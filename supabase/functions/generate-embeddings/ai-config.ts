@@ -11,9 +11,16 @@ export const claudeConfig = {
   model: "claude-3-7-sonnet-20250219", // Use a fast, economical model for descriptions
 }
 
+// Embeddings via Gemini's OpenAI-compatible endpoint (free tier).
+// Query and stored vectors must always come from the same model + dimensions;
+// changing either requires re-embedding everything in usage_embeddings /
+// code_embeddings. 1536 is a supported Matryoshka output size and matches the
+// dimensionality the SQL search functions were validated with.
 export const openaiConfig = {
-  apiKey: Deno.env.get("OPENAI_API_KEY") || "",
-  embeddingModel: "text-embedding-3-small",
+  apiKey: Deno.env.get("GEMINI_API_KEY") || "",
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  embeddingModel: "gemini-embedding-001",
+  embeddingDimensions: 1536,
 }
 
 // Usage-oriented prompt template for components

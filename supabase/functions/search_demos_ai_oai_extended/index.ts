@@ -13,8 +13,11 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 }
 
+// Gemini embeddings via OpenAI-compatible endpoint. Must match the model +
+// dimensions used at index time (see generate-embeddings/ai-config.ts).
 const openai = new OpenAI({
-  apiKey: Deno.env.get("OPENAI_API_KEY"),
+  apiKey: Deno.env.get("GEMINI_API_KEY"),
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 })
 
 console.log("Hello from Functions!")
@@ -38,8 +41,9 @@ Deno.serve(async (req) => {
   }
 
   const embeddingResponse = await openai.embeddings.create({
-    model: "text-embedding-3-small",
+    model: "gemini-embedding-001",
     input: search,
+    dimensions: 1536,
     encoding_format: "float",
   })
   const output = embeddingResponse.data[0].embedding

@@ -12,7 +12,8 @@ import {
 
 // Initialize clients
 const openai = new OpenAI({
-  apiKey: openaiConfig.apiKey || Deno.env.get("OPENAI_API_KEY"),
+  apiKey: openaiConfig.apiKey || Deno.env.get("GEMINI_API_KEY"),
+  baseURL: openaiConfig.baseURL,
 })
 
 const anthropic = new Anthropic({
@@ -58,11 +59,12 @@ async function fetchCodeFromUrl(codeOrUrl: string): Promise<string> {
   return codeOrUrl
 }
 
-// Generate embeddings using OpenAI
+// Generate embeddings using Gemini (OpenAI-compatible endpoint)
 async function generateEmbedding(text: string): Promise<number[]> {
   const response = await openai.embeddings.create({
     model: openaiConfig.embeddingModel,
     input: text,
+    dimensions: openaiConfig.embeddingDimensions,
   })
 
   return response.data[0].embedding
@@ -198,9 +200,9 @@ async function generateComponentEmbeddings(componentId: number): Promise<any> {
         usage_description: usageDescription,
         metadata: {
           name: component.name,
-          component_id: componentId
-        }
-      }
+          component_id: componentId,
+        },
+      },
     }
   } catch (error) {
     console.error(

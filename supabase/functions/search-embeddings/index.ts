@@ -16,9 +16,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 }
 
-// Initialize OpenAI client for embeddings
+// Initialize embeddings client (Gemini via OpenAI-compatible endpoint)
 const openai = new OpenAI({
-  apiKey: openaiConfig.apiKey || Deno.env.get("OPENAI_API_KEY"),
+  apiKey: openaiConfig.apiKey || Deno.env.get("GEMINI_API_KEY"),
+  baseURL: openaiConfig.baseURL,
 })
 
 // Constants
@@ -33,8 +34,9 @@ const SIMILARITY_THRESHOLD = 0.75 // Minimum similarity score to include in resu
 async function generateEmbedding(text: string): Promise<number[]> {
   try {
     const response = await openai.embeddings.create({
-      model: "text-embedding-3-small",
+      model: openaiConfig.embeddingModel,
       input: text,
+      dimensions: openaiConfig.embeddingDimensions,
       encoding_format: "float",
     })
 
@@ -355,11 +357,14 @@ async function searchComponents(
   const hydeEmbedding = await generateEmbedding(hydeDocuments.searchQueries)
 
   // Search with embeddings using the new RPC function
-  const { data: results, error } = await supabase.rpc("match_embeddings_with_details", {
-    query_embedding: hydeEmbedding,
-    match_threshold: match_threshold,
-    match_count: 15
-  })
+  const { data: results, error } = await supabase.rpc(
+    "match_embeddings_with_details",
+    {
+      query_embedding: hydeEmbedding,
+      match_threshold: match_threshold,
+      match_count: 15,
+    },
+  )
 
   if (error) {
     throw error
@@ -384,7 +389,11 @@ serve(async (req) => {
   }
 
   try {
-    const { search, match_threshold = 0.33, userMessage = "" } = await req.json()
+    const {
+      search,
+      match_threshold = 0.33,
+      userMessage = "",
+    } = await req.json()
 
     if (!search) {
       return new Response(
@@ -398,7 +407,9 @@ serve(async (req) => {
 
     if (match_threshold && (match_threshold < 0.1 || match_threshold > 0.99)) {
       return new Response(
-        JSON.stringify({ error: "match_threshold must be between 0.1 and 0.99" }),
+        JSON.stringify({
+          error: "match_threshold must be between 0.1 and 0.99",
+        }),
         {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
