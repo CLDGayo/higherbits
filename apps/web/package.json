@@ -15,7 +15,7 @@
     "combine-css": "node css/combinedCSS.js",
     "generate-embeddings": "ts-node --project scripts/tsconfig.json scripts/generate-embeddings.ts",
     "stripe:listen": "stripe listen --forward-to http://localhost:3000/api/stripe/webhook/v2",
-    "postinstall": "pnpx prisma generate --schema=./prisma/schema.prisma"
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.10",
