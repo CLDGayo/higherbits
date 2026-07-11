@@ -240,9 +240,9 @@ function FileTreeNode({
   const getFileIcon = () => {
     if (item.type === "directory") {
       return isExpanded ? (
-        <FolderOpen className="h-4 w-4 text-blue-500" />
+        <FolderOpen className="h-4 w-4 text-primary" />
       ) : (
-        <Folder className="h-4 w-4 text-blue-500" />
+        <Folder className="h-4 w-4 text-primary" />
       )
     }
 
@@ -267,7 +267,7 @@ function FileTreeNode({
     }
 
     if (isGlobalsCss) {
-      return <File className="h-4 w-4 text-blue-500" />
+      return <File className="h-4 w-4 text-primary" />
     }
 
     return <File className="h-4 w-4 text-gray-500" />

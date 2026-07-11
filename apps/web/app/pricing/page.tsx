@@ -4,7 +4,7 @@ import { Footer } from "@/components/ui/footer"
 import { Suspense } from "react"
 
 export const metadata = {
-  title: "Pricing - 21st.dev",
+  title: "Pricing - HigherBits.dev",
   description: "Choose the plan that best fits your needs",
 }
 

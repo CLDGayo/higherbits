@@ -193,7 +193,7 @@ function EditorPaneOriginal({
     <div className="h-full flex flex-col">
       {isReadOnly && (
         <div className="p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 text-xs text-center">
-          This component is from the 21st.dev registry and is read-only.
+          This component is from the HigherBits.dev registry and is read-only.
         </div>
       )}
       <Editor

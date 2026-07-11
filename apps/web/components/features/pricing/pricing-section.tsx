@@ -129,8 +129,8 @@ export function PricingSection({
     feature: string,
     tier: PricingProps["tiers"][0],
   ) => {
-    if (feature.includes("Premium 21st.dev Components")) {
-      return "Premium 21st.dev Components"
+    if (feature.includes("Premium HigherBits.dev Components")) {
+      return "Premium HigherBits.dev Components"
     }
     if (feature.includes("AI Component Generation")) {
       return "AI Component Generation"
@@ -176,7 +176,7 @@ export function PricingSection({
                 <div
                   key={tier.name}
                   className={cn(
-                    "bg-card rounded-2xl shadow-sm overflow-hidden",
+                    "bg-card rounded-lg shadow-sm overflow-hidden",
                     tier.highlighted ? "bg-muted" : "bg-card border",
                   )}
                 >
@@ -186,7 +186,7 @@ export function PricingSection({
                         {tier.name}
                       </h3>
                       {tier.popular && (
-                        <span className="inline-block text-xs font-medium bg-blue-100 text-blue-600 px-2 py-1 rounded-md">
+                        <span className="inline-block text-xs font-medium bg-primary text-primary-foreground px-2 py-1 rounded-md">
                           Popular
                         </span>
                       )}

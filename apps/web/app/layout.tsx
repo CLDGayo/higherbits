@@ -1,7 +1,24 @@
 import { GoogleAnalytics } from "@next/third-parties/google"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { Urbanist, Inter, Fira_Code } from "next/font/google"
 import { Metadata } from "next"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
+
+const urbanist = Urbanist({
+  subsets: ["latin"],
+  variable: "--font-urbanist",
+  display: "swap",
+})
+
+const firaCode = Fira_Code({
+  subsets: ["latin"],
+  variable: "--font-fira-code",
+  display: "swap",
+})
 
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -19,7 +36,7 @@ export const metadata: Metadata = {
   ),
   title: {
     default: `${SITE_NAME} - ${SITE_SLOGAN}`,
-    template: "%s | 21st.dev",
+    template: `%s | ${SITE_NAME}`,
   },
   description:
     "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
@@ -45,8 +62,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          GeistSans.variable,
-          GeistMono.variable,
+          inter.variable,
+          urbanist.variable,
+          firaCode.variable,
           "font-sans [scrollbar-gutter:stable]",
         )}
       >

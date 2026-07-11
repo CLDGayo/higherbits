@@ -82,7 +82,7 @@ const AssetCard = ({
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.2, delay: index * 0.1 }}
       className={cn(
-        "w-[184px] bg-white shadow-md dark:bg-[#181818] dark:outline dark:outline-1 dark:outline-[#2a2a2a] p-1 flex flex-col gap-1 rounded-[20px]",
+        "w-[184px] bg-white shadow-md dark:bg-[#181818] dark:outline dark:outline-1 dark:outline-[#2a2a2a] p-1 flex flex-col gap-1 rounded-lg",
         className,
       )}
       style={style}
@@ -92,7 +92,7 @@ const AssetCard = ({
         data-asset={title}
         aria-hidden="true"
         className={cn(
-          "flex items-center justify-center h-16 rounded-2xl bg-foreground/10",
+          "flex items-center justify-center h-16 rounded-lg bg-foreground/10",
         )}
       >
         <Logo21SVG
@@ -224,11 +224,11 @@ export function BrandAssetsMenu({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.2, delay: 2 * 0.1 }}
-        className="w-[184px] bg-white shadow-md dark:bg-[#181818] dark:outline dark:outline-1 dark:outline-[#2a2a2a] p-1 flex flex-col gap-1 rounded-[20px]"
+        className="w-[184px] bg-white shadow-md dark:bg-[#181818] dark:outline dark:outline-1 dark:outline-[#2a2a2a] p-1 flex flex-col gap-1 rounded-lg"
       >
         <Link
           href="/brand/21st-brand.zip"
-          className="flex items-center justify-center gap-2 text-primary dark:text-slate-400 font-medium p-1 text-center text-sm hover:bg-slate-100 dark:hover:bg-[#202020] rounded-[24px] transition-colors"
+          className="flex items-center justify-center gap-2 text-primary dark:text-slate-400 font-medium p-1 text-center text-sm hover:bg-slate-100 dark:hover:bg-[#202020] rounded-lg transition-colors"
         >
           <Icons.download className="h-4 w-4" /> 21st-brand.zip
         </Link>

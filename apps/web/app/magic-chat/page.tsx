@@ -2,9 +2,9 @@ import { Metadata } from "next"
 import { MagicChatPageClient } from "./page.client"
 
 export const metadata: Metadata = {
-  title: "Magic Chat - Create Standout Components with AI | 21st.dev",
+  title: "Magic Chat - Create Standout Components with AI | HigherBits.dev",
   description:
-    "Start with a prompt, iterate in chat, and draw inspiration from the best works of 21st.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
+    "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
   keywords: [
     "Magic Chat",
     "AI UI generation",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "React components",
     "TypeScript",
     "Next.js",
-    "21st.dev",
+    "HigherBits.dev",
     "AI chat",
     "component generation",
     "design inspiration",
@@ -23,19 +23,19 @@ export const metadata: Metadata = {
     "modern component patterns",
   ],
   openGraph: {
-    title: "Magic Chat - Create Standout Components with AI | 21st.dev",
+    title: "Magic Chat - Create Standout Components with AI | HigherBits.dev",
     description:
-      "Start with a prompt, iterate in chat, and draw inspiration from the best works of 21st.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
+      "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
     images: ["/magic-chat-og.png"],
     type: "website",
-    siteName: "21st.dev",
+    siteName: "HigherBits.dev",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Magic Chat - Create Standout Components with AI | 21st.dev",
+    title: "Magic Chat - Create Standout Components with AI | HigherBits.dev",
     description:
-      "Start with a prompt, iterate in chat, and draw inspiration from the best works of 21st.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
+      "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
     images: ["/magic-chat-og.png"],
   },
 }

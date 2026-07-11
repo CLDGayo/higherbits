@@ -159,7 +159,7 @@ export function AddRegistryModal({
     try {
       const username = component.user.username
       const componentSlug = component.component.component_slug
-      const jsonUrl = `https://21st.dev/r/${username}/${componentSlug}`
+      const jsonUrl = `https://higherbits.dev/r/${username}/${componentSlug}`
       await onAddFrom21Registry(jsonUrl)
     } catch (error) {
       console.error("Error adding component from registry:", error)
@@ -191,7 +191,7 @@ export function AddRegistryModal({
         <DialogHeader>
           <DialogTitle>Add from 21st Registry</DialogTitle>
           <DialogDescription>
-            Search for components in the 21st.dev registry or select from our
+            Search for components in the HigherBits.dev registry or select from our
             featured components.
           </DialogDescription>
         </DialogHeader>

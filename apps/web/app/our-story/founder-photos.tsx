@@ -49,7 +49,7 @@ export function FounderPhotos() {
     >
       {/* Static bottom card that never moves */}
       <div className="absolute right-8 top-8 w-[280px] h-[400px] z-0">
-        <div className="w-full h-full bg-card p-3 rounded-xl shadow-md transform -rotate-3 border border-border/30">
+        <div className="w-full h-full bg-card p-3 rounded-lg shadow-md transform -rotate-3 border border-border/30">
           <div className="w-full h-[85%] relative rounded-lg overflow-hidden">
             <img
               src="/story/photo_2025-05-14 20.49.00.jpeg"
@@ -63,7 +63,7 @@ export function FounderPhotos() {
 
       {/* Animated top card - GIF-like animation */}
       <div className="absolute right-0 w-[280px] h-[400px] z-10">
-        <div className="w-full h-full bg-card p-3 rounded-xl shadow-lg transform rotate-6 hover:rotate-0 transition-transform duration-300 border border-border/50">
+        <div className="w-full h-full bg-card p-3 rounded-lg shadow-lg transform rotate-6 hover:rotate-0 transition-transform duration-300 border border-border/50">
           <div className="w-full h-[85%] relative rounded-lg overflow-hidden">
             {/* Hide/show instead of re-rendering to prevent flickering */}
             {photos.map((photo, index) => (

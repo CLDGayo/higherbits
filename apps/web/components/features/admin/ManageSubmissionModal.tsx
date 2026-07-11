@@ -76,7 +76,7 @@ const ManageSubmissionModal: FC<ManageSubmissionModalProps> = ({
       case "posted":
         return "bg-green-200 text-green-800"
       case "featured":
-        return "bg-blue-200 text-blue-800"
+        return "bg-primary/15 text-primary"
       case "rejected":
         return "bg-red-200 text-red-800"
       default:

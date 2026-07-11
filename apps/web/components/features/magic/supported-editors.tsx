@@ -6,10 +6,10 @@ export function SupportedEditors() {
   return (
     <div className="pt-0 pb-20">
       <div className="text-center mb-8">
-        <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-t from-gray-300/70 to-white sm:text-balance">
+        <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty text-foreground sm:text-balance">
           Supported IDEs
         </h2>
-        <p className="mt-4 text-lg text-neutral-300">
+        <p className="mt-4 text-lg text-muted-foreground">
           Use Magic with your favorite IDEs
         </p>
       </div>
@@ -25,7 +25,7 @@ export function SupportedEditors() {
             <div className="flex items-center gap-2">
               <Icons.cursorDark className="h-9 w-auto text-white" />
             </div>
-            <span className="text-sm text-neutral-400">Cursor</span>
+            <span className="text-sm text-muted-foreground">Cursor</span>
           </Link>
 
           <Link
@@ -35,7 +35,7 @@ export function SupportedEditors() {
             className="flex flex-col items-center gap-3"
           >
             <Icons.windsurfTealLogo />
-            <span className="text-sm text-neutral-400">Windsurf</span>
+            <span className="text-sm text-muted-foreground">Windsurf</span>
           </Link>
 
           <Link
@@ -46,8 +46,8 @@ export function SupportedEditors() {
           >
             <div className="flex items-center gap-3">
               <Icons.vscode className="w-9 h-9 mr-1" />
-              <span className="text-sm text-neutral-400">+</span>
-              <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-xl border border-white/10 w-[53px] h-[53px]">
+              <span className="text-sm text-muted-foreground">+</span>
+              <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-lg border border-white/10 w-[53px] h-[53px]">
                 <Image
                   src="https://avatars.githubusercontent.com/u/184127137?s=200&v=4"
                   alt="Cline"
@@ -57,7 +57,7 @@ export function SupportedEditors() {
                 />
               </div>
             </div>
-            <span className="text-sm text-neutral-400">VS Code + Cline</span>
+            <span className="text-sm text-muted-foreground">VS Code + Cline</span>
           </Link>
         </div>
       </div>

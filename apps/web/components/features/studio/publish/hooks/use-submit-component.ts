@@ -523,7 +523,7 @@ export const useSubmitComponent = () => {
             }
             if (Array.isArray(parsed.registryDependencies)) {
               registryDeps = parsed.registryDependencies.map((d) =>
-                d.replace("https://21st.dev/r/", ""),
+                d.replace("https://higherbits.dev/r/", ""),
               )
             }
           }

@@ -79,7 +79,7 @@ interface EditProfileDialogProps {
 const CLERK_ACCOUNT_URL =
   process.env.NODE_ENV === "development"
     ? "https://wanted-titmouse-48.accounts.dev/user"
-    : "https://accounts.21st.dev/user"
+    : "https://accounts.HigherBits.dev/user"
 
 export function EditProfileDialog({
   isOpen,

@@ -39,7 +39,7 @@ export const SubmissionStatusEmail = ({
       case "featured":
         return {
           title: "Your submission has been featured! 🌟",
-          message: `Congratulations! Your component "${fullComponentName}" has been featured on 21st.dev. This means your work will be showcased to the entire community.`,
+          message: `Congratulations! Your component "${fullComponentName}" has been featured on HigherBits.dev. This means your work will be showcased to the entire community.`,
           buttonText: "View Your Featured Component",
           showShareButton: true,
         }
@@ -60,7 +60,7 @@ export const SubmissionStatusEmail = ({
       default:
         return {
           title: "Update on your submission",
-          message: `We have an update regarding your component "${fullComponentName}" on 21st.dev.`,
+          message: `We have an update regarding your component "${fullComponentName}" on HigherBits.dev.`,
           buttonText: "Check Status",
           showShareButton: false,
         }
@@ -114,12 +114,12 @@ export const SubmissionStatusEmail = ({
             )}
 
             <Text style={text}>
-              Thank you for contributing to the 21st.dev community!
+              Thank you for contributing to the HigherBits.dev community!
             </Text>
             <Text style={footer}>
               Best regards,
               <br />
-              The 21st.dev Team
+              The HigherBits.dev Team
             </Text>
           </Section>
         </Container>

@@ -116,7 +116,7 @@ export function UserAvatar({
                   )}
                   <span className="text-xs text-muted-foreground">
                     {user.manually_added
-                      ? `Created by 21st.dev`
+                      ? `Created by HigherBits.dev`
                       : `Joined ${formatDate(new Date(user.created_at))}`}
                   </span>
                 </div>

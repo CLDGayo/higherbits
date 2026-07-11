@@ -27,8 +27,8 @@ export function BundlesClient({ user }: { user: User }) {
             Discord
           </a>{" "}
           or{" "}
-          <a href="mailto:support@21st.dev" className="underline">
-            support@21st.dev
+          <a href="mailto:support@higherbits.dev" className="underline">
+            support@higherbits.dev
           </a>
         </AlertDescription>
       </Alert>

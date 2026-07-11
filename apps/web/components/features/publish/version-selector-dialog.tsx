@@ -62,11 +62,11 @@ export function VersionSelectorDialog({
     >
       <DialogContent
         hideCloseButton
-        className="sm:max-w-[400px] bg-background p-0 rounded-xl shadow-lg border-none"
+        className="sm:max-w-[400px] bg-background p-0 rounded-lg shadow-lg border-none"
       >
         <div className="grid grid-cols-1 gap-0">
           {/* New Flow Card */}
-          <div className="group p-1 pb-4 bg-muted text-foreground rounded-xl">
+          <div className="group p-1 pb-4 bg-muted text-foreground rounded-lg">
             <div className="flex flex-col h-full">
               <div className="flex-grow rounded-lg p-4 mb-4 border border-muted-foreground/20">
                 <div className="flex flex-col items-start gap-2 mb-4 pl-2">

@@ -220,7 +220,7 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
                     <Image
                       src="https://mintlify.s3.us-west-1.amazonaws.com/codeium/assets/windsurf/cascade/evergreen-toolbar-mcp.png"
                       alt="Windsurf MCP toolbar"
-                      className="rounded-xl border my-2 w-full mix-blend-difference"
+                      className="rounded-lg border my-2 w-full mix-blend-difference"
                       width={600}
                       height={128}
                     />

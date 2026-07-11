@@ -47,12 +47,12 @@ const customShikiStyles = `
 `
 
 const codeVariants = cva(
-  "font-mono rounded-md cursor-pointer overflow-auto transition-all duration-200 relative shadow-inner",
+  "font-fira-code cursor-pointer transition-all duration-200 relative",
   {
     variants: {
       display: {
-        inline: "inline-flex bg-secondary py-0 px-1",
-        block: "block bg-secondary p-2 mt-2 mb-4",
+        inline: "inline-flex bg-secondary py-0 px-1 rounded-md text-foreground overflow-auto",
+        block: "block bg-[#333A41] text-white p-4 mt-2 mb-4 rounded-lg shadow-md overflow-hidden",
       },
       fontSize: {
         xs: "text-xs",
@@ -106,14 +106,16 @@ const Code = ({
 
       const html = await highlighter.codeToHtml(code, {
         lang: langToUse as shiki.BundledLanguage,
-        theme: resolvedTheme === "dark" ? "github-dark" : "github-light",
+        theme: display === "block" ? "github-dark" : (resolvedTheme === "dark" ? "github-dark" : "github-light"),
       })
-      setHighlightedCode(html)
+      setHighlightedCode(
+        display === "block" ? html.replace(/#6A737D/gi, "#B8C3CC") : html,
+      )
     } catch (error) {
       console.error("Failed to highlight code:", error)
       setHighlightedCode(`<pre><code>${code}</code></pre>`)
     }
-  }, [code, language, resolvedTheme])
+  }, [code, language, resolvedTheme, display])
 
   useEffect(() => {
     highlight()
@@ -146,18 +148,26 @@ const Code = ({
           codeVariants({ fontSize, display }),
           className,
           "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
-          "relative",
-          isCopied &&
+          isCopied && display === "block" &&
+            "before:absolute before:inset-0 before:rounded-lg before:pointer-events-none before:bg-emerald-400/5 before:border before:border-emerald-400/20 before:animate-copy-success",
+          isCopied && display !== "block" &&
             "before:absolute before:inset-0 before:rounded-md before:pointer-events-none before:bg-emerald-400/5 before:border before:border-emerald-400/20 before:animate-copy-success",
         )}
         style={{
-          backgroundColor: background,
+          backgroundColor: background || (display === "block" ? "#333A41" : undefined),
           ...style,
         }}
         {...props}
       >
+        {display === "block" && (
+          <div className="flex items-center gap-2 mb-3 sticky top-0 bg-[#333A41] z-10">
+            <div className="w-3 h-3 rounded-full bg-[#FF5F56] shadow-sm" />
+            <div className="w-3 h-3 rounded-full bg-[#FFBD2E] shadow-sm" />
+            <div className="w-3 h-3 rounded-full bg-[#27C93F] shadow-sm" />
+          </div>
+        )}
         <div
-          className="shiki-wrapper"
+          className={cn("shiki-wrapper", display === "block" && "overflow-auto")}
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
         />
       </div>

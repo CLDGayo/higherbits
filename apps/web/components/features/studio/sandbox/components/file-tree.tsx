@@ -435,7 +435,7 @@ function DirectoryItem({
                 animate={{ opacity: isExpanded ? 0 : 1 }}
                 transition={{ duration: 0.2 }}
               >
-                <FolderIcon className="h-4 w-4 text-blue-500" />
+                <FolderIcon className="h-4 w-4 text-primary" />
               </motion.div>
               <motion.div
                 className="absolute inset-0 flex items-center justify-center"
@@ -443,7 +443,7 @@ function DirectoryItem({
                 animate={{ opacity: isExpanded ? 1 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <FolderOpenIcon className="h-4 w-4 text-blue-500" />
+                <FolderOpenIcon className="h-4 w-4 text-primary" />
               </motion.div>
             </div>
             <span className="truncate" title={entry.name}>

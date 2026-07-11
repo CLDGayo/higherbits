@@ -215,10 +215,8 @@ function HeaderContent({
     <>
       <header
         className={cn(
-          "flex fixed top-0 left-0 right-0 h-14 z-40 items-center px-4 py-3 text-foreground",
-          {
-            "border-b border-border/40 bg-background": variant !== "publish",
-          },
+          "flex items-center text-foreground w-[calc(100%-2rem)] max-w-[1400px]",
+          "fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-lg bg-card/90 backdrop-blur-md border border-border/80 p-4 shadow-sm",
         )}
       >
         <div

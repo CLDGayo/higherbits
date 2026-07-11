@@ -55,10 +55,10 @@ const safeFetchFile = async (url: string): Promise<string> => {
     console.error(`Error fetching from ${url}:`, error)
 
     // Try alternative R2 domain if CDN URL fails
-    if (url.includes("cdn.21st.dev")) {
+    if (url.includes("cdn.HigherBits.dev")) {
       try {
         const r2Url = url.replace(
-          "https://cdn.21st.dev/",
+          "https://cdn.HigherBits.dev/",
           "https://pub-d2a7943f757e46d59fd4e364dbae76ae.r2.dev/",
         )
         console.log(`Trying alternative R2 URL: ${r2Url}`)

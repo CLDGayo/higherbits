@@ -292,7 +292,7 @@ const RoundToggle = ({
               {
                 "bg-purple-100/70 text-purple-800 border-purple-200":
                   contestRound?.week_number % 4 === 0,
-                "bg-blue-100/70 text-blue-800 border-blue-200":
+                "bg-primary/15 text-primary border-primary/30":
                   contestRound?.week_number % 4 === 1,
                 "bg-green-100/70 text-green-800 border-green-200":
                   contestRound?.week_number % 4 === 2,
@@ -473,7 +473,7 @@ const UserPickerPopover = ({
                 disabled={disabled}
                 className="h-8 w-8"
               >
-                <UserCheck size={16} className="text-blue-600" />
+                <UserCheck size={16} className="text-primary" />
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="p-0 w-[300px]">
@@ -615,7 +615,7 @@ const SubmissionsAdminPage: FC = () => {
       case "rejected":
         return "bg-red-200 text-red-800"
       default:
-        return "bg-blue-200 text-blue-800"
+        return "bg-primary/15 text-primary"
     }
   }
 
@@ -834,7 +834,7 @@ const SubmissionsAdminPage: FC = () => {
                                 href={submission.component_data.website_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800 underline text-sm"
+                                className="text-primary hover:text-primary/80 underline text-sm"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 {submission.component_data.website_url.length >

@@ -77,7 +77,7 @@ export function PricingCard({
   return (
     <Card
       className={cn(
-        "relative flex flex-col overflow-hidden p-8 border-white/10 bg-white/5 min-h-[33rem]",
+        "relative flex flex-col overflow-hidden rounded-lg p-8 border-white/10 bg-white/5 min-h-[33rem]",
         isPlanFeatured && "ring-2 ring-accent/50",
         isActive && "ring-2 ring-primary/50",
       )}

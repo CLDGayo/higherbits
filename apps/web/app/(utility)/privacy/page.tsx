@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy – 21st.dev",
-  description: "Privacy policy for 21st.dev",
+  title: "Privacy Policy – HigherBits.dev",
+  description: "Privacy policy for HigherBits.dev",
 }
 
 export default function PrivacyPolicy() {
@@ -15,7 +15,7 @@ export default function PrivacyPolicy() {
 
         <h2>1. Introduction</h2>
         <p>
-          This Privacy Policy explains how 21st.dev ("we", "our", or "us"),
+          This Privacy Policy explains how HigherBits.dev ("we", "our", or "us"),
           operated by Serafim Korablev, collects and uses information through
           our website and services.
         </p>
@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
         <h3>2.1 Anonymous Usage Data</h3>
         <p>
           We collect anonymous usage data to improve our services and understand
-          how users interact with 21st.dev. This may include:
+          how users interact with HigherBits.dev. This may include:
         </p>
         <ul>
           <li>Pages visited and features used</li>
@@ -76,7 +76,7 @@ export default function PrivacyPolicy() {
           <br />
           United Kingdom
           <br />
-          Email: support@21st.dev
+          Email: support@higherbits.dev
         </p>
       </div>
     </div>

@@ -13,7 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertTriangleIcon } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "API Access - 21st.dev",
+  title: "API Access - HigherBits.dev",
   description: "Access our semantic search API for UI components",
 }
 
@@ -102,8 +102,8 @@ export default async function ApiAccessPage() {
                   on Twitter
                 </a>{" "}
                 or email our support at{" "}
-                <a href="mailto:support@21st.dev" className="underline">
-                  support@21st.dev
+                <a href="mailto:support@higherbits.dev" className="underline">
+                  support@higherbits.dev
                 </a>
                 . We'd love to learn about your project and ensure you have the best possible experience with our API.
               </AlertDescription>

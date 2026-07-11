@@ -74,7 +74,7 @@ const formatTextWithLinks = (text: string) => {
     /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g,
     (url) => {
       const href = url.startsWith("www.") ? `https://${url}` : url
-      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline break-all">${url}</a>`
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline break-all">${url}</a>`
     },
   )
 
@@ -134,7 +134,7 @@ export function DemosTable({
         // Fix URL if it's a relative path without http(s)
         const previewUrl = demo.preview_url.startsWith("http")
           ? demo.preview_url
-          : `https://cdn.21st.dev${demo.preview_url.startsWith("/") ? "" : "/"}${demo.preview_url}`
+          : `https://cdn.HigherBits.dev${demo.preview_url.startsWith("/") ? "" : "/"}${demo.preview_url}`
 
         const img = new Image()
         img.onload = () => {
@@ -201,7 +201,7 @@ export function DemosTable({
                     disabled={!isComponentAvailable}
                     onClick={handleRowClick}
                   >
-                    <ExternalLink size={16} className="text-blue-600" />
+                    <ExternalLink size={16} className="text-primary" />
                   </Button>
                 </div>
               </TooltipTrigger>
@@ -258,7 +258,7 @@ export function DemosTable({
                 "px-2 py-1 text-xs rounded",
                 status === "on_review" && "bg-yellow-100 text-yellow-700",
                 status === "featured" && "bg-green-100 text-green-700",
-                status === "posted" && "bg-blue-100 text-blue-700",
+                status === "posted" && "bg-primary/15 text-primary",
                 status === "draft" && "bg-gray-100 text-gray-700",
                 status === "rejected" && "bg-red-100 text-red-700",
                 !status && "bg-gray-100 text-gray-700",

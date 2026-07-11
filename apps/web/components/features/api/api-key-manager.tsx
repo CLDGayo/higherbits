@@ -54,7 +54,7 @@ export function ApiKeyManager({ initialKey, userId }: ApiKeyManagerProps) {
 
         <div className="flex justify-center">
           <Link
-            href="https://accounts.21st.dev/sign-in"
+            href="https://accounts.HigherBits.dev/sign-in"
             className="inline-block px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Sign In

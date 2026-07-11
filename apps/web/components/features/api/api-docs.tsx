@@ -39,14 +39,14 @@ export function ApiDocs() {
           code={`{
   "results": [{
     "name": "Default",
-    "preview_url": "https://cdn.21st.dev/...",
-    "video_url": "https://cdn.21st.dev/...",
+    "preview_url": "https://cdn.HigherBits.dev/...",
+    "video_url": "https://cdn.HigherBits.dev/...",
     "demo_id": 123,              // Use this ID for prompt generation
     "component_data": {
       "name": "Animated hero",
       "description": "Animated hero with text and two shadcn/ui buttons",
-      "code": "https://cdn.21st.dev/...",
-      "install_command": "pnpm dlx shadcn@latest add \"https://21st.dev/r/...\""
+      "code": "https://cdn.HigherBits.dev/...",
+      "install_command": "pnpm dlx shadcn@latest add \"https://higherbits.dev/r/...\""
     },
     "component_user_data": {
       "name": "serafim",

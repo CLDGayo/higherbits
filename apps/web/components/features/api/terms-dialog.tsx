@@ -38,7 +38,7 @@ export function TermsDialog({ open, onAccept, onClose }: TermsDialogProps) {
       <DialogContent className="flex flex-col gap-0 p-0 max-h-[calc(100vh-100px)] rounded-lg sm:max-h-[min(640px,80vh)] sm:max-w-lg [&>button:last-child]:top-3.5">
         <DialogHeader className="contents space-y-0 text-left">
           <DialogTitle className="border-b border-border px-6 py-4 text-base">
-            21st.dev API Terms of Use
+            HigherBits.dev API Terms of Use
           </DialogTitle>
           <div
             ref={contentRef}
@@ -54,7 +54,7 @@ export function TermsDialog({ open, onAccept, onClose }: TermsDialogProps) {
                         <strong>1. Purpose and Acceptable Use</strong>
                       </p>
                       <p>
-                        The 21st.dev API ("API") is provided to allow authorized
+                        The HigherBits.dev API ("API") is provided to allow authorized
                         users to search for, discover, and integrate components
                         with their projects. The API is intended solely for
                         real-time searches and installations of components, with
@@ -233,10 +233,10 @@ export function TermsDialog({ open, onAccept, onClose }: TermsDialogProps) {
                         For support, questions, or to report potential misuse,
                         please contact us at{" "}
                         <Link
-                          href="mailto:support@21st.dev"
+                          href="mailto:support@higherbits.dev"
                           className="text-primary hover:underline"
                         >
-                          support@21st.dev
+                          support@higherbits.dev
                         </Link>
                       </p>
                     </div>
@@ -246,7 +246,7 @@ export function TermsDialog({ open, onAccept, onClose }: TermsDialogProps) {
                         <strong>10. Changes to Terms</strong>
                       </p>
                       <p>
-                        21st.dev reserves the right to update these terms at any
+                        HigherBits.dev reserves the right to update these terms at any
                         time. Continued use of the API constitutes acceptance of
                         the updated terms.
                       </p>
@@ -254,7 +254,7 @@ export function TermsDialog({ open, onAccept, onClose }: TermsDialogProps) {
 
                     <div className="space-y-2">
                       <p className="text-sm text-muted-foreground">
-                        By using the 21st.dev API, you agree to adhere to these
+                        By using the HigherBits.dev API, you agree to adhere to these
                         terms and any applicable laws and regulations. Failure
                         to comply may result in the suspension or termination of
                         your API access.

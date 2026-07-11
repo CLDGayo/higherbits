@@ -236,7 +236,7 @@ export function LeaderboardClient({
                   <p className="text-sm">
                     After Week 3, we'll be taking a short pause to evaluate the
                     contest format and gather community feedback. Stay tuned for
-                    announcements about the next phase of 21st.dev contests!
+                    announcements about the next phase of HigherBits.dev contests!
                   </p>
                 </div>
               </div>

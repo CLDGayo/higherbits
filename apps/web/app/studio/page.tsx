@@ -154,11 +154,11 @@ export default function StudioPage() {
   }, [username, studioUrl])
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden">
       <div className="flex-1 relative antialiased">
         {/* Background image approach similar to hero.tsx */}
         <div className="absolute inset-0 z-0 bg-[url('/studio-background.webp')] bg-top bg-no-repeat bg-contain sm:bg-repeat-x">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/70 to-background"></div>
         </div>
 
         <Spotlight />
@@ -191,7 +191,7 @@ export default function StudioPage() {
                     duration: 0.8,
                     ease: "linear",
                   }}
-                  className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mt-4 mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
+                  className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight mt-4 mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/75"
                 >
                   Share Your Components
                   <br className="hidden sm:block" />
@@ -205,10 +205,10 @@ export default function StudioPage() {
                     duration: 0.8,
                     ease: "linear",
                   }}
-                  className="text-base sm:text-lg md:text-xl text-neutral-300 max-w-2xl mb-8 md:mb-10 px-4"
+                  className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mb-8 md:mb-10 px-4"
                 >
                   Join the community of design engineers and publish your UI
-                  components to 21st.dev
+                  components to HigherBits.dev
                 </motion.p>
 
                 <motion.div
@@ -224,7 +224,7 @@ export default function StudioPage() {
                     <Button
                       asChild
                       variant="outline"
-                      className="bg-white !text-black hover:bg-white/90 hover:!text-black border-white shadow-sm"
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
                       onClick={(e) => {
                         setIsEnterPressed(true)
                         setTimeout(() => {
@@ -236,7 +236,7 @@ export default function StudioPage() {
                       <Link href={studioUrl}>
                         <div className="flex items-center gap-2">
                           {isEnterPressed && (
-                            <Spinner size={16} color="black" />
+                            <Spinner size={16} color="currentColor" />
                           )}
                           {isEnterPressed ? "Opening..." : "Go to Studio"}
                         </div>
@@ -249,7 +249,7 @@ export default function StudioPage() {
                     <Button
                       disabled
                       variant="outline"
-                      className="bg-white/80 !text-black border-white/80 shadow-sm"
+                      className="bg-muted !text-muted-foreground border-border shadow-sm"
                     >
                       <div className="flex items-center gap-2">
                         Go to Studio
@@ -280,12 +280,12 @@ export default function StudioPage() {
                 ].map((stat, index) => (
                   <motion.div
                     key={index}
-                    className="flex flex-col items-center p-4 sm:p-6 rounded-xl border border-white/10 bg-black/30 backdrop-blur-sm transition-all hover:bg-black/40 hover:border-white/20 hover:shadow-md"
+                    className="flex flex-col items-center p-4 sm:p-6 rounded-lg border border-border bg-card/85 backdrop-blur-sm transition-all hover:bg-card hover:shadow-soft"
                   >
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-1">
                       {stat.value}
                     </div>
-                    <div className="text-xs sm:text-sm text-neutral-300 text-center">
+                    <div className="text-xs sm:text-sm text-muted-foreground text-center">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -303,8 +303,8 @@ export default function StudioPage() {
               ease: "linear",
             }}
           >
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-t from-gray-300/70 to-white">
-              Why Publish on 21st.dev?
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-t from-foreground/70 to-foreground">
+              Why Publish on HigherBits.dev?
             </h2>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
@@ -396,15 +396,15 @@ export default function StudioPage() {
               ].map((feature, index) => (
                 <div
                   key={index}
-                  className="flex flex-col rounded-xl border border-white/10 bg-black/30 p-4 shadow-sm transition-all hover:bg-black/40 hover:border-white/20 hover:shadow-md backdrop-blur-sm"
+                  className="flex flex-col rounded-lg border border-border bg-card/85 p-4 shadow-sm transition-all hover:bg-card hover:shadow-soft backdrop-blur-sm"
                 >
-                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-white/10 text-white">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-md bg-primary/15 text-primary">
                     {feature.icon}
                   </div>
-                  <h3 className="text-base font-bold mb-1.5 text-white">
+                  <h3 className="text-base font-bold mb-1.5 text-foreground">
                     {feature.title}
                   </h3>
-                  <p className="text-neutral-300">{feature.description}</p>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </div>
               ))}
             </div>
@@ -419,7 +419,7 @@ export default function StudioPage() {
                 duration: 0.8,
                 ease: "linear",
               }}
-              className="rounded-xl border border-white/10 bg-black/30 p-6 sm:p-8 shadow-sm backdrop-blur-sm hover:bg-black/40 hover:border-white/20 transition-all"
+              className="rounded-lg border border-border bg-card/85 p-6 sm:p-8 shadow-soft backdrop-blur-sm hover:bg-card transition-all"
             >
               <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                 <motion.div
@@ -431,7 +431,7 @@ export default function StudioPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
-                    className="text-xl sm:text-2xl font-bold mb-2 text-white text-center md:text-left"
+                    className="text-xl sm:text-2xl font-bold mb-2 text-foreground text-center md:text-left"
                   >
                     Ready to share your components?
                   </motion.h2>
@@ -439,18 +439,18 @@ export default function StudioPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
-                    className="text-sm sm:text-base text-neutral-300 text-center md:text-left"
+                    className="text-sm sm:text-base text-muted-foreground text-center md:text-left"
                   >
-                    Start publishing your components and join the 21st.dev
+                    Start publishing your components and join the HigherBits.dev
                     community
                   </motion.p>
                   <motion.p
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.6 }}
-                    className="text-sm sm:text-base text-white/70 text-center md:text-left mt-2"
+                    className="text-sm sm:text-base text-muted-foreground text-center md:text-left mt-2"
                   >
-                    <span className="inline-flex items-center bg-gradient-to-r from-emerald-500/20 to-emerald-500/10 text-emerald-300 px-2 py-1 rounded-md text-xs font-medium">
+                    <span className="inline-flex items-center bg-primary/15 text-primary px-2 py-1 rounded-md text-xs font-medium">
                       <svg
                         className="w-3 h-3 mr-1"
                         viewBox="0 0 24 24"
@@ -479,7 +479,7 @@ export default function StudioPage() {
                     <Button
                       asChild
                       variant="outline"
-                      className="bg-white !text-black hover:bg-white/90 hover:!text-black border-white shadow-sm"
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
                       onClick={(e) => {
                         setIsEnterPressed(true)
                         setTimeout(() => {
@@ -491,7 +491,7 @@ export default function StudioPage() {
                       <Link href={studioUrl}>
                         <div className="flex items-center gap-2">
                           {isEnterPressed && (
-                            <Spinner size={16} color="black" />
+                            <Spinner size={16} color="currentColor" />
                           )}
                           {isEnterPressed
                             ? "Opening Studio..."
@@ -506,7 +506,7 @@ export default function StudioPage() {
                     <Button
                       disabled
                       variant="outline"
-                      className="bg-white/80 !text-black border-white/80 shadow-sm"
+                      className="bg-muted !text-muted-foreground border-border shadow-sm"
                     >
                       <div className="flex items-center gap-2">
                         Go to Studio

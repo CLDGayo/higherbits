@@ -1,7 +1,8 @@
-export const SITE_NAME = "21st.dev"
-export const SITE_URL = "https://21st.dev"
-export const SITE_SLOGAN = "Discover, share, and craft UI components"
+export const SITE_NAME = "HigherBits.dev"
+export const SITE_URL = "https://higherbits.dev"
+export const SITE_SLOGAN = "Sophisticated Calm Development"
 export const SITE_TITLE = `${SITE_NAME} - ${SITE_SLOGAN}`
+export const SUPPORT_EMAIL = "support@higherbits.dev"
 
 
 // Base keywords used across the site for SEO purposes

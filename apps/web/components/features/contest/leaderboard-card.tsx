@@ -163,7 +163,7 @@ export function LeaderboardCard({
 
   return (
     <div onClick={() => handleDemoClick(submission)}>
-      <div className="group relative flex flex-col sm:flex-row items-start gap-4 rounded-xl px-0 py-4 transition-all duration-300 sm:-mx-4 sm:p-4 cursor-pointer hover:sm:bg-transparent dark:hover:sm:bg-transparent">
+      <div className="group relative flex flex-col sm:flex-row items-start gap-4 rounded-lg px-0 py-4 transition-all duration-300 sm:-mx-4 sm:p-4 cursor-pointer hover:sm:bg-transparent dark:hover:sm:bg-transparent">
         {/* Preview Image with Video (Top on mobile, Left on desktop) */}
         <div className="relative aspect-[4/3] w-full sm:w-56 mb-4 sm:mb-0">
           <div className="absolute inset-0">

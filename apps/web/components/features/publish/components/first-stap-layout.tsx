@@ -42,7 +42,7 @@ export function NameSlugStep({
         <div className="flex gap-2">
           <div className="flex grow gap-3">
             <Info
-              className="mt-0.5 shrink-0 text-blue-500"
+              className="mt-0.5 shrink-0 text-primary"
               size={16}
               strokeWidth={2}
               aria-hidden="true"

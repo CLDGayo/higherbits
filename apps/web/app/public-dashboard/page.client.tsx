@@ -168,7 +168,7 @@ export function PublicDashboardClient() {
       >
         <h1 className="text-3xl font-bold">Public Payouts Dashboard</h1>
         <p className="text-muted-foreground">
-          View all authors receiving payouts in 21st.dev
+          View all authors receiving payouts in HigherBits.dev
         </p>
       </motion.div>
 

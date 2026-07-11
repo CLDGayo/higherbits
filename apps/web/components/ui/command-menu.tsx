@@ -910,7 +910,7 @@ export function CommandMenu() {
                 </div>
               </div>
               <span className="text-sm font-medium transition-colors duration-300 group-hover:text-primary">
-                21st.dev
+                HigherBits.dev
               </span>
             </div>
 

@@ -3,7 +3,7 @@ import { MagicPageClient } from "./page.client"
 
 export const metadata: Metadata = {
   title:
-    "Magic - AI Agent for Your IDE That Creates Professional UI Components | 21st.dev",
+    "Magic - AI Agent for Your IDE That Creates Professional UI Components | HigherBits.dev",
   description:
     "Transform your IDE with our AI agent that understands Modern Component Patterns. Create production-ready UI components in seconds instead of hours. Built for developers who want beautiful, consistent, and maintainable React components.",
   keywords: [
@@ -27,18 +27,18 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title:
-      "Magic - AI Agent for Your IDE That Creates Professional UI Components | 21st.dev",
+      "Magic - AI Agent for Your IDE That Creates Professional UI Components | HigherBits.dev",
     description:
       "Transform your IDE with our AI agent that understands Modern Component Patterns. Create production-ready UI components in seconds instead of hours. Built for developers who want beautiful, consistent, and maintainable React components.",
     images: ["/magic-agent-og-image.png"],
     type: "website",
-    siteName: "21st.dev",
+    siteName: "HigherBits.dev",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Magic - AI Agent for Your IDE That Creates Professional UI Components | 21st.dev",
+      "Magic - AI Agent for Your IDE That Creates Professional UI Components | HigherBits.dev",
     description:
       "Transform your IDE with our AI agent that understands Modern Component Patterns. Create production-ready UI components in seconds instead of hours. Built for developers who want beautiful, consistent, and maintainable React components.",
     images: ["/magic-agent-og-image.png"],

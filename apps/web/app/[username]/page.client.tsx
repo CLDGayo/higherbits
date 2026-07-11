@@ -119,7 +119,7 @@ export function UserPageClient({ user, initialTab }: UserPageClientProps) {
                       href={appendQueryParam(
                         user.website_url,
                         "ref",
-                        "21st.dev",
+                        "HigherBits.dev",
                       )}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -157,7 +157,7 @@ export function UserPageClient({ user, initialTab }: UserPageClientProps) {
                 <div className="flex flex-col w-full">
                   <Alert>
                     <AlertTitle>
-                      This profile was created by 21st.dev
+                      This profile was created by HigherBits.dev
                     </AlertTitle>
                     <AlertDescription>
                       To claim this profile, please contact{" "}

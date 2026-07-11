@@ -94,7 +94,7 @@ export function BundlesLayout({
                 <Skeleton className="h-4 w-24" />
               </div>
             </div>
-            <Skeleton className="h-[242.5px] w-full rounded-xl" />
+            <Skeleton className="h-[242.5px] w-full rounded-lg" />
           </div>
         ))}
       </div>

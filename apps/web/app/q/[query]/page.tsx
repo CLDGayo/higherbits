@@ -23,8 +23,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const decodedQuery = decodeURIComponent(params.query)
 
   return {
-    title: `Search results for "${decodedQuery}" - 21st.dev`,
-    description: `Find React Tailwind components matching "${decodedQuery}" on 21st.dev`,
+    title: `Search results for "${decodedQuery}" - HigherBits.dev`,
+    description: `Find React Tailwind components matching "${decodedQuery}" on HigherBits.dev`,
     robots: {
       index: false,
       follow: true,

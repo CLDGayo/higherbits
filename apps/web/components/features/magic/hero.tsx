@@ -301,7 +301,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
-            className="font-instrument-sans mb-6 mt-0 text-center text-[12px] sm:text-base uppercase tracking-[0.51em] text-black"
+            className="font-sans mb-6 mt-0 text-center text-[12px] sm:text-base uppercase tracking-[0.51em] text-black"
           >
             Introducing Magic
           </motion.p>
@@ -329,12 +329,12 @@ export function Hero() {
             Empower your IDE with an AI extension that creates stunning,
             production-ready components inspired by{" "}
             <Link
-              href="https://21st.dev"
+              href="https://higherbits.dev"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-neutral-50 transition-colors"
             >
-              21st.dev
+              HigherBits.dev
             </Link>
           </motion.p>
 

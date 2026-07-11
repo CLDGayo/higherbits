@@ -182,7 +182,7 @@ export const getStripeId = async (userId: string): Promise<string> => {
     const account = await stripe.accounts.create({
       email: userData.email,
       business_profile: {
-        url: `https://21st.dev/${userData?.display_username ?? userData?.username}`,
+        url: `https://higherbits.dev/${userData?.display_username ?? userData?.username}`,
         product_description:
           "Sell UI components (source code) for web developers",
       },

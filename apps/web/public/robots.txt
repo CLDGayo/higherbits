@@ -5,4 +5,4 @@ Disallow: /auth/
 Disallow: /admin/
 Disallow: /preview/
 
-Sitemap: https://21st.dev/sitemap.xml
+Sitemap: https://higherbits.dev/sitemap.xml

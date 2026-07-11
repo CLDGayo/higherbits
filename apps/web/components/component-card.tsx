@@ -31,7 +31,7 @@ export function ComponentCard({
   return (
     <Link href={`/components/${id}`}>
       <div
-        className={`overflow-hidden rounded-lg border bg-background shadow hover:shadow-md transition-shadow ${className || ""}`}
+        className={`overflow-hidden rounded-lg border bg-background shadow-sm hover:shadow-md transition-shadow duration-200 ${className || ""}`}
       >
         <div className="aspect-[16/9] w-full overflow-hidden bg-muted">
           {previewUrl ? (

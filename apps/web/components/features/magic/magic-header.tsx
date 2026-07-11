@@ -23,7 +23,7 @@ export function MagicHeader({ isScrolled }: MagicHeaderProps) {
       className={cn(
         "fixed left-4 right-4 z-50 flex items-center justify-between transition-all duration-300 ease-out",
         isScrolled && !isMobile
-          ? "top-4 mx-10 rounded-xl border border-white/10 bg-black/70 px-4 py-2 pr-2 shadow-lg backdrop-blur-md"
+          ? "top-4 mx-10 rounded-lg border border-border bg-card/85 px-4 py-2 pr-2 shadow-soft backdrop-blur-md"
           : "top-0 rounded-none border-b border-transparent bg-transparent px-4 py-3 shadow-none backdrop-blur-none",
       )}
       initial={{ y: isScrolled ? 0 : -20, opacity: 0 }}
@@ -37,20 +37,19 @@ export function MagicHeader({ isScrolled }: MagicHeaderProps) {
     >
       <div className="flex items-center gap-3">
         <Logo
-          fill="white"
           position="flex"
           hasLink={false}
           className="w-6 h-6"
         />
-        <span className="text-white font-medium">
-          Magic <span className="font-light text-gray-400">by 21st.dev</span>
+        <span className="text-foreground font-medium">
+          Magic <span className="font-light text-muted-foreground">by HigherBits.dev</span>
         </span>
       </div>
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="sm"
-          className="gap-2 px-2.5 text-sm font-medium text-white hover:bg-neutral-800/10 hover:text-white"
+          className="gap-2 px-2.5 text-sm font-medium text-foreground hover:bg-muted hover:text-foreground"
           asChild
         >
           <a
@@ -61,13 +60,14 @@ export function MagicHeader({ isScrolled }: MagicHeaderProps) {
             <Icons.gitHub className="h-4 w-4" />
             <GitHubStarsBasic
               repo="21st-dev/magic-mcp"
-              className="text-white"
+              className="text-foreground"
             />
           </a>
         </Button>
         <Button
           variant="ghost"
-          className="text-white text-[14px] hover:text-gray-300 hover:bg-accent/10"
+          className="text-foreground text-[14px] hover:bg-muted hover:text-foreground"
+          asChild
         >
           <Link href="/pricing">Pricing</Link>
         </Button>

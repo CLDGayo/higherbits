@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Terms of Service – 21st.dev",
-  description: "Terms of service for 21st.dev",
+  title: "Terms of Service – HigherBits.dev",
+  description: "Terms of service for HigherBits.dev",
 }
 
 export default function TermsOfService() {
@@ -25,7 +25,7 @@ export default function TermsOfService() {
               </h2>
               <p className="text-muted-foreground leading-7">
                 These Terms of Service ("Terms") govern your access to and use
-                of 21st.dev ("we", "our", or "us"), operated by 21st Labs Inc. By accessing or using 21st.dev, you agree to be bound
+                of HigherBits.dev ("we", "our", or "us"), operated by 21st Labs Inc. By accessing or using HigherBits.dev, you agree to be bound
                 by these Terms.
               </p>
             </section>
@@ -35,10 +35,10 @@ export default function TermsOfService() {
                 2. Intellectual Property Rights
               </h2>
               <p className="text-muted-foreground leading-7">
-                All code, content, and materials published on 21st.dev,
+                All code, content, and materials published on HigherBits.dev,
                 including but not limited to components, documentation, metadata (such as names and descriptions), and all associated media assets (such as images, videos, and thumbnails), are the sole and exclusive property of their
-                respective authors and 21st.dev. Users are granted access to
-                view and use the content solely through the official 21st.dev
+                respective authors and HigherBits.dev. Users are granted access to
+                view and use the content solely through the official HigherBits.dev
                 platform in accordance with these Terms.
               </p>
             </section>
@@ -54,40 +54,40 @@ export default function TermsOfService() {
                 <li className="flex items-start">
                   <span className="mr-3 text-primary">•</span>
                   <span className="leading-7">
-                    Scraping or automatically collecting data from 21st.dev
+                    Scraping or automatically collecting data from HigherBits.dev
                     through web scraping, bots, crawlers, or any other automated
-                    means without explicit written consent from 21st.dev
+                    means without explicit written consent from HigherBits.dev
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-3 text-primary">•</span>
                   <span className="leading-7">
-                    Using any content, code, or data from 21st.dev to train
+                    Using any content, code, or data from HigherBits.dev to train
                     artificial intelligence models, machine learning systems, or
                     similar technologies without explicit written consent from
-                    21st.dev
+                    HigherBits.dev
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-3 text-primary">•</span>
                   <span className="leading-7">
                     Redistributing, selling, or licensing any content from
-                    21st.dev without authorization
+                    HigherBits.dev without authorization
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-3 text-primary">•</span>
                   <span className="leading-7">
-                    Republishing or reusing media assets (such as images, GIFs, and video previews) or structured metadata (titles, descriptions, tags) from 21st.dev, including manual or automated means, without explicit written permission
+                    Republishing or reusing media assets (such as images, GIFs, and video previews) or structured metadata (titles, descriptions, tags) from HigherBits.dev, including manual or automated means, without explicit written permission
                   </span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-3 text-primary">•</span>
                   <span className="leading-7">
                     Copying and redistributing components originally published
-                    on 21st.dev to other websites, social media platforms, or
+                    on HigherBits.dev to other websites, social media platforms, or
                     any other medium without providing a clear and visible link
-                    back to the original component page on 21st.dev
+                    back to the original component page on HigherBits.dev
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -137,7 +137,7 @@ export default function TermsOfService() {
               </h2>
               <p className="text-muted-foreground leading-7">
                 We reserve the right to modify these Terms at any time. Changes
-                will be effective immediately upon posting on 21st.dev. Your
+                will be effective immediately upon posting on HigherBits.dev. Your
                 continued use of the platform after changes constitutes
                 acceptance of the modified Terms.
               </p>
@@ -162,7 +162,7 @@ export default function TermsOfService() {
                 <br />
                 Phone: (628) 227-7780
                 <br />
-                Email: support@21st.dev
+                Email: support@higherbits.dev
               </p>
             </section>
           </div>

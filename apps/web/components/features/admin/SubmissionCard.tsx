@@ -52,7 +52,7 @@ const SubmissionCard: FC<SubmissionCardProps> = ({
                         ? "bg-green-200 text-green-800"
                         : submission.submission_status === "rejected"
                           ? "bg-red-200 text-red-800"
-                          : "bg-blue-200 text-blue-800"
+                          : "bg-primary/15 text-primary"
                 }`}
               >
                 {submission.submission_status || "No Status"}

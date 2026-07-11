@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "motion/react"
 import Link from "next/link"
@@ -16,6 +16,7 @@ import { GitHubStarsBasic } from "./github-stars-number"
 export function HeroSection() {
   const router = useRouter()
   const isMobile = useIsMobile()
+  const heroRef = useRef<HTMLDivElement>(null)
 
   const onEnterWebsite = async () => {
     await setCookie({
@@ -44,9 +45,56 @@ export function HeroSection() {
     }
   }, [router])
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && !CSS.supports("(animation-timeline: view()) and (animation-range: entry)")) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("animate-in-view")
+            }
+          })
+        },
+        { threshold: 0.1 }
+      )
+      const elements = document.querySelectorAll('.parallax-layer')
+      elements.forEach(el => observer.observe(el))
+      return () => observer.disconnect()
+    }
+  }, [])
+
   return (
     <AuroraBackground className="fixed inset-0 z-50">
-      <div className="container relative z-10 pointer-events-auto px-6 md:px-8 flex flex-col min-h-screen">
+      <style>{`
+        @supports ((animation-timeline: view()) and (animation-range: entry)) {
+          .parallax-layer {
+            animation: parallax linear both;
+            animation-timeline: view();
+            animation-range: entry 10% cover 50%;
+          }
+          @keyframes parallax {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+          }
+          .parallax-layer-delay {
+            animation-range: entry 20% cover 60%;
+          }
+        }
+        .parallax-layer {
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease-out;
+        }
+        @supports not ((animation-timeline: view()) and (animation-range: entry)) {
+          .parallax-layer:not(.animate-in-view) {
+             transform: translateY(30px);
+             opacity: 0;
+          }
+          .animate-in-view {
+             transform: translateY(0);
+             opacity: 1;
+          }
+        }
+      `}</style>
+      <div ref={heroRef} className="container relative z-10 pointer-events-auto px-6 md:px-8 flex flex-col min-h-screen">
         {/* Navigation Bar */}
         <div className="w-full justify-center pt-6 hidden md:flex">
           <motion.nav
@@ -57,7 +105,7 @@ export function HeroSection() {
           >
             <div className="flex items-center gap-3">
               <div className="h-6 w-6 rounded-full bg-foreground" />
-              <span className="font-semibold text-foreground">21st.dev</span>
+              <span className="font-semibold text-foreground">HigherBits.dev</span>
             </div>
 
             <div className="h-4 w-[1px] bg-border/60" />
@@ -107,7 +155,7 @@ export function HeroSection() {
               duration: 0.8,
               ease: "easeInOut",
             }}
-            className="flex flex-col max-w-[300px] md:max-w-[800px] sm:max-w-[450px] text-center"
+            className="flex flex-col max-w-[300px] md:max-w-[800px] sm:max-w-[450px] text-center parallax-layer"
           >
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.2] pb-1">
               Discover, share & remix the best UI components
@@ -144,7 +192,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-center"
+              className="text-center parallax-layer parallax-layer-delay"
             >
               <p className="text-muted-foreground mb-4">Optimized for</p>
               <div className="flex flex-col gap-2">
@@ -163,7 +211,7 @@ export function HeroSection() {
                     <div className="flex items-center gap-3">
                       <Icons.vscode className="w-6 h-6 mr-1" />
                       <span className="text-sm text-muted-foreground">+</span>
-                      <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-xl border border-white/10 w-[36px] h-[36px]">
+                      <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-lg border border-white/10 w-[36px] h-[36px]">
                         <img
                           src="https://avatars.githubusercontent.com/u/184127137?s=200&v=4"
                           alt="Cline"

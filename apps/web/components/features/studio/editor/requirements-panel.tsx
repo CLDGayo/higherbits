@@ -127,7 +127,7 @@ export function RequirementsPanel({
         className,
       )}
     >
-      <div className="flex items-center justify-between p-3 bg-background border border-border rounded-2xl shadow-md">
+      <div className="flex items-center justify-between p-3 bg-background border border-border rounded-lg shadow-md">
         <div className="flex items-start gap-2">
           <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0" />
           <div className="flex flex-col gap-1">

@@ -40,10 +40,10 @@ export function MaintenancePage() {
           <div className="text-sm text-muted-foreground">
             Contact us at{" "}
             <Link
-              href="mailto:support@21st.dev"
+              href="mailto:support@higherbits.dev"
               className="text-primary hover:underline"
             >
-              support@21st.dev
+              support@higherbits.dev
             </Link>
           </div>
           

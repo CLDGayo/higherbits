@@ -165,7 +165,7 @@ export default async function Image({
                     src={
                       component.user.display_image_url ||
                       component.user.image_url ||
-                      "https://21st.dev/placeholder.svg"
+                      "https://higherbits.dev/placeholder.svg"
                     }
                     alt={
                       component.user.display_name || component.user.name || ""
@@ -248,7 +248,7 @@ export default async function Image({
                   fontWeight: "500",
                 }}
               >
-                21st.dev
+                HigherBits.dev
               </div>
             </div>
           </div>

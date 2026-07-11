@@ -68,9 +68,11 @@ export default async function HomePage() {
 
     if (shouldShowHero) {
       return (
-        <div className="min-h-screen flex flex-col">
-          <div className="flex-1">
-            <HeroSection />
+        <div className="min-h-screen flex flex-col bg-[#F5F5F0]">
+          <div className="flex-1 grid gap-6 p-4">
+            <div className="rounded-lg bg-white shadow-sm overflow-hidden flex flex-col">
+              <HeroSection />
+            </div>
             <NewsletterDialog />
           </div>
           <Footer />
@@ -79,12 +81,14 @@ export default async function HomePage() {
     }
 
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-[#F5F5F0]">
         <Header variant="default" />
-        <div className="flex-1">
-          <Logo className="z-50" />
-          <HomePageClient />
-          <NewsletterDialog />
+        <div className="flex-1 grid gap-6 p-4 pt-24">
+          <div className="rounded-lg bg-white shadow-sm p-6 relative">
+            <Logo className="z-50 mb-4" />
+            <HomePageClient />
+            <NewsletterDialog />
+          </div>
         </div>
         <Footer />
       </div>

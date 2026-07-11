@@ -33,16 +33,9 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: [
-          "var(--font-geist-sans)",
-          "Geist",
-          "Geist Fallback",
-          "Arial",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-        ],
-        mono: ["var(--font-geist-mono)"],
+        sans: ["var(--font-inter)", "Inter", "sans-serif"],
+        display: ["var(--font-urbanist)", "Urbanist", "sans-serif"],
+        mono: ["var(--font-fira-code)", "Fira Code", "monospace"],
         arial: ["Arial", "sans-serif"],
       },
       zIndex: {
@@ -110,6 +103,7 @@ module.exports = {
       },
       boxShadow: {
         base: "0 0 0 1px hsl(var(--alpha-300)), var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000)",
+        soft: "var(--shadow-soft)",
       },
       keyframes: {
         "pulse-custom": {

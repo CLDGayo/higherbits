@@ -155,7 +155,15 @@ export function HomePageClient() {
   }, [isMobile])
 
   const handleTabChange = (tab: Exclude<AppSection, "magic"> | "home") => {
-    navigateToTab(tab)
+    if ("startViewTransition" in document) {
+      ;(document as any).startViewTransition(() => {
+        navigateToTab(tab)
+      }).finally(() => {
+        // Optionally manage focus here
+      })
+    } else {
+      navigateToTab(tab)
+    }
   }
 
   return (
@@ -165,7 +173,7 @@ export function HomePageClient() {
         magicBannerVisible && shouldShowBanner && "mt-3 md:mt-4",
       )}
     >
-      <div className="container">
+      <div className="container" style={{ viewTransitionName: "main-content" } as React.CSSProperties}>
         <AnimatePresence>
           {magicBannerVisible && shouldShowBanner && <MagicBanner />}
         </AnimatePresence>

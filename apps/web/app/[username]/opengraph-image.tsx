@@ -133,7 +133,7 @@ export default async function Image({
               src={
                 userData.display_image_url ||
                 userData.image_url ||
-                "https://21st.dev/placeholder.svg"
+                "https://higherbits.dev/placeholder.svg"
               }
               alt={`${userData.display_name || userData.name || userData.username}'s avatar`}
               style={{
@@ -224,7 +224,7 @@ export default async function Image({
                   fontWeight: "500",
                 }}
               >
-                21st.dev
+                HigherBits.dev
               </div>
             </div>
           </div>

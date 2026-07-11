@@ -5,8 +5,8 @@ import { FounderPhotos } from "./founder-photos"
 import { LinkPreview } from "@/components/ui/link-preview"
 
 export const metadata: Metadata = {
-  title: "Our Story - 21st.dev",
-  description: "The story behind 21st.dev and how it all began",
+  title: "Our Story - HigherBits.dev",
+  description: "The story behind HigherBits.dev and how it all began",
 }
 
 export default function OurStoryPage() {
@@ -40,7 +40,7 @@ export default function OurStoryPage() {
                         Serafim
                       </LinkPreview>
                       , and I started{" "}
-                      <span className="text-foreground">21st.dev</span> because
+                      <span className="text-foreground">HigherBits.dev</span> because
                       I'm a <span className="text-foreground">vibe coder</span>.
                     </p>
 
@@ -95,7 +95,7 @@ export default function OurStoryPage() {
 
                     <p>
                       That idea became the seed for{" "}
-                      <span className="text-foreground">21st.dev</span>.
+                      <span className="text-foreground">HigherBits.dev</span>.
                     </p>
 
                     <p>
@@ -117,7 +117,7 @@ export default function OurStoryPage() {
                       </LinkPreview>{" "}
                       — an AI tool for building websites and apps. The vision
                       was to use{" "}
-                      <span className="text-foreground">21st.dev</span> like a{" "}
+                      <span className="text-foreground">HigherBits.dev</span> like a{" "}
                       <span className="text-foreground font-bold">
                         Figma Community
                       </span>{" "}
@@ -130,7 +130,7 @@ export default function OurStoryPage() {
 
                     <p>
                       I decided to keep building{" "}
-                      <span className="text-foreground">21st.dev</span>.
+                      <span className="text-foreground">HigherBits.dev</span>.
                     </p>
 
                     <p>
@@ -147,10 +147,10 @@ export default function OurStoryPage() {
                       </LinkPreview>{" "}
                       joined — and in just three days, he built{" "}
                       <LinkPreview
-                        url="https://21st.dev/magic"
+                        url="https://higherbits.dev/magic"
                         className="text-foreground font-bold"
                         isStatic={true}
-                        imageSrc="https://21st.dev/magic-agent-og-image.png"
+                        imageSrc="https://higherbits.dev/magic-agent-og-image.png"
                         width={200}
                         height={120}
                       >
@@ -191,7 +191,7 @@ export default function OurStoryPage() {
                         Magic MCP
                       </span>{" "}
                       for AI generation, and{" "}
-                      <span className="text-foreground">21st.dev</span> as the
+                      <span className="text-foreground">HigherBits.dev</span> as the
                       home to{" "}
                       <span className="text-foreground">
                         share, remix, and evolve

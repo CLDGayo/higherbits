@@ -46,7 +46,7 @@ export const DbLinks = ({
               disabled={!componentSupabaseUrl}
             >
               <a href={componentSupabaseUrl} target="_blank">
-                <ExternalLink size={16} className="text-blue-600" />
+                <ExternalLink size={16} className="text-primary" />
               </a>
             </Button>
           </TooltipTrigger>

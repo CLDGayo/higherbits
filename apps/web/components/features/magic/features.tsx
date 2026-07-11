@@ -35,10 +35,10 @@ export function Features() {
     <section className="pt-24 pb-10 lg:pb-24 overflow-hidden relative">
       <div className="absolute inset-0 pointer-events-none bg-grid-white" />
       <div className="text-center">
-        <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-t from-gray-300/70 to-white sm:text-balance">
+        <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-t from-foreground/70 to-foreground sm:text-balance">
           Powerful Features
         </h2>
-        <p className="mt-4 text-lg text-neutral-300">
+        <p className="mt-4 text-lg text-muted-foreground">
           Everything you need to build modern UI components
         </p>
       </div>
@@ -47,14 +47,14 @@ export function Features() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="group relative rounded-2xl border border-white/10 bg-white/5 p-8 shadow-lg z-10 backdrop-blur-sm"
+            className="group relative rounded-lg border border-border bg-card/85 p-8 shadow-soft z-10 backdrop-blur-sm"
           >
             {feature.badge && (
               <Link
                 href={feature.badge.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-xl bg-neutral-800/50 pl-1 pr-2 py-1 text-sm text-neutral-200 hover:bg-neutral-700/50 transition-colors"
+                className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-lg bg-primary/15 pl-1 pr-2 py-1 text-sm text-primary hover:bg-primary/25 transition-colors"
               >
                 {feature.badge.icon && (
                   <feature.badge.icon className="h-4 w-4" />
@@ -73,12 +73,12 @@ export function Features() {
               </div>
             </div>
             <div className="mt-5 flex items-center gap-2">
-              <h3 className="text-lg font-semibold text-neutral-200">
+              <h3 className="text-lg font-semibold text-foreground">
                 {feature.title}
               </h3>
               {feature.title === "Enhance Existing UI" }
             </div>
-            <p className="mt-2 text-neutral-400 leading-relaxed">
+            <p className="mt-2 text-muted-foreground leading-relaxed">
               {feature.description}
             </p>
           </div>

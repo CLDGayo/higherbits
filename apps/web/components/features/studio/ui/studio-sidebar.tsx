@@ -170,7 +170,7 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
             <Link href="/" className="flex items-center gap-2">
               <SidebarMenuButton tooltip="Home">
                 <Home className="h-4 w-4" />
-                <span>Back to 21st.dev</span>
+                <span>Back to HigherBits.dev</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>

@@ -35,7 +35,7 @@ export async function DELETE() {
       clerkAccountUrl:
         process.env.NODE_ENV === "development"
           ? "https://wanted-titmouse-48.accounts.dev/user"
-          : "https://accounts.21st.dev/user",
+          : "https://accounts.HigherBits.dev/user",
     })
   } catch (error) {
     console.error("Error in delete account API:", error)

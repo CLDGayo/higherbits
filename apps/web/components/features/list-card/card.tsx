@@ -167,7 +167,7 @@ export function ComponentCard({
               Please sign in to bookmark components
             </p>
           </div>
-          <Link href="https://accounts.21st.dev/sign-in">
+          <Link href="https://accounts.HigherBits.dev/sign-in">
             <Button size="sm" variant="outline">
               Sign In
             </Button>
@@ -221,7 +221,7 @@ export function ComponentCard({
               Please sign in to vote
             </p>
           </div>
-          <Link href="https://accounts.21st.dev/sign-in">
+          <Link href="https://accounts.HigherBits.dev/sign-in">
             <Button size="sm" variant="outline">
               Sign In
             </Button>
@@ -274,7 +274,7 @@ export function ComponentCard({
         >
           <div className="relative aspect-[4/3] mb-3 group">
             <div className="absolute inset-0">
-              <div className="relative w-full h-full rounded-lg shadow-base overflow-hidden">
+              <div className="relative w-full h-full rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                 <div className="absolute inset-0">
                   <ComponentPreviewImage
                     src={previewUrl}

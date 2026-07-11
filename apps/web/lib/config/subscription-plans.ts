@@ -56,7 +56,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     description: "For professional developers",
     features: [
       "50 tokens per month",
-      "Premium 21st.dev Components",
+      "Premium HigherBits.dev Components",
       "AI Component Generation",
       "Unlimited UI Inspirations",
       "Unlimited SVG Logo Search",
@@ -80,7 +80,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     description: "For power users",
     features: [
       "200 tokens per month",
-      "Premium 21st.dev Components",
+      "Premium HigherBits.dev Components",
       "AI Component Generation",
       "Unlimited UI Inspirations",
       "Unlimited SVG Logo Search",
@@ -183,7 +183,7 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
   },
   {
     name: "Premium Components",
-    section: "21st.dev",
+    section: "HigherBits.dev",
     values: {
       free: "-",
       pro: {

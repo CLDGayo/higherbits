@@ -76,7 +76,7 @@ export function SelectIdeStep({ onSelect }: SelectIdeStepProps) {
           <div className="flex items-center justify-center gap-3">
             <Icons.vscode className="w-9 h-9 mr-1" />
             <span className="text-sm text-muted-foreground">+</span>
-            <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-xl border border-white/10 w-[53px] h-[53px]">
+            <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-lg border border-white/10 w-[53px] h-[53px]">
               <Image
                 src="https://avatars.githubusercontent.com/u/184127137?s=200&v=4"
                 alt="Cline"

@@ -101,7 +101,7 @@ export default async function Page() {
               <p className="text-base leading-7">
                 A fast-paced, week-long contest that rewards the best
                 open-source components published on{" "}
-                <span className="font-semibold">21st.dev</span>. Winners are
+                <span className="font-semibold">HigherBits.dev</span>. Winners are
                 chosen by a blend of{" "}
                 <span className="font-semibold">direct community votes</span>{" "}
                 and <span className="font-semibold">real-world usage data</span>{" "}
@@ -120,12 +120,12 @@ export default async function Page() {
                   <span className="font-semibold">License:</span> Every
                   component submitted must be released under the{" "}
                   <span className="font-semibold">
-                    21st.dev Community License
+                    HigherBits.dev Community License
                   </span>
                   .
                 </li>
                 <li>
-                  Components must be publicly available on 21st.dev before the
+                  Components must be publicly available on HigherBits.dev before the
                   weekly submission window closes (see timeline below).
                 </li>
               </ul>
@@ -290,7 +290,7 @@ export default async function Page() {
                   contest format and gather community feedback. During this
                   time, we'll be planning improvements and considering new
                   directions for future contests. Stay tuned for announcements
-                  about the next phase of 21st.dev contests!
+                  about the next phase of HigherBits.dev contests!
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -300,7 +300,7 @@ export default async function Page() {
                   href="https://discord.gg/Qx4rFunHfm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-[#147070] underline underline-offset-4 dark:text-primary"
                 >
                   Discord community
                 </a>
@@ -370,11 +370,11 @@ export default async function Page() {
                   href="https://discord.gg/Qx4rFunHfm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-[#147070] underline underline-offset-4 dark:text-primary"
                 >
                   Hop into our Discord
                 </a>{" "}
-                and connect with the rest of the 21st.dev community.
+                and connect with the rest of the HigherBits.dev community.
               </p>
             </section>
           </div>

@@ -5,7 +5,7 @@ import { Metadata } from "next"
 import { Header } from "@/components/ui/header.client"
 
 export const metadata: Metadata = {
-  title: "Publish New Template | 21st.dev",
+  title: "Publish New Template | HigherBits.dev",
   description: "Create and publish a new template",
 }
 

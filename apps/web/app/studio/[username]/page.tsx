@@ -91,8 +91,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${user.display_name || user.name || user.username}'s Studio | 21st.dev`,
-    description: `Manage components by ${user.display_name || user.name || user.username} on 21st.dev`,
+    title: `${user.display_name || user.name || user.username}'s Studio | HigherBits.dev`,
+    description: `Manage components by ${user.display_name || user.name || user.username} on HigherBits.dev`,
   }
 }
 

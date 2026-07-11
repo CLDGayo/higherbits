@@ -174,7 +174,7 @@ export function PricingTable({
               onClick={() => setIsYearly(false)}
               className={cn(
                 "px-3 py-1 rounded-md transition-colors",
-                !isYearly ? "bg-zinc-100 dark:bg-zinc-800" : "text-zinc-500",
+                !isYearly ? "bg-muted text-foreground" : "text-muted-foreground",
               )}
             >
               Monthly
@@ -184,7 +184,7 @@ export function PricingTable({
               onClick={() => setIsYearly(true)}
               className={cn(
                 "px-3 py-1 rounded-md transition-colors",
-                isYearly ? "bg-zinc-100 dark:bg-zinc-800" : "text-zinc-500",
+                isYearly ? "bg-muted text-foreground" : "text-muted-foreground",
               )}
             >
               Yearly
@@ -212,16 +212,16 @@ export function PricingTable({
               type="button"
               onClick={() => handlePlanSelect(plan.level)}
               className={cn(
-                "flex-1 p-4 rounded-xl text-left transition-all",
-                "border border-zinc-200 dark:border-zinc-800",
+                "flex-1 p-4 rounded-lg text-left transition-all",
+                "border border-border bg-card",
                 selectedPlan === plan.level &&
-                  "ring-2 ring-blue-500 dark:ring-blue-400",
+                  "ring-2 ring-primary",
               )}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">{plan.name}</span>
                 {plan.level === defaultPlan && isYearly === initialIsYearly && (
-                  <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full">
+                  <span className="text-xs bg-primary/15 text-primary px-2 py-0.5 rounded-full">
                     Current
                   </span>
                 )}
@@ -230,7 +230,7 @@ export function PricingTable({
                 <span className="text-2xl font-bold">
                   ${isYearly ? plan.price.yearly : plan.price.monthly}
                 </span>
-                <span className="text-sm font-normal text-zinc-500">
+                <span className="text-sm font-normal text-muted-foreground">
                   /{isYearly ? "year" : "month"}
                 </span>
               </div>
@@ -238,11 +238,11 @@ export function PricingTable({
           ))}
         </div>
 
-        <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+        <div className="border border-border rounded-lg overflow-hidden bg-card">
           <div className="overflow-x-auto sm:overflow-x-visible">
-            <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            <div className="divide-y divide-border">
               {/* Desktop Header - hidden on mobile */}
-              <div className="hidden sm:flex items-center p-4 bg-zinc-50 dark:bg-zinc-900">
+              <div className="hidden sm:flex items-center p-4 bg-muted/60">
                 <div className="flex-1 min-w-[150px] text-sm font-medium">
                   Features
                 </div>
@@ -278,7 +278,7 @@ export function PricingTable({
                             : "font-light",
                         )}
                       >
-                        <span className="sm:hidden text-xs text-zinc-500">
+                        <span className="sm:hidden text-xs text-muted-foreground">
                           {plan.name}:
                         </span>
                         {getFeatureValue(feature, plan.level, isYearly)}
@@ -358,10 +358,10 @@ function getFeatureValue(
     }
 
     if (value === "✓") {
-      return <Check className="h-4 w-4 text-blue-500" />
+      return <Check className="h-4 w-4 text-primary" />
     }
     if (value === "-") {
-      return <span className="text-zinc-300 dark:text-zinc-700">-</span>
+      return <span className="text-muted-foreground/50">-</span>
     }
     // Handle special values like "5/m", "50/m", etc.
     if (value?.endsWith("/m")) {
@@ -379,9 +379,9 @@ function getFeatureValue(
   }
 
   if (shouldShowCheck(feature.included, planLevel)) {
-    return <Check className="h-4 w-4 text-blue-500" />
+    return <Check className="h-4 w-4 text-primary" />
   } else {
-    return <span className="text-zinc-300 dark:text-zinc-700">-</span>
+    return <span className="text-muted-foreground/50">-</span>
   }
 }
 

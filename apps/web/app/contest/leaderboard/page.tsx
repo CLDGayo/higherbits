@@ -5,7 +5,7 @@ import { Footer } from "@/components/ui/footer"
 import { Logo } from "@/components/ui/logo"
 
 export const metadata: Metadata = {
-  title: "Weekly Component Contest Leaderboard - 21st.dev",
+  title: "Weekly Component Contest Leaderboard - HigherBits.dev",
   description:
     "Vote for your favorite components and see who's leading the weekly component contest.",
 }

@@ -157,19 +157,19 @@ const SuccessModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="bg-black/95 backdrop-blur-xl border border-white/10 max-w-sm rounded-xl p-6"
+        className="max-w-sm rounded-lg border border-border bg-card p-6 text-card-foreground shadow-soft"
         hideCloseButton={true}
       >
         {/* Success Icon */}
         <div className="flex justify-center mb-4">
-          <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/30">
-            <Icons.check className="w-5 h-5 text-green-400" />
+          <div className="w-10 h-10 bg-primary/15 rounded-full flex items-center justify-center border border-primary/30">
+            <Icons.check className="w-5 h-5 text-primary" />
           </div>
         </div>
 
         {/* Title */}
         <div className="text-center mb-6">
-          <DialogTitle className="font-semibold text-white mb-2">
+          <DialogTitle className="font-semibold text-foreground mb-2">
             You're on the waitlist!
           </DialogTitle>
 
@@ -180,7 +180,7 @@ const SuccessModal = ({
 
         {/* Call to action section */}
         <div className="text-center mb-6">
-          <p className="font-semibold text-white mb-1 text-sm">
+          <p className="font-semibold text-foreground mb-1 text-sm">
             Want early access?
           </p>
           <p className="text-muted-foreground text-sm">
@@ -197,7 +197,7 @@ const SuccessModal = ({
           <Button
             variant="ghost"
             onClick={onClose}
-            className="w-full text-muted-foreground hover:text-white hover:bg-white/5"
+            className="w-full text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             I'll wait for the launch
           </Button>
@@ -287,7 +287,7 @@ export function MagicChatPageClient() {
   return (
     <div
       ref={scrollRef}
-      className="absolute inset-0 min-h-screen w-full overflow-auto bg-black"
+      className="absolute inset-0 min-h-screen w-full overflow-auto bg-background text-foreground"
     >
       <MagicHeader isScrolled={isScrolled} />
 
@@ -298,6 +298,7 @@ export function MagicChatPageClient() {
           transition={{ duration: 1, delay: 0.5 }}
           className="relative min-h-screen bg-[url('/magic-chat-waitilist.webp')] bg-cover bg-top bg-center bg-no-repeat antialiased overflow-hidden sm:bg-contain sm:bg-repeat-x"
         >
+          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background" />
           <Spotlight />
 
           <div className="relative z-10">
@@ -310,7 +311,7 @@ export function MagicChatPageClient() {
                   delay: 0.2,
                   ease: [0.25, 1, 0.5, 1],
                 }}
-                className="font-instrument-sans mb-6 mt-0 text-center text-[12px] sm:text-base uppercase tracking-[0.51em] text-white"
+                className="font-sans mb-6 mt-0 text-center text-[12px] sm:text-base uppercase tracking-[0.51em] text-muted-foreground"
               >
                 Introducing Magic Chat
               </motion.p>
@@ -326,7 +327,7 @@ export function MagicChatPageClient() {
                 className="max-w-4xl text-center text-3xl font-semibold tracking-tight sm:text-7xl"
               >
                 <div className="flex flex-col items-center gap-2">
-                  <span className="bg-clip-text text-transparent bg-gradient-to-b from-white/95 to-white/80 backdrop-blur-xl pb-1">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/75 pb-1">
                     Create standout components
                   </span>
                 </div>
@@ -340,10 +341,10 @@ export function MagicChatPageClient() {
                   delay: 0.6,
                   ease: [0.25, 1, 0.5, 1],
                 }}
-                className="mt-6 max-w-2xl text-center sm:text-xl leading-8 text-white"
+                className="mt-6 max-w-2xl text-center sm:text-xl leading-8 text-muted-foreground"
               >
                 Start with a prompt, iterate in chat, and draw inspiration from
-                the best works of 21st.dev's top design engineers
+                the best works of HigherBits.dev's top design engineers
               </motion.p>
 
               <motion.div
@@ -357,21 +358,21 @@ export function MagicChatPageClient() {
                 className="mt-10 w-full max-w-md"
               >
                 <div className="space-y-4 flex flex-col items-center">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 p-2 bg-card/90 rounded-lg shadow-soft transition-shadow duration-200 backdrop-blur-sm border border-border/80">
                     <Input
                       type="email"
                       placeholder="Enter your email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60 backdrop-blur-sm h-8 max-w-[300px]"
+                      className="flex-1 bg-background/80 border-border text-foreground placeholder:text-muted-foreground h-8 max-w-[300px]"
                       disabled={isLoading}
                     />
                     <Button
                       onClick={handleSubscribe}
                       disabled={isLoading || !email}
                       className={cn(
-                        "whitespace-nowrap bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border-none",
+                        "whitespace-nowrap bg-primary text-primary-foreground hover:bg-primary/90 border-none",
                         isLoading ? "" : "",
                       )}
                     >
@@ -386,7 +387,7 @@ export function MagicChatPageClient() {
                     </Button>
                   </div>
                   {error && (
-                    <p className="text-red-400 text-sm text-center">{error}</p>
+                    <p className="text-destructive text-sm text-center">{error}</p>
                   )}
                 </div>
               </motion.div>
@@ -421,7 +422,7 @@ export function MagicChatPageClient() {
                   className="absolute bottom-0 left-0 right-0 w-full h-[303px] pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 100%)",
+                      "linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background) / 0) 100%)",
                     zIndex: 10,
                   }}
                 />

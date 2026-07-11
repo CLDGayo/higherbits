@@ -24,7 +24,7 @@ async function getApiKey(userId: string) {
     expires_at: rawApiKey.expires_at,
     last_used_at: rawApiKey.last_used_at,
     is_active: rawApiKey.is_active ?? true,
-    project_url: rawApiKey.project_url || "https://21st.dev/magic",
+    project_url: rawApiKey.project_url || "https://higherbits.dev/magic",
   }
 }
 

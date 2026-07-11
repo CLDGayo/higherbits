@@ -197,7 +197,7 @@ export function FeedbackDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="flex h-[100dvh] flex-col gap-0 p-0 sm:h-[min(740px,90vh)] sm:max-w-[550px] sm:rounded-xl"
+        className="flex h-[100dvh] flex-col gap-0 p-0 sm:h-[min(740px,90vh)] sm:max-w-[550px] sm:rounded-lg"
         hideCloseButton={false}
       >
         <DialogHeader className="flex-none border-b border-border px-6 py-4">

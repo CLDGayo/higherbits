@@ -4,7 +4,7 @@ import { Header } from "@/components/ui/header.client"
 import ImportPageClient from "./page.client"
 
 export const metadata: Metadata = {
-  title: "Import Component | 21st.dev",
+  title: "Import Component | HigherBits.dev",
 }
 
 export default function ImportPage() {

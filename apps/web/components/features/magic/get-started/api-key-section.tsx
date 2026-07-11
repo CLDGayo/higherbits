@@ -69,7 +69,7 @@ export function ApiKeySection({
         expires_at: data.expires_at,
         last_used_at: data.last_used_at,
         is_active: data.is_active ?? true,
-        project_url: "https://21st.dev/magic",
+        project_url: "https://higherbits.dev/magic",
       }
 
       setApiKey(newKey)
@@ -108,7 +108,7 @@ export function ApiKeySection({
       <div className="flex justify-start">
         <Button
           onClick={() => {
-            window.location.href = `https://accounts.21st.dev/sign-in?redirect_url=${encodeURIComponent("https://21st.dev/magic/console")}`
+            window.location.href = `https://accounts.HigherBits.dev/sign-in?redirect_url=${encodeURIComponent("https://higherbits.dev/magic/console")}`
           }}
           variant="default"
         >

@@ -385,10 +385,6 @@ export default function PublishComponentForm({
     username: publishAsUsername ?? "",
   })
 
-  if (process.env.NODE_ENV === "development") {
-    console.log("form", form.getValues())
-  }
-
   useEffect(() => {
     const message = "You have unsaved changes. Are you sure you want to leave?"
 

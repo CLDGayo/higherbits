@@ -86,9 +86,9 @@ function PublishClientPageContent({
     try {
       await addFrom21Registry(jsonUrl)
       await loadRootDirectory()
-      toast.success("Added from 21st.dev registry")
+      toast.success("Added from HigherBits.dev registry")
     } catch (error) {
-      toast.error("Failed to add from 21st.dev registry")
+      toast.error("Failed to add from HigherBits.dev registry")
       console.error(error)
     }
   }

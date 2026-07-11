@@ -8,6 +8,7 @@ import { createPortal } from "react-dom"
 import dynamic from "next/dynamic"
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
 import { useTheme } from "next-themes"
+import { Hexagon } from "lucide-react"
 
 // Animation cache to prevent multiple fetches of the same file
 const animationCache = new Map<string, any>()
@@ -28,6 +29,7 @@ interface LogoProps {
   position?: "fixed" | "flex"
   hasLink?: boolean
   animationFile?: string
+  showWordmark?: boolean
 }
 
 export function Logo({
@@ -36,6 +38,7 @@ export function Logo({
   position = "fixed",
   hasLink = true,
   animationFile = "/loading.json",
+  showWordmark,
 }: LogoProps) {
   const { isVisible, setIsVisible, toggleMenu } = useBrandAssetsMenu()
   const logoRef = useRef<HTMLDivElement>(null)
@@ -52,10 +55,6 @@ export function Logo({
   useEffect(() => {
     setIsMounted(true)
   }, [])
-
-  useEffect(() => {
-    console.log("Brand menu visibility state:", isVisible)
-  }, [isVisible])
 
   useEffect(() => {
     // Skip fetch if we already have the animation in cache
@@ -95,64 +94,30 @@ export function Logo({
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
-    console.log("Right-click detected, setting menu visible")
     setIsVisible(true)
   }
 
-  const svgLogo = (
-    <svg
-      width="100%"
-      height="100%"
-      viewBox="0 0 60 60"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="21st logo - Right-click to open brand assets menu"
-    >
-      <path
-        d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.5 35.5 20 40H40C40 51.0457 31.0457 60 20 60C8.95431 60 0 51.0457 0 40C0 28.9543 9.5 22 20 20H0Z"
-        fill={fill}
-      />
-      <path
-        d="M40 60C51.7324 55.0977 60 43.5117 60 30C60 16.4883 51.7324 4.90234 40 0V60Z"
-        fill={fill}
-      />
-    </svg>
-  )
+  const shouldShowWordmark = showWordmark ?? position === "fixed"
 
   const renderLogo = () => (
     <div
-      className="w-full h-full relative"
+      className="flex items-center gap-2 h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Static SVG Logo */}
-      <div
+      <Hexagon
         className={cn(
-          "w-full h-full absolute inset-0 transition-opacity duration-300",
-          isHovered ? "opacity-0" : "opacity-100",
+          "shrink-0 text-[#147070] dark:text-primary",
+          shouldShowWordmark ? "h-7 w-7" : "h-full w-auto",
         )}
-      >
-        {svgLogo}
-      </div>
-
-      {/* Lottie Animation */}
-      {animationData && typeof window !== "undefined" && (
-        <div
-          className={cn(
-            "w-full h-full absolute inset-0 transition-opacity duration-300",
-            isHovered && lottieReady ? "opacity-100" : "opacity-0",
-            resolvedTheme === "dark" && "lottie-dark-mode",
-          )}
-        >
-          <Lottie
-            animationData={animationData}
-            style={{ width: "100%", height: "100%" }}
-            rendererSettings={{
-              preserveAspectRatio: "xMidYMid slice",
-              progressiveLoad: true,
-            }}
-          />
-        </div>
+      />
+      {shouldShowWordmark && (
+        <span className="text-xl">
+          <span className="font-bold text-foreground">Higher</span>
+          <span className="font-bold text-[#147070] dark:text-primary">
+            Bits
+          </span>
+        </span>
       )}
     </div>
   )
@@ -176,7 +141,7 @@ export function Logo({
       <div
         ref={logoRef}
         className={cn(
-          `${position === "fixed" ? position : ""} w-7 h-7 flex items-center justify-center ${position === "fixed" ? "left-4 top-3" : ""} rounded-full group cursor-pointer relative`,
+          `${position === "fixed" ? position : ""} h-7 flex items-center ${position === "fixed" ? "left-4 top-3" : ""} rounded-full group cursor-pointer relative`,
           className,
         )}
         onClick={toggleMenu}
@@ -202,7 +167,7 @@ export function Logo({
       <Link
         href="/?tab=home"
         className={cn(
-          `${position === "fixed" ? position : ""} w-7 h-7 flex items-center justify-center ${position === "fixed" ? "left-4 top-3" : ""} rounded-full group cursor-pointer`,
+          `${position === "fixed" ? position : ""} h-7 flex items-center ${position === "fixed" ? "left-4 top-3" : ""} rounded-full group cursor-pointer`,
           className,
         )}
         onClick={toggleMenu}

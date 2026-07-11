@@ -30,7 +30,7 @@ export default async function PromptRulesPage() {
           <p className="text-xs text-muted-foreground mt-1">
             For questions about AI rules,{" "}
             <a
-              href="mailto:support@21st.dev"
+              href="mailto:support@higherbits.dev"
               className="underline hover:text-primary"
             >
               contact us

@@ -10,8 +10,8 @@ interface FooterProps {
 
 export function Footer({ className, isOpenSource = true }: FooterProps) {
   return (
-    <footer className={cn("border-t border-border/40", className)}>
-      <div className="container mx-auto px-[var(--container-x-padding)] max-w-[3680px] [--container-x-padding:20px] min-720:[--container-x-padding:24px] min-1280:[--container-x-padding:32px] min-1536:[--container-x-padding:80px]">
+    <footer className={cn("bg-background p-4", className)}>
+      <div className="grid gap-4 bg-card text-card-foreground border border-border rounded-lg shadow-sm p-6 mx-auto container max-w-[3680px]">
         {isOpenSource && (
           <div className="flex md:hidden items-center justify-center pt-4 text-center">
             <span className="text-sm text-muted-foreground">

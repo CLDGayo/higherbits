@@ -27,10 +27,10 @@ export function HowItWorks() {
   return (
     <section className="pt-10 pb-10 lg:pb-24 overflow-hidden">
       <div className="text-center">
-        <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-t from-gray-300/70 to-white sm:text-balance">
+        <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-t from-foreground/70 to-foreground sm:text-balance">
           How It Works
         </h2>
-        <p className="mt-4 text-lg text-neutral-300">
+        <p className="mt-4 text-lg text-muted-foreground">
           Create beautiful UI components in three simple steps
         </p>
       </div>
@@ -39,7 +39,7 @@ export function HowItWorks() {
         {steps.map((step, index) => (
           <div
             key={index}
-            className="group relative rounded-2xl border border-white/10 bg-white/5 p-8 shadow-lg"
+            className="group relative rounded-lg border border-border bg-card/85 p-8 shadow-soft"
           >
             <div className="relative w-full">
               <div className="relative w-full aspect-[21/5]">
@@ -51,10 +51,10 @@ export function HowItWorks() {
                 />
               </div>
             </div>
-            <h3 className="mt-5 text-lg font-semibold text-neutral-200">
+            <h3 className="mt-5 text-lg font-semibold text-foreground">
               {step.title}
             </h3>
-            <p className="mt-2 text-neutral-400 leading-relaxed">
+            <p className="mt-2 text-muted-foreground leading-relaxed">
               {step.description}
             </p>
           </div>

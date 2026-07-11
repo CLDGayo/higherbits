@@ -354,7 +354,7 @@ export function OnboardingClient({
         expires_at: data.expires_at,
         last_used_at: data.last_used_at,
         is_active: data.is_active ?? true,
-        project_url: "https://21st.dev/magic",
+        project_url: "https://higherbits.dev/magic",
       }
 
       setApiKey(newKey)

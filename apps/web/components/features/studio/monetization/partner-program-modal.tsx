@@ -97,7 +97,7 @@ export function PartnerProgramModal() {
             {!isPartner && (
               <Button
                 onClick={() => {
-                  window.open("https://cal.com/serafimcloud/21st.dev", "_blank")
+                  window.open("https://cal.com/serafimcloud/HigherBits.dev", "_blank")
                 }}
                 className="gap-2"
                 disabled={!hasEnoughComponents}

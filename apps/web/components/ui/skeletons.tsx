@@ -132,7 +132,7 @@ export function LogoCardSkeleton() {
     "rounded-md",
     "rounded-sm",
     "rounded-lg",
-    "rounded-xl",
+    "rounded-lg",
   ]
   const randomShape = shapes[Math.floor(Math.random() * shapes.length)]
 
@@ -193,7 +193,7 @@ export function ProfileCardSkeleton() {
 
 export function LeaderboardCardSkeleton() {
   return (
-    <div className="group relative flex flex-col sm:flex-row items-start gap-4 rounded-xl px-0 py-4 transition-all duration-300 sm:-mx-4 sm:p-4">
+    <div className="group relative flex flex-col sm:flex-row items-start gap-4 rounded-lg px-0 py-4 transition-all duration-300 sm:-mx-4 sm:p-4">
       {/* Preview Image Skeleton */}
       <div className="relative aspect-[4/3] w-full sm:w-56 mb-4 sm:mb-0">
         <div className="absolute inset-0">

@@ -21,12 +21,12 @@ export const InviteEmail = ({ inviteUrl }: InviteEmailProps) => {
     <Html>
       <Head />
       <Preview>
-        You're off the waitlist - welcome to 21st.dev's Magic beta! 🎉
+        You're off the waitlist - welcome to HigherBits.dev's Magic beta! 🎉
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
-            src="https://21st.dev/magic-agent-og-image.png"
+            src="https://higherbits.dev/magic-agent-og-image.png"
             width={580}
             height={300}
             alt="Magic Agent"
@@ -50,7 +50,7 @@ export const InviteEmail = ({ inviteUrl }: InviteEmailProps) => {
               magic of AI-powered UI development! 🪄
             </Text>
             <Text style={text}>
-              You are invited to be an early user of 21st.dev's Magic Agent
+              You are invited to be an early user of HigherBits.dev's Magic Agent
               beta. Our product is early, and we're excited to have you help
               shape its future. Every piece of feedback will make Magic better
               for everyone.
@@ -66,7 +66,7 @@ export const InviteEmail = ({ inviteUrl }: InviteEmailProps) => {
               <br />
               Serafim
               <br />
-              <span style={subtitle}>Co-founder of 21st.dev</span>
+              <span style={subtitle}>Co-founder of HigherBits.dev</span>
             </Text>
           </Section>
         </Container>

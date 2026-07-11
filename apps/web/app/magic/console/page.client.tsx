@@ -147,29 +147,18 @@ export function ConsoleClient({
 
       setOsType(detectedOs)
 
-      console.log("Reading onboarding state from localStorage")
       const savedState = localStorage.getItem(ONBOARDING_STATE_KEY)
-      console.log("Raw savedState:", savedState)
 
       if (savedState) {
         const parsedState = JSON.parse(savedState)
-        console.log("Parsed state:", parsedState)
 
         if (
           parsedState &&
           typeof parsedState === "object" &&
           parsedState.selectedIde
         ) {
-          console.log(
-            "Found selectedIde in localStorage:",
-            parsedState.selectedIde,
-          )
           setSelectedIde(parsedState.selectedIde)
-        } else {
-          console.log("No valid selectedIde found in parsed state")
         }
-      } else {
-        console.log("No savedState found in localStorage")
       }
     } catch (error) {
       console.error("Error reading onboarding state:", error)
@@ -321,7 +310,7 @@ export function ConsoleClient({
         expires_at: data.expires_at,
         last_used_at: data.last_used_at,
         is_active: data.is_active ?? true,
-        project_url: "https://21st.dev/magic",
+        project_url: "https://higherbits.dev/magic",
       }
 
       setApiKey(newKey)

@@ -6,7 +6,7 @@ import { Metadata } from "next"
 import { Header } from "@/components/ui/header.client"
 
 export const metadata: Metadata = {
-  title: "Publish New Component | 21st.dev",
+  title: "Publish New Component | HigherBits.dev",
 }
 
 export default function PublishPage() {

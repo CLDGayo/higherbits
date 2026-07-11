@@ -86,13 +86,13 @@ export async function sendSubmissionStatusEmail({
       }
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://21st.dev"
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://higherbits.dev"
     const componentUrl = `${baseUrl}/${submission.user_data.username}/${submission.component_data.component_slug}/${submission.demo_slug}`
 
     const data = await resend.emails.send({
-      from: "Serafim from 21st.dev <serafim@hey.21st.dev>",
+      from: "Serafim from HigherBits.dev <serafim@hey.HigherBits.dev>",
       to: userEmail,
-      replyTo: "21st.dev Support <support@21st.dev>",
+      replyTo: "HigherBits.dev Support <support@higherbits.dev>",
       subject: getEmailSubject(status, componentName),
       react: SubmissionStatusEmail({
         componentName,

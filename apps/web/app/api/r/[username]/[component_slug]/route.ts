@@ -9,7 +9,7 @@ import { Tables } from "@/types/supabase"
 import { NextRequest, NextResponse } from "next/server"
 import { ComponentRegistryResponse } from "./types"
 
-// registry:hooks in 21st.dev -> registry:hook in shadcn/ui
+// registry:hooks in HigherBits.dev -> registry:hook in shadcn/ui
 const getShadcnRegistrySlug = (registryName: string) => {
   if (registryName === "hooks") {
     return "registry:hook"
@@ -298,7 +298,7 @@ export async function GET(
     const registryDependencies = (
       component.direct_registry_dependencies as string[]
     ).map((fullSlug) => {
-      return `https://21st.dev/r/${fullSlug}`
+      return `https://higherbits.dev/r/${fullSlug}`
     })
 
     console.log("Resolved registry dependencies:", resolvedRegistryDependencies)

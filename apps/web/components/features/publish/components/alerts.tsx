@@ -15,7 +15,7 @@ const pageStyles = {
   container: "flex justify-end items-start w-full h-full p-6",
   wrapper: cn(
     "bg-background/95",
-    "rounded-xl border border-border/40",
+    "rounded-lg border border-border/40",
     "dark:bg-background/95 dark:border-border/30",
     "relative",
     "w-full",
@@ -175,7 +175,7 @@ export const ResolveUnknownDependenciesAlertForm = ({
             </Label>
             <Input
               name={slugWithUsername}
-              placeholder='e.g. "https://21st.dev/shadcn/button"'
+              placeholder='e.g. "https://higherbits.dev/shadcn/button"'
               className="w-full"
             />
             {errors[slugWithUsername] && (

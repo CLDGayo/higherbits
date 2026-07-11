@@ -7,6 +7,10 @@ export function useDebugMode() {
   const [isDebug, setIsDebug] = useAtom(isDebugAtom)
 
   useEffect(() => {
+    if (process.env.NODE_ENV !== "development") {
+      return
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.shiftKey && event.key === "D") {
         event.preventDefault()

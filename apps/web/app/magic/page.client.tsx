@@ -35,7 +35,7 @@ export function MagicPageClient() {
   return (
     <div
       ref={scrollRef}
-      className="absolute inset-0 min-h-screen w-full overflow-auto bg-black"
+      className="absolute inset-0 min-h-screen w-full overflow-auto bg-background text-foreground"
     >
       <MagicHeader isScrolled={isScrolled} />
 

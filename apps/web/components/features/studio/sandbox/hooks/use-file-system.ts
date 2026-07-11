@@ -774,7 +774,7 @@ export const useFileSystem = ({
         }
 
         command.onOutput((data) => {
-          console.log("21st.dev registry add output:", data)
+          console.log("HigherBits.dev registry add output:", data)
           const successMessage1 = "was already tracked in 21st-registry.json."
           const successMessage2 =
             "has been added/updated in 21st-registry.json."
@@ -783,7 +783,7 @@ export const useFileSystem = ({
             data.includes(successMessage1) ||
             data.includes(successMessage2)
           ) {
-            console.log("21st.dev registry add command completed successfully.")
+            console.log("HigherBits.dev registry add command completed successfully.")
             disposeShellAndClearTimeout()
             resolve()
           }
@@ -791,12 +791,12 @@ export const useFileSystem = ({
 
         outputTimeout = setTimeout(() => {
           console.error(
-            "Timeout waiting for 21st.dev registry add command output.",
+            "Timeout waiting for HigherBits.dev registry add command output.",
           )
           disposeShellAndClearTimeout()
           reject(
             new Error(
-              "Timeout waiting for 21st.dev registry add command output.",
+              "Timeout waiting for HigherBits.dev registry add command output.",
             ),
           )
         }, 120000) // 120 seconds timeout, similar to _runTaskAndWaitForOutput

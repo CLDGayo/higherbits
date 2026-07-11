@@ -34,7 +34,7 @@ export default function TemplatesPage() {
         className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
       >
         <ArrowLeft size={20} />
-        <span>Back to 21st.dev</span>
+        <span>Back to HigherBits.dev</span>
       </Link>
 
       <div className="mb-8">
