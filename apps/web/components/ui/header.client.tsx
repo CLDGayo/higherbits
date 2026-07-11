@@ -225,7 +225,7 @@ function HeaderContent({
             open ? "md:ml-64 md:pl-3" : "",
           )}
         >
-          <Logo />
+          {(!open || isMobile) && <Logo />}
           {text && !isMobile && (
             <div className="flex items-center gap-2">
               <Icons.slash className="text-border w-[22px] h-[22px]" />
