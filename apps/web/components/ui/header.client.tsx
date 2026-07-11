@@ -215,8 +215,10 @@ function HeaderContent({
     <>
       <header
         className={cn(
-          "flex items-center text-foreground w-[calc(100%-2rem)] max-w-[1400px]",
-          "fixed top-4 left-1/2 -translate-x-1/2 z-50 rounded-lg bg-card/90 backdrop-blur-md border border-border/80 p-4 shadow-sm",
+          "flex fixed top-0 left-0 right-0 h-14 z-40 items-center px-4 py-3 text-foreground",
+          {
+            "border-b border-border/40 bg-background": variant !== "publish",
+          },
         )}
       >
         <div
@@ -225,7 +227,7 @@ function HeaderContent({
             open ? "md:ml-64 md:pl-3" : "",
           )}
         >
-          {(!open || isMobile) && <Logo />}
+          <Logo />
           {text && !isMobile && (
             <div className="flex items-center gap-2">
               <Icons.slash className="text-border w-[22px] h-[22px]" />
