@@ -9,7 +9,6 @@ import { SortOption, User } from "@/types/global"
 import { cookies } from "next/headers"
 import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { unstable_cache } from "next/cache"
-import { Logo } from "@/components/ui/logo"
 import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
 
 interface CollectionPageProps {
@@ -89,7 +88,6 @@ export default async function CollectionPage(props: CollectionPageProps) {
 
     return (
       <div className="min-h-screen flex flex-col">
-        <Logo className="z-50" />
         <Header />
         <div className="flex-1">
           <CollectionPageContent

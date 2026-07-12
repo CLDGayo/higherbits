@@ -35,7 +35,7 @@ interface LogoProps {
 export function Logo({
   fill = "currentColor",
   className,
-  position = "fixed",
+  position = "flex",
   hasLink = true,
   animationFile = "/loading.json",
   showWordmark,

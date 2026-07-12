@@ -3,7 +3,6 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { ConsoleClient } from "./page.client"
 import { PlanInfo } from "@/app/settings/billing/page"
 import { PLAN_LIMITS, PlanType } from "@/lib/config/subscription-plans"
-import { Logo } from "@/components/ui/logo"
 import { Footer } from "@/components/ui/footer"
 import { Header } from "@/components/ui/header.client"
 import { ApiKey } from "@/types/global"
@@ -180,7 +179,6 @@ export default async function ConsolePage() {
   return (
     <div className="min-h-screen">
       <div className="min-h-screen flex flex-col">
-        <Logo className="z-50" />
         <Header />
         <div className="flex-1 mt-[11vh] max-w-[640px] mx-auto w-full px-4">
           <ConsoleClient subscription={subscription} apiKey={apiKey} />

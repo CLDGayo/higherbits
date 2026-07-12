@@ -8,7 +8,6 @@ import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { SearchPageClient } from "@/app/q/[query]/page.client"
-import { Logo } from "@/components/ui/logo"
 
 export const dynamic = "force-dynamic"
 
@@ -45,7 +44,6 @@ export default async function SearchPage(props: Props) {
 
     return (
       <div className="min-h-screen flex flex-col">
-        <Logo className="z-50" />
         <Header variant="default" />
         <div className="flex-1">
           <SearchPageClient

@@ -8,7 +8,6 @@ import { Footer } from "@/components/ui/footer"
 import { HeroSection } from "@/components/ui/hero-section"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { HomePageClient } from "./page.client"
-import { Logo } from "@/components/ui/logo"
 import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
 export const dynamic = "force-dynamic"
 
@@ -85,7 +84,6 @@ export default async function HomePage() {
         <Header variant="default" />
         <div className="flex-1 grid gap-6 p-4 pt-24">
           <div className="rounded-lg bg-white shadow-sm p-6 relative">
-            <Logo className="z-50 mb-4" />
             <HomePageClient />
             <NewsletterDialog />
           </div>

@@ -79,7 +79,7 @@ export default async function LeaderboardPage() {
   return (
     <div className="min-h-screen">
       <div className="min-h-screen flex flex-col">
-        <Logo className="z-50" />
+        <Logo position="fixed" className="z-50" />
         <div className="flex-1 mt-[11vh] max-w-[640px] mx-auto w-full px-4">
           <div className="w-full bg-background antialiased mt-14">
             <div className="p-3 sm:p-6 mb-[20vh]">

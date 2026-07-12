@@ -1,6 +1,5 @@
 import React, { Suspense } from "react"
 import Link from "next/link"
-import { Logo } from "@/components/ui/logo"
 import { Footer } from "@/components/ui/footer"
 import {
   Accordion,
@@ -85,7 +84,6 @@ export default async function Page() {
   return (
     <div className="min-h-screen">
       <div className="min-h-screen flex flex-col">
-        <Logo className="z-50" />
         <Header />
         <div className="flex-1 mt-[11vh] max-w-[640px] mx-auto w-full px-4">
           <div className="space-y-8 text-foreground p-3 sm:p-6 mb-[20vh]">
