@@ -1,5 +1,5 @@
 import { GoogleAnalytics } from "@next/third-parties/google"
-import { Urbanist, Inter, Fira_Code } from "next/font/google"
+import { Urbanist, Inter, Fira_Code, Quicksand } from "next/font/google"
 import { Metadata } from "next"
 
 const inter = Inter({
@@ -17,6 +17,15 @@ const urbanist = Urbanist({
 const firaCode = Fira_Code({
   subsets: ["latin"],
   variable: "--font-fira-code",
+  display: "swap",
+})
+
+// Cozy claymorphism display font — Quicksand is a rounded, warm geometric sans
+// that carries the "cozy cushion" direction. Exposed as --font-cozy for Tailwind
+// (font-cozy) consumption in Phase 4. next/font/google built-in — no npm install.
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  variable: "--font-cozy",
   display: "swap",
 })
 
@@ -65,6 +74,7 @@ export default function RootLayout({
           inter.variable,
           urbanist.variable,
           firaCode.variable,
+          quicksand.variable,
           "font-sans [scrollbar-gutter:stable]",
         )}
       >

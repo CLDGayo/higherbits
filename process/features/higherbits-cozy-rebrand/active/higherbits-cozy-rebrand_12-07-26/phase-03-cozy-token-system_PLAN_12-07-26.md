@@ -68,86 +68,71 @@ className.
 
 ### Step A — Palette tokens (light)
 
-- [ ] A1. Define the light-mode base surface tokens: cream/off-white background
-  (e.g. `--background`), soft pastel lavender/purple as the primary accent
-  (e.g. `--primary`), with a readable foreground/text color pairing confirmed for contrast.
-- [ ] A2. Define pastel accent-chip tokens: pink, peach/butter yellow, baby blue, mint — as
-  named CSS variables (e.g. `--accent-pink`, `--accent-peach`, `--accent-blue`, `--accent-mint`)
-  usable for badges/chips/small UI accents.
-- [ ] A3. Confirm the existing shadcn-style HSL CSS-variable convention (matching Phase 00's
-  ground-truth read of the current `globals.css`) is followed so downstream Tailwind consumption
-  (`hsl(var(--primary))` etc.) keeps working without a Tailwind-config restructure.
+- [x] A1. Light-mode base: pastel lavender page `--background: 258 42% 94%`, warm cream card
+  `--card: 35 45% 97%`, ink-brown text `--foreground: 25 25% 20%`, lavender primary
+  `--primary: 255 55% 72%` with `--primary-foreground: 258 40% 16%` (deep readable pairing).
+- [x] A2. Pastel accent-chip tokens + matching deeper foregrounds: `--accent-pink`, `--accent-peach`,
+  `--accent-blue`, `--accent-mint` (+ `-foreground` each) defined in `:root`.
+- [x] A3. shadcn-style bare-HSL convention preserved (`H S% L%`), consumed via `hsl(var(--x))` —
+  no Tailwind-config restructure needed; existing consumption pattern unchanged.
 
 ### Step B — Palette tokens (dark — "cozy dusk")
 
-- [ ] B1. Define the dark-mode surface tokens: deep plum/charcoal background replacing the current
-  near-black, with the SAME pastel accent hues from Step A2 adjusted for dark-mode contrast
-  (typically lighter/more saturated versions).
-- [ ] B2. Confirm dark-mode primary/accent contrast ratios are readable (do not silently regress
-  accessibility — a mid-lightness pastel like lavender needs a carefully chosen foreground color).
-- [ ] B3. Write the `.dark` variable block mirroring Step A's variable names with dark-appropriate
-  values.
+- [x] B1. "Cozy dusk" dark surfaces: deep plum `--background: 260 22% 13%` (not pure black),
+  `--card: 260 20% 17%`; same pastel accent family deepened for dark contrast.
+- [x] B2. Contrast handled via deep foreground pairings (e.g. `--primary-foreground: 258 35% 14%`
+  on lavender primary; accent chips use `L 13-16%` foregrounds on `L 64-72%` chips). Automated WCAG
+  tool absent (known-gap, agent-probe substitute accepted per contract B2).
+- [x] B3. `.dark` block mirrors every `:root` variable name with dusk values.
 
 ### Step C — Radius + shadow tokens (claymorphism)
 
-- [ ] C1. Set `--radius` to a cushion-appropriate large value in the 20-28px range (or the
-  equivalent rem value — confirm against Phase 00's "before" baseline of `--radius: 0.5rem` or
-  whatever was found, and pick a value that reads as puffy without breaking existing layout
-  assumptions that depend on `--radius`).
-- [ ] C2. Define dual soft-shadow tokens for the puffy "cushion" card effect: a soft outer drop
-  shadow (`--shadow-cushion-outer` or similar) plus a subtle inner highlight
-  (`--shadow-cushion-inner` or similar, using `inset` box-shadow) — both light and dark variants,
-  since dark-mode shadows typically need different opacity/color to read correctly against a dark
-  background.
-- [ ] C3. Define a rounded-pill button radius token if distinct from the general `--radius` (e.g.
-  `--radius-pill: 9999px` for fully-rounded buttons) if Phase 4's pill-button requirement needs a
-  separate value from card radius.
+- [x] C1. `--radius: 1.5rem` (24px — cushion range 20-28px). Name unchanged (E1 honored) —
+  value-only change so `shimmer-button.tsx`/`lib/defaults.ts`/`lib/sandpack.tsx` keep resolving.
+  Added `--radius-sm: 0.75rem` for smaller cushion elements.
+- [x] C2. Dual cushion shadows, light + dark: `--shadow-cushion-outer` (diffuse drop),
+  `--shadow-cushion-inner` (inset top highlight for pillow depth), `--shadow-cushion` (composed).
+  Dusk variant uses deeper/plum-tinted values. `--shadow-soft` retained by name (value refreshed).
+- [x] C3. `--radius-pill: 9999px` added for fully-rounded pill buttons/inputs.
 
 ### Step C2b — Texture utility (CSS-only, no image assets)
 
-- [ ] C4. Design a reusable `.texture-cushion` utility class (or equivalent named token/class) in
-  `globals.css` that overlays a subtle fabric/linen-grain or fine-noise texture at very low opacity
-  (e.g. 3-8%) using ONE of: (a) layered `repeating-linear-gradient`/`repeating-radial-gradient`
-  CSS-only grain simulation, or (b) an inline SVG `feTurbulence` filter encoded as a `data:` URI
-  background-image — no external/binary image assets, no new dependencies.
-- [ ] C5. Define a dark-mode-appropriate texture variant (adjust opacity/blend-mode so the grain
-  reads correctly against the deep plum/charcoal "cozy dusk" background — a texture tuned for cream
-  will likely need lower opacity or a different blend-mode on dark surfaces).
-- [ ] C6. Confirm the texture utility is genuinely reusable (a single class applied to any card/
-  surface element) rather than a per-component one-off — this is the Phase 4 consumption contract.
+- [x] C4. `.texture-cushion` utility in `globals.css`: a `::before` overlay combining an inline SVG
+  `feTurbulence` fractal-noise data-URI + a faint diagonal `repeating-linear-gradient` fabric weave.
+  No image assets, no dependencies. Light default: `opacity: 0.5`, `mix-blend-mode: multiply`.
+- [x] C5. Dark variant `.dark .texture-cushion::before`: lighter-frequency noise, white-tinted weave,
+  `opacity: 0.35`, `mix-blend-mode: screen` so grain reads on deep plum.
+- [x] C6. Reusable single-class contract: element gets `position: relative; isolation: isolate`;
+  `::before` uses `border-radius: inherit` + `z-index: -1` so it composes with any card radius/shadow.
 
 ### Step D — Typography tokens
 
-- [ ] D1. Evaluate whether the existing font stack already reads as "warm/friendly/rounded" or
-  whether a new `next/font/google` rounded-sans font (e.g. a font in the Quicksand/Comfortaa/
-  Nunito family) is needed to hit the cozy direction — if adding a new font, this is the ONE
-  explicitly sanctioned new-dependency case per the charter (Next.js built-in `next/font/google`,
-  not an npm install) — document the choice and rationale in the phase report.
-- [ ] D2. If a new font is added, wire it via `next/font/google` in `layout.tsx` following the same
-  pattern as any existing font import, and expose it as a CSS variable for Tailwind consumption.
-- [ ] D3. Increase base padding/spacing generosity via token or Tailwind spacing-scale note if the
-  existing scale is too tight for the "generous padding" cushion direction — document as a Phase 4
-  consumption note rather than changing the Tailwind spacing scale itself (spacing scale changes
-  are higher-risk; prefer Phase 4 applying more generous spacing via existing scale values).
+- [x] D1. Decision: existing Inter/Urbanist are clean but generic (AI-slop default per
+  vc-frontend-design). Added **Quicksand** — the archetype rounded/warm geometric cozy sans — as a
+  distinctive display option. Charter-sanctioned `next/font/google` built-in (NO npm install).
+- [x] D2. Wired via `next/font/google` in `layout.tsx` (`variable: "--font-cozy"`, added to `<body>`
+  className), exposed to Tailwind as `font-cozy` in `tailwind.config.js`. Same pattern as existing fonts.
+- [x] D3. Spacing scale left unchanged (higher-risk). Cushion generosity comes via the larger
+  `--radius` (24px) + cushion shadows; Phase 4 applies generous padding via existing scale values.
 
 ### Step E — Tailwind wiring
 
-- [ ] E1. Wire all new CSS variables (Steps A-C2b) into `apps/web/tailwind.config.js`'s theme config
-  so they're consumable as Tailwind utility classes (`bg-accent-pink`, `shadow-cushion`, etc.) —
-  follow the exact pattern already used for existing tokens (Phase 00's ground truth read of the
-  current config is the reference).
-- [ ] E2. Confirm the pill-button radius and rounded-sidebar-rail direction from the charter can be
-  expressed via the wired tokens without needing new arbitrary Tailwind values scattered through
-  Phase 4's component edits.
+- [x] E1. Wired into `tailwind.config.js`: `accent.pink/peach/blue/mint` (+ `-foreground`),
+  `borderRadius.cushion/cushion-sm/pill`, `boxShadow.cushion/cushion-outer/cushion-inner`,
+  `fontFamily.cozy`. Existing `--radius`/`--shadow-soft` wiring left intact. Consumable as
+  `bg-accent-pink`, `rounded-cushion`, `rounded-pill`, `shadow-cushion`, `font-cozy`.
+- [x] E2. Pill radius (`rounded-pill`) and cushion radius (`rounded-cushion`) both expressible via
+  wired tokens — Phase 4 needs no arbitrary `rounded-[Npx]` values.
 
 ### Step F — Verify tokens don't break existing rendering
 
-- [ ] F1. Confirm build/typecheck/test still pass after the token swap — tokens changing values
-  should not break any test that asserts specific color/class values (if any exist, they need
-  updating as part of this phase, not deferred).
-- [ ] F2. Spot-check (agent-probe or manual) that at least the landing page renders without visual
-  breakage (not full restyle yet — just confirm nothing is broken, e.g. text becomes invisible due
-  to a bad contrast token).
+- [x] F1. build exit 0, tsc exit 0, test 10/10. No test asserts token/color values (grep confirmed
+  zero matches), so no test updates needed. Downstream `--radius`/`--shadow-soft` consumers unbroken
+  (names unchanged; build+tsc would have surfaced any rename).
+- [x] F2. Agent-probe: `agent-browser` unavailable in this environment (known-gap per contract F2).
+  Substitute per `higherbits-redesign` precedent = source-token grep evidence: all tokens present,
+  syntactically valid (build compiled 90 routes), light+dark foreground pairings deep enough that no
+  token renders text invisible. No live screenshot captured.
 
 ---
 
@@ -204,7 +189,7 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
 - [ ] 2. INNOVATE — innovate-agent: approach decided; Decision Summary written
 - [ ] 3. PLAN-SUPPLEMENT — plan-agent: existing phase plan updated; Inner Loop Refresh Note if sections changed (or "n/a — research clean")
 - [ ] 4. PVL — vc-validate-agent: full V1-V7; validate-contract written per `.claude/skills/vc-validate-findings/references/example-validate-output.md` (Status / Gate / Plan updates applied / Execute-agent instructions / Test gates / High-risk pack / Backlog artifacts / Known gaps / Accepted by)
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
+- [x] 5. EXECUTE — all checklist items done; test gates green (build/tsc/test + all grep gates). COMPLETE 12-07-26 (see ## Execution Report).
 - [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
 - [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
 
@@ -370,6 +355,62 @@ What this coverage does NOT prove:
 Gate: CONDITIONAL (concerns noted, user accepted)
 Accepted by: session (autonomous PVL run per delegated VALIDATE task) — accepted concerns: (1) test-coverage agent-probe-only gap on dark-mode contrast (B2) and visual spot-check (F2), resolution: known-gap substitute per `higherbits-redesign` program precedent; (2) breaking-changes downstream-consumer note on `--radius`/`--shadow-soft`, resolution: execute-agent instruction E1 requires name-stability + F1 gate coverage
 
+
+## Execution Report
+
+**Date:** 12-07-26 · **Status:** COMPLETE · **Executed by:** vc-execute-agent
+
+### Files changed (blast radius only — CSS/config, zero behavior/logic changes)
+- `apps/web/app/globals.css` — `:root` + `.dark` token blocks rewritten (values only, no renames);
+  `.texture-cushion` utility added (light + `.dark` variant).
+- `apps/web/tailwind.config.js` — accent-chip colors, cushion radii/shadows, `font-cozy` wired.
+- `apps/web/app/layout.tsx` — Quicksand added via `next/font/google` (Step D1, charter-sanctioned; no npm install).
+
+### Token table (name → light value → dark "cozy dusk" value)
+| Token | Light | Dark |
+|---|---|---|
+| `--background` | `258 42% 94%` (pastel lavender) | `260 22% 13%` (deep plum) |
+| `--foreground` | `25 25% 20%` (ink brown) | `40 30% 92%` (warm cream) |
+| `--card` | `35 45% 97%` (cream) | `260 20% 17%` |
+| `--primary` | `255 55% 72%` (lavender) | `255 58% 76%` |
+| `--primary-foreground` | `258 40% 16%` | `258 35% 14%` |
+| `--secondary` | `24 80% 82%` (peach) | `24 55% 68%` |
+| `--accent-pink` / `-foreground` | `342 78% 84%` / `342 55% 34%` | `342 58% 72%` / `342 40% 16%` |
+| `--accent-peach` / `-foreground` | `34 92% 80%` / `28 60% 32%` | `30 70% 70%` / `26 45% 15%` |
+| `--accent-blue` / `-foreground` | `205 82% 82%` / `208 55% 30%` | `205 62% 70%` / `208 45% 15%` |
+| `--accent-mint` / `-foreground` | `158 52% 78%` / `162 48% 26%` | `158 42% 64%` / `162 40% 13%` |
+| `--radius` | `1.5rem` (24px) | (same — single var) |
+| `--radius-sm` | `0.75rem` | (same) |
+| `--radius-pill` | `9999px` | (same) |
+| `--shadow-soft` (kept by name) | `0 8px 24px -8px hsl(258 40% 45% / .18)` | `0 8px 24px -8px hsl(260 40% 4% / .55)` |
+| `--shadow-cushion-outer` | diffuse lavender drop (2-layer) | deeper plum drop (2-layer) |
+| `--shadow-cushion-inner` | inset white top highlight | inset plum-tinted highlight |
+| `--shadow-cushion` | outer + inner composed | outer + inner composed |
+| `.texture-cushion` | feTurbulence + 45° weave, `opacity .5` multiply | lighter noise + white weave, `opacity .35` screen |
+| `font-cozy` | Quicksand (`--font-cozy`) | (same) |
+
+### Gate results
+| Gate | Result |
+|---|---|
+| `corepack pnpm --filter web build` | exit 0 (90 routes compiled) |
+| `corepack pnpm --filter web exec tsc --noEmit` | exit 0 |
+| `corepack pnpm --filter web test` | 10/10 pass (4 files) |
+| `grep -c "texture-cushion" globals.css` | 4 (≥1 ✓) |
+| Accent tokens in `:root` AND `.dark` | `accent-pink` at line 250 (`:root`) + 318 (`.dark`) ✓; 16 total accent matches |
+| `grep var(--radius)\|var(--shadow` tailwind.config.js | wiring intact (lg/md/sm/cushion/pill + soft/cushion-*) ✓ |
+| E1: `--radius:` / `--shadow-soft:` names present | 1 / 2 — unchanged (values only) ✓ |
+
+### Deviations
+- **None material.** Within-blast-radius design choice: Step D1 added Quicksand (a NEW font, but the
+  ONE charter-sanctioned `next/font/google` case explicitly permitted by the Phase 3 plan + charter —
+  documented pre-add here and in D1/D2). No npm install; `layout.tsx` edit was pre-authorized by the
+  plan's Blast Radius + Touchpoints. Not a hard-stop deviation.
+
+### Known gaps (accepted per validate-contract CONDITIONAL)
+- B2 dark-mode WCAG contrast: no automated contrast tool in repo — agent-probe substitute (deep
+  foreground pairings) accepted.
+- F2 visual spot-check: `agent-browser` unavailable — source-token grep evidence substitute accepted
+  per `higherbits-redesign` precedent. No live screenshot captured.
 
 ## Inner Loop Refresh Note
 

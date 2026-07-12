@@ -219,107 +219,200 @@ iframe {
 
 @layer base {
   :root {
-    --background: 60 20% 95.1%;
-    --foreground: 210 12.1% 22.7%;
-    --card: 0 0% 100%;
-    --card-foreground: 210 12.1% 22.7%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 12.1% 22.7%;
-    --primary: 180 67% 67%;
-    --primary-foreground: 180 80% 10%;
-    --primary-gradient-start: 180 67% 67%;
-    --primary-gradient-end: 180 67% 60%;
-    --mono-gradient-start: 0 0% 0%;
-    --mono-gradient-end: 0 0% 45%;
-    --secondary: 10 85% 75%;
-    --secondary-foreground: 0 0% 10%;
-    --muted: 0 0% 87.8%;
-    --kbd: 0 0% 87.8%;
-    --muted-foreground: 210 12.1% 40%;
-    --accent: 206 45.9% 85.5%;
-    --accent-foreground: 210 12.1% 22.7%;
-    --destructive: 0 84.2% 60.2%;
+    /* Cozy claymorphism — light ("cozy daylight"):
+       soft pastel lavender page base, warm cream card surfaces, ink-brown text. */
+    --background: 258 42% 94%;
+    --foreground: 25 25% 20%;
+    --card: 35 45% 97%;
+    --card-foreground: 25 25% 20%;
+    --popover: 35 45% 97%;
+    --popover-foreground: 25 25% 20%;
+    --primary: 255 55% 72%;
+    --primary-foreground: 258 40% 16%;
+    --primary-gradient-start: 255 55% 78%;
+    --primary-gradient-end: 262 50% 68%;
+    --mono-gradient-start: 25 25% 20%;
+    --mono-gradient-end: 25 15% 42%;
+    --secondary: 24 80% 82%;
+    --secondary-foreground: 20 45% 24%;
+    --muted: 258 28% 90%;
+    --kbd: 258 28% 90%;
+    --muted-foreground: 25 12% 42%;
+    --accent: 210 70% 86%;
+    --accent-foreground: 212 45% 26%;
+    --destructive: 0 72% 62%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 87.8%;
-    --input: 0 0% 87.8%;
-    --ring: 180 67% 67%;
-    --alpha-300: 0 0% 87.8%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 1rem;
-    --shadow-soft: 0 2px 12px hsl(var(--foreground) / 0.06);
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 258 26% 87%;
+    --input: 258 26% 87%;
+    --ring: 255 55% 72%;
+    --alpha-300: 258 26% 87%;
+    /* Pastel accent chips — each with a matching deeper foreground tone. */
+    --accent-pink: 342 78% 84%;
+    --accent-pink-foreground: 342 55% 34%;
+    --accent-peach: 34 92% 80%;
+    --accent-peach-foreground: 28 60% 32%;
+    --accent-blue: 205 82% 82%;
+    --accent-blue-foreground: 208 55% 30%;
+    --accent-mint: 158 52% 78%;
+    --accent-mint-foreground: 162 48% 26%;
+    --chart-1: 342 70% 72%;
+    --chart-2: 158 45% 58%;
+    --chart-3: 205 65% 66%;
+    --chart-4: 34 82% 70%;
+    --chart-5: 255 55% 72%;
+    /* Cushion radius scale — puffy claymorphism. */
+    --radius: 1.5rem;
+    --radius-pill: 9999px;
+    --radius-sm: 0.75rem;
+    /* Legacy soft shadow (kept by name for downstream consumers). */
+    --shadow-soft: 0 8px 24px -8px hsl(258 40% 45% / 0.18);
+    /* Dual cushion shadow — outer diffuse drop + inner top highlight (pillow depth). */
+    --shadow-cushion-outer: 0 12px 28px -10px hsl(258 40% 40% / 0.22),
+      0 4px 10px -6px hsl(258 40% 40% / 0.14);
+    --shadow-cushion-inner: inset 0 2px 3px hsl(0 0% 100% / 0.7),
+      inset 0 -2px 4px hsl(258 40% 40% / 0.08);
+    --shadow-cushion: var(--shadow-cushion-outer), var(--shadow-cushion-inner);
+    --sidebar-background: 258 40% 96%;
+    --sidebar-foreground: 25 20% 28%;
+    --sidebar-primary: 255 55% 72%;
+    --sidebar-primary-foreground: 258 40% 16%;
+    --sidebar-accent: 258 34% 91%;
+    --sidebar-accent-foreground: 25 25% 24%;
+    --sidebar-border: 258 26% 87%;
+    --sidebar-ring: 255 55% 72%;
     --border-gradient-start: rgba(255, 255, 255, 0.01);
     --border-gradient-mid: rgba(0, 0, 0, 0.5);
     --border-gradient-end: rgba(255, 255, 255, 0.01);
   }
 
   .dark {
-    --background: 210 12.1% 15%;
-    --foreground: 60 20% 95.1%;
-    --card: 210 12.1% 18%;
-    --card-foreground: 60 20% 95.1%;
-    --popover: 210 12.1% 18%;
-    --popover-foreground: 60 20% 95.1%;
-    --primary: 180 67% 67%;
-    --primary-foreground: 180 80% 10%;
-    --mono-gradient-start: 0 0% 100%;
-    --mono-gradient-end: 0 0% 60%;
-    --secondary: 10 85% 75%;
-    --secondary-foreground: 0 0% 10%;
-    --muted: 210 12.1% 22.7%;
-    --kbd: 210 12.1% 22.7%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 210 12.1% 22.7%;
-    --accent-foreground: 60 20% 95.1%;
-    --destructive: 0 84.2% 60.2%;
+    /* Cozy claymorphism — dark ("cozy dusk"):
+       deep plum/charcoal surfaces (never pure black), same pastel accent family
+       desaturated/deepened for readable contrast. */
+    --background: 260 22% 13%;
+    --foreground: 40 30% 92%;
+    --card: 260 20% 17%;
+    --card-foreground: 40 30% 92%;
+    --popover: 260 20% 17%;
+    --popover-foreground: 40 30% 92%;
+    --primary: 255 58% 76%;
+    --primary-foreground: 258 35% 14%;
+    --primary-gradient-start: 255 58% 76%;
+    --primary-gradient-end: 262 52% 68%;
+    --mono-gradient-start: 40 30% 96%;
+    --mono-gradient-end: 40 12% 62%;
+    --secondary: 24 55% 68%;
+    --secondary-foreground: 20 30% 14%;
+    --muted: 260 16% 22%;
+    --kbd: 260 16% 22%;
+    --muted-foreground: 40 14% 68%;
+    --accent: 260 18% 26%;
+    --accent-foreground: 40 30% 92%;
+    --destructive: 0 62% 58%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 12.1% 22.7%;
-    --input: 210 12.1% 22.7%;
-    --ring: 180 67% 67%;
-    --alpha-300: 210 12.1% 22.7%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --shadow-soft: 0 2px 12px hsl(var(--foreground) / 0.06);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 260 16% 24%;
+    --input: 260 16% 24%;
+    --ring: 255 58% 76%;
+    --alpha-300: 260 16% 24%;
+    /* Pastel accent chips (cozy dusk) — deepened, still readable on dark plum. */
+    --accent-pink: 342 58% 72%;
+    --accent-pink-foreground: 342 40% 16%;
+    --accent-peach: 30 70% 70%;
+    --accent-peach-foreground: 26 45% 15%;
+    --accent-blue: 205 62% 70%;
+    --accent-blue-foreground: 208 45% 15%;
+    --accent-mint: 158 42% 64%;
+    --accent-mint-foreground: 162 40% 13%;
+    --chart-1: 342 58% 68%;
+    --chart-2: 158 42% 58%;
+    --chart-3: 205 60% 64%;
+    --chart-4: 30 70% 66%;
+    --chart-5: 255 58% 76%;
+    /* Legacy soft shadow (kept by name; darker/denser for the dusk background). */
+    --shadow-soft: 0 8px 24px -8px hsl(260 40% 4% / 0.55);
+    /* Dual cushion shadow (cozy dusk) — deeper drop, subtler plum-tinted top highlight. */
+    --shadow-cushion-outer: 0 14px 30px -10px hsl(260 40% 3% / 0.6),
+      0 4px 12px -6px hsl(260 40% 3% / 0.45);
+    --shadow-cushion-inner: inset 0 1px 2px hsl(255 40% 82% / 0.14),
+      inset 0 -2px 5px hsl(260 40% 3% / 0.3);
+    --shadow-cushion: var(--shadow-cushion-outer), var(--shadow-cushion-inner);
+    --sidebar-background: 260 22% 15%;
+    --sidebar-foreground: 40 24% 88%;
+    --sidebar-primary: 255 58% 76%;
+    --sidebar-primary-foreground: 258 35% 14%;
+    --sidebar-accent: 260 18% 22%;
+    --sidebar-accent-foreground: 40 28% 90%;
+    --sidebar-border: 260 16% 24%;
+    --sidebar-ring: 255 58% 76%;
     --border-gradient-mid: rgba(255, 255, 255, 0.8);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Cozy claymorphism — reusable CSS-only texture utility.
+   * `.texture-cushion` overlays a subtle fabric/grain surface on any card
+   * or panel via an inline SVG feTurbulence data-URI (no image assets, no
+   * dependencies). Layered under a faint diagonal weave so surfaces read as
+   * tactile fabric, not flat. Applied to any element via className — this is
+   * the Phase 4 consumption contract.
+   * ------------------------------------------------------------------ */
+  .texture-cushion {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .texture-cushion::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+    /* Fine-noise grain (feTurbulence) + soft diagonal fabric weave. */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(
+        45deg,
+        hsl(var(--foreground) / 0.015) 0,
+        hsl(var(--foreground) / 0.015) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    background-size: 140px 140px, 6px 6px;
+    /* Light "cozy daylight" default — very low opacity soft grain. */
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+  }
+
+  .dark .texture-cushion::before {
+    /* "Cozy dusk" variant — grain lightens (screen) so it reads on deep plum. */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(
+        45deg,
+        hsl(0 0% 100% / 0.02) 0,
+        hsl(0 0% 100% / 0.02) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    opacity: 0.35;
+    mix-blend-mode: screen;
   }
 
   @layer base {
     :root {
-      --chart-1: 12 76% 61%;
-      --chart-2: 173 58% 39%;
-      --chart-3: 197 37% 24%;
-      --chart-4: 43 74% 66%;
-      --chart-5: 27 87% 67%;
+      --chart-1: 342 70% 72%;
+      --chart-2: 158 45% 58%;
+      --chart-3: 205 65% 66%;
+      --chart-4: 34 82% 70%;
+      --chart-5: 255 55% 72%;
     }
 
     .dark {
-      --chart-1: 220 70% 50%;
-      --chart-2: 160 60% 45%;
-      --chart-3: 30 80% 55%;
-      --chart-4: 280 65% 60%;
-      --chart-5: 340 75% 55%;
+      --chart-1: 342 58% 68%;
+      --chart-2: 158 42% 58%;
+      --chart-3: 205 60% 64%;
+      --chart-4: 30 70% 66%;
+      --chart-5: 255 58% 76%;
     }
   }
 

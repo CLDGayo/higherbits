@@ -35,6 +35,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "sans-serif"],
         display: ["var(--font-urbanist)", "Urbanist", "sans-serif"],
+        cozy: ["var(--font-cozy)", "Quicksand", "sans-serif"],
         mono: ["var(--font-fira-code)", "Fira Code", "monospace"],
         arial: ["Arial", "sans-serif"],
       },
@@ -70,6 +71,14 @@ module.exports = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          pink: "hsl(var(--accent-pink))",
+          "pink-foreground": "hsl(var(--accent-pink-foreground))",
+          peach: "hsl(var(--accent-peach))",
+          "peach-foreground": "hsl(var(--accent-peach-foreground))",
+          blue: "hsl(var(--accent-blue))",
+          "blue-foreground": "hsl(var(--accent-blue-foreground))",
+          mint: "hsl(var(--accent-mint))",
+          "mint-foreground": "hsl(var(--accent-mint-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -100,10 +109,16 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        cushion: "var(--radius)",
+        "cushion-sm": "var(--radius-sm)",
+        pill: "var(--radius-pill)",
       },
       boxShadow: {
         base: "0 0 0 1px hsl(var(--alpha-300)), var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000)",
         soft: "var(--shadow-soft)",
+        "cushion-outer": "var(--shadow-cushion-outer)",
+        "cushion-inner": "var(--shadow-cushion-inner)",
+        cushion: "var(--shadow-cushion)",
       },
       keyframes: {
         "pulse-custom": {
