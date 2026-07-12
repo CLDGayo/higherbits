@@ -18,7 +18,7 @@ const formatNumber = (num: number): string => {
 
 export function GitHubStarsBasic({
   className,
-  repo = "serafimcloud/21st",
+  repo = "CLDGayo/higherbits",
 }: GitHubStarsProps) {
   const { data: stars, isLoading } = useQuery({
     queryKey: ["github-stars", repo],

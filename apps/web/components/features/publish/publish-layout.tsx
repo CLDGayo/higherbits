@@ -834,7 +834,7 @@ export default function PublishComponentForm({
                 `## Error Description\n\`\`\`\n${errorMessage}\n\`\`\`\n\n## Additional Information\n- Time: ${new Date().toISOString()}\n- Environment: ${process.env.NODE_ENV}\n- Browser: ${navigator.userAgent}`,
               )
               window.open(
-                `https://github.com/serafimcloud/21st/issues/new?title=${title}&body=${body}`,
+                `https://github.com/CLDGayo/higherbits/issues/new?title=${title}&body=${body}`,
                 "_blank",
               )
             },

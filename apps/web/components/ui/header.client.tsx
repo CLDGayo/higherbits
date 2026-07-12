@@ -504,7 +504,7 @@ function HeaderContent({
                     className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
                     onSelect={() =>
                       window.open(
-                        "https://github.com/serafimcloud/21st",
+                        "https://github.com/CLDGayo/higherbits",
                         "_blank",
                       )
                     }

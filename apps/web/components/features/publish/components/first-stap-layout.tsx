@@ -52,7 +52,7 @@ export function NameSlugStep({
                 Components go through a review process before being featured.
               </p>
               <a
-                href="https://github.com/serafimcloud/21st?tab=readme-ov-file#review-process"
+                href="https://github.com/CLDGayo/higherbits?tab=readme-ov-file#review-process"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group whitespace-nowrap text-sm font-medium text-primary"

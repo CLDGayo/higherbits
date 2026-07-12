@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { motion } from "motion/react"
@@ -15,14 +14,13 @@ interface AssetCardProps {
   index?: number
 }
 
-const Logo21SVG = ({
-  color = "white",
-  logoColor = "black",
+// HigherBits brand mark — hexagon wordmark, matching logo.tsx's renderLogo() pattern.
+const HigherBitsLogoSVG = ({
+  color = "currentColor",
   width = 124,
   height = 24,
 }: {
-  color?: "white" | "black"
-  logoColor?: "white" | "black"
+  color?: string
   width?: number
   height?: number
 }) => (
@@ -33,19 +31,12 @@ const Logo21SVG = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect
-      width="84"
-      height="84"
-      rx="42"
-      fill={logoColor === "white" ? "black" : "white"}
-    />
     <path
-      d="M13 32C13 20.9543 21.9543 12 33 12C44.0457 12 53 20.9543 53 32C53 43.0457 44.5 47.5 33 52H53C53 63.0457 44.0457 72 33 72C21.9543 72 13 63.0457 13 52C13 40.9543 22.5 34 33 32H13Z"
-      fill={color}
-    />
-    <path
-      d="M53 72C64.7324 67.0977 73 55.5117 73 42C73 28.4883 64.7324 16.9023 53 12V72Z"
-      fill={color}
+      d="M42 6 L72 24 V60 L42 78 L12 60 V24 Z"
+      fill="none"
+      stroke={color}
+      strokeWidth="6"
+      strokeLinejoin="round"
     />
   </svg>
 )
@@ -72,9 +63,6 @@ const AssetCard = ({
     }
   }
 
-  const logoFile = title.includes("Dark") ? "21st-logo-dark" : "21st-logo-white"
-
-
   return (
     <motion.li
       initial={{ opacity: 0, y: -20 }}
@@ -95,11 +83,10 @@ const AssetCard = ({
           "flex items-center justify-center h-16 rounded-lg bg-foreground/10",
         )}
       >
-        <Logo21SVG
-          color={logoColor}
-          logoColor={logoColor}
-          width={124}
-          height={24}
+        <HigherBitsLogoSVG
+          color={logoColor === "white" ? "#ffffff" : "#147070"}
+          width={40}
+          height={40}
         />
       </div>
       <div className="flex justify-stretch">
@@ -123,41 +110,9 @@ const AssetCard = ({
             )}
           >
             <Icons.copy className="h-4 w-4 mr-1" />
-            svg
+            copy svg
           </div>
         </button>
-        <a
-          className="py-[5px] group relative flex flex-1 items-center justify-center text-muted-foreground text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-[#202020] rounded-md first:rounded-l-[20px] last:rounded-r-2xl transition-colors uppercase"
-          href={`/brand/${logoFile}.png`}
-          download={`${logoFile}.png`}
-        >
-          <div
-            aria-hidden="true"
-            className="absolute opacity-0 transition-opacity"
-          >
-            <Icons.check className="h-4 w-4" />
-          </div>
-          <div className="flex items-center justify-center gap-0.5 opacity-100 transition-opacity">
-            <Icons.download className="h-4 w-4 mr-1" />
-            png
-          </div>
-        </a>
-        <a
-          className="py-[5px] group relative flex flex-1 items-center justify-center text-muted-foreground text-[13px] font-medium hover:bg-slate-100 dark:hover:bg-[#202020] rounded-md first:rounded-l-[20px] last:rounded-r-2xl transition-colors uppercase"
-          href={`/brand/${logoFile}.svg`}
-          download={`${logoFile}.svg`}
-        >
-          <div
-            aria-hidden="true"
-            className="absolute opacity-0 transition-opacity"
-          >
-            <Icons.check className="h-4 w-4" />
-          </div>
-          <div className="flex items-center justify-center gap-0.5 opacity-100 transition-opacity">
-            <Icons.download className="h-4 w-4 mr-1" />
-            svg
-          </div>
-        </a>
       </div>
     </motion.li>
   )
@@ -219,20 +174,6 @@ export function BrandAssetsMenu({
         background="white"
         index={1}
       />
-      <motion.li
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.2, delay: 2 * 0.1 }}
-        className="w-[184px] bg-white shadow-md dark:bg-[#181818] dark:outline dark:outline-1 dark:outline-[#2a2a2a] p-1 flex flex-col gap-1 rounded-lg"
-      >
-        <Link
-          href="/brand/21st-brand.zip"
-          className="flex items-center justify-center gap-2 text-primary dark:text-slate-400 font-medium p-1 text-center text-sm hover:bg-slate-100 dark:hover:bg-[#202020] rounded-lg transition-colors"
-        >
-          <Icons.download className="h-4 w-4" /> 21st-brand.zip
-        </Link>
-      </motion.li>
     </motion.ul>
   )
 }

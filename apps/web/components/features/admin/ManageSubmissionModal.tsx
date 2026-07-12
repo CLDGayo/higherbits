@@ -34,7 +34,7 @@ const ManageSubmissionModal: FC<ManageSubmissionModalProps> = ({
     on_review: `Your component is currently under review. We'll get back to you soon with feedback.`,
     posted: `Your component has been published and is now available via direct link. However, it's not featured in public listings yet as it doesn't fully meet our quality guidelines. It's still accessible through your profile and direct links.`,
     featured: `Congratulations! Your component has been featured and is now visible on the homepage and in public listings.`,
-    rejected: `Your component does not follow our quality guidelines. Please review our guidelines at https://github.com/serafimcloud/21st?tab=readme-ov-file#quality-guidelines and consider resubmitting after making the necessary improvements.`,
+    rejected: `Your component does not follow our quality guidelines. Please review our guidelines at https://github.com/CLDGayo/higherbits?tab=readme-ov-file#quality-guidelines and consider resubmitting after making the necessary improvements.`,
   }
 
   const hotkeyMap = {

@@ -133,7 +133,7 @@ export function HeroSection() {
                 Magic MCP
               </Link>
               <Link
-                href="https://github.com/serafimcloud/21st"
+                href="https://github.com/CLDGayo/higherbits"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1.5 text-sm text-foreground/90 hover:text-foreground transition-colors"

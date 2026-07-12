@@ -70,7 +70,7 @@ export const SubmissionStatusEmail = ({
   const statusData = getStatusData()
 
   const createShareUrl = (url: string) => {
-    const shareText = `Check out my component ${componentName} that was just featured on @21st_dev!`
+    const shareText = `Check out my component ${componentName} that was just featured on HigherBits.dev!`
     return `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`
   }
 

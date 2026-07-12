@@ -84,7 +84,7 @@ export function VersionSelectorDialog({
                   <li className="flex items-center gap-2 py-2 px-2">
                     <Check className="h-4 w-4 text-foreground/70 shrink-0" />
                     <span className="text-sm">
-                      Add components from 21st registry
+                      Add components from HigherBits registry
                     </span>
                   </li>
 

@@ -108,7 +108,7 @@ export const LoadingSpinner = ({
             viewBox="0 0 60 60"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            aria-label="21st logo loading"
+            aria-label="HigherBits logo loading"
           >
             <path
               d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.5 35.5 20 40H40C40 51.0457 31.0457 60 20 60C8.95431 60 0 51.0457 0 40C0 28.9543 9.5 22 20 20H0Z"

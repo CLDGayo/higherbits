@@ -189,7 +189,7 @@ export function AddRegistryModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add from 21st Registry</DialogTitle>
+          <DialogTitle>Add from HigherBits Registry</DialogTitle>
           <DialogDescription>
             Search for components in the HigherBits.dev registry or select from our
             featured components.

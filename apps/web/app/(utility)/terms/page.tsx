@@ -25,7 +25,7 @@ export default function TermsOfService() {
               </h2>
               <p className="text-muted-foreground leading-7">
                 These Terms of Service ("Terms") govern your access to and use
-                of HigherBits.dev ("we", "our", or "us"), operated by 21st Labs Inc. By accessing or using HigherBits.dev, you agree to be bound
+                of HigherBits.dev ("we", "our", or "us"), operated by Higher Bits Labs Inc. By accessing or using HigherBits.dev, you agree to be bound
                 by these Terms.
               </p>
             </section>
@@ -150,7 +150,7 @@ export default function TermsOfService() {
               <p className="text-muted-foreground leading-7">
                 For any questions regarding these Terms, please contact:
                 <br />
-                21st Labs Inc.
+                Higher Bits Labs Inc.
                 <br />
                 1111b S Governors Ave
                 <br />

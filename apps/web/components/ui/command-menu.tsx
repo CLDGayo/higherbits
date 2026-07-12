@@ -721,7 +721,7 @@ export function CommandMenu() {
                         value="social-github"
                         onSelect={() => {
                           window.open(
-                            "https://github.com/serafimcloud/21st",
+                            "https://github.com/CLDGayo/higherbits",
                             "_blank",
                           )
                           setSearchQuery("")

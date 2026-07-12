@@ -125,7 +125,7 @@ function ShortcutsList() {
       </ExternalLink>
 
       <ExternalLink
-        href="https://github.com/serafimcloud/21st/issues"
+        href="https://github.com/CLDGayo/higherbits/issues"
         icon={Bug}
       >
         Report a Bug
