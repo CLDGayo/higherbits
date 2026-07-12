@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function PricingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="texture-cushion min-h-screen flex flex-col bg-background">
       <Suspense>
         <Header />
       </Suspense>

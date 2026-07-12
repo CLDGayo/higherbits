@@ -215,9 +215,9 @@ function HeaderContent({
     <>
       <header
         className={cn(
-          "flex fixed top-0 left-0 right-0 h-14 z-40 items-center px-4 py-3 text-foreground",
+          "texture-cushion flex fixed top-0 left-0 right-0 h-14 z-40 items-center px-4 py-3 text-foreground",
           {
-            "border-b border-border/40 bg-background": variant !== "publish",
+            "border-b border-border/40 bg-background/95 backdrop-blur-sm": variant !== "publish",
           },
         )}
       >
@@ -244,7 +244,7 @@ function HeaderContent({
             <Button
               variant="outline"
               className={cn(
-                "relative h-8 w-full justify-start bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 hidden md:inline-flex",
+                "relative h-8 w-full justify-start rounded-pill bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 hidden md:inline-flex",
               )}
               onClick={() =>
                 document.dispatchEvent(
@@ -256,7 +256,7 @@ function HeaderContent({
                 Global search...
               </span>
               <span className="inline-flex lg:hidden mr-4">Search...</span>
-              <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-sans text-[11px] opacity-100 sm:flex">
+              <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded-pill border bg-muted px-1.5 font-sans text-[11px] opacity-100 sm:flex">
                 <span className="text-[11px] font-sans">⌘</span>K
               </kbd>
             </Button>

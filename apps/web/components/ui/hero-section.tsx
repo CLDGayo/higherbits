@@ -9,6 +9,7 @@ import { ArrowRight } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-media-query"
 import { setCookie } from "@/lib/cookies"
 import { AuroraBackground } from "./aurora-background"
+import { Badge } from "./badge"
 import { Button } from "./button"
 import { Icons } from "../icons"
 import { GitHubStarsBasic } from "./github-stars-number"
@@ -157,6 +158,12 @@ export function HeroSection() {
             }}
             className="flex flex-col max-w-[300px] md:max-w-[800px] sm:max-w-[450px] text-center parallax-layer"
           >
+            <div className="flex justify-center mb-5">
+              <Badge variant="pink" className="rounded-pill px-3 py-1 shadow-cushion-outer">
+                Cozy UI, freshly baked
+              </Badge>
+            </div>
+
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.2] pb-1">
               Discover, share & remix the best UI components
             </h1>
@@ -169,7 +176,7 @@ export function HeroSection() {
               <Button onClick={onEnterWebsite}>
                 Browse components
                 {!isMobile && (
-                  <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded border border-muted-foreground/70 bg-muted-foreground/10 px-1.5 text-[0.625rem] font-medium text-white">
+                  <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded-pill border border-primary-foreground/40 bg-primary-foreground/10 px-1.5 text-[0.625rem] font-medium text-primary-foreground">
                     <Icons.enter className="h-2.5 w-2.5" />
                   </kbd>
                 )}

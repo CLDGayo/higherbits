@@ -13,7 +13,7 @@ metadata:
 
 **Program:** higherbits-cozy-rebrand
 **Umbrella plan:** process/features/higherbits-cozy-rebrand/active/higherbits-cozy-rebrand_12-07-26/higherbits-cozy-rebrand-umbrella_PLAN_12-07-26.md
-**Phase status:** ⏳ PLANNED
+**Phase status:** ✅ EXECUTED (awaiting EVL confirmation run)
 **Report destination:** process/features/higherbits-cozy-rebrand/active/higherbits-cozy-rebrand_12-07-26/phase-04-surface-restyle_REPORT_12-07-26.md
 **Hour budget:** 2.0h
 
@@ -58,66 +58,75 @@ behavior changes.
 
 ### Step A — Header + navigation
 
-- [ ] A1. Apply pill-shaped radius to header buttons/search input using the wired tokens.
-- [ ] A2. Apply `.texture-cushion` (or the Phase 3 texture utility) to the header background or
-  header-adjacent surface where it reads naturally — do not over-apply texture to every element;
-  reserve it for card/panel surfaces per the charter's "visible soft grain" direction.
-- [ ] A3. Confirm no structural/behavioral change to header.client.tsx — className/CSS edits only.
-  If the cushion restyle appears to require restructuring the component, STOP and route to
-  backlog per the prior program's documented constraint on this file.
+- [x] A1. Search input + ⌘K kbd → `rounded-pill` (header.client.tsx:244,256).
+- [x] A2. `.texture-cushion` + `bg-background/95 backdrop-blur-sm` on header bar (header.client.tsx:215).
+- [x] A3. TG5 diff-review: header.client.tsx diff is 4 className lines only; grep for useAuth/useUser/stripe/SignedIn in the diff returns zero — no logic/structural delta.
 
 ### Step B — Sidebar
 
-- [ ] B1. Apply rounded sidebar rail treatment (large radius on sidebar container/panel edges)
-  per the charter's "rounded sidebar rail" requirement.
-- [ ] B2. Apply cushion card treatment (radius + dual shadow + `.texture-cushion`) to sidebar
-  panel sections if visually appropriate.
+- [x] B1/B2. E2 resolved: primary nav sidebar is the shared `SidebarMenuButton` primitive in
+  `components/ui/sidebar.tsx` (consumed by `features/main-page/sidebar-layout.tsx`; studio/settings
+  sidebars out of high-traffic scope). Menu rail radius `rounded-md` → `rounded-pill` (sidebar.tsx:522).
+  Full-panel texture skipped — pill menu rows read cozy; heavy texture on the nav rail would compete
+  with card surfaces (charter "reserve texture for card/panel" direction).
 
 ### Step C — Footer
 
-- [ ] C1. Apply cushion token palette (pastel accents, warm typography) to footer surface.
-- [ ] C2. Confirm footer remains a low-texture/flatter surface if texture would compete visually
-  with more prominent card surfaces — execute-agent's judgment call, documented in report.
+- [x] C1. Footer panel → `rounded-cushion`, `shadow-cushion`, `border-border/60`, `p-6`→`p-8`
+  (footer.tsx:14). Uses `bg-card`/`text-card-foreground` theme tokens (dark-aware).
+- [x] C2. No `.texture-cushion` on footer — kept flatter than hero/pricing card surfaces per the
+  charter's texture-reservation direction (judgment call, documented).
 
 ### Step D — Landing page
 
-- [ ] D1. Apply cushion card treatment (20-28px radius, dual soft shadow, `.texture-cushion`) to
-  landing-page component preview cards / feature cards.
-- [ ] D2. Apply pastel accent chips (pink/peach/blue/mint) to badges, tags, or small UI accents on
-  the landing page per the charter's accent-chip direction.
-- [ ] D3. Apply generous padding/spacing per Phase 3's spacing-generosity note.
-- [ ] D4. Apply pill-button radius to primary CTAs.
+- [x] D1. Landing wrappers → `texture-cushion rounded-cushion bg-card shadow-cushion border-border/60`
+  (page.tsx:69,84); root shell `bg-[#F5F5F0]` hardcoded → `texture-cushion bg-background`.
+- [x] D2. Pastel `Badge variant="pink"` announcement chip added to hero ("Cozy UI, freshly baked",
+  hero-section.tsx) — first live consumer of the Phase-3 accent-chip variants. (Prior on-disk work
+  defined the pink/peach/blue/mint variants in badge.tsx but applied none; this makes D2 genuine.)
+- [x] D3. Landing card padding `p-6` → `p-8` (page.tsx:84).
+- [x] D4. Primary CTAs → `rounded-pill` via the shared Button primitive (button.tsx base + size variants).
 
 ### Step E — Pricing page
 
-- [ ] E1. Apply cushion card treatment to pricing tier cards (this is the highest-visibility card
-  surface on the page — prioritize getting radius + shadow + texture right here).
-- [ ] E2. Confirm the Phase 1 logo-restoration fix on this route is still correctly rendering
-  after the restyle (regression check against Phase 1's fix).
-- [ ] E3. Apply pill-button radius to pricing CTAs.
+- [x] E1. Pricing tier card → `texture-cushion rounded-cushion bg-card shadow-cushion border-border/60`;
+  hardcoded dark-only `text-neutral-*`/`bg-white/5`/`text-black` all swapped to theme tokens
+  (`text-foreground`, `text-muted-foreground`); featured ring `ring-accent/50`→`ring-accent-pink/60`;
+  check icons → `text-accent-mint-foreground` (pricing-card.tsx). Also `texture-cushion` on the
+  pricing page shell (pricing/page.tsx:11).
+- [x] E2. E3-instruction resolved (re-read Phase 1 report): pricing/page.tsx diff is the single
+  `texture-cushion` line — zero Header/Logo change; `<Logo>` page-level count = 0; logo.tsx
+  `position` default still `"flex"` (Phase 1 fix intact). TG7 = exactly 1 logo (single `<Header/>`).
+  Runtime note: Header is `<Suspense>`-wrapped so its client-hydrated Logo isn't in the raw SSR HTML
+  — a pre-existing render characteristic, not a regression from this phase.
+- [x] E3. Pricing CTA button → `rounded-pill bg-primary text-primary-foreground` (pricing-card.tsx:155).
 
 ### Step F — Component/card primitives
 
-- [ ] F1. Identify the shared card/button/badge primitive components consumed across multiple
-  high-traffic surfaces (Step D/E likely reuse the same underlying `<Card>`/`<Button>` primitives
-  — restyle at the primitive level where possible instead of per-surface overrides, to keep the
-  change DRY and consistent).
-- [ ] F2. Apply `.texture-cushion` to the shared card primitive if it is genuinely shared (avoids
-  repeating the texture-application work per surface in Steps A-E).
+- [x] F1. Restyled at the primitive level (DRY): `card.tsx` (`rounded-cushion`+`shadow-cushion`+
+  `border-border/60`), `button.tsx` (base `rounded-pill` + all size variants + default variant
+  `hover:-translate-y-px shadow-cushion-outer`), `badge.tsx` (4 pastel accent variants added).
+- [x] F2. `.texture-cushion` kept off the shared `<Card>` base (applied per-surface on hero/pricing
+  wrappers instead) — a global card texture would over-apply grain to every small card site-wide,
+  against the charter's "reserve for major surfaces" direction. Documented judgment call.
 
 ### Step G — Dark mode consistency pass
 
-- [ ] G1. Spot-check each restyled surface (header, sidebar, footer, landing, pricing, cards) in
-  dark ("cozy dusk") mode — confirm the texture utility's dark variant (Phase 3 Step C5) reads
-  correctly and contrast/legibility holds.
+- [x] G1. Source-level dark-mode review (TG8): every restyled surface uses theme tokens with `.dark`
+  variants — `bg-card`/`text-card-foreground`/`shadow-cushion` (dark shadow at globals.css:334),
+  accent-*-foreground pairs (dark rows at globals.css:318-325), and `.dark .texture-cushion::before`
+  (globals.css:386). Pricing-card's former hardcoded light-only values were removed, so it now reads
+  correctly in cozy-dusk. No hardcoded light-only hex survives on the restyled surfaces.
 
 ### Step H — Visual verification (agent-probe, best-effort)
 
-- [ ] H1. Attempt `vc-agent-browser` (or equivalent) screenshot checkpoints of the 5 restyled
-  surfaces in both light and dark mode. If unavailable, document as known-gap (per the prior
-  higherbits-redesign program's precedent) — source-level token/className evidence substitutes.
-- [ ] H2. Record the agent-probe judgment (or known-gap note) in the phase report against the
-  charter's "recognizably cozy-cushion/textured claymorphism" bar.
+- [x] H1. `vc-agent-browser` unavailable (program-level known-gap per umbrella charter + Phase 1
+  precedent). Substitute evidence: build/tsc/test green, TG4 grep = 7, live `next start` HTTP-200
+  probe of `/pricing`, source-token/className review of all 6 surface types. TG9 = known-gap (D).
+- [x] H2. Judgment vs charter "recognizably cozy-cushion/textured claymorphism" bar: MET at source
+  level — every major surface now carries `rounded-cushion` (20-28px), dual `shadow-cushion`,
+  `.texture-cushion` grain, pill buttons, and the pastel accent chip. Pixel-level confirmation
+  remains the accepted known-gap.
 
 ---
 
@@ -166,7 +175,7 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
 - [ ] 2. INNOVATE — innovate-agent: approach decided; Decision Summary written
 - [ ] 3. PLAN-SUPPLEMENT — plan-agent: existing phase plan updated; Inner Loop Refresh Note if sections changed (or "n/a — research clean")
 - [ ] 4. PVL — vc-validate-agent: full V1-V7; validate-contract written per `.claude/skills/vc-validate-findings/references/example-validate-output.md` (Status / Gate / Plan updates applied / Execute-agent instructions / Test gates / High-risk pack / Backlog artifacts / Known gaps / Accepted by)
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
+- [x] 5. EXECUTE — all Step A-H checklist items done; gates green (build 0 / tsc 0 / test 10/10 / TG4=7 / TG5 zero-logic-delta / TG7=1 logo)
 - [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
 - [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
 
@@ -206,9 +215,9 @@ grep -n "texture-cushion" apps/web/components/ui/header.client.tsx apps/web/app/
 ## Resume and Execution Handoff
 
 - Selected plan file path: `process/features/higherbits-cozy-rebrand/active/higherbits-cozy-rebrand_12-07-26/phase-04-surface-restyle_PLAN_12-07-26.md`
-- Last completed step: not started
-- Validate-contract status: pending
-- Next step: Spawn vc-research-agent for RESEARCH (Step 1), after Phase 03 exit gate confirmed passed
+- Last completed step: 5 EXECUTE (resumed + completed after dead-agent crash)
+- Validate-contract status: CONDITIONAL (accepted), gates green
+- Next step: EVL confirmation run (orchestrator spawns vc-tester to re-run TG1-TG4/TG7), then commit + UPDATE PROCESS
 
 ---
 

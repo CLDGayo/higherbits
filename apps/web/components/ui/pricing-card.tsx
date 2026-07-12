@@ -77,14 +77,14 @@ export function PricingCard({
   return (
     <Card
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-lg p-8 border-white/10 bg-white/5 min-h-[33rem]",
-        isPlanFeatured && "ring-2 ring-accent/50",
+        "texture-cushion relative flex flex-col overflow-hidden rounded-cushion p-8 border-border/60 bg-card shadow-cushion min-h-[33rem]",
+        isPlanFeatured && "ring-2 ring-accent-pink/60",
         isActive && "ring-2 ring-primary/50",
       )}
     >
       <motion.div layout className="flex-1 space-y-8">
         <motion.div layout className="text-center">
-          <motion.h3 layout className="text-lg font-semibold text-neutral-200">
+          <motion.h3 layout className="text-lg font-semibold text-foreground">
             {name}
           </motion.h3>
           <motion.div
@@ -95,7 +95,7 @@ export function PricingCard({
               <div className="flex items-end justify-end">
                 <motion.span
                   layout
-                  className="text-4xl font-bold text-neutral-200"
+                  className="text-4xl font-bold text-foreground"
                 >
                   <NumberFlow
                     format={{
@@ -107,14 +107,14 @@ export function PricingCard({
                     value={price}
                   />
                 </motion.span>
-                <motion.span layout className="text-neutral-400 mb-2">
+                <motion.span layout className="text-muted-foreground mb-2">
                   {pricePeriod}
                 </motion.span>
               </div>
             ) : (
               <motion.span
                 layout
-                className="text-4xl font-bold text-neutral-200"
+                className="text-4xl font-bold text-foreground"
               >
                 ${price}
               </motion.span>
@@ -126,12 +126,12 @@ export function PricingCard({
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mt-1 text-sm text-neutral-400"
+              className="mt-1 text-sm text-muted-foreground"
             >
               ${monthlyPrice}/month billed yearly
             </motion.p>
           )}
-          <motion.p layout className="mt-2 text-sm text-neutral-400">
+          <motion.p layout className="mt-2 text-sm text-muted-foreground">
             {description}
           </motion.p>
         </motion.div>
@@ -143,8 +143,8 @@ export function PricingCard({
               key={featureIndex}
               className="flex items-start gap-x-2 "
             >
-              <Check className="h-5 w-5 min-w-5 min-h-5 text-neutral-200 mt-1" />
-              <span className="text-neutral-400">{feature}</span>
+              <Check className="h-5 w-5 min-w-5 min-h-5 text-accent-mint-foreground mt-1" />
+              <span className="text-muted-foreground">{feature}</span>
             </motion.li>
           ))}
         </motion.ul>
@@ -155,7 +155,7 @@ export function PricingCard({
           variant="default"
           size="lg"
           className={cn(
-            "w-full bg-neutral-200 text-black hover:bg-white/90",
+            "w-full rounded-pill bg-primary text-primary-foreground hover:bg-primary/90",
             isActive &&
               "bg-primary text-primary-foreground hover:bg-primary/90",
           )}
