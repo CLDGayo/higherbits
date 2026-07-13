@@ -64,6 +64,7 @@ interface UserProfile {
   paypal_email: string | null
   stripe_customer_id: string | null
   stripe_subscription_id: string | null
+  lemon_squeezy_customer_id: string | null
   total_components: number
   total_downloads: number
   pro_banner_url: string | null

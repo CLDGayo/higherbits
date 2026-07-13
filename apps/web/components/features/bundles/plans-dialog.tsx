@@ -20,6 +20,10 @@ import { Check } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import {
+  isPaymentsNotConfigured,
+  PAYMENTS_UNAVAILABLE_MESSAGE,
+} from "@/lib/checkout-error"
 import { UserComponentsTab } from "../user-page/user-page-header"
 
 interface PlansDialogProps {
@@ -100,6 +104,8 @@ export default function PlansDialog({
     if (response.ok) {
       const data = await response.json()
       window.location.href = data.url
+    } else if (isPaymentsNotConfigured(response.status)) {
+      toast.info(PAYMENTS_UNAVAILABLE_MESSAGE)
     } else {
       toast.error("Failed to create checkout for bundle")
     }

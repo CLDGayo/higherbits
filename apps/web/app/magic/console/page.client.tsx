@@ -14,6 +14,10 @@ import {
 } from "lucide-react"
 import { PLAN_LIMITS, PlanType } from "@/lib/config/subscription-plans"
 import { toast } from "sonner"
+import {
+  isPaymentsNotConfigured,
+  PAYMENTS_UNAVAILABLE_MESSAGE,
+} from "@/lib/checkout-error"
 import { UpgradeConfirmationDialog } from "@/components/features/settings/billing/upgrade-confirmation-dialog"
 import { CircleProgress } from "@/components/ui/circle-progress"
 import { IdeOption, OsType } from "@/app/magic/onboarding/page.client"
@@ -182,7 +186,7 @@ export function ConsoleClient({
 
     setIsUpgradeLoading(true)
     try {
-      const response = await fetch("/api/stripe/create-checkout", {
+      const response = await fetch("/api/lemonsqueezy/create-checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -201,7 +205,11 @@ export function ConsoleClient({
       })
 
       if (!response.ok) {
-        const error = await response.json()
+        const error = await response.json().catch(() => ({}))
+        if (isPaymentsNotConfigured(response.status, error)) {
+          toast.info(PAYMENTS_UNAVAILABLE_MESSAGE)
+          return
+        }
         throw new Error(error.message || "Failed to create checkout session")
       }
 

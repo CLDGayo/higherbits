@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
+import {
+  isPaymentsNotConfigured,
+  PAYMENTS_UNAVAILABLE_MESSAGE,
+} from "@/lib/checkout-error"
 import { LoaderCircle, ExternalLink, ArrowRight, Check } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -223,7 +227,7 @@ export function BillingSettingsClient({
 
     setIsUpgradeLoading(true)
     try {
-      const response = await fetch("/api/stripe/create-checkout", {
+      const response = await fetch("/api/lemonsqueezy/create-checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -235,14 +239,18 @@ export function BillingSettingsClient({
           cancelUrl: `${window.location.origin}/settings/billing?canceled=true`,
           isUpgrade: true,
           currentPlanId: currentPlanId,
-          subscriptionId: subscription?.stripe_subscription_id,
+          subscriptionId: subscription?.lemon_squeezy_subscription_id,
           attributionSource: ATTRIBUTION_SOURCE.SETTINGS,
           sourceDetail: SOURCE_DETAIL.SETTINGS_BILLING,
         }),
       })
 
       if (!response.ok) {
-        const error = await response.json()
+        const error = await response.json().catch(() => ({}))
+        if (isPaymentsNotConfigured(response.status, error)) {
+          toast.info(PAYMENTS_UNAVAILABLE_MESSAGE)
+          return
+        }
         throw new Error(error.message || "Failed to create checkout session")
       }
 

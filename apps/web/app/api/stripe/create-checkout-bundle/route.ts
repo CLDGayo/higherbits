@@ -1,8 +1,21 @@
-import { stripeV2 } from "@/lib/stripe"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { auth } from "@clerk/nextjs/server"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
+
+// Payments are considered "not configured" when the Stripe keys @/lib/stripe
+// requires are absent. That module throws at import time when they are missing,
+// so we guard BEFORE importing it (dynamic import below) and return a friendly
+// 503 rather than a raw 500 while the payment provider is being migrated.
+function paymentsNotConfigured(): boolean {
+  return !process.env.STRIPE_SECRET_KEY_V1 || !process.env.STRIPE_SECRET_KEY_V2
+}
+
+const PAYMENTS_NOT_CONFIGURED_RESPONSE = {
+  error: "payments_not_configured",
+  message:
+    "Checkout is temporarily unavailable while we upgrade our payment provider. Email support@higherbits.dev to purchase.",
+} as const
 
 const checkoutSchema = z.object({
   bundleId: z.number(),
@@ -13,6 +26,14 @@ const checkoutSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    if (paymentsNotConfigured()) {
+      return NextResponse.json(PAYMENTS_NOT_CONFIGURED_RESPONSE, { status: 503 })
+    }
+
+    // Imported dynamically so the module-level Stripe key check does not throw
+    // when payments are unconfigured (guarded above).
+    const { stripeV2 } = await import("@/lib/stripe")
+
     const authSession = await auth()
     const userId = authSession?.userId
     if (!userId) {

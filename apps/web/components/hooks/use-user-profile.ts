@@ -11,6 +11,9 @@ interface UserProfile {
   username: string | null
   name: string | null
   image_url: string | null
+  role: string | null
+  stripe_id: string | null
+  lemon_squeezy_customer_id: string | null
   display_name: string | null
   display_username: string | null
   display_image_url: string | null

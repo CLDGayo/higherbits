@@ -41,6 +41,7 @@ async function getCurrentPlan(userId: string | null): Promise<PlanInfo> {
         plans:plan_id (
           id,
           stripe_plan_id,
+          lemon_squeezy_variant_id,
           price,
           env,
           period,
@@ -112,6 +113,7 @@ async function getCurrentPlan(userId: string | null): Promise<PlanInfo> {
         ? {
             id: plansData.id,
             stripe_plan_id: plansData.stripe_plan_id,
+            lemon_squeezy_variant_id: plansData.lemon_squeezy_variant_id || "",
             price: plansData.price,
             env: plansData.env,
             period: plansData.period,

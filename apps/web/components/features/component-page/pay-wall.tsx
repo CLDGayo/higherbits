@@ -34,6 +34,10 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
+import {
+  isPaymentsNotConfigured,
+  PAYMENTS_UNAVAILABLE_MESSAGE,
+} from "@/lib/checkout-error"
 import PlansDialog from "../bundles/plans-dialog"
 
 interface PayWallProps {
@@ -72,7 +76,7 @@ export function PayWall({ accessState, component }: PayWallProps) {
     setIsProcessing(true)
     try {
       const pathname = window.location.pathname
-      const response = await fetch("/api/stripe/create-checkout", {
+      const response = await fetch("/api/lemonsqueezy/create-checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,6 +95,11 @@ export function PayWall({ accessState, component }: PayWallProps) {
 
       if (!response.ok) {
         const errorData = await response.text()
+        if (isPaymentsNotConfigured(response.status, errorData)) {
+          toast.info(PAYMENTS_UNAVAILABLE_MESSAGE)
+          setIsProcessing(false)
+          return
+        }
         throw new Error(`Failed to create checkout session: ${errorData}`)
       }
 

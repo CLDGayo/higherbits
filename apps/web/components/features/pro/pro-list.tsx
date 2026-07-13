@@ -99,6 +99,7 @@ export function ProList({ className }: ProListProps) {
                 is_partner: false,
                 bundles_fee: 0,
                 stripe_id: null,
+                lemon_squeezy_customer_id: null,
               }}
               isClickable
             />

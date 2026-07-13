@@ -12,12 +12,13 @@ export interface PlanInfo {
   current_period_end?: string
   cancel_at_period_end?: boolean
   portal_url?: string
-  stripe_subscription_id?: string
+  lemon_squeezy_subscription_id?: string
   usage: number
   limit: number
   planData?: {
     id: number
     stripe_plan_id: string
+    lemon_squeezy_variant_id: string
     price: number
     env: string
     period: string

@@ -1799,6 +1799,7 @@ export type Database = {
           period: string | null
           price: number | null
           stripe_plan_id: string | null
+          lemon_squeezy_variant_id: string | null
           type: string | null
           version: number
         }
@@ -1810,6 +1811,7 @@ export type Database = {
           period?: string | null
           price?: number | null
           stripe_plan_id?: string | null
+          lemon_squeezy_variant_id?: string | null
           type?: string | null
           version?: number
         }
@@ -1821,6 +1823,7 @@ export type Database = {
           period?: string | null
           price?: number | null
           stripe_plan_id?: string | null
+          lemon_squeezy_variant_id?: string | null
           type?: string | null
           version?: number
         }
@@ -2284,6 +2287,7 @@ export type Database = {
           ref: string | null
           role: Database["public"]["Enums"]["user_role"] | null
           stripe_id: string | null
+          lemon_squeezy_customer_id: string | null
           twitter_url: string | null
           updated_at: string | null
           username: string | null
@@ -2310,6 +2314,7 @@ export type Database = {
           ref?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           stripe_id?: string | null
+          lemon_squeezy_customer_id?: string | null
           twitter_url?: string | null
           updated_at?: string | null
           username?: string | null
@@ -2336,6 +2341,7 @@ export type Database = {
           ref?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           stripe_id?: string | null
+          lemon_squeezy_customer_id?: string | null
           twitter_url?: string | null
           updated_at?: string | null
           username?: string | null
@@ -2353,6 +2359,7 @@ export type Database = {
           status: string | null
           updated_at: string
           user_id: string | null
+          lemon_squeezy_subscription_id: string | null
         }
         Insert: {
           created_at?: string
@@ -2363,6 +2370,7 @@ export type Database = {
           status?: string | null
           updated_at?: string
           user_id?: string | null
+          lemon_squeezy_subscription_id?: string | null
         }
         Update: {
           created_at?: string
@@ -2373,6 +2381,7 @@ export type Database = {
           status?: string | null
           updated_at?: string
           user_id?: string | null
+          lemon_squeezy_subscription_id?: string | null
         }
         Relationships: [
           {

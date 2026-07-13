@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
+import {
+  isPaymentsNotConfigured,
+  PAYMENTS_UNAVAILABLE_MESSAGE,
+} from "@/lib/checkout-error"
 import { PlanComparisonTable } from "@/components/features/pricing/plan-comparison-table"
 import { PricingSection } from "../../components/features/pricing/pricing-section"
 import { FAQ } from "../../components/features/pricing/faq"
@@ -91,7 +95,7 @@ const handleUpgradePlan = async (
 
   try {
     console.log("Attempting upgrade with:", { planId, period })
-    const response = await fetch("/api/stripe/create-checkout", {
+    const response = await fetch("/api/lemonsqueezy/create-checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,6 +113,10 @@ const handleUpgradePlan = async (
 
     if (!response.ok) {
       const errorData = await response.text()
+      if (isPaymentsNotConfigured(response.status, errorData)) {
+        toast.info(PAYMENTS_UNAVAILABLE_MESSAGE)
+        return
+      }
       console.error("Checkout creation failed:", {
         status: response.status,
         statusText: response.statusText,
