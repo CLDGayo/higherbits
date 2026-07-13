@@ -55,6 +55,10 @@ export function StudioUsernameClient({
       router.push(`${pathname}/sandbox/${sandboxId}`)
     } catch (error) {
       console.error("Failed to create sandbox:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create sandbox",
+      )
+    } finally {
       setIsCreating(false)
     }
   }

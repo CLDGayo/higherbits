@@ -44,12 +44,36 @@ export function Footer({ className, isOpenSource = true }: FooterProps) {
               </span>
             )}
           </div>
-          <nav className="flex items-center justify-end gap-2 md:gap-4">
+          <nav className="flex flex-wrap items-center justify-end gap-2 md:gap-4">
             <Link
               href="/our-story"
               className="text-sm text-muted-foreground hover:underline underline-offset-4"
             >
               Our Story
+            </Link>
+            <Link
+              href="/terms"
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/refunds"
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+            >
+              Refunds
+            </Link>
+            <Link
+              href="mailto:support@higherbits.dev"
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+            >
+              Contact
             </Link>
             <Link
               href="https://discord.gg/Qx4rFunHfm"

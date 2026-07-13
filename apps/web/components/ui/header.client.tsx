@@ -303,14 +303,14 @@ function HeaderContent({
                   <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg shadow-sm shadow-black/5 rtl:space-x-reverse">
                     <Button
                       onClick={handleRedirectToStudio}
-                      className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10"
+                      className="rounded-s-full !rounded-e-none shadow-none focus-visible:z-10"
                     >
                       Add new
                     </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
-                          className="rounded-none shadow-none first:rounded-s-lg last:rounded-e-lg focus-visible:z-10 !border !border-[hsl(var(--primary-gradient-start))] hover:!border-[hsl(var(--primary-gradient-start))] hover:opacity-90 hover:text-accent"
+                          className="rounded-e-full !rounded-s-none shadow-none focus-visible:z-10 !border !border-[hsl(var(--primary-gradient-start))] hover:!border-[hsl(var(--primary-gradient-start))] hover:opacity-90 hover:text-accent"
                           size="icon"
                           aria-label="Component options"
                         >

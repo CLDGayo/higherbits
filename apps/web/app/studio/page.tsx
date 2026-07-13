@@ -114,11 +114,47 @@ const Spotlight = ({
   )
 }
 
+// Format a count for display: plain number below 1000, "1.2k" style above.
+function formatStat(n: number): string {
+  if (n < 1000) return String(n)
+  const thousands = n / 1000
+  const rounded = Math.round(thousands * 10) / 10
+  return `${rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)}k`
+}
+
 export default function StudioPage() {
   const { user, isLoaded } = useUser()
   const [studioUrl, setStudioUrl] = useState("/studio")
   const [username, setUsername] = useState("")
   const [isEnterPressed, setIsEnterPressed] = useState(false)
+  const [stats, setStats] = useState<{
+    users: number
+    components: number
+    downloads: number
+    contributors: number
+  } | null>(null)
+
+  // Fetch real platform stats on mount (unauthenticated, cached server-side).
+  useEffect(() => {
+    let cancelled = false
+    fetch("/api/platform/stats")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data || data.error) return
+        setStats({
+          users: data.users ?? 0,
+          components: data.components ?? 0,
+          downloads: data.downloads ?? 0,
+          contributors: data.contributors ?? 0,
+        })
+      })
+      .catch(() => {
+        // fail-soft: fall back to rendering 0s
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   // Resolve username: Clerk first, then fall back to the Supabase `users` table
   // via /api/user/me (email/Google signups often have no Clerk username but do
@@ -310,10 +346,19 @@ export default function StudioPage() {
                 className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 my-12 md:my-16 max-w-4xl mx-auto px-4"
               >
                 {[
-                  { value: "100k+", label: "Monthly Users" },
-                  { value: "2k+", label: "Components" },
-                  { value: "124k+", label: "Monthly Downloads" },
-                  { value: "100+", label: "Contributors" },
+                  { value: formatStat(stats?.users ?? 0), label: "Users" },
+                  {
+                    value: formatStat(stats?.components ?? 0),
+                    label: "Components",
+                  },
+                  {
+                    value: formatStat(stats?.downloads ?? 0),
+                    label: "Downloads",
+                  },
+                  {
+                    value: formatStat(stats?.contributors ?? 0),
+                    label: "Contributors",
+                  },
                 ].map((stat, index) => (
                   <motion.div
                     key={index}

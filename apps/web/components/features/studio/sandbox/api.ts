@@ -40,7 +40,16 @@ export const createNewSandbox = async (
     body: JSON.stringify({ userId }),
   })
 
-  if (!res.ok) throw new Error(await res.text())
+  if (!res.ok) {
+    let message = "Failed to create sandbox"
+    try {
+      const body = await res.json()
+      if (body?.error) message = body.error
+    } catch {
+      // response body was not JSON — keep the default message
+    }
+    throw new Error(message)
+  }
   const response = await res.json()
 
   return { sandboxId: response.shortSandboxId }

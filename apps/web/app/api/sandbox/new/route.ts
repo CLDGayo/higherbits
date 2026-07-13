@@ -25,11 +25,23 @@ export async function POST(req: NextRequest) {
     }
 
     console.log("Creating CodeSandbox instance...")
-    const sandbox = await codesandboxSdk.sandbox.create({
-      template: TEMPLATES[DEFAULT_TEMPLATE],
-      hibernationTimeoutSeconds: DEFAULT_HIBERNATION_TIMEOUT,
-      privacy: "public", // Public visibility
-    })
+    let sandbox
+    try {
+      sandbox = await codesandboxSdk.sandbox.create({
+        template: TEMPLATES[DEFAULT_TEMPLATE],
+        hibernationTimeoutSeconds: DEFAULT_HIBERNATION_TIMEOUT,
+        privacy: "public", // Public visibility
+      })
+    } catch (sdkError) {
+      console.error("CodeSandbox SDK error:", sdkError)
+      return NextResponse.json(
+        {
+          error:
+            "Sandbox service unavailable — check CSB_API_KEY configuration",
+        },
+        { status: 502 },
+      )
+    }
 
     const codesandboxId = sandbox.id
     console.log(`CodeSandbox instance created: ${codesandboxId}`)
@@ -48,7 +60,10 @@ export async function POST(req: NextRequest) {
 
     if (dbError) {
       console.error("Error storing sandbox:", dbError)
-      return new NextResponse("Failed to save sandbox data", { status: 500 })
+      return NextResponse.json(
+        { error: "Failed to save sandbox data" },
+        { status: 500 },
+      )
     }
 
     console.log(`Sandbox created and stored with ID: ${dbSandbox.id}`)
@@ -61,6 +76,9 @@ export async function POST(req: NextRequest) {
     })
   } catch (error) {
     console.error("Error creating sandbox:", error)
-    return new NextResponse("Internal Server Error", { status: 500 })
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    )
   }
 }
