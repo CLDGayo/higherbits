@@ -120,16 +120,35 @@ export default function StudioPage() {
   const [username, setUsername] = useState("")
   const [isEnterPressed, setIsEnterPressed] = useState(false)
 
-  // Set username from Clerk user data
+  // Resolve username: Clerk first, then fall back to the Supabase `users` table
+  // via /api/user/me (email/Google signups often have no Clerk username but do
+  // have a DB username). Studio access itself validates against the DB, so the
+  // enable state must match that source, not Clerk alone.
   useEffect(() => {
     if (!isLoaded || !user) return
 
-    // Get username from all available sources
     const usernameFromClerk = user.username ?? ""
 
     if (usernameFromClerk) {
       setUsername(usernameFromClerk)
       setStudioUrl(`/studio/${usernameFromClerk}`)
+      return
+    }
+
+    let cancelled = false
+    fetch("/api/user/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.username) return
+        setUsername(data.username)
+        setStudioUrl(`/studio/${data.username}`)
+      })
+      .catch(() => {
+        // fail-soft: leave the "set username" fallback button in place
+      })
+
+    return () => {
+      cancelled = true
     }
   }, [user, isLoaded])
 
@@ -243,6 +262,24 @@ export default function StudioPage() {
                         <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border border-neutral-300 bg-neutral-100 px-1.5 ml-1.5 font-sans text-[11px] text-neutral-600 leading-none opacity-100 flex">
                           <Icons.enter className="h-2.5 w-2.5" />
                         </kbd>
+                      </Link>
+                    </Button>
+                  ) : isLoaded && !user ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
+                    >
+                      <Link href="/sign-in">Sign in to enter Studio</Link>
+                    </Button>
+                  ) : isLoaded && user ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
+                    >
+                      <Link href="/settings/profile">
+                        Set username to enter Studio
                       </Link>
                     </Button>
                   ) : (
@@ -500,6 +537,24 @@ export default function StudioPage() {
                         <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border border-neutral-300 bg-neutral-100 px-1.5 ml-1.5 font-sans text-[11px] text-neutral-600 leading-none opacity-100 flex">
                           <Icons.enter className="h-2.5 w-2.5" />
                         </kbd>
+                      </Link>
+                    </Button>
+                  ) : isLoaded && !user ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
+                    >
+                      <Link href="/sign-in">Sign in to enter Studio</Link>
+                    </Button>
+                  ) : isLoaded && user ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
+                    >
+                      <Link href="/settings/profile">
+                        Set username to enter Studio
                       </Link>
                     </Button>
                   ) : (
