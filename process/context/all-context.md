@@ -1,12 +1,36 @@
 # HigherBits.dev - All Context
 
-Last updated: 2026-07-11
+Last updated: 2026-07-13
 
 Root context entrypoint for the repo. Use for (1) quick routing to the right context pack, (2) broad architecture + repo understanding. Start here before loading deeper context files.
 
 ---
 
 ## Project Identity (read first)
+
+**CURRENT STATE CORRECTION (2026-07-13, supersedes the paragraphs immediately below):**
+`apps/web` is NOT the small 5-9-component curated storefront described in the rest of this
+section anymore. Following the `21st-promotion` (2026-07-09) and `higherbits-full-port` programs,
+`apps/web` is the **full 21st.dev-derived application port** — marketplace, creator studio, Magic
+MCP onboarding/console, contest, collections, pricing, and publish/draft flows all live and wired.
+The registry/Qdrant-driven curated catalog described below is one surface within this larger app,
+not the whole product. Brand identity is fully **HigherBits.dev** ("Higher Bits Labs Inc." in
+legal/footer copy) — the `higherbits-cozy-rebrand` program (completed 2026-07-13, see
+`process/features/higherbits-cozy-rebrand/completed/higherbits-cozy-rebrand_12-07-26/`) fixed the
+double/missing-logo bug, swept all residual "21st" brand strings from `apps/web`/`apps/backend`
+shipped code, and restyled the app to a **cozy claymorphism visual system**: pastel lavender/cream
+("cozy daylight") + a dark "cozy dusk" theme, puffy 20-28px-radius cards with dual soft shadows,
+a reusable CSS-only `.texture-cushion` grain/texture utility, pill buttons, and Quicksand-family
+rounded typography — applied across header/sidebar/footer/landing/pricing/component-card surfaces.
+**Monetization readiness (Lemon Squeezy, as of 2026-07-13):** legal/policy pages are live (`/terms`,
+`/privacy`, `/refunds`, linked from the footer); `ops/seed-placeholder-components.mjs` seeded 8
+components into the live DB; `/api/platform/stats` returns real (non-mocked) platform stats. Stripe
+checkout code paths described later in this file are effectively dead/unconfigured pending a Lemon
+Squeezy integration (blocked on user-supplied LS account credentials — see
+`process/features/higherbits-cozy-rebrand/backlog/`). Studio publish flow additionally needs a
+`CSB_API_KEY` (CodeSandbox) that is not yet provisioned.
+
+**Original historical description (pre-full-port, retained for registry/Qdrant-catalog subsystem accuracy — the paragraphs below describe the registry-driven curated catalog subsystem, which still exists inside the larger app):**
 
 **HigherBits.dev** is a premium **Next.js + Turborepo monorepo** UI marketplace — a high-end curated component, template, and theme aggregator. It showcases a growing catalog of original React UI components and ingest MIT-licensed components from GitHub via the `ops/github-ingest.mjs` tool. A **Qdrant vector database** powers behavior-based semantic search ("a soft pastel button", "a calm photo card") rather than name search, populated by an **n8n** ingestion pipeline that reads staged `docs/evidence-manifest/registry/` files.
 
@@ -141,6 +165,11 @@ docs/
 
 ## Technology Stack
 
+**Note (2026-07-13):** the stack below still applies but "storefront" undersells current scope —
+`apps/web` is the full 21st.dev-derived port (marketplace/studio/magic/contest/pricing/publish),
+cozy-claymorphism-styled per the `higherbits-cozy-rebrand` program. See the CURRENT STATE
+CORRECTION at the top of this file.
+
 - **Framework:** Next.js 15 (App Router) storefront in `apps/web`
 - **Component engine:** isolated in `packages/ui`, decoupled from the storefront shell (never imports from `apps/web`)
 - **Monorepo:** Turborepo build orchestration; pnpm workspaces (`apps/*`, `packages/*`)
@@ -215,6 +244,14 @@ Cozy Downloads/
 
 ## Open Questions / Outstanding Work
 
+- **Lemon Squeezy checkout integration NOT built (blocked on user LS account creds).** Stripe
+  checkout code paths in this repo are effectively dead/unconfigured. Follow-up work (overlay UI +
+  `@lemonsqueezy/lemonsqueezy.js` + a webhook route mirroring
+  `apps/web/app/api/webhooks/stripe/route.ts`) is tracked in
+  `process/features/higherbits-cozy-rebrand/backlog/lemonsqueezy-checkout-integration_NOTE_13-07-26.md`.
+- **`CSB_API_KEY` (CodeSandbox) NOT provisioned.** Blocks the studio publish flow's CodeSandbox
+  export step. See
+  `process/features/higherbits-cozy-rebrand/backlog/csb-api-key-provisioning_NOTE_13-07-26.md`.
 - **Clerk env keys NOT set (runtime blocker — affects ALL phases).** `apps/web/.env.local` needs `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` (`pk_test_…`) and `CLERK_SECRET_KEY` (`sk_test_…`) from the Clerk dashboard. **CRITICAL BUILD-VS-RUNTIME DISTINCTION (discovered Phase 1, 2026-06-28):** A format-valid placeholder key (e.g. `pk_test_Y2xlcmsuZXhhbXBsZS5jb20k`, decodes to `clerk.example.com`) satisfies Next.js build validation (build exits 0) but BREAKS the dev RUNTIME — `clerkMiddleware()` in `apps/web/middleware.ts` attempts a handshake to the encoded frontend-API host, which does not resolve → `ERR_NAME_NOT_RESOLVED` on every page load. Build/CI/vitest are unaffected (they do not execute middleware). For local browser testing of ANY Clerk-gated route: real Clerk dev keys (`pk_test_` / `sk_test_` from a live Clerk app in the Clerk dashboard) are required in `apps/web/.env.local`.
 - **Clerk session-token claim NOT configured.** `publicMetadata` is not in the default Clerk session token. The Pro check (`sessionClaims.publicMetadata.isPro`) only works after adding the custom claim `{"publicMetadata": "{{user.public_metadata}}"}` in Clerk Dashboard → Sessions, and setting a test user's public metadata to `{"isPro": true}`.
 - **Billing/checkout (Stripe) & Connect — BUILT (Phase 1 & Phase 9 complete).** `apps/web/app/api/checkout/route.ts` and `apps/web/app/api/webhooks/stripe/route.ts` are live (dual mode, 7-event lifecycle, idempotent). Phase 9 introduced Stripe Connect payouts, using server-side component registry lookups (`readRegistryEntry`) to prevent payout destination manipulation. Env vars `STRIPE_SECRET_KEY`, `STRIPE_SUBSCRIPTION_PRICE_ID`, `STRIPE_LIFETIME_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` needed in `apps/web/.env.local` for live use. Unit-tested with mocks (no live Stripe calls needed for tests or build).

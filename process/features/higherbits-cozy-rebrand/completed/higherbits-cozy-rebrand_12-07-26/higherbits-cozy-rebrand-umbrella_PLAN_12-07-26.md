@@ -13,7 +13,7 @@ metadata:
 
 **Date:** 12-07-26
 **Complexity:** COMPLEX
-**Status:** ⏳ PLANNED
+**Status:** ✅ COMPLETE — all 6 phases executed, EVL-verified, committed and deployed to production higherbits.dev
 
 - Program type: PHASE PROGRAM (6 phases, sequential with gated joins)
 - Date: 12-07-26
@@ -449,27 +449,45 @@ gates plus agent-probe for visual correctness, same as that program.)
 
 ## Current Execution State
 
-Last updated: 12-07-26
-Completed phases: none (Phase 0 RESEARCH step complete; Phase 0 not yet fully closed out)
-Current phase: Phase 0 — Ground truth + full-site audit
-Current loop step: PLAN-SUPPLEMENT complete — next: PVL
-Validate-contract status: pending (all phases)
-Program Net Gate: PENDING
-Latest validator run: not yet run
+Last updated: 13-07-26 (UPDATE PROCESS closeout)
+Completed phases: Phase 0 (Ground truth), Phase 1 (Logo/header unification), Phase 2 (Brand sweep),
+Phase 3 (Cozy token system), Phase 4 (Surface restyle), Phase 5 (Long-tail QA) — ALL 6/6 VERIFIED
+(each phase plan carries `Status: CONDITIONAL` gate at the PVL/validate-contract level — accepted
+known-gaps only, no unresolved FAILs; EXECUTE + EVL confirmed green on every phase).
+Current phase: none — program complete.
+Current loop step: UPDATE-PROCESS complete (this closeout).
+Validate-contract status: written for all 6 phases (CONDITIONAL gate, accepted known-gaps).
+Program Net Gate: ✅ VERIFIED — build/typecheck/vitest green at every phase exit; brand-sweep grep
+gate 0 matches; logo single-render gate confirmed; cozy claymorphism tokens live in both themes.
+Latest validator run: see UPDATE PROCESS closeout report (13-07-26).
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
-Orchestrator rule: read "Current loop step" and "validate-contract status" before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.
 
-**Phase 0 RESEARCH findings (12-07-26):** Baseline gates all green (build exit 0/90 routes, tsc
-exit 0, vitest 4 files/10 tests pass). packages/ui confirmed OUT of scope (zero imports from
-apps/web) — the Phase 0 hard-stop question is resolved. Root cause of the logo bug confirmed
-(header.client.tsx:230 unconditional Logo render; DOUBLE renders on 6 named routes; /pricing
-invisible-logo unverified, needs live check). Critical KEEP allow-list identified for Phase 2's
-brand sweep (@21st-dev/cli, @21st-dev/magic, 21st-vite, 21st-registry.json are functional and must
-NOT be renamed). Phase 3's current token state confirmed (globals.css lines ~220-306,
-tailwind.config.js lines ~47-107). All 5 phase plans (00, 01, 02, 03, 05) have been supplemented
-with these findings via PLAN-SUPPLEMENT (inner-loop Step 3); each carries an Inner Loop Refresh
-Note dated 12-07-26. Next step: spawn vc-validate-agent for Phase 0 PVL (inner-loop Step 4).
+**Execution commits (all on `main`):**
+- `af928f7` fix: unify logo rendering to single header source (Phase 1)
+- `9122d52` feat: rebrand 21st.dev to HigherBits.dev (Phase 2)
+- `d4729dc` feat: add cozy claymorphism design token system (Phase 3)
+- `90a99a0` feat: restyle core surfaces to cozy cushion design (Phase 4)
+- `716e576` chore: complete cozy rebrand long-tail QA (Phase 5)
+
+**Post-program follow-ups shipped (outside this program's blast radius, same feature area):**
+- `9135506` fix: enable studio access for users without Clerk username
+- `56eb4ef` fix: harden studio UX and add store-review readiness surface (publish-modal error
+  surfacing, real `/api/platform/stats`, split-button fix, `/refunds` policy page + footer policy
+  links, `ops/seed-placeholder-components.mjs` seeded 8 components into the live DB, Supabase
+  storage bucket "users" created)
+
+**Deployed to production** — higherbits.dev (gayo-vps, pm2 app `higherbits`) reflects this program's
+work as of 13-07-26.
+
+**Known gaps carried to backlog (documented, non-blocking):**
+- `vc-agent-browser` was unavailable throughout — no dedicated screenshot/visual-probe artifact
+  exists for any phase; source-token/grep evidence was the accepted substitute per the prior
+  higherbits-redesign program's precedent.
+- `/pricing` route missing from the Playwright a11y regression matrix — see
+  `process/features/higherbits-cozy-rebrand/backlog/pricing-a11y-coverage-gap_NOTE_12-07-26.md`.
+- Lemon Squeezy checkout integration and `CSB_API_KEY` provisioning are separate follow-up work —
+  see new backlog notes added at this closeout.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes — update-process-agent rewrites it after every phase closeout (overwrite, not append — git history is the audit log).
 
