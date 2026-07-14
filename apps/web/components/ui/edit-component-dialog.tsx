@@ -59,7 +59,7 @@ const safeFetchFile = async (url: string): Promise<string> => {
       try {
         const r2Url = url.replace(
           "https://cdn.HigherBits.dev/",
-          "https://pub-d2a7943f757e46d59fd4e364dbae76ae.r2.dev/",
+          process.env.NEXT_PUBLIC_CDN_URL + "/",
         )
         console.log(`Trying alternative R2 URL: ${r2Url}`)
         const r2Response = await fetch(r2Url)

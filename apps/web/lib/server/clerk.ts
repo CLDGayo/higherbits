@@ -2,7 +2,7 @@
 
 import { verifyToken } from "@clerk/nextjs/server"
 
-export const verifyJwtToken = async (jwt: string) => {
+export const verifyJwtToken = async (jwt: string): ReturnType<typeof verifyToken> => {
   if (!process.env.CLERK_SECRET_KEY) {
     throw new Error("CLERK_SECRET_KEY is not set")
   }
