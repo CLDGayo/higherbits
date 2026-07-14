@@ -1,5 +1,6 @@
 import { OpenAI } from "openai"
 import { NextResponse } from "next/server"
+import { auth } from "@clerk/nextjs/server"
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -7,6 +8,15 @@ const openai = new OpenAI({
 
 export async function POST(request: Request) {
   try {
+    const { userId } = await auth()
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      )
+    }
+
     const { defaultConfig, dependencyConfigs } = await request.json()
 
     console.log("🔄 [Tailwind Merge] Request received:", {

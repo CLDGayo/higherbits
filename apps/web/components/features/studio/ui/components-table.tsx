@@ -69,17 +69,30 @@ interface DemosTableProps {
 const formatTextWithLinks = (text: string) => {
   if (!text) return null
 
-  // Replace URLs with HTML links
-  const linkedText = text.replace(
-    /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g,
-    (url) => {
-      const href = url.startsWith("www.") ? `https://${url}` : url
-      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline break-all">${url}</a>`
-    },
-  )
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+  const parts = text.split(urlRegex);
 
-  // Return with dangerouslySetInnerHTML since we're only adding safe <a> tags
-  return <div dangerouslySetInnerHTML={{ __html: linkedText }} />
+  return (
+    <div>
+      {parts.map((part, i) => {
+        if (part.match(urlRegex)) {
+          const href = part.startsWith("www.") ? `https://${part}` : part;
+          return (
+            <a
+              key={i}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline break-all"
+            >
+              {part}
+            </a>
+          );
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </div>
+  );
 }
 
 // Format status text: capitalize and replace underscores with spaces

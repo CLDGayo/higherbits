@@ -1,0 +1,1 @@
+{"nodes": [{"id": "edge_fn_generate_embeddings", "label": "Generate Embeddings Edge Function", "file_type": "code", "source_file": "supabase/functions/generate-embeddings/index.ts"}], "edges": [], "hyperedges": []}

@@ -1,0 +1,87 @@
+{
+  "task": "21st-promotion Phase 1 — Backend & Schema Merge",
+  "result": "PASS-WITH-KNOWN-GAPS",
+  "commands": [
+    { "command": "corepack pnpm --filter @repo/db build", "result": "PASS" },
+    { "command": "corepack pnpm --filter @repo/db type-check", "result": "PASS" },
+    { "command": "corepack pnpm --filter web test -- clerk-webhook", "result": "PASS (8/8)" },
+    { "command": "grep -rE \"from ['\\\"].*21st-dev/apps/web/app/api/(search|webhooks/clerk|stripe)\" apps/web/ | wc -l", "result": "PASS (0)" },
+    { "command": "corepack pnpm install && corepack pnpm turbo run build --dry", "result": "PASS" },
+    { "command": "git status --porcelain --untracked-files=all packages/db/prisma/", "result": "PASS (only schema.prisma untracked)" },
+    { "command": "corepack pnpm --filter @repo/db test", "result": "PASS (1/1 smoke)" },
+    { "command": "corepack pnpm --filter web build", "result": "PASS" }
+  ],
+  "manualChecks": [
+    { "check": "Live Supabase Postgres connectivity (prisma db pull / runtime query against vucvdpamtrjkzmubwlts)", "result": "SKIP — no credentials in env; user must supply real DATABASE_URL/DIRECT_DATABASE_URL" },
+    { "check": "packages/db/.env placeholder content populated", "result": "SKIP — privacy hook needs user approval; empty gitignored file created; required content in .env.example" },
+    { "check": "onDelete Cascade blast radius (11 cascading child models) reviewed and accepted", "result": "PENDING USER REVIEW — documented in adversarial-validation.json scenario (a)" }
+  ],
+  "steps": [
+    {
+      "step": "A1 schema rename compiles + Prisma client generates",
+      "command": "corepack pnpm --filter @repo/db build",
+      "result": "PASS",
+      "notes": "Exit 0. prebuild runs `prisma generate` (client v6.19.3 to ./prisma/client), then two tsup entries build (index.ts with --dts, prisma.ts without). local_users rename resolves all 21 FK relations."
+    },
+    {
+      "step": "A3 type-check across packages/db",
+      "command": "corepack pnpm --filter @repo/db type-check",
+      "result": "PASS",
+      "notes": "tsc --noEmit exit 0. No TypeScript errors."
+    },
+    {
+      "step": "A2 existing Clerk webhook regression (AC-12.2/12.3/12.4) + 5 new user.* tests",
+      "command": "corepack pnpm --filter web test -- clerk-webhook",
+      "result": "PASS",
+      "notes": "8/8 tests pass. 3 existing org-membership + invalid-signature tests unregressed; 5 new: user.created upsert (asserts NO Stripe call), user.updated upsert (updated_at Date), user.deleted deleteMany, malformed-payload 400 guard (boundary case), Prisma-failure 500 with no DB-detail leak (boundary case)."
+    },
+    {
+      "step": "A4 zero-live-wiring security gate",
+      "command": "grep -rE \"from ['\\\"].*21st-dev/apps/web/app/api/(search|webhooks/clerk|stripe)\" apps/web/ | wc -l",
+      "result": "PASS",
+      "notes": "Returns 0. Broader any-reference grep also 0 (re-export/require/dynamic-import bypass ruled out)."
+    },
+    {
+      "step": "B1 workspace registration + non-interference",
+      "command": "corepack pnpm install && corepack pnpm turbo run build --dry",
+      "result": "PASS",
+      "notes": "pnpm install regenerated lockfile, added prisma+@prisma/client, recognized `backend` (21st-dev/apps/backend) as workspace member with no errors. turbo dry-run lists backend in Packages in Scope; backend#build is a no-op (no build script — B2 documented, expected)."
+    },
+    {
+      "step": "C1-C3/C5 generated client excluded from git",
+      "command": "git status --porcelain --untracked-files=all packages/db/prisma/",
+      "result": "PASS",
+      "notes": "Only packages/db/prisma/schema.prisma listed as untracked. The generated prisma/client/ (3.1MB) is fully excluded (git check-ignore packages/db/prisma/client confirms)."
+    },
+    {
+      "step": "C4 Prisma client smoke test",
+      "command": "corepack pnpm --filter @repo/db test",
+      "result": "PASS",
+      "notes": "node --test 1/1 pass. Asserts PrismaClient instantiates without throwing, `local_users` delegate present, `users` delegate ABSENT (rename verified at runtime). No DB connection opened."
+    },
+    {
+      "step": "apps/web full production build (root app unaffected)",
+      "command": "corepack pnpm --filter web build",
+      "result": "PASS",
+      "notes": "Next.js production build succeeds. /api/webhooks/clerk route compiles with the new @repo/db/prisma import."
+    },
+    {
+      "step": "D1 file-promotion hygiene self-audit",
+      "command": "find packages/db/prisma -type d -iname node_modules -o -iname .pnpm-store -o -iname .turbo (+ vcs-dir check)",
+      "result": "PASS",
+      "notes": "Empty. Copy was a single-file `cp 21st-dev/apps/web/prisma/schema.prisma packages/db/prisma/schema.prisma` (not a recursive directory copy), so no vcs/dep/build dirs could be promoted."
+    },
+    {
+      "step": "Live Supabase Postgres connectivity",
+      "command": "n/a — requires real DATABASE_URL/DIRECT_DATABASE_URL",
+      "result": "SKIP",
+      "notes": "KNOWN GAP. No live Supabase credentials in this environment; placeholder values only were written (never fabricated real ones). prisma generate + build + type-check + smoke test do NOT need a live connection and all pass. prisma migrate deploy / db pull / real runtime queries against project vucvdpamtrjkzmubwlts remain UNVERIFIED until the user supplies real credentials in apps/web/.env.local and packages/db/.env."
+    },
+    {
+      "step": "packages/db/.env placeholder file",
+      "command": "n/a — privacy hook",
+      "result": "SKIP",
+      "notes": "KNOWN GAP. An empty gitignored packages/db/.env was created, but its placeholder CONTENT could not be written: the repo privacy-block hook requires interactive user approval for any .env write that this autonomous agent cannot self-grant. The required placeholder content is documented in root .env.example (DATABASE_URL / DIRECT_DATABASE_URL, committed) — the user must populate packages/db/.env and apps/web/.env.local with real values."
+    }
+  ]
+}

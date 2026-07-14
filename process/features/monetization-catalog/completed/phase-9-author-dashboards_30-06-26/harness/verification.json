@@ -1,0 +1,16 @@
+{
+  "task": "Phase 9: Author Dashboards and Revenue Share",
+  "result": "PASS",
+  "commands": [
+    "corepack pnpm --filter web run test __tests__/checkout.test.ts",
+    "corepack pnpm --filter web run test __tests__/dashboard.test.ts",
+    "corepack pnpm --filter web run build"
+  ],
+  "manualChecks": [
+    "Verified the build static site generator does not fail on Stripe retrieve type errors",
+    "Verified that Stripe Connect dashboard button requests the login link",
+    "Verified that Stripe Account ID is securely resolved from the registry server-side",
+    "Verified that rate limiting applies to sensitive routes",
+    "Verified orgId is extracted directly from auth() server-side"
+  ]
+}

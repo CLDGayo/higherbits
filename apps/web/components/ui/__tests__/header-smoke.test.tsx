@@ -23,6 +23,10 @@ vi.mock("framer-motion", () => ({ useAnimation: () => ({ start: vi.fn() }), moti
 vi.mock("next-themes", () => ({ useTheme: () => ({ theme: "light", setTheme: vi.fn() }) }))
 vi.mock("@tanstack/react-query", () => ({ useQuery: () => ({ data: null, isLoading: false }) }))
 
+vi.mock("../sidebar", () => ({
+  useSidebar: () => ({ toggleSidebar: vi.fn(), state: "expanded", isMobile: false }),
+  SidebarTrigger: () => <button data-testid="sidebar-trigger">Sidebar Trigger</button>,
+}))
 describe("Header Smoke Test", () => {
   it("renders without crashing and contains nav elements", () => {
     const { getByTestId, container } = render(<Header />)

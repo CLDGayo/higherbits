@@ -55,12 +55,15 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       checkShells()
 
-      const isPortOpen = await connectedSandbox.ports.waitForPort(5173)
-      if (isPortOpen) {
-        const newPreviewURL = connectedSandbox.ports.getPreviewUrl(5173)
-        console.log("newPreviewURL", newPreviewURL)
-        setPreviewURL(newPreviewURL || null)
-      }
+      connectedSandbox.ports.waitForPort(5173).then((isPortOpen) => {
+        if (isPortOpen) {
+          const newPreviewURL = connectedSandbox.ports.getPreviewUrl(5173)
+          console.log("newPreviewURL", newPreviewURL)
+          setPreviewURL(newPreviewURL || null)
+        }
+      }).catch(err => {
+        console.error("Error waiting for port 5173", err)
+      })
     } catch (error) {
       console.error("Failed to initialize sandbox in hook:", error)
       sandboxRef.current = null

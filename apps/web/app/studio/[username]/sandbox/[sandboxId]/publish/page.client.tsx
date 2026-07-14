@@ -493,8 +493,11 @@ const PublishPage = ({
 
             {previewURL && (
               <iframe
-                src={`${previewURL}?theme=${resolvedTheme}` || ""}
-                className="w-2/3 h-full"
+                src={`/api/sandbox/proxy?url=${encodeURIComponent(previewURL)}`}
+                className="w-2/3 h-full border-0"
+                title="Preview"
+                allow="cross-origin-isolated; accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+                sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
               />
             )}
           </div>

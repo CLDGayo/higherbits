@@ -1,5 +1,6 @@
 import OpenAI from "openai"
 import { NextResponse } from "next/server"
+import { auth } from "@clerk/nextjs/server"
 import { makeSlugFromName } from "@/components/features/publish/hooks/use-is-check-slug-available"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { defaultTailwindConfig, defaultGlobalCss } from "@/lib/defaults"
@@ -42,18 +43,20 @@ const MOCK_RESPONSE = {
 
 export async function POST(request: Request) {
   try {
-    const { code, userId } = await request.json()
+    const { userId } = await auth()
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      )
+    }
+
+    const { code } = await request.json()
 
     if (!code) {
       return NextResponse.json(
         { error: "Component code is required" },
-        { status: 400 },
-      )
-    }
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
         { status: 400 },
       )
     }

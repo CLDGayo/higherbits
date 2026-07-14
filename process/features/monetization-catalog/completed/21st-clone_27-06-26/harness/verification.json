@@ -1,0 +1,12 @@
+{
+  "phase": "11",
+  "gates_run": [
+    "node scripts/validate-registry.mjs",
+    "corepack pnpm --filter web test"
+  ],
+  "gates_status": "PASS",
+  "manual_checks_required": [
+    "Navigate to `/catalog/...` and confirm the version switcher UI renders"
+  ],
+  "date": "2026-06-30"
+}

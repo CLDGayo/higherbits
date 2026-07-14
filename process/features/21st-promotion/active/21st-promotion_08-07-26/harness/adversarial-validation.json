@@ -1,0 +1,22 @@
+{
+  "scenarios": [
+    {
+      "scenario": "(a) Cascade-delete risk on billing-adjacent rows: a crafted/malformed user.deleted webhook triggers prisma.local_users.delete which cascades to billing-adjacent children (api_keys, author_payouts, etc.).",
+      "ruled_out": true,
+      "rationale": "Impact is nil today AND explicitly bounded. (1) The user.deleted handler is only reachable AFTER svix signature verification (existing wh.verify) — a crafted payload without a valid signature returns 400 before any DB call. (2) A verified user.deleted with no `id` returns 400 before any DB call (malformed-payload guard, covered by test P1-user.deleted-missing-id). (3) local_users has a MIX of onDelete: 11 Cascade + 10 NoAction relations (all values imported unchanged — E7). A delete WOULD cascade the 11 Cascade children (api_keys, author_payouts, bundles, component_analytics, component_likes, demo_hunt_votes, mcp_component_usage, mcp_generation_requests, payout_rates, templates, usages), but those models are imported present-but-unused this phase with zero live rows, so real-world blast radius is nil. (4) deleteMany is used (not delete), so a missing row is a no-op rather than a throw. This cascade behavior is documented inline in the route, not silently assumed. RESIDUAL: once these models carry live rows (future phase), a user.deleted will hard-cascade billing rows — flagged for the user to confirm as intended before real data exists.",
+      "test_coverage": "P1-user.deleted, P1-user.deleted-missing-id"
+    },
+    {
+      "scenario": "(b) Prisma error-response detail leakage: a Prisma failure (unique constraint, connection error) leaks DB schema / column names / error codes in the HTTP response body.",
+      "ruled_out": true,
+      "rationale": "The entire user.* DB block is wrapped in try/catch. On any thrown Prisma error the handler logs server-side via console.error and returns a fixed generic body 'User sync failed' with status 500 — the Prisma error object is never serialized into the response. Test P1-user.created-Prisma-failure injects a rejected upsert with a realistic Prisma message ('P2002 Unique constraint failed on the fields: (email)') and asserts the response body does NOT contain 'P2002' or 'email' and equals exactly 'User sync failed'.",
+      "test_coverage": "P1-user.created-Prisma-failure"
+    },
+    {
+      "scenario": "(c) A4 security-gate bypass via re-export chain: a barrel/index file in apps/web indirectly re-exports from a 21st-dev billing/search/webhook route path, evading the literal A4 grep.",
+      "ruled_out": true,
+      "rationale": "Two greps run. The primary A4 gate `grep -rE \"from ['\\\"].*21st-dev/apps/web/app/api/(search|webhooks/clerk|stripe)\" apps/web/` returns 0. A broader second grep dropping the `from` anchor — `grep -rE \"21st-dev/apps/web/app/api/(search|webhooks/clerk|stripe)\" apps/web/` — catches ANY textual reference including re-export (`export ... from`), require(), and dynamic import() string paths, and also returns 0. No 21st-dev route file was copied into apps/web/app/api/ (the only file touched in that tree is the pre-existing webhooks/clerk/route.ts, which imports @repo/db/prisma, not any 21st-dev path). RESIDUAL (documented in validate-contract Known Gaps): a fully string-concatenated dynamic path could still evade a static grep, but no such pattern exists anywhere in this repo's conventions.",
+      "test_coverage": "A4 grep gate (both variants = 0)"
+    }
+  ]
+}

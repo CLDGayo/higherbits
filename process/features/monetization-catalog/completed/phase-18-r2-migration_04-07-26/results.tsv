@@ -1,0 +1,4 @@
+iteration	date	domain	gaps_found	gaps_fixed	gates_green	loop_status
+baseline	04-07-26	plan	6	0	0/1	BASELINE_CONDITIONAL
+001	04-07-26	plan	6	6	0/1	SUPPLEMENT_APPLIED
+002	04-07-26	plan	0	0	1/1	HALTED_SUCCESS

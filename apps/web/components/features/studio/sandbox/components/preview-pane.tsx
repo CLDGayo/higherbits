@@ -19,6 +19,7 @@ interface PreviewPaneProps {
   showPreview: boolean
   iframeKey: number
   onRefresh: () => void
+  codesandboxId?: string
 }
 
 export function PreviewPane({
@@ -32,6 +33,7 @@ export function PreviewPane({
   showPreview,
   iframeKey,
   onRefresh,
+  codesandboxId,
 }: PreviewPaneProps) {
   const [previousConnectedShellId, setPreviousConnectedShellId] = useState<
     string | null
@@ -87,8 +89,11 @@ export function PreviewPane({
             ) : (
               <iframe
                 key={`${iframeKey}-${connectedShellId}`}
-                src={`${previewURL}?theme=${resolvedTheme}`}
-                className="w-full h-full rounded-b"
+                src={`/api/sandbox/proxy?url=${encodeURIComponent(previewURL)}`}
+                className="w-full h-full rounded-b border-0"
+                title="Preview"
+                allow="cross-origin-isolated; accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+                sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
               />
             )}
           </div>

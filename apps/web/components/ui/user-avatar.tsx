@@ -41,7 +41,7 @@ export function UserAvatar({
       style={{ width: size, height: size }}
       {...props}
     >
-      <AvatarImage src={src || "/placeholder.svg"} alt={alt || "User avatar"} />
+      <AvatarImage src={src || undefined} alt={alt || "User avatar"} />
       <AvatarFallback>
         {alt
           ? alt
@@ -87,7 +87,7 @@ export function UserAvatar({
             <Avatar className="h-12 w-12 shadow-base">
               <AvatarImage
                 src={
-                  user.display_image_url || user.image_url || "/placeholder.svg"
+                  user.display_image_url || user.image_url || undefined
                 }
                 alt={user.display_name || user.name || "User avatar"}
               />

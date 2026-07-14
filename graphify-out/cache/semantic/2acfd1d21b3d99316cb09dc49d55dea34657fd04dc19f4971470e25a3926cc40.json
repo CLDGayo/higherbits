@@ -1,0 +1,1 @@
+{"nodes": [{"id": "turbo_json", "label": "Turbo Configuration", "file_type": "code", "source_file": "turbo.json"}], "edges": [{"source": "turbo_json", "target": "package_json", "relation": "references", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "turbo.json"}], "hyperedges": []}

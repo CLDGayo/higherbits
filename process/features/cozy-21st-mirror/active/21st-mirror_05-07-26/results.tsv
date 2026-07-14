@@ -1,0 +1,8 @@
+iteration	date	domain	phase	gaps_found	gaps_fixed	loop_status
+0	05-07-26	tests	phase-01	-	-	BASELINE
+1	05-07-26	tests	phase-01	0	0	HALTED_SUCCESS
+2	06-07-26	plan	phase-02	2	2	CONDITIONAL_ACCEPTED
+3	06-07-26	tests	phase-02	0	0	HALTED_SUCCESS
+4	06-07-26	plan	phase-03	2	2	CONDITIONAL_ACCEPTED
+5	06-07-26	tests	phase-03	0	0	HALTED_SUCCESS
+6	06-07-26	tests	phase-04	0	0	HALTED_SUCCESS

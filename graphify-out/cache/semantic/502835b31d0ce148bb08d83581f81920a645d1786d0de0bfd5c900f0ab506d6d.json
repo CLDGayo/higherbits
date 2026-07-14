@@ -1,0 +1,1 @@
+{"nodes": [{"id": "vc_ui_ux_designer_md", "label": "vc-ui-ux-designer", "file_type": "code", "source_file": ".claude/agents/vc-ui-ux-designer.md"}], "edges": [{"source": "vc_ui_ux_designer_md", "target": "vc_agent_browser_skill", "relation": "references", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": ".claude/agents/vc-ui-ux-designer.md"}], "hyperedges": []}

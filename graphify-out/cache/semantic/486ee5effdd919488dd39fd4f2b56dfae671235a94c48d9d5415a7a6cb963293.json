@@ -1,0 +1,1 @@
+{"nodes": [{"id": "vc_validate_findings_script", "label": "validate-findings-output.mjs", "file_type": "code", "source_file": ".claude/skills/vc-validate-findings/scripts/validate-findings-output.mjs"}], "edges": [], "hyperedges": []}

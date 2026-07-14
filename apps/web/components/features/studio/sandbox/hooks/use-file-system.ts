@@ -42,9 +42,10 @@ export interface FileEntry {
 
 const normalizePath = (path: string) => {
   if (!path.startsWith(ROOT_PATH)) {
-    return `${ROOT_PATH}${path.startsWith("/") ? path : `/${path}`}`
+    const combined = `${ROOT_PATH}${path.startsWith("/") ? path : `/${path}`}`
+    return combined === `${ROOT_PATH}/` ? ROOT_PATH : combined
   }
-  return path
+  return path === `${ROOT_PATH}/` ? ROOT_PATH : path
 }
 
 const mapReaddirEntryToFileEntry = (
@@ -156,14 +157,39 @@ export const useFileSystem = ({
     }
 
     try {
-      // basic operation; will fail if we don't have connection
-      await sandboxRef.current?.fs.stat(normalizePath("/package.json"))
-    } catch (error) {
-      console.error("Failed to read package.json:", error)
+      try {
+        await sandboxRef.current.fs.readdir("/project/sandbox")
+        console.log("SUCCESSFULLY READ /project/sandbox")
+      } catch (e1: any) {
+        console.log("FAILED /project/sandbox", e1)
+        try {
+          await sandboxRef.current.fs.readdir("/workspace")
+          console.log("SUCCESSFULLY READ /workspace")
+        } catch (e2: any) {
+          console.log("FAILED /workspace", e2)
+          try {
+            await sandboxRef.current.fs.readdir("/")
+            console.log("SUCCESSFULLY READ /")
+          } catch (e3: any) {
+            console.log("FAILED /", e3)
+            // Log to backend
+            fetch("/api/sandbox/error-log", {
+              method: "POST",
+              body: JSON.stringify({ message: "All paths failed", e1: String(e1), e2: String(e2), e3: String(e3) }),
+            })
+            throw new Error("All root paths failed")
+          }
+        }
+      }
+
+      // We don't throw from basic operation anymore so the loop continues
+    } catch (error: any) {
+      console.error("Failed to read root directory:", error)
       await reconnectSandbox()
+      return
     }
 
-    return await operation(sandboxRef?.current)
+    return await operation(sandboxRef.current)
   }
 
   const loadRootDirectory = async () => {
@@ -201,9 +227,13 @@ export const useFileSystem = ({
         ),
       )
       if (rootEntries) setFiles(rootEntries)
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to load root directory:", error)
-      toast.error("Failed to load project files")
+      fetch("/api/sandbox/error-log", {
+        method: "POST",
+        body: JSON.stringify({ message: error.message, stack: error.stack }),
+      }).catch(() => {})
+      toast.error(`Failed to load project files: ${error.message || "Unknown error"}`)
       setFiles([])
     } finally {
       setIsTreeLoading(false)

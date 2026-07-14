@@ -1,0 +1,1 @@
+{"nodes": [{"id": "vc_debugger", "label": "Debugger Agent", "file_type": "code", "source_file": ".claude/agents/vc-debugger.md"}], "edges": [{"source": "vc_debugger", "target": "vc_execute_agent", "relation": "conceptually_related_to", "confidence": "EXTRACTED", "confidence_score": 0.9, "source_file": ".claude/agents/vc-debugger.md"}], "hyperedges": []}

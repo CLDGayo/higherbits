@@ -1,0 +1,23 @@
+{
+  "task": "Phase 9: Author Dashboards and Revenue Share",
+  "snippets": [
+    {
+      "file": "apps/web/app/api/checkout/route.ts",
+      "lines": "68-77",
+      "description": "Securely reading Stripe Account ID from the registry server-side to prevent client tampering",
+      "content": "  const category = url.searchParams.get(\"category\");\n  const slug = url.searchParams.get(\"slug\");\n  \n  let authorStripeAccountId: string | undefined = undefined;\n  if (category && slug) {\n    const entry = await readRegistryEntry(category, slug);\n    if (entry?.stripeAccountId) {\n      authorStripeAccountId = entry.stripeAccountId;\n    }\n  }"
+    },
+    {
+      "file": "apps/web/app/api/checkout/route.ts",
+      "lines": "25-28",
+      "description": "In-memory rate limiter to mitigate DoS for checkout and connect endpoints",
+      "content": "  const ip = req.headers.get(\"x-forwarded-for\") || \"unknown\";\n  if (!checkRateLimit(`checkout:${ip}:${userId}`, 10, 60000)) {\n    return new Response(\"Too many requests\", { status: 429 });\n  }"
+    },
+    {
+      "file": "apps/web/app/api/connect/dashboard/route.ts",
+      "lines": "25-30",
+      "description": "Verifying account ownership before creating an Express login link",
+      "content": "    const account = await stripe.accounts.retrieve(accountId);\n    if (account.metadata?.clerkUserId !== userId) {\n      return new Response(\"Forbidden: Account does not belong to user\", {\n        status: 403,\n      });\n    }\n\n    const loginLink = await stripe.accounts.createLoginLink(accountId);"
+    }
+  ]
+}

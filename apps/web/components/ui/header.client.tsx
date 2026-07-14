@@ -15,6 +15,7 @@ import {
   useUser,
 } from "@clerk/nextjs"
 import { ChevronDown, Bookmark } from "lucide-react"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -216,21 +217,26 @@ function HeaderContent({
     <>
       <header
         className={cn(
-          "texture-cushion flex fixed top-0 left-0 right-0 h-14 z-40 items-center px-4 py-3 text-foreground",
+          "texture-cushion flex fixed top-0 left-0 right-0 h-14 z-50 items-center px-4 py-3 text-foreground",
           {
             "border-b border-border/40 bg-background/95 backdrop-blur-sm": variant !== "publish",
           },
         )}
       >
+        <div className="flex items-center shrink-0 md:w-64 gap-2">
+          <SidebarTrigger className="-ml-2" />
+          <Link href="/" className="flex items-center">
+            <Logo showWordmark />
+          </Link>
+        </div>
         <div
           className={cn(
             "flex items-center flex-1",
-            open ? "md:ml-64 md:pl-3" : "",
+            open ? "md:pl-3" : "md:pl-3",
           )}
         >
-          <Logo showWordmark />
           {text && !isMobile && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mr-4">
               <Icons.slash className="text-border w-[22px] h-[22px]" />
               <span className="text-[14px] font-medium">{text}</span>
             </div>
@@ -238,8 +244,7 @@ function HeaderContent({
 
           <div
             className={cn(
-              "hidden md:block w-[400px]",
-              open ? "ml-4" : "absolute left-1/2 -translate-x-1/2",
+              "hidden md:block w-[400px]"
             )}
           >
             <Button

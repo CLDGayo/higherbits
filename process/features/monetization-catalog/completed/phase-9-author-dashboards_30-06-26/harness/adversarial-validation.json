@@ -1,0 +1,29 @@
+{
+  "scenarios": [
+    {
+      "scenario": "A malicious user attempts to generate a login link for another author's Stripe Connect account by passing their accountId.",
+      "ruled_out": true,
+      "rationale": "The API route `/api/connect/dashboard` explicitly verifies that `account.metadata.clerkUserId` exactly matches the currently authenticated Clerk `userId` before issuing the link."
+    },
+    {
+      "scenario": "A user tampers with the return URL after onboarding to associate someone else's Stripe account to their own Clerk account.",
+      "ruled_out": true,
+      "rationale": "The `/api/connect/return` route retrieves the Stripe account directly using the server-side Stripe key and verifies `account.metadata.clerkUserId === userId` before saving it to `publicMetadata`."
+    },
+    {
+      "scenario": "A malicious user supplies an arbitrary `authorStripeAccountId` in the URL during checkout to route subscription payouts to themselves.",
+      "ruled_out": true,
+      "rationale": "The `/api/checkout` route ignores any client-provided account ID. It accepts the component `category` and `slug`, and securely reads the `Stripe_Account_Id` directly from the server-side component registry via `readRegistryEntry`."
+    },
+    {
+      "scenario": "A user spoofs the `orgId` search parameter during checkout to attach an incorrect organization to the Stripe subscription.",
+      "ruled_out": true,
+      "rationale": "The `orgId` is securely extracted directly from the signed-in user's Clerk `auth()` session on the server. The client-provided `orgId` URL parameter is ignored."
+    },
+    {
+      "scenario": "An attacker launches a DoS attack by spamming the checkout or connect endpoints to exhaust server resources or Stripe API limits.",
+      "ruled_out": true,
+      "rationale": "An in-memory rate-limiter (`checkRateLimit`) wraps `/api/checkout`, `/api/connect/route.ts`, `/api/connect/dashboard`, and `/api/connect/return`, limiting bursts per user/IP."
+    }
+  ]
+}

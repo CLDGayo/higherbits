@@ -48,7 +48,10 @@ export function useClerkSupabaseClient(): SupabaseClient<Database> {
     if (session && !clerkClient) {
       setClerkClient(
         createSupabaseClerkClient(() =>
-          session.getToken({ template: "supabase" }),
+          session.getToken({ template: "supabase" }).catch((e) => {
+            console.error("Failed to get supabase template token, falling back to default:", e)
+            return session.getToken()
+          })
         ),
       )
     }

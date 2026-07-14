@@ -611,38 +611,8 @@ export function MainSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="flex justify-end pr-4 border-t">
-        <div className="flex items-center justify-between">
-          <Help open={helpOpen} onOpenChange={setHelpOpen} />
-          <div className="relative h-8 w-8">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 hover:bg-accent"
-                  aria-label="Toggle Sidebar"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    toggleSidebar()
-                  }}
-                >
-                  <Icons.sidebar className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent
-                className="flex items-center gap-1.5 z-50"
-                side="right"
-              >
-                <span>Toggle Sidebar</span>
-                <kbd className="pointer-events-none h-5 text-muted-foreground select-none items-center gap-1 rounded border bg-muted px-1.5 opacity-100 flex text-[11px] leading-none font-sans">
-                  S
-                </kbd>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
+      <SidebarFooter className="flex justify-start pl-4 border-t py-2">
+        <Help open={helpOpen} onOpenChange={setHelpOpen} />
       </SidebarFooter>
     </Sidebar>
   )

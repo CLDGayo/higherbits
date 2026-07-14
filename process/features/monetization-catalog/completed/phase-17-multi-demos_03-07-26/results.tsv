@@ -1,0 +1,3 @@
+iteration	date	domain	gaps_found	gaps_fixed	gates_green	loop_status
+baseline	03-07-26	tests	0	0	8/8	BASELINE_GREEN
+001	03-07-26	tests	2	2	5/5	HALTED_SUCCESS

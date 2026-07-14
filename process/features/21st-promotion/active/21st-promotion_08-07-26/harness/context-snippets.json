@@ -1,0 +1,29 @@
+{
+  "task": "21st-promotion Phase 1 — Backend & Schema Merge",
+  "snippets": [
+    {
+      "file": "apps/web/app/api/webhooks/clerk/route.ts",
+      "lines": "1-4, 38-108",
+      "description": "A2 diff — new user.created/updated/deleted branch. Import added: `import { prisma } from \"@repo/db/prisma\"`. The user.* block is placed BEFORE the organizationMembership Stripe-sync block and returns early on every user.* event, so the existing seat-sync path (commit 9a3593d) is never entered by a user.* event. No Stripe SDK / no 21st-dev Supabase/billing code imported (E4). user.deleted uses prisma.local_users.deleteMany (idempotent); user.created/updated use prisma.local_users.upsert. All Prisma errors caught and returned as a generic 'User sync failed' 500 (no schema/DB detail leaked).",
+      "content": "import { prisma } from \"@repo/db/prisma\"; ... if (eventType===\"user.created\"||\"user.updated\"||\"user.deleted\") { if(!clerkUserId) return 400; try { if deleted -> deleteMany({where:{id}}) else upsert({where:{id},create,update}); } catch { console.error(...); return 'User sync failed' 500 } return 'OK' 200 }"
+    },
+    {
+      "file": "packages/db/prisma/schema.prisma",
+      "lines": "616-665",
+      "description": "local_users model post-rename (was `model users`). 20 back-relation fields, unchanged. Referenced by 21 forward FK sites across 20 models (components holds 2 named relations: components_hunter_usernameTousers + components_user_idTousers). onDelete is a MIX — NOT changed by this phase: 11 Cascade (api_keys L28, author_payouts L47, bundles L129, component_analytics L170, component_likes L208, demo_hunt_votes L340, mcp_component_usage L435, mcp_generation_requests L454, payout_rates L469, templates L572, usages L612) and 10 NoAction (bundle_purchases L116, collections L154, components hunter L264, components user_id L266, components_purchases L286, demos L402, feedback L422, referral_payments L512, sandboxes L530, users_to_plans L679).",
+      "content": "model local_users { id String @id ... api_keys api_keys[] author_payouts author_payouts[] ... }"
+    },
+    {
+      "file": "A4 security gate",
+      "lines": "n/a",
+      "description": "Zero-live-wiring grep. Exact command run and output.",
+      "content": "$ grep -rE \"from ['\\\"].*21st-dev/apps/web/app/api/(search|webhooks/clerk|stripe)\" apps/web/ | wc -l  =>  0.  Broader any-reference grep (catches re-export/require/dynamic-import barrel bypass, adversarial scenario c): grep -rE \"21st-dev/apps/web/app/api/(search|webhooks/clerk|stripe)\" apps/web/ | wc -l  =>  0."
+    },
+    {
+      "file": "packages/db/prisma/schema.prisma",
+      "lines": "1-6",
+      "description": "Prisma generator block (E1 confirmation). output = ./client resolves to packages/db/prisma/client/ — OUTSIDE packages/db/dist/, so tsup --clean (which wipes dist/) does NOT delete the generated client. The barrel (src/index.ts) intentionally does NOT re-export the Prisma type through tsup --dts (Prisma's 3.1MB index.d.ts uses TS `import =` syntax that rollup-dts cannot parse); the client is exposed via a dedicated subpath export `@repo/db/prisma` built by a second tsup entry without --dts.",
+      "content": "generator client { provider = \"prisma-client-js\" previewFeatures = [\"postgresqlExtensions\",\"relationJoins\"] output = \"./client\" binaryTargets = [\"native\",\"rhel-openssl-3.0.x\"] }"
+    }
+  ]
+}

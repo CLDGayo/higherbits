@@ -1,0 +1,1 @@
+{"nodes": [{"id": "backend_r2", "label": "R2 Storage Client", "file_type": "code", "source_file": "apps/backend/src/r2.ts"}], "edges": [], "hyperedges": []}

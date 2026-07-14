@@ -1,0 +1,14 @@
+{
+  "task": "21st-promotion Phase 1 — Backend & Schema Merge",
+  "planPath": "process/features/21st-promotion/active/21st-promotion_08-07-26/phase-01-backend-merge_PLAN_08-07-26.md",
+  "riskLevel": "high",
+  "riskClasses": ["auth/identity", "billing/credits", "schema/data migration"],
+  "humanApprovalRequired": true,
+  "why": "Crosses 3 of 6 high-risk classes simultaneously: new Clerk-user auth webhook branch (auth/identity), Stripe Prisma billing models imported adjacent to hardened seat-sync 9a3593d (billing/credits), and a new Prisma schema targeting a live external Supabase Postgres (schema/data migration). Manual-first evidence contract applies.",
+  "riskClass": ["auth/identity", "billing/credits", "schema/data migration"],
+  "workDescription": "21st-promotion Phase 1 Backend & Schema Merge — copied 21st-dev Prisma schema (40 models) into packages/db/prisma/schema.prisma, renamed `users` model to `local_users` (21 FK relations onto it, mixed onDelete Cascade/NoAction, all values preserved unchanged), generated Prisma client to packages/db/prisma/client (gitignored), added a fresh user.created/updated/deleted branch to apps/web/app/api/webhooks/clerk/route.ts syncing local_users via the generated Prisma client only (no Stripe SDK, no 21st-dev billing/Supabase code), registered 21st-dev/apps/backend as a pnpm workspace member. Stripe billing Prisma models imported present-but-unused (zero route wiring).",
+  "approver": "vc-execute-agent (recommendation only — PENDING_USER_REVIEW)",
+  "mustStopBeforeFinalize": true,
+  "phase": "21st-promotion Phase 1",
+  "date": "2026-07-08"
+}

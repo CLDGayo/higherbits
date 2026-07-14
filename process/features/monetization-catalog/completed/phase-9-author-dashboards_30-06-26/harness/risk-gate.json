@@ -1,0 +1,9 @@
+{
+  "task": "Phase 9: Author Dashboards and Revenue Share",
+  "planPath": "process/features/monetization-catalog/active/phase-9-author-dashboards_30-06-26",
+  "riskLevel": "high",
+  "riskClasses": ["billing or credits"],
+  "mustStopBeforeFinalize": true,
+  "humanApprovalRequired": true,
+  "why": "Phase 9 implements Stripe Connect payouts and one-time payment revenue splitting, requiring strict validation of the application fee and Stripe account ID."
+}

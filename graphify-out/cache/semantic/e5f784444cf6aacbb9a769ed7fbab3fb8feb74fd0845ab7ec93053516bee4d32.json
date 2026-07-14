@@ -1,0 +1,1 @@
+{"nodes": [{"id": "apps_web_lib_registry", "label": "Registry Reader Utility", "file_type": "code", "source_file": "apps/web/lib/registry.ts"}, {"id": "lib_registry", "label": "lib/registry.ts", "file_type": "code", "source_file": "apps/web/lib/registry.ts"}], "edges": [], "hyperedges": []}

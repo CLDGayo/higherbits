@@ -107,18 +107,11 @@ export const useSubmissions = (isAdmin: boolean) => {
       // In production, this should be handled server-side
       const largeBatch = 1000 // Fetch a large number to get all submissions
 
-      let query = supabase.rpc("get_demos_submissions", {
-        p_sort_by: "date",
-        p_offset: 0,
-        p_limit: largeBatch,
-        p_include_private: true,
-      })
-
-      const { data, error } = await query
-
-      if (error) {
-        throw error
+      const response = await fetch(`/api/admin/submissions?limit=${largeBatch}&offset=0`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch submissions")
       }
+      const data = await response.json()
 
       let filteredData = data
 
@@ -349,25 +342,21 @@ export const useSubmissions = (isAdmin: boolean) => {
     status: SubmissionStatus,
   ) => {
     try {
-      const params = {
-        p_component_id: componentId,
-        p_status: status,
-        p_feedback: feedback || "",
-      }
+      const response = await fetch("/api/admin/submissions", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          componentId: componentId,
+          status: status,
+          moderators_feedback: feedback || "",
+        }),
+      })
 
-      const response = (await supabase.rpc(
-        "update_submission_as_admin",
-        params,
-      )) as PostgrestSingleResponse<AdminRpcResponse>
-
-      const { data, error } = response
-
-      if (error) {
-        throw error
-      }
-
-      if (data && !data.success) {
-        throw new Error(data.error || "Failed to update submission")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || "Failed to update submission")
       }
 
       const updatedSubmission = submissions.find(
@@ -597,22 +586,26 @@ export const useSubmissions = (isAdmin: boolean) => {
     try {
       if (mode === "submission") {
         // Remove only from submissions
-        const { error } = await supabase
-          .from("submissions")
-          .delete()
-          .eq("component_id", submission.component_data.id)
+        const response = await fetch(`/api/admin/submissions?mode=submission&id=${submission.id}`, {
+          method: "DELETE",
+        })
 
-        if (error) throw error
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || "Failed to delete submission")
+        }
 
         toast.success("Removed from submissions successfully")
       } else if (mode === "component") {
         // Delete component completely - cascade delete will handle demos, etc.
-        const { error } = await supabase
-          .from("components")
-          .delete()
-          .eq("id", submission.component_data.id)
+        const response = await fetch(`/api/admin/submissions?mode=component&id=${submission.component_data.id}`, {
+          method: "DELETE",
+        })
 
-        if (error) throw error
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || "Failed to delete component")
+        }
 
         toast.success("Component deleted completely")
       }

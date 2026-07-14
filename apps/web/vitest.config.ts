@@ -11,6 +11,7 @@ export default defineConfig({
       "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     }
   },
+  // @ts-ignore - Type mismatch due to vite update
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: "node", // Using 'node' as we don't need JSDOM for backend/lib functions

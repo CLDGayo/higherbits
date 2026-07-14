@@ -1,0 +1,1 @@
+{"nodes": [{"id": "vc_git_manager", "label": "Git Manager Agent", "file_type": "code", "source_file": ".claude/agents/vc-git-manager.md"}], "edges": [{"source": "vc_git_manager", "target": "vc_execute_agent", "relation": "conceptually_related_to", "confidence": "EXTRACTED", "confidence_score": 0.9, "source_file": ".claude/agents/vc-git-manager.md"}], "hyperedges": []}

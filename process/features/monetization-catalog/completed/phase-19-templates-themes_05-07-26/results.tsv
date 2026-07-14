@@ -1,0 +1,5 @@
+iteration	date	domain	gaps_found	gaps_fixed	gates_green	loop_status
+baseline	05-07-26	plan	1	0	0/1	BASELINE_BLOCKED
+001	05-07-26	plan	1	1	0/1	SUPPLEMENT_APPLIED
+002	05-07-26	plan	0	0	1/1	HALTED_SUCCESS
+evl-001	05-07-26	tests	0	0	6/6	HALTED_SUCCESS

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "vc_fast_mode_agent", "label": "Fast Mode Agent", "file_type": "code", "source_file": ".claude/agents/vc-fast-mode-agent.md"}], "edges": [{"source": "vc_fast_mode_agent", "target": "vc_execute_agent", "relation": "calls", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": ".claude/agents/vc-fast-mode-agent.md"}], "hyperedges": []}

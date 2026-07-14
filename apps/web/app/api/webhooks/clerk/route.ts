@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { Webhook, WebhookRequiredHeaders } from "svix"
 import { WebhookEvent } from "@clerk/nextjs/server"
+import { clerkClient } from "@clerk/nextjs/server"
 import { createClient } from "@supabase/supabase-js"
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET
@@ -57,8 +58,26 @@ export async function POST(req: Request) {
     case "user.created":
     case "user.updated":
       try {
-        const username =
-          user.external_accounts?.[0]?.username || user.username || user.id
+        let username = user.external_accounts?.[0]?.username || user.username
+        
+        if (!username && user.email_addresses?.[0]?.email_address) {
+          const emailPrefix = user.email_addresses[0].email_address.split('@')[0]
+          // Add a random 4-digit number to ensure uniqueness
+          const randomSuffix = Math.floor(1000 + Math.random() * 9000)
+          username = `${emailPrefix}${randomSuffix}`
+          
+          try {
+            const client = await clerkClient()
+            await client.users.updateUser(user.id, { username })
+          } catch (e) {
+            console.error("Failed to update Clerk user with generated username:", e)
+          }
+        }
+
+        // Fallback if no email is found
+        if (!username) {
+          username = user.id
+        }
         const name =
           `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim() || null
         const image_url = user.image_url

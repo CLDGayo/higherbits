@@ -10,14 +10,16 @@ export const metadata = {
 
 export default async function PricingPage() {
   return (
-    <div className="texture-cushion min-h-screen flex flex-col bg-background">
+    <>
       <Suspense>
         <Header />
       </Suspense>
-      <main className="flex-1">
-        <Pricing />
-      </main>
-      <Footer />
-    </div>
+      <div className="texture-cushion min-h-screen flex flex-col bg-background">
+        <main className="flex-1">
+          <Pricing />
+        </main>
+        <Footer />
+      </div>
+    </>
   )
 }

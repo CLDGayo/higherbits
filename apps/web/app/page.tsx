@@ -80,9 +80,10 @@ export default async function HomePage() {
     }
 
     return (
-      <div className="texture-cushion min-h-screen flex flex-col bg-background">
+      <>
         <Header variant="default" />
-        <div className="flex-1 grid gap-6 p-4 pt-24">
+        <div className="texture-cushion min-h-screen flex flex-col bg-background">
+          <div className="flex-1 grid gap-6 p-4 pt-24">
           <div className="rounded-cushion bg-card shadow-cushion border border-border/60 p-8 relative">
             <HomePageClient />
             <NewsletterDialog />
@@ -90,6 +91,7 @@ export default async function HomePage() {
         </div>
         <Footer />
       </div>
+      </>
     )
   } catch (error) {
     console.error("Error in home page:", error)
