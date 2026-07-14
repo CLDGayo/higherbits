@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { z } from "zod"
-import { getComponentBundles, transferOwnership } from "./server/components"
+import { getComponentBundles, transferOwnership, deleteComponent } from "./server/components"
 import { checkIsAdmin } from "./server/users"
 
 const getComponentBundlesSchema = z.object({
@@ -32,3 +32,20 @@ export const transferOwnershipAction = async (
   const { componentId, userId } = transferOwnershipSchema.parse(input)
   return transferOwnership(componentId, userId)
 }
+
+const deleteComponentSchema = z.object({
+  componentId: z.number().int().positive(),
+});
+
+export const deleteComponentAction = async (
+  input: z.infer<typeof deleteComponentSchema>,
+) => {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const { componentId } = deleteComponentSchema.parse(input);
+  await deleteComponent(componentId, userId);
+  return { success: true };
+};

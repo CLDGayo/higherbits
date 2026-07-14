@@ -553,9 +553,9 @@ export function ComponentsList({
     return rawComponents
   }, [props.type, rawComponents, localSearchQuery])
 
-  const showSkeleton = isLoading || (!components?.length && !localSearchQuery)
+  const showSkeleton = isLoading
   const showSpinner = isFetching && !showSkeleton
-  const showEmptyState = !isLoading && !components?.length && localSearchQuery
+  const showEmptyState = !isLoading && !components?.length
 
   const handleGlobalSearch = () => {
     if (!localSearchQuery) return
@@ -596,10 +596,10 @@ export function ComponentsList({
         ) : showEmptyState ? (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
             <div className="text-lg font-semibold mb-2">
-              No results found for "{localSearchQuery}"
+              {localSearchQuery ? `No results found for "${localSearchQuery}"` : "No components found"}
             </div>
             <p className="text-muted-foreground mb-6">
-              Try adjusting your search or use global search
+              {localSearchQuery ? "Try adjusting your search or use global search" : "There are currently no components available in this category."}
             </p>
             <Button
               onClick={handleGlobalSearch}

@@ -217,7 +217,6 @@ export function MainSidebar() {
                     <div className="flex items-center">
                       <Sparkles className="mr-2 h-4 w-4" />
                       {magicNavItem.title}
-
                     </div>
                     <ChevronRight
                       className={cn(
@@ -404,6 +403,8 @@ export function MainSidebar() {
                       router.push(
                         `/${userState.profile.display_username}?tab=bookmarks`,
                       )
+                    } else if (clerkUser?.username) {
+                      router.push(`/${clerkUser.username}?tab=bookmarks`)
                     } else if (clerkUser?.externalAccounts?.[0]?.username) {
                       router.push(
                         `/${clerkUser.externalAccounts[0].username}?tab=bookmarks`,
@@ -423,6 +424,10 @@ export function MainSidebar() {
                     if (userState.profile?.display_username) {
                       router.push(
                         `/${userState.profile.display_username}?tab=purchased_bundles`,
+                      )
+                    } else if (clerkUser?.username) {
+                      router.push(
+                        `/${clerkUser.username}?tab=purchased_bundles`,
                       )
                     } else if (clerkUser?.externalAccounts?.[0]?.username) {
                       router.push(

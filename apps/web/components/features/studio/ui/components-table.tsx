@@ -34,7 +34,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { transferOwnershipAction } from "@/lib/api/components"
+import {
+  transferOwnershipAction,
+  deleteComponentAction,
+} from "@/lib/api/components"
 import { cn } from "@/lib/utils"
 import { ExtendedDemoWithComponent } from "@/lib/utils/transformData"
 import {
@@ -47,7 +50,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronUp, ExternalLink, InfoIcon } from "lucide-react"
+import {
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
+  InfoIcon,
+  Trash2,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useId, useState } from "react"
 import { toast } from "sonner"
@@ -69,14 +78,14 @@ interface DemosTableProps {
 const formatTextWithLinks = (text: string) => {
   if (!text) return null
 
-  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
-  const parts = text.split(urlRegex);
+  const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g
+  const parts = text.split(urlRegex)
 
   return (
     <div>
       {parts.map((part, i) => {
         if (part.match(urlRegex)) {
-          const href = part.startsWith("www.") ? `https://${part}` : part;
+          const href = part.startsWith("www.") ? `https://${part}` : part
           return (
             <a
               key={i}
@@ -87,12 +96,12 @@ const formatTextWithLinks = (text: string) => {
             >
               {part}
             </a>
-          );
+          )
         }
-        return <span key={i}>{part}</span>;
+        return <span key={i}>{part}</span>
       })}
     </div>
-  );
+  )
 }
 
 // Format status text: capitalize and replace underscores with spaces
@@ -416,6 +425,70 @@ export function DemosTable({
       sortingFn: "alphanumeric",
     },
   ]
+
+  if (isOwnProfile || isAdmin) {
+    columns.push({
+      header: "Actions",
+      id: "actions",
+      cell: ({ row }) => {
+        const componentId =
+          row.original.component_id ?? row.original.component?.id
+        const isSandboxOnly =
+          row.original.submission_status === "draft" && !componentId
+        const sandboxId = isSandboxOnly ? row.original.id : null
+
+        const [isDeleting, setIsDeleting] = useState(false)
+
+        if (!componentId && !sandboxId) return null
+
+        const handleDelete = async (e: React.MouseEvent) => {
+          e.stopPropagation()
+          if (
+            !confirm(
+              `Are you sure you want to delete this ${isSandboxOnly ? "draft" : "component"}? This action cannot be undone.`,
+            )
+          )
+            return
+
+          setIsDeleting(true)
+          try {
+            if (isSandboxOnly && sandboxId) {
+              const { deleteSandboxAction } = await import(
+                "@/lib/api/sandboxes"
+              )
+              await deleteSandboxAction({ sandboxId: String(sandboxId) })
+              toast.success("Draft deleted successfully")
+            } else if (componentId) {
+              await deleteComponentAction({ componentId })
+              toast.success("Component deleted successfully")
+            }
+            router.refresh()
+          } catch (error) {
+            toast.error(
+              error instanceof Error ? error.message : "Failed to delete",
+            )
+            setIsDeleting(false)
+          }
+        }
+
+        return (
+          <div className="flex justify-end pr-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              <Trash2 size={16} />
+              <span className="sr-only">Delete</span>
+            </Button>
+          </div>
+        )
+      },
+      size: 80,
+    })
+  }
 
   if (isAdmin) {
     columns.push({

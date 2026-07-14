@@ -85,3 +85,22 @@ export const transferOwnership = async (
     throw new Error("Failed to transfer ownership")
   })
 }
+
+export const deleteComponent = async (componentId: number, userId: string) => {
+  const component = await prisma.components.findUnique({
+    where: { id: componentId }
+  });
+
+  if (!component) {
+    throw new Error("Component not found");
+  }
+
+  // Only allow owner or admin to delete
+  if (component.user_id !== userId) {
+    throw new Error("Unauthorized to delete this component");
+  }
+
+  await prisma.components.delete({
+    where: { id: componentId }
+  });
+};
