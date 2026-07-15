@@ -266,7 +266,7 @@ During /goal execution of a phase program:
 |---|---|
 | 1 — Architecture & Prompt Engineering | COMPLETE |
 | 2 — Asset Generation Pipeline | COMPLETE (CODE DONE — live seed batch deferred) |
-| 3 — Component Library | PLANNED |
+| 3 — Component Library | COMPLETE |
 | 4 — Page Assembly & Layout | PLANNED |
 | 5 — Refinement, Animation & Deployment | PLANNED |
 
@@ -352,7 +352,7 @@ node --test ops/__tests__/gemini-asset-gen.test.mjs
 ## Current Execution State
 
 Last updated: 15-07-26
-Current phase: 2 of 5 complete — next Phase 3
+Current phase: 3 of 5 complete — next Phase 4
 Phase 1 name: Architecture & Prompt Engineering
 Phase 1 status: COMPLETE (EVL confirmed, 1 known-gap accepted)
 Phase 1 EVL: 5/6 gates independently green (build, tsc, vitest, bundle-safety, prompt-template JSON check); a11y Playwright gate FAILs on 4 pre-existing muted-foreground contrast violations unrelated to this phase's additive-only token work — accepted as known-gap, backlog note filed (`process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`)
@@ -361,7 +361,11 @@ Phase 2 name: Asset Generation Pipeline
 Phase 2 status: COMPLETE (CODE DONE — live seed batch deferred, user opt-in pending)
 Phase 2 EVL: 5/5 Fully-Automated gates independently green (unit tests 7/7 mocked-fetch, zero-live-network check, zero-dotenv-read check, web build exit 0, bundle-safety grep 0). VE11 (live API integration) and VE12 (visual fidelity) deferred per D2 known-gap — GEMINI_API_KEY deliberately not accessed this phase (billed spend + privacy-gated key = /goal hard-stop class); opt-in run instructions + cost estimate (~$0.31 seed batch) recorded in the phase report.
 Phase 2 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-02-asset-generation-pipeline_REPORT_14-07-26.md`
-Next phase: Phase 3 — Component Library, loop step RESEARCH. Pre-conditions carried forward: (1) `apps/web/public/clay/{icons,illustrations,textures}/` are empty (placeholder `.gitkeep` only) — Phase 3 components must use placeholder/mock asset paths until the D1 live seed batch runs (see Phase 2 report for the opt-in command); (2) `ops/gemini-asset-gen.mjs` + `ops/gemini-prompts.mjs` + manifest.json shape exist and are ready to consume once a live batch runs; (3) Tailwind `shadow-clay-*` utility registration was deferred from Phase 1 and still needs to land — confirm exact deferral point in Phase 1 report before Phase 3 starts.
+Phase 3 name: Component Library
+Phase 3 status: COMPLETE (EVL confirmed CLEAN, all fully-automated gates green)
+Phase 3 EVL: 8/8 Fully-Automated/structural gates independently green (test 19/19 across 8 files, tsc --noEmit exit 0, build exit 0, bundle-safety grep 0, packages/ui untouched, no new deps, tailwind.config.js additive-only +4 shadow-clay-* keys, globals.css unchanged). PVL: first-pass Gate: PASS after 2 in-plan fixes (ClayCard asset-prop gap; Tailwind JIT static-lookup instruction). Known gaps carried: VE14 a11y (Clerk runtime blocker, pre-existing, zero new routes this phase), VE15 visual parity (deferred Agent-Probe), empty clay asset dirs (Phase 2 deferral, unchanged). One EXECUTE deviation on record: tests assert class presence via `element.className.toContain()` (no `@testing-library/jest-dom` installed) — preserves D5 class-presence intent, no new dependency.
+Phase 3 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-03-component-library_REPORT_14-07-26.md`
+Next phase: Phase 4 — Page Assembly & Layout, loop step RESEARCH. Pre-conditions carried forward: (a) clay components live in `apps/web/components/ui/` (clay-card, clay-input, clay-pill-button, clay-pill-bar-chart, clay-donut-chart) with `shadow-clay-sm/md/lg/pressed` Tailwind utilities registered and consumable app-wide; (b) `apps/web/public/clay/{icons,illustrations,textures}/` asset dirs remain empty — Phase 4 pages must use the components' no-render asset defaults (ClayCard's `iconSrc`/`illustrationSrc` gracefully omit rendering when absent) until the user-approved Gemini seed batch runs; (c) VE15 visual-parity Agent-Probe is still owed (accumulating since Phase 1 — no dedicated visual check has run across any phase yet); (d) a11y Playwright gate remains blocked on Clerk dev keys (pre-existing, unrelated to this program).
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
 Orchestrator rule: read this section plus the Phase 2 plan's `## Phase Loop Progress` before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.

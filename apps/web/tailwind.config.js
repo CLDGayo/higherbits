@@ -119,6 +119,10 @@ module.exports = {
         "cushion-outer": "var(--shadow-cushion-outer)",
         "cushion-inner": "var(--shadow-cushion-inner)",
         cushion: "var(--shadow-cushion)",
+        "clay-sm": "var(--clay-depth-sm)",
+        "clay-md": "var(--clay-depth-md)",
+        "clay-lg": "var(--clay-depth-lg)",
+        "clay-pressed": "var(--clay-pressed)",
       },
       keyframes: {
         "pulse-custom": {

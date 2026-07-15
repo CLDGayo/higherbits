@@ -35,15 +35,29 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (CORRECTED 15-07-26 — see note below):** 4 test files / 10 tests, all passing:
+**Total (UPDATED 15-07-26 — Phase 3 added 9 new tests):** 8 test files / 19 tests, all passing:
 `apps/web/lib/registry.test.ts`, `apps/web/components/ui/__tests__/footer-smoke.test.tsx`,
 `apps/web/components/ui/__tests__/header-smoke.test.tsx`,
-`apps/web/app/__tests__/landing-smoke.test.tsx`. The "123 tests across 27 files" text below
-was found stale during `claymorphism-3d-redesign` Phase 01 EVL (15-07-26, independently
-confirmed via `corepack pnpm --filter web test`) — the disk state did not match the documented
-count, and no test files were deleted during that phase's execution (its diff touched only
-`globals.css`, `.env.example`, and 2 new files under `apps/web/scripts/`). The drift predates
-that phase; root cause not yet investigated — flagged as a `vc-audit-context` follow-up.
+`apps/web/app/__tests__/landing-smoke.test.tsx` (baseline 4 files / 10 tests), plus 4 new files
+from `claymorphism-3d-redesign` Phase 3 (Component Library, 15-07-26):
+`apps/web/components/ui/__tests__/clay-card.test.tsx` (3 tests — base render, depth-class
+mapping, optional iconSrc/illustrationSrc props), `clay-input.test.tsx` (2 tests),
+`clay-pill-button.test.tsx` (2 tests), `clay-charts.test.tsx` (2 tests — pill-bar + donut chart
+render, with a local `ResizeObserver` stub for recharts' `ResponsiveContainer`). Class-presence
+assertions use raw `element.className.toContain(...)` — `@testing-library/jest-dom` is NOT
+installed in `apps/web`, so `toHaveClass` is unavailable (see Test Infra gap below). The "123
+tests across 27 files" text further below was found stale during `claymorphism-3d-redesign`
+Phase 01 EVL (15-07-26, independently confirmed via `corepack pnpm --filter web test`) — the disk
+state did not match the documented count, and no test files were deleted during that phase's
+execution (its diff touched only `globals.css`, `.env.example`, and 2 new files under
+`apps/web/scripts/`). The drift predates that phase; root cause not yet investigated — flagged as
+a `vc-audit-context` follow-up.
+
+**Test infra gaps found (Phase 3, 15-07-26):** (1) no `@testing-library/jest-dom` in `apps/web` —
+`toHaveClass`/DOM matchers unavailable, tests use raw `.className` string assertions instead
+(candidate future infra add, out of Phase 3 scope); (2) jsdom lacks `ResizeObserver` globally —
+recharts-based component tests must stub it per-file (candidate: hoist a shared stub into a test
+setup file).
 Historical narrative below (file-by-file additions, mocking conventions) is retained for
 context but the aggregate "123/27" figure is NOT current — do not cite it.
 
