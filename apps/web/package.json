@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "types": "supabase gen types --lang=typescript --project-id 'vucvdpamtrjkzmubwlts' --schema public > ./types/supabase.ts",
     "supabase:login": "supabase login",
     "build": "next build",
