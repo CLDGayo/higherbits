@@ -47,7 +47,7 @@ const MagicBannerContent = memo(function MagicBannerContent() {
             <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium">
-                  Introducing Magic - The AI Agent That Builds Beautiful UI
+                  Introducing HigherBits AI - The AI Agent That Builds Beautiful UI
                   Components
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -61,7 +61,7 @@ const MagicBannerContent = memo(function MagicBannerContent() {
                   className="text-sm"
                   onClick={() => router.push("/magic")}
                 >
-                  Try Magic Now
+                  Try HigherBits AI Now
                 </Button>
               </div>
             </div>

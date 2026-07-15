@@ -58,7 +58,7 @@ export function TroubleshootingSection({
       ],
     },
     {
-      problem: "Magic Agent doesn't respond to commands",
+      problem: "HigherBits AI doesn't respond to commands",
       solutions: [
         "Try using /21 instead of /ui in your IDE's chat",
         "Ensure you're in agent mode, not regular chat mode",
@@ -113,15 +113,15 @@ export function TroubleshootingSection({
       {
         problem: "Conflicts with existing MCPs in Windsurf",
         solutions: [
-          "Remove all existing Magic MCP entries from your configuration",
+          "Remove all existing HigherBits AI entries from your configuration",
           "Use the specific Windsurf installation command",
           "Check your mcp_config.json file for duplicate entries",
         ],
       },
       {
-        problem: "Magic Agent doesn't respond in Windsurf",
+        problem: "HigherBits AI doesn't respond in Windsurf",
         solutions: [
-          "Magic MCP only works with Windsurf Next beta",
+          "HigherBits AI only works with Windsurf Next beta",
           "Ensure you're using the latest version of Windsurf Next",
         ],
       },

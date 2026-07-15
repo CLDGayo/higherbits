@@ -253,7 +253,7 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
                   2
                 </div>
                 <div className="space-y-3 w-full">
-                  <h3 className="font-medium">Add Magic MCP Configuration</h3>
+                  <h3 className="font-medium">Add HigherBits AI Configuration</h3>
                   <div className="text-sm text-muted-foreground space-y-2 w-full max-w-[600px]">
                     <p>
                       Add the following configuration to your MCP config file:
@@ -309,7 +309,7 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
                         <span>Click "Refresh" in the MCP toolbar</span>
                       </div>
                       <p className="text-muted-foreground mt-2">
-                        The toolbar should now show Magic MCP server as
+                        The toolbar should now show HigherBits AI server as
                         available
                       </p>
                     </div>

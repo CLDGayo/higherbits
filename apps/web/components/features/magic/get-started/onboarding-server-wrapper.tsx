@@ -95,7 +95,7 @@ export function OnboardingServerWrapper({
               </h3>
               <p className="text-sm text-green-700 dark:text-green-300 mt-1">
                 You've already used Magic and completed all the necessary steps.
-                You can continue working with Magic in the console.
+                You can continue working with HigherBits AI in the console.
               </p>
               <Button asChild className="mt-3" size="sm">
                 <Link href="/magic/console">

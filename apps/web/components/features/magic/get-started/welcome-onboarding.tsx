@@ -26,19 +26,19 @@ interface OnboardingStep {
 
 const defaultSteps: OnboardingStep[] = [
   {
-    title: "Welcome to Magic Agent Beta",
+    title: "Welcome to HigherBits AI Beta",
     description:
-      "Thank you for joining Magic Agent! During the beta period, all features are completely free. We're excited to have you on board!",
+      "Thank you for joining HigherBits AI! During the beta period, all features are completely free. We're excited to have you on board!",
   },
   {
     title: "Help Us Improve",
     description:
-      "Please click the 'Feedback' button in the top right corner to join our Discord community. Your feedback is invaluable in making Magic Agent better.",
+      "Please click the 'Feedback' button in the top right corner to join our Discord community. Your feedback is invaluable in making HigherBits AI better.",
   },
   {
     title: "Get Started",
     description:
-      "Now, let's set up Magic Agent! Follow the installation instructions below to start creating amazing UI components.",
+      "Now, let's set up HigherBits AI! Follow the installation instructions below to start creating amazing UI components.",
   },
 ]
 

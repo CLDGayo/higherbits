@@ -205,7 +205,7 @@ export function FeedbackDialog({
             Send Feedback
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
-            Help us improve Magic MCP by sharing your thoughts or requesting new
+            Help us improve HigherBits AI by sharing your thoughts or requesting new
             features.
           </DialogDescription>
         </DialogHeader>
@@ -270,7 +270,7 @@ export function FeedbackDialog({
                     id="content"
                     placeholder={
                       type === "feedback"
-                        ? "Tell us what you think about Magic MCP..."
+                        ? "Tell us what you think about HigherBits AI..."
                         : "Describe the feature you'd like to see..."
                     }
                     value={content}

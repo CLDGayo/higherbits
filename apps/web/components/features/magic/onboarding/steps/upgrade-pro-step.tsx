@@ -131,7 +131,7 @@ export function UpgradeProStep({ apiKey, onComplete }: UpgradeProStepProps) {
       <div className="space-y-4 max-w-2xl">
         <h1 className="text-3xl font-bold tracking-tight">Upgrade to Pro</h1>
         <p className="text-lg text-muted-foreground">
-          Get unlimited access to Magic MCP and premium features
+          Get unlimited access to HigherBits AI and premium features
         </p>
       </div>
 

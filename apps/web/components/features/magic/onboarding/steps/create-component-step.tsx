@@ -85,7 +85,7 @@ export function CreateComponentStep({
           Create Your First Component
         </h1>
         <p className="text-lg text-muted-foreground">
-          Let's create your first UI component with Magic MCP
+          Let's create your first UI component with HigherBits AI
         </p>
       </div>
 
@@ -98,7 +98,7 @@ export function CreateComponentStep({
                 Component Created!
               </h3>
               <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                You've successfully created your first component with Magic MCP.
+                You've successfully created your first component with HigherBits AI.
               </p>
             </div>
           </div>
@@ -134,16 +134,16 @@ export function CreateComponentStep({
                 2
               </div>
               <div className="space-y-3 flex-1">
-                <h3 className="font-medium">Let Magic Create It</h3>
+                <h3 className="font-medium">Let HigherBits AI Create It</h3>
                 <div className="text-sm text-muted-foreground space-y-2">
                   <p>
-                    When prompted in your IDE, use Magic to instantly build your
+                    When prompted in your IDE, use HigherBits AI to instantly build your
                     polished UI component
                   </p>
                   <div className="relative w-full aspect-[21/5] rounded-md overflow-hidden">
                     <Image
                       src="/how-it-works-3.png"
-                      alt="Let Magic create it"
+                      alt="Let HigherBits AI create it"
                       fill
                       className="object-cover object-left-top mix-blend-difference"
                     />

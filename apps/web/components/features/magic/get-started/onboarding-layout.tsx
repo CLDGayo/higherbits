@@ -79,14 +79,14 @@ export function Onboarding({
           </div>
         </div>
       ),
-      description: "Install Magic in your preferred IDE",
+      description: "Install HigherBits AI in your preferred IDE",
       isCompleted: allStepsCompleted,
       content: <IdeInstructions apiKey={apiKey} selectedOS={selectedOS} />,
     },
     {
       id: "first-component",
       title: "Create your first component",
-      description: "Try creating your first UI component with Magic",
+      description: "Try creating your first UI component with HigherBits AI",
       isCompleted: allStepsCompleted,
       content: (
         <div className="space-y-6 max-w-[650px]">
@@ -120,16 +120,16 @@ export function Onboarding({
               2
             </div>
             <div className="space-y-3 flex-1">
-              <h3 className="font-medium">Let Magic Create It</h3>
+              <h3 className="font-medium">Let HigherBits AI Create It</h3>
               <div className="text-sm text-muted-foreground space-y-2">
                 <p>
-                  When prompted in Cursor, use Magic to instantly build your
+                  When prompted in Cursor, use HigherBits AI to instantly build your
                   polished UI component
                 </p>
                 <div className="relative w-full aspect-[21/5] rounded-md overflow-hidden">
                   <Image
                     src="/how-it-works-3.png"
-                    alt="Let Magic create it"
+                    alt="Let HigherBits AI create it"
                     fill
                     className="object-cover object-left-top mix-blend-difference"
                   />

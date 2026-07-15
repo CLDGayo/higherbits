@@ -48,7 +48,7 @@ export function SelectIdeStep({ onSelect }: SelectIdeStepProps) {
       <div className="space-y-4 max-w-2xl text-center">
         <h1 className="text-3xl font-bold tracking-tight">Select Your IDE</h1>
         <p className="text-lg text-muted-foreground">
-          Choose the IDE you want to use with Magic MCP
+          Choose the IDE you want to use with HigherBits AI
         </p>
       </div>
 

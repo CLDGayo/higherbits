@@ -251,7 +251,7 @@ export function InstallIdeStep({
                         <div className="flex items-center gap-2 text-sm mt-4">
                           <Check className="h-3.5 w-3.5 text-green-500" />
                           <span>
-                            Magic MCP should now be available in the server list
+                            HigherBits AI should now be available in the server list
                           </span>
                         </div>
                       </div>
@@ -451,7 +451,7 @@ export function InstallIdeStep({
                         <div className="flex items-center gap-2 text-sm mt-4">
                           <Check className="h-3.5 w-3.5 text-green-500" />
                           <span>
-                            Magic MCP should now be available in the MCP server
+                            HigherBits AI should now be available in the MCP server
                             list
                           </span>
                         </div>
@@ -508,7 +508,7 @@ export function InstallIdeStep({
                     </div>
                     <div className="space-y-3 w-full">
                       <h3 className="font-medium">
-                        Add Magic MCP Configuration
+                        Add HigherBits AI Configuration
                       </h3>
                       <div className="text-sm text-muted-foreground space-y-2 w-full max-w-[600px]">
                         <p>
@@ -566,7 +566,7 @@ export function InstallIdeStep({
                             <span>Click "Refresh" in the MCP toolbar</span>
                           </div>
                           <p className="text-muted-foreground mt-2">
-                            The toolbar should now show Magic MCP server as
+                            The toolbar should now show HigherBits AI server as
                             available
                           </p>
                         </div>
@@ -749,7 +749,7 @@ export function InstallIdeStep({
         <div className="space-y-4 max-w-2xl">
           <h1 className="text-2xl font-bold tracking-tight">API Key Missing</h1>
           <p className="text-lg text-muted-foreground">
-            We couldn't find your API key, which is required to use Magic MCP.
+            We couldn't find your API key, which is required to use HigherBits AI.
           </p>
         </div>
 
@@ -780,9 +780,9 @@ export function InstallIdeStep({
   return (
     <div className="flex flex-col space-y-8 px-4 max-w-[700px] mx-auto w-full">
       <div className="space-y-4 max-w-2xl">
-        <h1 className="text-3xl font-bold tracking-tight">Install Magic MCP</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Install HigherBits AI</h1>
         <p className="text-lg text-muted-foreground">
-          Follow these steps to install Magic MCP in{" "}
+          Follow these steps to install HigherBits AI in{" "}
           {selectedIde === "cursor"
             ? "Cursor"
             : selectedIde === "windsurf"

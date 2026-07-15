@@ -413,7 +413,7 @@ export function ConsoleClient({
             <div className="bg-background rounded-lg border border-border overflow-hidden">
               <div className="p-4">
                 <p className="text-sm text-muted-foreground">
-                  We're constantly working to improve Magic MCP. Share your
+                  We're constantly working to improve HigherBits AI. Share your
                   thoughts or request new features to help us make it even
                   better.
                 </p>

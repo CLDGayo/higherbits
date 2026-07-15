@@ -35,7 +35,6 @@ import { DeleteAccountDialog } from "@/components/ui/delete-account-dialog"
 
 const profileFormSchema = z.object({
   display_name: z.string().min(2).max(50),
-  use_custom_username: z.boolean().default(false),
   display_username: z
     .string()
     .min(2)
@@ -53,11 +52,6 @@ const profileFormSchema = z.object({
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
-
-const CLERK_ACCOUNT_URL =
-  process.env.NODE_ENV === "development"
-    ? "https://wanted-titmouse-48.accounts.dev/user"
-    : "https://accounts.HigherBits.dev/user"
 
 export default function ProfileSettingsPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -93,7 +87,6 @@ export default function ProfileSettingsPage() {
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       display_name: "",
-      use_custom_username: false,
       display_username: "",
       display_image_url: "",
       bio: "",
@@ -108,9 +101,8 @@ export default function ProfileSettingsPage() {
     if (!isUserLoading && dbUser && user) {
       form.reset({
         display_name: dbUser.display_name || user.fullName || "",
-        use_custom_username: !!dbUser.display_username,
         display_username:
-          dbUser.display_username || user.externalAccounts?.[0]?.username || "",
+          dbUser.display_username || dbUser.username || user.username || user.externalAccounts?.[0]?.username || "",
         display_image_url: dbUser.display_image_url || user.imageUrl || "",
         bio: dbUser.bio || "",
         website_url: dbUser.website_url?.replace(/^https?:\/\//, "") || "",
@@ -163,7 +155,7 @@ export default function ProfileSettingsPage() {
     }
   }, [saveStatus])
 
-  const useCustomUsername = form.watch("use_custom_username")
+  // Handle save status visibility
 
   const checkUsername = async (username: string) => {
     if (!username) {
@@ -197,9 +189,7 @@ export default function ProfileSettingsPage() {
       // Clean up empty strings
       const cleanData = {
         ...data,
-        display_username: data.use_custom_username
-          ? data.display_username
-          : null,
+        display_username: data.display_username || null,
         bio: data.bio || null,
         website_url: data.website_url || null,
         github_url: data.github_url || null,
@@ -362,67 +352,34 @@ export default function ProfileSettingsPage() {
                   name="display_username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs">
-                        {useCustomUsername ? "Username" : "GitHub Username"}
-                      </FormLabel>
+                      <FormLabel className="text-xs">Username</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
                             {...field}
-                            value={
-                              useCustomUsername
-                                ? field.value
-                                : user?.externalAccounts?.[0]?.username || ""
-                            }
-                            readOnly={!useCustomUsername}
-                            className={cn(
-                              "pr-10 h-9",
-                              !useCustomUsername &&
-                                "bg-muted text-muted-foreground",
-                            )}
+                            value={field.value || ""}
+                            className="pr-10 h-9"
                             onChange={(e) => {
                               field.onChange(e)
                               checkUsername(e.target.value)
                             }}
                           />
-                          {useCustomUsername && (
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                              {isCheckingUsername && (
-                                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                            {isCheckingUsername && (
+                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            )}
+                            {!isCheckingUsername &&
+                              isUsernameValid === true && (
+                                <Check className="h-4 w-4 text-green-500" />
                               )}
-                              {!isCheckingUsername &&
-                                isUsernameValid === true && (
-                                  <Check className="h-4 w-4 text-green-500" />
-                                )}
-                              {!isCheckingUsername &&
-                                isUsernameValid === false && (
-                                  <X className="h-4 w-4 text-red-500" />
-                                )}
-                            </div>
-                          )}
+                            {!isCheckingUsername &&
+                              isUsernameValid === false && (
+                                <X className="h-4 w-4 text-red-500" />
+                              )}
+                          </div>
                         </div>
                       </FormControl>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="use_custom_username"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-xs">
-                          Use custom username
-                        </FormLabel>
-                      </div>
                     </FormItem>
                   )}
                 />
@@ -529,23 +486,7 @@ export default function ProfileSettingsPage() {
               </div>
             </div>
 
-            <div className="pt-4">
-              <h3 className="text-sm font-medium">GitHub connection</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                Edit your GitHub connection settings
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2 h-8 text-xs"
-                onClick={() => {
-                  window.open(CLERK_ACCOUNT_URL, "_blank")
-                }}
-                type="button"
-              >
-                Manage GitHub connection
-              </Button>
-            </div>
+
             {/* Danger Zone Section */}
             <div className="bg-background rounded-lg border border-border overflow-hidden">
               <div className="p-4">

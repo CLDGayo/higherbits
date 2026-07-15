@@ -8,7 +8,7 @@ const features = [
   {
     title: "Add New Components",
     description:
-      "Create UI components by describing what you need. Magic generates production-ready code instantly.",
+      "Create UI components by describing what you need. HigherBits AI generates production-ready code instantly.",
     image: "/features-1.svg",
   },
   {

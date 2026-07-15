@@ -12,7 +12,7 @@ const steps = [
   {
     title: "Choose from Options",
     description:
-      "Magic generates three unique variations of your component. Review them and select the one that best matches your needs and design preferences.",
+      "HigherBits AI generates three unique variations of your component. Review them and select the one that best matches your needs and design preferences.",
     image: "/how-it-works-3.png",
   },
   {

@@ -303,7 +303,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
             className="font-sans mb-6 mt-0 text-center text-[12px] sm:text-base uppercase tracking-[0.51em] text-black"
           >
-            Introducing Magic
+            Introducing HigherBits AI
           </motion.p>
 
           <motion.h1
@@ -451,7 +451,7 @@ export function Hero() {
                   ))}
                 </div>
                 <span className="text-sm text-neutral-800">
-                  <NumberFlow value={count} />+ people using Magic
+                  <NumberFlow value={count} />+ people using HigherBits AI
                 </span>
               </div>
             </motion.div>
@@ -472,7 +472,7 @@ export function Hero() {
                 <div className="relative w-full h-full group">
                   <img
                     src="/magic-preview.webp"
-                    alt="Magic Agent Demo"
+                    alt="HigherBits AI Demo"
                     className="object-cover object-center"
                   />
                 </div>
