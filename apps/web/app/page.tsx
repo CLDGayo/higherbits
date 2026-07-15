@@ -67,9 +67,9 @@ export default async function HomePage() {
 
     if (shouldShowHero) {
       return (
-        <div className="texture-cushion min-h-screen flex flex-col bg-background">
-          <div className="flex-1 grid gap-6 p-4">
-            <div className="texture-cushion rounded-cushion bg-card shadow-cushion border border-border/60 overflow-hidden flex flex-col">
+        <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+          <div className="flex-1 flex flex-col gap-6 min-w-0">
+            <div className="flex flex-col min-w-0">
               <HeroSection />
             </div>
             <NewsletterDialog />
@@ -82,9 +82,9 @@ export default async function HomePage() {
     return (
       <>
         <Header variant="default" />
-        <div className="texture-cushion min-h-screen flex flex-col bg-background">
-          <div className="flex-1 grid gap-6 p-4 pt-24">
-          <div className="rounded-cushion bg-card shadow-cushion border border-border/60 p-8 relative">
+        <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+          <div className="flex-1 flex flex-col gap-6 pt-24 min-w-0">
+          <div className="relative min-w-0 px-4 md:px-8">
             <HomePageClient />
             <NewsletterDialog />
           </div>

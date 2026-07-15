@@ -95,7 +95,7 @@ export function HeroSection() {
           }
         }
       `}</style>
-      <div ref={heroRef} className="container relative z-10 pointer-events-auto px-6 md:px-8 flex flex-col min-h-screen">
+      <div ref={heroRef} className="w-full max-w-7xl mx-auto relative z-10 pointer-events-auto px-6 md:px-8 flex flex-col min-h-screen">
         {/* Navigation Bar */}
         <div className="w-full justify-center pt-6 hidden md:flex">
           <motion.nav

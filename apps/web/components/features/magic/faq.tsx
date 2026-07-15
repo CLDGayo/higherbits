@@ -22,14 +22,14 @@ interface FAQProps {
 
 const DEFAULT_FAQS = [
   {
-    question: "How does Magic AI Agent work?",
+    question: "How does HigherBits AI work?",
     answer:
-      "Magic AI Agent searches for relevant components in the HigherBits.dev library based on your request. Using RAG technology, it finds the top 3 matching components and draws inspiration from them to create new, unique components tailored to your needs. The IDE agent understands your application context and seamlessly integrates the new components in the right place.",
+      "HigherBits AI searches for relevant components in the HigherBits.dev library based on your request. Using RAG technology, it finds the top 3 matching components and draws inspiration from them to create new, unique components tailored to your needs. The IDE agent understands your application context and seamlessly integrates the new components in the right place.",
   },
   {
-    question: "How does Magic AI Agent handle my codebase?",
+    question: "How does HigherBits AI handle my codebase?",
     answer:
-      "Magic AI Agent only writes or modifies files related to the components it generates. It follows your project's code style and structure, and integrates seamlessly with your existing codebase without affecting other parts of your application.",
+      "HigherBits AI only writes or modifies files related to the components it generates. It follows your project's code style and structure, and integrates seamlessly with your existing codebase without affecting other parts of your application.",
   },
   {
     question: "Can I customize the generated components?",
@@ -39,7 +39,7 @@ const DEFAULT_FAQS = [
   {
     question: "Who owns the generated components?",
     answer:
-      "You fully own all components generated for you by Magic AI Agent. There are no licensing restrictions - you're free to use, modify, and distribute the components however you want in your projects.",
+      "You fully own all components generated for you by HigherBits AI. There are no licensing restrictions - you're free to use, modify, and distribute the components however you want in your projects.",
   },
   {
     question: "How does revenue sharing work with component authors?",
@@ -53,15 +53,15 @@ const DEFAULT_FAQS = [
   {
     question: "How soon do new components get added to HigherBits.dev's library?",
     answer:
-      "Authors can publish components to HigherBits.dev at any time, and Magic Agent will have immediate access to them. This means you'll always have access to the latest components and design patterns from the community.",
+      "Authors can publish components to HigherBits.dev at any time, and HigherBits AI will have immediate access to them. This means you'll always have access to the latest components and design patterns from the community.",
   },
   {
     question: "Is there a limit to component complexity?",
     answer:
-      "Magic AI Agent can handle components of varying complexity, from simple buttons to complex interactive forms. However, for best results, we recommend breaking down very complex UIs into smaller, manageable components.",
+      "HigherBits AI can handle components of varying complexity, from simple buttons to complex interactive forms. However, for best results, we recommend breaking down very complex UIs into smaller, manageable components.",
   },
   {
-    question: "How can I get help with Magic AI Agent?",
+    question: "How can I get help with HigherBits AI?",
     answer: (
       <>
         If you need assistance, you can contact us via email at support@higherbits.dev
@@ -73,7 +73,7 @@ const DEFAULT_FAQS = [
         >
           Discord community
         </Link>
-        . We're here to help you get the most out of Magic AI Agent.
+        . We're here to help you get the most out of HigherBits AI.
       </>
     ),
   },
@@ -90,7 +90,7 @@ export function FAQ({ simplified = false, faqs = DEFAULT_FAQS }: FAQProps) {
             Frequently Asked Questions
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Everything you need to know about Magic AI Agent
+            Everything you need to know about HigherBits AI
           </p>
         </div>
       )}

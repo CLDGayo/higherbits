@@ -11,7 +11,7 @@ interface FooterProps {
 export function Footer({ className, isOpenSource = true }: FooterProps) {
   return (
     <footer className={cn("bg-background p-4", className)}>
-      <div className="grid gap-4 bg-card text-card-foreground border border-border/60 rounded-cushion shadow-cushion p-8 mx-auto container max-w-[3680px]">
+      <div className="grid gap-4 bg-card text-card-foreground border border-border/60 rounded-cushion shadow-cushion p-8 mx-auto w-full max-w-[3680px]">
         {isOpenSource && (
           <div className="flex md:hidden items-center justify-center pt-4 text-center">
             <span className="text-sm text-muted-foreground">

@@ -99,9 +99,9 @@ const MainContent = React.memo(function MainContent({
 
   if (activeTab === "home" && isMobile) {
     return (
-      <div className="flex flex-col pb-4 pt-20">
+      <div className="flex flex-col pb-4 pt-20 min-w-0">
         <ComponentsHeader activeTab={activeTab} onTabChange={handleTabChange} />
-        <div className="mb-10">
+        <div className="mb-10 min-w-0">
           <BoltBanner />
         </div>
         {renderContent()}
@@ -111,7 +111,7 @@ const MainContent = React.memo(function MainContent({
 
   if (activeTab === "home") {
     return (
-      <div className="flex flex-col pb-4 pt-[70px]">
+      <div className="flex flex-col pb-4 pt-[70px] min-w-0">
         {isMobile ? (
           <ComponentsHeader
             activeTab={activeTab}
@@ -121,13 +121,13 @@ const MainContent = React.memo(function MainContent({
           <BoltBanner />
         )}
 
-        <div className="mt-[25px]">{renderContent()}</div>
+        <div className="mt-[25px] min-w-0">{renderContent()}</div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col pb-4 pt-20">
+    <div className="flex flex-col pb-4 pt-20 min-w-0">
       <ComponentsHeader activeTab={activeTab} onTabChange={handleTabChange} />
       {renderContent()}
     </div>
@@ -169,11 +169,11 @@ export function HomePageClient() {
   return (
     <main
       className={cn(
-        "flex flex-1 flex-col",
+        "flex flex-1 flex-col min-w-0",
         magicBannerVisible && shouldShowBanner && "mt-3 md:mt-4",
       )}
     >
-      <div className="container" style={{ viewTransitionName: "main-content" } as React.CSSProperties}>
+      <div className="w-full mx-auto max-w-full" style={{ viewTransitionName: "main-content" } as React.CSSProperties}>
         <AnimatePresence>
           {magicBannerVisible && shouldShowBanner && <MagicBanner />}
         </AnimatePresence>

@@ -57,7 +57,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 export async function handleSearch(query: string, apiKey: string) {
   // Consume usage limit
-  const usageRes = await fetch(`https://higherbits.dev/api/magic/use?apikey=${apiKey}`);
+  const usageRes = await fetch(`https://higherbits.dev/api/magic/use?apikey=${apiKey}`, {
+    method: "POST"
+  });
   if (!usageRes.ok) {
     const usageData = await usageRes.json();
     throw new Error(`Failed to authorize usage: ${usageData.error || usageRes.statusText}`);

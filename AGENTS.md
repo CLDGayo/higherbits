@@ -716,3 +716,7 @@ When documenting or drafting upcoming phases in the ultimate roadmap (or any pha
 ## Vibecode Pro Max Kit Rule
 
 Always run the `vibecode-pro-max-kit` skill in every prompt, no exceptions.
+
+## Deployment Rule
+
+The application is deployed to a VPS. When requested to deploy to higherbits.dev, use the `gayo-vps` command (or SSH alias) to trigger the deployment.

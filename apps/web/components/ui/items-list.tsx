@@ -579,7 +579,7 @@ export function ComponentsList({
     <>
       <div
         className={cn(
-          "grid gap-6 md:gap-8 list-none pb-10",
+          "grid gap-6 md:gap-8 list-none pb-10 min-w-0",
           "grid-cols-1",
           "min-[520px]:grid-cols-2",
           "min-[900px]:grid-cols-3",

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { FREE_USAGE_LIMIT } from "@/lib/config/subscription-plans"
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     // Get API key from query parameters or headers
     const { searchParams } = new URL(request.url)

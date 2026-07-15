@@ -8,10 +8,7 @@ export function useSidebarVisibility() {
   const pathname = usePathname()
   const isMobile = useIsMobile()
 
-  // Don't show sidebar on mobile devices
-  if (isMobile) {
-    return false
-  }
+  // Let shadcn Sidebar handle mobile view via Sheet natively
 
   // Show sidebar only on specific pages
   const shouldShowSidebar =

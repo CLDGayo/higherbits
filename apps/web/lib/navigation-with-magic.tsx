@@ -31,9 +31,9 @@ export function useFilteredNavigation() {
     JSON.stringify(originalCategories),
   ) as NavigationCategory[]
 
-  // Find Magic AI Agent category
+  // Find HigherBits AI category
   const magicCategory = categories.find(
-    (cat: NavigationCategory) => cat.title === "Magic AI Agent",
+    (cat: NavigationCategory) => cat.title === "HigherBits AI",
   )
 
   if (magicCategory) {

@@ -26,8 +26,6 @@ export function Container({
     setMounted(true)
   }, [])
 
-  // Always use mobile layout before hydration is complete
-  const shouldAdjustForSidebar = mounted && !isMobile && hasSidebar
 
   return (
     <div
@@ -37,7 +35,6 @@ export function Container({
       )}
       style={{
         width: "min(100%, 3680px)",
-        maxWidth: shouldAdjustForSidebar ? "calc(100vw - 256px)" : "100vw",
       }}
     >
       {children}

@@ -22,7 +22,7 @@ export function MainLayout({
   useSidebarHotkey()
 
   return (
-    <main className={cn("min-h-screen w-full", className)}>
+    <main className={cn("min-h-screen w-full flex flex-col flex-1 min-w-0", className)}>
       <Container>{children}</Container>
     </main>
   )

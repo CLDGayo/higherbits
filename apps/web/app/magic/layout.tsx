@@ -1,7 +1,7 @@
 import { type Metadata } from "next/types"
 
 export const metadata: Metadata = {
-  title: "Magic AI Agent",
+  title: "HigherBits AI",
   description: "AI Agent for Your IDE That Creates Professional UI Components",
 }
 

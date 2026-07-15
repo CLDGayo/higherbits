@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
 html,
 body {
   width: 100%;
@@ -216,6 +217,7 @@ iframe {
   mask-composite: exclude;
   pointer-events: none;
 }
+}
 
 @layer base {
   :root {
@@ -395,7 +397,9 @@ iframe {
     --sidebar-ring: 255 58% 76%;
     --border-gradient-mid: rgba(255, 255, 255, 0.8);
   }
+}
 
+@layer utilities {
   /* ------------------------------------------------------------------ *
    * Cozy claymorphism — reusable CSS-only texture utility.
    * `.texture-cushion` overlays a subtle fabric/grain surface on any card
@@ -472,25 +476,9 @@ iframe {
       var(--clay-shadow-light),
       var(--clay-shadow-dark);
   }
+}
 
-  @layer base {
-    :root {
-      --chart-1: 342 70% 72%;
-      --chart-2: 158 45% 58%;
-      --chart-3: 205 65% 66%;
-      --chart-4: 34 82% 70%;
-      --chart-5: 255 55% 72%;
-    }
-
-    .dark {
-      --chart-1: 342 58% 68%;
-      --chart-2: 158 42% 58%;
-      --chart-3: 205 60% 64%;
-      --chart-4: 30 70% 66%;
-      --chart-5: 255 58% 76%;
-    }
-  }
-
+@layer utilities {
   @media (min-width: 720px) {
     .min-720\: {
       --container-x-padding: 24px;
