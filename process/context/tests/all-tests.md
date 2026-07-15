@@ -146,6 +146,23 @@ done
 for bad video path/id + ~6 Phase 19 cases: template/theme Content_Type accepted, Palette_Tokens
 valid/missing-name/missing-value/non-array error cases). All pass.
 
+## gemini-asset-gen runner (ops/, added 15-07-26, claymorphism-3d-redesign Phase 2)
+
+**Runner:** `node --test` (Node 22 built-in) — first confirmed-on-disk test file under `ops/__tests__/`.
+**Run command:** `node --test ops/__tests__/gemini-asset-gen.test.mjs`
+**Total:** 7 tests, all passing. Mocked via an injected `fetchImpl` parameter (no `global.fetch`
+override, zero live network calls). Covers: graceful-absence when `GEMINI_API_KEY` is unset,
+successful icon generation with mimeType-derived file extension, manifest write, manifest
+idempotency (hash-match skip), `GEMINI_IMAGE_MODEL` fallback to the confirmed DEFAULT, and
+fail-fast on an invalid/retired resolved model id.
+**Note (drift consistency):** the `upload-seed-entries runner` and `github-ingest.test.mjs`
+entries below were NOT independently re-confirmed on disk during this pass — see
+`process/context/all-context.md` Open Questions for the broader `ops/`-subsystem documentation
+drift flagged 15-07-26 (this repo's actual `ops/` contents as of that date were confirmed to be
+`ops/README-seed.md`, `ops/seed-placeholder-components.mjs`, and the 3 new Phase 2 gemini files
+only — a full `vc-audit-context` pass is needed to reconcile the rest of this file's `ops/`
+claims).
+
 ## upload-seed-entries runner (ops/, Phase 19)
 
 **Runner:** `node --test` (Node 22 built-in)

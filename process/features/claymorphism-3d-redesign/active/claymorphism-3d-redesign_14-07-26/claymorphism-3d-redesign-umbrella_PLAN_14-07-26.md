@@ -265,7 +265,7 @@ During /goal execution of a phase program:
 | Phase | Status |
 |---|---|
 | 1 — Architecture & Prompt Engineering | COMPLETE |
-| 2 — Asset Generation Pipeline | PLANNED |
+| 2 — Asset Generation Pipeline | COMPLETE (CODE DONE — live seed batch deferred) |
 | 3 — Component Library | PLANNED |
 | 4 — Page Assembly & Layout | PLANNED |
 | 5 — Refinement, Animation & Deployment | PLANNED |
@@ -352,12 +352,16 @@ node --test ops/__tests__/gemini-asset-gen.test.mjs
 ## Current Execution State
 
 Last updated: 15-07-26
-Current phase: 1 of 5 complete — next Phase 2
+Current phase: 2 of 5 complete — next Phase 3
 Phase 1 name: Architecture & Prompt Engineering
 Phase 1 status: COMPLETE (EVL confirmed, 1 known-gap accepted)
 Phase 1 EVL: 5/6 gates independently green (build, tsc, vitest, bundle-safety, prompt-template JSON check); a11y Playwright gate FAILs on 4 pre-existing muted-foreground contrast violations unrelated to this phase's additive-only token work — accepted as known-gap, backlog note filed (`process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`)
 Phase 1 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-01-architecture-prompt-engineering_REPORT_14-07-26.md`
-Next phase: Phase 2 — Asset Generation Pipeline, loop step RESEARCH. Pre-conditions carried forward: (1) plain Node `ops/` scripts do NOT auto-load `apps/web/.env.local` — Phase 2's asset-generation pipeline must explicitly load env or the user duplicates `GEMINI_API_KEY` to a root env file; (2) `GEMINI_API_KEY` confirmed present in `apps/web/.env.local` (value not recorded); (3) the exact Gemini model id must be confirmed via `vc-docs-seeker` before wiring into the ops script — the prompt template doc uses the literal placeholder `"CONFIRM AT PHASE 2"`, never a real model id, until then.
+Phase 2 name: Asset Generation Pipeline
+Phase 2 status: COMPLETE (CODE DONE — live seed batch deferred, user opt-in pending)
+Phase 2 EVL: 5/5 Fully-Automated gates independently green (unit tests 7/7 mocked-fetch, zero-live-network check, zero-dotenv-read check, web build exit 0, bundle-safety grep 0). VE11 (live API integration) and VE12 (visual fidelity) deferred per D2 known-gap — GEMINI_API_KEY deliberately not accessed this phase (billed spend + privacy-gated key = /goal hard-stop class); opt-in run instructions + cost estimate (~$0.31 seed batch) recorded in the phase report.
+Phase 2 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-02-asset-generation-pipeline_REPORT_14-07-26.md`
+Next phase: Phase 3 — Component Library, loop step RESEARCH. Pre-conditions carried forward: (1) `apps/web/public/clay/{icons,illustrations,textures}/` are empty (placeholder `.gitkeep` only) — Phase 3 components must use placeholder/mock asset paths until the D1 live seed batch runs (see Phase 2 report for the opt-in command); (2) `ops/gemini-asset-gen.mjs` + `ops/gemini-prompts.mjs` + manifest.json shape exist and are ready to consume once a live batch runs; (3) Tailwind `shadow-clay-*` utility registration was deferred from Phase 1 and still needs to land — confirm exact deferral point in Phase 1 report before Phase 3 starts.
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
 Orchestrator rule: read this section plus the Phase 2 plan's `## Phase Loop Progress` before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.
