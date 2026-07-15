@@ -267,7 +267,7 @@ During /goal execution of a phase program:
 | 1 — Architecture & Prompt Engineering | COMPLETE |
 | 2 — Asset Generation Pipeline | COMPLETE (CODE DONE — live seed batch deferred) |
 | 3 — Component Library | COMPLETE |
-| 4 — Page Assembly & Layout | PLANNED |
+| 4 — Page Assembly & Layout | COMPLETE |
 | 5 — Refinement, Animation & Deployment | PLANNED |
 
 Status values: PLANNED | CODE DONE | TESTING | VERIFIED | BLOCKED | COMPLETE
@@ -351,8 +351,8 @@ node --test ops/__tests__/gemini-asset-gen.test.mjs
 
 ## Current Execution State
 
-Last updated: 15-07-26
-Current phase: 3 of 5 complete — next Phase 4
+Last updated: 16-07-26
+Current phase: 4 of 5 complete — next Phase 5
 Phase 1 name: Architecture & Prompt Engineering
 Phase 1 status: COMPLETE (EVL confirmed, 1 known-gap accepted)
 Phase 1 EVL: 5/6 gates independently green (build, tsc, vitest, bundle-safety, prompt-template JSON check); a11y Playwright gate FAILs on 4 pre-existing muted-foreground contrast violations unrelated to this phase's additive-only token work — accepted as known-gap, backlog note filed (`process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`)
@@ -365,7 +365,11 @@ Phase 3 name: Component Library
 Phase 3 status: COMPLETE (EVL confirmed CLEAN, all fully-automated gates green)
 Phase 3 EVL: 8/8 Fully-Automated/structural gates independently green (test 19/19 across 8 files, tsc --noEmit exit 0, build exit 0, bundle-safety grep 0, packages/ui untouched, no new deps, tailwind.config.js additive-only +4 shadow-clay-* keys, globals.css unchanged). PVL: first-pass Gate: PASS after 2 in-plan fixes (ClayCard asset-prop gap; Tailwind JIT static-lookup instruction). Known gaps carried: VE14 a11y (Clerk runtime blocker, pre-existing, zero new routes this phase), VE15 visual parity (deferred Agent-Probe), empty clay asset dirs (Phase 2 deferral, unchanged). One EXECUTE deviation on record: tests assert class presence via `element.className.toContain()` (no `@testing-library/jest-dom` installed) — preserves D5 class-presence intent, no new dependency.
 Phase 3 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-03-component-library_REPORT_14-07-26.md`
-Next phase: Phase 4 — Page Assembly & Layout, loop step RESEARCH. Pre-conditions carried forward: (a) clay components live in `apps/web/components/ui/` (clay-card, clay-input, clay-pill-button, clay-pill-bar-chart, clay-donut-chart) with `shadow-clay-sm/md/lg/pressed` Tailwind utilities registered and consumable app-wide; (b) `apps/web/public/clay/{icons,illustrations,textures}/` asset dirs remain empty — Phase 4 pages must use the components' no-render asset defaults (ClayCard's `iconSrc`/`illustrationSrc` gracefully omit rendering when absent) until the user-approved Gemini seed batch runs; (c) VE15 visual-parity Agent-Probe is still owed (accumulating since Phase 1 — no dedicated visual check has run across any phase yet); (d) a11y Playwright gate remains blocked on Clerk dev keys (pre-existing, unrelated to this program).
+Phase 4 name: Page Assembly & Layout
+Phase 4 status: COMPLETE (EVL confirmed CLEAN, zero fix cycles)
+Phase 4 EVL: 7/7 Fully-Automated/structural gates independently green (VE5 build exit 0, VE6 tsc exit 0, VE7 tests 29/29 across 11 files incl. new hero-section.test.tsx + page.client.test.tsx proving VE1-VE4, VE8 package.json diff empty, VE9 bundle-safety grep 0, VE11 D7 procedural — pre-existing header.client.tsx/sidebar-layout.tsx diffs intact, nothing staged). VE10 a11y: 13 pass / 5 fail, all `color-contrast` class only (4 pre-existing muted-foreground routes + `/public-dashboard` light-mode accent-pink 4.40:1, plan-locked D3 pair) — no new violation classes, accepted known-gap. VE12 (Agent-Probe visual parity) still deferred, accumulating since Phase 1. `results.tsv` rows: HALTED_KNOWN_GAP, 2026-07-16. Two within-blast-radius EXECUTE deviations on record (icon-button aria-label additions to fix a pre-existing button-name violation surfaced by the new route; opacity-90 removal) — both documented in the phase report, neither hard-stop class.
+Phase 4 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-04-page-assembly-layout_REPORT_14-07-26.md`
+Next phase: Phase 5 — Refinement, Animation & Deployment, loop step RESEARCH. Pre-conditions carried forward: (a) hero (`hero-section.tsx`) and dashboard (`public-dashboard/page.client.tsx`) surfaces now visibly use the Clay component set (ClayCard/ClayInput/ClayPillButton/ClayPillBarChart/ClayDonutChart); `page.client.tsx` additionally exports `buildUsageChart`/`buildEarningsChart` pure helpers Phase 5 can reuse; (b) `apps/web/public/clay/{icons,illustrations,textures}/` asset dirs remain empty — Phase 5 must continue to rely on the components' no-render asset defaults until the user-approved Gemini seed batch runs; (c) VE12/VE15 visual-parity Agent-Probe is still owed (accumulating since Phase 1 — no dedicated visual check has run across any phase yet) — Phase 5's final a11y QA pass is a natural point to also close this out; (d) a11y light-mode residual (muted-foreground + accent-pink pair) is tracked in 2 backlog notes — Phase 5's "final a11y QA" scope should consider whether to raise `accent-pink` contrast to ≥4.5:1 as part of polish, or continue deferring it; (e) Clerk dev keys remain absent (pre-existing, program-external) — does not block build/CI execution of the a11y spec.
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
 Orchestrator rule: read this section plus the Phase 2 plan's `## Phase Loop Progress` before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.

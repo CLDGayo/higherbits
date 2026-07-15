@@ -10,6 +10,7 @@ const routes = [
   "/contest",
   "/our-story",
   "/templates",
+  "/public-dashboard",
 ]
 
 async function auditRoute(page: Page, route: string, theme: "light" | "dark") {

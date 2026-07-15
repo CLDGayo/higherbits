@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import Link from "next/link"
 import {
   ChevronDown,
   ChevronUp,
@@ -12,8 +13,12 @@ import {
 } from "lucide-react"
 import { motion } from "motion/react"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { ClayCard } from "@/components/ui/clay-card"
+import { ClayInput } from "@/components/ui/clay-input"
+import { ClayPillButton } from "@/components/ui/clay-pill-button"
+import { ClayPillBarChart } from "@/components/ui/clay-pill-bar-chart"
+import { ClayDonutChart } from "@/components/ui/clay-donut-chart"
+import { type ChartConfig } from "@/components/ui/chart"
 import {
   Select,
   SelectContent,
@@ -87,6 +92,59 @@ async function fetchAuthorPayouts(
   return await response.json()
 }
 
+const CHART_PALETTE = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+]
+
+/**
+ * Top-N authors by total usage → bar-chart data + config.
+ * Config carries the single "value" series key (Bar fills with var(--color-value))
+ * plus a per-name key for each data point.
+ */
+export function buildUsageChart(
+  authors: AuthorPayout[],
+  topN = 5,
+): { data: Array<{ name: string; value: number }>; config: ChartConfig } {
+  const data = [...authors]
+    .sort((a, b) => b.total_usage - a.total_usage)
+    .slice(0, topN)
+    .map((a) => ({ name: a.username, value: a.total_usage }))
+
+  const config: ChartConfig = {
+    value: { label: "Usage", color: CHART_PALETTE[0] },
+  }
+  data.forEach((d, i) => {
+    config[d.name] = { label: d.name, color: CHART_PALETTE[i % CHART_PALETTE.length] }
+  })
+  return { data, config }
+}
+
+/**
+ * Top-N authors by potential earnings → donut-chart data + config.
+ * D8 hard constraint: donut Cells fill with var(--color-${name}), so the config
+ * MUST have exactly one key per data[].name (no extra/missing keys).
+ */
+export function buildEarningsChart(
+  authors: AuthorPayout[],
+  topN = 5,
+): { data: Array<{ name: string; value: number }>; config: ChartConfig } {
+  const data = [...authors]
+    .filter((a) => a.potential_earnings > 0)
+    .sort((a, b) => b.potential_earnings - a.potential_earnings)
+    .slice(0, topN)
+    .map((a) => ({ name: a.username, value: a.potential_earnings }))
+
+  const config: ChartConfig = {}
+  data.forEach((d, i) => {
+    config[d.name] = { label: d.name, color: CHART_PALETTE[i % CHART_PALETTE.length] }
+  })
+  return { data, config }
+}
+
 export function PublicDashboardClient() {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -158,6 +216,9 @@ export function PublicDashboardClient() {
     0,
   )
 
+  const usageChart = buildUsageChart(filteredData)
+  const earningsChart = buildEarningsChart(filteredData)
+
   return (
     <div className="container mx-auto py-8 space-y-6">
       <motion.div
@@ -172,11 +233,60 @@ export function PublicDashboardClient() {
         </p>
       </motion.div>
 
-      <div className="bg-background rounded-lg border border-border overflow-hidden p-6">
+      {/* Clay stat tiles + pink upsell */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ClayCard className="p-5">
+          <div className="text-sm text-muted-foreground">Total Usage</div>
+          <div className="mt-1 text-2xl font-bold">{totalUsage}</div>
+        </ClayCard>
+        <ClayCard className="p-5">
+          <div className="text-sm text-muted-foreground">Potential Earnings</div>
+          <div className="mt-1 text-2xl font-bold">
+            ${totalPotentialEarnings.toFixed(2)}
+          </div>
+        </ClayCard>
+        <ClayCard className="p-5">
+          <div className="text-sm text-muted-foreground">Components</div>
+          <div className="mt-1 text-2xl font-bold">{totalComponents}</div>
+        </ClayCard>
+        <ClayCard className="bg-accent-pink text-accent-pink-foreground flex flex-col justify-between p-5">
+          <div>
+            <div className="text-sm font-medium">Unlock everything</div>
+            <p className="mt-1 text-sm">
+              Go Pro for full access to every component.
+            </p>
+          </div>
+          <Link href="/pricing" className="mt-3 inline-block">
+            <span className="font-medium underline underline-offset-4">Get Pro</span>
+          </Link>
+        </ClayCard>
+      </div>
+
+      {/* Clay data-viz widgets */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <ClayCard className="p-5">
+          <div className="mb-3 text-sm font-medium">Top authors by usage</div>
+          <ClayPillBarChart
+            data={usageChart.data}
+            config={usageChart.config}
+            className="h-[240px] w-full"
+          />
+        </ClayCard>
+        <ClayCard className="p-5">
+          <div className="mb-3 text-sm font-medium">Earnings share</div>
+          <ClayDonutChart
+            data={earningsChart.data}
+            config={earningsChart.config}
+            className="mx-auto h-[240px]"
+          />
+        </ClayCard>
+      </div>
+
+      <ClayCard className="overflow-hidden p-6">
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <form onSubmit={handleSearch} className="relative">
-              <Input
+              <ClayInput
                 type="text"
                 placeholder="Search by username or name..."
                 value={searchTerm}
@@ -187,6 +297,7 @@ export function PublicDashboardClient() {
               {searchTerm && (
                 <button
                   type="button"
+                  aria-label="Clear search"
                   onClick={handleClearSearch}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
                 >
@@ -201,7 +312,7 @@ export function PublicDashboardClient() {
               value={pageSize.toString()}
               onValueChange={handlePageSizeChange}
             >
-              <SelectTrigger className="w-[100px]">
+              <SelectTrigger className="w-[100px]" aria-label="Rows per page">
                 <SelectValue placeholder="Rows" />
               </SelectTrigger>
               <SelectContent>
@@ -372,45 +483,47 @@ export function PublicDashboardClient() {
               {data.pagination.total} authors
             </div>
             <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
+              <ClayPillButton
+                variant="secondary"
                 size="sm"
                 onClick={() => handlePageChange(1)}
                 disabled={page === 1}
               >
                 First
-              </Button>
-              <Button
-                variant="outline"
+              </ClayPillButton>
+              <ClayPillButton
+                variant="secondary"
                 size="sm"
+                aria-label="Previous page"
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
-              </Button>
+              </ClayPillButton>
               <span className="text-sm">
                 Page {page} of {data.pagination.totalPages}
               </span>
-              <Button
-                variant="outline"
+              <ClayPillButton
+                variant="secondary"
                 size="sm"
+                aria-label="Next page"
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page === data.pagination.totalPages}
               >
                 <ChevronRight className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
+              </ClayPillButton>
+              <ClayPillButton
+                variant="secondary"
                 size="sm"
                 onClick={() => handlePageChange(data.pagination.totalPages)}
                 disabled={page === data.pagination.totalPages}
               >
                 Last
-              </Button>
+              </ClayPillButton>
             </div>
           </div>
         )}
-      </div>
+      </ClayCard>
     </div>
   )
 }

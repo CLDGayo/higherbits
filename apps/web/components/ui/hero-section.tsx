@@ -10,7 +10,8 @@ import { useIsMobile } from "@/hooks/use-media-query"
 import { setCookie } from "@/lib/cookies"
 import { AuroraBackground } from "./aurora-background"
 import { Badge } from "./badge"
-import { Button } from "./button"
+import { ClayCard } from "./clay-card"
+import { ClayPillButton } from "./clay-pill-button"
 import { Icons } from "../icons"
 import { GitHubStarsBasic } from "./github-stars-number"
 
@@ -173,25 +174,21 @@ export function HeroSection() {
             </h2>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 justify-center mb-20">
-              <Button onClick={onEnterWebsite}>
+              <ClayPillButton onClick={onEnterWebsite}>
                 Browse components
                 {!isMobile && (
                   <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded-pill border border-primary-foreground/40 bg-primary-foreground/10 px-1.5 text-[0.625rem] font-medium text-primary-foreground">
                     <Icons.enter className="h-2.5 w-2.5" />
                   </kbd>
                 )}
-              </Button>
+              </ClayPillButton>
 
-              <Button
-                variant="ghost"
-                className="gap-2 border-border hover:bg-transparent text-foreground opacity-60 hover:opacity-90 transition-opacity duration-200"
-                asChild
-              >
+              <ClayPillButton variant="secondary" asChild className="gap-2">
                 <Link href="/magic" onClick={onEnterWebsite}>
                   Integrate in IDE AI Agent
                   <ArrowRight className="h-4 w-4 ml-1.5" />
                 </Link>
-              </Button>
+              </ClayPillButton>
             </div>
 
             {/* Company Logos */}
@@ -201,6 +198,7 @@ export function HeroSection() {
               transition={{ delay: 0.6, duration: 0.8 }}
               className="text-center parallax-layer parallax-layer-delay"
             >
+              <ClayCard className="inline-block bg-card/70 px-6 py-5 backdrop-blur-sm">
               <p className="text-muted-foreground mb-4">Optimized for</p>
               <div className="flex flex-col gap-2">
                 {/* IDE Logos */}
@@ -250,6 +248,7 @@ export function HeroSection() {
                   </div>
                 </div>
               </div>
+              </ClayCard>
             </motion.div>
           </motion.div>
         </div>
