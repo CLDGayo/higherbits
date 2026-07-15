@@ -255,6 +255,11 @@ iframe {
     --accent-blue-foreground: 208 55% 30%;
     --accent-mint: 158 52% 78%;
     --accent-mint-foreground: 162 48% 26%;
+    /* Warm pastel yellow chip (claymorphism-3d-redesign Phase 1) — follows the
+       pink/peach/blue/mint structure. WCAG AA verified: chip-bg vs foreground
+       = 5.88:1 (>=4.5). See apps/web/scripts/wcag-contrast.mjs. */
+    --accent-yellow: 48 90% 78%;
+    --accent-yellow-foreground: 42 60% 26%;
     --chart-1: 342 70% 72%;
     --chart-2: 158 45% 58%;
     --chart-3: 205 65% 66%;
@@ -272,6 +277,29 @@ iframe {
     --shadow-cushion-inner: inset 0 2px 3px hsl(0 0% 100% / 0.7),
       inset 0 -2px 4px hsl(258 40% 40% / 0.08);
     --shadow-cushion: var(--shadow-cushion-outer), var(--shadow-cushion-inner);
+    /* ---- Claymorphism triple-shadow namespace (claymorphism-3d-redesign Phase 1) ----
+       ADDITIVE — coexists with --shadow-cushion-* above, does NOT replace it.
+       True diagonal clay depth: light inset highlight (top-left) + dark inset
+       shadow (bottom-right) + soft outer drop. Fragments below are composed by
+       the .clay-surface utility and by the 3 discrete depth tiers. */
+    --clay-shadow-light: inset 3px 3px 6px hsl(0 0% 100% / 0.75);
+    --clay-shadow-dark: inset -3px -3px 6px hsl(258 40% 40% / 0.18);
+    --clay-shadow-outer: 0 10px 24px -10px hsl(258 40% 40% / 0.22);
+    /* 3 discrete depth tiers — each a full composed box-shadow (outer drop +
+       light-TL inset + dark-BR inset). Components pick depth by var name only. */
+    --clay-depth-sm: 0 4px 10px -6px hsl(258 40% 40% / 0.18),
+      inset 2px 2px 4px hsl(0 0% 100% / 0.7),
+      inset -2px -2px 4px hsl(258 40% 40% / 0.16);
+    --clay-depth-md: 0 10px 24px -10px hsl(258 40% 40% / 0.22),
+      inset 3px 3px 6px hsl(0 0% 100% / 0.75),
+      inset -3px -3px 6px hsl(258 40% 40% / 0.18);
+    --clay-depth-lg: 0 20px 44px -14px hsl(258 40% 40% / 0.28),
+      inset 5px 5px 10px hsl(0 0% 100% / 0.8),
+      inset -5px -5px 10px hsl(258 40% 40% / 0.22);
+    /* Inverted "pressed" state (light/dark inset positions swapped) — declared
+       for Phase 5 micro-interactions; NOT wired to any interaction in Phase 1. */
+    --clay-pressed: inset -3px -3px 6px hsl(0 0% 100% / 0.7),
+      inset 3px 3px 6px hsl(258 40% 40% / 0.2);
     --sidebar-background: 258 40% 96%;
     --sidebar-foreground: 25 20% 28%;
     --sidebar-primary: 255 55% 72%;
@@ -323,6 +351,10 @@ iframe {
     --accent-blue-foreground: 208 45% 15%;
     --accent-mint: 158 42% 64%;
     --accent-mint-foreground: 162 40% 13%;
+    /* Warm pastel yellow chip (cozy dusk) — deepened per sibling pattern.
+       WCAG AA verified: chip-bg vs foreground = 8.60:1 (>=4.5). */
+    --accent-yellow: 48 62% 64%;
+    --accent-yellow-foreground: 42 45% 13%;
     --chart-1: 342 58% 68%;
     --chart-2: 158 42% 58%;
     --chart-3: 205 60% 64%;
@@ -336,6 +368,23 @@ iframe {
     --shadow-cushion-inner: inset 0 1px 2px hsl(255 40% 82% / 0.14),
       inset 0 -2px 5px hsl(260 40% 3% / 0.3);
     --shadow-cushion: var(--shadow-cushion-outer), var(--shadow-cushion-inner);
+    /* ---- Claymorphism triple-shadow namespace (cozy dusk) ----
+       ADDITIVE; coexists with --shadow-cushion-*. Deeper plum-black drop, a
+       faint plum-tinted top highlight so clay depth reads on dark surfaces. */
+    --clay-shadow-light: inset 3px 3px 6px hsl(255 40% 82% / 0.12);
+    --clay-shadow-dark: inset -3px -3px 6px hsl(260 40% 3% / 0.5);
+    --clay-shadow-outer: 0 12px 26px -10px hsl(260 40% 3% / 0.6);
+    --clay-depth-sm: 0 4px 12px -6px hsl(260 40% 3% / 0.45),
+      inset 2px 2px 4px hsl(255 40% 82% / 0.1),
+      inset -2px -2px 4px hsl(260 40% 3% / 0.45);
+    --clay-depth-md: 0 12px 26px -10px hsl(260 40% 3% / 0.6),
+      inset 3px 3px 6px hsl(255 40% 82% / 0.12),
+      inset -3px -3px 6px hsl(260 40% 3% / 0.5);
+    --clay-depth-lg: 0 22px 46px -14px hsl(260 40% 3% / 0.7),
+      inset 5px 5px 10px hsl(255 40% 82% / 0.14),
+      inset -5px -5px 10px hsl(260 40% 3% / 0.55);
+    --clay-pressed: inset -3px -3px 6px hsl(255 40% 82% / 0.1),
+      inset 3px 3px 6px hsl(260 40% 3% / 0.55);
     --sidebar-background: 260 22% 15%;
     --sidebar-foreground: 40 24% 88%;
     --sidebar-primary: 255 58% 76%;
@@ -396,6 +445,32 @@ iframe {
       );
     opacity: 0.35;
     mix-blend-mode: screen;
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Claymorphism soft-clay surface (claymorphism-3d-redesign Phase 1).
+   * `.clay-surface` composes the additive --clay-* triple-shadow namespace
+   * into the true diagonal clay look: a light inset highlight (top-left) +
+   * a dark inset shadow (bottom-right) + a soft outer drop. This is distinct
+   * from `.texture-cushion` (grain overlay) and from the --shadow-cushion-*
+   * family (pillow top-highlight) — the three coexist and may be combined.
+   * CSS-only, no JS, no Tailwind config. Theme-aware via the .dark override
+   * below, which reads the .dark block's --clay-* values. Default depth is
+   * the medium tier; use .clay-surface with an inline/utility box-shadow of
+   * --clay-depth-sm|lg to change tier (Phase 3+ consumption contract).
+   * ------------------------------------------------------------------ */
+  .clay-surface {
+    box-shadow:
+      var(--clay-shadow-outer),
+      var(--clay-shadow-light),
+      var(--clay-shadow-dark);
+  }
+
+  .dark .clay-surface {
+    box-shadow:
+      var(--clay-shadow-outer),
+      var(--clay-shadow-light),
+      var(--clay-shadow-dark);
   }
 
   @layer base {

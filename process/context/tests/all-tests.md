@@ -35,7 +35,19 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total:** 123 tests across 27 files — **all passing** (the 6 pre-existing failures tracked in
+**Total (CORRECTED 15-07-26 — see note below):** 4 test files / 10 tests, all passing:
+`apps/web/lib/registry.test.ts`, `apps/web/components/ui/__tests__/footer-smoke.test.tsx`,
+`apps/web/components/ui/__tests__/header-smoke.test.tsx`,
+`apps/web/app/__tests__/landing-smoke.test.tsx`. The "123 tests across 27 files" text below
+was found stale during `claymorphism-3d-redesign` Phase 01 EVL (15-07-26, independently
+confirmed via `corepack pnpm --filter web test`) — the disk state did not match the documented
+count, and no test files were deleted during that phase's execution (its diff touched only
+`globals.css`, `.env.example`, and 2 new files under `apps/web/scripts/`). The drift predates
+that phase; root cause not yet investigated — flagged as a `vc-audit-context` follow-up.
+Historical narrative below (file-by-file additions, mocking conventions) is retained for
+context but the aggregate "123/27" figure is NOT current — do not cite it.
+
+**Historical narrative (stale count, kept for per-file history):** 123 tests across 27 files — **all passing** (the 6 pre-existing failures tracked in
 `process/features/monetization-catalog/backlog/preexisting-test-failures_NOTE_01-07-26.md` were
 resolved as a side effect of Phase 18's registry.test.ts/search.test.ts/views.test.ts rewrites —
 see that note's 04-07-26 addendum for confirmation). `apps/web/__tests__/clerk-webhook.test.ts`
