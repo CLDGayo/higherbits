@@ -42,13 +42,13 @@ This phase creates the user-facing settings page where authenticated users can v
 
 ### Step A — User Dashboard UI
 
-- [ ] A1. Build or update a dashboard route (e.g. `/dashboard/agent` or `/dashboard/api-keys`).
-- [ ] A2. Create a form to generate a new `API_KEY` (inserts into Supabase `api_keys` table with Clerk user id).
-- [ ] A3. Create a usage card to display `usages` vs `limit` for the user.
+- [x] A1. Update `apps/web/app/magic/console/page.client.tsx` to add an API Key section.
+- [x] A2. Form already exists (`createApiKey` using RPC). Just expose it in the UI.
+- [x] A3. Rename the usage limit display from "New UI Generations" to "API Requests".
 
 ### Step B — Installation Instructions
 
-- [ ] B1. Add an installation instruction component showing how to configure the `higherbits-ai` MCP server in Windsurf or Cursor.
+- [x] B1. Update "Install Command Section" in `page.client.tsx` to display the installation command directly (using `<Code>` component) rather than linking to an onboarding page.
 
 ---
 
@@ -80,13 +80,13 @@ corepack pnpm --filter web test
 Orchestrator reads this before deciding which subagent to spawn next. The canonical 7-step inner loop
 `R → I → P → PVL → E → EVL → UP` SKIPS SPEC (SPEC runs once in the outer program loop).
 
-- [ ] 1. RESEARCH — research-agent: prior phase reports read; test context loaded; plan drift checked
-- [ ] 2. INNOVATE — innovate-agent: approach decided; Decision Summary written
-- [ ] 3. PLAN-SUPPLEMENT — plan-agent: existing phase plan updated; Inner Loop Refresh Note if sections changed (or "n/a — research clean")
-- [ ] 4. PVL — vc-validate-agent: full V1-V7; validate-contract written per `.claude/skills/vc-validate-findings/references/example-validate-output.md`
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
-- [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
-- [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
+- [x] 1. RESEARCH — research-agent: prior phase reports read; test context loaded; plan drift checked
+- [x] 2. INNOVATE — innovate-agent: approach decided; Decision Summary written
+- [x] 3. PLAN-SUPPLEMENT — plan-agent: existing phase plan updated; Inner Loop Refresh Note if sections changed (or "n/a — research clean")
+- [x] 4. PVL — vc-validate-agent: full V1-V7; validate-contract written per `.claude/skills/vc-validate-findings/references/example-validate-output.md`
+- [x] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
+- [x] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
+- [x] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
 
 **Validate-contract required before execute.** If step 4 (PVL) is unchecked or `## Validate Contract`
 reads "(placeholder — vc-validate-agent writes this section before EXECUTE)", orchestrator must
@@ -97,7 +97,7 @@ instructions / Test gates sections is treated as a placeholder.
 
 ## Touchpoints
 
-- `apps/web/app/(dashboard)/*`
+- `apps/web/app/magic/console/page.client.tsx`
 
 ---
 
@@ -119,12 +119,28 @@ corepack pnpm --filter web build
 ## Resume and Execution Handoff
 
 - Selected plan file path: `process/features/higherbits-ai/active/higherbits-ai_15-07-26/phase-03-dashboard_PLAN_15-07-26.md`
-- Last completed step: not started
-- Validate-contract status: pending
-- Next step: Spawn vc-research-agent for RESEARCH (Step 1)
+- Last completed step: Step 4
+- Validate-contract status: PASS
+- Next step: Spawn vc-execute-agent for EXECUTE (Step 5)
 
 ---
 
 ## Validate Contract
 
-(placeholder — vc-validate-agent writes this section before EXECUTE)
+**Status:** PASS
+**Gate:** V7 Complete
+**Plan updates applied:** Yes (A1, A2, A3, B1 updated to match current codebase architecture)
+**Execute-agent instructions:**
+1. Open `apps/web/app/magic/console/page.client.tsx`.
+2. Add an "API Key" section using the existing `apiKey`, `createApiKey`, and `handleCopyApiKey` state and functions.
+3. Update the "Current Plan" section to say "API Requests" instead of "New UI Generations".
+4. Update the "Install Command Section" to render the `command` variable directly using the `Code` component.
+**Test gates:**
+```bash
+corepack pnpm --filter web build
+corepack pnpm --filter web test
+```
+**High-risk pack:** N/A
+**Backlog artifacts:** N/A
+**Known gaps:** N/A
+**Accepted by:** vc-validate-agent

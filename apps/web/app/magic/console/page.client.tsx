@@ -11,6 +11,7 @@ import {
   Copy,
   AlertTriangle,
   RefreshCw,
+  Lock,
 } from "lucide-react"
 import { PLAN_LIMITS, PlanType } from "@/lib/config/subscription-plans"
 import { toast } from "sonner"
@@ -478,7 +479,7 @@ export function ConsoleClient({
                         <CircleProgress progress={usageCount / usageLimit} />
                       </div>
                       <div className="text-sm text-foreground">
-                        New UI Generations
+                        API Requests
                       </div>
                     </div>
                     <div className="text-sm tabular-nums">
@@ -600,24 +601,68 @@ export function ConsoleClient({
             </div>
           )}
 
-          {/* Install Command Section */}
+          {/* API Key Section */}
           <div className="space-y-2 mt-8">
             <div className="flex items-center justify-between pb-3 border-b mb-4">
-              <h3 className="font-medium">Install Magic MCP</h3>
+              <h3 className="font-medium">API Key</h3>
             </div>
             <div className="bg-background rounded-lg border border-border overflow-hidden">
               <div className="p-4">
-                <p className="text-sm text-muted-foreground">
-                  Configure Magic MCP in your IDE by completing the guided
-                  onboarding process.
+                <p className="text-sm text-muted-foreground mb-4">
+                  Use this API key to authenticate the HigherBits AI MCP server. Keep it secure.
                 </p>
+                {!apiKey ? (
+                  <Button
+                    onClick={createApiKey}
+                    disabled={isCreatingApiKey}
+                    variant="default"
+                    className="w-[140px] bg-black text-white hover:bg-black/90"
+                  >
+                    {isCreatingApiKey ? (
+                      <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Lock className="mr-2 h-4 w-4" />
+                    )}
+                    Create API Key
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-2 bg-muted p-1 rounded-md w-full max-w-[650px]">
+                    <code className="flex-1 font-mono text-muted-foreground text-sm tracking-wider overflow-hidden pl-1">
+                      {getMaskedApiKey(apiKey.key)}
+                    </code>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCopyApiKey}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {copiedApiKey ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
-              <div className="bg-muted p-3 rounded-b-lg flex justify-end gap-3 border-t">
-                <Button asChild>
-                  <Link href="/magic/onboarding?step=select-ide">
-                    Setup Magic MCP
-                  </Link>
-                </Button>
+            </div>
+          </div>
+
+          {/* Install Command Section */}
+          <div className="space-y-2 mt-8">
+            <div className="flex items-center justify-between pb-3 border-b mb-4">
+              <h3 className="font-medium">Install HigherBits AI</h3>
+            </div>
+            <div className="bg-background rounded-lg border border-border overflow-hidden">
+              <div className="p-4">
+                <p className="text-sm text-muted-foreground mb-4">
+                  Run this command to start the HigherBits AI MCP server.
+                </p>
+                <div className="flex items-center gap-2 w-full max-w-[650px]">
+                  <div className="flex-1 overflow-hidden">
+                    <Code code={command || "npx higherbits-ai"} language="bash" className="w-full" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
