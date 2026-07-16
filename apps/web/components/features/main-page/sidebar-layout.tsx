@@ -164,8 +164,7 @@ export function MainSidebar() {
   }, []) // Empty dependency array ensures this only runs once on mount
 
   return (
-    <Sidebar className="hidden md:block">
-      <SidebarHeader className="h-14" />
+    <Sidebar className="hidden md:flex top-14 h-[calc(100svh-3.5rem)] border-t">
       <SidebarContent className="pb-14">
         <SidebarGroup>
           <SidebarGroupContent>

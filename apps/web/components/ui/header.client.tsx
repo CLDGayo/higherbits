@@ -217,7 +217,7 @@ function HeaderContent({
     <>
       <header
         className={cn(
-          "texture-cushion flex fixed top-0 left-0 right-0 h-14 z-50 items-center px-4 md:px-8 py-3 text-foreground",
+          "texture-cushion flex !fixed top-0 left-0 right-0 h-14 z-50 items-center px-4 md:px-8 py-3 text-foreground",
           {
             "border-b border-border/40 bg-background/95 backdrop-blur-sm": variant !== "publish",
           },

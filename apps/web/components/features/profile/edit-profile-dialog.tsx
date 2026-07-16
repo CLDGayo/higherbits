@@ -39,7 +39,6 @@ import { useImageUpload } from "@/hooks/use-image-upload"
 
 const profileFormSchema = z.object({
   display_name: z.string().min(2).max(50),
-  use_custom_username: z.boolean().default(false),
   display_username: z
     .string()
     .min(2)
@@ -76,11 +75,6 @@ interface EditProfileDialogProps {
   onUpdate: () => void
 }
 
-const CLERK_ACCOUNT_URL =
-  process.env.NODE_ENV === "development"
-    ? "https://wanted-titmouse-48.accounts.dev/user"
-    : "https://accounts.HigherBits.dev/user"
-
 export function EditProfileDialog({
   isOpen,
   setIsOpen,
@@ -108,8 +102,7 @@ export function EditProfileDialog({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       display_name: user.display_name || user.name || "",
-      use_custom_username: !!user.display_username,
-      display_username: user.display_username || user.username,
+      display_username: user.display_username || user.username || "",
       display_image_url: user.display_image_url || user.image_url || "",
       bio: user.bio || "",
       website_url: user.website_url?.replace(/^https?:\/\//, "") || "",
@@ -117,8 +110,6 @@ export function EditProfileDialog({
       twitter_url: user.twitter_url?.replace(/^https?:\/\//, "") || "",
     },
   })
-
-  const useCustomUsername = form.watch("use_custom_username")
 
   const checkUsername = async (username: string) => {
     if (!username) {
@@ -153,9 +144,7 @@ export function EditProfileDialog({
       // Clean up empty strings
       const cleanData = {
         ...data,
-        display_username: data.use_custom_username
-          ? data.display_username
-          : null,
+        display_username: data.display_username || null,
         bio: data.bio || null,
         website_url: data.website_url || null,
         github_url: data.github_url || null,
@@ -299,63 +288,34 @@ export function EditProfileDialog({
                     name="display_username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          {useCustomUsername ? "Username" : "GitHub Username"}
-                        </FormLabel>
+                        <FormLabel>Username</FormLabel>
                         <FormControl>
                           <div className="relative">
                             <Input
                               {...field}
-                              value={
-                                useCustomUsername ? field.value : user.username
-                              }
-                              readOnly={!useCustomUsername}
-                              className={cn(
-                                "pr-10",
-                                !useCustomUsername &&
-                                  "bg-muted text-muted-foreground",
-                              )}
+                              value={field.value || ""}
+                              className="pr-10"
                               onChange={(e) => {
                                 field.onChange(e)
                                 checkUsername(e.target.value)
                               }}
                             />
-                            {useCustomUsername && (
-                              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                                {isCheckingUsername && (
-                                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                              {isCheckingUsername && (
+                                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                              )}
+                              {!isCheckingUsername &&
+                                isUsernameValid === true && (
+                                  <Check className="h-4 w-4 text-green-500" />
                                 )}
-                                {!isCheckingUsername &&
-                                  isUsernameValid === true && (
-                                    <Check className="h-4 w-4 text-green-500" />
-                                  )}
-                                {!isCheckingUsername &&
-                                  isUsernameValid === false && (
-                                    <X className="h-4 w-4 text-red-500" />
-                                  )}
-                              </div>
-                            )}
+                              {!isCheckingUsername &&
+                                isUsernameValid === false && (
+                                  <X className="h-4 w-4 text-red-500" />
+                                )}
+                            </div>
                           </div>
                         </FormControl>
                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="use_custom_username"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel>Use different username</FormLabel>
-                        </div>
                       </FormItem>
                     )}
                   />
@@ -460,16 +420,7 @@ export function EditProfileDialog({
           </ScrollArea>
 
           <DialogFooter className="flex-none border-t border-border px-6 py-4">
-            <div className="flex w-full items-center justify-between">
-              <Button
-                variant="link"
-                className="h-auto p-0 text-sm text-muted-foreground hover:text-primary"
-                onClick={() => {
-                  window.open(CLERK_ACCOUNT_URL, "_blank")
-                }}
-              >
-                Edit GitHub connection →
-              </Button>
+            <div className="flex w-full items-center justify-end">
               <div className="flex items-center gap-2">
                 <Button
                   type="button"

@@ -254,7 +254,7 @@ export function ComponentCard({
         disabled={isTouch}
       >
         <div
-          className="block select-none"
+          className="block select-none cursor-pointer"
           onClick={(e) => {
             if (e.metaKey || e.ctrlKey) {
               e.preventDefault()
