@@ -8,7 +8,14 @@ metadata:
   feature: claymorphism-3d-redesign
 ---
 
-# Pre-existing `--muted-foreground` contrast failure — 4 routes
+# Pre-existing `--muted-foreground` contrast failure — 5 routes
+
+**Update (16-07-26, Phase 5 EXECUTE):** confirmed a **5th** affected route — `/public-dashboard`
+light mode — fails the same `#78695e`-on-`#ede9f6`/`#efebf1` muted-foreground pair (measured 4.41,
+required 4.5). Phase 5's a11y sweep re-confirmed the full set at **13 pass / 5 fail**, all five
+`color-contrast`-class, all the same root cause. Phase 5 did NOT fix `--muted-foreground` (app-wide
+token, far larger blast radius than accent-pink's 3 sites — out of Phase 5 scope per its Blockers
+section). Accepted as the program's standing known-gap.
 
 **Date:** 15-07-26
 **Source:** Phase 01 (Architecture & Prompt Engineering) EVL confirmation run,

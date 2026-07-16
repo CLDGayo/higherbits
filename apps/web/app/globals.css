@@ -476,6 +476,71 @@ iframe {
       var(--clay-shadow-light),
       var(--clay-shadow-dark);
   }
+
+  /* ------------------------------------------------------------------ *
+   * Clay interactive modifier (claymorphism-3d-redesign Phase 5, A1).
+   * Opt-in `.clay-interactive` gives a genuinely clickable `.clay-surface`
+   * a hover-lift + active press-down feel. This is deliberately NOT a
+   * blanket `.clay-surface:hover` rule (rejected in INNOVATE — a misleading
+   * affordance on the non-clickable ClayCard stat tiles, which render as a
+   * plain div). Built only on the existing --clay-depth-* and --clay-pressed
+   * tokens, CSS `transition` only — no JS animation library. The
+   * reduced-motion guard below neutralizes both the transition and the
+   * transform. Apply at a call site only where the surface is truly
+   * interactive; ships defined-but-unused where none exists today.
+   * ------------------------------------------------------------------ */
+  .clay-interactive {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .clay-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--clay-depth-lg);
+  }
+
+  .clay-interactive:active {
+    transform: translateY(1px);
+    box-shadow: var(--clay-pressed);
+  }
+
+  /* Mobile-viewport clay scaling (Phase 5, B1) — desktop-tuned clay drop
+     shadows read heavy/noisy on narrow screens. Soften --clay-shadow-outer
+     blur/spread (per theme) and step `.clay-surface` down to the existing
+     `sm` depth tier. Reuses the --clay-depth-* scale from Phase 1; introduces
+     no new breakpoint-specific vars, and does NOT touch the
+     --container-x-padding utilities. */
+  @media (max-width: 480px) {
+    :root {
+      --clay-shadow-outer: 0 6px 14px -8px hsl(258 40% 40% / 0.18);
+    }
+
+    .dark {
+      --clay-shadow-outer: 0 7px 16px -8px hsl(260 40% 3% / 0.5);
+    }
+
+    .clay-surface {
+      box-shadow: var(--clay-depth-sm);
+    }
+  }
+
+  /* Reduced-motion guard (Phase 5, A3) — zeroes the new `.clay-interactive`
+     transition/transform AND ClayPillButton's existing (previously unguarded)
+     hover/active transition + translate. ClayPillButton is targeted via its
+     stable `.rounded-pill` class (Tailwind borderRadius.pill), so no TSX edit
+     is required. */
+  @media (prefers-reduced-motion: reduce) {
+    .clay-interactive,
+    .rounded-pill {
+      transition: none;
+    }
+
+    .clay-interactive:hover,
+    .clay-interactive:active,
+    .rounded-pill:hover,
+    .rounded-pill:active {
+      transform: none;
+    }
+  }
 }
 
 @layer utilities {

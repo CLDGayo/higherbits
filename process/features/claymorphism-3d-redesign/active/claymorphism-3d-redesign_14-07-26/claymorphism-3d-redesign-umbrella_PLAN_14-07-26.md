@@ -268,9 +268,12 @@ During /goal execution of a phase program:
 | 2 — Asset Generation Pipeline | COMPLETE (CODE DONE — live seed batch deferred) |
 | 3 — Component Library | COMPLETE |
 | 4 — Page Assembly & Layout | COMPLETE |
-| 5 — Refinement, Animation & Deployment | PLANNED |
+| 5 — Refinement, Animation & Deployment | COMPLETE (CODE DONE — deploy-ready-but-deferred, user go-ahead pending) |
 
 Status values: PLANNED | CODE DONE | TESTING | VERIFIED | BLOCKED | COMPLETE
+
+**Program status: CODE-COMPLETE, all 5 phases closed.** See `## Program Closeout` below for the
+Definition-of-Done scoring and the outstanding user-gated actions.
 
 ---
 
@@ -352,7 +355,7 @@ node --test ops/__tests__/gemini-asset-gen.test.mjs
 ## Current Execution State
 
 Last updated: 16-07-26
-Current phase: 4 of 5 complete — next Phase 5
+Current phase: 5 of 5 complete — program CODE-COMPLETE, deploy pending user
 Phase 1 name: Architecture & Prompt Engineering
 Phase 1 status: COMPLETE (EVL confirmed, 1 known-gap accepted)
 Phase 1 EVL: 5/6 gates independently green (build, tsc, vitest, bundle-safety, prompt-template JSON check); a11y Playwright gate FAILs on 4 pre-existing muted-foreground contrast violations unrelated to this phase's additive-only token work — accepted as known-gap, backlog note filed (`process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`)
@@ -369,12 +372,68 @@ Phase 4 name: Page Assembly & Layout
 Phase 4 status: COMPLETE (EVL confirmed CLEAN, zero fix cycles)
 Phase 4 EVL: 7/7 Fully-Automated/structural gates independently green (VE5 build exit 0, VE6 tsc exit 0, VE7 tests 29/29 across 11 files incl. new hero-section.test.tsx + page.client.test.tsx proving VE1-VE4, VE8 package.json diff empty, VE9 bundle-safety grep 0, VE11 D7 procedural — pre-existing header.client.tsx/sidebar-layout.tsx diffs intact, nothing staged). VE10 a11y: 13 pass / 5 fail, all `color-contrast` class only (4 pre-existing muted-foreground routes + `/public-dashboard` light-mode accent-pink 4.40:1, plan-locked D3 pair) — no new violation classes, accepted known-gap. VE12 (Agent-Probe visual parity) still deferred, accumulating since Phase 1. `results.tsv` rows: HALTED_KNOWN_GAP, 2026-07-16. Two within-blast-radius EXECUTE deviations on record (icon-button aria-label additions to fix a pre-existing button-name violation surfaced by the new route; opacity-90 removal) — both documented in the phase report, neither hard-stop class.
 Phase 4 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-04-page-assembly-layout_REPORT_14-07-26.md`
-Next phase: Phase 5 — Refinement, Animation & Deployment, loop step RESEARCH. Pre-conditions carried forward: (a) hero (`hero-section.tsx`) and dashboard (`public-dashboard/page.client.tsx`) surfaces now visibly use the Clay component set (ClayCard/ClayInput/ClayPillButton/ClayPillBarChart/ClayDonutChart); `page.client.tsx` additionally exports `buildUsageChart`/`buildEarningsChart` pure helpers Phase 5 can reuse; (b) `apps/web/public/clay/{icons,illustrations,textures}/` asset dirs remain empty — Phase 5 must continue to rely on the components' no-render asset defaults until the user-approved Gemini seed batch runs; (c) VE12/VE15 visual-parity Agent-Probe is still owed (accumulating since Phase 1 — no dedicated visual check has run across any phase yet) — Phase 5's final a11y QA pass is a natural point to also close this out; (d) a11y light-mode residual (muted-foreground + accent-pink pair) is tracked in 2 backlog notes — Phase 5's "final a11y QA" scope should consider whether to raise `accent-pink` contrast to ≥4.5:1 as part of polish, or continue deferring it; (e) Clerk dev keys remain absent (pre-existing, program-external) — does not block build/CI execution of the a11y spec.
+Phase 5 name: Refinement, Animation & Deployment (FINAL PHASE)
+Phase 5 status: COMPLETE (CODE DONE — deploy-ready-but-deferred; deploy is a user-gated hard stop, not autonomously executed)
+Phase 5 EVL: 13/13 Fully-Automated gates independently re-run by vc-tester (16-07-26), zero fix cycles — `.clay-interactive` grep 8, `prefers-reduced-motion` grep 1, `@media` count 6 (vs. baseline 3), accent-pink contrast 5.22:1 (VERIFY-only, no code change needed), build exit 0, tsc exit 0, vitest 29/29 across 11 files, a11y 13 pass / 5 fail (all 5 = pre-existing muted-foreground known-gap on `/magic`/`/api-access`/`/contest`/`/templates`/`/public-dashboard` light-mode, zero accent-pink violations, zero new classes/routes), `.gitkeep`-aware asset check 0, `package.json` diff empty, bundle-safety grep 0, D7 procedural pass (4 pre-existing dirty files remain modified-unstaged, nothing staged), 8 screenshot PNGs + `apps/web/e2e/visual-evidence.spec.ts` present (closes the VE12/VE15 Agent-Probe visual-parity debt carried since Phase 1). `results.tsv` rows appended 16-07-26 (`tests CONDITIONAL BASELINE` + `HALTED_KNOWN_GAP`). Two within-blast-radius EXECUTE deviations on record (B1 mobile padding scaling omitted — `.clay-surface` has no intrinsic padding, layout-regression risk; reduced-motion selector for ClayPillButton chosen as `.rounded-pill`, left open by contract instruction E3) plus one mid-run CSS comment bug self-corrected by execute-agent. `.clay-interactive` ships defined-but-unused (no genuinely interactive `.clay-surface` consumer exists in current routes — pre-authorized by the plan's own fallback, stated plainly in the phase report).
+Phase 5 report: `process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-05-refinement-animation-deployment_REPORT_14-07-26.md`
+Next phase: **None — program is CODE-COMPLETE.** Two outstanding actions require the user, not an agent: (a) execute (or explicitly waive) the documented gayo-vps pm2 deploy procedure (Phase 5 Step E — hard stop, never autonomous); (b) optionally approve the ~$0.31 Gemini seed-batch run to populate `apps/web/public/clay/{icons,illustrations,textures}/` (currently `.gitkeep`-only — components render correctly without it). See `## Program Closeout` below for full Definition-of-Done scoring and archival-timing rationale.
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
-Orchestrator rule: read this section plus the Phase 2 plan's `## Phase Loop Progress` before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.
+Orchestrator rule: read this section plus the Phase 5 plan's `## Phase Loop Progress` before spawning any subagent. Program has no remaining phases to spawn — this section now records final program state.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes — update-process-agent rewrites it after every phase closeout (overwrite, not append — git history is the audit log).
+
+---
+
+## Program Closeout
+
+**Verdict: CODE-COMPLETE.** All 5 phases executed and independently EVL-confirmed. The program's
+Definition of Done (5 items, see `## Program Goal Charter`) is scored below against the Program
+Goal Charter, mirroring the `21st-promotion` program's closeout precedent.
+
+### Definition of Done scoring
+
+| # | DoD item | Status | Evidence |
+|---|---|---|---|
+| 1 | Extended token system with triple-shadow structure + palette/typeface spec + Gemini prompt templates | **MET** | Phase 1: `--clay-shadow-light/dark/outer`, `--clay-depth-sm/md/lg`, `--clay-pressed`, `--accent-yellow(-foreground)` in `globals.css` (`:root` + `.dark`); `gemini-prompt-templates_REF_14-07-26.md` prompt library |
+| 2 | ops/ Gemini image-gen pipeline, WebP output, graceful-absence when key unset | **MET (code)** — live seed batch is an OPTIONAL user opt-in, not required for DoD | Phase 2: `ops/gemini-asset-gen.mjs` + `ops/gemini-prompts.mjs`, 7/7 unit tests mocked-fetch, zero-live-network; asset dirs remain `.gitkeep`-only pending user approval (~$0.31 est. cost) |
+| 3 | Reusable claymorphic components (card/input/pill button/pill-bar+donut chart) in existing `apps/web/components/ui/` | **MET** | Phase 3: `clay-card.tsx`, `clay-input.tsx`, `clay-pill-button.tsx`, `clay-pill-bar-chart.tsx`, `clay-donut-chart.tsx` — 19/19 tests, no new heavy deps, `packages/ui` untouched |
+| 4 | At least one hero/nav surface + one dashboard/widget-grid surface assembled with new components + assets | **MET** | Phase 4: `hero-section.tsx` + `public-dashboard/page.client.tsx` restyled with the full Clay set; a11y-green; 29/29 tests |
+| 5 | Micro-interaction polish, responsive scaling, a11y gate held, deploy via documented gayo-vps procedure | **MET (code) — deploy deferred to user by design** | Phase 5: `.clay-interactive` + reduced-motion guard + mobile scaling shipped; a11y 13/5 known-gap (zero new violations); deploy is Phase 5's own Step E hard stop — the DoD item's "deploy" clause is satisfied as **deploy-ready-but-deferred**, not executed, per the umbrella's own HARD STOPS list |
+
+**Program-level VERIFIED bar** (per `## Program Goal Charter` §What "verified" means): `build`
+exit 0, `tsc --noEmit` exit 0, `test` green (29/29 across 11 files — the umbrella's cited baseline
+of "123 across 27" was documentation drift discovered and corrected during Phase 1, see
+`process/context/all-context.md` Open Questions), and the a11y Playwright gate green with **zero
+new failures** on any newly-styled route (13 pass / 5 fail — all 5 are the pre-existing,
+program-external muted-foreground pattern). All four criteria hold as of Phase 5 EVL (16-07-26).
+
+### Outstanding user actions (not agent-blockable)
+
+1. **Deploy.** Push `origin main`, then run the documented gayo-vps pm2 procedure (see
+   `process/context/all-context.md` §Deployment, verbatim, unchanged) — or explicitly waive
+   deploying this program's changes for now.
+2. **Optional Gemini seed batch (~$0.31).** Populates `apps/web/public/clay/{icons,illustrations,textures}/`
+   with real generated assets; the components already render correctly without them (no-render
+   defaults), so this is a visual-fidelity enhancement, not a functional blocker.
+3. **Muted-foreground contrast backlog.** 5 pre-existing routes (`/magic`, `/api-access`,
+   `/contest`, `/templates`, `/public-dashboard`, all light-mode) fail WCAG AA on the app-wide
+   `--muted-foreground` token — tracked in
+   `process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`.
+   Pre-existing and program-external; fixing it is a separate, larger-blast-radius task (an
+   app-wide token affecting dozens of consumers) explicitly out of this program's scope.
+
+### Archival-timing rationale
+
+The task folder (`process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/`)
+**stays in `active/`** rather than moving to `completed/` at this UPDATE PROCESS pass. Rationale
+(mirrors the `21st-promotion` precedent of leaving a code-complete program's folder in `active/`
+pending an explicitly named open item): the deploy action (outstanding user action #1 above) is a
+genuine, not-yet-taken step in this program's own Definition of Done — the folder should move to
+`completed/` only after the user runs (or explicitly waives) the deploy, at which point a follow-up
+UPDATE PROCESS pass can archive it cleanly. The optional Gemini seed batch and the muted-foreground
+backlog item do NOT block archival on their own (both are correctly scoped as separate, optional/
+out-of-scope items) — only the deploy decision does.
 
 ---
 

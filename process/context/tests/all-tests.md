@@ -97,12 +97,24 @@ getCategoryEntries("templates")/("themes") fixtures).
 runs tests from `apps/web/e2e/`.
 **Run command:** `corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts`
 **Package script:** `corepack pnpm --filter web test:a11y`
-**Current route matrix:** `/`, `/magic`, `/magic-chat`, `/studio`, `/api-access`, `/contest`,
-`/our-story`, `/templates` across light and dark themes.
-**Latest known result:** 16 Chromium Axe checks passed on 2026-07-11 during
-`higherbits-redesign` Phase 5 EVL.
+**Current route matrix (updated 16-07-26, `claymorphism-3d-redesign` Phase 4/5):** `/`, `/magic`,
+`/magic-chat`, `/studio`, `/api-access`, `/contest`, `/our-story`, `/templates`, plus 2 routes added
+in Phase 4 (`hero-section.tsx`'s route and `/public-dashboard`) — 10 routes total, light and dark.
+**Latest known result (16-07-26, `claymorphism-3d-redesign` Phase 5 EVL):** 13 pass / 5 fail — all
+5 failures are the same pre-existing `color-contrast`-class violation on the app-wide
+`--muted-foreground` token (`/magic`, `/api-access`, `/contest`, `/templates`, `/public-dashboard`,
+all light-mode); zero new violation classes or routes. Tracked in
+`process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`.
 **Limits:** unauthenticated only; does not prove Clerk-authenticated flows, pixel-perfect layout,
-or visual diffs. The dedicated `agent-browser` screenshot CLI was unavailable in that environment.
+or visual diffs beyond the dedicated screenshot spec below.
+
+**New: `apps/web/e2e/visual-evidence.spec.ts` (added 16-07-26, `claymorphism-3d-redesign` Phase 5).**
+A scoped Playwright spec capturing 8 screenshot artifacts (hero + `/public-dashboard`, each in
+light/dark theme, each at desktop default + 375px mobile viewport) into the program's task folder
+(`process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/`). Run:
+`corepack pnpm --filter web exec playwright test e2e/visual-evidence.spec.ts`. This is the first
+dedicated visual-evidence artifact in the repo — closes a visual-parity Agent-Probe debt that had
+accumulated since the program's Phase 1 (no `agent-browser` CLI was available in that environment).
 
 ### Mocking conventions established (vitest)
 
