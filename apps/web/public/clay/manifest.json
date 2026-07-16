@@ -3,48 +3,48 @@
     "promptHash": "8496bf53f2f9",
     "generatedAt": "2026-07-16T09:21:20.816Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "icons/heart": {
     "promptHash": "cb014b114d41",
     "generatedAt": "2026-07-16T09:21:42.215Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "icons/bell": {
     "promptHash": "3db0097c373d",
     "generatedAt": "2026-07-16T09:22:03.320Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "icons/gear": {
     "promptHash": "57319734a2e0",
     "generatedAt": "2026-07-16T09:22:22.973Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "icons/dashboard-tile": {
     "promptHash": "348d4e3de869",
     "generatedAt": "2026-07-16T09:22:43.683Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "illustrations/mascot": {
     "promptHash": "16519f169378",
     "generatedAt": "2026-07-16T09:23:06.951Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "illustrations/potted-plant": {
     "promptHash": "bad763faea0b",
     "generatedAt": "2026-07-16T09:23:27.973Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   },
   "textures/soft-noise": {
     "promptHash": "d572170313ca",
     "generatedAt": "2026-07-16T09:23:49.378Z",
     "model": "gemini-3-pro-image-preview",
-    "format": "image/jpeg"
+    "format": "image/webp"
   }
 }

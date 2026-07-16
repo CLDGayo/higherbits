@@ -262,6 +262,13 @@ iframe {
        = 5.88:1 (>=4.5). See apps/web/scripts/wcag-contrast.mjs. */
     --accent-yellow: 48 90% 78%;
     --accent-yellow-foreground: 42 60% 26%;
+    /* Lavender + cream pastel chips (claymorphism-reference-parity Phase 01) — extend the
+       pink/peach/blue/mint/yellow rotation for Phase 2 chart fills and Phase 3 dashboard tiles.
+       WCAG AA verified: lavender 6.39:1, cream 6.80:1 (>=4.5). See apps/web/scripts/wcag-contrast.mjs. */
+    --accent-lavender: 258 55% 84%;
+    --accent-lavender-foreground: 258 40% 32%;
+    --accent-cream: 42 48% 90%;
+    --accent-cream-foreground: 36 35% 28%;
     --chart-1: 342 70% 72%;
     --chart-2: 158 45% 58%;
     --chart-3: 205 65% 66%;
@@ -357,6 +364,12 @@ iframe {
        WCAG AA verified: chip-bg vs foreground = 8.60:1 (>=4.5). */
     --accent-yellow: 48 62% 64%;
     --accent-yellow-foreground: 42 45% 13%;
+    /* Lavender + cream pastel chips (cozy dusk). WCAG AA verified: lavender 5.67:1,
+       cream 7.91:1 (>=4.5). */
+    --accent-lavender: 258 42% 68%;
+    --accent-lavender-foreground: 258 35% 15%;
+    --accent-cream: 42 30% 70%;
+    --accent-cream-foreground: 36 30% 14%;
     --chart-1: 342 58% 68%;
     --chart-2: 158 42% 58%;
     --chart-3: 205 60% 64%;
@@ -475,6 +488,30 @@ iframe {
       var(--clay-shadow-outer),
       var(--clay-shadow-light),
       var(--clay-shadow-dark);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * ClayCard image slots (claymorphism-reference-parity Phase 01).
+   * `ClayCard` (apps/web/components/ui/clay-card.tsx) applies these classes to its optional
+   * iconSrc / illustrationSrc <img> elements. The icon slot is a small contained thumbnail; the
+   * illustration slot is a larger decorative image. Both use `object-fit: contain` so the
+   * real-alpha WebP subjects (chroma-keyed in this phase) are never cropped, with a soft radius
+   * consistent with the clay surface language. CSS-only, no JS, no Tailwind config.
+   * ------------------------------------------------------------------ */
+  .clay-card-icon {
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+  }
+
+  .clay-card-illustration {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 9rem;
+    object-fit: contain;
+    border-radius: var(--radius);
   }
 
   /* ------------------------------------------------------------------ *

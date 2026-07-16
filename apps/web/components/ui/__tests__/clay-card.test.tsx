@@ -43,12 +43,13 @@ describe("ClayCard", () => {
     const img = withIcon.querySelector("img")
     expect(img).not.toBeNull()
     expect(img?.getAttribute("src")).toBe("/clay/icons/a.png")
+    expect(img?.className).toContain("clay-card-icon")
 
     const { container: withIllu } = render(
       <ClayCard illustrationSrc="/clay/illustrations/b.png">x</ClayCard>,
     )
-    expect(withIllu.querySelector("img")?.getAttribute("src")).toBe(
-      "/clay/illustrations/b.png",
-    )
+    const illu = withIllu.querySelector("img")
+    expect(illu?.getAttribute("src")).toBe("/clay/illustrations/b.png")
+    expect(illu?.className).toContain("clay-card-illustration")
   })
 })
