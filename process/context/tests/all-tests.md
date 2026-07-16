@@ -35,7 +35,12 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (UPDATED 16-07-26 — Phase 4 added 2 new test files):** 11 test files / 29 tests, all
+**Total (RE-BASELINED 17-07-26, `claymorphism-reference-parity` Phase 1 inner RESEARCH — corrects
+the 16-07-26 figure below, which undercounted; new unrelated test files landed the same day: clay
+charts/input/pill-button, hero-section, use-sidebar-visibility, public-dashboard/page.client,
+amplitude, api/magic/route):** 37 tests / 13 files, all passing.
+**Prior entry (UPDATED 16-07-26 — Phase 4 added 2 new test files, superseded by the re-baseline
+above):** 11 test files / 29 tests, all
 passing: `apps/web/lib/registry.test.ts`, `apps/web/components/ui/__tests__/footer-smoke.test.tsx`,
 `apps/web/components/ui/__tests__/header-smoke.test.tsx`,
 `apps/web/app/__tests__/landing-smoke.test.tsx` (baseline 4 files / 10 tests), 4 files from
@@ -100,11 +105,25 @@ runs tests from `apps/web/e2e/`.
 **Current route matrix (updated 16-07-26, `claymorphism-3d-redesign` Phase 4/5):** `/`, `/magic`,
 `/magic-chat`, `/studio`, `/api-access`, `/contest`, `/our-story`, `/templates`, plus 2 routes added
 in Phase 4 (`hero-section.tsx`'s route and `/public-dashboard`) — 10 routes total, light and dark.
-**Latest known result (16-07-26, `claymorphism-3d-redesign` Phase 5 EVL):** 13 pass / 5 fail — all
-5 failures are the same pre-existing `color-contrast`-class violation on the app-wide
-`--muted-foreground` token (`/magic`, `/api-access`, `/contest`, `/templates`, `/public-dashboard`,
-all light-mode); zero new violation classes or routes. Tracked in
-`process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`.
+**RECONCILED BASELINE (17-07-26, `claymorphism-reference-parity` Phase 1 EVL — corrects the
+16-07-26 entry below, which undercounted pre-existing failures by 3): 8 pre-existing fails, 0 new,
+out of the full light+dark matrix.** The 8 pre-existing fails are:
+1. **5× `color-contrast` on the app-wide `--muted-foreground` token** (`/magic`, `/api-access`,
+   `/contest`, `/templates`, `/public-dashboard`, all light-mode) — same violation class documented
+   16-07-26 below, unchanged.
+2. **2× `link-name` (serious)** on `/` and `/magic-chat`, light mode — pre-existing, NOT introduced
+   by Phase 1 (Phase 1's blast radius never touched these routes' link markup).
+3. **1× `color-contrast` on `text-primary` (`#a490df`, 2.3:1)** on `/contest`'s Discord links,
+   light mode — pre-existing, NOT introduced by Phase 1 (token/markup untouched by Phase 1).
+Both new items (2 and 3) were discovered during Phase 1's EVL confirmation run and are pre-existing
+app-wide conditions unrelated to any Phase 1 change; they were previously undercounted in this
+file's 16-07-26 entry. Zero new violation classes or routes vs this reconciled baseline.
+Tracked in `process/features/claymorphism-3d-redesign/backlog/preexisting-muted-foreground-contrast_NOTE_15-07-26.md`
+(muted-foreground only) — the link-name and text-primary items are documented here as the smallest
+correct home pending a dedicated backlog note if a future phase wants to fix them.
+**Prior entry (16-07-26, `claymorphism-3d-redesign` Phase 5 EVL, superseded by the reconciled count
+above): 13 pass / 5 fail — all 5 failures are the same pre-existing `color-contrast`-class violation
+on the app-wide `--muted-foreground` token; zero new violation classes or routes.**
 **Limits:** unauthenticated only; does not prove Clerk-authenticated flows, pixel-perfect layout,
 or visual diffs beyond the dedicated screenshot spec below.
 
@@ -194,6 +213,20 @@ drift flagged 15-07-26 (this repo's actual `ops/` contents as of that date were 
 `ops/README-seed.md`, `ops/seed-placeholder-components.mjs`, and the 3 new Phase 2 gemini files
 only — a full `vc-audit-context` pass is needed to reconcile the rest of this file's `ops/`
 claims).
+
+## gemini-asset-chroma-key runner (ops/, added 16-07-26, `claymorphism-reference-parity` Phase 1)
+
+**Runner:** `node --test` (Node 22 built-in).
+**Run command:** `node --test ops/__tests__/gemini-asset-chroma-key.test.mjs`
+**Total:** 10 tests, all passing. Exercises the pure exported pixel-classifier + band-detector +
+despeckle functions against synthetic RGBA buffer fixtures only — zero real-asset file I/O.
+**Context:** `ops/gemini-asset-chroma-key.mjs` is a one-time, ops-time-only script (uses `sharp`,
+added as a root `package.json` devDependency the same phase — never imported by app code, never
+bundled into the production build) that converted the 8 Gemini-generated clay assets under
+`apps/web/public/clay/{icons,illustrations,textures}/` from fake-checkerboard JPGs to real-alpha
+WebP (7 chroma-keyed + 1 plain re-encode). See
+`process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-01-assets-css-foundation_REPORT_16-07-26.md`
+for the algorithm writeup.
 
 ## upload-seed-entries runner (ops/, Phase 19)
 
