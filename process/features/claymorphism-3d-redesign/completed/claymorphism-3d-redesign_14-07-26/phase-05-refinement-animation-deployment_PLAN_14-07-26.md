@@ -13,7 +13,7 @@ metadata:
 
 **Program:** claymorphism-3d-redesign
 **Umbrella plan:** process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/claymorphism-3d-redesign-umbrella_PLAN_14-07-26.md
-**Phase status:** PLAN-SUPPLEMENTED (research + innovate locked 16-07-26)
+**Phase status:** COMPLETE — deployed and verified 16-07-26 (see Step E, `## Deploy Confirmation (16-07-26)` in the phase report, and this UPDATE PROCESS pass)
 **Report destination:** process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-05-refinement-animation-deployment_REPORT_14-07-26.md (flat in the program task folder)
 
 ---
@@ -153,21 +153,29 @@ dirty state as found, do not fold it into this phase's commit) applies verbatim 
 
 ### Step E — Deploy
 
-- [~] E1. Confirm all prior phases are committed and the working tree is clean (excluding the
+- [x] E1. Confirm all prior phases are committed and the working tree is clean (excluding the
       pre-existing dirty-file set documented in Blast Radius, which is explicitly out of scope
-      for this phase's commit).
-- [ ] E2. This step is **document-only / deploy-ready-but-deferred** — a hard stop for user
-      action, not an autonomous action. Confirm the documented gayo-vps deploy procedure from
-      `process/context/all-context.md` §Deployment remains accurate: push to `origin main`, then
-      `su - cozy -c "cd ~/htdocs/higherbits.dev && git pull --ff-only origin main && corepack
-      pnpm install --no-frozen-lockfile && NODE_OPTIONS=\"--max-old-space-size=3072\" corepack
-      pnpm --filter web build && pm2 restart higherbits"` — never `sudo -u cozy`, never Vercel.
-      Do NOT execute this against the live gayo-vps host as part of an autonomous EXECUTE pass;
-      surface it to the user as "code/tests/a11y complete, ready to deploy, awaiting your
-      go-ahead."
-- [ ] E3. Post-deploy smoke check (only after the user has confirmed E2 was run): confirm the
-      live site serves the restyled hero/dashboard routes without error (manual browser check or
-      curl for HTTP 200 on key routes).
+      for this phase's commit). **DONE 16-07-26** — pushed 10 commits to origin main
+      (2f701c6..03661e2) before deploy.
+- [x] E2. **EXECUTED 16-07-26, with explicit user authorization** (orchestrator-run, not
+      autonomous). Deploy procedure text in `process/context/all-context.md` §Deployment was
+      found STALE at deploy time — documented path (`/home/cozy/htdocs/higherbits.dev`, pm2 app
+      `higherbits`) is no longer the live app. Actual live app: `/home/higherbits/htdocs/higherbits.dev`,
+      user `higherbits`, pm2 app name `higherbits.dev` (same `next start` :3005 behind nginx,
+      same heap-bound build requirement). Steps run: (1) stashed 181 uncommitted live hot-edits on
+      the server as `pre-deploy-16-07-26-live-edits` (only meaningful losses: a dev-only
+      `--turbopack` script flag and 2 cosmetic header padding tweaks — `sidebar-layout.tsx`'s live
+      edit already matched origin); (2) `git merge --ff-only origin/main` → `03661e2`; (3)
+      `corepack pnpm install --no-frozen-lockfile`; (4) `NEXT_TELEMETRY_DISABLED=1
+      NODE_OPTIONS=--max-old-space-size=3072 corepack pnpm --filter web build` → BUILD_ID
+      `M4KO6WWsu6STGRpJWXKTI` (survived one mid-build SSH drop; a separate stray build attempt in
+      the dead `/home/cozy` copy was kernel-OOM-killed — harmless, wrong directory); (5)
+      `pm2 restart higherbits.dev` → online. Context correction applied in
+      `process/context/all-context.md` §Deployment (see this phase's UPDATE PROCESS pass).
+- [x] E3. Post-deploy smoke check — **DONE 16-07-26**: `https://higherbits.dev` and
+      `/public-dashboard` both HTTP 200; served HTML references the fresh BUILD_ID
+      `M4KO6WWsu6STGRpJWXKTI`; live CSS confirmed to contain `clay-interactive` +
+      `prefers-reduced-motion` markers; dashboard HTML confirmed to contain clay markers.
 
 ### Step F — Visual evidence capture (NEW)
 
@@ -232,9 +240,9 @@ find process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_1
   previously-failing `/public-dashboard` light-mode contrast pair
 - All assets WebP and reasonably sized, or Step D documented as a no-op (empty asset dirs)
 - Screenshot evidence artifacts present in the task folder (or documented env-limited gap)
-- Deploy executed via the documented gayo-vps procedure (or explicitly deferred to the user with
-  a clear "ready to deploy, awaiting your go-ahead" note — this is the expected default outcome,
-  not a fallback)
+- Deploy executed via the documented gayo-vps procedure — **DONE 16-07-26**, see Step E and the
+  `## Deploy Confirmation (16-07-26)` section of the phase report; the documented procedure path
+  was found stale at deploy time and corrected (see `process/context/all-context.md` §Deployment)
 
 ---
 
@@ -263,6 +271,12 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
 - [x] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
 - [x] 6. EVL — vc-tester confirmation run (16-07-26): all 13 fully-automated gates independently green (clay-interactive grep 8, reduced-motion grep 1, @media 6 vs baseline 3, contrast 5.22:1, build exit 0, tsc exit 0, tests 29/29, a11y 13 pass / 5 fail = exact pre-existing muted-foreground known-gap set with zero new classes/routes, asset check 0, no new deps, bundle-safety 0, D7 dirty files unstaged-intact, 8 screenshot PNGs + visual-evidence.spec.ts present). Zero fix cycles (results.tsv: HALTED_KNOWN_GAP). VE14-VE16 Agent-Probe rows satisfied via screenshot artifacts; VE17 deploy = user-gated hard stop, deferred. EVL HANDOFF SUMMARY emitted in-chat 16-07-26.
 - [x] 7. UPDATE PROCESS (16-07-26): phase report finalized (EVL confirmation, deploy-ready-but-deferred status, known gaps); umbrella `## Current Execution State` rewritten (Phase 5 COMPLETE, program CODE-COMPLETE pending user deploy) + `## Program Closeout` written; validators run; process commit invoked. Task folder stays in `active/` pending the deploy decision.
+- [x] 7b. UPDATE PROCESS follow-up (16-07-26): deploy EXECUTED and VERIFIED on gayo-vps under explicit
+      user authorization. Phase report gained a `## Deploy Confirmation (16-07-26)` section; this
+      plan's Step E + Exit Gate marked done; umbrella `## Program Closeout` / `## Current Execution
+      State` rewritten to program COMPLETE; task folder archived `active/` → `completed/`;
+      `process/context/all-context.md` §Deployment corrected (live app moved from `/home/cozy` to
+      `/home/higherbits`, pm2 app renamed `higherbits.dev`). Validators run; process commit invoked.
 
 **Validate-contract required before execute.** If step 4 (PVL) is unchecked or `## Validate Contract`
 reads "(placeholder — vc-validate-agent writes this section before EXECUTE)", orchestrator must
@@ -350,7 +364,8 @@ corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts
 - Last completed step: PLAN-SUPPLEMENT (Step 3) — plan updated with locked INNOVATE decisions (16-07-26)
 - Validate-contract status: PASS (16-07-26)
 - Supporting context files loaded: `process/context/all-context.md`, `process/context/tests/all-tests.md`, umbrella plan §Stable Program Goal + §Current Execution State, Phase 4 report, this plan's own RESEARCH/INNOVATE checkbox lines
-- Next step: Spawn vc-execute-agent for EXECUTE (Step 5)
+- Last completed step (updated 16-07-26): UPDATE PROCESS follow-up (Step 7b) — deploy executed and verified; program COMPLETE; task folder archived to `completed/`
+- Next step: none — program complete. Any future work on this visual system is a new task/feature.
 
 ---
 

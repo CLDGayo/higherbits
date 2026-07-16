@@ -1,7 +1,7 @@
 ---
 phase: phase-05-refinement-animation-deployment
 date: 2026-07-16
-status: COMPLETE_WITH_GAPS
+status: COMPLETE
 feature: claymorphism-3d-redesign
 plan: process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26/phase-05-refinement-animation-deployment_PLAN_14-07-26.md
 ---
@@ -110,10 +110,50 @@ aria-label additions.
   (new), 8 `phase5-*.png` (new, task folder), backlog note update. Pre-existing dirty set
   (card.tsx, sidebar-layout.tsx, edit-profile-dialog.tsx, header.client.tsx + harness log +
   test-results) untouched and never staged.
-- **Closeout classification:** `Keep in active/testing` — code/tests/a11y complete and green, but
-  the plan's Step E deploy is an explicit user-action hard stop still outstanding. Ready for
-  UPDATE PROCESS archival ONLY after the user runs (or explicitly waives) the deploy.
+- **Closeout classification (updated 16-07-26):** `Ready for UPDATE PROCESS archival` — the
+  deploy step (Step E) has now been EXECUTED and VERIFIED under explicit user authorization. See
+  `## Deploy Confirmation (16-07-26)` below.
 - **No follow-up plan stubs created.** No CONTEXT_PARTIAL items.
+
+## Deploy Confirmation (16-07-26)
+
+Deploy EXECUTED and VERIFIED with explicit user authorization (orchestrator-run, not an
+autonomous EXECUTE-phase action — matches the plan's Step E hard-stop design: code/tests/a11y
+were completed and left deploy-ready-but-deferred at EXECUTE/EVL time; deploy itself happened in
+a separate, user-authorized follow-up pass).
+
+**What was run:**
+1. Pushed 10 commits to `origin main` (`2f701c6..03661e2`), then deployed on gayo-vps.
+2. **Environment drift discovered at deploy time.** The documented procedure in
+   `process/context/all-context.md` §Deployment (live app at `/home/cozy/htdocs/higherbits.dev`,
+   pm2 app `higherbits`) was STALE — the live app no longer runs from there. Actual live app:
+   `/home/higherbits/htdocs/higherbits.dev`, user `higherbits`, pm2 app name `higherbits.dev`
+   (same `pnpm start` → `next start` on :3005, same nginx proxy, unchanged). This context file has
+   been corrected as part of this UPDATE PROCESS pass.
+3. Deploy steps actually run:
+   - Stashed 181 uncommitted live hot-edits on the server as git stash
+     `pre-deploy-16-07-26-live-edits` (only meaningful losses: a dev-only `--turbopack` script
+     flag and 2 cosmetic header padding tweaks; the `sidebar-layout.tsx` live edit already matched
+     origin).
+   - `git merge --ff-only origin/main` → `03661e2`.
+   - `corepack pnpm install --no-frozen-lockfile`.
+   - `NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS=--max-old-space-size=3072 corepack pnpm --filter web
+     build` → `BUILD_ID M4KO6WWsu6STGRpJWXKTI` (one SSH drop occurred mid-build; the build
+     survived it. A separate, earlier build attempt in the dead `/home/cozy` copy was
+     kernel-OOM-killed — harmless, wrong directory, not the live app).
+   - `pm2 restart higherbits.dev` → online.
+4. **Verification:** `https://higherbits.dev` and `/public-dashboard` both returned HTTP 200; the
+   served HTML referenced the fresh `BUILD_ID M4KO6WWsu6STGRpJWXKTI`; live CSS confirmed to
+   contain `clay-interactive` + `prefers-reduced-motion` markers; dashboard HTML confirmed to
+   contain clay markers.
+5. **Side artifacts on server:** `~cozy/pre-deploy-backup-16-07-26/` (stale untracked harness
+   files moved out of the dead `/home/cozy` copy); the git stash in the live directory remains as
+   the recovery path for the 181 stashed hot-edits, should any of them need to be reapplied later.
+
+**Net effect:** Phase 5 Step E (deploy) is now fully closed — not deferred. Program Definition of
+Done item 5 ("... deploy via the documented gayo-vps pm2 procedure") is now **MET** in full (was
+previously "MET (code) — deploy deferred to user by design"). See the umbrella plan's
+`## Program Closeout` for the updated Definition-of-Done scoring.
 
 ## EVL Confirmation (16-07-26)
 
