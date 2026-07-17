@@ -163,6 +163,8 @@ export function MainSidebar() {
     return () => clearTimeout(timer)
   }, []) // Empty dependency array ensures this only runs once on mount
 
+  const isAdmin = userState?.profile?.is_admin === true
+
   return (
     <Sidebar className="hidden md:flex top-14 h-[calc(100svh-3.5rem)] border-t">
       <SidebarContent className="pb-14">
@@ -207,6 +209,7 @@ export function MainSidebar() {
                 ))}
 
               {/* AI Component Builder collapsible menu */}
+              {isAdmin && (
               <SidebarMenuItem className="group/menu-item relative">
                 <SidebarMenuButton
                   isActive={false}
@@ -318,10 +321,12 @@ export function MainSidebar() {
                   )}
                 </AnimatePresence>
               </SidebarMenuItem>
+              )}
 
               {/* Templates and other items */}
               {mainNavigationItems
                 .filter((item) => !["home", "components"].includes(item.value))
+                .filter((item) => isAdmin || !["bundles", "templates", "pro"].includes(item.value))
                 .map((item) => (
                   <SidebarMenuItem key={item.value}>
                     <SidebarMenuButton
@@ -352,6 +357,7 @@ export function MainSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {isAdmin && (
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold text-foreground">
             Contest
@@ -387,6 +393,7 @@ export function MainSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        )}
 
         {/* Add You section */}
         <SidebarGroup>
@@ -417,6 +424,7 @@ export function MainSidebar() {
                   </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              {isAdmin && (
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => {
@@ -441,6 +449,7 @@ export function MainSidebar() {
                   </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
