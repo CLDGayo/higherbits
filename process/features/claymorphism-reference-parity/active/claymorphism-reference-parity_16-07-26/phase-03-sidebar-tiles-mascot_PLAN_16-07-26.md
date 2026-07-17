@@ -101,7 +101,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
 
 ### Step A0 — Tailwind accent-token registration fix (NEW — inner R+I finding)
 
-- [ ] A0. In `apps/web/tailwind.config.js`, register ALL 3 currently-missing `colors.accent` keys —
+- [x] A0. In `apps/web/tailwind.config.js`, register ALL 3 currently-missing `colors.accent` keys —
       `yellow`, `lavender`, `cream` (each with a `-foreground` pair) — following the exact existing
       pattern used for pink/peach/blue/mint (`hsl(var(--accent-{name}) / <alpha-value>)`). Yellow is
       included deliberately even though this phase's own tile grid does not consume it: it is a
@@ -114,7 +114,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
 
 ### Step A — Sidebar pill-nav + Go Premium card
 
-- [ ] A1. **CORRECTED SCOPE (inner R+I):** `sidebarMenuButtonVariants` (in
+- [x] A1. **CORRECTED SCOPE (inner R+I):** `sidebarMenuButtonVariants` (in
       `apps/web/components/ui/sidebar.tsx`) ALREADY includes `rounded-pill` +
       `data-[active=true]:bg-sidebar-accent` + `font-medium` +
       `text-sidebar-accent-foreground` in its base classes — the pill mechanism is LIVE today, not
@@ -123,7 +123,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
       `text-accent-lavender-foreground`, gated on Step A0's Tailwind registration landing first). No
       structural rewrite of `MainSidebar`, no new prop, no change to `sidebarMenuButtonVariants`'s
       variant/size logic beyond the token swap.
-- [ ] A1b. **NEW (inner R+I) — reconcile the second manual styling path:** `sidebar-layout.tsx`
+- [x] A1b. **NEW (inner R+I) — reconcile the second manual styling path:** `sidebar-layout.tsx`
       (~279-287) has `asChild` `SidebarMenuButton` instances that bypass the variant system with a
       hardcoded className ternary: `isActive ? "bg-accent text-accent-foreground font-medium" : ...`
       — a third token. Update this ternary to use the SAME lavender token as A1 so both styling
@@ -136,7 +136,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
       edit (both paths should still agree on lavender for source clarity, and it removes any
       reliance on implicit specificity ordering), but do not treat "manual className always wins"
       as a general assumption elsewhere in this codebase.**
-- [ ] A2. Locate the exact "Get Pro" -> `/pricing` CTA pattern already used elsewhere (e.g.
+- [x] A2. Locate the exact "Get Pro" -> `/pricing` CTA pattern already used elsewhere (e.g.
       `header.client.tsx` per SPEC's confirmed research) and reuse its href/click-behavior pattern
       exactly for a new "Go Premium" card. CONFIRMED at VALIDATE: TWO existing instances exist —
       `apps/web/components/ui/header.client.tsx` (lines ~305, ~616) and, more directly analogous,
@@ -148,7 +148,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
       inner INNOVATE: mirror this instance EXACTLY (Crown icon, Link href="/pricing", pink token
       deliberately retained — brand consistency, same CTA concept as the dashboard card).**
       Confirmed at inner-PVL 17-07-26: `Crown` is already imported in `sidebar-layout.tsx` (line 28).
-- [ ] A3. Add the Go-Premium card in `SidebarFooter` (confirmed insertion point: ~618-620,
+- [x] A3. Add the Go-Premium card in `SidebarFooter` (confirmed insertion point: ~618-620,
       alongside the existing `<Help>` element), using an existing `ClayCard` (imported, not
       modified) + the already-imported `Crown` icon, styled with the clay surface treatment and
       **pink token** (`bg-accent-pink`/`text-accent-pink-foreground` — matching the dashboard's
@@ -158,7 +158,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
 
 ### Step B — Dashboard 5-tile pastel grid
 
-- [ ] B1. Confirm the dashboard's current stat-tile grid classes (`gap-4 sm:grid-cols-2
+- [x] B1. Confirm the dashboard's current stat-tile grid classes (`gap-4 sm:grid-cols-2
       lg:grid-cols-4` per Decision Summary D5) and the exact real-data sources per the SPEC's
       Analogous Mapping Table. CONFIRMED at VALIDATE 16-07-26: the grid classes match exactly; 4
       tiles exist today (Total Usage, Potential Earnings, Components, + 1 pink "Get Pro" upsell
@@ -173,7 +173,7 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
       a totals tile) and a "Total Paid Out" tile from summed `total_amount`. Both `total_amount`
       (in the `AuthorPayout` interface) and `pagination.total` (in `PaginationInfo`) are confirmed
       present on disk at inner-PVL 17-07-26.
-- [ ] B2. **LOCKED at inner INNOVATE — final 5-tile order + token assignment:**
+- [x] B2. **LOCKED at inner INNOVATE — final 5-tile order + token assignment:**
       1. Total Usage (existing) — token: **peach**
       2. Potential Earnings (existing) — token: **blue**
       3. Components (existing) — token: **mint**
@@ -196,17 +196,17 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
 
       Captions must be honest, non-fabricated (no period-over-period deltas — no such data exists;
       SPEC AC7 bans invented copy): e.g. "all time", "across N creators" — factual, not comparative.
-- [ ] B3. Add a 2-column chart row beneath (if not already present) hosting the Phase-2-fixed bar
+- [x] B3. Add a 2-column chart row beneath (if not already present) hosting the Phase-2-fixed bar
       and donut charts; confirm the existing 375px mobile collapse behavior still holds at the new
       tile count. NOTE: the chart row already exists today (`ClayPillBarChart` / `ClayDonutChart`
       side-by-side, `grid gap-4 lg:grid-cols-2`) — this step is a verification, not new
       construction, unless Phase 2's changes altered its shape.
-- [ ] B4. Verify every tile's number/label traces to a real data source — no fabricated numbers;
+- [x] B4. Verify every tile's number/label traces to a real data source — no fabricated numbers;
       captions use only honest framing (e.g. "all time", "across N creators") per B2 above.
 
 ### Step C — Hero mascot integration
 
-- [ ] C1. **LOCKED at inner INNOVATE — placement:** integrate `mascot.webp` (Phase 1's real-alpha
+- [x] C1. **LOCKED at inner INNOVATE — placement:** integrate `mascot.webp` (Phase 1's real-alpha
       output, confirmed present on disk at `apps/web/public/clay/illustrations/mascot.webp`) as a
       decorative element near/overlapping the "Optimized for" `ClayCard` block (confirmed at
       inner-PVL 17-07-26 to sit at lines 182-232 in `apps/web/components/ui/hero-section.tsx`).
@@ -222,19 +222,19 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
       earlier "258-line" estimate; read the live file at EXECUTE time regardless) — per the locked
       D8 decision, the anonymous `/public-dashboard` does NOT get a fabricated greeting banner; this
       integration is `hero-section.tsx` only.
-- [ ] C2. If chroma-key quality for the chosen asset was flagged as a fallback candidate in Phase
+- [x] C2. If chroma-key quality for the chosen asset was flagged as a fallback candidate in Phase
       1, apply the documented solid-bg container treatment instead of a broken-looking image.
-- [ ] C3. Confirm the integration renders with no visible checkerboard/hard rectangular edge
+- [x] C3. Confirm the integration renders with no visible checkerboard/hard rectangular edge
       (visual spot-check, feeds the Phase 4 Agent-Probe evidence).
 
 ### Step D — Tests
 
-- [ ] D1. NEW file `apps/web/components/features/main-page/__tests__/sidebar-layout.test.tsx`:
+- [x] D1. NEW file `apps/web/components/features/main-page/__tests__/sidebar-layout.test.tsx`:
       RTL smoke test — active-nav item has the lavender pill class + `data-active="true"`; the
       `asChild` manual-styling path (A1b) also renders the lavender token; Go-Premium card link has
       `href="/pricing"`. Confirmed at inner-PVL 17-07-26: no `__tests__/` directory currently exists
       under `apps/web/components/features/main-page/` — this is genuinely a new file/directory.
-- [ ] D2. Extend `apps/web/app/public-dashboard/__tests__/page.client.test.tsx`: RTL/unit test
+- [x] D2. Extend `apps/web/app/public-dashboard/__tests__/page.client.test.tsx`: RTL/unit test
       asserts dashboard renders exactly 5 stat tiles with distinct background-token classes (no two
       adjacent sharing one) in the locked B2 order, each including an icon chip (lucide) + honest
       caption text node, plus the unchanged 6th pink upsell card. **CORRECTED at inner-PVL
@@ -245,10 +245,10 @@ A separate Tailwind registration gap (uncaught by outer PVL) also surfaced — s
       `data.pagination.total` — see execute-agent instruction E6: set `pagination.total` to a value
       that DIFFERS from the fixture row count (e.g. `total: 5` while keeping 2 sample rows) so the
       E2 anti-regression assertion is actually meaningful.
-- [ ] D3. Extend `apps/web/components/ui/__tests__/hero-section.test.tsx` (existing 3-test file):
+- [x] D3. Extend `apps/web/components/ui/__tests__/hero-section.test.tsx` (existing 3-test file):
       new assertion for the mascot img/illustration element (src matches `/clay/illustrations/` or
       `/clay/icons/`).
-- [ ] D4. grep check: zero new files under `app/api/checkout`, `app/api/webhooks`, or any
+- [x] D4. grep check: zero new files under `app/api/checkout`, `app/api/webhooks`, or any
       billing-related directory as a result of this phase's changes. NOTE at VALIDATE: a literal
       `app/api/checkout` directory does not currently exist (checkout lives nested under
       `app/api/stripe/create-checkout`); the other named billing dirs (`app/api/webhooks`,
@@ -328,9 +328,19 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
       re-run (`generated-by: inner-pvl: phase-3`) against the Step 1-3 plan-supplement text — Gate:
       CONDITIONAL (accepted autonomously). The `## Validate Contract` below now reflects the
       inner-PVL pass; ready for Step 5 EXECUTE.
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
-- [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
-- [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
+- [x] 5. EXECUTE — 2026-07-18: all A0-D4 items implemented (Tailwind yellow/lavender/cream tokens registered + compiled-CSS-verified; sidebar variant + both asChild paths swapped to lavender pill; pink Go-Premium card in SidebarFooter mirroring the live `/support` "Support Us!" CTA; 5 distinct-pastel dashboard tiles peach/blue/mint/lavender/cream + lucide icon chips + honest captions, Creators from pagination.total, Total Paid Out from summed total_amount; hero mascot.webp over AuroraBackground, hidden md:block; new sidebar-layout.test.tsx + extended page.client/hero-section tests). Vitest 45/45 (14 files, was 39/13 w/ 2 fails — carryover Get-Pro→Support-Us + hero Browse-Link both fixed). Scoped gate green. a11y: 0 NEW violations (1 self-introduced dark-lavender caption contrast found + fixed by dropping opacity-80; remaining fails all foreign/pre-existing routes). build/tsc: foreign-attributed known-gap (lib/queries.ts 33 + use-analytics.ts 2 errors, 0 in-radius; SKIP_BUILD_VALIDATION webpack compile green + A0 CSS verified). Report: phase-03-sidebar-tiles-mascot_REPORT_17-07-26.md.
+- [x] 6. EVL — vc-tester independent confirmation run 18-07-26: full vitest 45/45 (14 files),
+      scoped gate 15/15 (4 files), a11y 0 NEW violations (8 fails all foreign/pre-existing;
+      `/public-dashboard` dark passes, confirming the in-phase caption fix), 4 harness validators
+      exit 0, packages/ui + billing radius guards clean. build + tsc RED, 100% foreign-attributed
+      (lib/queries.ts 33 + hooks/use-analytics.ts 2 errors, 0 in any phase file) — accepted as
+      program-level known-gap under /goal; resolution path = user's console-errors-cleanup plan.
+      See `phase-03-sidebar-tiles-mascot-evl-iteration-001_REPORT_18-07-26.md`. EVL HANDOFF
+      SUMMARY emitted.
+- [x] 7. UPDATE PROCESS — archived; context updated; committed. 18-07-26: phase report appended
+      with EVL Outcome section; backlog note `foreign-build-tsc-red_NOTE_18-07-26.md` written;
+      umbrella `## Current Execution State` + Program Status Table rewritten (Phase 3 → VERIFIED,
+      Phase 4 → next); harness validators run; process commit invoked scoped to the feature folder.
 
 **Validate-contract complete.** The inner-PVL re-run (V1-V7, 17-07-26) against the Step 1-3
 plan-supplement text is complete — see `## Validate Contract` below (`generated-by: inner-pvl:

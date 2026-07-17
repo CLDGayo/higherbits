@@ -256,7 +256,7 @@ During /goal execution of this phase program:
 | 0 — Pre-program (plan creation) | ✅ COMPLETE |
 | 01 — Assets & CSS Foundation | ✅ VERIFIED (commit `f109b3f`, 17-07-26) |
 | 02 — Chart Fixes | ✅ VERIFIED with 1 accepted known-gap (commit `d2a183d`, EVL closed 17-07-26) |
-| 03 — Sidebar, Tiles & Mascot | ⏳ PLANNED — PVL complete (Steps 1-4 done, inner-PVL CONDITIONAL accepted 17-07-26), ready for EXECUTE |
+| 03 — Sidebar, Tiles & Mascot | ✅ VERIFIED with foreign-attributed build/tsc known-gap (EVL closed 18-07-26; execution commit `711a937`; user hero hot-fix pre-committed `0acf1e3`) |
 | 04 — Typography, QA & Deploy | ⏳ PLANNED |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
@@ -382,23 +382,27 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-phase-stub.mjs pr
 
 ## Current Execution State
 
-Last updated: 17-07-26
-Current phase: 3 of 4
-Phase 2 name: Chart Fixes
-Phase 2 status: ✅ VERIFIED with 1 accepted known-gap (EVL closed; execution commit `d2a183d`)
-Phase 2 EVL: 10 of 11 gates green (build, tsc, scoped clay-charts 4/4, a11y 0 new vs 8-known-gap
-  baseline, 4 regression validators); full suite 38/39 — sole fail is a USER hot-fix ("Get Pro" →
-  "Support Us!" in `public-dashboard/page.client.tsx`) outside Phase 2's 3-file blast radius;
-  repair carried forward to Phase 3 EXECUTE (file already in Phase 3's confirmed touchpoints)
-Phase 2 report: `process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-02-chart-fixes_REPORT_17-07-26.md`
-Next phase: Phase 3 — Sidebar, Tiles & Mascot, loop step EXECUTE (Steps 1-4 done, inner-PVL
-  CONDITIONAL accepted 17-07-26; EVL-carryover repair item: fix the "Get Pro" → "Support Us!" test
-  assertion in `page.client.test.tsx` as part of Phase 3 EXECUTE, since Phase 3 already touches
-  `page.client.tsx`)
+Last updated: 18-07-26
+Current phase: 4 of 4
+Phase 3 name: Sidebar, Tiles & Mascot
+Phase 3 status: ✅ VERIFIED with foreign-attributed build/tsc known-gap (EVL closed; execution
+  commit `711a937`; user hero hot-fix pre-committed `0acf1e3`)
+Phase 3 EVL: full vitest 45/45 (14 files), scoped gate 15/15 (4 files), a11y 0 NEW violations
+  (dark `/public-dashboard` caption-contrast self-introduced regression found + fixed in-radius),
+  4 harness validators green, `packages/ui` + billing-surface guards green; build+tsc RED 100%
+  foreign (`lib/queries.ts` 33 errors + `hooks/use-analytics.ts` 2 errors, 0 in-radius) — accepted
+  program-level known-gap, backlog note written
+Phase 3 report: `process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-03-sidebar-tiles-mascot_REPORT_17-07-26.md`
+Next phase: Phase 4 — Typography, QA & Deploy-Draft, loop step RESEARCH (pending). Hard stop
+  reminder: Phase 4 may only DRAFT the gayo-vps deploy request, never execute it. Phase 4 also
+  inherits the foreign build/tsc known-gap — see
+  `process/features/claymorphism-reference-parity/backlog/foreign-build-tsc-red_NOTE_18-07-26.md`;
+  do not attempt to fix `lib/queries.ts` / `hooks/use-analytics.ts` from within this program.
 
-Program Net Gate: PENDING (2 of 4 phases verified)
-Latest validator run: 17-07-26 — vc-audit-context (validate-context-discovery.mjs) and vc-audit-plans
-  (validate-plan-inventory.mjs) run at this UPDATE PROCESS closeout, see Status Footer below
+Program Net Gate: PENDING (3 of 4 phases verified; build/tsc red foreign-attributed — see backlog
+  note `foreign-build-tsc-red_NOTE_18-07-26.md`)
+Latest validator run: 18-07-26 — vc-audit-plans (validate-plan-inventory.mjs) and vc-audit-context
+  (validate-context-discovery.mjs) run at this UPDATE PROCESS closeout, see Status Footer below
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
 Orchestrator rule: read "Current loop step" and "validate-contract status" before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.
