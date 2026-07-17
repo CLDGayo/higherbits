@@ -53,7 +53,10 @@ vi.mock("@tanstack/react-query", () => ({
   useQuery: () => ({
     data: {
       data: sampleAuthors,
-      pagination: { total: 2, page: 1, pageSize: 10, totalPages: 1 },
+      // total (5) deliberately differs from sampleAuthors.length (2) so the
+      // Creators-tile assertion exercises data.pagination.total, not
+      // filteredData.length (E6 anti-regression).
+      pagination: { total: 5, page: 1, pageSize: 10, totalPages: 1 },
     },
     isLoading: false,
     isError: false,
@@ -91,15 +94,62 @@ describe("PublicDashboardClient Clay-component wiring (VE2/VE3)", () => {
     expect(errSpy).not.toHaveBeenCalled()
   })
 
-  it("renders the pink upsell card with Get Pro copy and /pricing link (VE3)", () => {
+  it("renders the pink upsell card with Support Us! copy and /support link (VE3)", () => {
     const { container } = render(<PublicDashboardClient />)
 
     const pink = container.querySelector(".bg-accent-pink")
     expect(pink).not.toBeNull()
-    expect(container.textContent).toContain("Get Pro")
+    expect(container.textContent).toContain("Support Us!")
 
-    const pricingLink = container.querySelector('a[href="/pricing"]')
-    expect(pricingLink).not.toBeNull()
+    const supportLink = container.querySelector('a[href="/support"]')
+    expect(supportLink).not.toBeNull()
+  })
+})
+
+describe("PublicDashboardClient — 5-tile pastel stat grid (Phase 3 D2)", () => {
+  const TILE_TOKENS = [
+    "bg-accent-peach",
+    "bg-accent-blue",
+    "bg-accent-mint",
+    "bg-accent-lavender",
+    "bg-accent-cream",
+  ]
+
+  it("renders exactly 5 distinct-pastel stat tiles plus the pink upsell card", () => {
+    const { container } = render(<PublicDashboardClient />)
+
+    // Each of the 5 stat tokens appears exactly once (distinct, no reuse).
+    for (const token of TILE_TOKENS) {
+      expect(container.querySelectorAll(`.${token}`).length).toBe(1)
+    }
+    // 6th card is the unchanged pink upsell (distinct from the 5 stat tiles).
+    expect(container.querySelectorAll(".bg-accent-pink").length).toBe(1)
+
+    // Stat labels are present.
+    for (const label of [
+      "Total Usage",
+      "Potential Earnings",
+      "Components",
+      "Creators",
+      "Total Paid Out",
+    ]) {
+      expect(container.textContent).toContain(label)
+    }
+
+    // Honest, non-fabricated captions.
+    expect(container.textContent).toContain("all time")
+  })
+
+  it("sources the Creators tile from data.pagination.total, not filteredData.length (E6)", () => {
+    const { container } = render(<PublicDashboardClient />)
+
+    // pagination.total is 5 while only 2 authors are in the fixture. A regression
+    // that read filteredData.length would render 2 here instead of 5.
+    const creatorsTile = container.querySelector(".bg-accent-lavender")
+    expect(creatorsTile).not.toBeNull()
+    expect(creatorsTile?.textContent).toContain("Creators")
+    expect(creatorsTile?.textContent).toContain("5")
+    expect(creatorsTile?.textContent).not.toContain("2")
   })
 })
 

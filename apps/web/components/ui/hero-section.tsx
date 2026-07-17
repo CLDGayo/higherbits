@@ -179,8 +179,17 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="text-center parallax-layer parallax-layer-delay"
+              className="relative text-center parallax-layer parallax-layer-delay"
             >
+              {/* Decorative clay mascot — real-alpha WebP, sits over the
+                  AuroraBackground gradient to demonstrate the transparency.
+                  Hidden on mobile where the fixed hero layout is too packed. */}
+              <img
+                src="/clay/illustrations/mascot.webp"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-24 right-0 hidden h-28 w-auto select-none md:block lg:-top-28 lg:h-32"
+              />
               <ClayCard className="inline-block bg-card/70 px-6 py-5 backdrop-blur-sm">
               <p className="text-muted-foreground mb-4">Optimized for</p>
               <div className="flex flex-col gap-2">

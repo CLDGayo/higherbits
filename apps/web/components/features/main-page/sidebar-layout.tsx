@@ -58,6 +58,7 @@ import {
 
 // Import types from navigation-with-magic.tsx
 import { Button } from "@/components/ui/button"
+import { ClayCard } from "@/components/ui/clay-card"
 import { TextShimmer } from "@/components/ui/text-shimmer"
 import type {
   NavigationCategory,
@@ -65,7 +66,7 @@ import type {
 } from "@/lib/navigation-with-magic"
 
 export function MainSidebar() {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state } = useSidebar()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -285,7 +286,7 @@ export function MainSidebar() {
                                     className={cn(
                                       "flex items-center justify-between w-full",
                                       isActive
-                                        ? "bg-accent text-accent-foreground font-medium"
+                                        ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
                                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                                     )}
                                     target={
@@ -565,7 +566,7 @@ export function MainSidebar() {
                                           className={cn(
                                             "flex items-center justify-between w-full",
                                             isActive
-                                              ? "bg-accent text-accent-foreground font-medium"
+                                              ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
                                               : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                                           )}
                                           target={
@@ -624,7 +625,25 @@ export function MainSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="flex justify-start pl-4 border-t py-2">
+      <SidebarFooter className="flex flex-col justify-start pl-4 border-t py-2">
+        {state !== "collapsed" && (
+          <ClayCard className="bg-accent-pink text-accent-pink-foreground mr-4 flex flex-col justify-between p-4">
+            <div>
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Crown className="h-4 w-4" />
+                Unlock everything
+              </div>
+              <p className="mt-1 text-sm">
+                Go Pro for full access to every component.
+              </p>
+            </div>
+            <Link href="/support" className="mt-3 inline-block">
+              <span className="font-medium underline underline-offset-4">
+                Support Us!
+              </span>
+            </Link>
+          </ClayCard>
+        )}
         <Help open={helpOpen} onOpenChange={setHelpOpen} />
       </SidebarFooter>
     </Sidebar>

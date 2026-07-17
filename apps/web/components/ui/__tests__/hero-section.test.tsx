@@ -38,12 +38,13 @@ describe("HeroSection Clay-component wiring (VE1)", () => {
     expect(container.textContent).toContain("Integrate in IDE AI Agent")
   })
 
-  it("opens the component browser from Browse components", () => {
+  it("links Browse components to the component browser", () => {
     const { getByText } = render(<HeroSection />)
 
-    fireEvent.click(getByText("Browse components"))
-
-    expect(routerPush).toHaveBeenCalledWith("/?tab=home")
+    // Browse components is now an asChild <Link>, not a router.push button.
+    const link = getByText("Browse components").closest("a")
+    expect(link).not.toBeNull()
+    expect(link?.getAttribute("href")).toBe("/?tab=home")
   })
 
   it("does not navigate when Enter is pressed outside the CTA", () => {
@@ -52,5 +53,15 @@ describe("HeroSection Clay-component wiring (VE1)", () => {
     fireEvent.keyDown(window, { key: "Enter" })
 
     expect(routerPush).not.toHaveBeenCalled()
+  })
+
+  it("renders the decorative clay mascot from the clay assets folder (C1)", () => {
+    const { container } = render(<HeroSection />)
+
+    const mascot = container.querySelector(
+      'img[src^="/clay/illustrations/"], img[src^="/clay/icons/"]',
+    )
+    expect(mascot).not.toBeNull()
+    expect(mascot?.getAttribute("src")).toContain("/clay/illustrations/")
   })
 })

@@ -10,6 +10,11 @@ import {
   ChevronRight,
   Search,
   X,
+  TrendingUp,
+  DollarSign,
+  Package,
+  Users,
+  Wallet,
 } from "lucide-react"
 import { motion } from "motion/react"
 
@@ -215,6 +220,14 @@ export function PublicDashboardClient() {
     (sum, author) => sum + author.potential_earnings,
     0,
   )
+  // Total amount already paid out across the current result set (real data).
+  const totalPaidOut = filteredData.reduce(
+    (sum, author) => sum + author.total_amount,
+    0,
+  )
+  // True total author count across ALL pages — sourced from pagination.total,
+  // never filteredData.length (which is only the current page's row count).
+  const creatorsCount = data?.pagination?.total ?? 0
 
   const usageChart = buildUsageChart(filteredData)
   const earningsChart = buildEarningsChart(filteredData)
@@ -235,19 +248,59 @@ export function PublicDashboardClient() {
 
       {/* Clay stat tiles + pink upsell */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <ClayCard className="p-5">
-          <div className="text-sm text-muted-foreground">Total Usage</div>
-          <div className="mt-1 text-2xl font-bold">{totalUsage}</div>
+        <ClayCard className="bg-accent-peach text-accent-peach-foreground p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-background/40">
+              <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="text-sm font-medium">Total Usage</div>
+          </div>
+          <div className="mt-2 text-2xl font-bold">{totalUsage}</div>
+          <div className="mt-1 text-xs">all time</div>
         </ClayCard>
-        <ClayCard className="p-5">
-          <div className="text-sm text-muted-foreground">Potential Earnings</div>
-          <div className="mt-1 text-2xl font-bold">
+        <ClayCard className="bg-accent-blue text-accent-blue-foreground p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-background/40">
+              <DollarSign className="h-4 w-4" />
+            </div>
+            <div className="text-sm font-medium">Potential Earnings</div>
+          </div>
+          <div className="mt-2 text-2xl font-bold">
             ${totalPotentialEarnings.toFixed(2)}
           </div>
+          <div className="mt-1 text-xs">all time</div>
         </ClayCard>
-        <ClayCard className="p-5">
-          <div className="text-sm text-muted-foreground">Components</div>
-          <div className="mt-1 text-2xl font-bold">{totalComponents}</div>
+        <ClayCard className="bg-accent-mint text-accent-mint-foreground p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-background/40">
+              <Package className="h-4 w-4" />
+            </div>
+            <div className="text-sm font-medium">Components</div>
+          </div>
+          <div className="mt-2 text-2xl font-bold">{totalComponents}</div>
+          <div className="mt-1 text-xs">published</div>
+        </ClayCard>
+        <ClayCard className="bg-accent-lavender text-accent-lavender-foreground p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-background/40">
+              <Users className="h-4 w-4" />
+            </div>
+            <div className="text-sm font-medium">Creators</div>
+          </div>
+          <div className="mt-2 text-2xl font-bold">{creatorsCount}</div>
+          <div className="mt-1 text-xs">across all pages</div>
+        </ClayCard>
+        <ClayCard className="bg-accent-cream text-accent-cream-foreground p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-pill bg-background/40">
+              <Wallet className="h-4 w-4" />
+            </div>
+            <div className="text-sm font-medium">Total Paid Out</div>
+          </div>
+          <div className="mt-2 text-2xl font-bold">
+            ${totalPaidOut.toFixed(2)}
+          </div>
+          <div className="mt-1 text-xs">all time</div>
         </ClayCard>
         <ClayCard className="bg-accent-pink text-accent-pink-foreground flex flex-col justify-between p-5">
           <div>

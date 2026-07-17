@@ -79,6 +79,12 @@ module.exports = {
           "blue-foreground": "hsl(var(--accent-blue-foreground) / <alpha-value>)",
           mint: "hsl(var(--accent-mint) / <alpha-value>)",
           "mint-foreground": "hsl(var(--accent-mint-foreground) / <alpha-value>)",
+          yellow: "hsl(var(--accent-yellow) / <alpha-value>)",
+          "yellow-foreground": "hsl(var(--accent-yellow-foreground) / <alpha-value>)",
+          lavender: "hsl(var(--accent-lavender) / <alpha-value>)",
+          "lavender-foreground": "hsl(var(--accent-lavender-foreground) / <alpha-value>)",
+          cream: "hsl(var(--accent-cream) / <alpha-value>)",
+          "cream-foreground": "hsl(var(--accent-cream-foreground) / <alpha-value>)",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
