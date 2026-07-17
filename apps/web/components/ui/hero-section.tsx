@@ -155,13 +155,15 @@ export function HeroSection() {
             </h2>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 justify-center mb-20">
-              <ClayPillButton onClick={browseComponents}>
-                Browse components
-                {!isMobile && (
-                  <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded-pill border border-primary-foreground/40 bg-primary-foreground/10 px-1.5 text-[0.625rem] font-medium text-primary-foreground">
-                    <Icons.enter className="h-2.5 w-2.5" />
-                  </kbd>
-                )}
+              <ClayPillButton asChild>
+                <Link href="/?tab=home">
+                  Browse components
+                  {!isMobile && (
+                    <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded-pill border border-primary-foreground/40 bg-primary-foreground/10 px-1.5 text-[0.625rem] font-medium text-primary-foreground">
+                      <Icons.enter className="h-2.5 w-2.5" />
+                    </kbd>
+                  )}
+                </Link>
               </ClayPillButton>
 
               <ClayPillButton variant="secondary" asChild className="gap-2">
