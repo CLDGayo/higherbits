@@ -2,3 +2,7 @@ iteration	timestamp	gaps_found	fail_count	concern_count	applied	saturation_statu
 0	2026-07-16	1	0	1	1	ACTIVE	CONTINUE	baseline: outer-pvl CONDITIONAL (sharp premise concern, fixed in-pass V6)
 1	2026-07-16	9	0	1	9	PLATEAU	HALTED_SUCCESS	inner R+I+supplement applied 9 gaps; inner-pvl CONDITIONAL accepted (sole concern = sharp devDep, resolvable only by EXECUTE A0)
 2	2026-07-17	0	0	0	0	SATURATED	HALTED_SUCCESS	EVL confirmation: 14 gates + 4 validators green; a11y GREEN for phase attribution (8 pre-existing fails, 0 new; baseline undercount noted as follow-up)
+1	2026-07-17	7	0	1	7	PLATEAU	HALTED_SUCCESS	phase-02: inner R+I+supplement (6 items) + inner-pvl CONDITIONAL accepted (concern resolved in-pass via Step C0; B2 mechanism empirically proven)
+1	2026-07-17	15	0	4	15	PLATEAU	HALTED_SUCCESS	phase-03: inner R+I+supplement (11 gaps) + inner-pvl CONDITIONAL accepted (4 concerns resolved in-pass; E6-E9 added; baseline re-drift 38/14)
+2	2026-07-17	1	1	0	0	ACTIVE	CONTINUE	phase-02 EVL: 10 gates green, a11y 0-new; full suite 38/39 — failing assertion caused by USER hot-fix (Get Pro->Support Us! in page.client.tsx, out of blast radius); repair assigned to Phase 3 EXECUTE (file in its radius); Phase 2 attribution clean
+3	2026-07-17	1	1	0	0	ACTIVE	HALTED_SUCCESS	phase-02 EVL closed: known-gap accepted under /goal (38/39 fail = user hot-fix out of radius; repair carried to Phase 3 EXECUTE, file in its radius); iteration report evl-iteration-001 written

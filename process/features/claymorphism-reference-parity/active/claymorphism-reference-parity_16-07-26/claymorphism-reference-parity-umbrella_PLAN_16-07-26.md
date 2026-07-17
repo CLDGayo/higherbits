@@ -255,8 +255,8 @@ During /goal execution of this phase program:
 |---|---|
 | 0 — Pre-program (plan creation) | ✅ COMPLETE |
 | 01 — Assets & CSS Foundation | ✅ VERIFIED (commit `f109b3f`, 17-07-26) |
-| 02 — Chart Fixes | ⏳ PLANNED |
-| 03 — Sidebar, Tiles & Mascot | ⏳ PLANNED |
+| 02 — Chart Fixes | ✅ VERIFIED with 1 accepted known-gap (commit `d2a183d`, EVL closed 17-07-26) |
+| 03 — Sidebar, Tiles & Mascot | ⏳ PLANNED — PVL complete (Steps 1-4 done, inner-PVL CONDITIONAL accepted 17-07-26), ready for EXECUTE |
 | 04 — Typography, QA & Deploy | ⏳ PLANNED |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
@@ -383,17 +383,20 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-phase-stub.mjs pr
 ## Current Execution State
 
 Last updated: 17-07-26
-Current phase: 2 of 4
-Phase 1 name: Assets & CSS Foundation
-Phase 1 status: ✅ VERIFIED (EVL green, commit `f109b3f`)
-Phase 1 EVL: 14 gate commands + 4 regression validators green; a11y GREEN for phase attribution (8
-  pre-existing fails — 5 muted-foreground + 3 link-name/text-primary — 0 new)
-Phase 1 report: `process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-01-assets-css-foundation_REPORT_16-07-26.md`
-Next phase: Phase 2 — Chart Fixes, loop step RESEARCH (Phase 3 — Sidebar, Tiles & Mascot is also
-  unblocked and parallel-safe alongside Phase 2 per the Pre-PVL Conflict Resolution below — no
-  shared files)
+Current phase: 3 of 4
+Phase 2 name: Chart Fixes
+Phase 2 status: ✅ VERIFIED with 1 accepted known-gap (EVL closed; execution commit `d2a183d`)
+Phase 2 EVL: 10 of 11 gates green (build, tsc, scoped clay-charts 4/4, a11y 0 new vs 8-known-gap
+  baseline, 4 regression validators); full suite 38/39 — sole fail is a USER hot-fix ("Get Pro" →
+  "Support Us!" in `public-dashboard/page.client.tsx`) outside Phase 2's 3-file blast radius;
+  repair carried forward to Phase 3 EXECUTE (file already in Phase 3's confirmed touchpoints)
+Phase 2 report: `process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-02-chart-fixes_REPORT_17-07-26.md`
+Next phase: Phase 3 — Sidebar, Tiles & Mascot, loop step EXECUTE (Steps 1-4 done, inner-PVL
+  CONDITIONAL accepted 17-07-26; EVL-carryover repair item: fix the "Get Pro" → "Support Us!" test
+  assertion in `page.client.test.tsx` as part of Phase 3 EXECUTE, since Phase 3 already touches
+  `page.client.tsx`)
 
-Program Net Gate: PENDING (1 of 4 phases verified)
+Program Net Gate: PENDING (2 of 4 phases verified)
 Latest validator run: 17-07-26 — vc-audit-context (validate-context-discovery.mjs) and vc-audit-plans
   (validate-plan-inventory.mjs) run at this UPDATE PROCESS closeout, see Status Footer below
 
@@ -410,10 +413,23 @@ No shared-package conflicts exist between the 4 phases. Classification:
 
 - `apps/web/app/globals.css` — touched ONLY by Phase 1 (parallel-safe; no other phase edits this file).
 - `apps/web/components/ui/clay-pill-bar-chart.tsx`, `clay-donut-chart.tsx` — touched ONLY by Phase 2 (parallel-safe).
-- `apps/web/components/ui/sidebar.tsx`, `sidebar-layout.tsx`, `apps/web/app/public-dashboard/page.client.tsx`, `apps/web/components/ui/hero-section.tsx` — touched ONLY by Phase 3 (parallel-safe, paths corrected 17-07-26).
+- `apps/web/components/ui/sidebar.tsx`, `sidebar-layout.tsx`, `apps/web/components/ui/hero-section.tsx` — touched ONLY by Phase 3 (parallel-safe, paths corrected 17-07-26).
 - `apps/web/e2e/visual-evidence.spec.ts` and the font-cozy className sweep — touched ONLY by Phase 4, after Phases 1-3 land (parallel-safe, sequenced last).
 
-No package conflicts — all phases are parallel-safe.
+- Conflict 1 (discovered 17-07-26, post-Phase-1 closeout): Phase 2 and Phase 3
+  Files: `apps/web/app/public-dashboard/page.client.tsx`
+  Detail: path corrections during outer PVL revealed Phase 2's chart-data builder consumer site
+  (`buildUsageChart()`/`buildEarningsChart()`, lines ~108/131) and Phase 3's dashboard stat-tile
+  surface live in the SAME file. The original "all phases parallel-safe" claim (written when the
+  dashboard path was unconfirmed) is superseded by this entry.
+  Resolution: parallel-safe for READ-ONLY steps only (R/I/PVL may run concurrently — PVL writes go
+  to each phase's own plan file); EXECUTE is SEQUENCED — Phase 2 EXECUTE must complete (and commit)
+  before Phase 3 EXECUTE starts. Regions differ (chart config vs. tile grid) but same-file
+  concurrent writes by two execute-agents on one working tree are not safe.
+  Action: no blast-radius reassignment needed; orchestrator enforces EXECUTE ordering (recorded here
+  per the §Pre-PVL Conflict Resolution orchestrator write exception).
+
+No other conflicts — all remaining phase pairs are parallel-safe.
 
 ---
 
