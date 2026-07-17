@@ -1,7 +1,14 @@
 import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin"
 
+const skipBuildValidation = process.env.SKIP_BUILD_VALIDATION === "true"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  distDir: process.env.NEXT_DIST_DIR ?? ".next",
+  eslint: {
+    // The VPS uses a constrained build path after local validation has passed.
+    ignoreDuringBuilds: skipBuildValidation,
+  },
   images: {
     remotePatterns: [
       {
@@ -11,8 +18,24 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: skipBuildValidation,
+  },
   transpilePackages: ["ui"],
   webpack: (config, { isServer }) => {
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: [
+        "**/.git/**",
+        "**/node_modules/**",
+        "../process/**",
+        "../supabase/**",
+        "../graphify-out/**",
+        "./.next/**",
+        "./test-results/**",
+      ],
+    }
+
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,

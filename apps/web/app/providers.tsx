@@ -17,11 +17,11 @@ import { sidebarOpenAtom } from "@/components/features/main-page/main-layout"
 
 const queryClient = new QueryClient()
 
-export function AppProviders({
+function AppProvidersContent({
   children,
 }: {
   children: React.ReactNode
-}): React.ReactElement {
+}) {
   const [open, setOpen] = useAtom(sidebarOpenAtom)
   const shouldShowSidebar = useSidebarVisibility()
 
@@ -30,17 +30,27 @@ export function AppProviders({
   }, [])
 
   return (
+    <SidebarProvider defaultOpen={open} open={open} onOpenChange={setOpen}>
+      {shouldShowSidebar && <MainSidebar />}
+      <MainLayout>
+        <CommandMenu />
+        {children}
+      </MainLayout>
+    </SidebarProvider>
+  )
+}
+
+export function AppProviders({
+  children,
+}: {
+  children: React.ReactNode
+}): React.ReactElement {
+  return (
     <QueryClientProvider client={queryClient}>
       <ClerkProvider>
-        <SidebarProvider defaultOpen={open} open={open} onOpenChange={setOpen}>
-          <Suspense fallback={null}>
-            {shouldShowSidebar && <MainSidebar />}
-          </Suspense>
-          <MainLayout>
-            <CommandMenu />
-            {children}
-          </MainLayout>
-        </SidebarProvider>
+        <Suspense fallback={null}>
+          <AppProvidersContent>{children}</AppProvidersContent>
+        </Suspense>
       </ClerkProvider>
     </QueryClientProvider>
   )

@@ -5,13 +5,15 @@ import { render } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import HomePage from "../page"
 
-vi.mock("next/headers", () => ({
-  cookies: () => ({ get: vi.fn(), has: vi.fn(() => false) })
-}))
 vi.mock("next/navigation", () => ({
-  redirect: vi.fn(),
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
+}))
+vi.mock("../page.client", () => ({
+  HomePageClient: () => "Component browser",
+}))
+vi.mock("@/components/ui/header.client", () => ({
+  Header: () => "Marketplace header",
 }))
 vi.mock("@clerk/nextjs", () => ({
   SignInButton: () => <button>Sign In</button>,
@@ -22,8 +24,10 @@ vi.mock("@clerk/nextjs", () => ({
 }))
 
 describe("Landing Smoke Test", () => {
-  it("renders async page without crashing", async () => {
-    const jsx = await HomePage()
+  const renderPage = async (tab?: string) => {
+    const jsx = await HomePage({
+      searchParams: Promise.resolve(tab ? { tab } : {}),
+    })
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -31,9 +35,23 @@ describe("Landing Smoke Test", () => {
         },
       },
     })
-    const { container } = render(
+    return render(
       <QueryClientProvider client={queryClient}>{jsx}</QueryClientProvider>,
     )
+  }
+
+  it("renders the marketing landing page at the bare root URL", async () => {
+    const { container } = await renderPage()
+
     expect(container).toBeDefined()
+    expect(container.textContent).toContain(
+      "Discover, share & remix the best UI components",
+    )
+  })
+
+  it("renders the component browser for a tab URL", async () => {
+    const { container } = await renderPage("home")
+
+    expect(container.textContent).toContain("Component browser")
   })
 })

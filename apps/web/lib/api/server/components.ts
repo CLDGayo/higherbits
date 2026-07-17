@@ -15,6 +15,11 @@ export const hasUserComponentAccess = async (
     return false
   }
 
+  const userPlan = await prisma.users_to_plans.findUnique({ where: { user_id: userId } })
+  if (userPlan?.status === "active") {
+    return true
+  }
+
   const bundles = await prisma.bundles.findMany({
     where: {
       bundle_items: {

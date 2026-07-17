@@ -7,7 +7,6 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-media-query"
-import { setCookie } from "@/lib/cookies"
 import { AuroraBackground } from "./aurora-background"
 import { Badge } from "./badge"
 import { ClayCard } from "./clay-card"
@@ -20,32 +19,17 @@ export function HeroSection() {
   const isMobile = useIsMobile()
   const heroRef = useRef<HTMLDivElement>(null)
 
-  const onEnterWebsite = async () => {
-    await setCookie({
-      name: "has_visited",
-      value: "true",
-      expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-      httpOnly: true,
-      sameSite: "lax",
-    })
-    router.refresh()
+  const browseComponents = () => {
+    router.push("/?tab=home")
   }
 
   useEffect(() => {
     document.body.style.overflow = "hidden"
 
-    const handleKeyPress = async (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        await onEnterWebsite()
-      }
-    }
-    window.addEventListener("keydown", handleKeyPress)
-
     return () => {
       document.body.style.overflow = "unset"
-      window.removeEventListener("keydown", handleKeyPress)
     }
-  }, [router])
+  }, [])
 
   useEffect(() => {
     if (typeof window !== "undefined" && !CSS.supports("(animation-timeline: view()) and (animation-range: entry)")) {
@@ -114,22 +98,19 @@ export function HeroSection() {
 
             <div className="flex items-center gap-6">
               <Link
-                href="/"
-                onClick={onEnterWebsite}
+                href="/?tab=home"
                 className="text-sm text-foreground/90 hover:text-foreground transition-colors"
               >
                 Explore
               </Link>
               <Link
                 href="/api-access"
-                onClick={onEnterWebsite}
                 className="text-sm text-foreground/90 hover:text-foreground transition-colors"
               >
                 API
               </Link>
               <Link
                 href="/magic"
-                onClick={onEnterWebsite}
                 className="text-sm text-foreground/90 hover:text-foreground transition-colors"
               >
                 Magic MCP
@@ -174,7 +155,7 @@ export function HeroSection() {
             </h2>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 justify-center mb-20">
-              <ClayPillButton onClick={onEnterWebsite}>
+              <ClayPillButton onClick={browseComponents}>
                 Browse components
                 {!isMobile && (
                   <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded-pill border border-primary-foreground/40 bg-primary-foreground/10 px-1.5 text-[0.625rem] font-medium text-primary-foreground">
@@ -184,7 +165,7 @@ export function HeroSection() {
               </ClayPillButton>
 
               <ClayPillButton variant="secondary" asChild className="gap-2">
-                <Link href="/magic" onClick={onEnterWebsite}>
+                <Link href="/magic">
                   Integrate in IDE AI Agent
                   <ArrowRight className="h-4 w-4 ml-1.5" />
                 </Link>

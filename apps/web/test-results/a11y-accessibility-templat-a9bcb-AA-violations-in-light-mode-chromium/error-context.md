@@ -7,7 +7,7 @@
 # Test info
 
 - Name: a11y.spec.ts >> accessibility >> /templates has no WCAG A/AA violations in light mode
-- Location: e2e/a11y.spec.ts:42:11
+- Location: e2e/a11y.spec.ts:43:11
 
 # Error details
 
@@ -165,19 +165,8 @@ Error: expect(received).toEqual(expected) // deep equality
         - paragraph [ref=e15]: No templates found
     - region "Notifications alt+T"
   - alert [ref=e16]
-  - generic [ref=e21] [cursor=pointer]:
-    - button "Open Next.js Dev Tools" [ref=e22]:
-      - img [ref=e23]
-    - generic [ref=e26]:
-      - button "Open issues overlay" [ref=e27]:
-        - generic [ref=e28]:
-          - generic [ref=e29]: "1"
-          - generic [ref=e30]: "2"
-        - generic [ref=e31]:
-          - text: Issue
-          - generic [ref=e32]: s
-      - button "Collapse issues badge" [ref=e33]:
-        - img [ref=e34]
+  - button "Open Next.js Dev Tools" [ref=e22] [cursor=pointer]:
+    - img [ref=e23]
 ```
 
 # Test source
@@ -195,43 +184,44 @@ Error: expect(received).toEqual(expected) // deep equality
   10 |   "/contest",
   11 |   "/our-story",
   12 |   "/templates",
-  13 | ]
-  14 | 
-  15 | async function auditRoute(page: Page, route: string, theme: "light" | "dark") {
-  16 |   if (theme === "dark") {
-  17 |     await page.addInitScript(() => {
-  18 |       window.localStorage.setItem("theme", "dark")
-  19 |       document.documentElement.classList.add("dark")
-  20 |     })
-  21 |   }
-  22 | 
-  23 |   await page.goto(route)
-  24 |   await page.waitForLoadState("networkidle")
-  25 | 
-  26 |   if (theme === "dark") {
-  27 |     await page.evaluate(() => {
-  28 |       document.documentElement.classList.add("dark")
-  29 |     })
-  30 |   }
-  31 | 
-  32 |   const results = await new AxeBuilder({ page })
-  33 |     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-  34 |     .analyze()
-  35 | 
-> 36 |   expect(results.violations).toEqual([])
+  13 |   "/public-dashboard",
+  14 | ]
+  15 | 
+  16 | async function auditRoute(page: Page, route: string, theme: "light" | "dark") {
+  17 |   if (theme === "dark") {
+  18 |     await page.addInitScript(() => {
+  19 |       window.localStorage.setItem("theme", "dark")
+  20 |       document.documentElement.classList.add("dark")
+  21 |     })
+  22 |   }
+  23 | 
+  24 |   await page.goto(route)
+  25 |   await page.waitForLoadState("networkidle")
+  26 | 
+  27 |   if (theme === "dark") {
+  28 |     await page.evaluate(() => {
+  29 |       document.documentElement.classList.add("dark")
+  30 |     })
+  31 |   }
+  32 | 
+  33 |   const results = await new AxeBuilder({ page })
+  34 |     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+  35 |     .analyze()
+  36 | 
+> 37 |   expect(results.violations).toEqual([])
      |                              ^ Error: expect(received).toEqual(expected) // deep equality
-  37 | }
-  38 | 
-  39 | test.describe("accessibility", () => {
-  40 |   for (const route of routes) {
-  41 |     for (const theme of ["light", "dark"] as const) {
-  42 |       test(`${route} has no WCAG A/AA violations in ${theme} mode`, async ({
-  43 |         page,
-  44 |       }) => {
-  45 |         await auditRoute(page, route, theme)
-  46 |       })
-  47 |     }
-  48 |   }
-  49 | })
-  50 | 
+  38 | }
+  39 | 
+  40 | test.describe("accessibility", () => {
+  41 |   for (const route of routes) {
+  42 |     for (const theme of ["light", "dark"] as const) {
+  43 |       test(`${route} has no WCAG A/AA violations in ${theme} mode`, async ({
+  44 |         page,
+  45 |       }) => {
+  46 |         await auditRoute(page, route, theme)
+  47 |       })
+  48 |     }
+  49 |   }
+  50 | })
+  51 | 
 ```

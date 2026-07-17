@@ -22,7 +22,7 @@ export function useComponentAccess(
   useEffect(() => {
     hasUserComponentAccessAction({ componentId: component.id }).then(
       (hasPurchased) => {
-        setComponentAccess(hasPurchased ? "UNLOCKED" : "REQUIRES_BUNDLE")
+        setComponentAccess(hasPurchased ? "UNLOCKED" : "REQUIRES_SUBSCRIPTION")
       },
     )
   }, [component.id])

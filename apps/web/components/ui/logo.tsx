@@ -165,7 +165,7 @@ export function Logo({
   return (
     <div ref={logoRef} className="relative">
       <Link
-        href="/?tab=home"
+        href="/"
         className={cn(
           `${position === "fixed" ? position : ""} h-7 flex items-center ${position === "fixed" ? "left-4 top-3" : ""} rounded-full group cursor-pointer`,
           className,

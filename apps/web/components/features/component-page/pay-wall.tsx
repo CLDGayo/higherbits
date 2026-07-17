@@ -34,10 +34,6 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
-import {
-  isPaymentsNotConfigured,
-  PAYMENTS_UNAVAILABLE_MESSAGE,
-} from "@/lib/checkout-error"
 import PlansDialog from "../bundles/plans-dialog"
 
 interface PayWallProps {
@@ -55,67 +51,7 @@ export function PayWall({ accessState, component }: PayWallProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [showUnlockDialog, setShowUnlockDialog] = useState(false)
   const { isSignedIn } = useUser()
-
-  const handleUpgradePlan = async (
-    planId: string,
-    period: "monthly" | "yearly" = "monthly",
-  ) => {
-    if (isProcessing) return
-
-    // Track attribution before redirecting to pricing page
-    trackAttribution(
-      ATTRIBUTION_SOURCE.COMPONENT_LIBRARY,
-      SOURCE_DETAIL.PREMIUM_COMPONENT_CTA,
-    )
-
-    if (!isSignedIn) {
-      window.location.href = "/pricing"
-      return
-    }
-
-    setIsProcessing(true)
-    try {
-      const pathname = window.location.pathname
-      const response = await fetch("/api/lemonsqueezy/create-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "csrf-token": (window as any).__NEXT_DATA__?.props?.csrfToken || "",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          planId,
-          period,
-          successUrl: `${window.location.origin}${pathname}?success=true`,
-          cancelUrl: `${window.location.origin}${pathname}?canceled=true`,
-          attributionSource: ATTRIBUTION_SOURCE.COMPONENT_LIBRARY,
-          sourceDetail: SOURCE_DETAIL.PREMIUM_COMPONENT_CTA,
-        }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.text()
-        if (isPaymentsNotConfigured(response.status, errorData)) {
-          toast.info(PAYMENTS_UNAVAILABLE_MESSAGE)
-          setIsProcessing(false)
-          return
-        }
-        throw new Error(`Failed to create checkout session: ${errorData}`)
-      }
-
-      const data = await response.json()
-
-      if (!data.url) {
-        throw new Error("No checkout URL received from server")
-      }
-
-      window.location.href = data.url
-    } catch (error) {
-      console.error("Upgrade plan error:", error)
-      toast.error("Failed to initiate upgrade. Please try again later.")
-      setIsProcessing(false)
-    }
-  }
+  const router = useRouter()
 
   const handleUnlockComponent = async () => {
     setIsProcessing(true)
@@ -147,7 +83,11 @@ export function PayWall({ accessState, component }: PayWallProps) {
         document.querySelector('[data-dialog-type="unlock-component"]') !== null
 
       if (accessState === "REQUIRES_SUBSCRIPTION") {
-        handleUpgradePlan("pro")
+        trackAttribution(
+          ATTRIBUTION_SOURCE.COMPONENT_LIBRARY,
+          SOURCE_DETAIL.PREMIUM_COMPONENT_CTA,
+        )
+        router.push("/support")
       } else if (accessState === "REQUIRES_UNLOCK") {
         if (isInUnlockDialog) {
           handleUnlockComponent()
@@ -166,10 +106,7 @@ export function PayWall({ accessState, component }: PayWallProps) {
   )
   if (accessState === "REQUIRES_SUBSCRIPTION") {
     paywall = (
-      <SubscriptionPaywall
-        isProcessing={isProcessing}
-        onUpgrade={() => handleUpgradePlan("pro")}
-      />
+      <SubscriptionPaywall />
     )
   } else if (accessState === "REQUIRES_UNLOCK") {
     paywall = (
@@ -528,13 +465,7 @@ const features = [
   },
 ]
 
-function SubscriptionPaywall({
-  isProcessing,
-  onUpgrade,
-}: {
-  isProcessing: boolean
-  onUpgrade: () => void
-}) {
+function SubscriptionPaywall() {
   const { isSignedIn } = useUser()
   const router = useRouter()
 
@@ -544,54 +475,45 @@ function SubscriptionPaywall({
       ATTRIBUTION_SOURCE.COMPONENT_LIBRARY,
       SOURCE_DETAIL.PREMIUM_COMPONENT_CTA,
     )
-    if (!isSignedIn) {
-      router.push("/pricing")
-      return
-    }
-    onUpgrade()
+    router.push("/support")
   }
 
   return (
     <div className="flex-1 w-full flex flex-col h-full gap-10">
       <div className="flex flex-col items-center justify-center flex-1 pt-20">
         <div className="space-y-2 mb-8">
-          <h3 className="text-xl font-semibold">Premium Component</h3>
+          <h3 className="text-xl font-semibold">Supporters-only component</h3>
           <p className="text-muted-foreground">
-            {isSignedIn
-              ? "Subscribe to access this premium component and many others. Get 50 tokens for $10/mo."
-              : "Select a plan to access premium components. Starting at 50 tokens for $10/mo."}
+            Become a Supporter to access this component and many others.
           </p>
         </div>
 
         <Button
           onClick={handleAction}
-          disabled={isProcessing}
           className={cn(
             "flex items-center justify-center gap-1.5",
-            isProcessing || !isSignedIn ? "" : "pr-1.5",
+            !isSignedIn ? "" : "pr-1.5",
           )}
         >
-          {isProcessing ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              {isSignedIn ? "Subscribe Now" : "Select Plan"}
-              {isSignedIn && (
-                <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
-                  <span className="text-[11px] leading-none font-sans">
-                    {navigator?.platform?.toLowerCase()?.includes("mac")
-                      ? "⌘"
-                      : "Ctrl"}
-                  </span>
-                  <Icons.enter className="h-2.5 w-2.5" />
-                </kbd>
-              )}
-            </>
+          Become a Supporter
+          {isSignedIn && (
+            <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
+              <span className="text-[11px] leading-none font-sans">
+                {navigator?.platform?.toLowerCase()?.includes("mac")
+                  ? "⌘"
+                  : "Ctrl"}
+              </span>
+              <Icons.enter className="h-2.5 w-2.5" />
+            </kbd>
           )}
         </Button>
+
+        <Link
+          href={`${process.env.NEXT_PUBLIC_APP_URL || ""}/?tab=bundles`}
+          className="underline text-sm text-muted-foreground mt-4 hover:text-foreground transition-colors"
+        >
+          or buy a bundle
+        </Link>
       </div>
 
       <FeatureCards title="What's included" features={features} />

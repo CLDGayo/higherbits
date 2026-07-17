@@ -1,27 +1,38 @@
 import * as amplitude from "@amplitude/analytics-browser"
 import { sessionReplayPlugin } from "@amplitude/plugin-session-replay-browser"
 
-export const initAmplitude = () => {
-  if (typeof window !== "undefined") {
-    if (process.env.NODE_ENV === "production") {
-      const sessionReplayTracking = sessionReplayPlugin({
-        sampleRate: 0.0001,
-      })
-      amplitude.add(sessionReplayTracking)
-    }
+const isAmplitudeEnabled = () =>
+  typeof window !== "undefined" &&
+  // NODE_ENV is set by Next.js for every client build.
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  process.env.NODE_ENV === "production" &&
+  Boolean(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY?.trim())
 
-    amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY || "", {
-      defaultTracking: {
-        sessions: true,
-        pageViews: true,
-        formInteractions: true,
-        fileDownloads: true,
-      },
-    })
+export const initAmplitude = () => {
+  if (!isAmplitudeEnabled()) {
+    return
   }
+
+  const sessionReplayTracking = sessionReplayPlugin({
+    sampleRate: 0.0001,
+  })
+  amplitude.add(sessionReplayTracking)
+
+  amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY!, {
+    defaultTracking: {
+      sessions: true,
+      pageViews: true,
+      formInteractions: true,
+      fileDownloads: true,
+    },
+  })
 }
 
 export const trackPageProperties = (properties: Record<string, any>) => {
+  if (!isAmplitudeEnabled()) {
+    return
+  }
+
   amplitude.track("", { ...properties })
 }
 
@@ -48,6 +59,10 @@ export const trackEvent = (
   eventName: (typeof AMPLITUDE_EVENTS)[keyof typeof AMPLITUDE_EVENTS],
   eventProperties?: Record<string, any>,
 ) => {
+  if (!isAmplitudeEnabled()) {
+    return
+  }
+
   amplitude.track(eventName, eventProperties)
 }
 
@@ -55,6 +70,10 @@ export const identifyUser = (
   userId: string | null | undefined,
   userProperties?: Record<string, any>,
 ) => {
+  if (!isAmplitudeEnabled()) {
+    return
+  }
+
   if (userId) {
     amplitude.setUserId(userId)
     if (userProperties) {

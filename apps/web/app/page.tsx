@@ -1,7 +1,5 @@
 import React from "react"
 import { Metadata } from "next"
-import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
@@ -60,30 +58,33 @@ export const generateMetadata = async (): Promise<Metadata> => {
   }
 }
 
-export default async function HomePage() {
-  try {
-    const cookieStore = await cookies()
-    const shouldShowHero = !cookieStore.has("has_visited")
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>
+}) {
+  const { tab } = await searchParams
 
-    if (shouldShowHero) {
-      return (
-        <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
-          <div className="flex-1 flex flex-col gap-6 min-w-0">
-            <div className="flex flex-col min-w-0">
-              <HeroSection />
-            </div>
-            <NewsletterDialog />
-          </div>
-          <Footer />
-        </div>
-      )
-    }
-
+  // The marketing landing page owns the bare root URL; tabs opt into the browser.
+  if (!tab) {
     return (
-      <>
-        <Header variant="default" />
-        <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
-          <div className="flex-1 flex flex-col gap-6 pt-24 min-w-0">
+      <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+        <div className="flex-1 flex flex-col gap-6 min-w-0">
+          <div className="flex flex-col min-w-0">
+            <HeroSection />
+          </div>
+          <NewsletterDialog />
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <Header variant="default" />
+      <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+        <div className="flex-1 flex flex-col gap-6 pt-24 min-w-0">
           <div className="relative min-w-0 px-4 md:px-8">
             <HomePageClient />
             <NewsletterDialog />
@@ -91,10 +92,6 @@ export default async function HomePage() {
         </div>
         <Footer />
       </div>
-      </>
-    )
-  } catch (error) {
-    console.error("Error in home page:", error)
-    redirect("/")
-  }
+    </>
+  )
 }

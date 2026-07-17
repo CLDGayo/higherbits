@@ -77,30 +77,27 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link
-                href={item.disabled ? "#" : item.href}
-                passHref
-                legacyBehavior
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href}
+                className={cn(
+                  item.disabled &&
+                    "opacity-50 cursor-not-allowed pointer-events-none",
+                )}
               >
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  className={cn(
-                    item.disabled &&
-                      "opacity-50 cursor-not-allowed pointer-events-none",
-                  )}
+                <Link
+                  href={item.disabled ? "#" : item.href}
+                  className="flex items-center gap-2"
                 >
-                  <a className="flex items-center gap-2">
-                    {item.icon}
-                    <span>{item.title}</span>
-                    {item.disabled && (
-                      <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
-                        Soon
-                      </span>
-                    )}
-                  </a>
-                </SidebarMenuButton>
-              </Link>
+                  {item.icon}
+                  <span>{item.title}</span>
+                  {item.disabled && (
+                    <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                      Soon
+                    </span>
+                  )}
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

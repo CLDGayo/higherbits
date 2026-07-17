@@ -419,7 +419,6 @@ function PublishClientPageContent({
             showPreview={showPreview}
             iframeKey={iframeKey}
             onRefresh={handleRefreshPreview}
-            codesandboxId={serverSandbox?.codesandbox_id ?? undefined}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

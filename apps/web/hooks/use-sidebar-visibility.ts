@@ -1,18 +1,14 @@
 "use client"
 
-import { usePathname } from "next/navigation"
-import { useIsMobile } from "@/hooks/use-media-query"
-import * as React from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 
 export function useSidebarVisibility() {
   const pathname = usePathname()
-  const isMobile = useIsMobile()
+  const searchParams = useSearchParams()
 
-  // Let shadcn Sidebar handle mobile view via Sheet natively
-
-  // Show sidebar only on specific pages
+  // The root route is the landing page until a browser tab is explicitly selected.
   const shouldShowSidebar =
-    pathname === "/" ||
+    (pathname === "/" && searchParams.has("tab")) ||
     pathname.startsWith("/s/") ||
     pathname.startsWith("/q/") ||
     pathname.startsWith("/c/") ||

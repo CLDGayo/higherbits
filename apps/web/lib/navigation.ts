@@ -214,6 +214,7 @@ const ui: NavigationItem[] = [
   { title: "Forms", href: "/s/form", isNew: true, demoId: 918, demosCount: 23 },
   { title: "Icons", href: "/s/icons", demoId: 865, demosCount: 10 },
   { title: "Inputs", href: "/s/input", demoId: 1456, demosCount: 102 },
+  { title: "Lists", href: "/s/list", demosCount: 39 },
   { title: "Links", href: "/s/link", demoId: 1287, demosCount: 13 },
   { title: "Menus", href: "/s/menu", demoId: 1428, demosCount: 18 },
   {

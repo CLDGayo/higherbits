@@ -100,57 +100,60 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
       <SidebarContent className="px-2 py-4  bg-background">
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href={basePath} className="flex items-center gap-2">
-              <SidebarMenuButton
-                isActive={isComponentsActive}
-                tooltip="Components"
-              >
+            <SidebarMenuButton
+              asChild
+              isActive={isComponentsActive}
+              tooltip="Components"
+            >
+              <Link href={basePath} className="flex items-center gap-2">
                 <Layers className="h-4 w-4" />
                 <span>Components</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <Link
-              href={`${basePath}/bundles`}
-              className="flex items-center gap-2"
-            >
-              <SidebarMenuButton isActive={isBundlesActive}>
+            <SidebarMenuButton asChild isActive={isBundlesActive}>
+              <Link
+                href={`${basePath}/bundles`}
+                className="flex items-center gap-2"
+              >
                 <Package className="h-4 w-4" />
                 <span>Bundles</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <Link
-              href={`${basePath}/analytics`}
-              className="flex items-center gap-2"
+            <SidebarMenuButton
+              asChild
+              isActive={isAnalyticsActive}
+              tooltip="Analytics"
             >
-              <SidebarMenuButton
-                isActive={isAnalyticsActive}
-                tooltip="Analytics"
+              <Link
+                href={`${basePath}/analytics`}
+                className="flex items-center gap-2"
               >
                 <BarChartBig className="h-4 w-4" />
                 <span>Analytics</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <Link
-              href={`${basePath}/monetization`}
-              className="flex items-center gap-2"
+            <SidebarMenuButton
+              asChild
+              isActive={isMonetizationActive}
+              tooltip="Monetization"
             >
-              <SidebarMenuButton
-                isActive={isMonetizationActive}
-                tooltip="Monetization"
+              <Link
+                href={`${basePath}/monetization`}
+                className="flex items-center gap-2"
               >
                 <CreditCard className="h-4 w-4" />
                 <span>Monetization</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
@@ -158,21 +161,21 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
       <SidebarFooter className="border-t bg-background">
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href="/settings/profile" className="flex items-center gap-2">
-              <SidebarMenuButton tooltip="Settings">
+            <SidebarMenuButton asChild tooltip="Settings">
+              <Link href="/settings/profile" className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 <span>Settings</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <Link href="/" className="flex items-center gap-2">
-              <SidebarMenuButton tooltip="Home">
+            <SidebarMenuButton asChild tooltip="Home">
+              <Link href="/" className="flex items-center gap-2">
                 <Home className="h-4 w-4" />
                 <span>Back to HigherBits.dev</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

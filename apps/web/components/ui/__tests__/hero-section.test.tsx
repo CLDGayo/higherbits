@@ -1,15 +1,16 @@
 /** @vitest-environment jsdom */
 import React from "react"
-import { describe, it, expect, vi } from "vitest"
-import { render } from "@testing-library/react"
+import { beforeEach, describe, it, expect, vi } from "vitest"
+import { fireEvent, render } from "@testing-library/react"
+
+const { routerPush } = vi.hoisted(() => ({ routerPush: vi.fn() }))
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn(), refresh: vi.fn() }),
+  useRouter: () => ({ push: routerPush, replace: vi.fn(), prefetch: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
 }))
 
 vi.mock("@/hooks/use-media-query", () => ({ useIsMobile: () => false }))
-vi.mock("@/lib/cookies", () => ({ setCookie: vi.fn() }))
 vi.mock("@tanstack/react-query", () => ({
   useQuery: () => ({ data: null, isLoading: false }),
 }))
@@ -17,6 +18,10 @@ vi.mock("@tanstack/react-query", () => ({
 import { HeroSection } from "../hero-section"
 
 describe("HeroSection Clay-component wiring (VE1)", () => {
+  beforeEach(() => {
+    routerPush.mockClear()
+  })
+
   it("renders ClayPillButton CTA buttons and ClayCard content blocks", () => {
     const { container } = render(<HeroSection />)
 
@@ -31,5 +36,21 @@ describe("HeroSection Clay-component wiring (VE1)", () => {
     // CTA copy is present
     expect(container.textContent).toContain("Browse components")
     expect(container.textContent).toContain("Integrate in IDE AI Agent")
+  })
+
+  it("opens the component browser from Browse components", () => {
+    const { getByText } = render(<HeroSection />)
+
+    fireEvent.click(getByText("Browse components"))
+
+    expect(routerPush).toHaveBeenCalledWith("/?tab=home")
+  })
+
+  it("does not navigate when Enter is pressed outside the CTA", () => {
+    render(<HeroSection />)
+
+    fireEvent.keyDown(window, { key: "Enter" })
+
+    expect(routerPush).not.toHaveBeenCalled()
   })
 })

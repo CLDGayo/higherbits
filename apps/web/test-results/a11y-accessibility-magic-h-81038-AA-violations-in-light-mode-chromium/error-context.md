@@ -7,7 +7,7 @@
 # Test info
 
 - Name: a11y.spec.ts >> accessibility >> /magic has no WCAG A/AA violations in light mode
-- Location: e2e/a11y.spec.ts:42:11
+- Location: e2e/a11y.spec.ts:43:11
 
 # Error details
 
@@ -229,7 +229,7 @@ Error: expect(received).toEqual(expected) // deep equality
 +         ],
 +         "failureSummary": "Fix any of the following:
 +   Element has insufficient color contrast of 4.41 (foreground color: #78695e, background color: #ede9f6, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1",
-+         "html": "<p class=\"jsx-5938f6032460e552 mt-4 text-lg text-muted-foreground\">Everything you need to know about Magic AI Agent</p>",
++         "html": "<p class=\"jsx-5938f6032460e552 mt-4 text-lg text-muted-foreground\">Everything you need to know about HigherBits AI</p>",
 +         "impact": "serious",
 +         "none": Array [],
 +         "target": Array [
@@ -266,16 +266,16 @@ Error: expect(received).toEqual(expected) // deep equality
               - img [ref=e10]
             - generic [ref=e12]: Magic by HigherBits.dev
           - generic [ref=e13]:
-            - link "5.4k" [ref=e14] [cursor=pointer]:
+            - link "5.5k" [ref=e14] [cursor=pointer]:
               - /url: https://github.com/21st-dev/magic-mcp
               - img
-              - generic [ref=e15]: 5.4k
+              - generic [ref=e15]: 5.5k
             - link "Pricing" [ref=e16] [cursor=pointer]:
               - /url: /pricing
             - button "Sign up" [ref=e17] [cursor=pointer]
         - main [ref=e18]:
           - generic [ref=e21]:
-            - paragraph [ref=e22]: Introducing Magic
+            - paragraph [ref=e22]: Introducing HigherBits AI
             - heading "AI Agent That Builds Beautiful UI Components" [level=1] [ref=e23]:
               - generic [ref=e24]:
                 - generic [ref=e25]: AI Agent That Builds
@@ -292,10 +292,10 @@ Error: expect(received).toEqual(expected) // deep equality
                   - text: Get Started
                   - generic:
                     - img
-                - link "5.4k" [ref=e35] [cursor=pointer]:
+                - link "5.5k" [ref=e35] [cursor=pointer]:
                   - /url: https://github.com/21st-dev/magic-mcp
                   - img
-                  - generic [ref=e36]: 5.4k
+                  - generic [ref=e36]: 5.5k
               - generic [ref=e38]:
                 - generic [ref=e39]:
                   - link "YL" [ref=e40] [cursor=pointer]:
@@ -316,8 +316,8 @@ Error: expect(received).toEqual(expected) // deep equality
                       - generic [ref=e61]: "1"
                       - generic [ref=e63]: "1"
                       - generic [ref=e65]: "4"
-                  - text: + people using Magic
-            - img "Magic Agent Demo" [ref=e70] [cursor=pointer]
+                  - text: + people using HigherBits AI
+            - img "HigherBits AI Demo" [ref=e70] [cursor=pointer]
           - generic [ref=e71]:
             - generic [ref=e72]:
               - generic [ref=e73]:
@@ -347,7 +347,7 @@ Error: expect(received).toEqual(expected) // deep equality
                 - generic [ref=e112]:
                   - img "Add New Components" [ref=e115]
                   - heading "Add New Components" [level=3] [ref=e117]
-                  - paragraph [ref=e118]: Create UI components by describing what you need. Magic generates production-ready code instantly.
+                  - paragraph [ref=e118]: Create UI components by describing what you need. HigherBits AI generates production-ready code instantly.
                 - generic [ref=e119]:
                   - img "Enhance Existing UI" [ref=e122]
                   - heading "Enhance Existing UI" [level=3] [ref=e124]
@@ -373,7 +373,7 @@ Error: expect(received).toEqual(expected) // deep equality
                 - generic [ref=e151]:
                   - img "Choose from Options" [ref=e154]
                   - heading "Choose from Options" [level=3] [ref=e155]
-                  - paragraph [ref=e156]: Magic generates three unique variations of your component. Review them and select the one that best matches your needs and design preferences.
+                  - paragraph [ref=e156]: HigherBits AI generates three unique variations of your component. Review them and select the one that best matches your needs and design preferences.
                 - generic [ref=e157]:
                   - img "Instant Integration" [ref=e160]
                   - heading "Instant Integration" [level=3] [ref=e161]
@@ -381,15 +381,15 @@ Error: expect(received).toEqual(expected) // deep equality
             - generic [ref=e163]:
               - generic [ref=e164]:
                 - heading "Frequently Asked Questions" [level=2] [ref=e165]
-                - paragraph [ref=e166]: Everything you need to know about Magic AI Agent
+                - paragraph [ref=e166]: Everything you need to know about HigherBits AI
               - generic [ref=e168]:
-                - heading "How does Magic AI Agent work?" [level=3] [ref=e170]:
-                  - button "How does Magic AI Agent work?" [ref=e171] [cursor=pointer]:
-                    - text: How does Magic AI Agent work?
+                - heading "How does HigherBits AI work?" [level=3] [ref=e170]:
+                  - button "How does HigherBits AI work?" [ref=e171] [cursor=pointer]:
+                    - text: How does HigherBits AI work?
                     - img [ref=e172]
-                - heading "How does Magic AI Agent handle my codebase?" [level=3] [ref=e175]:
-                  - button "How does Magic AI Agent handle my codebase?" [ref=e176] [cursor=pointer]:
-                    - text: How does Magic AI Agent handle my codebase?
+                - heading "How does HigherBits AI handle my codebase?" [level=3] [ref=e175]:
+                  - button "How does HigherBits AI handle my codebase?" [ref=e176] [cursor=pointer]:
+                    - text: How does HigherBits AI handle my codebase?
                     - img [ref=e177]
                 - heading "Can I customize the generated components?" [level=3] [ref=e180]:
                   - button "Can I customize the generated components?" [ref=e181] [cursor=pointer]:
@@ -415,9 +415,9 @@ Error: expect(received).toEqual(expected) // deep equality
                   - button "Is there a limit to component complexity?" [ref=e206] [cursor=pointer]:
                     - text: Is there a limit to component complexity?
                     - img [ref=e207]
-                - heading "How can I get help with Magic AI Agent?" [level=3] [ref=e210]:
-                  - button "How can I get help with Magic AI Agent?" [ref=e211] [cursor=pointer]:
-                    - text: How can I get help with Magic AI Agent?
+                - heading "How can I get help with HigherBits AI?" [level=3] [ref=e210]:
+                  - button "How can I get help with HigherBits AI?" [ref=e211] [cursor=pointer]:
+                    - text: How can I get help with HigherBits AI?
                     - img [ref=e212]
           - generic [ref=e216]:
             - generic [ref=e217]: Higher Bits Labs Inc.
@@ -436,19 +436,8 @@ Error: expect(received).toEqual(expected) // deep equality
                 - /url: https://discord.gg/Qx4rFunHfm
     - region "Notifications alt+T"
   - alert [ref=e225]
-  - generic [ref=e230] [cursor=pointer]:
-    - button "Open Next.js Dev Tools" [ref=e231]:
-      - img [ref=e232]
-    - generic [ref=e235]:
-      - button "Open issues overlay" [ref=e236]:
-        - generic [ref=e237]:
-          - generic [ref=e238]: "1"
-          - generic [ref=e239]: "2"
-        - generic [ref=e240]:
-          - text: Issue
-          - generic [ref=e241]: s
-      - button "Collapse issues badge" [ref=e242]:
-        - img [ref=e243]
+  - button "Open Next.js Dev Tools" [ref=e231] [cursor=pointer]:
+    - img [ref=e232]
 ```
 
 # Test source
@@ -466,43 +455,44 @@ Error: expect(received).toEqual(expected) // deep equality
   10 |   "/contest",
   11 |   "/our-story",
   12 |   "/templates",
-  13 | ]
-  14 | 
-  15 | async function auditRoute(page: Page, route: string, theme: "light" | "dark") {
-  16 |   if (theme === "dark") {
-  17 |     await page.addInitScript(() => {
-  18 |       window.localStorage.setItem("theme", "dark")
-  19 |       document.documentElement.classList.add("dark")
-  20 |     })
-  21 |   }
-  22 | 
-  23 |   await page.goto(route)
-  24 |   await page.waitForLoadState("networkidle")
-  25 | 
-  26 |   if (theme === "dark") {
-  27 |     await page.evaluate(() => {
-  28 |       document.documentElement.classList.add("dark")
-  29 |     })
-  30 |   }
-  31 | 
-  32 |   const results = await new AxeBuilder({ page })
-  33 |     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-  34 |     .analyze()
-  35 | 
-> 36 |   expect(results.violations).toEqual([])
+  13 |   "/public-dashboard",
+  14 | ]
+  15 | 
+  16 | async function auditRoute(page: Page, route: string, theme: "light" | "dark") {
+  17 |   if (theme === "dark") {
+  18 |     await page.addInitScript(() => {
+  19 |       window.localStorage.setItem("theme", "dark")
+  20 |       document.documentElement.classList.add("dark")
+  21 |     })
+  22 |   }
+  23 | 
+  24 |   await page.goto(route)
+  25 |   await page.waitForLoadState("networkidle")
+  26 | 
+  27 |   if (theme === "dark") {
+  28 |     await page.evaluate(() => {
+  29 |       document.documentElement.classList.add("dark")
+  30 |     })
+  31 |   }
+  32 | 
+  33 |   const results = await new AxeBuilder({ page })
+  34 |     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+  35 |     .analyze()
+  36 | 
+> 37 |   expect(results.violations).toEqual([])
      |                              ^ Error: expect(received).toEqual(expected) // deep equality
-  37 | }
-  38 | 
-  39 | test.describe("accessibility", () => {
-  40 |   for (const route of routes) {
-  41 |     for (const theme of ["light", "dark"] as const) {
-  42 |       test(`${route} has no WCAG A/AA violations in ${theme} mode`, async ({
-  43 |         page,
-  44 |       }) => {
-  45 |         await auditRoute(page, route, theme)
-  46 |       })
-  47 |     }
-  48 |   }
-  49 | })
-  50 | 
+  38 | }
+  39 | 
+  40 | test.describe("accessibility", () => {
+  41 |   for (const route of routes) {
+  42 |     for (const theme of ["light", "dark"] as const) {
+  43 |       test(`${route} has no WCAG A/AA violations in ${theme} mode`, async ({
+  44 |         page,
+  45 |       }) => {
+  46 |         await auditRoute(page, route, theme)
+  47 |       })
+  48 |     }
+  49 |   }
+  50 | })
+  51 | 
 ```
