@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Cell, XAxis } from "recharts"
 
 import {
   ChartContainer,
@@ -27,7 +27,11 @@ const ClayPillBarChart = React.forwardRef<
       <CartesianGrid vertical={false} />
       <XAxis dataKey="name" tickLine={false} axisLine={false} />
       <ChartTooltip content={<ChartTooltipContent />} />
-      <Bar dataKey="value" fill="var(--color-value)" radius={radius} />
+      <Bar dataKey="value" radius={radius}>
+        {data.map((entry) => (
+          <Cell key={entry.name} fill={`var(--color-${entry.name})`} />
+        ))}
+      </Bar>
     </BarChart>
   </ChartContainer>
 ))
