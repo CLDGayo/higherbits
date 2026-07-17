@@ -24,7 +24,7 @@ export function DesignEngineersList({
   const supabaseWithAdminAccess = useClerkSupabaseClient()
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
-  const { data, isLoading, isFetching, hasNextPage, fetchNextPage } =
+  const { data, isLoading, isError, isFetching, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["active-authors"],
       queryFn: async ({ pageParam = 0 }) => {
@@ -108,7 +108,23 @@ export function DesignEngineersList({
     )
   }
 
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
+        <p>Failed to load design engineers. Please try again later.</p>
+      </div>
+    )
+  }
+
   const authors = data?.pages.flatMap((page) => page.data) || []
+
+  if (!isLoading && !isError && authors.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
+        <p>No design engineers found.</p>
+      </div>
+    )
+  }
 
   return (
     <>

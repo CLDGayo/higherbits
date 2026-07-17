@@ -24,7 +24,7 @@ interface BookmarkButtonProps {
   size?: number
   showTooltip?: boolean
   bookmarked: boolean
-  onClick?: () => void
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export function BookmarkButton({
@@ -53,6 +53,7 @@ export function BookmarkButton({
         status: "unauthorized",
         source: e ? "click" : "hotkey",
       })
+      toast.error("You must be logged in to bookmark components")
       return
     }
 
@@ -103,7 +104,15 @@ export function BookmarkButton({
 
   const button = (
     <Button
-      onClick={onClick ?? handleBookmark}
+      onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (onClick) {
+          onClick(e)
+        } else {
+          handleBookmark(e)
+        }
+      }}
       disabled={bookmarkMutation.isPending}
       variant="ghost"
       className="h-8 px-1.5"
