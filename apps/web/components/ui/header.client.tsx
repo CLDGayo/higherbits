@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useEffect, useState, Suspense } from "react"
-import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { NavigationMenuLink } from "@/components/ui/navigation-menu"
 import { TextShimmer } from "@/components/ui/text-shimmer"
 import { atom } from "jotai"
@@ -225,9 +225,7 @@ function HeaderContent({
       >
         <div className="flex items-center shrink-0 md:w-64 gap-2">
           <SidebarTrigger className="-ml-2" />
-          <Link href="/" className="flex items-center">
-            <Logo showWordmark />
-          </Link>
+          <Logo showWordmark />
         </div>
         <div
           className={cn(
@@ -293,7 +291,7 @@ function HeaderContent({
                         className="gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
                       >
                         <Link
-                          href="/pricing"
+                          href="/support"
                           onClick={() =>
                             trackAttribution(
                               ATTRIBUTION_SOURCE.HEADER,
@@ -302,7 +300,7 @@ function HeaderContent({
                           }
                           className="bg-gradient-to-r from-[hsl(var(--primary-gradient-start))] to-[hsl(var(--primary-gradient-end))] bg-clip-text text-transparent"
                         >
-                          <span className="font-medium">Get Pro</span>
+                          <span className="font-medium">Support Us!</span>
                         </Link>
                       </Button>
                     )}
@@ -600,7 +598,7 @@ function HeaderContent({
                 className="gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
               >
                 <Link
-                  href="/pricing"
+                  href="/support"
                   onClick={() =>
                     trackAttribution(
                       ATTRIBUTION_SOURCE.HEADER,
@@ -613,7 +611,7 @@ function HeaderContent({
                     duration={1.2}
                     spread={2}
                   >
-                    Get Pro
+                    Support Us!
                   </TextShimmer>
                 </Link>
               </Button>

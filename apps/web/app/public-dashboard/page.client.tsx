@@ -256,8 +256,8 @@ export function PublicDashboardClient() {
               Go Pro for full access to every component.
             </p>
           </div>
-          <Link href="/pricing" className="mt-3 inline-block">
-            <span className="font-medium underline underline-offset-4">Get Pro</span>
+          <Link href="/support" className="mt-3 inline-block">
+            <span className="font-medium underline underline-offset-4">Support Us!</span>
           </Link>
         </ClayCard>
       </div>
