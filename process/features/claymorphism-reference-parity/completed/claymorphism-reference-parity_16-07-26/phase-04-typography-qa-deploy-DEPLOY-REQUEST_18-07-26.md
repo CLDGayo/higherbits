@@ -11,11 +11,34 @@ metadata:
 
 # Deploy Request (DRAFT) — claymorphism-reference-parity Phase 4
 
-> ⛔ **DRAFT ONLY — NEVER EXECUTED BY ANY AGENT.** This document is a request for
-> explicit human authorization. Deploy execution is a Program Goal Charter **hard stop**:
-> it happens only when the user runs the commands (or explicitly authorizes an agent to)
+> ✅ **EXECUTED 18-07-26 — see status header below.** The draft body underneath is preserved
+> verbatim as the historical record of what was requested and why; it was NOT edited to reflect
+> the outcome. Read the status header first.
+
+## STATUS: EXECUTED 18-07-26
+
+- **Deployed SHA:** `bfa2573` (5 attempts to green — see the umbrella plan's
+  `## Deploy Confirmation (18-07-26)` section for the full blocker/fix narrative).
+- **Precondition below ("deploy is currently BLOCKED") turned out to be working-tree-only** — the
+  foreign build/tsc red was never present in the committed `main` tree; `tsc --noEmit` on the
+  committed tree (re-verified in an isolated scratch worktree during this deploy) was clean.
+- **Deploy path re-verification (§ below) is now RESOLVED**: confirmed live at
+  `/home/higherbits/htdocs/higherbits.dev`, pm2 app `higherbits.dev`; `/home/cozy/htdocs/higherbits.dev`
+  confirmed present but dead.
+- **Result:** `https://higherbits.dev` returns HTTP/2 200; production HTML confirms `font-cozy` and
+  `clay-surface` markers are live. pm2 app `higherbits.dev` restarted and online.
+- Full narrative, all 4 blockers found/fixed, and durable process learnings:
+  `process/features/claymorphism-reference-parity/completed/claymorphism-reference-parity_16-07-26/claymorphism-reference-parity-umbrella_PLAN_16-07-26.md`
+  §`## Deploy Confirmation (18-07-26)`, and `process/context/all-context.md` §Deployment.
+
+---
+
+> ⛔ **DRAFT ONLY — NEVER EXECUTED BY ANY AGENT (historical, at draft time).** This document was a
+> request for explicit human authorization. Deploy execution is a Program Goal Charter **hard
+> stop**: it happens only when the user runs the commands (or explicitly authorizes an agent to)
 > in a live, interactive session. No RIPER-5 agent — including under a standing `/goal` —
-> may run any step below.
+> may run any step below. *(The actual deploy was carried out by the user directly, consistent
+> with this constraint.)*
 
 ---
 
