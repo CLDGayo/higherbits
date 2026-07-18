@@ -1,13 +1,29 @@
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-02-24.acacia", // The Stripe API version
-})
+// Guard BEFORE constructing Stripe so nothing dereferences the env var at
+// module load. When STRIPE_SECRET_KEY is absent (payments intentionally
+// unconfigured), return a friendly 503 instead of throwing at import time.
+function paymentsNotConfigured(): boolean {
+  return !process.env.STRIPE_SECRET_KEY
+}
 
 export async function POST(req: Request) {
   try {
+    if (paymentsNotConfigured()) {
+      return NextResponse.json(
+        { error: "Payments are not configured" },
+        { status: 503 },
+      )
+    }
+
+    // Imported and constructed dynamically so the module never touches the
+    // Stripe key at import time (guarded above).
+    const Stripe = (await import("stripe")).default
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+      apiVersion: "2025-02-24.acacia", // The Stripe API version
+    })
+
     const { userId } = await auth()
     const { amount } = await req.json()
 
