@@ -35,8 +35,15 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (RE-BASELINED 17-07-26, `claymorphism-reference-parity` Phase 1 inner RESEARCH — corrects
-the 16-07-26 figure below, which undercounted; new unrelated test files landed the same day: clay
+**Total (RE-BASELINED 18-07-26, `claymorphism-reference-parity` Phase 4 EVL — corrects the 17-07-26
+figure below):** 48 tests / 15 files, all passing. Phase 4 added
+`apps/web/app/__tests__/font-cozy-sweep.test.tsx` (3 new AC5 tests — RTL class-presence assertions
+for `font-cozy` on the hero h1/h2/nav-brand span and the dashboard h1 + 5 stat-tile number divs;
+the sidebar Go-Premium card target is asserted at source-level class-presence rather than jsdom
+render, since `sidebar-layout.tsx` needs Clerk/jotai/`useSidebar`-context providers impractical to
+mock in jsdom).
+**Prior entry (17-07-26, `claymorphism-reference-parity` Phase 1 inner RESEARCH — corrects the
+16-07-26 figure below, which undercounted; new unrelated test files landed the same day: clay
 charts/input/pill-button, hero-section, use-sidebar-visibility, public-dashboard/page.client,
 amplitude, api/magic/route):** 37 tests / 13 files, all passing.
 **Prior entry (UPDATED 16-07-26 — Phase 4 added 2 new test files, superseded by the re-baseline
@@ -105,9 +112,17 @@ runs tests from `apps/web/e2e/`.
 **Current route matrix (updated 16-07-26, `claymorphism-3d-redesign` Phase 4/5):** `/`, `/magic`,
 `/magic-chat`, `/studio`, `/api-access`, `/contest`, `/our-story`, `/templates`, plus 2 routes added
 in Phase 4 (`hero-section.tsx`'s route and `/public-dashboard`) — 10 routes total, light and dark.
-**RECONCILED BASELINE (17-07-26, `claymorphism-reference-parity` Phase 1 EVL — corrects the
-16-07-26 entry below, which undercounted pre-existing failures by 3): 8 pre-existing fails, 0 new,
-out of the full light+dark matrix.** The 8 pre-existing fails are:
+**RE-RECONCILED BASELINE (18-07-26, `claymorphism-reference-parity` Phase 4 EVL — independent
+vc-tester confirmation run found 6 real pre-existing fails, down from the 8 listed below; net
+improvement, 0 NEW; also corrects a wrong "networkidle timeout" attribution made in the Phase 4
+EXECUTE report — these are genuine axe color-contrast violations, not test-infra flakiness): 6
+pre-existing fails, 0 new, on `/magic`, `/api-access`, `/contest`, `/templates`, `/public-dashboard`
+(light mode).** Root cause of the count drop (8→6) not independently re-investigated this pass —
+plausible explanation is route/matrix changes across Phases 2-4, not a fix; treat as the current
+live count, not a claimed improvement to preserve.
+**Prior entry (17-07-26, `claymorphism-reference-parity` Phase 1 EVL — corrects the 16-07-26 entry
+below, which undercounted pre-existing failures by 3): 8 pre-existing fails, 0 new, out of the full
+light+dark matrix.** The 8 pre-existing fails were:
 1. **5× `color-contrast` on the app-wide `--muted-foreground` token** (`/magic`, `/api-access`,
    `/contest`, `/templates`, `/public-dashboard`, all light-mode) — same violation class documented
    16-07-26 below, unchanged.

@@ -257,7 +257,7 @@ During /goal execution of this phase program:
 | 01 — Assets & CSS Foundation | ✅ VERIFIED (commit `f109b3f`, 17-07-26) |
 | 02 — Chart Fixes | ✅ VERIFIED with 1 accepted known-gap (commit `d2a183d`, EVL closed 17-07-26) |
 | 03 — Sidebar, Tiles & Mascot | ✅ VERIFIED with foreign-attributed build/tsc known-gap (EVL closed 18-07-26; execution commit `711a937`; user hero hot-fix pre-committed `0acf1e3`) |
-| 04 — Typography, QA & Deploy | ⏳ PLANNED |
+| 04 — Typography, QA & Deploy | ✅ VERIFIED WITH_GAPS (execution commit `06c35e5`, EVL closed 18-07-26; deploy drafted, not executed) |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
 
@@ -383,24 +383,32 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-phase-stub.mjs pr
 ## Current Execution State
 
 Last updated: 18-07-26
-Current phase: 4 of 4
-Phase 3 name: Sidebar, Tiles & Mascot
-Phase 3 status: ✅ VERIFIED with foreign-attributed build/tsc known-gap (EVL closed; execution
-  commit `711a937`; user hero hot-fix pre-committed `0acf1e3`)
-Phase 3 EVL: full vitest 45/45 (14 files), scoped gate 15/15 (4 files), a11y 0 NEW violations
-  (dark `/public-dashboard` caption-contrast self-introduced regression found + fixed in-radius),
-  4 harness validators green, `packages/ui` + billing-surface guards green; build+tsc RED 100%
-  foreign (`lib/queries.ts` 33 errors + `hooks/use-analytics.ts` 2 errors, 0 in-radius) — accepted
-  program-level known-gap, backlog note written
-Phase 3 report: `process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-03-sidebar-tiles-mascot_REPORT_17-07-26.md`
-Next phase: Phase 4 — Typography, QA & Deploy-Draft, loop step RESEARCH (pending). Hard stop
-  reminder: Phase 4 may only DRAFT the gayo-vps deploy request, never execute it. Phase 4 also
-  inherits the foreign build/tsc known-gap — see
-  `process/features/claymorphism-reference-parity/backlog/foreign-build-tsc-red_NOTE_18-07-26.md`;
-  do not attempt to fix `lib/queries.ts` / `hooks/use-analytics.ts` from within this program.
+Current phase: 4 of 4 (FINAL — program complete pending user-gated deploy)
+Phase 4 name: Typography, QA & Deploy
+Phase 4 status: ✅ VERIFIED WITH_GAPS (EVL closed 18-07-26; execution commit `06c35e5`; deploy
+  drafted, not executed — user-gated hard stop)
+Phase 4 EVL: independent vc-tester confirmation run reproduced all 8 gate groups —
+  HALTED_SUCCESS, zero fix cycles. vitest 48/48 (15 files, +3 AC5 tests over the 45/14 baseline);
+  reference-copy grep 0; billing-surface diff empty; `claymorphism-3d-redesign` stale-ref grep 0;
+  `packages/ui` diff empty; no new runtime deps; a11y 0 NEW violations (6 real pre-existing foreign
+  color-contrast fails on foreign routes — net improvement vs the 8-known-gap baseline; corrects
+  the EXECUTE report's wrong "networkidle timeout" attribution); visual-evidence 11/12 screenshots
+  (sole miss `phase5-dashboard-light-desktop.png`, blocked by a missing foreign Supabase RPC
+  `public.get_all_author_payouts` — new backlog note written); build/tsc RED, exactly 35 errors,
+  100% foreign (`lib/queries.ts` 33 + `hooks/use-analytics.ts` 2), 0 in-radius — matches
+  `foreign-build-tsc-red_NOTE_18-07-26.md` verbatim, accepted program-level known-gap.
+Phase 4 report: `process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26/phase-04-typography-qa-deploy_REPORT_18-07-26.md`
+  (see its `## EVL Corrections` section for the a11y/screenshot-count corrections)
+Next phase: none — all 4 phases complete. See `## Program Closeout` below for Definition-of-Done
+  scoring and archival decision. Deploy request is drafted
+  (`phase-04-typography-qa-deploy-DEPLOY-REQUEST_18-07-26.md`) but NOT executed — requires explicit
+  user authorization in a live session, including re-verification of the gayo-vps deploy path
+  (SSH recon was flaky during Phase 4 EXECUTE; `/home/cozy` confirmed to still exist,
+  `/home/higherbits` unconfirmed this pass).
 
-Program Net Gate: PENDING (3 of 4 phases verified; build/tsc red foreign-attributed — see backlog
-  note `foreign-build-tsc-red_NOTE_18-07-26.md`)
+Program Net Gate: VERIFIED WITH_GAPS (4 of 4 phases verified; carried known-gaps: foreign
+  build/tsc red, 6 foreign a11y contrast fails, 1 foreign Supabase RPC gap, deploy user-gated +
+  path-drift unresolved — none attributable to this program's own code)
 Latest validator run: 18-07-26 — vc-audit-plans (validate-plan-inventory.mjs) and vc-audit-context
   (validate-context-discovery.mjs) run at this UPDATE PROCESS closeout, see Status Footer below
 
@@ -439,4 +447,97 @@ No other conflicts — all remaining phase pairs are parallel-safe.
 
 ## Validate Contract
 
-(placeholder — vc-validate-agent writes this section before EXECUTE)
+(placeholder — vc-validate-agent writes this section before EXECUTE; per-phase contracts live in
+each phase's own plan file — see Phase Sequence table)
+
+---
+
+## Program Closeout (18-07-26)
+
+### Definition-of-Done scoring vs the Program Goal Charter
+
+1. **Stat-tile row, distinct pastel per tile, real data** — MET (Phase 3, EVL green).
+2. **`ClayPillBarChart` ≥3 colors + `ClayDonutChart` legend w/ percentages** — MET (Phase 2, EVL
+   green with 1 accepted known-gap unrelated to this criterion).
+3. **Sidebar pill-nav + visual-only Go Premium card → `/pricing`** — MET (Phase 3, EVL green).
+4. **`font-cozy` applied to headings/stat-numbers on the 4 touched surfaces** — MET (Phase 4, AC5
+   RTL test green, 48/48 vitest).
+5. **`.clay-card-icon`/`.clay-card-illustration` CSS + ≥1 real-alpha Gemini asset (no checkerboard)**
+   — MET (Phase 1, EVL green, `f109b3f`).
+6. **All existing test/build/type/a11y gates green, zero new violations/surface** — PARTIALLY MET.
+   vitest: MET (48/48, zero regressions across all 4 phases). a11y: MET (zero NEW violations at
+   every phase; Phase 4 EVL corrected the count to 6 real pre-existing foreign fails, a net
+   improvement over the original 8-known-gap baseline). Billing/schema/API surface: MET (zero new
+   surface at every phase, confirmed by grep/diff gates). **build/tsc: UNMET** — RED across Phases
+   2-4, 100% foreign-attributed (0 errors in any program file), but the charter's literal
+   requirement ("all exit 0") is not satisfied by a foreign carry-forward. Per the vacuous-green
+   ban, this residual cannot be scored MET on a Known-Gap alone. Backlog resolution path already
+   exists and is owned by the user: `process/general-plans/active/console-errors-cleanup_17-07-26/`
+   (see `foreign-build-tsc-red_NOTE_18-07-26.md`).
+
+### SPEC acceptance-criteria scoring (all 10 ACs, `claymorphism-reference-parity_SPEC_16-07-26.md`)
+
+| AC | Criterion | Verdict | Phase |
+|---|---|---|---|
+| 1 | Stat tiles distinct pastel identities | MET | 3 |
+| 2 | Bar chart ≥3 pastel colors | MET | 2 |
+| 3 | Donut legend + percentages | MET | 2 |
+| 4 | Sidebar pill nav + Go Premium card | MET | 3 |
+| 5 | Cozy display font visibly applied | MET | 4 |
+| 6 | Icon/illustration CSS + no-checkerboard | MET | 1 |
+| 7 | Real data mapping, no fabricated copy | MET | all |
+| 8 | A11y gate holds, zero new violations | MET | all (net improvement by Phase 4 EVL) |
+| 9 | Existing build/tsc/test gates stay green | **UNMET** (build/tsc leg only; vitest leg MET) | 2-4 |
+| 10 | Go Premium card carries zero new billing logic | MET | 3 |
+
+**AC9 backlog stub:** already covered by the existing
+`process/features/claymorphism-reference-parity/backlog/foreign-build-tsc-red_NOTE_18-07-26.md` —
+no new backlog artifact required; that note's resolution path (`console-errors-cleanup` general
+plan) is the standing fix-forward path.
+
+9 of 10 ACs fully MET; AC9 partially unmet on a foreign, non-program-owned residual with an
+existing, tracked backlog resolution path.
+
+### Carried known-gaps (all foreign / non-program-owned)
+
+1. **Foreign build/tsc red** — 35 errors, 100% in `apps/web/lib/queries.ts` (33) +
+   `apps/web/hooks/use-analytics.ts` (2), 0 in any claymorphism-reference-parity file across all 4
+   phases. Resolution: user's `console-errors-cleanup` general plan.
+2. **6 foreign a11y color-contrast fails** — pre-existing, on foreign routes (`/magic`,
+   `/api-access`, `/contest`, `/templates`, `/public-dashboard` light) — down from the original
+   8-known-gap baseline (net improvement), zero NEW violations introduced by this program.
+3. **1 foreign Supabase RPC gap** (`public.get_all_author_payouts`, PGRST202) — blocks the 12th
+   visual-evidence screenshot; new backlog note:
+   `process/features/claymorphism-reference-parity/backlog/missing-supabase-rpc-get-all-author-payouts_NOTE_18-07-26.md`.
+4. **Deploy user-gated + path-drift unresolved** — Phase 4 drafted (never executed) the gayo-vps
+   deploy request. SSH recon during Phase 4 EXECUTE was flaky: confirmed `/home/cozy/htdocs/higherbits.dev`
+   still exists on disk (documented dead copy) but could NOT confirm `/home/higherbits/htdocs/higherbits.dev`
+   (the documented live path) before the SSH session timed out. The deploy request explicitly flags
+   this as unresolved and requires re-verification (`pm2 list` + `ls /home/*/htdocs/`) before any
+   deploy is authorized. See
+   `phase-04-typography-qa-deploy-DEPLOY-REQUEST_18-07-26.md`.
+5. **A11y route-count documentation drift** ("10 routes" in umbrella/SPEC background text vs 9
+   actual in `e2e/a11y.spec.ts`) — cosmetic, non-blocking, deferred at Phase 4 INNOVATE (D5) as a
+   `vc-audit-context`/`vc-audit-plans` follow-up.
+
+### Archival decision
+
+**Keep in `active/` — do NOT archive to `completed/` yet.** Rationale: the deploy request (Phase 4
+Step C) is drafted but the actual gayo-vps deploy has not happened, and the deploy path itself has
+an unresolved drift signal (item 4 above) that needs user-driven re-verification before deploy
+authorization. This mirrors the `21st-promotion` precedent (task folder stayed in `active/` pending
+still-open out-of-scope items) rather than the `claymorphism-3d-redesign` precedent (archived only
+after its deploy was executed and confirmed live). All 4 phases are code-verified and EVL-closed —
+the ONLY remaining action is the user-authorized deploy step, which is intentionally outside this
+program's autonomous execution boundary (hard stop per the Program Goal Charter). Re-run UPDATE
+PROCESS to archive this task folder once the user has (a) re-verified the deploy path and (b)
+authorized and confirmed the live deploy — following the `claymorphism-3d-redesign` Phase 5 report's
+`## Deploy Confirmation` pattern as the template for that follow-up entry.
+
+### Program verdict
+
+**VERIFIED WITH_GAPS.** All 4 phases code-complete, EVL-confirmed, and validate-contract-gated;
+9 of 10 SPEC acceptance criteria fully MET; the 1 partially-unmet criterion (AC9 build/tsc leg) and
+all other carried gaps are 100% foreign-attributed with existing or newly-written backlog
+resolution paths — none require further work inside this program's own blast radius. Deploy remains
+the sole outstanding, explicitly user-gated action.
