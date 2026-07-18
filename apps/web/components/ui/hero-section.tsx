@@ -91,7 +91,7 @@ export function HeroSection() {
           >
             <div className="flex items-center gap-3">
               <div className="h-6 w-6 rounded-full bg-foreground" />
-              <span className="font-semibold text-foreground">HigherBits.dev</span>
+              <span className="font-cozy font-semibold text-foreground">HigherBits.dev</span>
             </div>
 
             <div className="h-4 w-[1px] bg-border/60" />
@@ -146,11 +146,11 @@ export function HeroSection() {
               </Badge>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.2] pb-1">
+            <h1 className="font-cozy text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.2] pb-1">
               Discover, share & remix the best UI components
             </h1>
 
-            <h2 className="text-base sm:text-lg md:text-xl leading-relaxed mb-8 md:mb-12 bg-gradient-to-b from-muted-foreground to-muted-foreground/70 bg-clip-text text-transparent max-w-[600px] mx-auto">
+            <h2 className="font-cozy text-base sm:text-lg md:text-xl leading-relaxed mb-8 md:mb-12 bg-gradient-to-b from-muted-foreground to-muted-foreground/70 bg-clip-text text-transparent max-w-[600px] mx-auto">
               Built by design engineers, loved by vibe coders.
             </h2>
 

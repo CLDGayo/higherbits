@@ -629,7 +629,7 @@ export function MainSidebar() {
         {state !== "collapsed" && (
           <ClayCard className="bg-accent-pink text-accent-pink-foreground mr-4 flex flex-col justify-between p-4">
             <div>
-              <div className="flex items-center gap-2 text-sm font-medium">
+              <div className="flex items-center gap-2 font-cozy text-sm font-medium">
                 <Crown className="h-4 w-4" />
                 Unlock everything
               </div>

@@ -240,7 +240,7 @@ export function PublicDashboardClient() {
         transition={{ duration: 0.5 }}
         className="space-y-2"
       >
-        <h1 className="text-3xl font-bold">Public Payouts Dashboard</h1>
+        <h1 className="font-cozy text-3xl font-bold">Public Payouts Dashboard</h1>
         <p className="text-muted-foreground">
           View all authors receiving payouts in HigherBits.dev
         </p>
@@ -255,7 +255,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Total Usage</div>
           </div>
-          <div className="mt-2 text-2xl font-bold">{totalUsage}</div>
+          <div className="mt-2 font-cozy text-2xl font-bold">{totalUsage}</div>
           <div className="mt-1 text-xs">all time</div>
         </ClayCard>
         <ClayCard className="bg-accent-blue text-accent-blue-foreground p-5">
@@ -265,7 +265,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Potential Earnings</div>
           </div>
-          <div className="mt-2 text-2xl font-bold">
+          <div className="mt-2 font-cozy text-2xl font-bold">
             ${totalPotentialEarnings.toFixed(2)}
           </div>
           <div className="mt-1 text-xs">all time</div>
@@ -277,7 +277,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Components</div>
           </div>
-          <div className="mt-2 text-2xl font-bold">{totalComponents}</div>
+          <div className="mt-2 font-cozy text-2xl font-bold">{totalComponents}</div>
           <div className="mt-1 text-xs">published</div>
         </ClayCard>
         <ClayCard className="bg-accent-lavender text-accent-lavender-foreground p-5">
@@ -287,7 +287,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Creators</div>
           </div>
-          <div className="mt-2 text-2xl font-bold">{creatorsCount}</div>
+          <div className="mt-2 font-cozy text-2xl font-bold">{creatorsCount}</div>
           <div className="mt-1 text-xs">across all pages</div>
         </ClayCard>
         <ClayCard className="bg-accent-cream text-accent-cream-foreground p-5">
@@ -297,7 +297,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Total Paid Out</div>
           </div>
-          <div className="mt-2 text-2xl font-bold">
+          <div className="mt-2 font-cozy text-2xl font-bold">
             ${totalPaidOut.toFixed(2)}
           </div>
           <div className="mt-1 text-xs">all time</div>

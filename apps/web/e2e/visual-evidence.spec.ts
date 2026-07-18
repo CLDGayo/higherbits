@@ -3,11 +3,18 @@ import path from "node:path"
 import { test, type Page } from "@playwright/test"
 
 /**
- * Phase 5 (F1) visual-evidence capture. Screenshots the two restyled clay
- * surfaces — hero (`/`) and dashboard (`/public-dashboard`) — across both
+ * Visual-evidence capture. Screenshots the restyled clay surfaces across both
  * themes (cozy-daylight + cozy-dusk/dark) and two viewports (desktop default +
- * 375px mobile): 8 artifacts total. Closes the VE12/VE15/VE16 Agent-Probe
- * visual-parity debt carried since Phase 1 by producing durable PNG evidence.
+ * 375px mobile).
+ *
+ * Phase 4 (claymorphism-reference-parity) extended this from 2 routes/8 shots to
+ * 3 routes/12 shots:
+ *   - hero (`/`) and dashboard (`/public-dashboard`) — unchanged `phase5-*` names
+ *   - sidebar (`/?tab=home`) — NEW; `useSidebarVisibility()` renders the sidebar
+ *     only when `pathname === "/" && searchParams.has("tab")`, so this is the
+ *     only route that captures the pill-nav + Go-Premium card. Uses a new
+ *     `phase4-sidebar-*` prefix.
+ * 3 routes × 2 themes × 2 viewports = 12 artifacts total.
  *
  * `screenshot: "only-on-failure"` is the global Playwright config default, so
  * this spec MUST call `page.screenshot({ path })` explicitly — a passing run
@@ -19,12 +26,13 @@ import { test, type Page } from "@playwright/test"
  */
 const OUTPUT_DIR = path.join(
   __dirname,
-  "../../../process/features/claymorphism-3d-redesign/active/claymorphism-3d-redesign_14-07-26",
+  "../../../process/features/claymorphism-reference-parity/active/claymorphism-reference-parity_16-07-26",
 )
 
 const routes = [
-  { path: "/", slug: "hero" },
-  { path: "/public-dashboard", slug: "dashboard" },
+  { path: "/", slug: "hero", prefix: "phase5" },
+  { path: "/public-dashboard", slug: "dashboard", prefix: "phase5" },
+  { path: "/?tab=home", slug: "sidebar", prefix: "phase4" },
 ] as const
 
 const viewports = [
@@ -38,6 +46,7 @@ async function capture(
   page: Page,
   route: string,
   slug: string,
+  prefix: string,
   theme: "light" | "dark",
   viewport: { name: string; width: number; height: number },
 ) {
@@ -62,7 +71,7 @@ async function capture(
   await page.screenshot({
     path: path.join(
       OUTPUT_DIR,
-      `phase5-${slug}-${theme}-${viewport.name}.png`,
+      `${prefix}-${slug}-${theme}-${viewport.name}.png`,
     ),
     fullPage: true,
   })
@@ -73,7 +82,14 @@ test.describe("visual evidence", () => {
     for (const theme of themes) {
       for (const viewport of viewports) {
         test(`${route.slug} ${theme} ${viewport.name}`, async ({ page }) => {
-          await capture(page, route.path, route.slug, theme, viewport)
+          await capture(
+            page,
+            route.path,
+            route.slug,
+            route.prefix,
+            theme,
+            viewport,
+          )
         })
       }
     }
