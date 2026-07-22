@@ -16,24 +16,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Rate Limiting: 60 requests per minute per key to prevent abuse
-    const { data: isAllowed, error: rateLimitError } = await supabaseWithAdminAccess
-      .rpc("check_rate_limit", {
-        p_user_id: apiKey, // Using apiKey as the identifier for rate limiting
-        p_endpoint: "magic_use",
-        p_limit: 60,
-        p_window_seconds: 60,
-      })
-
-    if (rateLimitError) {
-      console.error("Rate limit check failed:", rateLimitError)
-    } else if (isAllowed === false) {
-      return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
-        { status: 429 },
-      )
-    }
-
     try {
       // Check API key in api_keys table
       const { data: apiKeyData, error: apiKeyError } =
@@ -53,6 +35,25 @@ export async function POST(request: NextRequest) {
       }
 
       const userId = apiKeyData.user_id
+
+      // Rate Limiting: 60 requests per minute per user (keyed after key validation
+      // so unvalidated keys can't spawn unbounded rate-limit rows)
+      const { data: isAllowed, error: rateLimitError } = await supabaseWithAdminAccess
+        .rpc("check_rate_limit", {
+          p_user_id: userId,
+          p_endpoint: "magic_use",
+          p_limit: 60,
+          p_window_seconds: 60,
+        })
+
+      if (rateLimitError) {
+        console.error("Rate limit check failed:", rateLimitError)
+      } else if (isAllowed === false) {
+        return NextResponse.json(
+          { error: "Too many requests. Please try again later." },
+          { status: 429 },
+        )
+      }
 
       // Atomically increment usage
       const { data: rpcData, error: rpcError } = await supabaseWithAdminAccess

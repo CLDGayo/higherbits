@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const isAdmin = await checkIsAdmin(userId)
+    const { isAdmin } = await checkIsAdmin(userId)
 
     if (isAdmin && req.body) {
       const body = await req.json()

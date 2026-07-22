@@ -4,8 +4,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const repo = searchParams.get("repo")
 
-  if (!repo) {
-    return NextResponse.json({ error: "Repo parameter is required" }, { status: 400 })
+  // Validate owner/repo shape — blocks path traversal and non-repo GitHub API calls
+  if (!repo || !/^[\w.-]+\/[\w.-]+$/.test(repo)) {
+    return NextResponse.json({ error: "Invalid repo parameter" }, { status: 400 })
   }
 
   try {

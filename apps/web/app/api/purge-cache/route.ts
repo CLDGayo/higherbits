@@ -6,8 +6,12 @@ import { checkIsAdmin } from "@/lib/admin"
 export async function POST(request: Request) {
   try {
     const { userId } = await auth()
-    if (!userId || !(await checkIsAdmin(userId))) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    const { isAdmin } = await checkIsAdmin(userId)
+    if (!isAdmin) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
     const body = await request.json()
     const { filesToPurge, pathToRevalidate, tagToRevalidate } = body
