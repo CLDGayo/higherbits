@@ -277,6 +277,16 @@ function PublishClientPageContent({
     setIframeKey((prev) => prev + 1)
   }
 
+  // The dev server often finishes compiling a moment after port 5173 opens, so
+  // the first iframe load can land on a not-yet-ready (blank) page. Remount the
+  // iframe once, shortly after the preview URL is (re)set, to pick up the ready
+  // server without a manual refresh.
+  useEffect(() => {
+    if (!previewURL) return
+    const timer = setTimeout(() => setIframeKey((prev) => prev + 1), 6000)
+    return () => clearTimeout(timer)
+  }, [previewURL])
+
   const handleTogglePreview = () => {
     setShowPreview((prev) => !prev)
   }

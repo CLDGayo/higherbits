@@ -8,4 +8,7 @@ export const TEMPLATES = {
   "21st-vite": "d5t2cg",
 }
 
-export const DEFAULT_HIBERNATION_TIMEOUT = 60
+// Keep the VM warm longer between edits so refreshes don't repeatedly land on a
+// waking VM (which serves a blank preview until its dev server recompiles).
+// Trade-off: a warmer VM burns more VM credits. 300s matches CSB's free default.
+export const DEFAULT_HIBERNATION_TIMEOUT = 300
