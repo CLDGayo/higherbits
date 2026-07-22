@@ -19,6 +19,8 @@ interface PreviewPaneProps {
   showPreview: boolean
   iframeKey: number
   onRefresh: () => void
+  sandboxUnavailable?: boolean
+  onReconnect?: () => void
 }
 
 export function PreviewPane({
@@ -32,6 +34,8 @@ export function PreviewPane({
   showPreview,
   iframeKey,
   onRefresh,
+  sandboxUnavailable = false,
+  onReconnect,
 }: PreviewPaneProps) {
   const [previousConnectedShellId, setPreviousConnectedShellId] = useState<
     string | null
@@ -80,7 +84,20 @@ export function PreviewPane({
           }}
         >
           <div className="flex flex-col h-full">
-            {!previewURL ? (
+            {sandboxUnavailable ? (
+              <div className="h-full flex flex-col gap-3 items-center justify-center text-muted-foreground text-center px-6">
+                <p>Sandbox unavailable — the dev server stopped responding.</p>
+                {onReconnect && (
+                  <button
+                    type="button"
+                    onClick={onReconnect}
+                    className="rounded-md border px-3 py-1.5 text-sm text-foreground hover:bg-muted transition-colors"
+                  >
+                    Reconnect
+                  </button>
+                )}
+              </div>
+            ) : !previewURL ? (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 Waiting for dev server...
               </div>

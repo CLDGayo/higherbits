@@ -60,7 +60,22 @@ export async function POST(request: NextRequest) {
       },
     )
 
-    return NextResponse.json({ success: true, startData, sandbox })
+    // Private sandboxes gate their preview URL behind a "do you trust this URL"
+    // interstitial, which leaves the studio preview iframe blank. Mint a preview
+    // token so the browser can build a signed URL that skips the gate.
+    // Best-effort: public sandboxes work without it, so a token failure must not
+    // break the connect flow.
+    let previewToken: string | null = null
+    try {
+      const token = await codesandboxSdk.sandbox.previewTokens.create(
+        sandbox.codesandbox_id,
+      )
+      previewToken = token.token
+    } catch (tokenError) {
+      console.warn("Failed to mint preview token:", tokenError)
+    }
+
+    return NextResponse.json({ success: true, startData, sandbox, previewToken })
   } catch (error) {
     console.error("Error connecting to sandbox:", error)
     return NextResponse.json(

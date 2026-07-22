@@ -53,6 +53,8 @@ function PublishClientPageContent({
     isSandboxLoading,
     sandboxConnectionHash,
     reconnectSandbox,
+    retryConnection,
+    sandboxUnavailable,
     missingDependencyInfo,
     clearMissingDependencyInfo,
     connectedShellId,
@@ -344,6 +346,8 @@ function PublishClientPageContent({
             showPreview={showPreview}
             iframeKey={iframeKey}
             onRefresh={handleRefreshPreview}
+            sandboxUnavailable={sandboxUnavailable}
+            onReconnect={retryConnection}
           />
         </ResizablePanel>
       </ResizablePanelGroup>

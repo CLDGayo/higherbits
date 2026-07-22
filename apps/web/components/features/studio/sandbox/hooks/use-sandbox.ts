@@ -12,6 +12,12 @@ export type ServerSandbox = Pick<
 
 export type SandboxStatus = "draft" | "edit" | "published" | undefined
 
+// Caps that stop the CSB SDK from postMessage/WebSocket reconnect-storming a
+// dead or unreachable VM. Once hit, the sandbox is marked unavailable and the
+// polling loop parks until a manual retry.
+const MAX_SHELL_CHECK_FAILURES = 5
+const MAX_RECONNECT_ATTEMPTS = 5
+
 export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const sandboxRef = useRef<SandboxSession | null>(null)
   const [sandboxConnectionHash, setSandboxConnectionHash] = useState<
@@ -26,6 +32,9 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     packageName: string
     latestVersion: string
   } | null>(null)
+  const [sandboxUnavailable, setSandboxUnavailable] = useState(false)
+  const shellCheckFailuresRef = useRef(0)
+  const reconnectAttemptsRef = useRef(0)
 
   const initialize = async (isReconnecting = false) => {
     if (!isReconnecting) {
@@ -47,7 +56,8 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         throw new Error("Failed to connect to sandbox")
       }
 
-      const { startData, sandbox: serverSandboxResponse } = response
+      const { startData, sandbox: serverSandboxResponse, previewToken } =
+        response
 
       setServerSandbox(serverSandboxResponse)
 
@@ -63,15 +73,26 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       checkShells()
 
-      connectedSandbox.ports.waitForPort(5173).then((isPortOpen) => {
-        if (isPortOpen) {
-          const newPreviewURL = connectedSandbox.ports.getPreviewUrl(5173)
+      connectedSandbox.ports
+        .waitForPort(5173, { timeoutMs: 90_000 })
+        .then((portInfo) => {
+          // Private sandboxes need a signed URL, else CSB serves a "do you trust
+          // this URL" interstitial and the iframe renders blank. Fall back to the
+          // plain URL when no token was issued (public sandboxes).
+          const newPreviewURL = previewToken
+            ? portInfo.getSignedPreviewUrl(previewToken)
+            : portInfo.getPreviewUrl()
           console.log("newPreviewURL", newPreviewURL)
           setPreviewURL(newPreviewURL || null)
-        }
-      }).catch(err => {
-        console.error("Error waiting for port 5173", err)
-      })
+          // Port is live: healthy connection, reset the failure/reconnect caps.
+          shellCheckFailuresRef.current = 0
+          reconnectAttemptsRef.current = 0
+          setSandboxUnavailable(false)
+        })
+        .catch((err) => {
+          console.error("Error waiting for port 5173", err)
+          setSandboxUnavailable(true)
+        })
     } catch (error) {
       console.error("Failed to initialize sandbox in hook:", error)
       sandboxRef.current = null
@@ -137,7 +158,25 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   // Subscribe to shells to read output & remount iframe when new shell is created
   useEffect(() => {
     const interval = setInterval(async () => {
-      await checkShells()
+      // Parked after too many consecutive failures — stop hitting a dead VM
+      // (the source of the postMessage/WebSocket storm). A manual retry resets
+      // the counter and resumes polling.
+      if (shellCheckFailuresRef.current >= MAX_SHELL_CHECK_FAILURES) {
+        return
+      }
+      try {
+        await checkShells()
+        shellCheckFailuresRef.current = 0
+      } catch (err) {
+        shellCheckFailuresRef.current += 1
+        console.warn(
+          `checkShells failed (${shellCheckFailuresRef.current}/${MAX_SHELL_CHECK_FAILURES})`,
+          err,
+        )
+        if (shellCheckFailuresRef.current >= MAX_SHELL_CHECK_FAILURES) {
+          setSandboxUnavailable(true)
+        }
+      }
     }, 1000 * 5)
 
     return () => clearInterval(interval)
@@ -151,7 +190,15 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const reconnectSandbox = async () => {
     console.log("RECONNECTING sandbox")
     if (!sandboxId) return
-    
+
+    // Cap automatic reconnects so a permanently dead VM stops the reconnect
+    // storm instead of spinning forever. retryConnection() clears this.
+    if (reconnectAttemptsRef.current >= MAX_RECONNECT_ATTEMPTS) {
+      console.warn("Max reconnect attempts reached; marking sandbox unavailable")
+      setSandboxUnavailable(true)
+      return
+    }
+
     if (sandboxRef.current) {
       try {
         const isResponsive = await Promise.race([
@@ -160,6 +207,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         ])
         if (isResponsive) {
           console.log("Sandbox is still responsive, skipping full reconnect")
+          reconnectAttemptsRef.current = 0
           return;
         }
       } catch (error) {
@@ -178,6 +226,19 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       }
     }
 
+    reconnectAttemptsRef.current += 1
+    // Exponential backoff so a struggling VM isn't hammered on every retry.
+    const backoffMs = Math.min(1000 * 2 ** reconnectAttemptsRef.current, 15000)
+    await new Promise((resolve) => setTimeout(resolve, backoffMs))
+    await initialize(true)
+  }
+
+  // Manual retry from the "sandbox unavailable" UI: clears the caps and forces
+  // a fresh connection attempt.
+  const retryConnection = async () => {
+    reconnectAttemptsRef.current = 0
+    shellCheckFailuresRef.current = 0
+    setSandboxUnavailable(false)
     await initialize(true)
   }
 
@@ -200,6 +261,8 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     isSandboxLoading,
     sandboxConnectionHash,
     reconnectSandbox,
+    retryConnection,
+    sandboxUnavailable,
     // dependencies
     missingDependencyInfo,
     clearMissingDependencyInfo,

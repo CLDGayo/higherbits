@@ -1,6 +1,10 @@
 export const connectToSandbox = async (
   shortSandboxId: string,
-): Promise<{ startData: any; sandbox: any } | null> => {
+): Promise<{
+  startData: any
+  sandbox: any
+  previewToken?: string | null
+} | null> => {
   let retries = 3
   while (retries > 0) {
     try {
