@@ -41,3 +41,6 @@ css/*
 .env*.local
 
 /prisma/client
+# Playwright test artifacts (generated)
+/test-results/
+/playwright-report/

@@ -235,7 +235,7 @@ function HeaderContent({
         >
           {text && !isMobile && (
             <div className="flex items-center gap-2 mr-4">
-              <Icons.slash className="text-border w-[22px] h-[22px]" />
+              <Icons.Slash className="text-border w-[22px] h-[22px]" />
               <span className="text-[14px] font-medium">{text}</span>
             </div>
           )}
@@ -629,11 +629,9 @@ function HeaderContent({
             >
               <Icons.search className="h-6 w-6" />
             </Button>
-            {!isMobile && (
-              <SignInButton>
-                <Button>Sign up</Button>
-              </SignInButton>
-            )}
+            <SignInButton>
+              <Button size={isMobile ? "sm" : "default"}>Sign up</Button>
+            </SignInButton>
           </SignedOut>
         </div>
       </header>

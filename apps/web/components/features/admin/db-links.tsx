@@ -17,7 +17,7 @@ export const DbLinks = ({
   componentId?: number
   demoId?: number
 }) => {
-  const isAdmin = useIsAdmin()
+  const { isAdmin } = useIsAdmin()
   if (!isAdmin) {
     return null
   }

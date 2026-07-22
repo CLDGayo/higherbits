@@ -9,10 +9,22 @@ import { useEffect } from "react"
 export const createSupabaseClerkClient = (
   getToken?: () => Promise<string | null>,
 ) => {
+  let customFetch = typeof fetch === "undefined" ? undefined : fetch
+  if (typeof window === "undefined" && process.env.NODE_ENV === "development") {
+    customFetch = (...args: any[]) =>
+      import("node-fetch").then(({ default: fetch }) => (fetch as any)(...args))
+  }
+
   if (!getToken) {
     return createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_KEY!,
+      {
+        auth: { persistSession: false, storageKey: 'sb-clerk-auth-token' },
+        global: {
+          fetch: customFetch as any,
+        },
+      }
     )
   }
 
@@ -20,6 +32,7 @@ export const createSupabaseClerkClient = (
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_KEY!,
     {
+      auth: { persistSession: false, storageKey: 'sb-clerk-auth-token' },
       global: {
         fetch: async (url, options = {}) => {
           const clerkToken = await getToken?.()
@@ -27,7 +40,7 @@ export const createSupabaseClerkClient = (
           const headers = new Headers(options?.headers)
           headers.set("Authorization", `Bearer ${clerkToken}`)
 
-          return fetch(url, {
+          return (customFetch as any)(url, {
             ...options,
             headers,
           })
@@ -38,7 +51,14 @@ export const createSupabaseClerkClient = (
 }
 
 const supabaseClerkClientAtom = atom<SupabaseClient<Database> | null>(null)
-const defaultSupabaseClient = createSupabaseClerkClient()
+let _defaultSupabaseClient: SupabaseClient<Database> | null = null
+
+function getDefaultSupabaseClient(): SupabaseClient<Database> {
+  if (!_defaultSupabaseClient) {
+    _defaultSupabaseClient = createSupabaseClerkClient()
+  }
+  return _defaultSupabaseClient
+}
 
 export function useClerkSupabaseClient(): SupabaseClient<Database> {
   const { session } = useSession()
@@ -57,5 +77,5 @@ export function useClerkSupabaseClient(): SupabaseClient<Database> {
     }
   }, [session])
 
-  return clerkClient ?? defaultSupabaseClient
+  return clerkClient ?? getDefaultSupabaseClient()
 }

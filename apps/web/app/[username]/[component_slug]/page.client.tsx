@@ -675,7 +675,7 @@ export default function ComponentPage({
           </Tooltip>
 
           <div className="flex items-center gap-2">
-            <Icons.slash className="text-border w-[22px] h-[22px]" />
+            <Icons.Slash className="text-border w-[22px] h-[22px]" />
             <div className="flex items-center gap-2 min-w-0">
               <Link
                 href={`/${component.user.display_username || component.user.username}`}
@@ -707,7 +707,7 @@ export default function ComponentPage({
 
           {demo && (
             <div className="hidden md:flex items-center gap-2">
-              <Icons.slash className="text-border w-[22px] h-[22px]" />
+              <Icons.Slash className="text-border w-[22px] h-[22px]" />
               <UserAvatar
                 src={
                   demo.user.display_image_url ||
@@ -827,7 +827,7 @@ export default function ComponentPage({
 
           {canEdit && submission && (
             <>
-              <Icons.slash className="text-border w-[22px] h-[22px]" />
+              <Icons.Slash className="text-border w-[22px] h-[22px]" />
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div

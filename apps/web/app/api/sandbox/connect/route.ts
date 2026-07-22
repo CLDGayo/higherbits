@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { NextRequest, NextResponse } from "next/server"
-import { checkIsAdmin, supabaseWithAdminAccess } from "@/lib/supabase"
+import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { checkIsAdmin } from "@/lib/admin"
 import {
   codesandboxSdk,
   DEFAULT_HIBERNATION_TIMEOUT,
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const isAdmin = await checkIsAdmin(userId)
+    const { isAdmin } = await checkIsAdmin(userId)
 
     const { shortSandboxId } = await request.json()
 

@@ -1,5 +1,5 @@
 import { Bundle } from "@/types/global"
-import { auth } from "@clerk/nextjs/server"
+import { auth, clerkClient } from "@clerk/nextjs/server"
 import { unstable_cache } from "next/cache"
 import { redirect } from "next/navigation"
 import { authUsername, getUserData } from "./queries"
@@ -26,9 +26,47 @@ export const authUsernameOrRedirect = async (
     redirect("/sign-in")
   }
 
+  // 1. Check if user is a Clerk admin
+  let isClerkAdmin = false
+  try {
+    const client = await clerkClient()
+    
+    // Create a promise that rejects after 1.5s
+    const timeoutPromise = new Promise<never>((_, reject) => 
+      setTimeout(() => reject(new Error("Clerk API timeout")), 1500)
+    )
+    
+    // Race the Clerk API call against the timeout
+    const clerkUser = await Promise.race([
+      client.users.getUser(userId),
+      timeoutPromise
+    ])
+    
+    isClerkAdmin =
+      clerkUser.publicMetadata?.role === "admin" ||
+      clerkUser.publicMetadata?.is_admin === true
+  } catch (err) {
+    console.error("Error fetching Clerk user in authUsernameOrRedirect:", err)
+  }
+
   const result = await authUsernameCached(userId, username)
+
+  // 2. If result is null, they aren't the owner or a Supabase admin
   if (result === null) {
+    if (isClerkAdmin) {
+      // If they are a Clerk admin, we still need to return the user object
+      const targetUser = await getCachedUser(username)
+      if (targetUser) {
+        return { user: targetUser, isAdmin: true, isOwnProfile: false }
+      }
+    }
+    // Otherwise redirect
     redirect(redirectTo)
+  }
+
+  // 3. If they are a Clerk admin, ensure isAdmin is true in the result
+  if (isClerkAdmin) {
+    result.isAdmin = true
   }
 
   return result

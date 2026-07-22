@@ -1,16 +1,6 @@
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      persistSession: false,
-    },
-  },
-)
+import { checkIsAdmin } from "@/lib/admin"
 
 export async function GET() {
   const { userId } = await auth()
@@ -20,18 +10,13 @@ export async function GET() {
   }
 
   try {
-    const { data, error } = await supabaseAdmin
-      .from("users")
-      .select("is_admin")
-      .eq("id", userId)
-      .single()
+    const { isAdmin, error } = await checkIsAdmin(userId)
 
     if (error) {
-      console.error("Error fetching admin status:", error)
-      return NextResponse.json({ isAdmin: false })
+      console.error("Error fetching admin status in route:", error)
     }
 
-    return NextResponse.json({ isAdmin: data?.is_admin || false })
+    return NextResponse.json({ isAdmin: isAdmin ?? false })
   } catch (error) {
     console.error("Error in GET /api/user/isAdmin:", error)
     return NextResponse.json({ isAdmin: false })

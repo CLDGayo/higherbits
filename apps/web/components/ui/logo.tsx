@@ -107,14 +107,14 @@ export function Logo({
     >
       <Hexagon
         className={cn(
-          "shrink-0 text-[#147070] dark:text-primary",
+          "shrink-0 text-[#B19AEF]",
           shouldShowWordmark ? "h-7 w-7" : "h-full w-auto",
         )}
       />
       {shouldShowWordmark && (
         <span className="text-xl">
           <span className="font-bold text-foreground">Higher</span>
-          <span className="font-bold text-[#147070] dark:text-primary">
+          <span className="font-bold text-[#B19AEF]">
             Bits
           </span>
         </span>

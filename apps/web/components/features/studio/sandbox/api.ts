@@ -27,6 +27,29 @@ export const connectToSandbox = async (
   return null
 }
 
+export const getSandboxInfo = async (
+  shortSandboxId: string,
+): Promise<{ sandbox: any } | null> => {
+  let retries = 3
+  while (retries > 0) {
+    try {
+      const res = await fetch(`/api/sandbox/info?id=${shortSandboxId}`)
+
+      if (!res.ok) throw new Error(await res.text())
+      return await res.json()
+    } catch (error) {
+      console.error(
+        `Failed to load sandbox info (${retries} retries left):`,
+        error,
+      )
+      retries--
+      if (retries === 0) return null
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+    }
+  }
+  return null
+}
+
 export const createNewSandbox = async (
   userId: string,
 ): Promise<{

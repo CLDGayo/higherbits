@@ -23,12 +23,22 @@ export function GitHubStarsBasic({
   const { data: stars, isLoading } = useQuery({
     queryKey: ["github-stars", repo],
     queryFn: async () => {
-      const res = await fetch(`https://api.github.com/repos/${repo}`)
-      const data = await res.json()
-      return data.stargazers_count as number
+      try {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000)
+        const res = await fetch(`/api/github/stars?repo=${repo}`, {
+          signal: controller.signal
+        })
+        clearTimeout(timeoutId)
+        if (!res.ok) return 0
+        const data = await res.json()
+        return data.stars as number
+      } catch (error) {
+        return 0
+      }
     },
     staleTime: 1000 * 60 * 5,
-    retry: 2,
+    retry: 0,
   })
 
   return (

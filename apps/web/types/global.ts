@@ -179,7 +179,7 @@ export type ThemeOptions = {
   light: string
 }
 
-export type PlanType = "free" | "pro" | "pro_plus"
+export type PlanType = "free" | "pro"
 
 export interface PlanPrice {
   monthly: number

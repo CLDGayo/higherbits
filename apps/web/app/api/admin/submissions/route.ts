@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { auth } from "@clerk/nextjs/server"
+import { auth, clerkClient } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess as supabaseAdmin } from "@/lib/supabase"
 
 export async function GET(request: Request) {
@@ -9,12 +9,12 @@ export async function GET(request: Request) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    // Verify admin status
+    // Verify admin status in Supabase
     const { data: user, error: userError } = await supabaseAdmin
       .from("users")
       .select("is_admin")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
     if (userError || !user?.is_admin) {
       return new NextResponse("Forbidden", { status: 403 })
@@ -55,7 +55,7 @@ export async function PATCH(request: Request) {
       .from("users")
       .select("is_admin")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
     if (userError || !user?.is_admin) {
       return new NextResponse("Forbidden", { status: 403 })
@@ -110,7 +110,7 @@ export async function DELETE(request: Request) {
       .from("users")
       .select("is_admin")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
     if (userError || !user?.is_admin) {
       return new NextResponse("Forbidden", { status: 403 })

@@ -139,7 +139,7 @@ export function DemosTable({
     pageIndex: 0,
     pageSize: 20,
   })
-  const isAdmin = useIsAdmin()
+  const { isAdmin } = useIsAdmin()
   const [imageLoadStatus, setImageLoadStatus] = useState<
     Record<string, { loaded: boolean; error?: string; fixedUrl?: string }>
   >({})
@@ -154,7 +154,7 @@ export function DemosTable({
     demos.forEach((demo) => {
       if (demo.preview_url) {
         // Fix URL if it's a relative path without http(s)
-        const previewUrl = demo.preview_url.startsWith("http")
+        const previewUrl = demo.preview_url.startsWith("http") || demo.preview_url.startsWith("data:")
           ? demo.preview_url
           : `https://cdn.HigherBits.dev${demo.preview_url.startsWith("/") ? "" : "/"}${demo.preview_url}`
 

@@ -18,7 +18,7 @@ import {
   SOURCE_DETAIL,
 } from "@/lib/attribution-tracking"
 
-export type PlanLevel = "free" | "pro" | "pro_plus" | string
+export type PlanLevel = "free" | "pro" | string
 
 export interface PricingFeature {
   name: string
@@ -136,7 +136,7 @@ export function PricingTable({
   }
 
   const isPlanUpgrade = (selected: PlanLevel, current: PlanLevel) => {
-    const levels = ["free", "pro", "pro_plus", "all"]
+    const levels = ["free", "pro", "all"]
     return levels.indexOf(selected) > levels.indexOf(current)
   }
 
@@ -339,24 +339,6 @@ function getFeatureValue(
   if (feature.valueByPlan && feature.valueByPlan[planLevel as PlanLevel]) {
     const value = feature.valueByPlan[planLevel as PlanLevel]
 
-    // Handle dynamic pricing for AI Generation
-    if (feature.name === "AI Generation") {
-      if (planLevel === "free") return "$0.32 per generation"
-      if (planLevel === "pro")
-        return isYearly ? "$0.32 per generation" : "$0.40 per generation"
-      if (planLevel === "pro_plus")
-        return isYearly ? "$0.16 per generation" : "$0.20 per generation"
-    }
-
-    // Handle dynamic pricing for Premium Component
-    if (feature.name === "Premium Component") {
-      if (planLevel === "free") return "Not available"
-      if (planLevel === "pro")
-        return isYearly ? "$0.80 per component" : "$1.00 per component"
-      if (planLevel === "pro_plus")
-        return isYearly ? "$0.60 per component" : "$0.75 per component"
-    }
-
     if (value === "✓") {
       return <Check className="h-4 w-4 text-primary" />
     }
@@ -390,16 +372,14 @@ function shouldShowCheck(
   level: string,
 ): boolean {
   if (included === "all") return true
-  if (included === "pro_plus" && (level === "pro_plus" || level === "all"))
-    return true
   if (
     included === "pro" &&
-    (level === "pro" || level === "pro_plus" || level === "all")
+    (level === "pro" || level === "all")
   )
     return true
   if (
     included === "free" &&
-    (level === "free" || level === "pro" || level === "pro_plus")
+    (level === "free" || level === "pro" || level === "all")
   )
     return true
   return false

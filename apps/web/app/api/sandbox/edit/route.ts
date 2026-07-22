@@ -1,4 +1,5 @@
-import { checkIsAdmin, supabaseWithAdminAccess } from "@/lib/supabase"
+import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { checkIsAdmin } from "@/lib/admin"
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import ShortUUID from "short-uuid"
@@ -27,7 +28,7 @@ export async function PUT(request: Request) {
     }
 
     const sandboxId = ShortUUID().toUUID(shortSandboxId)
-    const isAdmin = await checkIsAdmin(userId)
+    const { isAdmin } = await checkIsAdmin(userId)
 
     let selectSandboxQuery = supabaseWithAdminAccess
       .from("sandboxes")

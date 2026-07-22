@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { SandboxSkeleton } from "@/components/features/studio/sandbox/components/sandbox-skeleton"
 
 function PublishClientPageContent({
   setServerSandbox,
@@ -58,7 +59,6 @@ function PublishClientPageContent({
     serverSandbox,
   } = useSandbox({ sandboxId })
 
-  console.log("previewURL", previewURL)
 
   const {
     files,
@@ -96,24 +96,24 @@ function PublishClientPageContent({
   useEffect(() => {
     // Renamed function for clarity
     const findAndSelectFirstUiFile = async () => {
-      console.log("Attempting to find initial UI file...") // Log: Start
-      console.log(
+      console.debug("Attempting to find initial UI file...")
+      console.debug(
         "isTreeLoading:",
         isTreeLoading,
         "files.length:",
         files.length,
         "selectedEntry:",
         selectedEntry,
-      ) // Log: State check
+      )
       if (!isTreeLoading && files.length > 0 && !selectedEntry) {
-        console.log("Files list:", JSON.stringify(files, null, 2)) // Log: Full file list (can be verbose)
+        console.debug("Files list:", JSON.stringify(files, null, 2))
 
         const findFirstUiFile = (entries: FileEntry[]): FileEntry | null => {
           for (const entry of entries) {
             // Check if path starts with /src/components/ui AND is not a directory itself
             if (entry.path.startsWith("/src/components/ui")) {
               if (entry.type === "file") {
-                console.log("Found potential UI file:", entry.path) // Log: Potential find
+                console.debug("Found potential UI file:", entry.path)
                 return entry
               } else if (entry.type === "dir" && entry.children) {
                 // Recurse only if it's a directory within the target path
@@ -131,25 +131,25 @@ function PublishClientPageContent({
         }
 
         const firstUiFile = findFirstUiFile(files)
-        console.log("Result of findFirstUiFile:", firstUiFile) // Log: Result
+        console.debug("Result of findFirstUiFile:", firstUiFile)
 
         if (firstUiFile) {
-          console.log("Setting selected entry:", firstUiFile.path) // Log: Setting state
+          console.debug("Setting selected entry:", firstUiFile.path)
           setSelectedEntry(firstUiFile)
           // Explicitly load content after setting the entry
           try {
-            console.log("Calling loadFileContent for:", firstUiFile.path) // Log: Loading content
+            console.debug("Calling loadFileContent for:", firstUiFile.path)
             const content = await loadFileContent(firstUiFile.path)
-            console.log("Content loaded successfully.") // Log: Load success
+            console.debug("Content loaded successfully.")
             setCode(content)
           } catch (error) {
             // Handle error if initial load fails
-            console.error("Failed to load initial file content:", error) // Log: Load error
+            console.error("Failed to load initial file content:", error)
             setCode("")
             setSelectedEntry(null)
           }
         } else {
-          console.log("No initial UI file found in /src/components/ui") // Log: Not found
+          console.debug("No initial UI file found in /src/components/ui")
         }
       }
     }
@@ -159,7 +159,7 @@ function PublishClientPageContent({
 
   useEffect(() => {
     if (serverSandbox) {
-      console.log("serverSandbox !!!!!!", serverSandbox)
+      console.debug("serverSandbox", serverSandbox)
       setServerSandbox(serverSandbox)
     }
   }, [serverSandbox])
@@ -280,82 +280,7 @@ function PublishClientPageContent({
   }
 
   if (isSandboxLoading) {
-    // Skeleton Loader for Sandbox UI (3-panel layout, no header skeleton)
-    return (
-      <div className="h-[calc(100vh-56px)] w-full flex flex-col bg-background">
-        {" "}
-        {/* Added top padding for header */}
-        {/* Skeleton Resizable Panel Group - Represents the main content area below the header */}
-        <div className="flex flex-1 min-h-0">
-          {/* Skeleton File Explorer Panel (Left) */}
-          <div className="w-[20%] p-2 space-y-2 overflow-hidden">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-6 w-full" />
-            <div className="pl-4 space-y-2">
-              <Skeleton className="h-6 w-5/6" />
-              <Skeleton className="h-6 w-1/2" />
-            </div>
-            <Skeleton className="h-6 w-2/3" />
-            <Skeleton className="h-6 w-full" />
-          </div>
-
-          {/* Skeleton Resizable Handle 1 */}
-          <div className="w-[1px] bg-border cursor-col-resize flex-shrink-0"></div>
-
-          {/* Skeleton Editor Panel (Middle) */}
-          <div className="w-[40%] flex flex-col overflow-hidden">
-            {/* Skeleton Editor Content */}
-            <div className="flex-1 p-4 space-y-2 overflow-y-auto">
-              {[...Array(15)].map((_, i) => (
-                <Skeleton
-                  key={i}
-                  className="h-4 w-full"
-                  style={{ width: `${Math.random() * 30 + 70}%` }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Skeleton Resizable Handle 2 */}
-          <div className="w-[1px] bg-border cursor-col-resize flex-shrink-0"></div>
-
-          {/* Skeleton Preview Panel (Right) */}
-          <div className="w-[40%] bg-muted/30 flex flex-col justify-center p-6 overflow-hidden">
-            <div className="flex items-center justify-between mb-4">
-              <Skeleton className="h-8 w-32" />
-              <div className="flex gap-2">
-                <Skeleton className="h-6 w-6 rounded-full" />
-                <Skeleton className="h-6 w-6 rounded-full" />
-              </div>
-            </div>
-
-            <div className="flex gap-4 mb-6">
-              <Skeleton className="h-24 w-24 rounded-md" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-5 w-3/4" />
-                <Skeleton className="h-5 w-1/2" />
-                <Skeleton className="h-5 w-5/6" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <Skeleton className="h-28 w-full rounded-md" />
-              <Skeleton className="h-28 w-full rounded-md" />
-            </div>
-
-            <div className="flex justify-end gap-3">
-              <Skeleton className="h-9 w-24 rounded-md" />
-              <Skeleton className="h-9 w-24 rounded-md" />
-            </div>
-          </div>
-        </div>
-        {/* Skeleton Bottom Right Controls */}
-        <div className="fixed bottom-4 right-4 flex gap-2 z-10">
-          <Skeleton className="h-9 w-9 rounded-md" />
-          <Skeleton className="h-9 w-9 rounded-md" />
-        </div>
-      </div>
-    )
+    return <SandboxSkeleton />
   }
 
   if (!sandboxRef.current) {
@@ -425,13 +350,9 @@ function PublishClientPageContent({
 
       {/* Bottom right preview controls */}
       <div className="fixed top-[65px] right-4 flex gap-2 z-10">
-        <Button
-          variant="outline"
-          size="sm"
-          className="bg-background/80 backdrop-blur-sm shadow-sm border w-10"
-        >
+        <div className="bg-background/80 backdrop-blur-sm shadow-sm border w-10 h-9 flex items-center justify-center rounded-md">
           <ThemeToggle fillIcon={false} />
-        </Button>
+        </div>
         {showPreview && (
           <Button
             variant="outline"

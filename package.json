@@ -43,7 +43,15 @@
       "@clerk/shared": "~3.47.4",
       "@clerk/nextjs": "~6.39.2",
       "fast-xml-parser": "~4.5.4",
-      "preact": "~10.26.10"
+      "preact": "~10.26.10",
+      "undici": ">=6.27.0",
+      "@babel/core": ">=7.29.6",
+      "basic-ftp": ">=5.2.0",
+      "handlebars": ">=4.7.9",
+      "vitest": ">=3.2.6",
+      "@vitest/ui": ">=3.2.6",
+      "tar": ">=7.5.19",
+      "esbuild": ">=0.28.1"
     }
   },
   "resolutions": {

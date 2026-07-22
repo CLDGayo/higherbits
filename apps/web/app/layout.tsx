@@ -1,33 +1,5 @@
 import { GoogleAnalytics } from "@next/third-parties/google"
-import { Urbanist, Inter, Fira_Code, Quicksand } from "next/font/google"
 import { Metadata } from "next"
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-})
-
-const urbanist = Urbanist({
-  subsets: ["latin"],
-  variable: "--font-urbanist",
-  display: "swap",
-})
-
-const firaCode = Fira_Code({
-  subsets: ["latin"],
-  variable: "--font-fira-code",
-  display: "swap",
-})
-
-// Cozy claymorphism display font — Quicksand is a rounded, warm geometric sans
-// that carries the "cozy cushion" direction. Exposed as --font-cozy for Tailwind
-// (font-cozy) consumption in Phase 4. next/font/google built-in — no npm install.
-const quicksand = Quicksand({
-  subsets: ["latin"],
-  variable: "--font-cozy",
-  display: "swap",
-})
 
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -55,11 +27,12 @@ export const metadata: Metadata = {
       "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
   },
   keywords: BASE_KEYWORDS,
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    viewportFit: "cover",
-  },
+}
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 }
 
 export default function RootLayout({
@@ -69,15 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          inter.variable,
-          urbanist.variable,
-          firaCode.variable,
-          quicksand.variable,
-          "font-sans [scrollbar-gutter:stable]",
-        )}
-      >
+      <body className={cn("font-sans [scrollbar-gutter:stable]")}>
         <div className="h-full">
           <ThemeProvider
             attribute="class"

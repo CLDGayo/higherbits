@@ -129,8 +129,7 @@ AS $$
   SELECT jsonb_build_object(
     'published_count', (
       SELECT count(*)
-      FROM public.demos d
-      JOIN public.components c ON c.id = d.component_id
+      FROM public.components c
       WHERE c.user_id = p_user_id
         AND c.is_public = true
     ),

@@ -8,11 +8,30 @@ function isValidActivityType(type: string): type is AnalyticsActivityType {
   )
 }
 
-// Initialize Supabase client with anon key
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!,
-)
+// Initialize Supabase client lazily to avoid multiple GoTrueClient warnings in dev
+let supabaseClient: ReturnType<typeof createClient> | null = null
+
+const getSupabase = (): ReturnType<typeof createClient> => {
+  if (supabaseClient) return supabaseClient
+
+  // In browser environments, use window to persist across HMR reloads
+  if (typeof window !== "undefined" && (window as any).__supabaseAnalyticsClient) {
+    supabaseClient = (window as any).__supabaseAnalyticsClient
+    return supabaseClient!
+  }
+
+  supabaseClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!,
+    { auth: { persistSession: false, storageKey: 'sb-analytics-auth-token' } }
+  )
+
+  if (typeof window !== "undefined") {
+    (window as any).__supabaseAnalyticsClient = supabaseClient
+  }
+
+  return supabaseClient
+}
 
 // Anonymous user ID generator
 const generateAnonId = () => {
@@ -67,7 +86,7 @@ export function useSupabaseAnalytics() {
         const oneDayAgo = new Date()
         oneDayAgo.setDate(oneDayAgo.getDate() - 1)
 
-        const { data: existingEvents } = await supabase
+        const { data: existingEvents } = await getSupabase()
           .from("component_analytics")
           .select("id")
           .eq("component_id", component_id)
@@ -99,7 +118,7 @@ export function useSupabaseAnalytics() {
     user_id?: string,
     anon_id?: string | null,
   ) => {
-    return supabase
+    return getSupabase()
       .from("component_analytics")
       .insert({
         component_id,

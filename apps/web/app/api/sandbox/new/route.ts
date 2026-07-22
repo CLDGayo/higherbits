@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { NextRequest, NextResponse } from "next/server"
-import { checkIsAdmin, supabaseWithAdminAccess } from "@/lib/supabase"
+import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { checkIsAdmin } from "@/lib/admin"
 import ShortUUID from "short-uuid"
 import {
   DEFAULT_HIBERNATION_TIMEOUT,
@@ -22,6 +23,25 @@ export async function POST(req: NextRequest) {
     if (isAdmin && req.body) {
       const body = await req.json()
       userId = body.userId
+    }
+
+    // Rate Limiting: 5 requests per minute
+    const { data: isAllowed, error: rateLimitError } = await supabaseWithAdminAccess
+      .rpc("check_rate_limit", {
+        p_user_id: userId as string,
+        p_endpoint: "sandbox_new",
+        p_limit: 5,
+        p_window_seconds: 60,
+      })
+      
+    if (rateLimitError) {
+      console.error("Rate limit check failed:", rateLimitError)
+      // Fail open or closed? Let's fail open to avoid breaking prod if DB is slow
+    } else if (isAllowed === false) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 },
+      )
     }
 
     console.log("Creating CodeSandbox instance...")

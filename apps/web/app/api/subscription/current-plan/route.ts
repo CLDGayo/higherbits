@@ -4,7 +4,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 
 interface PlanData {
   name: string
-  type: "free" | "pro" | "pro_plus"
+  type: "free" | "pro"
   period?: string | null
 }
 
@@ -79,8 +79,7 @@ export async function GET(request: NextRequest) {
       name: typedUserPlan.plans?.name || defaultPlanInfo.name,
       type: (typedUserPlan.plans?.type || defaultPlanInfo.type) as
         | "free"
-        | "pro"
-        | "pro_plus",
+        | "pro",
       period: typedUserPlan.plans?.period || defaultPlanInfo.period,
       periodEnd: typedUserPlan.meta?.period_end || defaultPlanInfo.periodEnd,
       current_period_end: typedUserPlan.meta?.current_period_end || null,

@@ -33,8 +33,6 @@ export function UpgradeProStep({ apiKey, onComplete }: UpgradeProStepProps) {
   let upgradePlan: PlanType | null = null
   if (currentPlan === "free") {
     upgradePlan = "pro"
-  } else if (currentPlan === "pro") {
-    upgradePlan = "pro_plus"
   }
 
   // Add keyboard shortcut for Enter key

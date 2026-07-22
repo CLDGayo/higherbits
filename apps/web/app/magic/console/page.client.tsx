@@ -174,8 +174,6 @@ export function ConsoleClient({
   let upgradePlanId: PlanType | null = null
   if (currentPlanId === "free") {
     upgradePlanId = "pro"
-  } else if (currentPlanId === "pro") {
-    upgradePlanId = "pro_plus"
   }
 
   const handleUpgradePlan = async (
@@ -217,8 +215,8 @@ export function ConsoleClient({
       const data = await response.json()
 
       if (data.directly_upgraded) {
-        const planOrder = { pro_plus: 3, pro: 2, free: 1 }
-        const isDowngrade = planOrder[planId] < planOrder[currentPlanId]
+        const planOrder = { pro: 2, free: 1 } as Record<string, number>
+        const isDowngrade = (planOrder[planId] ?? 0) < (planOrder[currentPlanId] ?? 0)
 
         toast.success(
           isDowngrade

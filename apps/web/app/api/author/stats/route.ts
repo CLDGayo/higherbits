@@ -1,4 +1,5 @@
-import { checkIsAdmin, supabaseWithAdminAccess } from "@/lib/supabase"
+import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { checkIsAdmin } from "@/lib/admin"
 import { auth } from "@clerk/nextjs/server"
 import { addDays, format } from "date-fns"
 import { NextRequest, NextResponse } from "next/server"

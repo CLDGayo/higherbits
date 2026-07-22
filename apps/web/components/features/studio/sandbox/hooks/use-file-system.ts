@@ -197,9 +197,21 @@ export const useFileSystem = ({
     let currentRegistryComponents: string[] = []
     try {
       try {
-        const registryContent = await sbWrapper<string | null>((sandbox) => {
-          return sandbox.fs.readTextFile(normalizePath("/21st-registry.json"))
+        const hasRegistry = await sbWrapper<boolean>(async (sandbox) => {
+          try {
+            await sandbox.fs.stat(normalizePath("/21st-registry.json"))
+            return true
+          } catch {
+            return false
+          }
         })
+        const registryContent = hasRegistry
+          ? await sbWrapper<string | null>((sandbox) => {
+              return sandbox.fs.readTextFile(
+                normalizePath("/21st-registry.json"),
+              )
+            })
+          : null
         if (registryContent) {
           const parsedRegistry = JSON.parse(registryContent)
           if (Array.isArray(parsedRegistry)) {
@@ -457,7 +469,7 @@ export const useFileSystem = ({
           }
 
           connectedShell.onOutput(async (data) => {
-            // console.log(`${taskName} Output:`, data)
+            console.log(`${taskName} Output:`, data)
             // Iterate through the completion map keys and values to find a match
             for (const [completionString, completionCallback] of Object.entries(
               completionMap,
@@ -518,7 +530,7 @@ export const useFileSystem = ({
             reject(
               new Error(`${taskName}: Timeout waiting for specified output`),
             )
-          }, 120000) // Increased timeout to 120 seconds
+          }, 300000) // Increased timeout to 300 seconds
 
           // Wrap resolve/reject to clear timeout
           const originalResolve = resolve
@@ -543,6 +555,22 @@ export const useFileSystem = ({
   }
 
   const bundleDemo = async (): Promise<string | undefined> => {
+    // Patch package.json to skip strict TypeScript checking during build
+    await sbWrapper(async (sandbox) => {
+      try {
+        const pkgStr = await sandbox.fs.readTextFile(normalizePath("package.json"))
+        if (pkgStr) {
+           const pkg = JSON.parse(pkgStr)
+           if (pkg.scripts && pkg.scripts.build && pkg.scripts.build.includes("tsc ")) {
+              pkg.scripts.build = "vite build"
+              await sandbox.fs.writeTextFile(normalizePath("package.json"), JSON.stringify(pkg, null, 2))
+           }
+        }
+      } catch (e) {
+         console.warn("Could not patch package.json before build", e)
+      }
+    })
+
     return _runTaskAndWaitForOutput<string>("build", {
       "built in": async (shell, sandbox) => {
         const content = await getContentOfBundleIndexHTML(sandbox)
@@ -554,6 +582,18 @@ export const useFileSystem = ({
       "error during build": (shell, sandbox) => {
         console.error("Build failed with error during build output.")
         throw new Error("Failed during build.")
+      },
+      "build error": (shell, sandbox) => {
+        console.error("Build failed with build error output.")
+        throw new Error("Failed during build.")
+      },
+      "failed to build": (shell, sandbox) => {
+        console.error("Build failed with failed to build output.")
+        throw new Error("Failed during build.")
+      },
+      "Command failed": (shell, sandbox) => {
+        console.error("Build failed: Command failed.")
+        throw new Error("Failed during build: Build command exited with error.")
       },
     })
   }
@@ -612,6 +652,7 @@ export const useFileSystem = ({
 
     await cleanFileContent(demoPath, commentsToRemoveDemo)
     await cleanFileContent(componentPath, commentsToRemoveComponent)
+
   }
 
   // Function to compile the project into a shadcn registry

@@ -16,6 +16,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Rate Limiting: 60 requests per minute per key to prevent abuse
+    const { data: isAllowed, error: rateLimitError } = await supabaseWithAdminAccess
+      .rpc("check_rate_limit", {
+        p_user_id: apiKey, // Using apiKey as the identifier for rate limiting
+        p_endpoint: "magic_use",
+        p_limit: 60,
+        p_window_seconds: 60,
+      })
+
+    if (rateLimitError) {
+      console.error("Rate limit check failed:", rateLimitError)
+    } else if (isAllowed === false) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 },
+      )
+    }
+
     try {
       // Check API key in api_keys table
       const { data: apiKeyData, error: apiKeyError } =
@@ -36,94 +54,53 @@ export async function POST(request: NextRequest) {
 
       const userId = apiKeyData.user_id
 
-      // Check available requests in usages table
-      let { data: usageData, error: usageError } = await supabaseWithAdminAccess
-        .from("usages")
-        .select("*")
-        .eq("user_id", userId)
-        .single()
+      // Atomically increment usage
+      const { data: rpcData, error: rpcError } = await supabaseWithAdminAccess
+        .rpc("increment_api_usage", {
+          p_user_id: userId,
+          p_limit: FREE_USAGE_LIMIT,
+        })
 
-      // If error is not "record not found", it's a genuine error
-      if (usageError && usageError.code !== "PGRST116") {
+      if (rpcError) {
+        console.error("RPC Error:", rpcError)
         return NextResponse.json(
-          { success: false, error: "Failed to check usage limits" },
+          { success: false, error: "Failed to update usage" },
           { status: 500 },
         )
       }
 
-      // If no record exists, create one with default values
-      if (!usageData) {
-        const { data: newUsage, error: insertError } =
-          await supabaseWithAdminAccess
-            .from("usages")
-            .insert({
-              user_id: userId,
-              usage: 0,
-              limit: FREE_USAGE_LIMIT,
-            })
-            .select()
-            .single()
-
-        if (insertError) {
-          return NextResponse.json(
-            { success: false, error: "Failed to create usage record" },
-            { status: 500 },
-          )
-        }
-
-        // Use the newly created record
-        usageData = newUsage
-      }
-
-      // Current usage values and limit
-      const currentUsage = usageData?.usage || 0
-      const usageLimit = usageData?.limit || 0
-
-      // Check if user has exceeded the limit
-      if (currentUsage >= usageLimit) {
+      if (!rpcData || !rpcData.success) {
         return NextResponse.json(
           {
             success: false,
-            error: "Usage limit exceeded",
-            usage: currentUsage,
-            limit: usageLimit,
+            error: rpcData?.error || "Usage limit exceeded",
+            usage: rpcData?.usage || 0,
+            limit: rpcData?.limit || FREE_USAGE_LIMIT,
             remaining: 0,
           },
           { status: 403 },
         )
       }
 
-      // Update usage counter
-      const { error: updateError } = await supabaseWithAdminAccess
-        .from("usages")
-        .update({
-          usage: currentUsage + 1,
-        })
-        .eq("user_id", userId)
-
-      if (updateError) {
-        return NextResponse.json(
-          { success: false, error: "Failed to update usage count" },
-          { status: 500 },
-        )
-      }
-
-      // Update last_used_at for API key
-      await supabaseWithAdminAccess
+      // Update last_used_at for API key in the background
+      supabaseWithAdminAccess
         .from("api_keys")
         .update({
           last_used_at: new Date().toISOString(),
           requests_count: (apiKeyData.requests_count || 0) + 1,
         })
         .eq("id", apiKeyData.id)
+        .then(({ error }) => {
+          if (error) console.error("Failed to update api_key stats:", error)
+        })
 
       // Return successful response
       return NextResponse.json({
         success: true,
         message: "API key is valid and usage updated",
-        usage: currentUsage + 1,
-        limit: usageLimit,
-        remaining: usageLimit - (currentUsage + 1),
+        usage: rpcData.usage,
+        limit: rpcData.limit,
+        remaining: rpcData.remaining,
       })
     } catch (error) {
       console.error("Supabase operation error:", error)

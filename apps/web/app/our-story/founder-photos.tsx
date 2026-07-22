@@ -4,13 +4,7 @@ import { useState, useEffect, useRef } from "react"
 
 // New photos in chronological order
 const photos = [
-  "/story/photo_2025-05-14 20.49.00.jpeg", // First photo
-  "/story/photo_2025-05-14 20.49.02.jpeg",
-  "/story/photo_2025-05-14 20.49.03.jpeg",
-  "/story/photo_2025-05-14 20.49.05.jpeg",
-  "/story/photo_2025-05-14 20.49.06.jpeg",
-  "/story/photo_2025-05-14 20.49.08.jpeg",
-  "/story/photo_2025-05-14 20.49.10.jpeg", // Last photo
+  "/story/founder-photo.jpg", // Clarence and Gwyneth
 ]
 
 export function FounderPhotos() {
@@ -52,7 +46,7 @@ export function FounderPhotos() {
         <div className="w-full h-full bg-card p-3 rounded-lg shadow-md transform -rotate-3 border border-border/30">
           <div className="w-full h-[85%] relative rounded-lg overflow-hidden">
             <img
-              src="/story/photo_2025-05-14 20.49.00.jpeg"
+              src="/story/founder-photo.jpg"
               alt="Static founder photo"
               className="w-full h-full object-cover opacity-70"
               loading="eager"

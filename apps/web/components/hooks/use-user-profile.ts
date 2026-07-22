@@ -58,7 +58,7 @@ export function useUserProfile(): {
         `,
         )
         .eq("id", clerkUser.id)
-        .single()
+        .maybeSingle()
       return data as UserProfile | null
     },
     enabled: !!clerkUser?.id,

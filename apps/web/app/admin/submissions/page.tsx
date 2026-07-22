@@ -537,7 +537,7 @@ const UserPickerPopover = ({
 }
 
 const SubmissionsAdminPage: FC = () => {
-  const isAdmin = useIsAdmin()
+  const { isAdmin, isLoading: isAdminLoading } = useIsAdmin()
   const {
     submissions,
     loading,
@@ -597,6 +597,14 @@ const SubmissionsAdminPage: FC = () => {
     }
     setContestDemoId(demoId)
     addToContest(demoId, roundId)
+  }
+
+  if (isAdminLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground"></div>
+      </div>
+    )
   }
 
   // Non-admin placeholder

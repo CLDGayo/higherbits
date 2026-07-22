@@ -18,12 +18,12 @@ const PAYMENTS_NOT_CONFIGURED_RESPONSE = {
 } as const
 
 const checkoutSchema = z.object({
-  planId: z.enum(["pro", "pro_plus"]),
+  planId: z.enum(["pro"]),
   successUrl: z.string().url(),
   cancelUrl: z.string().url(),
   period: z.enum(["monthly", "yearly"]).optional().default("monthly"),
   isUpgrade: z.boolean().optional(),
-  currentPlanId: z.enum(["free", "pro", "pro_plus"]).optional(),
+  currentPlanId: z.enum(["free", "pro"]).optional(),
   subscriptionId: z.string().optional(),
 })
 

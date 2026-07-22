@@ -32,178 +32,173 @@ export default function OurStoryPage() {
                     <p>
                       I'm{" "}
                       <LinkPreview
-                        url="https://x.com/serafimcloud"
+                        url="https://clarence.gayo-sphere.cloud"
                         isStatic={true}
-                        imageSrc="https://pbs.twimg.com/profile_images/1916816781143851008/hzhOBldZ_400x400.jpg"
+                        imageSrc="/story/clarence.png"
                         className="text-foreground font-bold"
                       >
-                        Serafim
+                        Clarence
                       </LinkPreview>
                       , and I started{" "}
-                      <span className="text-foreground">HigherBits.dev</span> because
-                      I'm a <span className="text-foreground">vibe coder</span>.
+                      <LinkPreview
+                        url="https://higherbits.dev/"
+                        isStatic={true}
+                        imageSrc="/story/higherbits-dev.png"
+                        className="text-foreground font-bold"
+                      >
+                        HigherBits.dev
+                      </LinkPreview>{" "}
+                      because I'm a fan of{" "}
+                      <LinkPreview
+                        url="https://21st.dev/"
+                        isStatic={true}
+                        imageSrc="/story/21st-dev.png"
+                        className="text-foreground font-bold"
+                      >
+                        21st.dev
+                      </LinkPreview>{" "}
+                      and, at heart, a <span className="text-foreground">vibe coder</span>.
                     </p>
 
                     <p>
-                      At first, I was just experimenting with frontend —
-                      learning by building. One day, I made a small{" "}
+                      At first, thanks to{" "}
                       <LinkPreview
-                        url="https://x.com/shadcn"
+                        url="https://aiautomation.ph/"
                         isStatic={true}
-                        imageSrc="https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg"
+                        imageSrc="/story/kuys-rj.png"
                         className="text-foreground font-bold"
                       >
-                        shadcn
+                        "Kuys RJ"
+                      </LinkPreview>{" "}
+                      and his{" "}
+                      <LinkPreview
+                        url="https://www.facebook.com/groups/1506890286852088"
+                        isStatic={true}
+                        imageSrc="/story/tech-va-community.png"
+                        className="text-foreground font-bold"
+                      >
+                        Tech VA Community
+                      </LinkPreview>{" "}
+                      (now the{" "}
+                      <LinkPreview
+                        url="https://learn.taraai.ph/"
+                        isStatic={true}
+                        imageSrc="/story/tara-ai.png"
+                        className="text-foreground font-bold"
+                      >
+                        TARA AI
                       </LinkPreview>
-                      -style component I was proud of. I wanted to share it
-                      somewhere… but realized there was{" "}
-                      <span className="text-foreground">no great place</span> to
-                      do that.
+                      ), I was able to create my very first web portfolio using Lovable.dev. Eventually, I upgraded to a Claude Pro subscription to push my development further. But over time, I noticed the generic outputs coming from standard AI tools were just a bit too plain—what the community calls <span className="text-foreground">"AI slop."</span> I needed better UI.
                     </p>
 
                     <p>
-                      Around the same time, I stumbled upon amazing component
-                      libraries like{" "}
+                      I started searching the web for inspiration, taking screenshots of beautiful designs to feed back into Claude. Then, during a random scroll on Facebook, I stumbled across a post about{" "}
                       <LinkPreview
-                        url="https://magicui.design"
-                        className="text-foreground font-bold"
+                        url="https://21st.dev/"
                         isStatic={true}
-                        imageSrc="https://vucvdpamtrjkzmubwlts.supabase.co/storage/v1/object/public/images//magicui.png"
+                        imageSrc="/story/21st-dev.png"
+                        className="text-foreground font-bold"
                       >
-                        Magic UI
+                        21st.dev
                       </LinkPreview>
-                      ,{" "}
+                      . I was truly amazed by its vast component library and modern aesthetic.
+                    </p>
+
+                    <p>
+                      Around the same time, I discovered other incredible libraries like{" "}
                       <LinkPreview
                         url="https://aceternity.com"
                         className="text-foreground font-bold"
                       >
                         Aceternity
                       </LinkPreview>
-                      , and{" "}
+                      ,{" "}
                       <LinkPreview
-                        url="https://motion-primitives.com"
+                        url="https://reactbits.dev/"
+                        isStatic={true}
+                        imageSrc="/story/reactbits-dev.png"
                         className="text-foreground font-bold"
                       >
-                        Motion Primitives
+                        ReactBits.dev
                       </LinkPreview>
-                      . They were beautiful — but scattered across different
-                      sites, hard to find, and easy to miss. I thought:{" "}
-                      <span className="text-foreground">
-                        why isn't there one place where all of this lives?
-                      </span>
+                      , and{" "}
+                      <LinkPreview
+                        url="https://motionsites.ai"
+                        className="text-foreground font-bold"
+                      >
+                        MotionSites.ai
+                      </LinkPreview>
+                      . They were beautiful—but scattered across different
+                      sites, hard to find, and easy to miss.
+                    </p>
+
+                    <p>
+                      More importantly, as I was studying{" "}
+                      <LinkPreview
+                        url="https://www.gohighlevel.com/"
+                        isStatic={true}
+                        imageSrc="/story/gohighlevel.png"
+                        className="text-foreground font-bold"
+                      >
+                        GoHighLevel
+                      </LinkPreview>{" "}
+                      funnel building, I realized a major roadblock: none of these amazing React-based components were natively compatible with GoHighLevel's JavaScript code blocks.
+                    </p>
+
+                    <p>
+                      I thought: <span className="text-foreground">what if there was a place where agencies, business owners, and my fellow Technical Virtual Assistants could access premium UI components specifically engineered for GoHighLevel alongside modern web frameworks?</span>
                     </p>
 
                     <p>
                       That idea became the seed for{" "}
-                      <span className="text-foreground">HigherBits.dev</span>.
-                    </p>
-
-                    <p>
-                      I started building the first version with{" "}
                       <LinkPreview
-                        url="https://x.com/daniel_dhawan"
+                        url="https://higherbits.dev/"
                         isStatic={true}
-                        imageSrc="https://pbs.twimg.com/profile_images/1844332776725598224/piNWYXgo_400x400.jpg"
+                        imageSrc="/story/higherbits-dev.png"
                         className="text-foreground font-bold"
                       >
-                        Daniel Dhawan
-                      </LinkPreview>{" "}
-                      inside a project called{" "}
-                      <LinkPreview
-                        url="https://rork.com"
-                        className="text-foreground font-bold"
-                      >
-                        Rork.com
-                      </LinkPreview>{" "}
-                      — an AI tool for building websites and apps. The vision
-                      was to use{" "}
-                      <span className="text-foreground">HigherBits.dev</span> like a{" "}
-                      <span className="text-foreground font-bold">
-                        Figma Community
-                      </span>{" "}
-                      for code. But later,{" "}
-                      <span className="text-foreground">Rork</span> pivoted to
-                      focus on mobile apps, and{" "}
-                      <span className="text-foreground">Daniel</span> spun it
-                      off into a separate direction.
-                    </p>
-
-                    <p>
-                      I decided to keep building{" "}
-                      <span className="text-foreground">HigherBits.dev</span>.
-                    </p>
-
-                    <p>
-                      Soon after,{" "}
-                      <LinkPreview
-                        url="https://x.com/sergeybunas"
-                        isStatic={true}
-                        imageSrc="https://pbs.twimg.com/profile_images/1872342398057230336/hCUe084N_400x400.jpg"
-                        className="text-foreground font-bold"
-                        width={200}
-                        height={200}
-                      >
-                        Sergey Bunas
-                      </LinkPreview>{" "}
-                      joined — and in just three days, he built{" "}
-                      <LinkPreview
-                        url="https://higherbits.dev/magic"
-                        className="text-foreground font-bold"
-                        isStatic={true}
-                        imageSrc="https://higherbits.dev/magic-agent-og-image.png"
-                        width={200}
-                        height={120}
-                      >
-                        Magic MCP
+                        HigherBits.dev
                       </LinkPreview>
-                      : our AI-powered component generator. You can install it
-                      as an agent inside{" "}
+                      .
+                    </p>
+
+                    <p>
+                      I decided to fork the open-source{" "}
                       <LinkPreview
-                        url="https://cursor.com"
+                        url="https://21st.dev/"
+                        isStatic={true}
+                        imageSrc="/story/21st-dev.png"
                         className="text-foreground font-bold"
                       >
-                        Cursor
+                        21st.dev
                       </LinkPreview>{" "}
-                      or other AI IDEs. It quickly gained traction and became a
-                      favorite among developers.
-                    </p>
-
-                    <p>
-                      We were featured in an{" "}
+                      repository to build my own vision. I started building the first version alongside my partner,{" "}
                       <LinkPreview
-                        url="https://a16z.com/a-deep-dive-into-mcp-and-the-future-of-ai-tooling/"
+                        url="https://gwyneth.gayo-sphere.cloud"
+                        isStatic={true}
+                        imageSrc="/story/gwyneth.png"
                         className="text-foreground font-bold"
                       >
-                        a16z
+                        Gwyneth Sarigumba
+                      </LinkPreview>
+                      . She helped me curate the initial components and design our first GoHighLevel funnel templates, and together, we keep building and refining the platform.
+                    </p>
+
+                    <p>
+                      We're building <span className="text-foreground">the best way to discover UI components</span>, and{" "}
+                      <LinkPreview
+                        url="https://higherbits.dev/"
+                        isStatic={true}
+                        imageSrc="/story/higherbits-dev.png"
+                        className="text-foreground font-bold"
+                      >
+                        HigherBits.dev
                       </LinkPreview>{" "}
-                      article about the future of AI-powered development. We
-                      raised our first round of funding. And most importantly —
-                      we kept building.
+                      is the home to share and evolve them.
                     </p>
 
                     <p>
-                      We're building{" "}
-                      <span className="text-foreground">
-                        the best way to create UI components
-                      </span>{" "}
-                      —
-                      with <span className="text-foreground">
-                        Magic MCP
-                      </span>{" "}
-                      for AI generation, and{" "}
-                      <span className="text-foreground">HigherBits.dev</span> as the
-                      home to{" "}
-                      <span className="text-foreground">
-                        share, remix, and evolve
-                      </span>{" "}
-                      them.
-                    </p>
-
-                    <p>
-                      For <span className="text-foreground">vibe coders</span>.
-                      For{" "}
-                      <span className="text-foreground">design engineers</span>.
-                      <br />
+                      For <span className="text-foreground">vibe coders</span>. For <span className="text-foreground">design engineers</span>. For <span className="text-foreground">Technical Virtual Assistants</span>.<br />
                       For anyone shaping the web.
                     </p>
 

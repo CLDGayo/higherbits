@@ -29,5 +29,5 @@ const BoltBannerContent = memo(function BoltBannerContent() {
 })
 
 export function BoltBanner() {
-  return <BoltBannerContent />
+  return null
 }

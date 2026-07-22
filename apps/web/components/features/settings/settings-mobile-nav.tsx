@@ -44,10 +44,10 @@ export function SettingsMobileNav() {
             className="flex items-center justify-center w-[22px] h-[22px] rounded-full cursor-pointer bg-foreground"
           />
           <div className="flex items-center gap-2">
-            <Icons.slash className="text-border w-[22px] h-[22px]" />
+            <Icons.Slash className="text-border w-[22px] h-[22px]" />
             <h1 className="text-[14px] font-medium">Settings</h1>
           </div>
-          <Icons.slash className="text-border w-[22px] h-[22px]" />
+          <Icons.Slash className="text-border w-[22px] h-[22px]" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

@@ -12,11 +12,20 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error("Missing Supabase environment variables")
 }
 
+let customFetch = typeof fetch === "undefined" ? undefined : fetch
+if (typeof window === "undefined" && process.env.NODE_ENV === "development") {
+  customFetch = (...args: any[]) =>
+    import("node-fetch").then(({ default: fetch }) => (fetch as any)(...args))
+}
+
 export const supabaseWithAdminAccess: SupabaseClient<Database> =
   createClient<Database>(supabaseUrl, supabaseKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
+    },
+    global: {
+      fetch: customFetch as any,
     },
   })
 
@@ -30,7 +39,7 @@ export const checkIsAdmin = async (
       .from("users")
       .select("is_admin")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
   if (currentUserError) {
     return { isAdmin: false, error: currentUserError }

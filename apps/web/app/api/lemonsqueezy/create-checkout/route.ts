@@ -6,7 +6,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { createCheckout } from "@lemonsqueezy/lemonsqueezy.js"
 
 const checkoutSchema = z.object({
-  planId: z.enum(["pro", "pro_plus"]),
+  planId: z.enum(["pro"]),
   successUrl: z.string().url(),
   cancelUrl: z.string().url(),
   period: z.enum(["monthly", "yearly"]).optional().default("monthly"),
@@ -53,6 +53,24 @@ export async function POST(request: NextRequest) {
     const userId = authSession?.userId
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    // Rate Limiting: 10 requests per minute
+    const { data: isAllowed, error: rateLimitError } = await supabaseWithAdminAccess
+      .rpc("check_rate_limit", {
+        p_user_id: userId as string,
+        p_endpoint: "checkout_new",
+        p_limit: 10,
+        p_window_seconds: 60,
+      })
+      
+    if (rateLimitError) {
+      console.error("Rate limit check failed:", rateLimitError)
+    } else if (isAllowed === false) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 },
+      )
     }
 
     const { data: user, error: userError } = await supabaseWithAdminAccess

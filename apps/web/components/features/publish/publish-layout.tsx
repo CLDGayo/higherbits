@@ -195,7 +195,7 @@ export default function PublishComponentForm({
   const [publishAttemptCount, setPublishAttemptCount] = useState(0)
 
   const isAddDemoMode = mode === "add-demo"
-  const isUserAdmin = useIsAdmin()
+  const { isAdmin: isUserAdmin } = useIsAdmin()
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),

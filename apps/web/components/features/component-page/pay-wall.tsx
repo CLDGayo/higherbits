@@ -211,18 +211,8 @@ export function PayWall({ accessState, component }: PayWallProps) {
   )
 }
 
-function getTokenPrice(
-  planType?: PlanType,
-  period: "monthly" | "yearly" = "monthly",
-) {
-  switch (planType) {
-    case "pro_plus":
-      return 30 / 200 // $0.15 per token
-    case "pro":
-      return 10 / 50 // $0.2 per token
-    default:
-      return 10 / 50 // Default to Pro plan price
-  }
+function getTokenPrice(planType?: PlanType, period: "monthly" | "yearly" = "monthly") {
+  return 0 // Token pricing removed
 }
 
 function UnlockPaywall({

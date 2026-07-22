@@ -4,7 +4,7 @@ import {
   ExtendedDemoWithComponent,
   transformDemoResult,
 } from "@/lib/utils/transformData"
-import { auth } from "@clerk/nextjs/server"
+import { auth, clerkClient } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import ShortUUID from "short-uuid"
 import { StudioUsernameClient } from "./page.client"
@@ -125,13 +125,24 @@ export default async function StudioUsernamePage({
 
   // Verify logged in user has access to this user's components
   // Admin can access any user's components, users can only access their own
+  let isClerkAdmin = false
+  try {
+    const client = await clerkClient()
+    const clerkUser = await client.users.getUser(userId)
+    isClerkAdmin =
+      clerkUser.publicMetadata?.role === "admin" ||
+      clerkUser.publicMetadata?.is_admin === true
+  } catch (err) {
+    console.error("Error fetching Clerk user in page:", err)
+  }
+
   const { data: currentUser } = await supabaseWithAdminAccess
     .from("users")
     .select("is_admin")
     .eq("id", userId)
-    .single()
+    .maybeSingle()
 
-  const isAdmin = currentUser?.is_admin || false
+  const isAdmin = isClerkAdmin || (currentUser?.is_admin ?? false)
   const isOwnProfile = userId === user.id
 
   if (!isAdmin && !isOwnProfile) {

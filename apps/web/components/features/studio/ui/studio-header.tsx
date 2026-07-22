@@ -82,7 +82,7 @@ export function StudioHeader({ user }: StudioHeaderProps) {
         />
 
         <div className="flex items-center gap-2 ml-2">
-          <Icons.slash className="text-border w-[22px] h-[22px]" />
+          <Icons.Slash className="text-border w-[22px] h-[22px]" />
           <span className="text-[14px] font-medium hidden sm:inline">
             Creator Studio
           </span>

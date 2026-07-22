@@ -13,10 +13,12 @@ import { ClayCard } from "./clay-card"
 import { ClayPillButton } from "./clay-pill-button"
 import { Icons } from "../icons"
 import { GitHubStarsBasic } from "./github-stars-number"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 
 export function HeroSection() {
   const router = useRouter()
   const isMobile = useIsMobile()
+  const { isAdmin } = useIsAdmin()
   const heroRef = useRef<HTMLDivElement>(null)
 
   const browseComponents = () => {
@@ -90,7 +92,7 @@ export function HeroSection() {
             className="flex items-center gap-6 bg-background/50 backdrop-blur-sm pl-4 pr-6 py-3 rounded-full border border-border/40"
           >
             <div className="flex items-center gap-3">
-              <div className="h-6 w-6 rounded-full bg-foreground" />
+              <Icons.logo className="h-6 w-6" />
               <span className="font-cozy font-semibold text-foreground">HigherBits.dev</span>
             </div>
 
@@ -102,18 +104,6 @@ export function HeroSection() {
                 className="text-sm text-foreground/90 hover:text-foreground transition-colors"
               >
                 Explore
-              </Link>
-              <Link
-                href="/api-access"
-                className="text-sm text-foreground/90 hover:text-foreground transition-colors"
-              >
-                API
-              </Link>
-              <Link
-                href="/magic"
-                className="text-sm text-foreground/90 hover:text-foreground transition-colors"
-              >
-                Magic MCP
               </Link>
               <Link
                 href="https://github.com/CLDGayo/higherbits"
@@ -142,16 +132,16 @@ export function HeroSection() {
           >
             <div className="flex justify-center mb-5">
               <Badge variant="pink" className="rounded-pill px-3 py-1 shadow-cushion-outer">
-                Cozy UI, freshly baked
+                🚀 Ship your next project faster
               </Badge>
             </div>
 
             <h1 className="font-cozy text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 md:mb-8 bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[1.2] pb-1">
-              Discover, share & remix the best UI components
+              Copy, paste, and ship premium UI components.
             </h1>
 
             <h2 className="font-cozy text-base sm:text-lg md:text-xl leading-relaxed mb-8 md:mb-12 bg-gradient-to-b from-muted-foreground to-muted-foreground/70 bg-clip-text text-transparent max-w-[600px] mx-auto">
-              Built by design engineers, loved by vibe coders.
+              A curated library of production-ready code snippets engineered for modern web frameworks and marketing agencies.
             </h2>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 justify-center mb-20">
@@ -166,12 +156,14 @@ export function HeroSection() {
                 </Link>
               </ClayPillButton>
 
-              <ClayPillButton variant="secondary" asChild className="gap-2">
-                <Link href="/magic">
-                  Integrate in IDE AI Agent
-                  <ArrowRight className="h-4 w-4 ml-1.5" />
-                </Link>
-              </ClayPillButton>
+              {isAdmin && (
+                <ClayPillButton variant="secondary" asChild className="gap-2">
+                  <Link href="/magic">
+                    Integrate in IDE AI Agent
+                    <ArrowRight className="h-4 w-4 ml-1.5" />
+                  </Link>
+                </ClayPillButton>
+              )}
             </div>
 
             {/* Company Logos */}
@@ -196,28 +188,21 @@ export function HeroSection() {
                 {/* IDE Logos */}
                 <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-12 text-foreground max-w-[350px] md:max-w-[800px] mx-auto">
                   <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
+                    <Icons.goHighLevelLogo className="h-6 sm:h-8 w-auto" />
+                  </div>
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
                     <Icons.cursorAnimatedLogo />
                     <Icons.cursorLogo className="h-3 sm:h-4 w-auto" />
                   </div>
+
                   <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <div className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px]">
-                      <Icons.windsurfTealLogo className="w-full h-full" />
-                    </div>
+                    <Icons.claudeLogo className="h-6 sm:h-8 w-auto" />
                   </div>
                   <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <div className="flex items-center gap-3">
-                      <Icons.vscode className="w-6 h-6 mr-1" />
-                      <span className="text-sm text-muted-foreground">+</span>
-                      <div className="flex items-center gap-2 bg-gradient-to-b from-[#0E0F0F] to-[#0C0C0C] overflow-hidden rounded-lg border border-white/10 w-[36px] h-[36px]">
-                        <img
-                          src="https://avatars.githubusercontent.com/u/184127137?s=200&v=4"
-                          alt="Cline"
-                          width={36}
-                          height={36}
-                          className="mix-blend-hard-light"
-                        />
-                      </div>
-                    </div>
+                    <Icons.codexLogo className="h-6 sm:h-8 w-auto" />
+                  </div>
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
+                    <Icons.antigravityLogo className="h-6 sm:h-8 w-auto" />
                   </div>
                 </div>
 
@@ -229,6 +214,7 @@ export function HeroSection() {
                   <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
                     <Icons.boltLogo className="h-5 sm:h-6 w-auto" />
                   </div>
+
                   <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[45%] sm:basis-auto justify-center">
                     <Icons.lovableLogo className="h-5 sm:h-6 w-auto" />
                     <span className="text-[16px] sm:text-[20px] font-bold">

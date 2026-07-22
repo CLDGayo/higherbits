@@ -575,7 +575,7 @@ export const useSubmitComponent = () => {
           .from("components")
           .insert(componentData)
           .select()
-          .single()
+          .maybeSingle()
 
       if (insertComponentError) {
         console.error("Error inserting component:", insertComponentError)
@@ -764,7 +764,7 @@ export const useSubmitComponent = () => {
       }
     } else {
       const { data: insertedDemo, error: insertDemoError } =
-        await context.supabase.from("demos").insert(demoData).select().single()
+        await context.supabase.from("demos").insert(demoData).select().maybeSingle()
 
       if (insertDemoError) {
         console.error("Error inserting demo:", insertDemoError)
@@ -927,7 +927,7 @@ export const useSubmitComponent = () => {
           .from("submissions")
           .select()
           .eq("component_id", submissionState.componentIdToUse)
-          .single()
+          .maybeSingle()
       }
     } catch (error) {
       console.error("Error submitting component:", error)

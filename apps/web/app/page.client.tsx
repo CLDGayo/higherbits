@@ -5,7 +5,7 @@ import { useAtom } from "jotai"
 import { AnimatePresence, motion } from "motion/react"
 import React, { useEffect, useState } from "react"
 
-import { BoltBanner } from "@/components/features/bolt/bolt-banner"
+
 import { BundlesLayout } from "@/components/features/bundles/bundles-layout"
 import { CategoriesList } from "@/components/features/categories/category-list"
 import { CollectionsContainer } from "@/components/features/collections/collections-list"
@@ -97,31 +97,19 @@ const MainContent = React.memo(function MainContent({
     }
   }
 
-  if (activeTab === "home" && isMobile) {
-    return (
-      <div className="flex flex-col pb-4 pt-20 min-w-0">
-        <ComponentsHeader activeTab={activeTab} onTabChange={handleTabChange} />
-        <div className="mb-10 min-w-0">
-          <BoltBanner />
-        </div>
-        {renderContent()}
-      </div>
-    )
-  }
-
   if (activeTab === "home") {
-    return (
-      <div className="flex flex-col pb-4 pt-[70px] min-w-0">
-        {isMobile ? (
-          <ComponentsHeader
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-          />
-        ) : (
-          <BoltBanner />
-        )}
+    if (isMobile) {
+      return (
+        <div className="flex flex-col pb-4 pt-20 min-w-0">
+          <ComponentsHeader activeTab={activeTab} onTabChange={handleTabChange} />
+          {renderContent()}
+        </div>
+      )
+    }
 
-        <div className="mt-[25px] min-w-0">{renderContent()}</div>
+    return (
+      <div className="flex flex-col pb-4 -mt-6 min-w-0">
+        <div className="min-w-0">{renderContent()}</div>
       </div>
     )
   }

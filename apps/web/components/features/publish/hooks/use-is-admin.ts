@@ -4,9 +4,9 @@ import { useUser } from "@clerk/nextjs"
 import { useQuery } from "@tanstack/react-query"
 
 export const useIsAdmin = () => {
-  const { user } = useUser()
+  const { user, isLoaded } = useUser()
 
-  const { data: isCurrentUserAdmin = false, isLoading } = useQuery({
+  const { data: isCurrentUserAdmin = false, isLoading: isQueryLoading } = useQuery({
     queryKey: ["user", user?.id, "isAdmin"],
     queryFn: async () => {
       if (!user?.id) return false
@@ -25,5 +25,9 @@ export const useIsAdmin = () => {
     enabled: !!user?.id,
   })
 
-  return isCurrentUserAdmin
+  // Loading state should be true if Clerk is still loading,
+  // or if the query is running for an authenticated user.
+  const isLoading = !isLoaded || (!!user?.id && isQueryLoading)
+
+  return { isAdmin: isCurrentUserAdmin, isLoading }
 }

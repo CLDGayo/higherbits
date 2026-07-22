@@ -4,14 +4,15 @@ import { UseFormReturn } from "react-hook-form"
 import type { FormData } from "../config/utils"
 
 async function convertVideoToMP4(file: File): Promise<File> {
-  const videoFormData = new FormData()
-  videoFormData.append("video", file)
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/convert`,
     {
       method: "POST",
-      body: videoFormData,
+      body: file,
+      headers: {
+        "Content-Type": file.type || "application/octet-stream",
+        "X-File-Name": encodeURIComponent(file.name),
+      },
     },
   )
 

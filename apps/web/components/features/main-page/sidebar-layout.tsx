@@ -66,7 +66,7 @@ import type {
 } from "@/lib/navigation-with-magic"
 
 export function MainSidebar() {
-  const { toggleSidebar, state } = useSidebar()
+  const { toggleSidebar, state, isMobile, setOpenMobile } = useSidebar()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -190,11 +190,12 @@ export function MainSidebar() {
                             item.value !== "components" &&
                             activeTab === item.value))
                       }
-                      onClick={() =>
+                      onClick={() => {
                         navigateToTab(
                           item.value as Exclude<AppSection, "magic"> | "home",
                         )
-                      }
+                        if (isMobile) setOpenMobile(false)
+                      }}
                     >
                       <div className="flex items-center w-full">
                         {getIconForNavItem(item.value)}
@@ -289,6 +290,10 @@ export function MainSidebar() {
                                         ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
                                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                                     )}
+                                    onClick={() => {
+                                      if (subitem.externalLink) return
+                                      if (isMobile) setOpenMobile(false)
+                                    }}
                                     target={
                                       subitem.externalLink
                                         ? "_blank"
@@ -336,11 +341,12 @@ export function MainSidebar() {
                         !pathname.startsWith("/s/") &&
                         activeTab === item.value
                       }
-                      onClick={() =>
+                      onClick={() => {
                         navigateToTab(
                           item.value as Exclude<AppSection, "magic">,
                         )
-                      }
+                        if (isMobile) setOpenMobile(false)
+                      }}
                     >
                       <div className="flex items-center w-full">
                         {getIconForNavItem(item.value)}
@@ -370,6 +376,7 @@ export function MainSidebar() {
                   isActive={pathname === "/contest"}
                   onClick={() => {
                     router.push("/contest")
+                    if (isMobile) setOpenMobile(false)
                   }}
                 >
                   <div className="flex items-center w-full">
@@ -383,6 +390,7 @@ export function MainSidebar() {
                   isActive={pathname === "/contest/leaderboard"}
                   onClick={() => {
                     router.push("/contest/leaderboard")
+                    if (isMobile) setOpenMobile(false)
                   }}
                 >
                   <div className="flex items-center w-full">
@@ -417,6 +425,7 @@ export function MainSidebar() {
                         `/${clerkUser.externalAccounts[0].username}?tab=bookmarks`,
                       )
                     }
+                      if (isMobile) setOpenMobile(false)
                   }}
                 >
                   <div className="flex items-center w-full">
@@ -442,6 +451,7 @@ export function MainSidebar() {
                         `/${clerkUser.externalAccounts[0].username}?tab=purchased_bundles`,
                       )
                     }
+                      if (isMobile) setOpenMobile(false)
                   }}
                 >
                   <div className="flex items-center w-full">
@@ -585,6 +595,10 @@ export function MainSidebar() {
                                           onMouseLeave={() =>
                                             setHoveredItem(null)
                                           }
+                                          onClick={() => {
+                                            if (item.externalLink) return
+                                            if (isMobile) setOpenMobile(false)
+                                          }}
                                         >
                                           <span className="flex items-center">
                                             {item.title}

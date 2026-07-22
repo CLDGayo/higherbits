@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "types": "supabase gen types --lang=typescript --project-id 'vucvdpamtrjkzmubwlts' --schema public > ./types/supabase.ts",
     "supabase:login": "supabase login",
     "build": "next build",
@@ -143,7 +143,9 @@
     "overrides": {
       "@types/react": "19.0.10",
       "@types/react-dom": "19.0.4",
-      "react-is": "19.1.0"
+      "react-is": "19.1.0",
+      "undici": ">=6.27.0",
+      "@babel/core": ">=7.29.6"
     }
   },
   "resolutions": {

@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server"
 import { revalidatePath, revalidateTag } from "next/cache"
+import { auth } from "@clerk/nextjs/server"
+import { checkIsAdmin } from "@/lib/admin"
 
 export async function POST(request: Request) {
   try {
+    const { userId } = await auth()
+    if (!userId || !(await checkIsAdmin(userId))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     const body = await request.json()
     const { filesToPurge, pathToRevalidate, tagToRevalidate } = body
 

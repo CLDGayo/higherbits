@@ -51,7 +51,7 @@ export const useSubmissions = (isAdmin: boolean) => {
         .select("*")
         .lte("start_at", now)
         .gte("end_at", now)
-        .single()
+        .maybeSingle()
 
       if (activeRound) return activeRound as ContestRound
 
@@ -62,7 +62,7 @@ export const useSubmissions = (isAdmin: boolean) => {
         .lte("start_at", now)
         .order("start_at", { ascending: false })
         .limit(1)
-        .single()
+        .maybeSingle()
 
       return pastRound as ContestRound
     },
@@ -134,22 +134,50 @@ export const useSubmissions = (isAdmin: boolean) => {
       const endIndex = startIndex + itemsPerPage
       const paginatedData = filteredData.slice(startIndex, endIndex)
 
+      // Extract IDs for batch querying
+      const demoIds = paginatedData.map((s: any) => s.id).filter(Boolean)
+      const componentIds = paginatedData
+        .map((s: any) => s.component_data?.id)
+        .filter(Boolean)
+
+      // Batch query contest participation
+      let demoHuntScores: any[] = []
+      if (demoIds.length > 0) {
+        const { data: scoresData } = await supabase
+          .from("demo_hunt_scores")
+          .select("demo_id, round_id")
+          .in("demo_id", demoIds)
+        if (scoresData) demoHuntScores = scoresData
+      }
+
+      // Batch query component public status
+      let publicComponents: any[] = []
+      if (componentIds.length > 0) {
+        const { data: compData } = await supabase
+          .from("components")
+          .select("id, is_public")
+          .in("id", componentIds)
+        if (compData) publicComponents = compData
+      }
+
       // Check contest participation status for each submission
-      const enhancedData = await Promise.all(
-        paginatedData.map(async (submission: any) => {
-          const roundId = await checkContestParticipation(submission.id)
-          const isPublic =
-            submission.component_data &&
-            typeof submission.component_data === "object"
-              ? await checkIsPublic(submission.component_data.id)
-              : false
-          return {
-            ...submission,
-            contest_round_id: roundId,
-            is_public: isPublic,
-          }
-        }),
-      )
+      const enhancedData = paginatedData.map((submission: any) => {
+        const roundId = demoHuntScores.find(
+          (score) => score.demo_id === submission.id,
+        )?.round_id || null
+
+        const isPublic = submission.component_data?.id
+          ? publicComponents.find(
+              (c) => c.id === submission.component_data.id,
+            )?.is_public || false
+          : false
+
+        return {
+          ...submission,
+          contest_round_id: roundId,
+          is_public: isPublic,
+        }
+      })
 
       setSubmissions(enhancedData as unknown as Submission[])
     } catch (error) {
@@ -193,7 +221,7 @@ export const useSubmissions = (isAdmin: boolean) => {
         .from("demo_hunt_scores")
         .select("round_id")
         .eq("demo_id", demoId)
-        .single()
+        .maybeSingle()
 
       if (error) {
         if (error.code === "PGRST116") {
@@ -529,7 +557,7 @@ export const useSubmissions = (isAdmin: boolean) => {
         .from("components")
         .select("is_public")
         .eq("id", componentId)
-        .single()
+        .maybeSingle()
 
       if (error) {
         throw error

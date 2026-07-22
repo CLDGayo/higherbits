@@ -19,7 +19,7 @@ export const usePublishAs = ({ username }: { username: string }) => {
         .from("users")
         .select("is_admin")
         .eq("id", user?.id!)
-        .single()
+        .maybeSingle()
       return data?.is_admin ?? false
     },
     enabled: !!user?.id,
@@ -32,7 +32,7 @@ export const usePublishAs = ({ username }: { username: string }) => {
         .from("users")
         .select("*")
         .eq("username", username)
-        .single()
+        .maybeSingle()
       return data
     },
     enabled: !!username,

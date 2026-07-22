@@ -19,11 +19,6 @@ interface PricingProps {
     price: {
       [key: string]: string | number
     }
-    tokenPrice: {
-      monthly: number
-      yearly: number
-    }
-    tokens: number
     description: string
     features: string[]
     cta: string
@@ -38,7 +33,7 @@ interface PricingProps {
   isAuthenticated?: boolean
 }
 
-const planOrder = { free: 1, pro: 2, pro_plus: 3 }
+const planOrder: Record<string, number> = { free: 1, pro: 2 }
 
 function formatPriceFeature(feature: string, frequency: string): string {
   if (!feature.includes("monthly / $")) {
@@ -72,7 +67,8 @@ export function PricingSection({
   const [frequency] = useAtom(pricingFrequencyAtom)
 
   const handleClick = (tierType: PlanType) => {
-    const isDowngrade = planOrder[tierType] < planOrder[currentPlan || "free"]
+    const isDowngrade =
+      (planOrder[tierType] ?? 0) < (planOrder[currentPlan || "free"] ?? 0)
 
     if (tierType === currentPlan && currentFrequency !== frequency) {
       onUpgrade(tierType, frequency)
@@ -84,7 +80,8 @@ export function PricingSection({
   }
 
   const getButtonText = (tierType: PlanType) => {
-    const isDowngrade = planOrder[tierType] < planOrder[currentPlan || "free"]
+    const isDowngrade =
+      (planOrder[tierType] ?? 0) < (planOrder[currentPlan || "free"] ?? 0)
     const isCurrentPlan = tierType === currentPlan
 
     if (tierType === "free" && currentPlan === "free") {
@@ -125,21 +122,7 @@ export function PricingSection({
     return buttonContent
   }
 
-  const formatFeatureWithPrice = (
-    feature: string,
-    tier: PricingProps["tiers"][0],
-  ) => {
-    if (feature.includes("Premium HigherBits.dev Components")) {
-      return "Premium HigherBits.dev Components"
-    }
-    if (feature.includes("AI Component Generation")) {
-      return "AI Component Generation"
-    }
-    if (feature.includes("tokens per month")) {
-      return `${tier.tokens} tokens included ($${tier.tokenPrice[frequency].toFixed(2)}/token)`
-    }
-    return feature
-  }
+  const formatFeatureWithPrice = (feature: string) => feature
 
   return (
     <div className="py-24">
@@ -224,7 +207,7 @@ export function PricingSection({
                         <li key={feature} className="flex items-start">
                           <Check className="h-5 w-5 flex-shrink-0 text-foreground mt-0.5" />
                           <span className="ml-3 text-sm text-muted-foreground">
-                            {formatFeatureWithPrice(feature, tier)}
+                            {formatFeatureWithPrice(feature)}
                           </span>
                         </li>
                       ))}

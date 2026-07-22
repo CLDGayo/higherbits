@@ -58,7 +58,7 @@ export async function getComponent(
     .not("user", "is", null)
     .order("downloads_count", { ascending: false })
     .returns<(Component & { user: User } & { tags: Tag[] })[]>()
-    .single()
+    .maybeSingle()
 
   if (error) {
     console.error("Error fetching component:", error)
@@ -81,7 +81,7 @@ export async function getUserData(
       .from("users")
       .select("*")
       .or(`username.eq.${username},display_username.eq.${username}`)
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error("Error fetching user data:", error)
@@ -113,7 +113,7 @@ export const authUsername = async (
     .from("users")
     .select("is_admin")
     .eq("id", userId)
-    .single()
+    .maybeSingle()
 
   if (currentUserError) {
     console.error("Error fetching current user", currentUserError)
@@ -148,7 +148,7 @@ export async function addTagsToDemo(
         .from("tags")
         .select("id")
         .eq("slug", slug)
-        .single()
+        .maybeSingle()
 
       if (existingTag) {
         tagId = existingTag.id
@@ -157,7 +157,7 @@ export async function addTagsToDemo(
           .from("tags")
           .insert({ name: capitalizedName, slug })
           .select()
-          .single()
+          .maybeSingle()
 
         if (insertError) {
           console.error("Error inserting tag:", insertError)
@@ -274,7 +274,7 @@ export async function getHunterUser(
     .from("users")
     .select("*")
     .eq("username", hunterUsername)
-    .single()
+    .maybeSingle()
 
   if (error) {
     console.error("Error fetching hunter user:", error)
@@ -343,11 +343,15 @@ export async function getComponentWithDemo(
     .from("users")
     .select("*")
     .or(`username.eq.${username},display_username.eq.${username}`)
-    .single()
+    .maybeSingle()
 
   if (userError) {
     console.error("User error:", userError)
     return { data: null, error: new Error(userError.message) }
+  }
+
+  if (!user) {
+    return { data: null, error: new Error("User not found") }
   }
 
   const { data: component, error: componentError } = await supabase
@@ -367,11 +371,15 @@ export async function getComponentWithDemo(
     )
     .eq("component_slug", slug)
     .eq("user_id", user.id)
-    .single()
+    .maybeSingle()
 
   if (componentError) {
     console.error("Component error:", componentError)
     return { data: null, error: new Error(componentError.message) }
+  }
+
+  if (!component) {
+    return { data: null, error: new Error("Component not found") }
   }
 
   const { data: submission, error: submissionError } = await supabase
@@ -397,11 +405,18 @@ export async function getComponentWithDemo(
     )
     .eq("component_id", component.id)
     .eq("demo_slug", demo_slug)
-    .single()
+    .maybeSingle()
 
   if (demoError) {
     if (demo_slug === "default") {
       return { data: null, error: new Error(demoError.message) }
+    }
+    return { data: null, error: null, shouldRedirectToDefault: true }
+  }
+
+  if (!demo) {
+    if (demo_slug === "default") {
+      return { data: null, error: new Error("Demo not found") }
     }
     return { data: null, error: null, shouldRedirectToDefault: true }
   }
@@ -463,11 +478,15 @@ export async function getComponentWithDemoForOG(
     .from("users")
     .select("*")
     .or(`username.eq.${username},display_username.eq.${username}`)
-    .single()
+    .maybeSingle()
 
   if (userError) {
     console.error("User error:", userError)
     return { data: null, error: new Error(userError.message) }
+  }
+
+  if (!user) {
+    return { data: null, error: new Error("User not found") }
   }
 
   const { data: component, error: componentError } = await supabase
@@ -487,11 +506,15 @@ export async function getComponentWithDemoForOG(
     )
     .eq("component_slug", slug)
     .eq("user_id", user.id)
-    .single()
+    .maybeSingle()
 
   if (componentError) {
     console.error("Component error:", componentError)
     return { data: null, error: new Error(componentError.message) }
+  }
+
+  if (!component) {
+    return { data: null, error: new Error("Component not found") }
   }
 
   const { data: submission, error: submissionError } = await supabase
@@ -517,11 +540,18 @@ export async function getComponentWithDemoForOG(
     )
     .eq("component_id", component.id)
     .eq("demo_slug", demo_slug)
-    .single()
+    .maybeSingle()
 
   if (demoError) {
     if (demo_slug === "default") {
       return { data: null, error: new Error(demoError.message) }
+    }
+    return { data: null, error: null, shouldRedirectToDefault: true }
+  }
+
+  if (!demo) {
+    if (demo_slug === "default") {
+      return { data: null, error: new Error("Demo not found") }
     }
     return { data: null, error: null, shouldRedirectToDefault: true }
   }
@@ -674,7 +704,7 @@ export function useHasUserBookmarkedDemo(
         .eq("demo_id", demoId)
         .eq("user_id", userId)
         .limit(1)
-        .single()
+        .maybeSingle()
 
       if (error && error.code !== "PGRST116") {
         console.error("Error checking if user bookmarked demo:", error)
@@ -720,7 +750,7 @@ export async function getPromptRule(
     .from("prompt_rules")
     .select("*")
     .eq("id", id)
-    .single()
+    .maybeSingle()
 
   if (error) {
     if (error.code === "PGRST116") {
@@ -730,9 +760,12 @@ export async function getPromptRule(
     throw new Error(`Failed to fetch prompt rule: ${error.message}`)
   }
 
+  if (!data) return null
+
   // Transform the data to match the PromptRule type
   return {
     ...data,
+    id: data.id as number,
     tech_stack: (data.tech_stack as unknown as TechStack[]) || [],
     theme: (data.theme as unknown as Theme) || {},
     created_at: data.created_at || new Date().toISOString(),
@@ -758,16 +791,21 @@ export async function createPromptRule(
       updated_at: now,
     })
     .select()
-    .single()
+    .maybeSingle()
 
   if (error) {
     console.error("Error creating prompt rule:", error)
     throw new Error(`Failed to create prompt rule: ${error.message}`)
   }
 
+  if (!data) {
+    throw new Error("No data returned")
+  }
+
   // Transform the data to match the PromptRule type
   return {
     ...data,
+    id: data.id as number,
     tech_stack: (data.tech_stack as unknown as TechStack[]) || [],
     theme: (data.theme as unknown as Theme) || {},
     created_at: data.created_at || now,
@@ -792,16 +830,21 @@ export async function updatePromptRule(
     })
     .eq("id", id)
     .select()
-    .single()
+    .maybeSingle()
 
   if (error) {
     console.error("Error updating prompt rule:", error)
     throw new Error(`Failed to update prompt rule: ${error.message}`)
   }
 
+  if (!data) {
+    throw new Error("No data returned")
+  }
+
   // Transform the data to match the PromptRule type
   return {
     ...data,
+    id: data.id as number,
     tech_stack: (data.tech_stack as unknown as TechStack[]) || [],
     theme: (data.theme as unknown as Theme) || {},
     created_at: data.created_at || now,
@@ -904,69 +947,40 @@ export function useFeaturedDemos() {
   return useQuery({
     queryKey: ["featured-demos"] as const,
     queryFn: async () => {
-      // Fetch liked demos for all admin users
-      const likedResults = await Promise.all(
-        adminUserIds.map((userId) =>
-          supabase.rpc("get_admin_liked_demos_v1", {
-            p_user_id: userId,
-            p_limit: adminLikedItemsLimit,
-          }),
-        ),
+      const { data: filteredData, error } = await supabase.rpc(
+        "get_demos_submissions",
+        {
+          p_sort_by: "date",
+          p_offset: 0,
+          p_limit: 100, // Fetch a larger batch to find featured items
+          p_tag_slug: undefined,
+          p_include_private: false,
+        },
       )
 
-      // Process Liked Demos
-      let combinedLikedDemosRaw: AdminLikedDemo[] = []
-      likedResults.forEach((result) => {
-        if (result.error) {
-          console.error(
-            `Error fetching admin liked demos for one user:`,
-            result.error,
-          )
-        } else if (result.data) {
-          combinedLikedDemosRaw = combinedLikedDemosRaw.concat(
-            result.data as AdminLikedDemo[],
-          )
-        }
-      })
+      if (error) {
+        console.error("Error fetching featured demos:", error)
+        throw error
+      }
 
-      // Deduplicate liked demos using a Map, preserving first occurrence
-      const uniqueLikedDemosMap = new Map<number, AdminLikedDemo>()
-      combinedLikedDemosRaw.forEach((demo) => {
-        // Ensure demo and demo.id are valid before using the map
-        if (
-          demo &&
-          typeof demo.id === "number" &&
-          !uniqueLikedDemosMap.has(demo.id)
-        ) {
-          uniqueLikedDemosMap.set(demo.id, demo)
-        }
-      })
-
-      // Transform and Sort unique liked demos by updated_at desc as proxy for bookmarked_at
-      const uniqueLikedDemosTransformed = Array.from(
-        uniqueLikedDemosMap.values(),
+      const featuredDataRaw = (filteredData || []).filter(
+        (demo) => demo.submission_status === "featured"
       )
-        .map(transformDemoResult) // Transform first
-        .sort((a, b) => {
-          // Then sort
-          // Handle potential null or undefined dates gracefully
-          const dateA = a.updated_at ? new Date(a.updated_at).getTime() : 0
-          const dateB = b.updated_at ? new Date(b.updated_at).getTime() : 0
-          return dateB - dateA // Descending order
-        })
+
+      const transformedData = featuredDataRaw.map(transformDemoResult)
 
       // Shuffle the featured items to add variety each time
-      const shuffledFeaturedItems = [...uniqueLikedDemosTransformed]
+      const shuffledFeaturedItems = [...transformedData]
       for (let i = shuffledFeaturedItems.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
-        const temp = shuffledFeaturedItems[i]
-        shuffledFeaturedItems[i] = shuffledFeaturedItems[j] as DemoWithComponent
-        shuffledFeaturedItems[j] = temp as DemoWithComponent
+        const temp = shuffledFeaturedItems[i]!
+        shuffledFeaturedItems[i] = shuffledFeaturedItems[j]!
+        shuffledFeaturedItems[j] = temp
       }
 
       return {
         data: shuffledFeaturedItems as DemoWithComponent[],
-        ids: new Set(uniqueLikedDemosTransformed.map((d) => d.id)),
+        ids: new Set(transformedData.map((d) => d.id)),
       }
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -1319,7 +1333,7 @@ export const useRoundSubmissions = (roundId: number | null) => {
         .from("component_hunt_rounds")
         .select("*,tags!component_hunt_rounds_seasonal_tag_id_fkey(slug,name)")
         .eq("id", roundId as number)
-        .single()
+        .maybeSingle()
 
       if (error) {
         console.error("Error fetching seasonal tag:", error)
@@ -1459,7 +1473,7 @@ export function useLeaderboardDemosForHome() {
         .select("*")
         .lte("start_at", now)
         .gte("end_at", now)
-        .single()
+        .maybeSingle()
 
       if (activeRound) {
         return activeRound as Round
@@ -1472,7 +1486,7 @@ export function useLeaderboardDemosForHome() {
         .lte("start_at", now)
         .order("start_at", { ascending: false })
         .limit(1)
-        .single()
+        .maybeSingle()
 
       return pastRound as Round
     },

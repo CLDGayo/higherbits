@@ -257,8 +257,8 @@ export function BillingSettingsClient({
       const data = await response.json()
 
       if (data.directly_upgraded) {
-        const planOrder = { pro_plus: 3, pro: 2, free: 1 }
-        const isDowngrade = planOrder[planId] < planOrder[currentPlanId]
+        const planOrder = { pro: 2, free: 1 }
+        const isDowngrade = planOrder[planId as keyof typeof planOrder] < planOrder[currentPlanId as keyof typeof planOrder]
 
         toast.success(
           isDowngrade
@@ -348,8 +348,8 @@ export function BillingSettingsClient({
     }
 
     // Check if it's a downgrade (moving to a lower tier plan)
-    const planOrder = { pro_plus: 3, pro: 2, free: 1 }
-    const isDowngrade = planOrder[selectedPlanId] < planOrder[currentPlanId]
+    const planOrder = { pro: 2, free: 1 }
+    const isDowngrade = planOrder[selectedPlanId as keyof typeof planOrder] < planOrder[currentPlanId as keyof typeof planOrder]
 
     if (isDowngrade) {
       // Show confirmation dialog for downgrade
@@ -390,8 +390,6 @@ export function BillingSettingsClient({
   let upgradePlanId: PlanType | null = null
   if (currentPlanId === "free") {
     upgradePlanId = "pro"
-  } else if (currentPlanId === "pro") {
-    upgradePlanId = "pro_plus"
   }
 
   // If showing pricing table
@@ -508,7 +506,7 @@ export function BillingSettingsClient({
             <div className="p-4 grid grid-cols-2 gap-4">
               <div>
                 <h4 className="text-sm font-medium">
-                  ${upgradePlanId === "pro" ? "20" : "40"} per month
+                  $6 per month <span className="text-muted-foreground font-normal">($4/mo billed yearly)</span>
                 </h4>
                 <p className="text-xs text-muted-foreground mt-1">
                   {PLAN_LIMITS[upgradePlanId].description}
@@ -519,26 +517,21 @@ export function BillingSettingsClient({
                 <div className="flex items-center gap-1">
                   <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
                   <span className="text-xs">
-                    <strong>
-                      {PLAN_LIMITS[upgradePlanId].generationsPerMonth -
-                        PLAN_LIMITS[currentPlanId].generationsPerMonth}
-                    </strong>{" "}
-                    additional generations per month
+                    Unlimited code & prompt copies
                   </span>
                 </div>
-
-                {/* Additional features unique to the upgrade plan */}
-                {PLAN_LIMITS[upgradePlanId].features
-                  .filter(
-                    (feature: string) =>
-                      !PLAN_LIMITS[currentPlanId].features.includes(feature),
-                  )
-                  .map((feature: string, index: number) => (
-                    <div key={index} className="flex items-center gap-1">
-                      <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
-                      <span className="text-xs">{feature}</span>
-                    </div>
-                  ))}
+                <div className="flex items-center gap-1">
+                  <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
+                  <span className="text-xs">
+                    Access to pro-only components
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
+                  <span className="text-xs">
+                    Priority support
+                  </span>
+                </div>
               </div>
             </div>
 

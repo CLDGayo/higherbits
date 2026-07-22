@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { LoadingSpinner } from "./loading-spinner"
 
 interface LoadingDialogProps {
@@ -13,6 +13,7 @@ export function LoadingDialog({ isOpen, message }: LoadingDialogProps) {
         hideCloseButton
         className="w-[425px] h-40 flex flex-col items-center justify-center gap-4"
       >
+        <DialogTitle className="sr-only">Loading</DialogTitle>
         <LoadingSpinner />
         <p className="text-center text-sm text-muted-foreground">{message}</p>
       </DialogContent>

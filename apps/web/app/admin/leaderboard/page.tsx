@@ -51,7 +51,7 @@ interface Tag {
 }
 
 const AdminLeaderboardPage: FC = () => {
-  const isAdmin = useIsAdmin()
+  const { isAdmin } = useIsAdmin()
   const [selectedCategory, setSelectedCategory] = useState<Category>("global")
   const [showAll, setShowAll] = useState(false)
   const [selectedRoundId, setSelectedRoundId] = useState<number | null>(null)

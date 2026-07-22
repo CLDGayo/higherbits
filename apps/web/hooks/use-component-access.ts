@@ -17,7 +17,7 @@ export function useComponentAccess(
 ) {
   const [componentAccess, setComponentAccess] =
     useState<ComponentAccessState>("UNDEFINED")
-  const isAdmin = useIsAdmin()
+  const { isAdmin } = useIsAdmin()
 
   useEffect(() => {
     hasUserComponentAccessAction({ componentId: component.id }).then(

@@ -2,7 +2,7 @@ import { Tables } from "@/types/supabase"
 import { SandboxSession } from "@codesandbox/sdk"
 import { connectToSandbox as connectToCodeSandboxSDK } from "@codesandbox/sdk/browser"
 import { useEffect, useRef, useState } from "react"
-import { connectToSandbox } from "../api"
+import { connectToSandbox, getSandboxInfo } from "../api"
 import { getLatestPackageVersionFromError } from "../utils/dependencies"
 
 export type ServerSandbox = Pick<
@@ -32,6 +32,14 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       setIsSandboxLoading(true)
     }
     try {
+      if (!isReconnecting) {
+        getSandboxInfo(sandboxId).then((info) => {
+          if (info?.sandbox) {
+            setServerSandbox((prev) => prev || info.sandbox)
+          }
+        }).catch(console.error)
+      }
+
       const response = await connectToSandbox(sandboxId)
 
       if (!response) {
@@ -39,9 +47,9 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         throw new Error("Failed to connect to sandbox")
       }
 
-      const { startData, sandbox: serverSandbox } = response
+      const { startData, sandbox: serverSandboxResponse } = response
 
-      setServerSandbox(serverSandbox)
+      setServerSandbox(serverSandboxResponse)
 
       console.log("startData", startData)
       const connectedSandbox = await connectToCodeSandboxSDK(startData)
@@ -143,6 +151,33 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const reconnectSandbox = async () => {
     console.log("RECONNECTING sandbox")
     if (!sandboxId) return
+    
+    if (sandboxRef.current) {
+      try {
+        const isResponsive = await Promise.race([
+          sandboxRef.current.fs.stat("/project/sandbox").then(() => true).catch(() => false),
+          new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 2000))
+        ])
+        if (isResponsive) {
+          console.log("Sandbox is still responsive, skipping full reconnect")
+          return;
+        }
+      } catch (error) {
+        console.warn("Error checking sandbox responsiveness:", error)
+      }
+      
+      console.warn("Sandbox is not responsive, disposing old connection and reconnecting...")
+      try {
+        // @ts-ignore
+        if (typeof sandboxRef.current.dispose === 'function') {
+          // @ts-ignore
+          sandboxRef.current.dispose()
+        }
+      } catch (e) {
+        console.error("Error disposing old sandbox session", e)
+      }
+    }
+
     await initialize(true)
   }
 

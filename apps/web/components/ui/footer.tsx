@@ -84,6 +84,9 @@ export function Footer({ className, isOpenSource = true }: FooterProps) {
             </Link>
           </nav>
         </div>
+        <div className="text-center md:text-left text-[10px] text-muted-foreground/60 border-t border-border/40 pt-4 mt-2">
+          All product names, logos, and brands are property of their respective owners. Use of these names, logos, and brands does not imply endorsement.
+        </div>
       </div>
     </footer>
   )

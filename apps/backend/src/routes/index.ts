@@ -24,7 +24,7 @@ export const setupRoutes = (req: Request) => {
   const headers = {
     "Access-Control-Allow-Origin": isAllowedOrigin ? origin : "",
     "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, X-File-Name",
   }
 
   if (req.method === "OPTIONS") {
@@ -198,10 +198,18 @@ async function handleBundle(req: Request, headers: Record<string, string>) {
 async function handleConvert(req: Request, headers: Record<string, string>) {
   try {
     console.log("Converting video")
-    const formData = await req.formData()
-    const file = formData.get("video") as File
+    let file: File | null = null;
+    const contentType = req.headers.get("content-type") || "";
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await req.formData()
+      file = formData.get("video") as File
+    } else {
+      const filename = decodeURIComponent(req.headers.get("x-file-name") || "video.mp4")
+      const buffer = await req.arrayBuffer()
+      file = new File([buffer], filename, { type: contentType })
+    }
 
-    if (!file) {
+    if (!file || file.size === 0) {
       console.log("No video file found in request")
       return Response.json(
         { error: "No video file provided" },

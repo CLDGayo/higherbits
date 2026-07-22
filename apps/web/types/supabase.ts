@@ -3032,6 +3032,28 @@ export type Database = {
       }
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          p_user_id: string
+          p_endpoint: string
+          p_limit: number
+          p_window_seconds: number
+        }
+        Returns: boolean
+      }
+      increment_api_usage: {
+        Args: {
+          p_user_id: string
+          p_limit: number
+        }
+        Returns: {
+          success: boolean
+          error?: string
+          usage: number
+          limit: number
+          remaining: number
+        }
+      }
       analyze_author_payouts: {
         Args: Record<PropertyKey, never>
         Returns: {

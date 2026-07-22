@@ -515,7 +515,7 @@ export function ComponentPreviewDialog({
                   <span className="truncate">{demo.component.name}</span>
                   {demo.name != "Default" && (
                     <>
-                      <Icons.slash className="text-border w-[12px] h-[12px] flex-shrink-0" />
+                      <Icons.Slash className="text-border w-[12px] h-[12px] flex-shrink-0" />
                       <span className="truncate">{demo.name}</span>
                     </>
                   )}
@@ -606,7 +606,7 @@ export function ComponentPreviewDialog({
                   <span className="truncate">{demo.component.name}</span>
                   {demo.name != "Default" && (
                     <>
-                      <Icons.slash className="text-border w-[12px] h-[12px] flex-shrink-0" />
+                      <Icons.Slash className="text-border w-[12px] h-[12px] flex-shrink-0" />
                       <span className="truncate">{demo.name}</span>
                     </>
                   )}

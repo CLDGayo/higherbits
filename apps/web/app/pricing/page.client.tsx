@@ -10,7 +10,6 @@ import { PlanComparisonTable } from "@/components/features/pricing/plan-comparis
 import { PricingSection } from "../../components/features/pricing/pricing-section"
 import { FAQ } from "../../components/features/pricing/faq"
 import {
-  COMPARISON_PLANS,
   COMPARISON_FEATURES,
   PLAN_LIMITS,
   PlanType,
@@ -26,50 +25,22 @@ const TIERS = [
     name: PLAN_LIMITS.pro.displayName,
     type: "pro" as PlanType,
     price: {
-      monthly: PLAN_LIMITS.pro.monthlyPrice || 20,
-      yearly: PLAN_LIMITS.pro.yearlyPrice || 192,
+      monthly: 6,
+      yearly: 48,
     },
-    tokenPrice: {
-      monthly: PLAN_LIMITS.pro.tokenPricing.pricePerToken.monthly,
-      yearly: PLAN_LIMITS.pro.tokenPricing.pricePerToken.yearly,
-    },
-    tokens: 50,
-    description: PLAN_LIMITS.pro.description,
+    description: "For professional developers",
     features: PLAN_LIMITS.pro.features,
     cta: "Upgrade",
     href: "/signup",
     popular: true,
   },
-  {
-    name: PLAN_LIMITS.pro_plus.displayName,
-    type: "pro_plus" as PlanType,
-    price: {
-      monthly: PLAN_LIMITS.pro_plus.monthlyPrice || 40,
-      yearly: PLAN_LIMITS.pro_plus.yearlyPrice || 384,
-    },
-    tokenPrice: {
-      monthly: PLAN_LIMITS.pro_plus.tokenPricing.pricePerToken.monthly,
-      yearly: PLAN_LIMITS.pro_plus.tokenPricing.pricePerToken.yearly,
-    },
-    tokens: 200,
-    description: PLAN_LIMITS.pro_plus.description,
-    features: PLAN_LIMITS.pro_plus.features,
-    cta: "Upgrade Plus",
-    href: "/signup",
-    highlighted: true,
-  },
 ]
 
 const PRICING_FAQS = [
   {
-    question: "What are tokens and how do they work?",
+    question: "What do I get with Pro?",
     answer:
-      "Tokens are your currency for using AI features and accessing premium components. Each AI component generation costs 1 token, and unlocking a premium component from the library costs 5 tokens. Tokens reset monthly with your subscription.",
-  },
-  {
-    question: "What happens if I run out of tokens?",
-    answer:
-      "When you run out of tokens, you'll need to wait until your next billing cycle when they reset, or upgrade your plan for more tokens. Unused tokens don't roll over to the next month.",
+      "Pro gives you unlimited code and prompt copies, access to pro-only components, and priority support.",
   },
   {
     question: "Can I switch plans at any time?",
@@ -79,7 +50,7 @@ const PRICING_FAQS = [
   {
     question: "Do you offer refunds?",
     answer:
-      "We can provide partial refunds only for unused tokens and features. Since we incur costs for AI token usage through Anthropic Claude Sonnet, we cannot refund already used tokens and features. Contact our support team to discuss refund options for your unused subscription balance.",
+      "Contact our support team to discuss refund options.",
   },
 ]
 
@@ -216,7 +187,26 @@ export function Pricing() {
       <div className="hidden md:block">
         <PlanComparisonTable
           features={COMPARISON_FEATURES}
-          plans={COMPARISON_PLANS}
+          plans={[
+            {
+              name: PLAN_LIMITS.free.displayName,
+              type: "free" as PlanType,
+              price: { monthly: 0, yearly: 0 },
+              buttonText: "Current Plan",
+              disabled: true,
+            },
+            {
+              name: PLAN_LIMITS.pro.displayName,
+              type: "pro" as PlanType,
+              price: {
+                monthly: PLAN_LIMITS.pro.monthlyPrice || 6,
+                yearly: PLAN_LIMITS.pro.yearlyPrice || 48,
+              },
+              popular: true,
+              buttonText: "Upgrade to Pro",
+              buttonHref: "/upgrade",
+            },
+          ]}
           currentPlan={currentPlan}
           currentFrequency={currentFrequency}
           onSelect={handlePlanSelect}

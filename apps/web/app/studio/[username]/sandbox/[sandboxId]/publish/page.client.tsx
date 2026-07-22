@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { LoadingDialog } from "@/components/ui/loading-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
+import { SandboxHeader } from "@/components/features/studio/sandbox/components/sandbox-header"
 
 import { ComponentForm } from "@/components/features/studio/publish/components/forms/component-form"
 import { DemoDetailsForm } from "@/components/features/studio/publish/components/forms/demo-form"
@@ -45,11 +46,7 @@ type ParsedCodeData = {
   demoDependencies?: Record<string, string>
 }
 
-const PublishPage = ({
-  submitHandlerRef,
-}: {
-  submitHandlerRef?: React.MutableRefObject<(() => void) | null>
-}) => {
+const PublishPage = () => {
   const params = useParams()
   const sandboxId = params.sandboxId as string
   const urlUsername = params.username as string
@@ -275,8 +272,6 @@ const PublishPage = ({
   const isDemoComplete = (demo: any) =>
     demo.name && demo.tags?.length > 0 && demo.preview_image_data_url
 
-  submitHandlerRef!.current = handleSubmit
-
   useEffect(() => {
     if (isSuccessDialogOpen) {
       const usernameToUse = publishAsUser?.username || user?.username
@@ -310,66 +305,86 @@ const PublishPage = ({
     setIsSuccessDialogOpen,
   ])
 
+  const renderSandboxHeader = () => (
+    <SandboxHeader
+      sandboxId={sandboxId}
+      sandboxName={serverSandbox?.name}
+      username={urlUsername}
+      status={sandboxStatus}
+      showEditName={false}
+      customBackLabel="Back to edit"
+      customBackUrl={`/studio/${urlUsername}/sandbox/${sandboxId}`}
+      customNextLabel={isSubmitting ? "Submitting..." : "Send to review"}
+      customNextAction={handleSubmit}
+      hideNext={false}
+      isNextLoading={isSubmitting}
+    />
+  )
+
   if (isComponentDataLoading || (!serverSandbox?.id && !componentFormData)) {
     return (
-      <div className="flex flex-col h-[calc(100vh-56px)] w-full">
-        <div className="flex h-full">
-          <div className="border-r pointer-events-none transition-[width] duration-300 max-h-screen overflow-y-auto w-1/3 p-4">
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <Skeleton className="h-10 w-full rounded-md" />
-                <div className="space-y-4 pt-4">
-                  <div className="grid grid-cols-2 gap-4">
+      <>
+        {renderSandboxHeader()}
+        <div className="flex flex-col h-[calc(100vh-56px)] w-full">
+          <div className="flex h-full">
+            <div className="border-r pointer-events-none transition-[width] duration-300 max-h-screen overflow-y-auto w-1/3 p-4">
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <Skeleton className="h-10 w-full rounded-md" />
+                  <div className="space-y-4 pt-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-1/3 mb-1" />
+                        <Skeleton className="h-10 w-full" />
+                      </div>
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-1/3 mb-1" />
+                        <Skeleton className="h-10 w-full" />
+                      </div>
+                    </div>
                     <div className="space-y-2">
                       <Skeleton className="h-4 w-1/3 mb-1" />
-                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-20 w-full" />
                     </div>
                     <div className="space-y-2">
                       <Skeleton className="h-4 w-1/3 mb-1" />
                       <Skeleton className="h-10 w-full" />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-1/3 mb-1" />
-                    <Skeleton className="h-20 w-full" />
-                  </div>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-1/3 mb-1" />
-                    <Skeleton className="h-10 w-full" />
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <Skeleton className="h-10 w-full rounded-md" />
-                <div className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-1/3 mb-1" />
-                    <Skeleton className="h-10 w-full" />
-                  </div>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-1/3 mb-1" />
-                    <Skeleton className="h-10 w-full" />
-                  </div>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-1/3 mb-1" />
-                    <Skeleton className="h-32 w-full" />
+                <div className="space-y-4">
+                  <Skeleton className="h-10 w-full rounded-md" />
+                  <div className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-1/3 mb-1" />
+                      <Skeleton className="h-10 w-full" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-1/3 mb-1" />
+                      <Skeleton className="h-10 w-full" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-1/3 mb-1" />
+                      <Skeleton className="h-32 w-full" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="w-2/3 h-full bg-muted flex items-center justify-center">
-            <Skeleton className="w-full h-full" />
+            <div className="w-2/3 h-full bg-muted flex items-center justify-center">
+              <Skeleton className="w-full h-full" />
+            </div>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
     <>
+      {renderSandboxHeader()}
       <Form {...form}>
         <div className="flex flex-col h-[calc(100vh-3.5rem)] w-full">
           <div className="flex flex-1 min-h-0">
@@ -496,7 +511,7 @@ const PublishPage = ({
                 src={previewURL}
                 className="w-2/3 h-full border-0"
                 title="Preview"
-                allow="cross-origin-isolated; accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+                allow="cross-origin-isolated; accelerometer; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; xr-spatial-tracking"
                 sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
               />
             )}

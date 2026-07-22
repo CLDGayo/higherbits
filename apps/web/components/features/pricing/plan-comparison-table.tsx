@@ -29,11 +29,6 @@ export interface Plan {
     monthly: number | string
     yearly: number | string
   }
-  tokenPrice: {
-    monthly: number
-    yearly: number
-  }
-  tokens: number
   popular?: boolean
   buttonText: string
   buttonAction?: () => void
@@ -56,7 +51,6 @@ export interface PlanComparisonTableProps
 const planOrder: Record<PlanType, number> = {
   free: 1,
   pro: 2,
-  pro_plus: 3,
 }
 
 const getButtonText = (
@@ -165,16 +159,6 @@ export function PlanComparisonTable({
       return <CheckValue />
     }
 
-    // Show appropriate values for Premium Components and AI Generation in free plan
-    if (planType === "free") {
-      if (featureName === "Premium Components") {
-        return "-"
-      }
-      if (featureName === "AI Component Generation") {
-        return "5 free generation"
-      }
-    }
-
     if (typeof value === "string") {
       return value
     }
@@ -201,10 +185,10 @@ export function PlanComparisonTable({
 
     const buttonContent = (
       <Button
-        variant={plan.type === "pro_plus" ? "default" : "outline"}
+        variant={plan.type === "pro" ? "default" : "outline"}
         className={cn(
           "justify-center",
-          plan.type === "pro_plus" && "bg-black text-white hover:bg-black/90",
+          plan.type === "pro" && "bg-black text-white hover:bg-black/90",
         )}
         onClick={() =>
           handlePlanSelect(
@@ -232,7 +216,7 @@ export function PlanComparisonTable({
   return (
     <div className={cn("w-full", className)} {...props}>
       {/* Header row with plan names and pricing */}
-      <div className="grid grid-cols-4 mb-8 gap-8 items-baseline">
+      <div className="grid grid-cols-3 mb-8 gap-8 items-baseline">
         <div className="col-span-1 pt-10">
           <h2 className="text-2xl font-bold tracking-tight">
             Compare plans &amp; features
@@ -252,8 +236,6 @@ export function PlanComparisonTable({
                 secondary: "billed yearly",
               }
             : "per mo"
-
-          const tokenPriceFormatted = plan.tokenPrice[frequency].toFixed(2)
 
           return (
             <div key={plan.type} className="col-span-1 flex flex-col">
@@ -284,13 +266,6 @@ export function PlanComparisonTable({
                     )}
                   </div>
                 </div>
-                {plan.tokens && (
-                  <div className="text-sm text-muted-foreground">
-                    {plan.type === "free"
-                      ? `${plan.tokens} tokens included`
-                      : `${plan.tokens} tokens included ($${tokenPriceFormatted}/token)`}
-                  </div>
-                )}
               </div>
 
               {renderUpgradeButton(plan)}
@@ -308,7 +283,7 @@ export function PlanComparisonTable({
               <div
                 key={feature.name}
                 className={cn(
-                  "grid grid-cols-4 py-4 gap-8",
+                  "grid grid-cols-3 py-4 gap-8",
                   idx !== (featureSections[sectionName]?.length ?? 0) - 1 &&
                     "border-b",
                 )}

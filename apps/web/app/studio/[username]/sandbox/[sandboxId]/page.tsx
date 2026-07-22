@@ -10,8 +10,13 @@ import {
   useSearchParams,
 } from "next/navigation"
 import { useState } from "react"
-import PageClient from "./page.client"
+import dynamic from "next/dynamic"
+import { SandboxSkeleton } from "@/components/features/studio/sandbox/components/sandbox-skeleton"
 
+const PageClient = dynamic(() => import("./page.client"), {
+  ssr: false,
+  loading: () => <SandboxSkeleton />,
+})
 export default function Page() {
   const { username, sandboxId } = useParams() as {
     username: string
