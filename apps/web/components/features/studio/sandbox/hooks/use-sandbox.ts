@@ -33,8 +33,10 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     latestVersion: string
   } | null>(null)
   const [sandboxUnavailable, setSandboxUnavailable] = useState(false)
+  const [isRestartingDevServer, setIsRestartingDevServer] = useState(false)
   const shellCheckFailuresRef = useRef(0)
   const reconnectAttemptsRef = useRef(0)
+  const previewTokenRef = useRef<string | null>(null)
 
   const initialize = async (isReconnecting = false) => {
     if (!isReconnecting) {
@@ -58,6 +60,8 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       const { startData, sandbox: serverSandboxResponse, previewToken } =
         response
+
+      previewTokenRef.current = previewToken ?? null
 
       setServerSandbox(serverSandboxResponse)
 
@@ -242,6 +246,52 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     await initialize(true)
   }
 
+  // Restart the dev server (vite) shell on the VM. Fixes a wedged HMR / module
+  // graph — the failure mode where the preview renders nothing into #root with
+  // no error and a plain reload doesn't help, because it re-runs the same stuck
+  // dev server. Killing vite and starting a fresh shell gives a clean module
+  // graph and a new port 5173.
+  const restartDevServer = async () => {
+    if (!sandboxRef.current || isRestartingDevServer) return
+    setIsRestartingDevServer(true)
+    setSandboxUnavailable(false)
+    setPreviewURL(null)
+    try {
+      const shells = await sandboxRef.current.shells.getShells()
+      const devShells = shells.filter(
+        (shell) => shell.name === "pnpm run install-and-dev",
+      )
+      await Promise.all(devShells.map((shell) => shell.kill().catch(() => {})))
+      subscribedShells.current.clear()
+
+      // Give the old vite a moment to release port 5173 before the new one binds.
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Fire-and-forget: the dev server runs for the lifetime of the VM, so we
+      // don't await the command (it never resolves).
+      sandboxRef.current.shells.run("pnpm run install-and-dev", {
+        shellName: "pnpm run install-and-dev",
+      })
+
+      checkShells()
+
+      const portInfo = await sandboxRef.current.ports.waitForPort(5173, {
+        timeoutMs: 120_000,
+      })
+      const newPreviewURL = previewTokenRef.current
+        ? portInfo.getSignedPreviewUrl(previewTokenRef.current)
+        : portInfo.getPreviewUrl()
+      setPreviewURL(newPreviewURL || null)
+      shellCheckFailuresRef.current = 0
+      reconnectAttemptsRef.current = 0
+    } catch (error) {
+      console.error("Failed to restart dev server:", error)
+      setSandboxUnavailable(true)
+    } finally {
+      setIsRestartingDevServer(false)
+    }
+  }
+
   const clearMissingDependencyInfo = () => {
     setMissingDependencyInfo(null)
   }
@@ -262,6 +312,8 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     sandboxConnectionHash,
     reconnectSandbox,
     retryConnection,
+    restartDevServer,
+    isRestartingDevServer,
     sandboxUnavailable,
     // dependencies
     missingDependencyInfo,

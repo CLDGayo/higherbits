@@ -22,6 +22,7 @@ import { Icons } from "@/components/icons"
 import {
   XCircle,
   RefreshCw,
+  RotateCcw,
   PanelRightOpen,
   PanelRightClose,
 } from "lucide-react"
@@ -54,6 +55,8 @@ function PublishClientPageContent({
     sandboxConnectionHash,
     reconnectSandbox,
     retryConnection,
+    restartDevServer,
+    isRestartingDevServer,
     sandboxUnavailable,
     missingDependencyInfo,
     clearMissingDependencyInfo,
@@ -376,6 +379,23 @@ function PublishClientPageContent({
             className="bg-background/80 backdrop-blur-sm shadow-sm border"
           >
             <RefreshCw className="h-4 w-4" />
+          </Button>
+        )}
+        {showPreview && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={restartDevServer}
+            disabled={isRestartingDevServer}
+            title="Restart dev server (fixes a blank preview that a reload won't)"
+            className="bg-background/80 backdrop-blur-sm shadow-sm border"
+          >
+            <RotateCcw
+              className={cn(
+                "h-4 w-4",
+                isRestartingDevServer && "animate-spin",
+              )}
+            />
           </Button>
         )}
         <Button
