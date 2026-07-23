@@ -69,6 +69,11 @@ export async function POST(request: NextRequest) {
     try {
       const token = await codesandboxSdk.sandbox.previewTokens.create(
         sandbox.codesandbox_id,
+        // Bound the token lifetime. The token rides in the preview URL, so a
+        // leaked signed URL must not grant preview access indefinitely. A fresh
+        // token is minted on every connect, so 12h comfortably covers any single
+        // editing session while capping the blast radius of a leak.
+        new Date(Date.now() + 12 * 60 * 60 * 1000),
       )
       previewToken = token.token
     } catch (tokenError) {

@@ -107,6 +107,9 @@ export function PreviewPane({
                 src={previewURL}
                 className="w-full h-full rounded-b border-0"
                 title="Preview"
+                // The preview URL carries a preview_token credential; keep it out
+                // of the Referer header on any request the framed page makes.
+                referrerPolicy="no-referrer"
                 allow="cross-origin-isolated; accelerometer; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; xr-spatial-tracking"
                 sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
               />
