@@ -4,6 +4,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { checkIsAdmin } from "@/lib/admin"
 import ShortUUID from "short-uuid"
 import {
+  DEFAULT_COMPONENT_TSX,
   DEFAULT_DEMO_TSX,
   DEFAULT_HIBERNATION_TIMEOUT,
   DEFAULT_TEMPLATE,
@@ -67,14 +68,20 @@ export async function POST(req: NextRequest) {
     const codesandboxId = sandbox.id
     console.log(`CodeSandbox instance created: ${codesandboxId}`)
 
-    // Seed the demo file so previews render on a dark backdrop out of the box
-    // (the template default has no background, leaving white-on-white for the
-    // default snow component). Best-effort: a write failure must not fail
-    // sandbox creation.
+    // Seed the demo + component files so previews render on a dark backdrop out
+    // of the box (the template defaults leave dark text on a light canvas that's
+    // invisible over the demo's dark background). Best-effort: a write failure
+    // must not fail sandbox creation.
     try {
-      await sandbox.fs.writeTextFile("src/demo.tsx", DEFAULT_DEMO_TSX)
+      await Promise.all([
+        sandbox.fs.writeTextFile("src/demo.tsx", DEFAULT_DEMO_TSX),
+        sandbox.fs.writeTextFile(
+          "src/components/ui/component.tsx",
+          DEFAULT_COMPONENT_TSX,
+        ),
+      ])
     } catch (seedError) {
-      console.warn("Failed to seed default demo.tsx:", seedError)
+      console.warn("Failed to seed default sandbox files:", seedError)
     }
 
     const now = new Date().toISOString()
