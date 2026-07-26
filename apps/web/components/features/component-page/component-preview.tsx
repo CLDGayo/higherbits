@@ -246,7 +246,7 @@ export function ComponentPagePreview({
       layout
       className={cn(
         "h-full w-full flex gap-2 rounded-lg md:flex-row flex-col md:max-h-[92vh] pb-4",
-        isFullScreen && "fixed inset-0 z-50 bg-background p-4",
+        isFullScreen && "fixed inset-0 z-50 bg-background p-2 sm:p-4 overflow-hidden w-screen h-screen",
       )}
       transition={{
         layout: {
@@ -295,7 +295,7 @@ export function ComponentPagePreview({
                 damping: 30,
               },
             }}
-            className="h-full w-full md:max-w-[30%] mi overflow-hidden rounded-lg border border-border min-w-[350px] dark:bg-[#151515]"
+            className="h-full w-full md:max-w-[30%] mi overflow-hidden rounded-lg border border-border min-w-0 md:min-w-[350px] dark:bg-[#151515]"
           >
             <SandpackProvider {...providerProps}>
               <div ref={sandpackRef} className="h-full w-full flex relative">
@@ -327,7 +327,7 @@ export function ComponentPagePreview({
                                 onValueChange={setActiveFile}
                                 className="h-full"
                               >
-                                <TabsList className="h-9 relative bg-muted dark:bg-background justify-start w-full gap-0.5 pb-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border px-4 overflow-x-auto flex-nowrap hide-scrollbar">
+                                <TabsList className="h-9 relative bg-muted dark:bg-background justify-start w-full gap-0.5 pb-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border px-2 sm:px-4 overflow-x-auto flex-nowrap hide-scrollbar">
                                   {visibleFiles.map((file) => (
                                     <TabsTrigger
                                       key={file}
@@ -379,15 +379,24 @@ const useInstallUrl = (component: Component, user: User) => {
 
   useEffect(() => {
     // TODO: Add custom template to make JWT live longer
-    auth.getToken({ template: "long-token" }).then((token) => {
-      const url = new URL(
-        `${process.env.NEXT_PUBLIC_APP_URL}/r/${user.username}/${component.component_slug}`,
-      )
-      if (token) {
-        url.searchParams.set("api_key", token)
-      }
-      setInstallUrl(url.toString())
-    })
+    auth.getToken({ template: "long-token" })
+      .then((token) => {
+        const url = new URL(
+          `${process.env.NEXT_PUBLIC_APP_URL}/r/${user.username}/${component.component_slug}`,
+        )
+        if (token) {
+          url.searchParams.set("api_key", token)
+        }
+        setInstallUrl(url.toString())
+      })
+      .catch((error) => {
+        console.error("Error fetching token for install URL:", error)
+        // Fallback to URL without API key on timeout/error
+        const url = new URL(
+          `${process.env.NEXT_PUBLIC_APP_URL}/r/${user.username}/${component.component_slug}`,
+        )
+        setInstallUrl(url.toString())
+      })
   }, [component.id, user.id])
 
   return installUrl
