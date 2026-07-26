@@ -35,8 +35,20 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (RE-BASELINED 18-07-26, `claymorphism-reference-parity` Phase 4 EVL — corrects the 17-07-26
-figure below):** 48 tests / 15 files, all passing. Phase 4 added
+**Total (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 01 inner-PVL/EVL — corrects the
+18-07-26 figure below, which undercounted):** 62 tests / 17 files, **57 passing / 5 failing**.
+The prior "48/15, all passing" claim was stale — it predates several unrelated test files that
+landed between 18-07-26 and 26-07-26 (not attributable to `supabase-interconnect`, which touched
+zero `apps/web` files). The 5 pre-existing failures span 4 files: `font-cozy-sweep.test.tsx`,
+`landing-smoke.test.tsx`, `header-smoke.test.tsx`, and `api/magic/route.test.ts` (×2 failures).
+Confirmed live-repeatable across 6 independent PVL/EVL cycles during Phase 01
+(`corepack pnpm --filter web test` → `Test Files 4 failed | 13 passed (17)`,
+`Tests 5 failed | 57 passed (62)`, byte-identical every run) — this is a genuine standing
+baseline, not run-to-run flake. Root cause not yet investigated; flagged as a `vc-audit-context`
+follow-up (see `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/`
+phase-01 report and PVL iteration reports for the confirming commands).
+**Prior entry (RE-BASELINED 18-07-26, `claymorphism-reference-parity` Phase 4 EVL — corrects the
+17-07-26 figure below):** 48 tests / 15 files, all passing. Phase 4 added
 `apps/web/app/__tests__/font-cozy-sweep.test.tsx` (3 new AC5 tests — RTL class-presence assertions
 for `font-cozy` on the hero h1/h2/nav-brand span and the dashboard h1 + 5 stat-tile number divs;
 the sidebar Go-Premium card target is asserted at source-level class-presence rather than jsdom

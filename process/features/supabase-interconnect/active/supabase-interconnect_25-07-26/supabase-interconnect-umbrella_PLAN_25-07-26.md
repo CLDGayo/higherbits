@@ -301,8 +301,8 @@ During /goal execution of a phase program:
 
 | Phase | Status |
 |---|---|
-| 0 — Pre-program (plan creation) | ⏳ PLANNED |
-| 01 — Grant/RLS repair | ⏳ PLANNED |
+| 0 — Pre-program (plan creation) | ✅ COMPLETE |
+| 01 — Grant/RLS repair | 🧪 TESTING — code-complete; live verification blocked on Step C3 user approval |
 | 02 — Embedding DB functions | ⏳ PLANNED |
 | 03 — Scheduler + seed | ⏳ PLANNED |
 | 04 — Navigation | ⏳ PLANNED |
@@ -310,6 +310,33 @@ During /goal execution of a phase program:
 | 06 — Schema source of truth | ⏳ PLANNED |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
+
+---
+
+## Program-Wide Learnings (carried forward from Phase 01, 26-07-26)
+
+Cross-phase methodology findings Phase 01 surfaced — apply these to Phases 02-06 as they run.
+Full detail: `phase-01-grant-repair_REPORT_26-07-26.md` §Program-Wide Learnings.
+
+1. **Audit Supabase call sites via recursive local-import closure, not a flat per-file grep.** A
+   flat grep across browser-client seed files misses relations reached through shared query-helper
+   modules (e.g. `apps/web/lib/queries.server.ts`). Phase 01's corrected method (seed files →
+   recursive local-import closure to fixpoint → classify each `.from()`/`.rpc()` call site as
+   `authenticated` / `anon` / service-role) found 3 relations a flat grep missed across 4 PVL
+   cycles before the fix.
+2. **Grep-verify every claimed supplement edit before trusting it.** PLAN-SUPPLEMENT / EXECUTE
+   supplement cycles have claimed edits that were never written to disk. Verify with grep after
+   every supplement cycle, not just after execute.
+3. **Prefer line-splice edits over ambiguous string-anchor replace on plan files.** A string-anchor
+   replace on `"## Validate Contract"` matched a prose mention instead of the heading and deleted
+   ~6 sections in one cycle. Anchor plan-file edits on exact line numbers from a fresh `Read`.
+4. **Commit task-folder artifacts early.** An uncommitted task folder has no diff baseline to
+   recover from if a supplement cycle corrupts a file (see #3). Commit regularly across PVL/EVL
+   cycles, not only at phase close.
+5. **Postgres grant semantics for any Phase 02-06 SQL:** a column-scoped `GRANT UPDATE (cols)`
+   does not remove a pre-existing table-level `GRANT UPDATE` — REVOKE must precede it in file
+   order. `EXECUTE` defaults to `PUBLIC` on function creation, so an explicit `GRANT EXECUTE` is
+   defensive documentation, not a corrective fix — don't over-claim it as closing a live bug.
 
 ---
 
@@ -399,18 +426,50 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-Last updated: 25-07-26
-Completed phases: Phase 0 (Planning)
-Current phase: Phase 1 — Grant/RLS repair
-Current loop step: RESEARCH
-Validate-contract status: pending (all phases)
-Program Net Gate: PENDING
-Latest validator run: not yet run
+**Last updated:** 26-07-26 (UPDATE PROCESS, Phase 01 inner-loop Step 7)
 
-Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS
-Orchestrator rule: read "Current loop step" and "validate-contract status" before spawning any subagent. Never spawn execute-agent when loop step is RESEARCH, INNOVATE, PLAN-SUPPLEMENT, or PVL.
+**Current phase N of total:** Phase 1 of 6
 
-Note: The Stable Program Goal above is fixed. This section is the only part that changes — update-process-agent rewrites it after every phase closeout (overwrite, not append — git history is the audit log).
+**Phase N name:** Phase 01 — Grant/RLS repair
+
+**Phase N status:** 🧪 TESTING — code-complete, NOT live-verified. Steps A1-A4, B0-B9, C1-C2 done
+(3 SQL files edited, 30 statements authored). Steps C3 (mandatory user-approval hard stop), C4
+(apply), C5, D1-D6 (live verification) are outstanding — nothing has been applied to the live
+database. One genuine new gap found and NOT fixed: `public.templates` has a live `authenticated`
+INSERT call site with no tracked grant (backlog note written, see below). Closeout classification:
+**Keep in active/testing** — not archivable; the phase's own exit gate is live-verification-based.
+
+**Phase N EVL:** Both Fully-Automated regression gates (tsc, vitest) green at the documented
+baseline across every PVL/EVL cycle, most recently 26-07-26 (`tsc --noEmit` exit 2 / 4 pre-existing
+errors in `add-registry-modal.tsx`; `vitest` 57/62, 5 pre-existing failures across 4 files — see
+`process/context/tests/all-tests.md` for the corrected baseline). One EVL fix cycle applied: the
+`REVOKE UPDATE ON public.users FROM authenticated;` statement moved from report prose into the SQL
+file itself (ordering is load-bearing — a column-scoped GRANT does not remove a prior table-level
+GRANT). All Agent-Probe/Hybrid live gates (C5, D1-D6, E7, E8) are unrun — correctly outside this
+phase's automated EVL scope; they require the live DB connection gated behind Step C3.
+
+**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_REPORT_26-07-26.md`
+
+**Next phase:** Phase 1 remains current — it is NOT advancing to Phase 2 yet. The next required
+action is presenting the phase report's "AWAITING USER APPROVAL — Step C3 (HARD STOP)" section to
+the user for the live-DDL approval decision. Once approved and applied (C4) and live-verified
+(C5, D1-D6), re-enter UPDATE PROCESS to close Phase 01 for real and advance to Phase 02 (embedding
+DB functions), inner loop Step 1 (RESEARCH).
+
+**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending C3.
+
+**Validate-contract status:** written, inline in `phase-01-grant-repair_PLAN_25-07-26.md`;
+`generated-by: inner-pvl: phase-1`; `Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted by
+orchestrator under standing /goal after 5 PVL supplement cycles — see `results.tsv`).
+
+Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS.
+Orchestrator rule: read "Phase N status" and "Validate-contract status" before spawning any
+subagent for this phase. Do not spawn execute-agent again for Phase 01 until the user has acted on
+the Step C3 approval request — the remaining EXECUTE-phase work (C4) depends on that decision.
+
+Note: The Stable Program Goal above is fixed. This section is the only part that changes —
+update-process-agent rewrites it after every phase closeout (overwrite, not append — git history
+is the audit log).
 
 ---
 

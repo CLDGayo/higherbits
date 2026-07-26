@@ -109,7 +109,7 @@ never assumed from the SQL file's presence in the repo alone (Fork A3 from INNOV
 (count is self-deriving — see A1; SPEC's prior "41 files"/"14-relation" figures are both stale,
 corrected 26-07-26)
 
-- [ ] A1. Re-derive the current browser-client file list at execute time via
+- [x] A1. Re-derive the current browser-client file list at execute time via
       `grep -rl "useClerkSupabaseClient" apps/web/{app,components,lib,hooks}` (or the call sites of
       `useClerkSupabaseClient` defined at `apps/web/lib/clerk.ts:66`) — do NOT assume a fixed count.
       **INNER-LOOP RESEARCH finding (26-07-26): the live count as of this research pass is 51 files,
@@ -117,7 +117,7 @@ corrected 26-07-26)
       snapshot from the SPEC. Count and list re-derived fresh at execute time; the file count is
       expected to keep drifting and must never be hardcoded again.** Cross-reference the re-derived
       list against the known SPEC citation list.
-- [ ] A2. **[Step A2 checklist text rewritten, PVL supplement cycle 3, 26-07-26 — see Gap 14 below;
+- [x] A2. **[Step A2 checklist text rewritten, PVL supplement cycle 3, 26-07-26 — see Gap 14 below;
       this is the executable instruction, not just a finding note.]** For each file, perform ALL of
       the following, in order:
       1. Extract every direct `.from()`/`.rpc()` call site and the relation/function name it targets.
@@ -148,7 +148,7 @@ corrected 26-07-26)
       Validate Contract text, never in this executable Step A2 item, so execute-agent would never
       have actually performed it. The numbered sub-instructions above are now written directly into
       this checklist item's own text (not prose elsewhere) so this does not recur.
-- [ ] A3. Diff the full target-relation set against the confirmed 13-relation grant baseline
+- [x] A3. Diff the full target-relation set against the confirmed 13-relation grant baseline
       (`components, demos, submissions, sandboxes, users, tags, component_tags, demo_tags,
       api_keys, usages, users_to_plans, mcp_generation_requests, component_hunt_rounds` —
       `public_profiles` is NOT in this baseline, it is created fresh by Step B3c-i);
@@ -163,7 +163,7 @@ corrected 26-07-26)
       no grant of any kind on the view itself anywhere in `supabase/restore-authenticated-grants.sql`
       (grep-confirmed), and it is called live from a browser-client file
       (`apps/web/components/features/component-page/info-section.tsx:79-80`). See new Step B3c.**
-- [ ] A4. Note: `author_payouts`, `payout_rates`, `bundles`, `demo_hunt_scores` are out-of-scope
+- [x] A4. Note: `author_payouts`, `payout_rates`, `bundles`, `demo_hunt_scores` are out-of-scope
       surfaces per the SPEC (creator-payout write path, bundle purchases, hunt scoring) — confirm
       whether any browser-client file actually *reads* them (read-only grants may still be needed
       even though the write feature is out of scope) and record the finding. **VALIDATE finding:
@@ -181,7 +181,7 @@ corrected 26-07-26)
 
 ### Step B — Per-table grant/RLS decision (Fork A3, per-table not blanket)
 
-- [ ] B0. **[NEW — SECURITY FIX, PVL supplement cycle 2, 26-07-26, Decision 1 — HIGH PRIORITY, do
+- [x] B0. **[NEW — SECURITY FIX, PVL supplement cycle 2, 26-07-26, Decision 1 — HIGH PRIORITY, do
       this before any other Step B item]** Replace the table-level
       `GRANT SELECT, UPDATE ON public.users TO authenticated;`
       (`restore-authenticated-grants.sql:149`) with a column-scoped UPDATE grant:
@@ -242,14 +242,14 @@ corrected 26-07-26)
       count mechanically (13 granted + 11 excluded = 24, post this cycle's fix) whenever either list
       changes, rather than trusting the prose alone.
 
-- [ ] B1. `demo_bookmarks` — user-owned table (bookmark belongs to the authenticated user). Extend
+- [x] B1. `demo_bookmarks` — user-owned table (bookmark belongs to the authenticated user). Extend
       grants + write a scoped RLS policy (`user_id = auth.jwt()->>'sub'` pattern — **VALIDATE
       correction: the closest visible exemplar in `restore-authenticated-grants.sql` is
       `components_insert_own`/`_update_own`/`_delete_own`, NOT a `templates_insert_own`-style
       policy — `templates` has no grant/policy statements in any tracked `supabase/*.sql` file at
       all (grep-confirmed); its live policy names are known only from the SPEC's live-DB audit
       narrative, not from a file execute-agent can open and copy**).
-- [ ] B2. `prompt_rules` — confirm ownership model (per-user or per-org) from schema; write scoped
+- [x] B2. `prompt_rules` — confirm ownership model (per-user or per-org) from schema; write scoped
       RLS accordingly. **VALIDATE finding (Gap 3, security-relevant): confirmed per-user via
       `apps/web/lib/queries.ts` (insert/select filter on `user_id`). But `updatePromptRule()`
       (`queries.ts:816-853`) and `deletePromptRule()` (`queries.ts:855-865`) perform ZERO app-level
@@ -262,7 +262,7 @@ corrected 26-07-26)
       to update/delete session A's row, expect 0 rows affected).** **INNER-PVL re-confirmation
       (26-07-26): re-read `queries.ts:816-865` again this cycle — the gap is unchanged and stands as
       described.**
-- [ ] B3. `demo_hunt_leaderboard` (view) — read-only view; grant `SELECT` to `authenticated` only,
+- [x] B3. `demo_hunt_leaderboard` (view) — read-only view; grant `SELECT` to `authenticated` only,
       no write RLS needed. Confirm the view's own security posture (`security_invoker`) is
       consistent with existing views (`mv_component_analytics`, `component_dependencies_graph_view_v3`,
       `components_with_username` — all confirmed `security_invoker=on` per SPEC F5/Gap5 findings).
@@ -285,7 +285,7 @@ corrected 26-07-26)
       empty result set for a real multi-contestant leaderboard. See Gap 7 in the Validate Contract
       for the full analysis (scored CONCERN, not FAIL, because the view's only browser-client
       consumer is currently dead code with zero live callers).**
-- [ ] B3b. **[NEW — added by VALIDATE, required before Step C1]** Grant narrow, read-only access to
+- [x] B3b. **[NEW — added by VALIDATE, required before Step C1]** Grant narrow, read-only access to
       the two base relations `demo_hunt_leaderboard` depends on: `GRANT SELECT ON
       public.demo_hunt_scores, public.demo_hunt_votes TO authenticated;` plus a permissive
       global-read policy for each, mirroring the existing `component_hunt_rounds_select_all`
@@ -315,7 +315,7 @@ corrected 26-07-26)
       identical view-redefinition edit in the same file (`supabase/views.sql`) closes it at no
       extra cost. `component_user_data`/`user_data`'s `to_jsonb(cu.*)`/`to_jsonb(du.*)`
       projections narrow accordingly to the safe `public_profiles` column list.
-- [ ] B3c. **[NEW — added by INNER-LOOP RESEARCH+INNOVATE, 26-07-26]** `components_with_username`
+- [x] B3c. **[NEW — added by INNER-LOOP RESEARCH+INNOVATE, 26-07-26]** `components_with_username`
       (view) — confirmed `security_invoker=on` via the dynamic `ALTER VIEW ... SET (security_invoker
       = on)` loop at `supabase/enable-rls.sql:8-11,41`, same RLS-invoker regime as
       `demo_hunt_leaderboard`. No grant exists anywhere for this view today (grep-confirmed against
@@ -362,7 +362,7 @@ corrected 26-07-26)
       permission error to grant around; it is a data-shape problem the view definition itself
       must fix.
 
-- [ ] B3c-i. **[NEW]** Create `public.public_profiles`:
+- [x] B3c-i. **[NEW]** Create `public.public_profiles`:
       `CREATE VIEW public.public_profiles WITH (security_invoker = off) AS SELECT id, username,
       name, display_name, display_username, display_image_url, image_url, bio, github_url,
       twitter_url, website_url FROM public.users;` plus
@@ -374,7 +374,7 @@ corrected 26-07-26)
       **[PVL supplement cycle 2, 26-07-26, Decision 5 / Gap 10]** `name` is now included in the
       column list above — `info-section.tsx`'s author byline rendering already falls back to
       `user.name` publicly, so `name` belongs in the safe set alongside the other display columns.
-- [ ] B3c-ii. **[NEW]** Redefine `components_with_username` (`supabase/views.sql:5-33`) via
+- [x] B3c-ii. **[NEW]** Redefine `components_with_username` (`supabase/views.sql:5-33`) via
       `CREATE OR REPLACE VIEW`: change `JOIN public.users u ON u.id = c.user_id` to
       `JOIN public.public_profiles u ON u.id = c.user_id`, and replace the
       `to_jsonb(u.*) AS "user"` projection with the equivalent narrow-column shape sourced
@@ -384,7 +384,7 @@ corrected 26-07-26)
       `public.users` joins (`cu`, `du` — `supabase/views.sql:118-122`) in the same statement
       batch, per the Gap 7 fold-in resolution at Step B3b below.
 
-- [ ] B3e. **[NEW — required by inner-PVL cycle 2, 26-07-26, Gap 9, BLOCKING]** Apply the identical
+- [x] B3e. **[NEW — required by inner-PVL cycle 2, 26-07-26, Gap 9, BLOCKING]** Apply the identical
       `public_profiles` substitution to `public.component_dependencies_graph_view_v3`'s two
       `public.users` joins (`su`, `du`) in the same statement batch as B3c-ii, AND grant
       `SELECT ON public.component_dependencies_graph_view_v3 TO authenticated` (this view currently
@@ -441,7 +441,7 @@ corrected 26-07-26)
       base-table dependencies (Gap 1) — a `security_invoker=on` view's grant is only as good as its
       weakest-granted base table.
 
-- [ ] B3f. **[NEW — PVL supplement cycle 2, 26-07-26, Decision 3]** Admin write paths via
+- [x] B3f. **[NEW — PVL supplement cycle 2, 26-07-26, Decision 3]** Admin write paths via
       SECURITY DEFINER RPC:
       1. Add `GRANT EXECUTE ON FUNCTION public.update_submission_as_admin(INT, TEXT, TEXT) TO
          authenticated;` and `GRANT EXECUTE ON FUNCTION public.update_demo_info_as_admin(INT, TEXT,
@@ -492,7 +492,7 @@ corrected 26-07-26)
          this phase's Blast Radius). See the narrowed Exit Gate wording below — this phase does NOT
          claim these two admin write flows become functional; they remain broken (still ungranted for
          a non-owning admin) until the follow-up lands.
-- [ ] B9. **[NEW — PVL supplement cycle 2, 26-07-26, Decision 4]** `apps/web/hooks/use-analytics.ts`'s
+- [x] B9. **[NEW — PVL supplement cycle 2, 26-07-26, Decision 4]** `apps/web/hooks/use-analytics.ts`'s
       `useSupabaseAnalytics` hook uses a raw `anon`-key `createClient()` (NOT
       `useClerkSupabaseClient`) to SELECT (dedup check, `:90`) and INSERT (`:122`)
       `component_analytics` rows under the `anon` Postgres role — a structurally separate pathway
@@ -510,10 +510,10 @@ corrected 26-07-26)
       to decide the `anon` grant + RLS shape (and any anti-abuse hardening) for
       `component_analytics` before wiring it live.
 
-- [ ] B4. `plans` — read-only reference data (subscription plan catalog); likely safe for a broad
+- [x] B4. `plans` — read-only reference data (subscription plan catalog); likely safe for a broad
       `SELECT` grant to `authenticated` (or even `anon` if publicly listed pricing) — confirm no
       row-level sensitivity, grant accordingly.
-- [ ] B5. `component_analytics` — confirm read pattern: aggregate stat or per-user? If aggregate
+- [x] B5. `component_analytics` — confirm read pattern: aggregate stat or per-user? If aggregate
       (e.g. "N views this component"), RLS may not cleanly express it — budget for a
       `SECURITY DEFINER` RPC returning only the safe aggregate instead of a blanket table grant.
       Document the decision either way. **VALIDATE finding (Gap 2, feasibility): the live
@@ -527,13 +527,13 @@ corrected 26-07-26)
       shape of the fix if the matview turns out to be the actual target.** **INNER-PVL
       re-confirmation (26-07-26): both call sites (`:363-372`, `:498`) re-read this cycle — finding
       stands unchanged.**
-- [ ] B6. `collections` — 0 live rows; confirmed out-of-scope for membership UI, but read access
+- [x] B6. `collections` — 0 live rows; confirmed out-of-scope for membership UI, but read access
       may still be needed if any of the browser-client files renders collection metadata read-only. If no
       current read call site exists, do NOT grant preemptively — record as "no active call site,
       grant deferred until a consumer exists."
-- [ ] B7. `feedback` — likely write-once-no-update pattern (a user submits feedback, never edits
+- [x] B7. `feedback` — likely write-once-no-update pattern (a user submits feedback, never edits
       it). Grant `INSERT` + narrow `SELECT` (own rows only) via RLS; no `UPDATE`/`DELETE` grant.
-- [ ] B8. Revoke `templates`'s excess `anon` `INSERT`/`UPDATE`/`DELETE` grants (F5 hygiene item) —
+- [x] B8. Revoke `templates`'s excess `anon` `INSERT`/`UPDATE`/`DELETE` grants (F5 hygiene item) —
       low severity, not currently exploitable (no matching `{anon}` write RLS policy), but tighten
       as defense-in-depth per AC13. **VALIDATE note: since `templates` has no tracked grant
       statements anywhere in `supabase/*.sql` today, this REVOKE will be the FIRST time any part of
@@ -544,13 +544,13 @@ corrected 26-07-26)
 
 ### Step C — Extend and apply the fix
 
-- [ ] C1. Extend `supabase/restore-authenticated-grants.sql` with the Step B (B0, B3b, B9-out-of-scope-note)
+- [x] C1. Extend `supabase/restore-authenticated-grants.sql` with the Step B (B0, B3b, B9-out-of-scope-note)
       decisions as new `GRANT`/`CREATE POLICY` statements, following the existing file's structure
       and comment style. **[PVL supplement cycle 2, 26-07-26]** This batch now also includes Step
       B0's column-scoped `users` UPDATE grant replacement (security fix — apply this one FIRST in
       the diff for reviewer visibility) and Step B3f's two `GRANT EXECUTE` statements in
       `supabase/admin-functions.sql`.
-- [ ] C2. Resolve the commented-out `public_profiles` block (`restore-authenticated-grants.sql:295`)
+- [x] C2. Resolve the commented-out `public_profiles` block (`restore-authenticated-grants.sql:295`)
       — either apply it (if a live consumer needs it) or leave it commented with an explicit
       documented reason (record the decision either way; do not silently leave ambiguous).
       **INNER-PVL FINDING (26-07-26): this is no longer an independent, optional item — see Gap 6.
@@ -826,7 +826,13 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
       grep-verified applied to the correct sections. Step C3's existing generic "any grant/RLS
       statement" hard-stop wording already covers the two new Edit-1 statements without further
       change. Emitted `SUPPLEMENT_APPLIED`; next step is PVL re-run from V1, NOT execute.
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
+- [x] 5. EXECUTE — all AUTHORABLE checklist items done (Steps A1-A4, B0-B9, C1-C2: 3 SQL files
+      edited, 30 statements, 1 new gap documented — `public.templates`, see backlog note); both
+      Fully-Automated regression gates (tsc, vitest) green at documented baseline. **Steps C3-C5,
+      D1-D6 remain undone — this is a documented gap, not silently skipped: they are gated behind
+      the Step C3 mandatory user-approval hard stop and require a live database connection this
+      agent does not have.** See phase report's "AWAITING USER APPROVAL — Step C3 (HARD STOP)"
+      section for the exact statements pending approval.
 - [x] 4e. PVL — vc-validate-agent: full V1-V7 re-run, inner-PVL cycle 4 (26-07-26). **Gate: CONDITIONAL.**
       Grep-verified all three cycle-3 fixes (Gap 12 component_dependencies_closure grant+policy;
       Gap 13 `role` added to Step B0's column list; Gap 14 Step A2 methodology rewrite) land in the
@@ -857,7 +863,16 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
       `GRANT EXECUTE` statements themselves are unchanged and still land. Both edits grep-verified
       applied to the correct sections. Emitted `SUPPLEMENT_APPLIED`; next step is a final PVL
       re-run from V1, NOT execute.
-- [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
+- [x] 6. EVL — both Fully-Automated gates (tsc, vitest) re-confirmed green at baseline via a
+      spawned vc-tester run. One EVL fix cycle applied (26-07-26): the `REVOKE UPDATE ON
+      public.users FROM authenticated;` statement moved from report prose into
+      `supabase/restore-authenticated-grants.sql:180` (a security fix that depended on an operator
+      reading an adjacent note is not self-sufficient) — regression gates re-confirmed unchanged
+      after the fix. EVL HANDOFF SUMMARY written (gates_green, known_gaps, follow_up_stubs,
+      context_partial, preliminary_packet_path, closeout_classification — see UPDATE PROCESS
+      handoff). All Agent-Probe/Hybrid live gates (C5, D1-D6, E7, E8) are correctly NOT included
+      in "EVL gates green" — they require the live DB connection gated behind Step C3 and are not
+      part of this phase's automated EVL scope.
 - [x] 4g. PVL — vc-validate-agent: full V1-V7 re-run, inner-PVL cycle 5 (26-07-26). **Gate: CONDITIONAL.**
       Re-derived Gaps 15/16's supplement-cycle-4 resolution from source (not from the changelog): grep-
       and-count-confirmed Step B0's granted (13) + excluded (11) `users` column lists now sum to exactly
@@ -890,7 +905,13 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
       findings carry no functional risk either way.** The Step C3 live-DDL hard stop remains a mandatory
       user-approval pause regardless of this gate's outcome.
 - [x] 4h. PLAN-SUPPLEMENT (PVL supplement cycle 5, 26-07-26, text-only) — vc-plan-agent resolved Gaps 17/18: (1) Gap 17 — added the anon-role `component_analytics` exclusion sentence to the Exit Gate narrowed-claim block, matching the style of the existing `useSubmissions.ts` exclusions; (2) Gap 18 — updated the Exit Gate's Gap 6/7 bullet and the Verification Evidence table's Gap 9 row from stale "pending SUPPLEMENT resolution" wording to resolved wording, mirroring the adjacent Gap 6 row's phrasing. Both edits are documentation-only — zero SQL, checklist, or Blast Radius changes. PVL loop closes here: CONDITIONAL accepted by orchestrator under standing /goal; no further PVL re-run required.
-- [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
+- [x] 7. UPDATE PROCESS (26-07-26) — phase report finalized (SPEC Achievement + Program-Wide
+      Learnings sections added), umbrella `## Current Execution State` rewritten, backlog note
+      written for the `public.templates` gap, `process/context/tests/all-tests.md` baseline
+      corrected. **Plan intentionally NOT archived — still `active/`.** Phase 01's own exit gate
+      (C3 user approval → C4 apply → C5/D1-D6 live verification) has not been reached; this is
+      "Keep in active/testing" per the closeout packet, not "Ready for UPDATE PROCESS archival."
+      Commit is a separate orchestrator-owned step, not performed by this agent.
 
 **Validate-contract required before execute.** If step 4 (PVL) is unchecked or the Validate Contract
 section reads "(placeholder — vc-validate-agent writes this section before EXECUTE)", orchestrator
