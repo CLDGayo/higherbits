@@ -92,3 +92,34 @@ BEGIN
   RETURN v_result;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- =====================================================================
+-- EXECUTE grants (Phase 1, Step B3f)
+--
+-- DEFENSIVE / EXPLICIT, not corrective. Postgres grants EXECUTE to PUBLIC by
+-- default on function creation unless explicitly revoked, so these two RPCs
+-- are probably already callable without these statements. They are added
+-- anyway because they document intent and survive any future
+-- `REVOKE ... FROM PUBLIC` hardening pass — being redundant costs nothing.
+--
+-- Safe by design either way: both functions are SECURITY DEFINER and
+-- self-check is_admin via the non-spoofable public.requesting_user_id()
+-- before performing any write, so granting EXECUTE does not widen who can
+-- successfully perform an admin write.
+--
+-- update_demo_info_as_admin is live-called from
+--   components/features/admin/hooks/useSubmissions.ts:440,494
+-- update_submission_as_admin currently has ZERO call sites (dormant).
+-- =====================================================================
+GRANT EXECUTE ON FUNCTION public.update_submission_as_admin(INT, TEXT, TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.update_demo_info_as_admin(INT, TEXT, TEXT) TO authenticated;
+
+-- NOT COVERED BY PHASE 1 (Step B3f item 4): useSubmissions.ts also performs
+-- admin writes DIRECTLY against tables via the browser client, bypassing both
+-- RPCs above — demo_hunt_scores INSERT/UPDATE (:147/:221/:276/:289) and
+-- components.is_public UPDATE (:557/:580). No existing RPC covers these and no
+-- RLS policy in Phase 1's scope can safely permit an arbitrary authenticated
+-- user to perform them (they are genuine admin-only writes on rows the caller
+-- does not own). These flows REMAIN BROKEN after Phase 1. Follow-up: author an
+-- update_hunt_score_as_admin / toggle_component_public_as_admin SECURITY
+-- DEFINER pair and switch the client call sites from .from() to .rpc().

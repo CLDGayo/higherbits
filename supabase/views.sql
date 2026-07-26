@@ -1,9 +1,52 @@
 -- Views required by apps/web (referenced via supabase-js .from()).
 -- Column sets match apps/web/types/supabase.ts Views definitions.
 
+-- =====================================================================
+-- public_profiles  — Phase 1 grant/RLS repair (Steps B3c-i / C2).
+--
+-- WHY: `public.users` is own-row-only under RLS (`users_select_self`,
+-- restore-authenticated-grants.sql:151-154). Every view below is
+-- security_invoker=on, so an INNER JOIN straight to `public.users` is
+-- filtered by the CALLER's own-row RLS — a cross-user row silently
+-- disappears from the result (not a 42501, an empty result).
+--
+-- Fix per restore-authenticated-grants.sql:284-304 ("KNOWN LIMITATION"):
+-- do NOT widen `users_select_self`. Instead expose a narrow-column view
+-- with security_invoker = off and join THAT.
+--
+-- security_invoker = off is intentional and safe HERE precisely because
+-- the column list excludes every sensitive column — email, paypal_email,
+-- stripe_id, lemon_squeezy_customer_id, ref, is_admin.
+--
+-- `name` is included (Gap 10): info-section.tsx's author byline falls back
+-- to `user.name` when `display_name` is unset.
+--
+-- NOTE: this view's security_invoker = off posture depends on nobody
+-- re-running enable-rls.sql's blanket security-invoker sweep afterwards.
+-- =====================================================================
+CREATE OR REPLACE VIEW public.public_profiles
+WITH (security_invoker = off) AS
+SELECT
+  u.id,
+  u.username,
+  u.name,
+  u.display_name,
+  u.display_username,
+  u.display_image_url,
+  u.image_url,
+  u.bio,
+  u.github_url,
+  u.twitter_url,
+  u.website_url
+FROM public.users u;
+
 -- Used by: components/features/component-page/info-section.tsx
 -- (resolves "username/slug" registry dependency strings to components)
-CREATE OR REPLACE VIEW public.components_with_username AS
+-- Step B3c-ii: joins public_profiles (not public.users) so cross-user
+-- registry dependencies resolve instead of silently returning 0 rows.
+-- security_invoker stays ON for this view — only its joined relation changed.
+CREATE OR REPLACE VIEW public.components_with_username
+WITH (security_invoker = on) AS
 SELECT
   c.code,
   c.component_names,
@@ -30,12 +73,18 @@ SELECT
   u.username,
   c.video_url
 FROM public.components c
-JOIN public.users u ON u.id = c.user_id;
+JOIN public.public_profiles u ON u.id = c.user_id;
 
 -- Used by: lib/queries.server.ts (registry dependency tree resolution).
 -- One row per (source component -> dependency component) closure edge,
 -- carrying the DEPENDENCY component's columns.
-CREATE OR REPLACE VIEW public.component_dependencies_graph_view_v3 AS
+-- Step B3e: su/du join public_profiles (not public.users) for the same
+-- cross-user reason as components_with_username above. Its base FROM table
+-- public.component_dependencies_closure also needs its own grant + policy
+-- (see restore-authenticated-grants.sql) — a security_invoker=on view's
+-- grant is only as good as its weakest-granted base relation.
+CREATE OR REPLACE VIEW public.component_dependencies_graph_view_v3
+WITH (security_invoker = on) AS
 SELECT
   dep.code,
   cl.component_id,
@@ -71,14 +120,18 @@ SELECT
   dep.user_id
 FROM public.component_dependencies_closure cl
 JOIN public.components src ON src.id = cl.component_id
-JOIN public.users su ON su.id = src.user_id
+JOIN public.public_profiles su ON su.id = src.user_id
 JOIN public.components dep ON dep.id = cl.dependency_component_id
-JOIN public.users du ON du.id = dep.user_id;
+JOIN public.public_profiles du ON du.id = dep.user_id;
 
 -- Used by: lib/queries.ts getRoundSubmissions (admin leaderboard).
 -- Per-demo per-round hunt standings. has_voted resolves against the
 -- requesting user's JWT (requesting_user_id()); false for service-role calls.
-CREATE OR REPLACE VIEW public.demo_hunt_leaderboard AS
+-- Step B3b/B3c-ii (Gap 7 fold-in): cu/du join public_profiles (not
+-- public.users) so a multi-contestant leaderboard is not filtered down to
+-- the caller's own rows. component_user_data/user_data narrow accordingly.
+CREATE OR REPLACE VIEW public.demo_hunt_leaderboard
+WITH (security_invoker = on) AS
 SELECT
   (
     SELECT count(*)
@@ -121,5 +174,5 @@ SELECT
 FROM public.demo_hunt_scores s
 JOIN public.demos d ON d.id = s.demo_id
 JOIN public.components c ON c.id = d.component_id
-JOIN public.users cu ON cu.id = c.user_id
-JOIN public.users du ON du.id = d.user_id;
+JOIN public.public_profiles cu ON cu.id = c.user_id
+JOIN public.public_profiles du ON du.id = d.user_id;
