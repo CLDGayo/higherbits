@@ -184,10 +184,28 @@ START: Phase 1, loop step RESEARCH (pending). Spawn vc-research-agent for Phase 
 | 0 (pre-program) | this file | Confirm folder structure, baseline audit, create sub-phase plans | — |
 | 1 — Grant/RLS repair | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_PLAN_25-07-26.md` | Extend `restore-authenticated-grants.sql` for `demo_bookmarks`/`prompt_rules`/`demo_hunt_leaderboard`, per-table RLS decision for `plans`/`component_analytics`/`collections`/`feedback`, revoke `templates` anon writes, verify live | Phase 0 |
 | 2 — Embedding DB functions | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_PLAN_25-07-26.md` | Author 4 embedding functions as version-controlled migrations, verify against scratch/seeded schema | Phase 1 |
-| 3 — Scheduler + seed | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_PLAN_25-07-26.md` | crontab script + install artifact for embeddings backfill job only; seed minimal fixtures for AC6/AC7 verification | Phase 2 (hard) |
+| 3 — Scheduler + seed | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_PLAN_25-07-26.md` | crontab script + install artifact for embeddings backfill job only; seed minimal fixtures for AC6/AC7 verification | Phase 2 (hard — on **scratch-verified** functions; see correction note below) |
 | 4 — Navigation | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_PLAN_25-07-26.md` | Resolve tab-vs-route conflicts (`/templates`), reconcile with WIP `useCategoryTagCounts()`, fix sidebar counts | Phase 1 |
 | 5 — Billing unification | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_PLAN_25-07-26.md` | Provider-aware cancel/invoice routing on `/settings/billing`; dual-webhook mutual-exclusion guarantee | Phase 1 |
 | 6 — Schema source of truth | `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-06-schema-truth_PLAN_25-07-26.md` | Regenerate `types.ts` from live DB; confirm `supabase/migrations/` covers every called RPC; delete 5 phantom hunt-scoring types entries; correct `all-context.md` stale claims | Phases 1-5 (baseline must include Phase 2's new functions; absorbs tsc fallout last) |
+
+**Correction (26-07-26, recorded at Phase 03's UPDATE PROCESS close):** the "Phase 3 (hard —)"
+dependency in the table above was, until this correction, phrased more strictly than the phases'
+own gates ever required — an earlier revision of this umbrella claimed Phase 3 was blocked until
+Phase 2's SQL was *applied to the live database*. That was wrong. Phase 2's own Exit Gate and
+Phase 3's own Entry Gate/validate-contract both accept Phase 2's **scratch-verified** proof (the
+real `0001_embedding_functions.sql` migration run end-to-end through
+`ops/pglite-verify-embedding-functions.mjs`, EVL-audited) as sufficient to satisfy the F3
+dependency — a live apply was never actually required to start Phase 3. An orchestrator ruling on
+26-07-26 (recorded verbatim in `phase-03-scheduler_PLAN_25-07-26.md`'s "Orchestrator ruling"
+section) resolved the conflict in favor of the phase plans' gate text over this file's stricter
+prose, and Phase 3 proceeded on that basis — it has since completed with all gates green and
+without any live database connection, vindicating the ruling. **Root cause, for future phases:**
+this umbrella's closeout narrative had drifted stricter than the validate-contracts and entry/exit
+gates it was meant to summarize, and a later phase read the narrative first instead of the
+governing gate text. The old wording is not deleted — it is superseded here, and downstream phases
+should treat entry/exit gate text as authoritative over this table's prose whenever the two
+disagree.
 
 ### Join Conditions
 
@@ -304,7 +322,7 @@ During /goal execution of a phase program:
 | 0 — Pre-program (plan creation) | ✅ COMPLETE |
 | 01 — Grant/RLS repair | 🧪 TESTING — code-complete; live verification blocked on Step C3 user approval |
 | 02 — Embedding DB functions | 🧪 TESTING — code-complete, locally verified for real (11/11 pglite harness, EVL-confirmed); live application deferred behind Step C5 user approval |
-| 03 — Scheduler + seed | ⏳ PLANNED — hard-blocked on Phase 02's live apply landing |
+| 03 — Scheduler + seed | 🧪 TESTING — code-complete, locally verified for real (73/73 vitest incl. 11 new; tsc 0 errors; EVL-confirmed); crontab install + seed apply are operator-only and outstanding |
 | 04 — Navigation | ⏳ PLANNED |
 | 05 — Billing unification | ⏳ PLANNED |
 | 06 — Schema source of truth | ⏳ PLANNED |
@@ -369,6 +387,37 @@ Full detail: `phase-01-grant-repair_REPORT_26-07-26.md` §Program-Wide Learnings
     (outside this program) fixed the 4 foreign tsc errors and 5 vitest failures Phase 01 had
     recorded. Trust a fresh measurement over the documented figure at the start of every phase,
     not just when something looks worse than expected.
+
+## Program-Wide Learnings (carried forward from Phase 03, 26-07-26)
+
+11. **Documented baselines in this repo go stale within hours, not days.** The tsc baseline moved
+    three times within this single program — 4 foreign errors → 0 → 1 (a *different* line number
+    on the same file) → 0 again — all from concurrent uncommitted work outside this program's
+    blast radius. This is now a recurring pattern across three consecutive phases, not an anomaly.
+    Every phase must re-measure the gate baseline at EXECUTE start rather than trusting the
+    hand-off figure, no matter how recently it was recorded.
+12. **Closeout narrative can drift stricter than the gates it summarizes — and the drift itself is
+    a defect to fix, not just route around.** This file's Phase Sequence table claimed Phase 3 was
+    hard-blocked on Phase 2's *live* apply; the phase plans' own Entry/Exit Gates and
+    validate-contracts never actually required that. The orchestrator ruled the gate text governs
+    (see the correction note under Phase Sequence above) and Phase 3 proceeded and completed clean
+    — but a later phase reads this umbrella's narrative before it reads the gate text of two other
+    files, so the mismatch was a live hazard, not a harmless technicality. Apply this check to
+    Phases 4-6: when this file's prose and a phase plan's own gates disagree, fix the umbrella's
+    prose at that phase's UPDATE PROCESS rather than silently proceeding on the gate text alone.
+13. **Two agents contradicted each other on a plain, cheaply-checkable fact.** During this program
+    a dispute arose over whether `ops/seed-placeholder-components.mjs` exists on disk — INNOVATE
+    said yes, RESEARCH (a more recent claim) said no. The orchestrator checked disk directly rather
+    than trusting recency; INNOVATE was right. When two agent outputs disagree on a fact that a
+    single `ls`/`find`/`grep` can settle, check disk before writing either version forward into a
+    plan or report.
+14. **A plan can ask an operator to watch a signal the implementation never exposes.** Phase 3's
+    plan told the operator to trust that "the missing-item count trends down over time relative to
+    the hourly cap," but the route's dry-run response originally reported only the capped count
+    (`wouldProcess`), which reads identically whether the real backlog is 20 or 20,000. Caught
+    during EXECUTE review, fixed additively (`totalMissing` + `cap` fields added, zero-invoke
+    guarantee unaffected). Worth a deliberate check in every future phase: for each observable a
+    plan asks an operator to monitor, confirm the implementation actually exposes that value.
 
 ---
 
@@ -458,52 +507,56 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-**Last updated:** 26-07-26 (UPDATE PROCESS, Phase 02 inner-loop Step 7)
+**Last updated:** 26-07-26 (UPDATE PROCESS, Phase 03 inner-loop Step 7)
 
-**Current phase N of total:** Phase 2 of 6 (Phase 1 also still open — see below; Phase 2 is the
-most recently closed-out phase and the one blocking Phase 3's start)
+**Current phase N of total:** Phase 3 of 6 (Phases 1 and 2 also still open — see below; Phase 3 is
+the most recently closed-out phase and the next phase to start is Phase 4)
 
-**Phase N name:** Phase 02 — Embedding DB functions
+**Phase N name:** Phase 03 — Scheduler + seed
 
 **Phase N status:** 🧪 TESTING — code-complete, locally verified for real (NOT vacuously — the
-pglite harness ran the actual committed migration file end-to-end, not a mirror). All Step A-C
-checklist items done except the two live-apply hard stops (C5 request, C6 apply), which remain
-deliberately unchecked. 4 `CREATE FUNCTION` migrations exist in
-`supabase/migrations/0001_embedding_functions.sql`, each with an explicit
-`REVOKE`/`GRANT EXECUTE ... TO service_role` pair. Nothing applied to the live database. Closeout
-classification: **Keep in active/testing** — not archivable; Phase 3's cron work is hard-blocked
-on this phase's eventual live apply landing.
+existing vitest suite exercises the actual extended route, not a mock of a mock). All Step A/B/C/D
+checklist items done except the operator-only and live-DB legs, which remain deliberately
+unchecked. `apps/web/app/api/cron/gen-usage-embeddings/route.ts` extended additively (dry-run
+short-circuit + `EMBEDDING_CRON_BATCH_CAP`); `ops/README-embedding-cron.md` (crontab install
+artifact) and `supabase/seed-embedding-verification.sql` (idempotent fixture SQL) delivered.
+Nothing installed on the VPS, nothing applied to the live database — both are explicitly
+operator-only per the Program Goal Charter's hard safety constraints. Closeout classification:
+**Keep in active/testing** — NOT archived; the crontab install and seed apply are outstanding
+operator actions, not agent work items.
 
 **Phase N EVL:** Independent EVL confirmation run (not trusting EXECUTE's self-report) found zero
-gaps and closed in one cycle (`results.tsv`: `1 phase-02-evl tests 0 0 PASS HALTED_SUCCESS
-2026-07-26`). All gates green: `tsc --noEmit` exit 0/0 errors; `pnpm --filter web test` 62/62
-passing (17 files); `node ops/pglite-verify-embedding-functions.mjs` exit 0, 11/11 PASS;
-`grep -c "CREATE FUNCTION" supabase/migrations/*.sql` == 4; `validate-agent-parity.mjs` and
-`validate-context-discovery.mjs` both pass; `git diff --check` clean. The regression baseline is
-**better** than documented at hand-off — the 4 foreign `tsc` errors and 5 vitest failures Phase 01
-recorded were fixed by a concurrent session; re-measured independently twice this session
-(pre-EXECUTE and at EVL), byte-identical both times. Test baseline corrected in
-`process/context/tests/all-tests.md` and `process/context/all-context.md`. The one Agent-Probe gate
-(AC5-d, live application + re-verification) is correctly unrun — it requires the live DB connection
-gated behind Step C5, outside this phase's automated EVL scope.
+gaps and closed in one cycle (`results.tsv`: `1 phase-03-evl tests 0 0 PASS HALTED_SUCCESS
+2026-07-26`). All gates green: `tsc --noEmit` exit 0/0 errors; `pnpm --filter web test` 73/73
+passing (18 files, 62 baseline + 11 new); `validate-agent-parity.mjs` and
+`validate-context-discovery.mjs` both pass; `git diff --check` clean. The regression baseline
+improved again this phase — the single foreign `tsc` error the Phase 02 hand-off recorded (at a
+different line number in `add-registry-modal.tsx` than Phase 01's original pair) is gone, fixed by
+further concurrent work outside this program. Test baseline corrected in
+`process/context/tests/all-tests.md` and `process/context/all-context.md`. The 3 Agent-Probe/
+live-key residuals (full embedding-generation leg, AC7 live search verification, live schedule
+firing) are correctly unrun — all three are pre-accepted Known Gaps in the SPEC and this phase's
+own validate-contract, requiring operator action outside this phase's automated EVL scope.
 
-**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_REPORT_26-07-26.md`
+**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_REPORT_26-07-26.md`
 
-**Next phase:** Phase 2 remains current — it is NOT advancing to Phase 3 yet. Phase 3 has a HARD
-dependency on Phase 2's live apply (Steps C5/C6) actually landing — a scheduler cannot be wired to
-functions that exist only in a tracked migration file. Two independent user-approval decisions are
-now outstanding across the program: Phase 1's Step C3 (grants/RLS live apply) and Phase 2's Step C5
-(embedding functions live apply). Both should be presented together for review since they are
-independent SQL statements against the same database. Once both are approved, applied, and
-live-verified, re-enter UPDATE PROCESS to close both phases for real and advance to Phase 03
-(scheduler + seed), inner loop Step 1 (RESEARCH). Phases 4 and 5 (parallel-safe, both depend only
-on Phase 1) could start their RESEARCH/INNOVATE work once Phase 1's live apply lands, independent
-of Phase 2/3's status — not yet started.
+**Next phase:** Phase 3 stays current — it does NOT advance to Phase 4 automatically. Phase 4 depends
+only on Phase 1 (parallel-safe with Phase 5, per the umbrella's Pre-PVL Conflict Resolution), so it
+is NOT blocked by anything in Phase 3's outstanding operator actions — Phase 4's RESEARCH could
+start now. **Correction applied this pass:** the prior claim that "Phase 3 has a HARD dependency on
+Phase 2's live apply actually landing" was wrong and has been corrected in the Phase Sequence
+section above — Phase 2's scratch-verified proof was always sufficient, and Phase 3 has since
+completed on exactly that basis. Two independent user-approval decisions remain outstanding across
+the program: Phase 1's Step C3 (grants/RLS live apply) and Phase 2's Step C5 (embedding functions
+live apply) — both are still pending and unrelated to Phase 3's completion. **Recommended next
+action:** Phase 4, loop step 1 (RESEARCH). Phase 5 (billing) is also eligible in parallel once
+Phase 1 lands, but Phase 4 is the umbrella's stated next phase.
 
-**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending C5/C6.
+**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending
+operator crontab install + seed SQL apply (non-blocking for program advancement).
 
-**Validate-contract status:** written, inline in `phase-02-embedding-functions_PLAN_25-07-26.md`;
-`generated-by: inner-pvl: phase-2`; `Gate: PASS` (0 FAILs, 0 unresolved CONCERNs — reached in a
+**Validate-contract status:** written, inline in `phase-03-scheduler_PLAN_25-07-26.md`;
+`generated-by: inner-pvl: phase-3`; `Gate: PASS` (0 FAILs, 0 unresolved CONCERNs — reached in a
 single inner-PVL cycle, see `results.tsv`).
 
 **Phase 1 status (unchanged, still open):** 🧪 TESTING — code-complete, NOT live-verified.
@@ -512,12 +565,19 @@ Step C3 user approval — see
 `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_REPORT_26-07-26.md`
 for the exact pending-approval SQL. No change this UPDATE PROCESS pass.
 
+**Phase 2 status (unchanged, still open):** 🧪 TESTING — code-complete, locally verified for real
+(11/11 pglite harness, EVL-confirmed), NOT live-applied. `Gate: PASS`. Blocked on Step C5 user
+approval — see
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_REPORT_26-07-26.md`.
+No change this UPDATE PROCESS pass. **Note:** Phase 2's live apply is no longer a blocker for Phase
+3 (see correction above) — it remains an independent outstanding user decision in its own right.
+
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS.
 Orchestrator rule: read "Phase N status" and "Validate-contract status" before spawning any
 subagent for this phase. Do not spawn execute-agent again for Phase 01 or Phase 02 until the user
-has acted on the respective C3/C5 approval requests — the remaining live-apply work depends on
-those decisions. Do not start Phase 03 (RESEARCH) until Phase 02's live apply (C5/C6) is confirmed
-landed.
+has acted on the respective C3/C5 approval requests. Phase 03 is code-complete and does not need
+another execute-agent spawn; its remaining items are operator-only. Phase 04 RESEARCH may start now
+— it is not blocked on any outstanding operator action from Phases 1-3.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes —
 update-process-agent rewrites it after every phase closeout (overwrite, not append — git history

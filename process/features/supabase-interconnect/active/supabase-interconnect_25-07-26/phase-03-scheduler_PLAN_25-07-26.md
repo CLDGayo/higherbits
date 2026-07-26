@@ -28,12 +28,28 @@ hunt-scoring cron is built, since the 5 hunt-scoring functions are out of scope 
 `## Out-of-Scope Corrections`). Seed minimal fixtures needed to make the embedding job's dry-run
 verifiable; no contest round is seeded (AC8 is descoped).
 
+**Orchestrator ruling (26-07-26, encoded here per explicit instruction — do not re-litigate):** the
+umbrella's prose narrative claims Phase 3 is hard-blocked on Phase 2's *live* apply to Supabase.
+That reading is stricter than what Phase 2's own Exit Gate and Phase 3's own Entry Gate /
+validate-contract actually require — both treat Phase 2's **scratch-verified** functions (proven
+via `ops/pglite-verify-embedding-functions.mjs` against the real `0001_embedding_functions.sql`
+migration, EVL-audited) as sufficient to satisfy the F3 dependency. **Ruled: the phase plans
+govern; Phase 3 proceeds now on Phase 2's scratch-verified functions.** Nothing changes about the
+live legs already deferred elsewhere in this plan — real embedding generation, live schedule
+firing on gayo-vps, and applying the seed SQL to the production database all remain gated behind
+their existing approval checkpoints (C3/D4, Step B6, and the Agent-Probe rows in the Validate
+Contract below). The umbrella's stricter wording is informal closeout narrative, not a locked gate,
+and will be corrected for consistency at this phase's UPDATE PROCESS step.
+
 ---
 
 ## Entry Gate
 
-- Phase 2 exit gate passed — hard dependency (F3): no scheduler may reference functions that don't
-  yet exist, whether in scratch-schema or live form
+- Phase 2 exit gate passed **on scratch-verified functions** — hard dependency (F3): no scheduler
+  may reference functions that don't yet exist, whether in scratch-schema or live form. Per the
+  orchestrator ruling above, Phase 2's `ops/pglite-verify-embedding-functions.mjs` pass against the
+  real migration SQL satisfies this gate; a live Supabase apply of Phase 2 is NOT required to enter
+  Phase 3.
 - Confirmed `pg_cron` is not an installed extension (already established via live-DB audit — no
   re-verification needed)
 
@@ -41,114 +57,169 @@ verifiable; no contest round is seeded (AC8 is descoped).
 
 ## Blast Radius
 
-- **Step A0 decision-dependent:** possibly ZERO new app code (see Step A0) — if the existing
-  `apps/web/app/api/cron/gen-usage-embeddings/route.ts` is reused as-is, the only new file is the
-  install artifact + seed SQL. If a standalone script is genuinely justified, new cron script at
-  `apps/web/scripts/run-embedding-backfill-cron.ts` (or `ops/` equivalent, matching the repo's
-  existing `ops/` script conventions) — invokes `supabase.functions.invoke("generate-embeddings",
-  ...)` (NOT a direct OpenAI/Gemini call — see Step A1's clarified call path), calling the Phase 2
-  `get_missing_usage_embedding_items` function first
-- New crontab entry documentation/install artifact (plain text — a copy-pasteable `crontab -e` line
-  or a small install helper script), NOT a systemd unit pair (Fork E1 rejects E3/E4). The line must
-  include log redirection and `flock` wrapping (see Step B).
-- Minimal seed-data SQL file(s) — idempotent (`ON CONFLICT DO NOTHING` or existence-guarded),
-  checked in for auditability (Fork F)
+- **No new standalone cron script.** Per Step A0 (locked below), the existing
+  `apps/web/app/api/cron/gen-usage-embeddings/route.ts` is reused and extended additively — the
+  previously-registered `apps/web/scripts/run-embedding-backfill-cron.ts` path is **retracted** and
+  is NOT created by this plan (see registry retraction in the umbrella-facing registry file).
+- `apps/web/app/api/cron/gen-usage-embeddings/route.ts` — additive-only changes: optional
+  `?dryRun=true` query param and an `EMBEDDING_CRON_BATCH_CAP` env-driven cap (default 20) applied
+  via `missingItems.slice(0, cap)` before the per-item loop. **Precision correction (PVL cycle
+  26-07-26):** the `?dryRun=true` flag is opt-in — omitting it preserves the route's existing
+  side effects. The batch cap is NOT opt-in: it applies unconditionally via its env-var default
+  (20) whether or not any query param is present, so a plain call with no params now processes at
+  most 20 items/run instead of unboundedly many. This is an intentional, safe behavior change, not
+  a silent regression — the route has zero live production traffic today (its `vercel.json` cron
+  entry never fires; the app runs on gayo-vps pm2, not Vercel — see Step A0), so no live caller
+  depends on unbounded processing. Document this explicitly as an intentional default-behavior
+  change in the Phase 3 report.
+- `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` — new vitest file, Supabase
+  client mocked, proving RPC call shape, per-item `functions.invoke` shape, dry-run short-circuit,
+  and cap slicing.
+- `ops/README-embedding-cron.md` — new crontab install artifact (plain text — a copy-pasteable
+  `crontab -e` block), NOT a systemd unit pair (Fork E1 rejects E3/E4). Includes the `CRON_SECRET`
+  declaration line, the `flock`-wrapped `curl` command, and log redirection (see Step B).
+- New idempotent seed-data SQL file — exact path: `supabase/seed-embedding-verification.sql`
+  (`ON CONFLICT DO NOTHING` or existence-guarded), checked in for auditability (Fork F).
+
+**WIP safety note (carried from Phase 1's precedent):** the working tree currently has 23
+uncommitted files unrelated to this program (confirmed via orchestrator-verified facts, 26-07-26).
+EXECUTE must never stage, commit, stash, or revert any of them — touch only the files listed above.
 
 ---
 
 ## Implementation Checklist
 
-### Step A — Reuse decision + author the cron path
+### Step A — Reuse decision (locked) + cap/dry-run authoring
 
-- [ ] **A0. Reuse-vs-author decision (mandatory, first).** Read
-      `apps/web/app/api/cron/gen-usage-embeddings/route.ts` fresh. It ALREADY implements almost
-      exactly this phase's target behavior: `CRON_SECRET`-guarded (401 on mismatch), non-interactive,
-      calls `supabase.rpc("get_missing_usage_embedding_items")` then
+- [x] **A0. Reuse decision — LOCKED, not conditional.** `apps/web/app/api/cron/gen-usage-embeddings/route.ts`
+      already implements almost exactly this phase's target behavior: `CRON_SECRET`-guarded (401 on
+      mismatch), non-interactive, calls `supabase.rpc("get_missing_usage_embedding_items")` then
       `supabase.functions.invoke("generate-embeddings", {...})` per missing item — the same Phase-2
       function this phase is gated on, and it already reuses the existing edge function rather than
       calling OpenAI/Gemini directly. `apps/web/vercel.json`'s hourly cron declaration points at this
       exact route (it never fires today because the app runs on gayo-vps pm2, not Vercel).
-      **Strongly prefer reuse:** the crontab line becomes
-      `curl -fsS -H "Authorization: Bearer $CRON_SECRET" https://higherbits.dev/api/cron/gen-usage-embeddings`
-      — zero new app code, only the install artifact + a real `CRON_SECRET` on gayo-vps. Only author
-      a standalone script (A1-A3 below) if there is a concrete, documented reason the existing route
-      cannot be reused (e.g. `maxDuration` insufficient, or a genuine need to run outside the
-      Next.js server process). **Document the decision explicitly in the Phase 3 report either way**
-      before proceeding to A1.
-- [ ] A1. (Only if A0 concludes "author new") Write `apps/web/scripts/run-embedding-backfill-cron.ts`
-      (or equivalent), reusing `generate-embeddings.ts`'s existing logic/imports rather than
-      duplicating it. **Clarified call path:** the script calls
+      **The route is extended additively; no new script is authored.** This is final — not an
+      "if A0 concludes" branch. Justification: `apps/web/scripts/tsconfig.json` (the config the
+      `generate-embeddings` npm script references) does not exist on disk, so that script is already
+      dead code and cannot serve as precedent for a new ts-node script; `ops/` convention across the
+      repo (`seed-placeholder-components.mjs`, `pglite-verify-embedding-functions.mjs`,
+      `gemini-asset-gen.mjs`, `seed-shadcn.mjs`, `gemini-asset-chroma-key.mjs`) is uniformly plain
+      `.mjs`, with zero ts-node ops-script precedent anywhere in the repo. Document this locked
+      decision verbatim in the Phase 3 report.
+- [x] A1. **Call path — locked, no direct provider call.** The route calls
       `supabase.functions.invoke("generate-embeddings", ...)` — it does NOT call OpenAI/Gemini
-      directly. This means **no new secret is needed in `apps/web`'s runtime**: `GEMINI_API_KEY`/
+      directly. **No new secret is needed in `apps/web`'s runtime.** `GEMINI_API_KEY`/
       `ANTHROPIC_API_KEY` live only in the edge function's own Deno env
-      (`supabase/functions/generate-embeddings/index.ts`, `ai-config.ts`) and stay there. If a
-      direct-provider-call design is ever chosen instead (not recommended), `GEMINI_API_KEY` must be
-      explicitly provisioned into `apps/web`'s env as a new prerequisite step — do not fold that into
-      an optional env-doc note.
-- [ ] A2. Ensure the script (if authored) is runnable via the repo's standard invocation convention —
-      `ts-node --project scripts/tsconfig.json scripts/run-embedding-backfill-cron.ts` per
-      `apps/web/package.json`'s existing `generate-embeddings` script pattern, NOT plain
-      `node file.ts` (Node 22.22.2 cannot run unflagged `.ts` files) — with no interactive input,
-      exiting 0 on success and non-zero on failure (for crontab log-visibility).
-- [ ] A3. Confirm required env vars (`OPENAI_API_KEY`/Supabase connection vars, or just `CRON_SECRET`
-      if A0 concludes reuse) are documented — cross-reference the SPEC's Known Gap about no
-      `apps/web/.env.example` existing; consider authoring one as a side effect if AC6's env-var
-      needs make it natural (non-blocking, optional).
-- [ ] A4. **Batch cap + dry-run (mandatory, applies whether A0 concludes reuse or author-new).** The
-      per-item embedding loop calls a paid, rate-limited API — add an explicit item-count cap (env
-      var or CLI flag, e.g. default 20/run) and a real `--dry-run` mode that lists missing items
-      WITHOUT invoking the edge function/API. If A0 concludes "reuse the existing route," the cap
-      and dry-run flag must be added to that route (small, additive change) since it does not
-      currently have either; document this as an in-scope addition to the reused route, not a new
-      script.
+      (`supabase/functions/generate-embeddings/index.ts`, `ai-config.ts`) and stay there.
+- [ ] A4. **Batch cap + dry-run (mandatory additive change to the reused route).** Add an
+      `EMBEDDING_CRON_BATCH_CAP` env var (default **20**) applied as `missingItems.slice(0, cap)`
+      before the per-item loop, and an optional `?dryRun=true` query param that returns
+      `{ dryRun: true, wouldProcess: N, items: [...] }` with HTTP 200 and makes **no**
+      `functions.invoke` call. **Implementation note:** the `dryRun` check must short-circuit
+      (return the JSON response) BEFORE entering the per-item `for` loop — not as a per-iteration
+      skip — so the "no functions.invoke call" guarantee is structurally enforced, not just
+      behaviorally coincidental. **Cap applies unconditionally** (see Blast Radius note above) —
+      it is not gated behind `?dryRun=true` or any other flag; this is an intentional default-
+      behavior change, safe because the route has zero live traffic today. **Starvation check:**
+      because `get_missing_usage_embedding_items()` recomputes missing items from current DB state
+      on every call (STABLE SQL function, no external bookkeeping table), items skipped by the cap
+      in one run are NOT dropped — they simply remain "missing" and are picked up automatically on
+      the next hourly run. No backlog-starvation risk exists as long as the missing-item count
+      trends down over time relative to the hourly cap. **Cap justification:** the route's
+      `maxDuration = 600`s; at ~5s per item (network + edge-function overhead) that is ≈100s for 20
+      items, leaving generous headroom for slow calls while bounding paid-API spend per run — 20 is
+      a deliberate, defensible default, not an arbitrary number.
+- [ ] A5. **Author the test file (mandatory — closes the test-coverage gap found in this PVL
+      cycle).** Write `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts`,
+      following the existing `vi.hoisted` + `vi.mock("@/lib/supabase", ...)` pattern already used in
+      `apps/web/app/api/magic/__tests__/route.test.ts` (mock `.rpc` AND `.functions.invoke` — the
+      global `apps/web/__tests__/setup.ts` mock only covers `.from()`, not `.rpc`/`.functions`, so
+      this file needs its own local override). Minimum assertions: (1) 401 when the Authorization
+      header doesn't match `CRON_SECRET`; (2) happy path calls
+      `rpc("get_missing_usage_embedding_items")` then `functions.invoke("generate-embeddings",
+      {...})` once per missing item with the correct `{type, id}` body shape; (3) `?dryRun=true`
+      returns `{dryRun:true, wouldProcess, items}` and `functions.invoke` is never called
+      (`expect(mockInvoke).not.toHaveBeenCalled()`); (4) when missing-item count exceeds
+      `EMBEDDING_CRON_BATCH_CAP`, only `cap` items are processed (assert `mockInvoke` call count
+      equals the cap, not the full list length).
 
 ### Step B — Author the install artifact
 
-- [ ] B1. Write the exact `crontab -e` line — either the `curl`-based reuse form from A0, or the
-      `ts-node` invocation from A2 if a standalone script was justified — running as the `higherbits`
-      user (never root), per deploy memory: install via `su - higherbits`, never `sudo -u` (HOME
-      pollution breaks corepack).
-- [ ] B2. Document the exact schedule cadence (recommend hourly or daily — confirm against
-      `vercel.json`'s original declared cron cadence for continuity if one is stated there).
-- [ ] B3. **Log redirection (mandatory).** The crontab line must redirect output to a log file, e.g.
-      `>> /home/higherbits/logs/embedding-cron.log 2>&1`, so the operator can confirm success/failure
-      without relying on cron's default mail behavior (commonly unconfigured on a fresh VPS). State
-      in the README how the operator checks this log to confirm a run happened.
-- [ ] B4. **Overlap/concurrency protection (mandatory).** Wrap the crontab command in
-      `flock -n /tmp/embedding-cron.lock -c "..."` to prevent two overlapping runs if a slow run is
-      still in flight when the next fires. Near-zero cost; do not build a DB-level lock for this
-      phase's scope.
-- [ ] B5. Write the install artifact as a short `ops/README-embedding-cron.md` (or similar) with:
-      the exact crontab line (including the `flock` wrapper and log redirection from B3/B4), the
-      working directory, required env vars, the batch-cap/`--dry-run` flag documented (A4), and a
-      dry-run command the operator can run manually first to confirm the script works before
-      installing the schedule.
+- [ ] B1. Write the exact `crontab -e` block:
+      ```
+      CRON_SECRET=<value>
+      0 * * * * flock -n /tmp/embedding-cron.lock -c 'curl -fsS -H "Authorization: Bearer $CRON_SECRET" https://higherbits.dev/api/cron/gen-usage-embeddings' >> /home/higherbits/logs/embedding-cron.log 2>&1
+      ```
+      Installed as the `higherbits` user's crontab (never root), per deploy memory: install via
+      `su - higherbits`, never `sudo -u` (HOME pollution breaks corepack). The `CRON_SECRET=` line
+      is a standard crontab variable declaration at the top of the crontab file — it is read by cron
+      itself and interpolated into the command via `$CRON_SECRET`.
+- [ ] B2. Document the exact schedule cadence — hourly (`0 * * * *`), matching `vercel.json`'s
+      original declared cron cadence for continuity.
+- [ ] B3. **Log redirection (mandatory).** The crontab line redirects output to
+      `/home/higherbits/logs/embedding-cron.log` (see B1). State in the README that the log
+      directory must exist first (`mkdir -p /home/higherbits/logs`), and how the operator checks
+      this log to confirm a run happened, since cron's default mail behavior is commonly
+      unconfigured on a fresh VPS.
+- [ ] B4. **Overlap/concurrency protection (mandatory).** The crontab command is wrapped in
+      `flock -n /tmp/embedding-cron.lock -c '...'` (see B1) to prevent two overlapping runs if a
+      slow run is still in flight when the next fires. Near-zero cost; no DB-level lock is built for
+      this phase's scope. **Operator-safety note:** a run skipped due to `flock` contention is a
+      silent no-op from cron's perspective (no error, no log line) — the README must say this
+      explicitly so a "missing" run can be correctly diagnosed as "another run was still in flight"
+      rather than "the job failed."
+- [ ] B5. Write the install artifact as `ops/README-embedding-cron.md` with: the exact crontab
+      block from B1 (including the `flock` wrapper and log redirection), the required env vars
+      (`CRON_SECRET`, `EMBEDDING_CRON_BATCH_CAP`), the `?dryRun=true` flag documented (A4), and a
+      dry-run `curl` command the operator can run manually first to confirm the route works before
+      installing the schedule. **Operator-safety note:** the `CRON_SECRET` value lives only inside
+      the crontab file itself (protected by standard crontab-spool permissions — 600, owner-only);
+      do not copy it into any other file, and never log its value anywhere (including the
+      `embedding-cron.log` output — the `curl` command must not echo the header).
 - [ ] B6. State explicitly in the artifact: this is the ONE privileged step the user runs personally
       on gayo-vps (`ssh root@72.62.196.231` per deploy memory, then `su - higherbits` for the
-      crontab edit) — no agent executes this step.
+      crontab edit) — no agent executes this step. Re-verify the live deploy path/user/pm2-name with
+      `pm2 list` and `ls /home/*/htdocs/` at install time per the standing drift warning in
+      `process/context/all-context.md` §Deployment.
 
 ### Step C — Local dry-run verification
 
-- [ ] C1. Run the cron path locally (or in a disposable environment) against the Phase 2
-      scratch-verified functions (or live, if Phase 2's live application was approved) and confirm
-      it successfully invokes `get_missing_usage_embedding_items` → calls
-      `supabase.functions.invoke("generate-embeddings", ...)` (the edge function itself handles the
-      OpenAI/Gemini call internally) without error.
-- [ ] C2. Confirm the exit code and log output are crontab-friendly (non-interactive, exits cleanly)
-      and that the log-redirection destination from B3 actually receives output.
-- [ ] C3. If `OPENAI_API_KEY`/`GEMINI_API_KEY` is not available to the edge function in this session's
-      environment (per SPEC Known Gaps), document this as a Known Gap for the dry-run's live-API leg
-      specifically — the control flow up to the edge-function invoke can still be verified.
-- [ ] C4. Confirm `--dry-run` (A4) correctly lists missing items without invoking the edge function —
-      run it once as part of this verification.
+- [ ] C1. Run the cron path locally (or in a disposable environment) against Phase 2's
+      scratch-verified functions and confirm it successfully invokes
+      `get_missing_usage_embedding_items` → calls `supabase.functions.invoke("generate-embeddings",
+      ...)` (the edge function itself handles the OpenAI/Gemini call internally) without error.
+- [ ] C2. Confirm the exit/response is crontab-friendly (the route returns a clean JSON response and
+      the `curl -fsS` flags in B1 make cron treat a non-2xx response as a failure) and that the log
+      redirection from B3 actually receives output when run via `curl` locally.
+- [ ] C3. If `OPENAI_API_KEY`/`GEMINI_API_KEY` is not available to the edge function in this
+      session's environment (per SPEC Known Gaps), document this as a Known Gap for the dry-run's
+      live-API leg specifically — the control flow up to the edge-function invoke can still be
+      verified.
+- [ ] C4. Confirm `?dryRun=true` (A4) correctly lists missing items without invoking the edge
+      function — exercise it once as part of this verification (both via the new vitest test from
+      Step A5 and, if a local dev server is available, a manual `curl`).
 
 ### Step D — Seed minimal fixtures for verification (Fork F)
 
-- [ ] D1. Write an idempotent SQL seed file (`ON CONFLICT DO NOTHING` or existence-guarded) adding
-      at least one `demos`/`components` row with no existing embedding, so
-      `get_missing_usage_embedding_items()` has something real to find during verification.
-- [ ] D2. Check the seed file into `supabase/` or `ops/` following the existing repo's seed-file
-      pattern (`ops/seed-placeholder-components.mjs` precedent).
+- [ ] D1. Write an idempotent SQL seed file at `supabase/seed-embedding-verification.sql`
+      (`ON CONFLICT DO NOTHING` or existence-guarded) adding at least one `components` row with no
+      existing embedding, so `get_missing_usage_embedding_items()` has something real to find during
+      verification. **Column-shape note (added this PVL cycle — `components` has real NOT NULL/FK
+      constraints per `ops/seed-placeholder-components.mjs`'s documented schema-recon comment):**
+      the insert must supply `user_id` (NOT NULL, FK to `users.id` — resolve via a subquery, e.g.
+      `(SELECT id FROM public.users LIMIT 1)`, mirroring the runtime-discovery pattern in
+      `ops/seed-placeholder-components.mjs` rather than hardcoding a UUID), `component_slug` (NOT
+      NULL, unique with `user_id`), `name` (NOT NULL), `component_names` (JSON, NOT NULL — e.g.
+      `'["Embedding Verification Fixture"]'`), and `preview_url` (NOT NULL, NO DEFAULT — any
+      placeholder string is fine, e.g. a neutral image URL). `code`/`description` are nullable or
+      defaulted (`code` defaults to `"N/A"`) and do not need explicit values. Guard the insert with
+      `ON CONFLICT (user_id, component_slug) DO NOTHING`, and make the insert a no-op (not an error)
+      if the `SELECT id FROM public.users LIMIT 1` subquery returns no row (empty database with zero
+      users) — document this edge case in the seed file's header comment. Do not seed a `demos` row
+      unless it is needed — a `components`-only seed row is sufficient to give
+      `get_missing_usage_embedding_items()` something to find.
+- [ ] D2. Check the seed file into `supabase/`, following the existing repo's seed-file pattern
+      (`ops/seed-placeholder-components.mjs` precedent — confirmed present on disk, 26.9K).
 - [ ] D3. **No contest round is seeded in this phase** — AC8 is descoped (see umbrella
       `## Out-of-Scope Corrections`); do not create `component_hunt_rounds` seed data here.
 - [ ] D4. **HARD STOP — request explicit user approval before running the seed SQL against the live
@@ -159,24 +230,26 @@ verifiable; no contest round is seeded (AC8 is descoped).
 ## Exit Gate
 
 ```bash
-# Local dry-run of the cron path (mocked OpenAI/Gemini call acceptable if credentials absent)
-# Exact command depends on A0's decision: either a curl against the reused route, or
-# `ts-node --project scripts/tsconfig.json scripts/run-embedding-backfill-cron.ts` for a new script
-# Expected: exits 0, logs show get_missing_usage_embedding_items → generate-embeddings invoke path
+# Local vitest coverage for the reused route's additive changes (cap + dry-run)
+corepack pnpm --filter web test -- app/api/cron/gen-usage-embeddings
+# Expected: exit 0, all new tests pass
 
 corepack pnpm --filter web exec tsc --noEmit
-# Expected: exit 0
+# Expected: exit 0 — no NEW errors beyond the 1 known foreign error at
+# apps/web/components/features/studio/sandbox/components/add-registry-modal.tsx(233,19) (TS2322,
+# from uncommitted user WIP, outside this program's blast radius — do not fix; mirrors Phase 1's
+# ruling on foreign errors)
 
 corepack pnpm --filter web test
-# Expected: all tests pass, no regression
+# Expected: 62/62 passing baseline (26-07-26) plus new tests, no regression
 ```
 
-- All Step A-D checklist items checked (including A0's documented reuse-vs-author decision)
-- Cron path + install artifact (crontab line w/ `flock` + log redirection + README) delivered as
+- All Step A-D checklist items checked (A0/A1 locked decisions documented in the Phase 3 report)
+- Cron path + install artifact (crontab block w/ `flock` + log redirection + README) delivered as
   repo files (SPEC AC6)
 - Local dry-run confirms the path invokes `get_missing_usage_embedding_items` →
   `generate-embeddings` edge-function invoke (SPEC AC6 `proven by:` note)
-- `--dry-run` flag and item-count cap verified functional (A4/C4)
+- `?dryRun=true` flag and `EMBEDDING_CRON_BATCH_CAP` verified functional (A4/C4)
 - Minimal seed fixtures added (idempotent, checked in) enabling AC7's search-result verification
 - Phase report explicitly states the VPS crontab install is NOT YET DONE and is not a blocking gate
   for this program's completion (SPEC AC6, Constraints)
@@ -186,7 +259,8 @@ corepack pnpm --filter web test
 
 ## Blockers That Would Justify BLOCKED Status
 
-- Phase 2 exit gate not yet passed — hard F3 dependency, cannot proceed.
+- Phase 2 exit gate not yet passed on scratch-verified functions — hard F3 dependency (see
+  orchestrator ruling above; live apply is NOT required), cannot proceed.
 - `OPENAI_API_KEY`/`GEMINI_API_KEY` genuinely unavailable to the edge function and no mocking
   strategy can meaningfully verify the control flow — document as Known Gap, do not block the whole
   phase; the artifact delivery (Step A/B) and DB-only verification (function calls without the
@@ -201,42 +275,62 @@ corepack pnpm --filter web test
 Orchestrator reads this before deciding which subagent to spawn next. The canonical 7-step inner loop
 `R → I → P → PVL → E → EVL → UP` SKIPS SPEC (SPEC runs once in the outer program loop).
 
-- [ ] 1. RESEARCH — research-agent: read Phase 2 report; confirm functions are scratch/live-verified; test context loaded
-- [ ] 2. INNOVATE — innovate-agent: confirm Fork E1 (plain crontab) + Fork F (committed idempotent seed SQL) still hold; Decision Summary written; MUST explicitly resolve Step A0's reuse-vs-author decision
-- [x] 3. PLAN-SUPPLEMENT — plan-agent: this PVL-supplement pass applied (25-07-26) — Gaps 1-5 addressed via Step A0 (reuse decision), Step A1 (clarified call path, no direct OpenAI/Gemini call), Step A4 (batch cap + dry-run), Step B3 (log redirection), Step B4 (flock overlap protection). All 5 gaps are now first-class checklist items, not just narrative Execute-Agent Instructions.
-- [ ] 4. PVL — vc-validate-agent: re-run V1-V7 against this supplemented plan to confirm gaps are closed — see `## Validate Contract` below for the prior CONDITIONAL contract (superseded once re-validation completes)
+- [x] 1. RESEARCH — research-agent: read Phase 2 report; confirmed functions are scratch-verified
+      (per orchestrator ruling, live apply not required); confirmed `apps/web/app/api/cron/gen-usage-embeddings/route.ts`
+      exists and is reusable; confirmed `apps/web/scripts/tsconfig.json` absent (disqualifies new
+      ts-node script); confirmed `ops/` convention is uniformly `.mjs`; test context loaded (62/62
+      passing baseline, 1 foreign tsc error)
+- [x] 2. INNOVATE — decision locked: Step A0 (reuse the existing route, no new script) and Step A1
+      (call path is `functions.invoke`, no direct provider call, no new secret) are final per this
+      supplement; Fork E1 (plain crontab) + Fork F (committed idempotent seed SQL) confirmed still
+      hold
+- [x] 3. PLAN-SUPPLEMENT — plan-agent: this inner-loop supplement pass (26-07-26) applied 7 edits —
+      (1) locked Step A0 reuse decision + registry retraction of the standalone-script path,
+      (2) locked Step A1 call-path clarification, (3) exact `?dryRun=true`/`EMBEDDING_CRON_BATCH_CAP`
+      parameter shape with justified cap=20, (4) exact crontab block (CRON_SECRET declaration +
+      flock-wrapped curl + log redirection), (5) two operator-safety notes (secret handling,
+      flock-skip silent no-op), (6) new local verification approach via a dedicated vitest file
+      instead of extending the pglite harness, (7) confirmed Step D2's `ops/seed-placeholder-components.mjs`
+      precedent is real (26.9K, on disk). Blast Radius, Touchpoints, registry, and Resume/Handoff
+      updated accordingly.
+- [x] 4. PVL — vc-validate-agent: fresh V1-V7 pass completed 26-07-26 (inner-PVL cycle 1 against
+      this PLAN-SUPPLEMENT). Read the actual `route.ts` and `generate-embeddings/index.ts` source,
+      the `get_missing_usage_embedding_items()` migration SQL, the vitest config + 2 precedent test
+      files, and `ops/seed-placeholder-components.mjs`'s schema-recon comment. Found 0 FAILs and 3
+      real CONCERN-class gaps (a checklist gap — no step actually instructed authoring
+      `route.test.ts` despite it being referenced in Blast Radius/Touchpoints/Exit Gate; a
+      self-contradiction between "default behavior unchanged" and the cap's unconditional env-var
+      default; and an under-specified seed SQL against `components`' real NOT NULL/FK schema) —
+      fixed all 3 directly in the plan text this cycle (new Step A5, Step A4 precision note + Blast
+      Radius correction, Step D1 column-shape note). Gate: PASS. See `## Validate Contract` below
+      for full findings.
 - [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
 - [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
 - [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
 
-**Validate-contract required before execute.** If step 4 (PVL) is unchecked or `## Validate Contract`
-reads "(placeholder — vc-validate-agent writes this section before EXECUTE)", orchestrator must
-spawn vc-validate-agent first.
-
-**Note on sequencing:** the prior outer PVL pass (25-07-26) found 5 CONCERN-class gaps (P1-P5). This
-PLAN-SUPPLEMENT pass folded all 5 into the checklist itself (Steps A0, A1, A4, B3, B4) so they are
-binding implementation steps rather than narrative instructions only. A fresh PVL pass (Step 4)
-should confirm the gaps are structurally closed before EXECUTE begins.
+**Validate-contract is current.** The `## Validate Contract` below is dated 26-07-26
+(`generated-by: inner-pvl: phase-3`, Gate: PASS) and supersedes the prior 25-07-26 outer-pvl
+CONDITIONAL contract. Orchestrator may proceed to spawn `vc-execute-agent` for Step 5 (EXECUTE).
 
 ---
 
 ## Touchpoints
 
-- `apps/web/app/api/cron/gen-usage-embeddings/route.ts` (existing — likely reused per A0, possibly
-  extended with A4's batch-cap/`--dry-run` addition)
-- `apps/web/scripts/run-embedding-backfill-cron.ts` (new, ONLY if A0 concludes a standalone script is
-  justified)
+- `apps/web/app/api/cron/gen-usage-embeddings/route.ts` (existing — reused per locked A0, extended
+  additively with A4's `EMBEDDING_CRON_BATCH_CAP`/`?dryRun=true` addition)
+- `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` (new — mocked-Supabase vitest
+  coverage for the additive changes, authored per Step A5)
 - `ops/README-embedding-cron.md` (new install artifact)
-- new idempotent seed SQL file (location TBD by execute-agent, following existing `ops/` or
-  `supabase/` conventions — `supabase/seed.sql` is the closest existing precedent)
+- `supabase/seed-embedding-verification.sql` (new idempotent seed SQL, following the
+  `ops/seed-placeholder-components.mjs` precedent's spirit, checked into `supabase/`)
 
 ---
 
 ## Public Contracts
 
 - No new API routes or public interfaces — this phase delivers an operator-facing install artifact
-  and (at most) a small additive change to an existing internal cron route, neither of which is a
-  runtime-facing contract for external callers.
+  and a small additive change (two optional params) to an existing internal cron route, neither of
+  which is a runtime-facing contract for external callers.
 - The seed data added is additive-only (idempotent) and does not alter any existing row.
 
 ---
@@ -246,15 +340,17 @@ should confirm the gaps are structurally closed before EXECUTE begins.
 | Gate / Scenario | Strategy | Proves SPEC criterion |
 |---|---|---|
 | Local dry-run of cron path invokes correct code path | Fully-Automated (DB leg) / Hybrid (embedding-generation leg, may be mocked) | AC6 |
-| `--dry-run` flag lists missing items without invoking edge function | Fully-Automated | AC6 (P3 gap closure) |
-| Install artifact reviewed for correctness (crontab line incl. `flock` + log redirection, README) | Hybrid | AC6 (P4/P5 gap closure) |
+| `?dryRun=true` lists missing items without invoking edge function; `EMBEDDING_CRON_BATCH_CAP` respected | Fully-Automated (new vitest file, Step A5) | AC6 (test-coverage gap closure) |
+| Install artifact reviewed for correctness (crontab block incl. `flock` + log redirection, README) | Hybrid | AC6 (B3/B4 gap closure) |
 | Search returns results after job run against seeded fixture | Agent-Probe (requires OPENAI_API_KEY/GEMINI_API_KEY + live Qdrant/Supabase) | AC7 |
 | Live schedule firing confirmation | Agent-Probe (operator-run, non-blocking) | AC6 |
+| No regression on tsc/test baseline | Fully-Automated | AC6 (no-regression gate) |
 
 ```bash
-# Exact command depends on A0's reuse-vs-author decision — see Exit Gate above
+corepack pnpm --filter web test -- app/api/cron/gen-usage-embeddings
 corepack pnpm --filter web exec tsc --noEmit && corepack pnpm --filter web test
-# Expected: exit 0, DB-leg function calls succeed
+# Expected: exit 0 (tsc: no NEW errors beyond the 1 known foreign add-registry-modal.tsx error),
+# DB-leg function calls succeed
 ```
 
 ---
@@ -262,59 +358,109 @@ corepack pnpm --filter web exec tsc --noEmit && corepack pnpm --filter web test
 ## Resume and Execution Handoff
 
 - Selected plan file path: `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_PLAN_25-07-26.md`
-- Last completed step: PLAN-SUPPLEMENT (PVL-supplement pass) — 25-07-26 — Gaps 1-5 addressed
-- Validate-contract status: prior CONDITIONAL contract below is superseded by this supplement; a
-  fresh PVL pass (Step 4) is required before EXECUTE
-- Next step: Spawn vc-validate-agent for a fresh PVL pass (Step 4) — after Phase 2 exit gate
-  confirmed. INNOVATE (Step 2, still unrun) must explicitly resolve Step A0's reuse-vs-author
-  decision before EXECUTE begins.
+- Last completed step: PVL (inner-loop validate, cycle 1) — 26-07-26 — fresh V1-V7 pass against the
+  PLAN-SUPPLEMENT; 3 gaps found and fixed directly in the plan text (see Phase Loop Progress Step 4
+  above); Gate: PASS
+- Validate-contract status: 26-07-26, `generated-by: inner-pvl: phase-3` — **PASS** (supersedes the
+  25-07-26 outer-pvl CONDITIONAL contract)
+- Next step: orchestrator spawns vc-execute-agent for Steps A-D (all checklist items, including the
+  new Step A5 test-authoring step). Phase 2 F3 dependency is satisfied on scratch-verified functions
+  per the orchestrator ruling recorded in `## Purpose` above; no further Phase-2-live wait is
+  required. Step D4's hard stop (explicit user approval before any live seed-SQL execution) still
+  applies during EXECUTE.
+- Supporting context files loaded: Phase 2 report, umbrella plan `## Current Execution State` and
+  `## Program-Wide Learnings`, `process/context/all-context.md`, `phase-blast-radius-registry.md`
 
 ---
 
 ## Test Infra Improvement Notes
 
-- No vitest coverage exists for the cron pathway today (neither the existing dormant
-  `apps/web/app/api/cron/gen-usage-embeddings/route.ts` nor any new script). `apps/web`'s vitest
-  config only globs `**/__tests__/**/*.test.ts` — a bare `scripts/*.ts` file is never auto-covered by
-  `corepack pnpm --filter web test` regardless of what gets authored. If any pure/extractable logic
-  (arg parsing, batch-cap logic, missing-item filtering) is added, it should live in a small module
-  under `apps/web/lib/` or `apps/web/scripts/` with a companion `__tests__/*.test.ts` file so it is
-  picked up automatically.
+- No vitest coverage exists yet for the cron pathway (`apps/web/app/api/cron/gen-usage-embeddings/route.ts`)
+  today. This plan closes that gap directly by adding
+  `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` (Touchpoints, authored per
+  Step A5), which `apps/web`'s existing vitest glob (`**/__tests__/**/*.test.ts`) will pick up
+  automatically — no vitest-config change needed. Precedent confirmed on disk:
+  `apps/web/app/api/magic/__tests__/route.test.ts` uses the identical `vi.hoisted` +
+  `vi.mock("@/lib/supabase", ...)` pattern this new file should follow.
+
+---
+
+## Inner Loop Refresh Note
+
+**Date: 2026-07-26** (strictly newer than the existing Validate Contract's `date: 2026-07-25` below
+— this is the mechanical Step 4b trigger that forces the orchestrator to re-run PVL from V1 before
+EXECUTE.)
+
+This is an inner-loop PLAN-SUPPLEMENT pass (Phase Loop Progress Step 3), not a PVL-supplement pass.
+Research (Step 1) and Innovate (Step 2) findings were folded into the plan directly:
+
+- **Orchestrator ruling recorded:** Phase 3 proceeds on Phase 2's scratch-verified functions; the
+  umbrella's stricter "live apply required" narrative is informal closeout prose, not a locked gate,
+  and will be corrected at this phase's UPDATE PROCESS. See `## Purpose` for the full ruling text.
+- **7 edits applied** (see Phase Loop Progress Step 3 checkbox summary above for the full list):
+  Step A0 locked (reuse the existing route, no new script — with the `apps/web/scripts/tsconfig.json`
+  absence and repo-wide `.mjs`-only `ops/` convention as justification), Step A1 locked (call path is
+  `functions.invoke`, no new secret), Step A4 given an exact parameter shape and a justified cap of
+  20, Step B given the exact crontab block, two new operator-safety notes added (B4/B5), a new local
+  verification approach specified (dedicated vitest file, not an extension of the pglite harness),
+  and Step D2's precedent citation confirmed accurate.
+- **Blast Radius / Touchpoints corrected:** `apps/web/scripts/run-embedding-backfill-cron.ts` is
+  retracted — it is not created by this plan. `supabase/seed-embedding-verification.sql` is named
+  explicitly (was "path TBD"). `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts`
+  is added as a new Touchpoint.
+- **Baselines corrected:** `corepack pnpm --filter web test` = 62/62 passing (not stale figures from
+  other phases); `tsc --noEmit` = 1 known foreign error at `add-registry-modal.tsx:233` (TS2322,
+  outside this program's blast radius, from uncommitted WIP) — the Exit Gate and Verification
+  Evidence commands above are updated to gate on "no NEW errors" rather than a bare `tsc --noEmit`
+  exit-0 expectation, mirroring Phase 1's precedent for foreign errors.
+
+Because this is a plan-content change (not a V7 SUPPLEMENT REQUEST gap-fix), the existing
+`## Validate Contract` section below is left untouched by this pass — vc-validate-agent supersedes
+it wholesale on the forced re-run from V1.
 
 ---
 
 ## Validate Contract
 
-Status: CONDITIONAL (prior pass — superseded by this PLAN-SUPPLEMENT; re-validation pending)
-Date: 25-07-26
-date: 2026-07-25
-generated-by: outer-pvl
+Status: PASS
+Date: 26-07-26
+date: 2026-07-26
+generated-by: inner-pvl: phase-3
+supersedes: 2026-07-25 (outer-pvl, CONDITIONAL) — this inner-PVL pass re-ran V1-V7 against the
+26-07-26 PLAN-SUPPLEMENT (the outer-pvl pass could not have seen the 3 gaps closed below, since
+they were introduced or exposed by the supplement itself)
 
 Parallel strategy: sequential
-Rationale: Score 2/7 (S4 phase-program classification, S6 high-risk data-mutation/schema-adjacent
-class named at umbrella level) → nominal MEDIUM-tier signal would suggest parallel subagents (4
-Layer 1 + 1 Layer 2 = 5 agents), but this validate-agent instance has no Agent/Task spawn tool
-available in its own tool grant for this invocation — the four Layer 1 dimension checks and the
-single Layer 2 section check were performed sequentially by this agent using Read/Bash fact-finding
-(Deep-Mode-equivalent: read all program artifacts, ran the plan-artifact/phase-stub/umbrella
-validators, traced the actual `apps/web/app/api/cron/gen-usage-embeddings/route.ts` +
-`supabase/functions/generate-embeddings/index.ts` code paths, grepped `GEMINI_API_KEY`/`CRON_SECRET`
-across the repo, confirmed the Node 22.22.2 toolchain and the `ts-node` script-invocation
-convention). Findings quality is not degraded by the missing spawn tool; only wall-clock
-parallelism is.
+Rationale: Signal score 2/7 (S4 phase-program classification; S6 high-risk data-mutation-adjacent
+class — the seed SQL writes to a production table pending Step D4 approval, and `CRON_SECRET` is a
+trust-boundary-adjacent secret) → nominal MEDIUM tier would suggest parallel subagents (4 Layer 1 +
+4 Layer 2 = 8 agents), but this validate-agent instance has no Agent/Task spawn tool available in
+its own tool grant for this invocation (Read/Bash/Write only) — the four Layer 1 dimension checks
+and the four Layer 2 section checks were performed sequentially by this agent using Read/Bash
+fact-finding: read `apps/web/app/api/cron/gen-usage-embeddings/route.ts`,
+`supabase/functions/generate-embeddings/index.ts`, `supabase/migrations/0001_embedding_functions.sql`
+(confirmed `get_missing_usage_embedding_items()`'s exact return shape), `apps/web/vitest.config.ts`
++ `apps/web/vitest.setup.ts` + `apps/web/__tests__/setup.ts`, two precedent test files
+(`apps/web/app/api/magic/__tests__/route.test.ts`, `apps/web/app/api/lemonsqueezy/__tests__/webhook.test.ts`),
+`ops/seed-placeholder-components.mjs`'s schema-recon comment (full `components`/`demos` column
+list), `apps/web/vercel.json`, `phase-blast-radius-registry.md`, and the Phase 2 plan's Exit Gate
+text. Findings quality is not degraded by the missing spawn tool; only wall-clock parallelism is.
 
 Test gates (C3 5-column table — ADDITIVE; existing consumers still parse the legacy line form below it):
 
 | criterion id | behavior | strategy | proving test | gap-resolution |
 |---|---|---|---|---|
-| AC6 (predecessor F3) | Cron pathway's DB-leg control flow (`get_missing_usage_embedding_items` → per-item loop) reaches the RPC boundary without throwing | Fully-Automated | Exact invocation depends on Step A0's decision — if reuse, an integration test against the existing `apps/web/app/api/cron/gen-usage-embeddings/route.ts` handler; if author-new, `ts-node --project scripts/tsconfig.json` invocation per the repo's `generate-embeddings` script convention — NOT plain `node file.ts` (Node 22.22.2 cannot run unflagged `.ts` files). | B |
-| AC6 | No regression | Fully-Automated | `corepack pnpm --filter web exec tsc --noEmit` && `corepack pnpm --filter web test` | A |
-| AC6 | `--dry-run` flag + batch cap functional (Step A4) | Fully-Automated | Run `--dry-run` once, confirm no edge-function invocation occurs; confirm cap is respected | B |
-| AC6 | Install artifact correctness (crontab line incl. `flock` wrapper + log redirection, README, env vars) | Hybrid | Manual review of `ops/README-embedding-cron.md` + the exact crontab line, checked against Steps B3/B4 | B |
-| AC6 (predecessor) | Full local dry-run including the embedding-generation leg | Hybrid — precondition: Phase 2 functions verified (scratch or live) + `OPENAI_API_KEY`/`GEMINI_API_KEY` reachable to the edge function | Local/disposable run against seeded fixture (Step D1) | B |
-| AC7 | Search returns non-empty results after a real job run | Agent-Probe — requires live `OPENAI_API_KEY`/`GEMINI_API_KEY` + live Qdrant/Supabase (currently absent per SPEC Known Gaps) | Operator/agent-run job against seeded fixture, then `/api/search` check | D — named residual; may end INCONCLUSIVE if no live key is ever provisioned this program |
-| AC6 | Live schedule firing on gayo-vps | Agent-Probe — operator-only, non-blocking per SPEC Constraints | Operator confirms post-install | D — named residual; explicitly non-blocking for program completion |
-| — | Concurrent cron-run overlap protection | Hybrid (was Known-Gap; now closed via Step B4) | Manual review of the `flock`-wrapped crontab line | B |
+| AC6 | 401 returned when Authorization header doesn't match `CRON_SECRET` | Fully-Automated | `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` — Step A5 assertion (1) | A |
+| AC6 | Happy path calls `rpc("get_missing_usage_embedding_items")` then `functions.invoke("generate-embeddings", {...})` once per missing item with correct `{type, id}` body | Fully-Automated | Step A5 assertion (2) | A |
+| AC6 (test-coverage gap closure) | `?dryRun=true` short-circuits before the loop; zero `functions.invoke` calls | Fully-Automated | Step A5 assertion (3) | A |
+| AC6 (test-coverage gap closure) | `EMBEDDING_CRON_BATCH_CAP` caps processed items when missing-count exceeds cap | Fully-Automated | Step A5 assertion (4) | A |
+| AC6 (no-regression gate) | No regression on baseline | Fully-Automated | `corepack pnpm --filter web exec tsc --noEmit` (no NEW errors beyond the 1 known foreign error) && `corepack pnpm --filter web test` (62/62 + new tests) | A |
+| AC6 (B3/B4 gap closure) | Install artifact correctness (crontab line incl. `flock` wrapper + log redirection, README, env vars, secret-handling note) | Hybrid | Manual review of `ops/README-embedding-cron.md` against Steps B1-B6 | B |
+| AC6 (predecessor) | Full local dry-run including the embedding-generation leg | Hybrid — precondition: reachable `OPENAI_API_KEY`/`GEMINI_API_KEY` to the edge function | Local/disposable run against seeded fixture (Step D1) | B |
+| AC7 | Search returns non-empty results after a real job run | Agent-Probe — requires live `OPENAI_API_KEY`/`GEMINI_API_KEY` + live Qdrant/Supabase (absent per SPEC Known Gaps) | Operator/agent-run job against seeded fixture, then `/api/search` check | D — named residual; may end INCONCLUSIVE if no live key is ever provisioned this program |
+| AC6 | Live schedule firing on gayo-vps | Agent-Probe — operator-only, non-blocking per SPEC Constraints | Operator confirms post-install (Step B6) | D — named residual; explicitly non-blocking for program completion |
+| — | Concurrent cron-run overlap protection | Hybrid | Manual review of the `flock`-wrapped crontab line (Step B4) | B |
+| — | Seed SQL is schema-valid against `components`' real NOT NULL/FK constraints | Hybrid | Manual review of `supabase/seed-embedding-verification.sql` against Step D1's column-shape note; any live application is separately gated by Step D4 | B |
 
 gap-resolution legend:
 - A — proven now (gate passes in this cycle)
@@ -322,72 +468,155 @@ gap-resolution legend:
 - C — deferred to a named later phase/plan
 - D — backlog test-building stub (named residual; keep-active; continue)
 
+C-4 reconciliation: the `strategy:` column carries ONLY the 3 proving strategies (Fully-Automated /
+Hybrid / Agent-Probe). Known-Gap is never a `strategy:` value — the 2 Agent-Probe rows above (AC7,
+live schedule firing) are named D-type residuals with an explicit SPEC-documented rationale, not
+silent Known-Gap passes.
+
+Failing stub:
+```
+test("should return 401 when Authorization header does not match CRON_SECRET", () => {
+  throw new Error("NOT IMPLEMENTED — TDD stub for: 401 on Authorization header mismatch")
+})
+```
+
+Failing stub:
+```
+test("should call rpc then functions.invoke once per missing item with correct body shape", () => {
+  throw new Error("NOT IMPLEMENTED — TDD stub for: RPC call shape, per-item functions.invoke shape")
+})
+```
+
+Failing stub:
+```
+test("should short-circuit before the loop and never call functions.invoke when dryRun=true", () => {
+  throw new Error("NOT IMPLEMENTED — TDD stub for: dry-run short-circuit, zero functions.invoke calls")
+})
+```
+
+Failing stub:
+```
+test("should only process cap items when missing count exceeds EMBEDDING_CRON_BATCH_CAP", () => {
+  throw new Error("NOT IMPLEMENTED — TDD stub for: batch cap slicing respected")
+})
+```
+
+(No stub for the no-regression row — it runs the existing repo-wide `tsc`/`test` gate commands, not
+a new single-scenario unit test; a `test("should have no regression", ...)` stub would be a
+meaningless placeholder for a whole-suite CI check, contrary to the stub rule's intent of a red-first
+starting point for one new behavior.)
+
 Legacy line form (retained so existing validate-contract consumers still parse):
-- Cron path DB-leg control flow: Fully-automated: reused route integration test OR `ts-node --project scripts/tsconfig.json scripts/run-embedding-backfill-cron.ts` (per A0 decision) | Hybrid: embedding-generation leg requires reachable credentials to the edge function | agent-probe: search-result verification (AC7), live cron firing (AC6) | Hybrid: concurrent-run locking via `flock` (Step B4, reviewed not executed)
+- Cron path DB-leg control flow: Fully-automated: `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` (Step A5) | Hybrid: embedding-generation leg requires reachable credentials to the edge function | agent-probe: search-result verification (AC7), live cron firing (AC6) | Hybrid: concurrent-run locking via `flock` (Step B4, reviewed not executed) | Hybrid: seed SQL schema validity (Step D1, reviewed not executed against live DB)
 
-Dimension findings (from prior outer-PVL pass, 25-07-26 — gaps below now addressed by this PLAN-SUPPLEMENT):
-- Infra fit: CONCERN → ADDRESSED — Step A2 now specifies the `ts-node --project scripts/tsconfig.json` convention explicitly (if a new script is authored); Step A0 makes reuse of the existing route the default path, sidestepping the issue entirely in the common case.
-- Test coverage: CONCERN (unresolved) — zero existing test coverage for the cron pathway either via the dormant route or a new script; `apps/web`'s vitest glob (`**/__tests__/**/*.test.ts`) never auto-covers a bare `scripts/*.ts` file regardless of what's authored — see `## Test Infra Improvement Notes` above. Not closed by this supplement (test-authoring is an EXECUTE-time action); the new `--dry-run`/batch-cap logic (A4) should live in a small testable module per the Test Infra note.
-- Breaking changes: PASS — no schema/API/auth contract changes; seed data is additive-only; no existing function signature altered by this phase.
-- Security surface: PASS — `CRON_SECRET` is a local-only placeholder in gitignored `.env`/`.env.local` (not a live secret exposure); D4's hard-stop before live seed insert is correctly gated; no secrets logged per the established `ops/` convention. Note: whichever approach ships (reused route or new script) must resolve to a REAL `CRON_SECRET` value on gayo-vps before the crontab call will authenticate — this is a deploy-time action, not a code gap.
-- Section feasibility (Phase 03 — Scheduler + Seed): CONCERN → ADDRESSED — the 5 gaps (P1-P5) are now first-class checklist steps (A0, A1, A4, B3, B4) rather than narrative-only Execute-Agent Instructions.
+Dimension findings:
+- Infra fit: PASS — route reuse confirmed byte-for-byte against the on-disk
+  `apps/web/app/api/cron/gen-usage-embeddings/route.ts` (read this cycle); call path confirmed to
+  use `supabase.functions.invoke("generate-embeddings", ...)`, matching the edge function's real
+  signature at `supabase/functions/generate-embeddings/index.ts`; `apps/web/scripts/tsconfig.json`
+  absence and the repo-wide `.mjs`-only `ops/` convention (7 files checked, 0 `.ts`) both
+  independently re-confirmed this cycle.
+- Test coverage: PASS (was the checklist's silent gap this cycle) — found the Implementation
+  Checklist had NO step actually instructing authoring of `route.test.ts`, despite it being listed
+  in Blast Radius/Touchpoints/Exit Gate/Verification Evidence and referenced by Step C4 as if it
+  already existed. Closed by adding Step A5 with 4 concrete assertions and the exact mocking
+  pattern needed, confirmed against 2 real precedent files on disk.
+- Breaking changes: PASS (was a real self-contradiction this cycle) — found the plan claimed
+  "Default behavior (neither param present) is unchanged" while independently describing an
+  `EMBEDDING_CRON_BATCH_CAP` env-var default that applies unconditionally (not gated behind any
+  query param) — these two claims cannot both be true once the cap default is nonzero. Closed by
+  correcting the wording in Blast Radius + Step A4 and stating explicitly why the change is safe
+  (the route has zero live production traffic today; `vercel.json`'s cron entry never fires because
+  the app runs on gayo-vps pm2, not Vercel).
+- Security surface: PASS — `CRON_SECRET` is never logged or echoed in any response body (confirmed
+  by reading `route.ts` — the header is read and compared, never returned); `curl -fsS` doesn't
+  print request headers; Step D4 hard-stops before any live DB write; no new secret is needed in
+  `apps/web`'s runtime (confirmed via reading `generate-embeddings/index.ts` — `GEMINI_API_KEY`/
+  `ANTHROPIC_API_KEY`/`SUPABASE_SERVICE_ROLE_KEY` are read only from the edge function's own Deno
+  env, never passed through from `apps/web`).
+- Section A feasibility (Reuse decision + cap/dry-run authoring): PASS (was CONCERN pre-fix) — same
+  root-cause fixes as Test coverage/Breaking changes above, applied at the checklist-step level
+  (new Step A5; Step A4 precision + starvation-check note).
+- Section B feasibility (Install artifact): PASS — `flock -n /tmp/embedding-cron.lock` reboot
+  safety verified correct: advisory locks are released by the OS when the holding process exits or
+  is killed (including on reboot), so a stale lock file surviving in `/tmp` does not cause a false
+  "still locked" state — `/tmp` is an idiomatic, safe location for this. `curl -fsS` failure
+  visibility verified correct: `-f` fails on HTTP >=400, `-S` still prints curl's own error message
+  to stderr even with `-s`, and B1's `2>&1` redirect captures it into the log — a broken run is
+  visible. No conflicts found with other program phases (registry `## Conflict Check` confirms
+  disjoint file sets from Phases 4/5/6).
+- Section C feasibility (Local dry-run verification): PASS — mechanically feasible now that
+  Section A's test-authoring gap is closed (Step A5); C3's Known-Gap language for missing API keys
+  is appropriately scoped and consistent with SPEC's documented Known Gaps.
+- Section D feasibility (Seed fixtures): PASS (was CONCERN pre-fix) — found Step D1 did not account
+  for `components`' real NOT NULL/FK schema (`user_id` FK NOT NULL, `component_slug` NOT NULL
+  unique, `name` NOT NULL, `component_names` JSON NOT NULL, `preview_url` NOT NULL no default — all
+  confirmed via `ops/seed-placeholder-components.mjs`'s documented schema-recon comment, itself
+  sourced from `apps/web/prisma/schema.prisma`). A hand-rolled INSERT following only the plan's
+  original one-line description risked failing against these constraints, or silently hardcoding a
+  fragile `user_id`. Closed by adding the column-shape note (subquery-based `user_id` resolution
+  mirroring the existing ops script's runtime-discovery pattern, explicit NOT NULL column list,
+  conflict target, and the empty-database edge case).
 
-Open gaps (STATUS: addressed by this PLAN-SUPPLEMENT pass; awaiting fresh PVL confirmation):
-- **P1 — Existing code not discovered/reused → CLOSED via Step A0.** Step A0 now mandates reading
-  `apps/web/app/api/cron/gen-usage-embeddings/route.ts` first and strongly prefers reuse (curl-based
-  crontab line, zero new app code) over authoring a duplicate script. The decision must be documented
-  in the Phase 3 report.
-- **P2 — Internal contradiction on the embedding-generation call path → CLOSED via Step A1.** Step A1
-  now states explicitly: the call path is `supabase.functions.invoke("generate-embeddings", ...)`,
-  NOT a direct OpenAI/Gemini call — no new secret is needed in `apps/web`'s runtime.
-  `GEMINI_API_KEY`/`ANTHROPIC_API_KEY` stay in the edge function's Deno env only.
-- **P3 — No batch cap / cost control / dry-run flag → CLOSED via Step A4.** Explicit item-count cap
-  (default 20/run) and a real `--dry-run` mode are now mandatory checklist items, applying to
-  whichever path A0 selects (including an additive change to the existing route if reused).
-- **P4 — No observability / log destination → CLOSED via Step B3.** Log redirection
-  (`>> /home/higherbits/logs/embedding-cron.log 2>&1`) is now a mandatory checklist item with an
-  explicit operator-facing confirmation method documented in the README.
-- **P5 — No overlap/concurrency protection → CLOSED via Step B4.** `flock -n /tmp/embedding-cron.lock`
-  wrapping is now a mandatory checklist item, documented in the README.
-- **Phase 2 hard dependency (F3) is unmet today (UNCHANGED — sequencing gate, not a plan-quality gap).**
-  Umbrella Program Status Table shows Phase 2 as `⏳ PLANNED` (not yet executed) — Phase 2's own
-  `## Validate Contract` is still the placeholder. **Execute-agent instruction / orchestrator note:**
-  do not spawn vc-execute-agent for this Phase 3 plan until Phase 2's exit gate (4 `CREATE FUNCTION`
-  migrations verified against scratch/seeded schema) is confirmed passed.
-- **Hunt-scoring scope check (session lock, confirmed clean, unchanged):** the plan's Purpose, Blast
-  Radius, and Implementation Checklist all correctly scope to the embeddings job only — no
-  hunt-scoring cron entry, no `component_hunt_rounds` seeding (Step D3 explicit exclusion). No FAIL
-  on scope creep.
-- **Structural plan-artifact check (informational, not a real gap, unchanged):**
-  `node .claude/skills/vc-generate-plan/scripts/validate-plan-artifact.mjs` reports FAILs for
-  missing SIMPLE/COMPLEX-plan metadata — this is the wrong validator for a phase-program sub-plan;
-  the correct validator, `node .claude/skills/vc-generate-phase-program/scripts/validate-phase-stub.mjs`,
-  passes with 0 failures/0 warnings, as does the umbrella validator on the umbrella plan. No action
-  needed.
+Open gaps: none blocking (0 unresolved CONCERNs, 0 FAILs). All CONCERN-class gaps found this cycle
+were closed via direct plan-text edits during this PVL pass (gap-resolution B, "fixed in this
+plan"), not accepted as residuals.
+
+Known Gaps (named residuals, gap-resolution D — do NOT count toward CONDITIONAL/BLOCKED):
+- AC7 search-result verification: requires live `OPENAI_API_KEY`/`GEMINI_API_KEY` + live
+  Qdrant/Supabase; per SPEC Known Gaps this leg may end INCONCLUSIVE this program if no live key is
+  ever provisioned. Not blocking — the DB-leg control flow up to the edge-function-invoke boundary
+  is Fully-Automated-proven independent of this.
+- Live schedule firing on gayo-vps: operator-only, explicitly non-blocking per SPEC Constraints
+  (Step B6) — no agent executes the crontab install.
+- Full embedding-generation-leg local dry-run (Hybrid): gated on the same live-key precondition as
+  AC7.
+- Human-operator-follows-the-README-correctly: no automated test proves a human will correctly
+  copy-paste and install the crontab block — the Hybrid review proves the artifact is *correct*,
+  not that it will be *executed* correctly by the operator.
+- Live schema parity for the seed SQL: the Hybrid review proves the INSERT is valid against the
+  documented (scratch-verified) `components` schema — it does not prove the live database's actual
+  current schema matches until Phase 2 is live-applied, which remains deferred per the orchestrator
+  ruling and is out of this phase's scope.
+
+**Structural plan-artifact check (informational, not a real gap, unchanged from prior pass):**
+`node .claude/skills/vc-generate-plan/scripts/validate-plan-artifact.mjs` reports 4 FAILs for
+missing SIMPLE/COMPLEX-plan metadata (overview/context section, Complexity metadata, Phase
+Completion Rules, Acceptance Criteria) — this is the wrong validator for a phase-program sub-plan.
+Re-ran this cycle: the correct validator,
+`node .claude/skills/vc-generate-phase-program/scripts/validate-phase-stub.mjs`, still passes with
+0 failures / 0 warnings against this file (487 lines pre-edit / current line count post-edit). No
+action needed.
 
 What this coverage does NOT prove:
-- The Fully-Automated DB-leg control-flow test proves the path reaches the RPC/edge-function-invoke
-  call boundary without throwing — it does NOT prove the embedding-generation leg (the edge
-  function's internal OpenAI/Gemini call) succeeds, since that leg's tier is Hybrid/Agent-Probe
-  depending on credential availability inside the edge function's own Deno env.
-- The Hybrid full-dry-run test proves the chain end-to-end against a scratch/seeded schema — it does
-  NOT prove production cron scheduling actually fires on gayo-vps (that is AC6's Agent-Probe leg,
-  operator-confirmed, explicitly non-blocking per SPEC).
-- The Agent-Probe search-result check proves AC7 only if a live `OPENAI_API_KEY`/`GEMINI_API_KEY` and
-  live Qdrant/Supabase connection are available this program — per SPEC Known Gaps, this may end
-  INCONCLUSIVE rather than pass.
-- The Hybrid review of the `flock`-wrapped crontab line proves the artifact is *correctly specified*
-  — it does NOT prove concurrent-run safety under load, since no automated test exercises two
-  overlapping cron firings.
-- No test in this plan proves the install artifact is followed correctly by the human operator —
-  Hybrid review proves the artifact is *correct*, not that it will be *executed* correctly.
+- The 4 new Fully-Automated tests (Step A5) prove control flow reaches the RPC/edge-function-invoke
+  call boundary without throwing, and prove the dry-run/cap logic in isolation with a mocked
+  Supabase client — they do NOT prove the embedding-generation leg (the edge function's internal
+  OpenAI/Gemini/Claude calls) succeeds, since that leg runs inside the edge function's own Deno
+  process and depends on credentials this session cannot verify are live.
+- The no-regression gate (`tsc --noEmit` + `pnpm test`) proves no NEW errors are introduced beyond
+  the 1 known foreign `add-registry-modal.tsx` error — it does NOT prove the foreign error itself is
+  benign; it is explicitly out of this program's blast radius and untouched.
+- The Hybrid install-artifact review proves the crontab block is *correctly specified* — it does NOT
+  prove concurrent-run safety under real load (no test exercises two overlapping cron firings) and
+  does NOT prove a human operator will follow the README correctly during the actual VPS install.
+- The Hybrid seed-SQL review proves the INSERT is schema-valid against the documented (scratch-
+  verified) NOT NULL/FK constraints for `components` — it does NOT prove the *live* database's
+  current schema matches until Phase 2 is live-applied (deferred, out of this phase's scope), and it
+  does NOT execute the insert (Step D4 gates any live application behind explicit user approval).
+- The Agent-Probe rows (AC7 search results, live schedule firing) may end INCONCLUSIVE this program
+  if live API keys/live cron install are never provisioned — this is a named, accepted residual per
+  SPEC Known Gaps, not a silent gap invisible to the reader.
 
-Gate: CONDITIONAL (prior pass; 0 FAILs; 5 CONCERN-class gaps — P1-P5 — now closed via this
-PLAN-SUPPLEMENT's checklist additions; Phase-2 hard dependency remains a sequencing gate, not a
-plan-quality FAIL). **A fresh PVL pass (Phase Loop Progress Step 4) should confirm this gate can be
-upgraded to PASS before EXECUTE begins.**
-Accepted by: session (autonomous — see prior pass's rationale; this supplement was authored per an
-explicit SUPPLEMENT REQUEST listing all 5 gaps by section/concern/severity/suggested-addition)
+Gate: PASS
+Net Gate Derivation: 0 FAILs / 0 unresolved CONCERNs (3 CONCERN-class gaps found this cycle —
+missing test-authoring checklist step, "default behavior unchanged" self-contradiction, under-
+specified seed-SQL schema — were all closed via direct plan-text edits during this same V6 pass,
+gap-resolution B) / 2 named D-type Agent-Probe residuals (SPEC-documented, non-blocking) → PASS.
+Proceed to EXECUTE.
+Accepted by: N/A — Gate is PASS; no CONCERN was accepted as a residual, all were resolved in-plan
+this cycle. The 2 Agent-Probe residuals (AC7, live schedule firing) were pre-accepted by SPEC's own
+Known Gaps section, not newly accepted here.
 
 ## Autonomous Goal Block
 

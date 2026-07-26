@@ -35,7 +35,18 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 02 inner-PVL/EVL — corrects the
+**Total (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 03 inner-PVL/EVL — corrects the
+Phase 02 entry immediately below, which is now stale by 11 tests / 1 file): 73 tests / 18 files,
+ALL 73 PASSING.** Phase 03 added `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts`
+(11 new tests, all passing) on top of the clean 62/17 baseline — pure addition, zero regressions.
+Also re-confirmed `tsc --noEmit` at exit 0 / 0 errors — the single foreign error the Phase 02 entry
+below still lists at `add-registry-modal.tsx:233` (a different line number than the 168/389 pair
+Phase 01 recorded — the file kept drifting across sessions) is gone as of 26-07-26, fixed by
+further concurrent work outside this program. Independently re-measured this session:
+`corepack pnpm --filter web exec tsc --noEmit` exit 0/0 errors,
+`corepack pnpm --filter web test` → `Test Files 18 passed (18)`, `Tests 73 passed (73)`. Treat
+**73/18, all passing, tsc 0 errors** as the current regression baseline to hold.
+**Prior entry (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 02 inner-PVL/EVL — corrects the
 Phase 01 entry immediately below, which is now stale in the better direction): 62 tests / 17
 files, ALL 62 PASSING.** The 4 previously-documented foreign `tsc --noEmit` errors in
 `apps/web/components/features/studio/sandbox/components/add-registry-modal.tsx:168,389` and the 5
@@ -44,7 +55,7 @@ vitest failures recorded by Phase 01 (below) were fixed by a concurrent session 
 before Phase 02 EXECUTE started, once at EVL confirmation), byte-identical both times:
 `corepack pnpm --filter web exec tsc --noEmit` exit 0/0 errors,
 `corepack pnpm --filter web test` → `Test Files 17 passed (17)`, `Tests 62 passed (62)`. Treat
-**62/17, all passing** as the current regression baseline to hold — not the 57/5 figure below.
+**62/17, all passing** as the historical baseline superseded above — not the 57/5 figure below.
 **Prior entry (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 01 inner-PVL/EVL — corrects the
 18-07-26 figure below, which undercounted, SUPERSEDED by the entry above):** 62 tests / 17 files,
 **57 passing / 5 failing**.

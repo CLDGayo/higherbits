@@ -45,9 +45,20 @@ phases (especially Phase 4 and Phase 5, declared parallel-safe) can be confirmed
 
 ## Phase 3 — Scheduler + seed
 
-- `apps/web/scripts/run-embedding-backfill-cron.ts` (new)
+**[updated inner-loop plan-supplement, 26-07-26]** — claimed paths changed materially from the
+original entry below; see retraction and revised claim list.
+
+- ~~`apps/web/scripts/run-embedding-backfill-cron.ts` (new)~~ **RETRACTED, 26-07-26.** Step A0 was
+  locked to "reuse the existing route, no new script" — this file is never created by this plan.
+  Left struck through here (not deleted) to preserve the append-only audit trail of what was
+  originally claimed vs. what actually ships.
+- `apps/web/app/api/cron/gen-usage-embeddings/route.ts` — existing file, additive-only changes
+  (`?dryRun=true` query param + `EMBEDDING_CRON_BATCH_CAP` env-driven cap). Read/write, not a new
+  file.
+- `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` (new)
 - `ops/README-embedding-cron.md` (new)
-- new idempotent seed SQL file (path TBD by execute-agent)
+- `supabase/seed-embedding-verification.sql` (new — path now named explicitly, was "TBD by
+  execute-agent" in the original entry)
 
 ## Phase 4 — Navigation
 
@@ -82,4 +93,6 @@ phases (especially Phase 4 and Phase 5, declared parallel-safe) can be confirmed
 parallel-safe) own fully disjoint file sets — see umbrella plan `## Pre-PVL Conflict Resolution`
 for the authoritative statement. Phases 1, 2, 3, and 6 are sequential and touch disjoint surfaces
 (Supabase SQL/migrations, cron scripts, and `types.ts`/`all-context.md` respectively) from each
-other and from 4/5.
+other and from 4/5. **[26-07-26 note]** Phase 3's revised claim list still touches only
+`apps/web/app/api/cron/gen-usage-embeddings/*` and `ops/`/`supabase/` new files — no overlap with
+Phase 4, 5, or 6's claimed surfaces.
