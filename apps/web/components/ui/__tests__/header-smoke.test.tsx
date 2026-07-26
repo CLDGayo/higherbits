@@ -16,7 +16,7 @@ vi.mock("@clerk/nextjs", () => ({
   useClerk: () => ({ signOut: vi.fn() }),
   useUser: () => ({ user: null }),
   useAuth: () => ({ userId: null }),
-  useSession: () => ({ session: { getToken: vi.fn() } }),
+  useSession: () => ({ session: { getToken: vi.fn(), id: "test-session" } }),
 }))
 vi.mock("jotai", () => ({ atom: () => ({}), useAtom: () => [false, vi.fn()], useSetAtom: () => vi.fn() }))
 vi.mock("framer-motion", () => ({ useAnimation: () => ({ start: vi.fn() }), motion: { div: "div" } }))

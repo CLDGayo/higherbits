@@ -17,6 +17,7 @@ vi.mock("@/components/ui/header.client", () => ({
 }))
 vi.mock("@clerk/nextjs", () => ({
   SignInButton: () => <button>Sign In</button>,
+  SignUpButton: () => <button>Sign Up</button>,
   SignedIn: ({ children }: any) => <div>{children}</div>,
   SignedOut: ({ children }: any) => <div>{children}</div>,
   useClerk: () => ({ signOut: vi.fn() }),
@@ -45,7 +46,7 @@ describe("Landing Smoke Test", () => {
 
     expect(container).toBeDefined()
     expect(container.textContent).toContain(
-      "Discover, share & remix the best UI components",
+      "Copy, paste, and ship premium UI components",
     )
   })
 

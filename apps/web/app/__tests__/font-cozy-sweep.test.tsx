@@ -29,6 +29,13 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }))
 vi.mock("@/hooks/use-media-query", () => ({ useIsMobile: () => false }))
+vi.mock("@clerk/nextjs", () => ({
+  useUser: () => ({ user: null, isLoaded: true }),
+  SignInButton: () => <button>Sign In</button>,
+  SignUpButton: () => <button>Sign Up</button>,
+  SignedIn: ({ children }: any) => <div>{children}</div>,
+  SignedOut: ({ children }: any) => <div>{children}</div>,
+}))
 
 // recharts' ResponsiveContainer relies on ResizeObserver, absent in jsdom.
 beforeAll(() => {

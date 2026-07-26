@@ -29,6 +29,7 @@ const mocks = vi.hoisted(() => {
     mockSingle: chainable.single,
     mockUpdate: chainable.update,
     mockInsert: chainable.insert,
+    mockRpc: vi.fn(),
   };
 });
 
@@ -40,11 +41,12 @@ vi.mock("@/lib/supabase", () => ({
     single: mocks.mockSingle,
     update: mocks.mockUpdate,
     insert: mocks.mockInsert,
+    rpc: mocks.mockRpc,
   },
 }));
 
 // Provide destructured access for the tests
-const { mockFrom, mockSelect, mockEq, mockSingle, mockUpdate, mockInsert } = mocks;
+const { mockFrom, mockSelect, mockEq, mockSingle, mockUpdate, mockInsert, mockRpc } = mocks;
 
 describe("Magic API Routes", () => {
   beforeEach(() => {
@@ -80,8 +82,10 @@ describe("Magic API Routes", () => {
     it("should deduct usage if within limits", async () => {
       // Mock api_keys table check
       mockSingle.mockResolvedValueOnce({ data: { id: "key_1", user_id: "user_123", requests_count: 5 }, error: null });
-      // Mock usages table check
-      mockSingle.mockResolvedValueOnce({ data: { usage: 5, limit: 10 }, error: null });
+      // Mock rate limit RPC
+      mockRpc.mockResolvedValueOnce({ data: true, error: null });
+      // Mock increment RPC
+      mockRpc.mockResolvedValueOnce({ data: { success: true, remaining: 4, usage: 6, limit: 10 }, error: null });
 
       const req = new NextRequest("http://localhost/api/magic/use?apikey=valid-key");
       const res = await useMagic(req);
@@ -95,8 +99,10 @@ describe("Magic API Routes", () => {
     it("should return 403 if usage limit exceeded", async () => {
       // Mock api_keys table check
       mockSingle.mockResolvedValueOnce({ data: { id: "key_1", user_id: "user_123" }, error: null });
-      // Mock usages table check
-      mockSingle.mockResolvedValueOnce({ data: { usage: 10, limit: 10 }, error: null });
+      // Mock rate limit RPC
+      mockRpc.mockResolvedValueOnce({ data: true, error: null });
+      // Mock increment RPC
+      mockRpc.mockResolvedValueOnce({ data: { success: false, error: "Usage limit exceeded", usage: 10, limit: 10, remaining: 0 }, error: null });
 
       const req = new NextRequest("http://localhost/api/magic/use?apikey=valid-key");
       const res = await useMagic(req);
