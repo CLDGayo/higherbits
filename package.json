@@ -13,6 +13,8 @@
     "assets:chroma-key": "node ops/gemini-asset-chroma-key.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.4",
+    "@electric-sql/pglite-pgvector": "0.0.5",
     "prettier": "^3.2.5",
     "sharp": "^0.34.0",
     "stripe-cli": "^0.1.0",
