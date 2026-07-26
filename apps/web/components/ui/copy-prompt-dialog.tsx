@@ -3,7 +3,7 @@
 import { Icons } from "@/components/icons"
 import { usePromptRules } from "@/hooks/use-prompt-rules"
 import { promptOptions, type PromptOptionBase } from "@/lib/prompts"
-import { PromptType } from "@/types/global"
+import { PROMPT_TYPES, PromptType } from "@/types/global"
 import { Loader2, Plus } from "lucide-react"
 import Link from "next/link"
 import React, { useEffect, useId } from "react"
@@ -256,7 +256,7 @@ export function CopyPromptDialog({
                 </>
               ) : (
                 <>
-                  Copy Prompt
+                  {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Copy Code" : "Copy Prompt"}
                   <kbd className="pointer-events-none h-5 w-5 justify-center select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
                     <Icons.enter className="h-2.5 w-2.5" />
                   </kbd>

@@ -2,7 +2,7 @@
   max-height: calc(var(--vh, 1vh) * 100 - 120px) !important;
   height: auto !important;
   border-radius: 8px !important;
-  overflow: hidden !important;
+  overflow-y: auto !important;
 }
 
 .codeViewerWrapper :global(.cm-scroller) {

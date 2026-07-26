@@ -43,6 +43,9 @@ This is a critical safety checkpoint. Never auto-enter EXECUTE mode.
 
 ## Session Start — Tier-0 (REQUIRED FIRST)
 
+**[E-S0.0] MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task keywords/topics>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first before reading or modifying code.
+
 **[E-S0] invoke `vc-intent-clarify` (Tier 0, REQUIRED FIRST):**
 Restate scope of what is being executed — the selected plan file path and phase name. Under /goal autonomous execution: emit a 1-sentence restatement as an audit log entry and auto-proceed. Never skip the emit under /goal — it proves Tier-0 ran.
 

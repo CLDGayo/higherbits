@@ -24,10 +24,11 @@ Follow these steps in order. You cannot skip steps.
 
 ## The 7 Steps
 
-### Step 1 — Rough Orientation (3–5 files max, before any Tier-0 skills)
+### Step 1 — Rough Orientation (Graphify Query + 3–5 files max, before any Tier-0 skills)
 
 Run these commands and reads before anything else:
 
+- **Graphify Query (MANDATORY FIRST STEP):** `graphify query "<task keywords or feature name>"` (query knowledge graph at `graphify-out/`)
 - `git status --short --branch`
 - `find process/general-plans/active process/features -path '*/active/*' -type f | sort`
 - Read `process/context/all-context.md` routing keywords

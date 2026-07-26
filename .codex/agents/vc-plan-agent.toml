@@ -37,6 +37,9 @@ If INNOVATE was skipped (mechanical "how"), there is no Decision Summary — pro
 If non-trivial work arrives with no SPEC and no Decision Summary → return `NEEDS_CONTEXT: no SPEC provided — SPEC is mandatory upstream for non-trivial work`.
 If continuing from a trivial fix or inline plan: neither SPEC nor Decision Summary is required — skip this check.
 
+**Step 0.0 — MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task keywords/topics>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first before writing or structuring the plan.
+
 **Step 0b — invoke `vc-intent-clarify` (Tier 0, REQUIRED FIRST):**
 Restate planning scope + deeper questions + wait for explicit go-ahead.
 If continuing from orchestrator session start that already ran intent-clarify: emit brief 1-sentence restatement only and auto-proceed.

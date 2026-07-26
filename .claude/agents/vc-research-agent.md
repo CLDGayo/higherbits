@@ -47,6 +47,9 @@ Mid-INNOVATE spawn context: if the orchestrator prompt contains a `VC-PREDICT-DE
 
 Before any file reads or research work, execute these steps in order:
 
+**Step 0.0 — MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task keywords/topics>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first before reading code files.
+
 **Step 0 — invoke `vc-intent-clarify` (Tier 0, REQUIRED FIRST):**
 Restate understanding of research scope + deeper questions + wait for explicit go-ahead.
 If continuing from orchestrator session start that already ran intent-clarify: emit brief 1-sentence restatement only and auto-proceed.

@@ -17,7 +17,7 @@ import {
 import { ChevronDown, Bookmark } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
@@ -115,7 +115,11 @@ function HeaderContent({
   const router = useRouter()
   const [open, setSidebarOpen] = useAtom(sidebarOpenAtom)
   const { theme, setTheme } = useTheme()
-  const { userId } = useAuth()
+  const { isLoaded, userId } = useAuth()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   const { user: clerkUser } = useUser()
   const [userState, setUserState] = useAtom(userStateAtom)
   const client = useClerkSupabaseClient()
@@ -203,13 +207,18 @@ function HeaderContent({
     }
   }
 
-  const handleRedirectToStudio = () => {
-    if (userState.profile?.display_username) {
-      router.push(`/studio/${userState.profile.display_username}?new=true`)
-    } else if (userState.profile?.username) {
-      router.push(`/studio/${userState.profile.username}?new=true`)
+  const handleRedirectToStudio = (type?: string | React.MouseEvent) => {
+    const username =
+      userState.profile?.display_username ||
+      userState.profile?.username ||
+      clerkUser?.username
+
+    const typeParam = typeof type === "string" ? `&type=${type}` : ""
+
+    if (username) {
+      router.push(`/studio/${username}?new=true${typeParam}`)
     } else {
-      router.push("/studio?new=true")
+      router.push(`/studio?new=true${typeParam}`)
     }
   }
 
@@ -268,371 +277,376 @@ function HeaderContent({
         </div>
 
         <div className="flex items-center gap-1">
-          <SignedIn>
-            <div className="flex items-center">
-              {!isMobile && variant !== "publish" && (
-                <>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleBookmarksClick}
-                    className="mr-2"
-                    aria-label="Saved components"
-                  >
-                    <Bookmark size={18} />
-                  </Button>
-                  {!open &&
-                    !userState.isSubscriptionLoading &&
-                    !userState.subscription && (
+          {mounted ? (
+            <>
+              <SignedIn>
+                <div className="flex items-center">
+                  {!isMobile && variant !== "publish" && (
+                    <>
                       <Button
                         variant="ghost"
-                        size="sm"
-                        asChild
-                        className="gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
+                        size="icon"
+                        onClick={handleBookmarksClick}
+                        className="mr-2"
+                        aria-label="Saved components"
                       >
-                        <Link
-                          href="/support"
-                          onClick={() =>
-                            trackAttribution(
-                              ATTRIBUTION_SOURCE.HEADER,
-                              SOURCE_DETAIL.HEADER_GET_PRO_LINK,
-                            )
-                          }
-                          className="bg-gradient-to-r from-[hsl(var(--primary-gradient-start))] to-[hsl(var(--primary-gradient-end))] bg-clip-text text-transparent"
-                        >
-                          <span className="font-medium">Support Us!</span>
-                        </Link>
+                        <Bookmark size={18} />
                       </Button>
-                    )}
-                  <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg shadow-sm shadow-black/5 rtl:space-x-reverse">
-                    <Button
-                      onClick={handleRedirectToStudio}
-                      className="rounded-s-full !rounded-e-none shadow-none focus-visible:z-10"
-                    >
-                      Add new
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          className="rounded-e-full !rounded-s-none shadow-none focus-visible:z-10 !border !border-[hsl(var(--primary-gradient-start))] hover:!border-[hsl(var(--primary-gradient-start))] hover:opacity-90 hover:text-accent"
-                          size="icon"
-                          aria-label="Component options"
-                        >
-                          <ChevronDown
-                            size={16}
-                            strokeWidth={2}
-                            aria-hidden="true"
-                          />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className="w-64"
-                        side="bottom"
-                        sideOffset={4}
-                        align="end"
-                      >
-                        <DropdownMenuItem
-                          onClick={handleRedirectToStudio}
-                          className="cursor-pointer"
-                        >
-                          <div className="flex flex-col gap-1">
-                            <span className="text-sm font-medium">
-                              Publish component
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              Create and publish a new component to the registry
-                            </span>
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link
-                            href="/publish/template"
-                            className="cursor-pointer"
+                      {!open &&
+                        !userState.isSubscriptionLoading &&
+                        !userState.subscription && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            asChild
+                            className="gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
                           >
-                            <div className="flex flex-col gap-1">
-                              <span className="text-sm font-medium">
-                                Publish template
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                Create and publish a new website template
-                              </span>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href="/import" className="cursor-pointer">
-                            <div className="flex flex-col gap-1">
-                              <span className="text-sm font-medium flex items-center gap-1">
-                                Import from registry
-                                <Badge
-                                  variant="secondary"
-                                  className="h-5 text-[11px] tracking-wide font-medium uppercase px-1.5 py-0 leading-none"
-                                >
-                                  beta
-                                </Badge>
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                Import an existing component from shadcn
-                                registry
-                              </span>
-                            </div>
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </>
-              )}
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden mr-2"
-              onClick={() =>
-                document.dispatchEvent(
-                  new KeyboardEvent("keydown", { key: "k", metaKey: true }),
-                )
-              }
-              aria-label="Search"
-            >
-              <Icons.search className="h-6 w-6" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="cursor-pointer rounded-full ml-2">
-                <UserAvatar
-                  src={
-                    userState.profile?.display_image_url ||
-                    clerkUser?.imageUrl ||
-                    undefined
-                  }
-                  alt={
-                    userState.profile?.display_name ||
-                    clerkUser?.fullName ||
-                    undefined
-                  }
-                  size={32}
-                />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[240px] p-0" align="end">
-                <div className="p-3 border-b border-border">
-                  <p className="text-sm text-foreground">
-                    {clerkUser?.primaryEmailAddress?.emailAddress}
-                  </p>
-                </div>
-
-                <div className="p-1">
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer"
-                    onSelect={() => {
-                      if (userState.profile?.display_username) {
-                        router.push(`/${userState.profile.display_username}`)
-                      } else if (clerkUser?.externalAccounts?.[0]?.username) {
-                        router.push(`/${userState.profile?.username}`)
-                      }
-                    }}
-                  >
-                    View Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
-                    onSelect={() => {
-                      if (userState.profile?.display_username) {
-                        router.push(
-                          `/studio/${userState.profile.display_username}`,
-                        )
-                      } else if (userState.profile?.username) {
-                        router.push(`/studio/${userState.profile.username}`)
-                      } else {
-                        router.push("/studio")
-                      }
-                    }}
-                  >
-                    Creator Studio
-                    <Icons.layoutDashboard className="h-4 w-4" />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
-                    onSelect={() => router.push("/settings/profile")}
-                  >
-                    Settings
-                    <Icons.settings className="h-4 w-4" />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
-                    onSelect={() =>
-                      (window.location.href = "/settings/billing")
-                    }
-                  >
-                    Billing
-                    <Icons.creditCard className="h-4 w-4" />
-                  </DropdownMenuItem>
-                </div>
-
-                <div className="border-t border-border p-1">
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer"
-                    onSelect={() => (window.location.href = "/api-access")}
-                  >
-                    API Docs & Keys
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer"
-                    onSelect={() => window.open("/terms", "_blank")}
-                  >
-                    Terms of Service
-                  </DropdownMenuItem>
-                </div>
-
-                <div className="border-t border-border p-1">
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
-                    onSelect={() =>
-                      window.open("https://x.com/serafimcloud", "_blank")
-                    }
-                  >
-                    <span>Twitter</span>
-                    <div className="flex items-center justify-center w-4">
-                      <Icons.twitter className="h-3 w-3" />
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
-                    onSelect={() =>
-                      window.open("https://discord.gg/Qx4rFunHfm", "_blank")
-                    }
-                  >
-                    <span>Discord</span>
-                    <Icons.discord className="h-4 w-4" />
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
-                    onSelect={() =>
-                      window.open(
-                        "https://github.com/CLDGayo/higherbits",
-                        "_blank",
-                      )
-                    }
-                  >
-                    <span>GitHub</span>
-                    <Icons.gitHub className="h-4 w-4" />
-                  </DropdownMenuItem>
-                </div>
-
-                <div className="border-t border-border p-1">
-                  <li className="flex items-center justify-between px-3 py-2 text-sm">
-                    <span>Theme</span>
-                    <fieldset className="flex items-center rounded-full border border-border/40 bg-background">
-                      <legend className="sr-only">
-                        Select a display theme:
-                      </legend>
-                      <span>
-                        <input
-                          type="radio"
-                          id="theme-switch-light"
-                          value="light"
-                          name="theme"
-                          className="sr-only peer"
-                          checked={theme === "light"}
-                          onChange={() => setTheme("light")}
-                        />
-                        <label
-                          htmlFor="theme-switch-light"
-                          className="inline-flex items-center justify-center rounded-full p-1.5 text-sm cursor-pointer text-muted-foreground hover:text-foreground peer-checked:bg-accent peer-checked:text-foreground"
+                            <Link
+                              href="/support"
+                              onClick={() =>
+                                trackAttribution(
+                                  ATTRIBUTION_SOURCE.HEADER,
+                                  SOURCE_DETAIL.HEADER_GET_PRO_LINK,
+                                )
+                              }
+                              className="bg-gradient-to-r from-[hsl(var(--primary-gradient-start))] to-[hsl(var(--primary-gradient-end))] bg-clip-text text-transparent"
+                            >
+                              <span className="font-medium">Support Us!</span>
+                            </Link>
+                          </Button>
+                        )}
+                      <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg shadow-sm shadow-black/5 rtl:space-x-reverse">
+                        <Button
+                          onClick={handleRedirectToStudio}
+                          className="rounded-s-full !rounded-e-none shadow-none focus-visible:z-10"
                         >
-                          <span className="sr-only">light</span>
-                          <Icons.lightTheme className="h-4 w-4" />
-                        </label>
-                      </span>
-                      <span>
-                        <input
-                          type="radio"
-                          id="theme-switch-dark"
-                          value="dark"
-                          name="theme"
-                          className="sr-only peer"
-                          checked={theme === "dark"}
-                          onChange={() => setTheme("dark")}
-                        />
-                        <label
-                          htmlFor="theme-switch-dark"
-                          className="inline-flex items-center justify-center rounded-full p-1.5 text-sm cursor-pointer text-muted-foreground hover:text-foreground peer-checked:bg-accent peer-checked:text-foreground"
-                        >
-                          <span className="sr-only">dark</span>
-                          <Icons.darkTheme className="h-4 w-4" />
-                        </label>
-                      </span>
-                    </fieldset>
-                  </li>
-                  <DropdownMenuItem
-                    className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
-                    onSelect={() => setSidebarOpen((prev) => !prev)}
-                  >
-                    <span>Toggle Sidebar</span>
-                    <div className="flex items-center">
-                      <Icons.sidebar className="h-4 w-4" />
-                    </div>
-                  </DropdownMenuItem>
+                          Add new
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              className="rounded-e-full !rounded-s-none shadow-none focus-visible:z-10 !border !border-[hsl(var(--primary-gradient-start))] hover:!border-[hsl(var(--primary-gradient-start))] hover:opacity-90 hover:text-accent"
+                              size="icon"
+                              aria-label="Component options"
+                            >
+                              <ChevronDown
+                                size={16}
+                                strokeWidth={2}
+                                aria-hidden="true"
+                              />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            className="w-64"
+                            side="bottom"
+                            sideOffset={4}
+                            align="end"
+                          >
+                            <DropdownMenuItem
+                              onClick={handleRedirectToStudio}
+                              className="cursor-pointer"
+                            >
+                              <div className="flex flex-col gap-1">
+                                <span className="text-sm font-medium">
+                                  Publish component
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  Create and publish a new component to the registry
+                                </span>
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link
+                                href="/publish/template"
+                                className="cursor-pointer"
+                              >
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-sm font-medium">
+                                    Publish template
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    Create and publish a new website template
+                                  </span>
+                                </div>
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href="/import" className="cursor-pointer">
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-sm font-medium flex items-center gap-1">
+                                    Import from registry
+                                    <Badge
+                                      variant="secondary"
+                                      className="h-5 text-[11px] tracking-wide font-medium uppercase px-1.5 py-0 leading-none"
+                                    >
+                                      beta
+                                    </Badge>
+                                  </span>
+                                  <span className="text-xs text-muted-foreground">
+                                    Import an existing component from shadcn
+                                    registry
+                                  </span>
+                                </div>
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </>
+                  )}
                 </div>
-
-                <div className="border-t border-border p-1">
-                  <DropdownMenuItem
-                    onSelect={() => signOut({ redirectUrl: "/" })}
-                    className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
-                    onMouseEnter={() => controls.start("hover")}
-                    onMouseLeave={() => controls.start("normal")}
-                  >
-                    <span>Log Out</span>
-                    <Icons.logout size={16} controls={controls} />
-                  </DropdownMenuItem>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SignedIn>
-
-          <SignedOut>
-            {!isMobile && (
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
-              >
-                <Link
-                  href="/support"
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden mr-2"
                   onClick={() =>
-                    trackAttribution(
-                      ATTRIBUTION_SOURCE.HEADER,
-                      SOURCE_DETAIL.HEADER_GET_PRO_LINK,
+                    document.dispatchEvent(
+                      new KeyboardEvent("keydown", { key: "k", metaKey: true }),
                     )
                   }
+                  aria-label="Search"
                 >
-                  <TextShimmer
-                    className="font-medium [--base-color:hsl(var(--primary-gradient-start))] [--base-gradient-color:hsl(var(--primary-gradient-end))] dark:[--base-color:hsl(var(--primary-gradient-start))] dark:[--base-gradient-color:hsl(var(--primary-gradient-end))]"
-                    duration={1.2}
-                    spread={2}
+                  <Icons.search className="h-6 w-6" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="cursor-pointer rounded-full ml-2">
+                    <UserAvatar
+                      src={
+                        userState.profile?.display_image_url ||
+                        clerkUser?.imageUrl ||
+                        undefined
+                      }
+                      alt={
+                        userState.profile?.display_name ||
+                        clerkUser?.fullName ||
+                        undefined
+                      }
+                      size={32}
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[240px] p-0" align="end">
+                    <div className="p-3 border-b border-border">
+                      <p className="text-sm text-foreground">
+                        {clerkUser?.primaryEmailAddress?.emailAddress}
+                      </p>
+                    </div>
+
+                    <div className="p-1">
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer"
+                        onSelect={() => {
+                          if (userState.profile?.display_username) {
+                            router.push(`/${userState.profile.display_username}`)
+                          } else if (userState.profile?.username) {
+                            router.push(`/${userState.profile.username}`)
+                          } else if (clerkUser?.username) {
+                            router.push(`/${clerkUser.username}`)
+                          } else {
+                            router.push("/settings/profile")
+                          }
+                        }}
+                      >
+                        View Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
+                        onSelect={() => {
+                          if (userState.profile?.display_username) {
+                            router.push(
+                              `/studio/${userState.profile.display_username}`,
+                            )
+                          } else if (userState.profile?.username) {
+                            router.push(`/studio/${userState.profile.username}`)
+                          } else {
+                            router.push("/studio")
+                          }
+                        }}
+                      >
+                        Creator Studio
+                        <Icons.layoutDashboard className="h-4 w-4" />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
+                        onSelect={() => router.push("/settings/profile")}
+                      >
+                        Settings
+                        <Icons.settings className="h-4 w-4" />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
+                        onSelect={() =>
+                          (window.location.href = "/settings/billing")
+                        }
+                      >
+                        Billing
+                        <Icons.creditCard className="h-4 w-4" />
+                      </DropdownMenuItem>
+                    </div>
+
+                    <div className="border-t border-border p-1">
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer"
+                        onSelect={() => (window.location.href = "/api-access")}
+                      >
+                        API Docs & Keys
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer"
+                        onSelect={() => window.open("/terms", "_blank")}
+                      >
+                        Terms of Service
+                      </DropdownMenuItem>
+                    </div>
+
+                    <div className="border-t border-border p-1">
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
+                        onSelect={() =>
+                          window.open("https://x.com/serafimcloud", "_blank")
+                        }
+                      >
+                        <span>Twitter</span>
+                        <div className="flex items-center justify-center w-4">
+                          <Icons.twitter className="h-3 w-3" />
+                        </div>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
+                        onSelect={() =>
+                          window.open("https://discord.gg/Qx4rFunHfm", "_blank")
+                        }
+                      >
+                        <span>Discord</span>
+                        <Icons.discord className="h-4 w-4" />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
+                        onSelect={() =>
+                          window.open(
+                            "https://github.com/CLDGayo/higherbits",
+                            "_blank",
+                          )
+                        }
+                      >
+                        <span>GitHub</span>
+                        <Icons.gitHub className="h-4 w-4" />
+                      </DropdownMenuItem>
+                    </div>
+
+                    <div className="border-t border-border p-1">
+                      <li className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span>Theme</span>
+                        <fieldset className="flex items-center rounded-full border border-border/40 bg-background">
+                          <legend className="sr-only">
+                            Select a display theme:
+                          </legend>
+                          <span>
+                            <input
+                              type="radio"
+                              id="theme-switch-light"
+                              value="light"
+                              name="theme"
+                              className="sr-only peer"
+                              checked={theme === "light"}
+                              onChange={() => setTheme("light")}
+                            />
+                            <label
+                              htmlFor="theme-switch-light"
+                              className="inline-flex items-center justify-center rounded-full p-1.5 text-sm cursor-pointer text-muted-foreground hover:text-foreground peer-checked:bg-accent peer-checked:text-foreground"
+                            >
+                              <span className="sr-only">light</span>
+                              <Icons.lightTheme className="h-4 w-4" />
+                            </label>
+                          </span>
+                          <span>
+                            <input
+                              type="radio"
+                              id="theme-switch-dark"
+                              value="dark"
+                              name="theme"
+                              className="sr-only peer"
+                              checked={theme === "dark"}
+                              onChange={() => setTheme("dark")}
+                            />
+                            <label
+                              htmlFor="theme-switch-dark"
+                              className="inline-flex items-center justify-center rounded-full p-1.5 text-sm cursor-pointer text-muted-foreground hover:text-foreground peer-checked:bg-accent peer-checked:text-foreground"
+                            >
+                              <span className="sr-only">dark</span>
+                              <Icons.darkTheme className="h-4 w-4" />
+                            </label>
+                          </span>
+                        </fieldset>
+                      </li>
+                      <DropdownMenuItem
+                        className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
+                        onSelect={() => setSidebarOpen((prev) => !prev)}
+                      >
+                        <span>Toggle Sidebar</span>
+                        <div className="flex items-center">
+                          <Icons.sidebar className="h-4 w-4" />
+                        </div>
+                      </DropdownMenuItem>
+                    </div>
+
+                    <div className="border-t border-border p-1">
+                      <DropdownMenuItem
+                        onSelect={() => signOut({ redirectUrl: "/" })}
+                        className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
+                        onMouseEnter={() => controls.start("hover")}
+                        onMouseLeave={() => controls.start("normal")}
+                      >
+                        <span>Log Out</span>
+                        <Icons.logout size={16} controls={controls} />
+                      </DropdownMenuItem>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SignedIn>
+
+              <SignedOut>
+                  <a
+                    href="/support"
+                    onClick={() =>
+                      trackAttribution(
+                        ATTRIBUTION_SOURCE.HEADER,
+                        SOURCE_DETAIL.HEADER_GET_PRO_LINK,
+                      )
+                    }
+                    className={cn(
+                      buttonVariants({ variant: "ghost", size: "sm" }),
+                      "hidden md:flex gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
+                    )}
                   >
-                    Support Us!
-                  </TextShimmer>
-                </Link>
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden mr-2"
-              onClick={() =>
-                document.dispatchEvent(
-                  new KeyboardEvent("keydown", { key: "k", metaKey: true }),
-                )
-              }
-              aria-label="Search"
-            >
-              <Icons.search className="h-6 w-6" />
-            </Button>
-            <SignInButton>
-              <Button size={isMobile ? "sm" : "default"}>Sign up</Button>
-            </SignInButton>
-          </SignedOut>
+                      <TextShimmer
+                        className="font-medium [--base-color:hsl(var(--primary-gradient-start))] [--base-gradient-color:hsl(var(--primary-gradient-end))] dark:[--base-color:hsl(var(--primary-gradient-start))] dark:[--base-gradient-color:hsl(var(--primary-gradient-end))]"
+                        duration={1.2}
+                        spread={2}
+                      >
+                        Support Us!
+                      </TextShimmer>
+                  </a>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden mr-2"
+                  onClick={() =>
+                    document.dispatchEvent(
+                      new KeyboardEvent("keydown", { key: "k", metaKey: true }),
+                    )
+                  }
+                  aria-label="Search"
+                >
+                  <Icons.search className="h-6 w-6" />
+                </Button>
+                <SignInButton>
+                  <Button size={isMobile ? "sm" : "default"}>Sign up</Button>
+                </SignInButton>
+              </SignedOut>
+            </>
+          ) : (
+            <div className="w-10 h-8 md:w-32" />
+          )}
         </div>
       </header>
       {showEditProfile && userState.profile && (

@@ -159,6 +159,8 @@ export function StudioHeader({ user }: StudioHeaderProps) {
                     router.push(`/${user.display_username}`)
                   } else if (user?.username) {
                     router.push(`/${user.username}`)
+                  } else {
+                    router.push("/settings/profile")
                   }
                 }}
               >

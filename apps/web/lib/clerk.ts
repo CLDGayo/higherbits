@@ -38,7 +38,9 @@ export const createSupabaseClerkClient = (
           const clerkToken = await getToken?.()
 
           const headers = new Headers(options?.headers)
-          headers.set("Authorization", `Bearer ${clerkToken}`)
+          if (clerkToken) {
+            headers.set("Authorization", `Bearer ${clerkToken}`)
+          }
 
           return (customFetch as any)(url, {
             ...options,
@@ -50,7 +52,6 @@ export const createSupabaseClerkClient = (
   )
 }
 
-const supabaseClerkClientAtom = atom<SupabaseClient<Database> | null>(null)
 let _defaultSupabaseClient: SupabaseClient<Database> | null = null
 
 function getDefaultSupabaseClient(): SupabaseClient<Database> {
@@ -60,22 +61,21 @@ function getDefaultSupabaseClient(): SupabaseClient<Database> {
   return _defaultSupabaseClient
 }
 
+let _clientCache: { sessionId: string; client: SupabaseClient<Database> } | null = null
+
 export function useClerkSupabaseClient(): SupabaseClient<Database> {
   const { session } = useSession()
-  const [clerkClient, setClerkClient] = useAtom(supabaseClerkClientAtom)
 
-  useEffect(() => {
-    if (session && !clerkClient) {
-      setClerkClient(
-        createSupabaseClerkClient(() =>
-          session.getToken({ template: "supabase" }).catch((e) => {
-            console.error("Failed to get supabase template token, falling back to default:", e)
-            return session.getToken()
-          })
-        ),
-      )
+  if (session) {
+    if (_clientCache?.sessionId === session.id) {
+      return _clientCache.client
     }
-  }, [session])
+    const client = createSupabaseClerkClient(async () => {
+      return await session.getToken({ template: 'supabase' })
+    })
+    _clientCache = { sessionId: session.id, client }
+    return client
+  }
 
-  return clerkClient ?? getDefaultSupabaseClient()
+  return getDefaultSupabaseClient()
 }

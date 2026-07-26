@@ -20,7 +20,7 @@ import { useUser } from "@clerk/nextjs"
 import { useAtom } from "jotai"
 import { Globe, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 const useProfileAnalytics = ({
   username,
@@ -45,7 +45,12 @@ interface UserPageClientProps {
 export function UserPageClient({ user, initialTab }: UserPageClientProps) {
   const [tab, setTab] = useAtom(userTabAtom)
   const { user: currentUser } = useUser()
-  const isOwnProfile = currentUser?.id === user.id
+  const [mounted, setMounted] = useState(false)
+  const isOwnProfile = mounted && currentUser?.id === user.id
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     if (

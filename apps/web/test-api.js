@@ -1,20 +1,16 @@
-const { createClient } = require('@supabase/supabase-js');
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+import { createClient } from "@supabase/supabase-js"
+import * as dotenv from "dotenv"
+import path from "path"
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") })
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
-async function main() {
-  const { data, error } = await supabase.rpc("get_demos_submissions", {
-    p_sort_by: "date",
-    p_offset: 0,
-    p_limit: 1000,
-    p_include_private: true,
-  });
-  console.log("Data length:", data?.length);
-  const onReview = data?.filter(item => item.submission_status === "on_review");
-  console.log("On Review count:", onReview?.length);
-  console.log("On Review items:", JSON.stringify(onReview, null, 2));
+async function test() {
+  const { data, error } = await supabase
+                .from("demos")
+                .select("*, component:components (*)")
+                .eq("user_id", "user_3GAxhDocnRgqHOHJPj73maMr1D4")
+                .limit(3)
+  console.log("Demos data:", data, "Error:", error)
 }
-
-main();
+test()

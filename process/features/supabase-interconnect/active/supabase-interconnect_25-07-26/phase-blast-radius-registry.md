@@ -31,6 +31,17 @@ phases (especially Phase 4 and Phase 5, declared parallel-safe) can be confirmed
 - `supabase/migrations/` (new directory or first entries — 4 embedding-function migrations)
 - Read-only: `apps/web/scripts/generate-embeddings.ts`, `supabase/functions/generate-embeddings`,
   `supabase/functions/ai-search-oai`
+- `supabase/migrations/0001_embedding_functions.sql` **[added inner-loop plan-supplement, 26-07-26]**
+  — single-file migration per Step B0 (2 unique indexes → `vec_dim` → `get_missing_usage_embedding_items`
+  → `insert_embedding` → `insert_code_embedding` → REVOKE/GRANT pairs)
+- root `package.json` **[added inner-loop plan-supplement, 26-07-26]** — new devDependencies
+  `@electric-sql/pglite` + `@electric-sql/pglite-pgvector` (ops-time-only local-verification
+  tooling, never bundled into `apps/web`'s production build; same precedent as the root `sharp`
+  devDependency)
+- `pnpm-lock.yaml` **[added inner-loop plan-supplement, 26-07-26]** — consequence of the devDependency
+  install above
+- `ops/pglite-verify-embedding-functions.mjs` **[added inner-loop plan-supplement, 26-07-26]** —
+  new local-verification harness script (runs the real `0001_embedding_functions.sql` through pglite)
 
 ## Phase 3 — Scheduler + seed
 

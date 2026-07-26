@@ -3,10 +3,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
@@ -17,6 +13,25 @@ import { transformDemoResult } from "@/lib/utils/transformData"
 import { Component, DemoWithComponent, User } from "@/types/global"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
+import { cn } from "@/lib/utils"
+import { 
+  Search, 
+  User as UserIcon, 
+  Sparkles, 
+  Box, 
+  Megaphone, 
+  Image as ImageIcon, 
+  Square, 
+  MousePointerClick, 
+  Briefcase, 
+  ArrowLeftRight, 
+  Layout, 
+  HelpCircle,
+  Star,
+  Monitor,
+  Map,
+  MoveHorizontal
+} from "lucide-react"
 
 interface AddRegistryModalProps {
   isOpen: boolean
@@ -31,6 +46,7 @@ export function AddRegistryModal({
 }: AddRegistryModalProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [isInstalling, setIsInstalling] = useState(false)
+  const [activeTab, setActiveTab] = useState<"my-components" | "featured" | "shadcn-base">("shadcn-base")
   const supabase = useClerkSupabaseClient()
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +66,6 @@ export function AddRegistryModal({
     staleTime: 30 * 1000,
   })
 
-  console.log("shadcnDemosQuery", shadcnDemosQuery.data)
-
   const registrySearchQuery = useQuery({
     queryKey: ["registryModalSearch", searchTerm],
     queryFn: async () => {
@@ -70,8 +84,6 @@ export function AddRegistryModal({
             user_data: result.components?.users_components_user_idTousers,
           }
         })
-
-        console.log("exactSearchResults", exactSearchResults)
 
         const { data: searchResults, error } = await supabase.functions.invoke(
           "search_demos_ai_oai_extended",
@@ -98,13 +110,7 @@ export function AddRegistryModal({
             const componentData = result.component_data as Component
             const userData = result.user_data as User
 
-            console.log("componentData", componentData)
-
             if (!componentData || !userData) {
-              console.warn(
-                "Missing component or user data in search result",
-                result,
-              )
               return null
             }
 
@@ -178,130 +184,205 @@ export function AddRegistryModal({
     : []
 
   const sortedRegistryResults = registrySearchQuery.data ?? []
-  // ? [...registrySearchQuery.data].sort((a, b) => {
-  //     const downloadsA = a.component?.likes_count || 0
-  //     const downloadsB = b.component?.likes_count || 0
-  //     return downloadsB - downloadsA
-  //   })
-  // : []
 
+  // Determine what content to show based on search/tab state
+  const isSearching = !!searchTerm.trim()
+  const showShadcnBase = !isSearching && activeTab === "shadcn-base"
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Add from HigherBits Registry</DialogTitle>
-          <DialogDescription>
-            Search for components in the HigherBits.dev registry or select from our
-            featured components.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Input
-            placeholder="Search components..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <div className="h-96 border rounded-md p-2 overflow-y-auto relative">
-            {isInstalling ? (
-              <div className="absolute inset-0 bg-background flex flex-col items-center justify-center z-10 rounded-md">
+      <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background gap-0 border-border">
+        <div className="flex h-[80vh] min-h-[600px]">
+          {/* Sidebar */}
+          <div className="w-[240px] border-r bg-muted/20 flex flex-col shrink-0">
+            <div className="p-3 border-b">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Components, authors, libr..."
+                  className="w-full pl-8 bg-background border-none shadow-none h-9 text-sm focus-visible:ring-1 focus-visible:ring-ring"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-3 space-y-5">
+              {/* Components Section */}
+              <div>
+                <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-1">Components</h4>
+                <div className="space-y-0.5">
+                  <SidebarItem 
+                    icon={UserIcon} 
+                    label="My components" 
+                    isActive={!isSearching && activeTab === "my-components"} 
+                    onClick={() => {
+                      setActiveTab("my-components")
+                      setSearchTerm("")
+                    }} 
+                  />
+                  <SidebarItem 
+                    icon={Sparkles} 
+                    label="Featured" 
+                    isActive={!isSearching && activeTab === "featured"} 
+                    onClick={() => {
+                      setActiveTab("featured")
+                      setSearchTerm("")
+                    }} 
+                  />
+                </div>
+              </div>
+
+              {/* Primitives Section */}
+              <div>
+                <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-1">Primitives</h4>
+                <div className="space-y-0.5">
+                  <SidebarItem 
+                    icon={Box} 
+                    label="shadcn/base" 
+                    isActive={!isSearching && activeTab === "shadcn-base"} 
+                    onClick={() => {
+                      setActiveTab("shadcn-base")
+                      setSearchTerm("")
+                    }} 
+                  />
+                </div>
+              </div>
+
+              {/* Categories Section */}
+              <div>
+                <h4 className="px-2 text-xs font-semibold text-muted-foreground mb-1">Categories</h4>
+                <div className="space-y-0.5">
+                  <SidebarItem icon={Megaphone} label="Announcements" />
+                  <SidebarItem icon={ImageIcon} label="Backgrounds" />
+                  <SidebarItem icon={Square} label="Borders" />
+                  <SidebarItem icon={MousePointerClick} label="Calls to Action" />
+                  <SidebarItem icon={Briefcase} label="Clients" />
+                  <SidebarItem icon={ArrowLeftRight} label="Comparisons" />
+                  <SidebarItem icon={Layout} label="Docks" />
+                  <SidebarItem icon={HelpCircle} label="FAQs" />
+                  <SidebarItem icon={Star} label="Features" />
+                  <SidebarItem icon={Layout} label="Footers" />
+                  <SidebarItem icon={ImageIcon} label="Galleries" />
+                  <SidebarItem icon={Monitor} label="Heroes" />
+                  <SidebarItem icon={Layout} label="Hooks" />
+                  <SidebarItem icon={ImageIcon} label="Images" />
+                  <SidebarItem icon={Map} label="Maps" />
+                  <SidebarItem icon={MoveHorizontal} label="Marquees" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 overflow-y-auto bg-background relative p-6">
+            {isInstalling && (
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 rounded-md">
                 <div className="max-w-xs max-h-xs">
                   <LoadingSpinner />
                 </div>
-                <p className="mt-4 text-sm text-muted-foreground">
+                <p className="mt-4 text-sm font-medium">
                   Installing component...
                 </p>
               </div>
-            ) : (
-              <>
-                {searchTerm.trim() && registrySearchQuery.isLoading && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-                    {[...Array(4)].map((_, i) => (
-                      <ComponentCardSkeleton key={i} />
-                    ))}
-                  </div>
-                )}
-                {searchTerm.trim() && registrySearchQuery.error && (
-                  <p className="text-sm text-destructive p-4 text-center">
-                    Error searching components.
-                  </p>
-                )}
-                {searchTerm.trim() &&
-                  registrySearchQuery.data &&
-                  registrySearchQuery.data.length === 0 && (
-                    <p className="text-sm text-muted-foreground p-4 text-center">
-                      No components found for "{searchTerm}".
-                    </p>
-                  )}
-                {searchTerm.trim() &&
-                  registrySearchQuery.data &&
-                  registrySearchQuery.data.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-                      {sortedRegistryResults.map((component) => (
-                        <ComponentCard
-                          key={component.id}
-                          demo={component}
-                          onClick={() => handleSelectComponent(component)}
-                          hideUser
-                          hideVotes
-                        />
-                      ))}
-                    </div>
-                  )}
+            )}
 
-                {!searchTerm.trim() && shadcnDemosQuery.isLoading && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-                    {[...Array(4)].map((_, i) => (
-                      <ComponentCardSkeleton key={i} />
-                    ))}
-                  </div>
-                )}
-                {!searchTerm.trim() && shadcnDemosQuery.error && (
-                  <p className="text-sm text-destructive p-4 text-center">
-                    Error loading featured components.
-                  </p>
-                )}
-                {!searchTerm.trim() &&
-                  shadcnDemosQuery.data &&
-                  shadcnDemosQuery.data.length === 0 && (
-                    <p className="text-sm text-muted-foreground p-4 text-center">
-                      No featured components available.
-                    </p>
-                  )}
-                {!searchTerm.trim() &&
-                  shadcnDemosQuery.data &&
-                  shadcnDemosQuery.data.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-                      {sortedShadcnDemos.map((component) => (
-                        <ComponentCard
-                          key={component.id}
-                          demo={component}
-                          onClick={() => handleSelectComponent(component)}
-                          hideUser
-                          hideVotes
-                        />
-                      ))}
-                    </div>
-                  )}
-                {!searchTerm.trim() &&
-                  !shadcnDemosQuery.isLoading &&
-                  !shadcnDemosQuery.error &&
-                  (!shadcnDemosQuery.data ||
-                    shadcnDemosQuery.data.length === 0) && (
-                    <p className="text-sm text-muted-foreground p-4 text-center">
-                      Browse featured components or enter a search term to find
-                      components.
-                    </p>
-                  )}
-              </>
+            {/* Search Results */}
+            {isSearching && registrySearchQuery.isLoading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <ComponentCardSkeleton key={i} />
+                ))}
+              </div>
+            )}
+            {isSearching && registrySearchQuery.error && (
+              <p className="text-sm text-destructive text-center mt-10">
+                Error searching components.
+              </p>
+            )}
+            {isSearching && registrySearchQuery.data?.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center mt-10">
+                No components found for "{searchTerm}".
+              </p>
+            )}
+            {isSearching && registrySearchQuery.data && registrySearchQuery.data.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {sortedRegistryResults.map((component) => (
+                  <ComponentCard
+                    key={component.id}
+                    demo={component}
+                    onClick={() => handleSelectComponent(component)}
+                    hideVotes
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Shadcn/Base Tab */}
+            {showShadcnBase && shadcnDemosQuery.isLoading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <ComponentCardSkeleton key={i} />
+                ))}
+              </div>
+            )}
+            {showShadcnBase && shadcnDemosQuery.error && (
+              <p className="text-sm text-destructive text-center mt-10">
+                Error loading shadcn components.
+              </p>
+            )}
+            {showShadcnBase && shadcnDemosQuery.data?.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center mt-10">
+                No shadcn components available.
+              </p>
+            )}
+            {showShadcnBase && shadcnDemosQuery.data && shadcnDemosQuery.data.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {sortedShadcnDemos.map((component) => (
+                  <ComponentCard
+                    key={component.id}
+                    demo={component}
+                    onClick={() => handleSelectComponent(component)}
+                    hideVotes
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Other Tabs (My components, Featured) */}
+            {!isSearching && !showShadcnBase && (
+              <p className="text-sm text-muted-foreground text-center mt-10">
+                Browse categories or enter a search term to find components.
+              </p>
             )}
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Close
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function SidebarItem({ 
+  icon: Icon, 
+  label, 
+  isActive, 
+  onClick 
+}: { 
+  icon: any; 
+  label: string; 
+  isActive?: boolean; 
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors text-left",
+        isActive ? "bg-secondary text-secondary-foreground" : "text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
+      )}
+    >
+      <Icon className="h-4 w-4" />
+      <span className="truncate">{label}</span>
+    </button>
   )
 }

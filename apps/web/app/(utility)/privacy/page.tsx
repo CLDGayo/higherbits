@@ -16,7 +16,7 @@ export default function PrivacyPolicy() {
         <h2>1. Introduction</h2>
         <p>
           This Privacy Policy explains how HigherBits.dev ("we", "our", or "us"),
-          operated by Serafim Korablev, collects and uses information through
+          operated by Higher Bits Labs Inc., collects and uses information through
           our website and services.
         </p>
 
@@ -66,15 +66,17 @@ export default function PrivacyPolicy() {
         <p>
           For any privacy-related questions or concerns, please contact:
           <br />
-          Serafim Korablev
+          Higher Bits Labs Inc.
           <br />
-          28 Coates Way
+          Samson St. Purok 3, Barangay 3,
           <br />
-          Watford
+          San Francisco,
           <br />
-          WD259NS
+          Agusan del Sur,
           <br />
-          United Kingdom
+          Philippines 8501
+          <br />
+          Phone: +81 070 8986 1692
           <br />
           Email: support@higherbits.dev
         </p>

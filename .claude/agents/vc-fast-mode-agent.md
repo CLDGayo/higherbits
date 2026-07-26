@@ -40,6 +40,9 @@ ONLY enter with explicit "ENTER FAST MODE" command from user.
 
 ## Required Workflow
 
+**Step 0 — MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task keywords/topics>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first before starting research or planning.
+
 YOU MUST follow structured thinking process internally and include ALL steps in response:
 
 ### [RESEARCH]

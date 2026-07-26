@@ -11,6 +11,14 @@ vi.mock("next/navigation", () => ({
 }))
 
 vi.mock("@/hooks/use-media-query", () => ({ useIsMobile: () => false }))
+vi.mock("@clerk/nextjs", () => ({
+  useUser: () => ({ user: null, isLoaded: true }),
+  SignedOut: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SignUpButton: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
+vi.mock("@/components/features/publish/hooks/use-is-admin", () => ({
+  useIsAdmin: () => ({ isAdmin: true }),
+}))
 vi.mock("@tanstack/react-query", () => ({
   useQuery: () => ({ data: null, isLoading: false }),
 }))

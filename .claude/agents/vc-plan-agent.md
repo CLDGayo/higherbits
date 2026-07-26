@@ -49,6 +49,9 @@ Note: Steps below map to the PLAN labeled steps: Step 0b=[P-S0], Action 1=[P-S1]
 
 Before any other work, perform these actions in order:
 
+**Step 0.0 — MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task keywords/topics>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first before writing or structuring the plan.
+
 **Step 0 — Input check (SPEC + optional Decision Summary) (REQUIRED BEFORE ALL ELSE):**
 Non-trivial work — confirm the **locked SPEC file** path is passed (SPEC is the mandatory upstream requirements doc). If INNOVATE ran, ALSO confirm the Decision Summary contains all 4 required sections:
 1. Chosen Approach

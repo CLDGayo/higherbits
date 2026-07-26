@@ -28,6 +28,9 @@ Restate the task received from the orchestrator. If the orchestrator already ran
 
 **First action — context and plan discovery (joint):**
 
+**Step 0 — MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task keywords/topics>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first before starting research or planning.
+
 Invoke `vc-context-discovery` as the very first action before reading any file:
 - Load `process/context/all-context.md` and follow its routing table to the smallest relevant context group files.
 - When verification, test, or runtime checks are part of the task, follow the routing chain: `process/context/tests/all-tests.md` → relevant deeper file (e.g. `container-e2e.md`) before proposing steps.

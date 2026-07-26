@@ -18,8 +18,9 @@ interface VersionSelectorDialogProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   username?: string
-  onCreateSandbox?: () => Promise<void>
+  onCreateSandbox?: (type?: string) => Promise<void>
   isCreating?: boolean
+  selectedType?: string
 }
 
 export function VersionSelectorDialog({
@@ -28,8 +29,20 @@ export function VersionSelectorDialog({
   username,
   onCreateSandbox,
   isCreating = false,
+  selectedType = "component",
 }: VersionSelectorDialogProps) {
   const router = useRouter()
+
+  const itemTypeLabels: Record<string, string> = {
+    component: "Component",
+    theme: "Theme",
+    template: "Template",
+    gradient: "Gradient",
+    shader: "Shader",
+    library: "Library",
+  }
+
+  const currentLabel = itemTypeLabels[selectedType] || "Component"
 
   // const handleStableVersion = () => {
   //   router.push("/publish")
@@ -40,12 +53,12 @@ export function VersionSelectorDialog({
     if (onCreateSandbox) {
       // Don't close the dialog - let the creation finish while showing loading state
       // The parent component will handle closing the dialog after creation
-      await onCreateSandbox()
+      await onCreateSandbox(selectedType)
     } else {
       if (username) {
-        router.push(`/studio/${username}?beta=true`)
+        router.push(`/studio/${username}?beta=true&type=${selectedType}`)
       } else {
-        router.push("/studio?beta=true")
+        router.push(`/studio?beta=true&type=${selectedType}`)
       }
       onOpenChange(false)
     }
@@ -125,10 +138,10 @@ export function VersionSelectorDialog({
                   {isCreating ? (
                     <div className="flex items-center gap-2">
                       <Spinner size={16} color="white" />
-                      <span>Creating...</span>
+                      <span>Creating {currentLabel}...</span>
                     </div>
                   ) : (
-                    <>Create Component</>
+                    <>Create {currentLabel}</>
                   )}
                 </Button>
               </div>

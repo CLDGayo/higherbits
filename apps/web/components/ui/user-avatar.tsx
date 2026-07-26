@@ -31,6 +31,24 @@ export function UserAvatar({
   skipLink = false,
   ...props
 }: UserAvatarProps) {
+  const displayName =
+    alt ||
+    user?.display_name ||
+    user?.name ||
+    user?.display_username ||
+    user?.username ||
+    "User"
+
+  const initials = displayName
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase()
+
+  const validSrc = src && src !== "/placeholder.svg" ? src : undefined
+
   const avatarContent = (
     <Avatar
       className={cn(
@@ -41,15 +59,9 @@ export function UserAvatar({
       style={{ width: size, height: size }}
       {...props}
     >
-      <AvatarImage src={src || undefined} alt={alt || "User avatar"} />
-      <AvatarFallback>
-        {alt
-          ? alt
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase()
-          : "U"}
+      <AvatarImage src={validSrc} alt={displayName} />
+      <AvatarFallback className="bg-muted text-foreground font-semibold flex items-center justify-center">
+        {initials || "U"}
       </AvatarFallback>
     </Avatar>
   )

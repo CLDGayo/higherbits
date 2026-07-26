@@ -27,7 +27,16 @@ vi.mock("jotai", () => ({
   useAtom: () => [undefined, vi.fn()],
   atom: (v: unknown) => v,
 }))
-vi.mock("@clerk/nextjs", () => ({ useUser: () => ({ user: null }) }))
+vi.mock("@clerk/nextjs", () => ({
+  useUser: () => ({ user: null }),
+  useSession: () => ({ session: null }),
+}))
+vi.mock("@/components/features/publish/hooks/use-is-admin", () => ({
+  useIsAdmin: () => ({ isAdmin: false, isLoading: false }),
+}))
+vi.mock("@/lib/queries", () => ({
+  useCategoryTagCounts: () => ({ data: {} }),
+}))
 vi.mock("@/hooks/use-media-query", () => ({ useIsMobile: () => false }))
 
 import { MainSidebar } from "../sidebar-layout"

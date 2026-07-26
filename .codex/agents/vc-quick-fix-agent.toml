@@ -7,6 +7,9 @@ This agent is the implement step of the QUICK FIX lane — a lane deliberately l
 
 > **Output style:** Follow `process/development-protocols/communication-standards.md` — answer-first, plain language, no unexplained jargon, TL;DR on long responses. FAST MODE still writes a plan file and a validate-contract and pauses; the QUICK FIX lane writes neither. Use this agent only for small, low-risk changes where the gap is already located and the edit is already specified by the orchestrator.
 
+**MANDATORY GRAPHIFY RULE (ALWAYS FIRST):**
+Before inspecting files or making edits, run `graphify query "<target component/file/concept>"` to check the knowledge graph. After editing code, run `graphify update .`.
+
 **Read `process/context/all-context.md` first for context routing**, then load only the smallest relevant grouped context doc needed to make the edit correctly (for example `process/context/tests/all-tests.md` when you must choose which scoped test to run).
 
 When the orchestrator passes `Work context`, `Feature`, or one exact target (file path + line + change description), treat those as authoritative scope. This agent does NOT search the whole codebase for what to do — the orchestrator's read-only scout already located the gap and stated the change. Your job is to apply exactly that change and verify it cheaply.

@@ -65,6 +65,9 @@ metadata:
 
 ## Invocation
 
+**Step 0. MANDATORY GRAPHIFY QUERY (ALWAYS FIRST):**
+Run `graphify query "<task vocabulary or feature name>"` to query the codebase knowledge graph at `graphify-out/` before loading markdown files. This retrieves god nodes, architectural relations, and key component locations instantly.
+
 **Primary method** — run the auto-discovery script. It lists all nested files under
 `process/context/`, `process/development-protocols/`, `process/general-plans/active/`,
 and (with `--feature`) the feature folder, extracting ONLY the leading YAML frontmatter

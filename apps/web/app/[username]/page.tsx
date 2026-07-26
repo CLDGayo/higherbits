@@ -6,17 +6,10 @@ import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { unstable_cache } from "next/cache"
 import { redirect } from "next/navigation"
 import { UserPageClient } from "./page.client"
-const getCachedUser = unstable_cache(
-  async (username: string) => {
-    const { data: user } = await getUserData(supabaseWithAdminAccess, username)
-    return user
-  },
-  ["user-data"],
-  {
-    revalidate: 30, // Cache for 30 seconds
-    tags: ["user-data"],
-  },
-)
+const getCachedUser = async (username: string) => {
+  const { data: user } = await getUserData(supabaseWithAdminAccess, username)
+  return user
+}
 
 async function getUser(username: string) {
   return getCachedUser(username)

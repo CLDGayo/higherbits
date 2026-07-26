@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "types": "supabase gen types --lang=typescript --project-id 'vucvdpamtrjkzmubwlts' --schema public > ./types/supabase.ts",
     "supabase:login": "supabase login",
     "build": "next build",
@@ -102,6 +102,7 @@
     "react-resizable-panels": "^2.1.8",
     "recharts": "^2.15.3",
     "resend": "^4.1.2",
+    "sharp": "^0.34.0",
     "shiki": "^3.0.0",
     "short-uuid": "^5.2.0",
     "sonner": "^1.5.0",

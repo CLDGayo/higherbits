@@ -152,15 +152,15 @@ export default function TermsOfService() {
                 <br />
                 Higher Bits Labs Inc.
                 <br />
-                1111b S Governors Ave
+                Samson St. Purok 3, Barangay 3,
                 <br />
-                STE 28395
+                San Francisco,
                 <br />
-                Dover, DE 19904
+                Agusan del Sur,
                 <br />
-                United States
+                Philippines 8501
                 <br />
-                Phone: (628) 227-7780
+                Phone: +81 070 8986 1692
                 <br />
                 Email: support@higherbits.dev
               </p>

@@ -1,12 +1,12 @@
-const { createClient } = require('@supabase/supabase-js');
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+import { createClient } from "@supabase/supabase-js"
+import * as dotenv from "dotenv"
+import path from "path"
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") })
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 
-async function main() {
-  const { data, error } = await supabase.from('users').select('id, is_admin').limit(5);
-  console.log(data, error);
+async function test() {
+  const { data, error } = await supabase.from("demos").select("*").limit(1)
+  console.log("Cols:", data ? Object.keys(data[0]) : null, "Error:", error)
 }
-
-main();
+test()

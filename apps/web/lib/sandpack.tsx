@@ -567,7 +567,7 @@ export default function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="${theme}" enableSystem={false}>
       <RouterProvider>
-          <div className="relative flex items-center justify-center h-screen w-full m-auto p-16 bg-background text-foreground">
+          <div className="relative flex items-center justify-center h-screen w-full m-auto p-4 sm:p-16 bg-background text-foreground">
             <div className="absolute lab-bg inset-0 size-full">
               <div className="absolute inset-0 bg-[radial-gradient(#00000021_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff22_1px,transparent_1px)]"></div>
             </div>

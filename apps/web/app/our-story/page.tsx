@@ -16,11 +16,28 @@ export default function OurStoryPage() {
       <main className="flex-1">
         <div className="container mx-auto max-w-6xl py-6 px-4 sm:py-16 pt-20 sm:px-8">
           <div className="relative mb-16">
-            {/* Notion-style page title with emoji */}
-            <div className="pt-40 flex items-center gap-3">
+            {/* Notion-style page title with emoji & mobile founder photos */}
+            <div className="pt-20 sm:pt-40 flex items-center justify-between gap-3 relative">
               <h1 className="text-2xl sm:text-[36px] leading-tight font-bold space-y-10">
                 Our Story
               </h1>
+              {/* Small photo frame stacked in upper right corner on mobile */}
+              <div className="lg:hidden relative w-20 h-24 shrink-0">
+                <div className="absolute right-3 top-2 w-16 h-20 z-0 bg-card p-1 rounded shadow transform -rotate-6 border border-border/30">
+                  <img
+                    src="/story/founder-photo.jpg"
+                    alt="Clarence & Gwyneth"
+                    className="w-full h-full object-cover rounded opacity-70"
+                  />
+                </div>
+                <div className="absolute right-0 top-0 w-16 h-20 z-10 bg-card p-1 rounded shadow-md transform rotate-3 border border-border/50">
+                  <img
+                    src="/story/founder-photo.jpg"
+                    alt="Clarence & Gwyneth"
+                    className="w-full h-full object-cover rounded"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Notion-style content layout */}

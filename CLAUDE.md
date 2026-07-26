@@ -6,6 +6,16 @@
 
 ---
 
+## MANDATORY GRAPHIFY RULE (ALWAYS & AT ALL COSTS)
+
+Every agent (Orchestrator, Claude, Codex, Antigravity, and ALL RIPER-5 subagents) MUST execute a `graphify` query or search at the VERY FIRST STEP of processing ANY user prompt, question, feature request, bug fix, or code modification.
+- **Before taking any action, reading files, or planning:** Run `graphify query "<user request/keywords>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first.
+- **During RIPER-5 phases:** Step 0 of every phase (Research, Spec, Innovate, Plan, Validate, Execute, Fast Mode, Quick Fix, Debugger, Update Process) MUST execute a Graphify query.
+- **After modifying code:** Run `graphify update .` to keep the knowledge graph in sync.
+No agent may skip Graphify under any circumstances.
+
+---
+
 ## Before Any Substantial Task
 
 Always run:
@@ -439,12 +449,12 @@ SEQUENTIAL test steps — never a literal shell pipe.
 
 **This file is automatically loaded at the start of every Claude Code session.**
 
-## graphify
+## graphify (MANDATORY ON EVERY PROMPT)
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
 
-Rules:
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+Rules (Mandatory):
+- **ALWAYS FIRST:** For EVERY user prompt, question, feature request, or code edit, ALWAYS start by running `graphify query "<topic/question>"` (or MCP tool / CLI equivalent). Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts.
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- **POST-EDIT:** After modifying code in EXECUTE, QUICK-FIX, or FAST MODE, run `graphify update .` to keep the graph current (AST-only, no API cost).

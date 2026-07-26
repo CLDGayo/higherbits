@@ -2,6 +2,13 @@
 
 **Bootstrap guard:** If `process/context/all-context.md` does not exist, the harness has not been set up yet (a bare `process/context/` holding only `generated-skills-catalog.json` from install does NOT count). Run `vc-setup` before any task — the context router and protocol docs are absent and agents will not route correctly.
 
+**MANDATORY GRAPHIFY RULE (ALWAYS & AT ALL COSTS):**
+Every agent (Orchestrator, Claude, Codex, Antigravity, and ALL RIPER-5 subagents) MUST execute a `graphify` query or search at the VERY FIRST STEP of processing ANY user prompt, question, feature request, bug fix, or code modification.
+- **Before taking any action, reading files, or planning:** Run `graphify query "<user request/keywords>"` (or inspect `graphify-out/`) to query the codebase knowledge graph first.
+- **During RIPER-5 phases:** Step 0 of every phase (Research, Spec, Innovate, Plan, Validate, Execute, Fast Mode, Quick Fix, Debugger, Update Process) MUST execute a Graphify query.
+- **After modifying code:** Run `graphify update .` to keep the knowledge graph in sync.
+No agent may skip Graphify under any circumstances.
+
 This file is the Codex compatibility layer for the existing `.claude/` system.
 
 Keep this file aligned with [CLAUDE.md](CLAUDE.md)
@@ -435,6 +442,10 @@ Skill Registry:
 
 | Skill | Purpose | Trigger Keywords |
 |---|---|---|
+| `taste-skill` | Anti-slop frontend design & component taste for HigherBits.dev | taste, taste skill, design taste, anti-slop, UI design, front-end design, component design |
+| `soft-skill` | High-end visual design (calm, soft, luxury, premium UI) | soft UI, luxury UI, calm design, premium visual |
+| `minimalist-skill` | Editorial minimalist UI (Linear/Notion aesthetic) | minimalist UI, editorial UI, clean design, Linear style |
+| `redesign-skill` | Audit-first redesign for existing components/pages | redesign UI, audit UI, overhaul component |
 | `vc-frontend-design` | Polished UI from designs/screenshots/videos | UI, design, layout, component, page, interface, visual, CSS, Tailwind, login page, dashboard |
 | `vc-debug` | Root cause-analysis helper used alongside `debugger` | debug, root cause, investigate, why is this |
 | `vc-scenario` | Edge case generation across 12 dimensions | edge cases, test scenarios, what could go wrong |
@@ -491,8 +502,8 @@ Bug Fix / Debug Request (keywords: "fix", "bug", "broken", "debug", "error")
 Existing Plan File Present
 -> Resume from relevant phase; do not recreate plan.
 
-UI / Frontend Request (keywords: "page", "component", "design", "layout", "interface", "UI")
--> Surface `vc-frontend-design` skill alongside `vc-research-agent`. Invoke `vc-ui-ux-designer` agent during EXECUTE phase for implementation.
+UI / Frontend Request (keywords: "page", "component", "design", "layout", "interface", "UI", "front-end", "redesign")
+-> Surface `taste-skill` (or specialized variants `soft-skill`, `minimalist-skill`, `redesign-skill`) alongside `vc-frontend-design` and `vc-research-agent`. For UI, front-end design, or designing components for HigherBits.dev, ALWAYS apply `taste-skill` guidelines (Brief Inference -> One-line Design Read -> 3 Dials configuration: VARIANCE/MOTION/DENSITY -> anti-slop execution). Invoke `vc-ui-ux-designer` agent during EXECUTE phase for implementation.
 
 Documentation Question (keywords: "how does X work", "API docs", "syntax", "version")
 -> Activate `vc-docs-seeker` skill before routing to `vc-research-agent`.

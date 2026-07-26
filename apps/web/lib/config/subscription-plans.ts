@@ -20,13 +20,12 @@ export interface PlanLimits {
 
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   free: {
-    generationsPerMonth: 5,
+    generationsPerMonth: 2,
     displayName: "Free",
     name: "Free",
     description: "Perfect for trying out",
     features: [
-      "5 code copies per day",
-      "5 prompt copies per day",
+      "2 free copies per day",
       "Unlimited UI Inspirations",
       "Unlimited SVG Logo Search",
       "Community support",
@@ -90,14 +89,14 @@ export interface ComparisonFeature {
   values: Record<PlanType, string>
 }
 
-export const FREE_USAGE_LIMIT = 5
+export const FREE_USAGE_LIMIT = 2
 
 export const COMPARISON_FEATURES: ComparisonFeature[] = [
   {
     name: "Code Copies",
     section: "Usage",
     values: {
-      free: "5 per day",
+      free: "2 per day",
       pro: "Unlimited",
     },
   },
@@ -105,7 +104,7 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
     name: "Prompt Copies",
     section: "Usage",
     values: {
-      free: "5 per day",
+      free: "2 per day",
       pro: "Unlimited",
     },
   },
@@ -149,7 +148,7 @@ export const PLAN_FEATURES: PlanFeature[] = [
     included: "free",
     category: "Usage",
     valueByPlan: {
-      free: "5 per day",
+      free: "2 per day",
       pro: "Unlimited",
     },
   },
@@ -158,7 +157,7 @@ export const PLAN_FEATURES: PlanFeature[] = [
     included: "free",
     category: "Usage",
     valueByPlan: {
-      free: "5 per day",
+      free: "2 per day",
       pro: "Unlimited",
     },
   },

@@ -762,14 +762,14 @@ export function EditComponentDialog({
           setIsOpen(open)
         }}
       >
-        <DrawerContent>
-          <DrawerHeader className="mb-2 px-6">
+        <DrawerContent className="max-w-full overflow-x-hidden">
+          <DrawerHeader className="mb-2 px-4 sm:px-6">
             <div className="flex justify-between items-center">
               <DrawerTitle>Edit component</DrawerTitle>
               {saveButton}
             </div>
           </DrawerHeader>
-          <div className="px-6 pb-6 overflow-y-auto max-h-[calc(100dvh-6rem)]">
+          <div className="px-4 sm:px-6 pb-6 overflow-y-auto overflow-x-hidden max-h-[calc(100dvh-6rem)]">
             {content}
           </div>
         </DrawerContent>

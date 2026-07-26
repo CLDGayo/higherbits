@@ -13,6 +13,7 @@ import { ClayCard } from "./clay-card"
 import { ClayPillButton } from "./clay-pill-button"
 import { Icons } from "../icons"
 import { GitHubStarsBasic } from "./github-stars-number"
+import { SignedOut, SignUpButton } from "@clerk/nextjs"
 import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 
 export function HeroSection() {
@@ -24,14 +25,6 @@ export function HeroSection() {
   const browseComponents = () => {
     router.push("/?tab=home")
   }
-
-  useEffect(() => {
-    document.body.style.overflow = "hidden"
-
-    return () => {
-      document.body.style.overflow = "unset"
-    }
-  }, [])
 
   useEffect(() => {
     if (typeof window !== "undefined" && !CSS.supports("(animation-timeline: view()) and (animation-range: entry)")) {
@@ -52,7 +45,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <AuroraBackground className="fixed inset-0 z-50">
+    <AuroraBackground className="fixed inset-0 z-50 overflow-y-auto">
       <style>{`
         @supports ((animation-timeline: view()) and (animation-range: entry)) {
           .parallax-layer {
@@ -101,7 +94,10 @@ export function HeroSection() {
             <div className="flex items-center gap-6">
               <Link
                 href="/?tab=home"
-                className="text-sm text-foreground/90 hover:text-foreground transition-colors"
+                onClick={() => {
+                  window.location.href = "/?tab=home"
+                }}
+                className="text-sm text-foreground/90 hover:text-foreground transition-colors cursor-pointer"
               >
                 Explore
               </Link>
@@ -145,8 +141,13 @@ export function HeroSection() {
             </h2>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 justify-center mb-20">
-              <ClayPillButton asChild>
-                <Link href="/?tab=home">
+              <ClayPillButton asChild className="cursor-pointer">
+                <Link
+                  href="/?tab=home"
+                  onClick={() => {
+                    window.location.href = "/?tab=home"
+                  }}
+                >
                   Browse components
                   {!isMobile && (
                     <kbd className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded-pill border border-primary-foreground/40 bg-primary-foreground/10 px-1.5 text-[0.625rem] font-medium text-primary-foreground">
@@ -155,6 +156,15 @@ export function HeroSection() {
                   )}
                 </Link>
               </ClayPillButton>
+
+              <SignedOut>
+                <SignUpButton mode="modal">
+                  <ClayPillButton variant="secondary" className="gap-2 cursor-pointer">
+                    Sign Up
+                    <ArrowRight className="h-4 w-4 ml-1" />
+                  </ClayPillButton>
+                </SignUpButton>
+              </SignedOut>
 
               {isAdmin && (
                 <ClayPillButton variant="secondary" asChild className="gap-2">
@@ -182,47 +192,45 @@ export function HeroSection() {
                 aria-hidden="true"
                 className="pointer-events-none absolute -top-24 right-0 hidden h-28 w-auto select-none md:block lg:-top-28 lg:h-32"
               />
-              <ClayCard className="inline-block bg-card/70 px-6 py-5 backdrop-blur-sm">
-              <p className="text-muted-foreground mb-4">Optimized for</p>
-              <div className="flex flex-col gap-2">
+              <ClayCard className="inline-block bg-card/70 px-4 sm:px-6 py-4 sm:py-5 backdrop-blur-sm w-full max-w-[340px] sm:max-w-none">
+              <p className="text-muted-foreground mb-4 font-medium text-xs sm:text-sm">Optimized for</p>
+              <div className="flex flex-col gap-3">
                 {/* IDE Logos */}
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-12 text-foreground max-w-[350px] md:max-w-[800px] mx-auto">
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <Icons.goHighLevelLogo className="h-6 sm:h-8 w-auto" />
+                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-10 text-foreground w-full mx-auto">
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.goHighLevelLogo className="h-5 sm:h-8 w-auto shrink-0 max-w-full" />
                   </div>
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
                     <Icons.cursorAnimatedLogo />
-                    <Icons.cursorLogo className="h-3 sm:h-4 w-auto" />
+                    <Icons.cursorLogo className="h-3 sm:h-4 w-auto shrink-0" />
                   </div>
-
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <Icons.claudeLogo className="h-6 sm:h-8 w-auto" />
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.claudeLogo className="h-5 sm:h-8 w-auto shrink-0" />
                   </div>
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <Icons.codexLogo className="h-6 sm:h-8 w-auto" />
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.codexLogo className="h-5 sm:h-8 w-auto shrink-0" />
                   </div>
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <Icons.antigravityLogo className="h-6 sm:h-8 w-auto" />
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.antigravityLogo className="h-5 sm:h-8 w-auto shrink-0" />
                   </div>
                 </div>
 
                 {/* Other Company Logos */}
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-12 text-foreground max-w-[350px] md:max-w-[800px] mx-auto">
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <Icons.v0Logo className="h-6 sm:h-8 w-auto" />
+                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-10 text-foreground w-full mx-auto">
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.v0Logo className="h-5 sm:h-8 w-auto shrink-0" />
                   </div>
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[30%] sm:basis-auto justify-center">
-                    <Icons.boltLogo className="h-5 sm:h-6 w-auto" />
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.boltLogo className="h-4 sm:h-6 w-auto shrink-0" />
                   </div>
-
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[45%] sm:basis-auto justify-center">
-                    <Icons.lovableLogo className="h-5 sm:h-6 w-auto" />
-                    <span className="text-[16px] sm:text-[20px] font-bold">
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.lovableLogo className="h-4 sm:h-6 w-auto shrink-0" />
+                    <span className="text-[14px] sm:text-[20px] font-bold">
                       lovable
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 basis-[45%] sm:basis-auto justify-center overflow-hidden max-w-[100px]">
-                    <Icons.replitWithText className="h-12 sm:h-16 w-auto min-w-[120px] sm:min-w-[150px]" />
+                  <div className="flex items-center gap-2 grayscale hover:grayscale-0 transition-all duration-200 justify-center">
+                    <Icons.replitWithText className="h-8 sm:h-12 w-auto shrink-0" />
                   </div>
                 </div>
               </div>

@@ -3,6 +3,7 @@
 import { Footer } from "@/components/ui/footer"
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { motion } from "motion/react"
 import { HeroPill, StarIcon } from "@/components/ui/hero-pill"
@@ -123,6 +124,7 @@ function formatStat(n: number): string {
 }
 
 export default function StudioPage() {
+  const router = useRouter()
   const { user, isLoaded } = useUser()
   const [studioUrl, setStudioUrl] = useState("/studio")
   const [username, setUsername] = useState("")
@@ -163,11 +165,14 @@ export default function StudioPage() {
   useEffect(() => {
     if (!isLoaded || !user) return
 
+    const searchString = typeof window !== "undefined" ? window.location.search : ""
     const usernameFromClerk = user.username ?? ""
 
     if (usernameFromClerk) {
       setUsername(usernameFromClerk)
-      setStudioUrl(`/studio/${usernameFromClerk}`)
+      const targetUrl = `/studio/${usernameFromClerk}${searchString}`
+      setStudioUrl(targetUrl)
+      router.replace(targetUrl)
       return
     }
 
@@ -177,7 +182,9 @@ export default function StudioPage() {
       .then((data) => {
         if (cancelled || !data?.username) return
         setUsername(data.username)
-        setStudioUrl(`/studio/${data.username}`)
+        const targetUrl = `/studio/${data.username}${searchString}`
+        setStudioUrl(targetUrl)
+        router.replace(targetUrl)
       })
       .catch(() => {
         // fail-soft: leave the "set username" fallback button in place
@@ -186,18 +193,14 @@ export default function StudioPage() {
     return () => {
       cancelled = true
     }
-  }, [user, isLoaded])
+  }, [user, isLoaded, router])
 
   // Add keyboard shortcut for Enter key
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === "Enter" && username) {
         setIsEnterPressed(true)
-
-        // Navigate to studio URL
-        setTimeout(() => {
-          window.location.href = studioUrl
-        }, 200)
+        router.push(studioUrl)
       }
     }
 
@@ -206,7 +209,7 @@ export default function StudioPage() {
     return () => {
       document.removeEventListener("keydown", handleKeyPress)
     }
-  }, [username, studioUrl])
+  }, [username, studioUrl, router])
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden">
@@ -279,16 +282,9 @@ export default function StudioPage() {
                     <Button
                       asChild
                       variant="outline"
-                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
-                      onClick={(e) => {
-                        setIsEnterPressed(true)
-                        setTimeout(() => {
-                          window.location.href = studioUrl
-                        }, 200)
-                        e.preventDefault()
-                      }}
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm cursor-pointer"
                     >
-                      <Link href={studioUrl}>
+                      <Link href={studioUrl} onClick={() => setIsEnterPressed(true)}>
                         <div className="flex items-center gap-2">
                           {isEnterPressed && (
                             <Spinner size={16} color="currentColor" />
@@ -561,16 +557,9 @@ export default function StudioPage() {
                     <Button
                       asChild
                       variant="outline"
-                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm"
-                      onClick={(e) => {
-                        setIsEnterPressed(true)
-                        setTimeout(() => {
-                          window.location.href = studioUrl
-                        }, 200)
-                        e.preventDefault()
-                      }}
+                      className="bg-primary !text-primary-foreground hover:bg-primary/90 hover:!text-primary-foreground border-primary shadow-sm cursor-pointer"
                     >
-                      <Link href={studioUrl}>
+                      <Link href={studioUrl} onClick={() => setIsEnterPressed(true)}>
                         <div className="flex items-center gap-2">
                           {isEnterPressed && (
                             <Spinner size={16} color="currentColor" />

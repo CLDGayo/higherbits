@@ -100,7 +100,7 @@ const MainContent = React.memo(function MainContent({
   if (activeTab === "home") {
     if (isMobile) {
       return (
-        <div className="flex flex-col pb-4 pt-20 min-w-0">
+        <div className="flex flex-col pb-4 pt-14 md:pt-20 min-w-0">
           <ComponentsHeader activeTab={activeTab} onTabChange={handleTabChange} />
           {renderContent()}
         </div>
@@ -115,7 +115,7 @@ const MainContent = React.memo(function MainContent({
   }
 
   return (
-    <div className="flex flex-col pb-4 pt-20 min-w-0">
+    <div className="flex flex-col pb-4 pt-14 md:pt-20 min-w-0">
       <ComponentsHeader activeTab={activeTab} onTabChange={handleTabChange} />
       {renderContent()}
     </div>

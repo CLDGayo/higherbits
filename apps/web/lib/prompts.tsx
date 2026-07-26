@@ -96,6 +96,46 @@ export const promptOptions: PromptOption[] = [
       <Icons.sitebrewLogo className="min-h-[18px] min-w-[18px] max-h-[18px] max-w-[18px]" />
     ),
   },
+  {
+    type: "option",
+    id: PROMPT_TYPES.CLAUDE,
+    label: "Claude",
+    description: "Optimized for Claude",
+    action: "copy",
+    icon: (
+      <Icons.claudeLogo className="min-h-[18px] min-w-[18px] max-h-[18px] max-w-[18px]" />
+    ),
+  },
+  {
+    type: "option",
+    id: PROMPT_TYPES.CODEX,
+    label: "Codex",
+    description: "Optimized for Codex",
+    action: "copy",
+    icon: (
+      <Icons.codexLogo className="min-h-[18px] min-w-[18px] max-h-[18px] max-w-[18px]" />
+    ),
+  },
+  {
+    type: "option",
+    id: PROMPT_TYPES.ANTIGRAVITY,
+    label: "Antigravity",
+    description: "Optimized for Antigravity",
+    action: "copy",
+    icon: (
+      <Icons.antigravityLogo className="min-h-[18px] min-w-[18px] max-h-[18px] max-w-[18px]" />
+    ),
+  },
+  {
+    type: "option",
+    id: PROMPT_TYPES.GOHIGHLEVEL,
+    label: "GoHighLevel",
+    description: "Raw HTML/JS for GoHighLevel",
+    action: "copy",
+    icon: (
+      <Icons.goHighLevelLogo className="min-h-[18px] min-w-[18px] max-h-[18px] max-w-[18px]" />
+    ),
+  },
 ]
 
 export type { PromptOption, PromptOptionBase }
@@ -133,6 +173,25 @@ export const getComponentInstallPrompt = ({
   const componentDemoFileName = demoCodeFileName.split("/").slice(-1)[0]
 
   let prompt = ""
+
+  if (promptType === PROMPT_TYPES.GOHIGHLEVEL) {
+    let output = ""
+    if (promptRule) {
+      if (promptRule.tech_stack && promptRule.tech_stack.length > 0) {
+        output += `<!-- Tech Stack: ${promptRule.tech_stack.map(t => `${t.name}${t.version ? ` ${t.version}` : ""}`).join(", ")} -->\n`
+      }
+      if (promptRule.additional_context) {
+        output += `<!-- Prompt Rule Context: ${promptRule.additional_context} -->\n`
+      }
+    }
+    if (userAdditionalContext) {
+      output += `<!-- User Context: ${userAdditionalContext} -->\n`
+    }
+    
+    output += `\n<!-- ${componentFileName} -->\n${code}\n\n<!-- ${componentDemoFileName} -->\n${demoCode}`
+    
+    return output.trim()
+  }
 
   if (promptType === PROMPT_TYPES.MAGIC_PATTERNS) {
     prompt =

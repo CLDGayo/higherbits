@@ -3,6 +3,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import path from "path"
 import dotenv from "dotenv"
+import { processUploadBuffer } from "./upload-security"
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env") })
 
@@ -46,15 +47,22 @@ export const uploadToR2 = async ({
       throw new Error("textContent or encodedContent must be provided")
     }
 
-    const content = file.textContent
-      ? file.textContent
+    const rawBuffer = file.textContent
+      ? Buffer.from(file.textContent, "utf-8")
       : Buffer.from(file.encodedContent!, "base64")
+
+    const { sanitizedBuffer, contentType: verifiedContentType } =
+      await processUploadBuffer({
+        buffer: rawBuffer,
+        fileName: file.name,
+        declaredContentType: contentType || file.type,
+      })
 
     const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: fileKey,
-      Body: content,
-      ContentType: contentType,
+      Body: sanitizedBuffer,
+      ContentType: verifiedContentType,
     })
 
     await r2Client.send(command)

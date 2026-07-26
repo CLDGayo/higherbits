@@ -474,8 +474,12 @@ export function CommandMenu() {
                         onSelect={() => {
                           if (dbUser?.display_username) {
                             router.push(`/${dbUser.display_username}`)
-                          } else if (user?.externalAccounts?.[0]?.username) {
-                            router.push(`/${dbUser?.username}`)
+                          } else if (dbUser?.username) {
+                            router.push(`/${dbUser.username}`)
+                          } else if (user?.username) {
+                            router.push(`/${user.username}`)
+                          } else {
+                            router.push("/settings/profile")
                           }
                           setSearchQuery("")
                           setValue("")

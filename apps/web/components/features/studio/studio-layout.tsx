@@ -11,10 +11,11 @@ import { StudioSidebar } from "./ui/studio-sidebar"
 interface StudioLayoutProps {
   user: User
   children: ReactNode
-  onCreateSandbox?: () => Promise<void>
+  onCreateSandbox?: (type?: string) => Promise<void>
   isCreating?: boolean
   showCreateDialog?: boolean
   setShowCreateDialog?: Dispatch<SetStateAction<boolean>>
+  selectedType?: string
 }
 
 export function StudioLayout({
@@ -24,6 +25,7 @@ export function StudioLayout({
   isCreating = false,
   showCreateDialog = false,
   setShowCreateDialog,
+  selectedType = "component",
 }: StudioLayoutProps) {
   const searchParams = useSearchParams()
   const username = user?.display_username || user?.username || undefined
@@ -47,6 +49,7 @@ export function StudioLayout({
           username={username}
           onCreateSandbox={onCreateSandbox}
           isCreating={isCreating}
+          selectedType={selectedType}
         />
       )}
     </div>

@@ -21,18 +21,18 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
 
   return (
     <div className="block p-[1px]">
-      <div className="group relative bg-background rounded-lg shadow-base p-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background to-accent/10 group-hover:to-accent/20 transition-colors" />
+      <div className="group relative bg-background/50 rounded-2xl p-6 sm:p-8 overflow-hidden ring-1 ring-white/10 hover:ring-white/20 transition-all duration-500">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
 
-        <div className="relative flex flex-col lg:flex-row gap-6">
+        <div className="relative grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 lg:gap-12 items-center">
           {/* Author Info Section */}
-          <div className="w-full lg:w-1/2 relative z-10">
+          <div className="relative z-10 flex flex-col justify-center">
             <Link
               href={`/${author.display_username || author.username}`}
-              className="block"
+              className="block group/author"
             >
-              <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-full shadow-base shrink-0">
+              <div className="flex flex-col gap-5">
+                <div className="h-16 w-16 rounded-full shadow-sm shrink-0 overflow-hidden ring-1 ring-border/50 group-hover/author:ring-foreground/20 transition-all duration-500">
                   {author.display_image_url || author.image_url ? (
                     <Image
                       src={author.display_image_url || author.image_url || ""}
@@ -42,13 +42,13 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                         author.username ||
                         ""
                       }
-                      className="h-12 w-12 rounded-full shadow-base object-cover"
-                      width={48}
-                      height={48}
+                      className="h-full w-full object-cover"
+                      width={64}
+                      height={64}
                     />
                   ) : (
-                    <div className="h-12 w-12 rounded-full shadow-base bg-muted flex items-center justify-center">
-                      <span className="text-lg font-medium">
+                    <div className="h-full w-full bg-muted flex items-center justify-center">
+                      <span className="text-xl font-medium text-muted-foreground">
                         {(
                           (author.display_name ||
                             author.name ||
@@ -59,29 +59,29 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col flex-1">
-                  <div className="space-y-1 mb-4">
-                    <h2 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                      {author.display_name || author.name || author.username}
-                    </h2>
-                    <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
-                      {author.bio ||
-                        `@${author.display_username || author.username}`}
-                    </p>
+                
+                <div className="flex flex-col gap-1.5">
+                  <h2 className="text-2xl font-medium tracking-tight text-foreground group-hover/author:text-primary transition-colors">
+                    {author.display_name || author.name || author.username}
+                  </h2>
+                  <p className="text-base text-foreground/70 line-clamp-2 max-w-[40ch] leading-relaxed">
+                    {author.bio ||
+                      `@${author.display_username || author.username}`}
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-5 mt-2">
+                  <div className="flex items-center gap-2 text-foreground/60">
+                    <Eye className="w-4 h-4" />
+                    <span className="text-sm font-medium">
+                      {totalViews.toLocaleString()} views
+                    </span>
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Eye className="w-4 h-4" />
-                      <span className="text-sm">
-                        {totalViews.toLocaleString()} views
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Download className="w-4 h-4" />
-                      <span className="text-sm">
-                        {(totalUsages + totalDownloads).toLocaleString()} usages
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-2 text-foreground/60">
+                    <Download className="w-4 h-4" />
+                    <span className="text-sm font-medium">
+                      {(totalUsages + totalDownloads).toLocaleString()} usages
+                    </span>
                   </div>
                 </div>
               </div>
@@ -90,64 +90,55 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
 
           {/* Components Cards Section */}
           {topComponents.length > 0 && (
-            <div className="w-full lg:w-1/2 relative min-h-[150px] flex justify-center">
-              <div className="absolute bottom-0 translate-y-12 translate-x-12 min-420:translate-x-0 lg:translate-x-5 flex items-end">
+            <div className="relative min-w-0 w-full overflow-hidden">
+              {/* Fade masks for scroll area */}
+              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background/50 to-transparent z-10 pointer-events-none opacity-0 lg:opacity-100" />
+              <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+              
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mb-4 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pt-2">
                 {topComponents.map((demo, index) => (
                   <motion.div
                     key={demo.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    className="snap-start shrink-0"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{
-                      duration: 0.3,
-                      delay: 0.3 + index * 0.15,
-                      type: "spring",
-                      stiffness: 100,
+                      duration: 0.5,
+                      delay: 0.1 + index * 0.1,
+                      ease: [0.21, 0.47, 0.32, 0.98],
                     }}
                   >
                     <Link
                       href={`/${demo.component.user?.display_username || demo.component.user?.username}/${demo.component?.component_slug}/${demo.demo_slug || "default"}`}
-                      className={`
-                        block
-                        transition-all duration-300 ease-out
-                        hover:z-10
-                        hover:-translate-y-5
-                        ${index === 0 ? "mr-[-110px]" : ""}
-                        w-[240px]
-                        relative
-                      `}
+                      className="block group/card relative w-[240px] sm:w-[260px] active:scale-[0.98] transition-transform duration-200 ease-out"
                     >
-                      <div className="relative aspect-[4/3] mb-3">
+                      <div className="relative aspect-[4/3] rounded-xl shadow-base overflow-hidden ring-1 ring-white/10 group-hover/card:ring-white/20 transition-all duration-300">
                         <div className="absolute inset-0">
-                          <div className="relative w-full h-full rounded-lg shadow-base overflow-hidden hover:z-10 group/card">
-                            <div className="absolute inset-0">
-                              <Image
-                                src={demo.preview_url || "/placeholder.svg"}
-                                alt={demo.name || ""}
-                                className="object-cover"
-                                fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                priority={index === 0}
-                              />
-                            </div>
-                            {demo.video_url && (
-                              <div className="absolute inset-0">
-                                <ComponentVideoPreview
-                                  component={demo}
-                                  demo={demo}
-                                />
-                              </div>
-                            )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none opacity-100 group-hover/card:opacity-0 transition-opacity duration-300">
-                              <div className="absolute bottom-2 left-0 right-0 p-3">
-                                <h3 className="text-white font-medium text-sm mb-0.5 line-clamp-1">
-                                  {demo.component?.name}
-                                </h3>
-                                <p className="text-white/80 text-xs">
-                                  {(demo.view_count || 0).toLocaleString()}{" "}
-                                  views
-                                </p>
-                              </div>
-                            </div>
+                          <Image
+                            src={demo.preview_url || "/placeholder.svg"}
+                            alt={demo.name || ""}
+                            className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            priority={index === 0}
+                          />
+                        </div>
+                        {demo.video_url && (
+                          <div className="absolute inset-0 z-10">
+                            <ComponentVideoPreview
+                              component={demo}
+                              demo={demo}
+                            />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none opacity-100 group-hover/card:opacity-0 transition-opacity duration-300 z-20">
+                          <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
+                            <h3 className="text-white font-medium text-sm line-clamp-1 drop-shadow-sm">
+                              {demo.component?.name}
+                            </h3>
+                            <p className="text-white/80 text-xs font-medium">
+                              {(demo.view_count || 0).toLocaleString()} views
+                            </p>
                           </div>
                         </div>
                       </div>

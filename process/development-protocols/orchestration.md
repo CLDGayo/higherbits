@@ -12,6 +12,14 @@ metadata:
 
 # Orchestration Protocol
 
+## Mandatory Graphify First Rule (ALWAYS & AT ALL COSTS)
+
+Before taking ANY orchestration step, routing subagents, answering questions, or generating plans, the Orchestrator and all subagents MUST execute a `graphify` query (`graphify query "<request/concept>"` or MCP equivalent). This queries `graphify-out/` to build a fast, scoped subgraph of god nodes, relationships, and code locations.
+
+- **Orchestrator Step 0:** Execute `graphify query` on user prompt keywords before intent clarification or routing.
+- **Subagent Step 0:** Pass `Graphify Query Result` or mandate `graphify query` as Step 1 of the subagent prompt.
+- **Post-Execution:** Require `graphify update .` after any code modification.
+
 ## Delegation Context
 
 When spawning subagents, always include:

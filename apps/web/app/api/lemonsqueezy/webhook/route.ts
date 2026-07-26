@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import crypto from "crypto"
 import { getPlanByLemonSqueezyVariantId } from "@/lib/lemonsqueezy"
+import { clerkClient } from "@clerk/nextjs/server"
 
 export async function POST(req: NextRequest) {
   try {
@@ -91,6 +92,18 @@ export async function POST(req: NextRequest) {
           { onConflict: "user_id" }
         )
       }
+
+      // Sync Pro status to Clerk publicMetadata
+      try {
+        const client = await clerkClient()
+        await client.users.updateUserMetadata(userId, {
+          publicMetadata: {
+            isPro: status === "active",
+          },
+        })
+      } catch (clerkErr) {
+        console.error("Failed to sync Clerk publicMetadata for Lemon Squeezy subscription:", clerkErr)
+      }
     } else if (eventName === "subscription_cancelled" || eventName === "subscription_expired") {
       await supabaseWithAdminAccess
         .from("users_to_plans")
@@ -99,6 +112,18 @@ export async function POST(req: NextRequest) {
           updated_at: new Date().toISOString(),
         })
         .eq("user_id", userId)
+
+      // Sync Pro status removal to Clerk publicMetadata
+      try {
+        const client = await clerkClient()
+        await client.users.updateUserMetadata(userId, {
+          publicMetadata: {
+            isPro: false,
+          },
+        })
+      } catch (clerkErr) {
+        console.error("Failed to sync Clerk publicMetadata on cancellation:", clerkErr)
+      }
     }
 
     return new NextResponse("Webhook processed", { status: 200 })

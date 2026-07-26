@@ -18,6 +18,8 @@ import { useFilteredNavigation } from "@/lib/navigation-with-magic"
 import { userStateAtom } from "@/lib/store/user-store"
 import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
+import { useCategoryTagCounts } from "@/lib/queries"
 import { useAtom } from "jotai"
 import {
   ArrowUpRight,
@@ -72,6 +74,11 @@ export function MainSidebar() {
   const searchParams = useSearchParams()
   const { user: clerkUser } = useUser()
   const [userState] = useAtom(userStateAtom)
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const [showTrigger, setShowTrigger] = React.useState(true)
   const [hoveredItem, setHoveredItem] = React.useState<string | null>(null)
@@ -87,7 +94,8 @@ export function MainSidebar() {
   const filteredCategories = useFilteredNavigation()
 
   // Fall back to default categories if filteredCategories is not available (SSR)
-  const categories = filteredCategories || defaultCategories
+  // Hydration fix: only use filteredCategories after mounting to avoid mismatch with SSR
+  const categories = mounted ? (filteredCategories || defaultCategories) : defaultCategories
 
   // Get the current tab from URL when available
   const urlTab = searchParams.get("tab") as Exclude<AppSection, "magic"> | null
@@ -153,8 +161,15 @@ export function MainSidebar() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  // Add a useEffect to automatically open Magic menu after 1 second
+  const { isAdmin: isHookAdmin } = useIsAdmin()
+  const { data: tagCounts } = useCategoryTagCounts()
+  const isAdmin = mounted ? Boolean(
+    clerkUser && (isHookAdmin || userState?.profile?.is_admin === true),
+  ) : false
+
+  // Add a useEffect to automatically open Magic menu after 1 second if admin
   React.useEffect(() => {
+    if (!isAdmin) return
     const timer = setTimeout(() => {
       setExpandedItems((prev) =>
         prev.includes("magic") ? prev : [...prev, "magic"],
@@ -162,9 +177,7 @@ export function MainSidebar() {
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, []) // Empty dependency array ensures this only runs once on mount
-
-  const isAdmin = userState?.profile?.is_admin === true
+  }, [isAdmin])
 
   return (
     <Sidebar className="hidden md:flex top-14 h-[calc(100svh-3.5rem)] border-t">
@@ -332,7 +345,15 @@ export function MainSidebar() {
               {/* Templates and other items */}
               {mainNavigationItems
                 .filter((item) => !["home", "components"].includes(item.value))
-                .filter((item) => isAdmin || !["bundles", "templates", "pro"].includes(item.value))
+                .filter((item) => {
+                  if (item.value === "collections") {
+                    return mounted ? Boolean(clerkUser) : false
+                  }
+                  return (
+                    isAdmin ||
+                    !["bundles", "templates", "pro"].includes(item.value)
+                  )
+                })
                 .map((item) => (
                   <SidebarMenuItem key={item.value}>
                     <SidebarMenuButton
@@ -405,6 +426,7 @@ export function MainSidebar() {
         )}
 
         {/* Add You section */}
+        {mounted && Boolean(clerkUser) && (
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold text-foreground">
             You
@@ -464,7 +486,21 @@ export function MainSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        )}
 
+        {categories.some((category: NavigationCategory) => {
+          if (isAdmin) return true
+          return category.items.some((item: NavigationItem) => {
+            const tagSlug = item.href.startsWith("/s/")
+              ? item.href.replace("/s/", "")
+              : ""
+            const realCount =
+              tagCounts && tagSlug
+                ? (tagCounts[tagSlug] ?? 0)
+                : 0
+            return realCount > 0
+          })
+        }) && (
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold text-foreground">
             Explore
@@ -474,6 +510,25 @@ export function MainSidebar() {
               {categories.map((category: NavigationCategory, index: number) => {
                 const categoryId = `category-${index}`
                 const isExpanded = expandedCategories.includes(categoryId)
+
+                const categoryItems = category.items.map((item: NavigationItem) => {
+                  const tagSlug = item.href.startsWith("/s/")
+                    ? item.href.replace("/s/", "")
+                    : ""
+                  const realCount =
+                    tagCounts && tagSlug
+                      ? (tagCounts[tagSlug] ?? 0)
+                      : 0
+                  return { ...item, realCount }
+                })
+
+                const visibleItems = categoryItems.filter(
+                  (item) => isAdmin || item.realCount > 0,
+                )
+
+                if (!isAdmin && visibleItems.length === 0) {
+                  return null
+                }
 
                 const getCategoryIcon = () => {
                   if (category.title === "Marketing Blocks") {
@@ -539,95 +594,98 @@ export function MainSidebar() {
                           style={{ paddingBottom: 0 }}
                         >
                           <div className="flex flex-col gap-0.5">
-                            {category.items.map(
-                              (item: NavigationItem, itemIndex: number) => {
-                                const isActive =
-                                  pathname === item.href ||
-                                  pathname.endsWith(item.title.toLowerCase())
+                            {visibleItems.map(
+                              (
+                                item: NavigationItem & { realCount: number },
+                                itemIndex: number,
+                              ) => {
+                                  const isActive =
+                                    pathname === item.href ||
+                                    pathname.endsWith(item.title.toLowerCase())
 
-                                // Calculate staggered delay but ensure total animation stays under 300ms
-                                const staggerDelay = Math.min(
-                                  itemIndex * 0.02,
-                                  0.15,
-                                )
+                                  // Calculate staggered delay but ensure total animation stays under 300ms
+                                  const staggerDelay = Math.min(
+                                    itemIndex * 0.02,
+                                    0.15,
+                                  )
 
-                                return (
-                                  <motion.div
-                                    key={item.title}
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{
-                                      opacity: 0,
-                                      y: -5,
-                                    }}
-                                    transition={{
-                                      duration: 0.15,
-                                      delay: staggerDelay,
-                                      ease: "easeOut",
-                                    }}
-                                  >
-                                    <div className="mb-0">
-                                      <SidebarMenuButton
-                                        asChild
-                                        isActive={isActive}
-                                      >
-                                        <Link
-                                          href={item.href}
-                                          className={cn(
-                                            "flex items-center justify-between w-full",
-                                            isActive
-                                              ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
-                                              : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                                          )}
-                                          target={
-                                            item.externalLink
-                                              ? "_blank"
-                                              : undefined
-                                          }
-                                          rel={
-                                            item.externalLink
-                                              ? "noopener noreferrer"
-                                              : undefined
-                                          }
-                                          onMouseEnter={() =>
-                                            setHoveredItem(item.title)
-                                          }
-                                          onMouseLeave={() =>
-                                            setHoveredItem(null)
-                                          }
-                                          onClick={() => {
-                                            if (item.externalLink) return
-                                            if (isMobile) setOpenMobile(false)
-                                          }}
+                                  return (
+                                    <motion.div
+                                      key={item.title}
+                                      initial={{ opacity: 0, y: -10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      exit={{
+                                        opacity: 0,
+                                        y: -5,
+                                      }}
+                                      transition={{
+                                        duration: 0.15,
+                                        delay: staggerDelay,
+                                        ease: "easeOut",
+                                      }}
+                                    >
+                                      <div className="mb-0">
+                                        <SidebarMenuButton
+                                          asChild
+                                          isActive={isActive}
                                         >
-                                          <span className="flex items-center">
-                                            {item.title}
-                                            {item.isNew && (
-                                              <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000]">
-                                                New
-                                              </span>
-                                            )}
-                                          </span>
-                                          <span
+                                          <Link
+                                            href={item.href}
                                             className={cn(
-                                              "text-muted-foreground text-sm flex items-center",
-                                              hoveredItem === item.title &&
-                                                "text-accent-foreground",
+                                              "flex items-center justify-between w-full",
+                                              isActive
+                                                ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
+                                                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                                             )}
+                                            target={
+                                              item.externalLink
+                                                ? "_blank"
+                                                : undefined
+                                            }
+                                            rel={
+                                              item.externalLink
+                                                ? "noopener noreferrer"
+                                                : undefined
+                                            }
+                                            onMouseEnter={() =>
+                                              setHoveredItem(item.title)
+                                            }
+                                            onMouseLeave={() =>
+                                              setHoveredItem(null)
+                                            }
+                                            onClick={() => {
+                                              if (item.externalLink) return
+                                              if (isMobile) setOpenMobile(false)
+                                            }}
                                           >
-                                            {item.externalLink &&
-                                              hoveredItem === item.title && (
-                                                <ArrowUpRight className="ml-1 h-3.5 w-3.5 transition-opacity" />
+                                            <span className="flex items-center">
+                                              {item.title}
+                                              {item.isNew && (
+                                                <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000]">
+                                                  New
+                                                </span>
                                               )}
-                                            {item.demosCount}
-                                          </span>
-                                        </Link>
-                                      </SidebarMenuButton>
-                                    </div>
-                                  </motion.div>
-                                )
-                              },
-                            )}
+                                            </span>
+                                            <span
+                                              className={cn(
+                                                "text-muted-foreground text-sm flex items-center",
+                                                hoveredItem === item.title &&
+                                                  "text-accent-foreground",
+                                              )}
+                                            >
+                                              {item.externalLink &&
+                                                hoveredItem === item.title && (
+                                                  <ArrowUpRight className="ml-1 h-3.5 w-3.5 transition-opacity" />
+                                                )}
+                                              {item.realCount > 0 && item.realCount}
+                                            </span>
+                                          </Link>
+                                        </SidebarMenuButton>
+                                      </div>
+                                    </motion.div>
+                                  )
+                                },
+                              )}
                           </div>
                         </motion.div>
                       )}
@@ -638,6 +696,7 @@ export function MainSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter className="flex flex-col justify-start pl-4 border-t py-2">
         {state !== "collapsed" && (

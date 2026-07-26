@@ -31,7 +31,7 @@ import { Component, DemoWithComponent, User } from "@/types/global"
 import { useUser } from "@clerk/nextjs"
 import NumberFlow from "@number-flow/react"
 import { motion } from "motion/react"
-import router from "next/router"
+import { useRouter } from "next/navigation"
 import { UpvoteIcon } from "../../icons/upvote-icon"
 import { ComponentCardSkeleton } from "../../ui/skeletons"
 import { UserAvatar } from "../../ui/user-avatar"
@@ -64,6 +64,8 @@ export function ComponentCard({
   isLeaderboard?: boolean
   onVote?: (demoId: number) => Promise<void>
 }) {
+  const router = useRouter()
+
   if (isLoading || !demo) {
     return <ComponentCardSkeleton />
   }

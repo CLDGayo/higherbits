@@ -140,7 +140,7 @@ export const ComponentDetailsForm = ({
   })
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor={nameId}>
             Name <span className="text-destructive">*</span>
@@ -269,7 +269,7 @@ export const ComponentDetailsForm = ({
           <div
             className={cn(
               "grid gap-4",
-              isFirstStep ? "grid-cols-2" : "grid-cols-1",
+              isFirstStep ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1",
             )}
           >
             <div className="space-y-2">

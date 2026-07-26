@@ -52,17 +52,32 @@ Fork B1 (author fresh) — the upstream port path was proven dead this session.
 - Read reference only: `supabase/functions/generate-embeddings` and `ai-search-oai` edge functions
   (deployment status unverified per SPEC Known Gaps — do not assume live; treat as reference only)
 
+**New writable paths this cycle (PVL-supplement, 26-07-26 — feasibility probe VERDICT: VIABLE):**
+- `supabase/migrations/0001_embedding_functions.sql` (new file — single-file migration; see Step B0)
+- root `package.json` — devDependencies gain `@electric-sql/pglite` and
+  `@electric-sql/pglite-pgvector` (ops-time-only local verification tooling; same precedent as the
+  root `sharp` devDependency added by `claymorphism-reference-parity` Phase 1 — never bundled into
+  `apps/web`'s production build)
+- `pnpm-lock.yaml` (changes as a consequence of the devDependency install)
+- `ops/pglite-verify-embedding-functions.mjs` (new — local-verification harness script that runs the
+  real `0001_embedding_functions.sql` through pglite; see Step C0/C0b)
+
+**Critical safety note:** the working tree has ~245 uncommitted WIP files as of this supplement
+cycle. EXECUTE must verify that the root `package.json` and `pnpm-lock.yaml` it touches are not
+carrying unrelated user WIP, and must never stage, commit, stash, or revert those files or any
+other dirty file outside this phase's blast radius.
+
 ---
 
 ## Implementation Checklist
 
 ### Step A — Design each function's signature from existing call-site expectations
 
-- [ ] A1. `vec_dim` — determine expected signature from any existing reference (likely a simple
-      utility returning the vector dimension of a given embedding column/value, used for
-      validation before insert). Author as a `plpgsql`/`sql` function matching the `vector` column
-      type confirmed live (1536-dim per `all-context.md`'s Qdrant convention, or as confirmed by
-      inspecting the live `vector` extension column definitions).
+- [ ] A1. `vec_dim` — **not a reimplementation.** pgvector already ships a built-in
+      `vector_dims(vector) RETURNS integer`. Author `vec_dim` as a thin SQL wrapper over it:
+      `CREATE FUNCTION vec_dim(v vector) RETURNS integer LANGUAGE sql IMMUTABLE AS $$ SELECT
+      vector_dims(v); $$;`. Do not hand-roll dimension extraction. Matches the `vector(1536)`
+      column type confirmed live per `search-functions.sql`.
 - [ ] A2. `get_missing_usage_embedding_items` — **PVL supplement (Gap 1, 25-07-26):** the embedding
       tables `usage_embeddings`/`code_embeddings` are keyed by `(item_id, item_type)` where
       `item_type ∈ {'component', 'demo'}` — confirmed by `apps/web/scripts/generate-embeddings.ts:44-89`,
@@ -79,10 +94,20 @@ Fork B1 (author fresh) — the upstream port path was proven dead this session.
       in the phase report.
 - [ ] A3. `insert_embedding` — generic embedding insert (target: `usage_embeddings` per the name
       pairing with `get_missing_usage_embedding_items`). Signature: takes an identifier + item_type
-      + a `vector` value, upserts into `usage_embeddings` keyed by `(item_id, item_type)`.
+      + a `vector` value, upserts into `usage_embeddings` using `ON CONFLICT (item_id, item_type)
+      DO UPDATE`, relying on the `CREATE UNIQUE INDEX IF NOT EXISTS` on `(item_id, item_type)`
+      authored in Step B0 (must exist before this function is created, same migration file).
 - [ ] A4. `insert_code_embedding` — same pattern, targeting `code_embeddings`. Signature: takes an
-      identifier + item_type + a `vector` value, upserts into `code_embeddings` keyed by
-      `(item_id, item_type)`.
+      identifier + item_type + a `vector` value, upserts into `code_embeddings` using
+      `ON CONFLICT (item_id, item_type) DO UPDATE`, relying on the matching unique index from
+      Step B0.
+- [ ] A4a. **Evidence note (session-locked, do not re-derive):** the existing edge function's
+      `.upsert()` calls in `supabase/functions/generate-embeddings/index.ts` omit an explicit
+      `onConflict` target, so PostgREST defaults to the table's PK — NOT `(item_id, item_type)`.
+      The "upsert" behavior described elsewhere in this repo's docs may therefore not already be
+      deduplicating on that key. This is weaker evidence than earlier drafts assumed; it does not
+      block this plan — the new `(item_id, item_type)` unique index + explicit `ON CONFLICT` in
+      `insert_embedding`/`insert_code_embedding` is the correct fix regardless.
 - [ ] A5. Cross-check each proposed signature against `apps/web/scripts/generate-embeddings.ts` to
       confirm the function shape is compatible with how the script currently calls (or would call)
       embedding generation — this script is the existing manual fallback and AC6 requires the new
@@ -94,11 +119,25 @@ Fork B1 (author fresh) — the upstream port path was proven dead this session.
       — if Phase 6 has already established the baseline migration file by the time this phase
       executes, add these as new migration files on top of that baseline instead of creating a
       competing directory structure).
-- [ ] B2. Write `CREATE FUNCTION vec_dim(...)` migration.
+- [ ] B0. **Author the entire migration as ONE file:** `supabase/migrations/0001_embedding_functions.sql`.
+      Sequential numbering (`0001_`, `0002_`, ...), NOT the Supabase-CLI timestamp format — Phase 6
+      will later create `0000_baseline.sql` and fold forward without renumbering. Order the
+      statements within the file exactly: (1) `CREATE UNIQUE INDEX IF NOT EXISTS` on
+      `usage_embeddings(item_id, item_type)`, (2) same for `code_embeddings(item_id, item_type)`,
+      (3) `vec_dim`, (4) `get_missing_usage_embedding_items`, (5) `insert_embedding`,
+      (6) `insert_code_embedding`, (7) all `REVOKE`/`GRANT` pairs (Step B7). This grouping matches
+      the repo's existing `search-functions.sql`/`admin-functions.sql` single-file convention.
+      **Fail-closed rationale:** if duplicate `(item_id, item_type)` rows already exist live, the
+      unique-index creation fails loudly — this is the desired outcome (surfaces data-quality debt
+      instead of silently masking it). Index creation is a metadata operation, not a data mutation,
+      and stays behind the phase's existing live-apply approval gate (C5).
+- [ ] B2. Write `CREATE FUNCTION vec_dim(...)` migration (ordered after the two unique indexes per B0).
 - [ ] B3. Write `CREATE FUNCTION get_missing_usage_embedding_items(...)` migration (UNION over
-      `components` + `demos` per A2's locked signature).
-- [ ] B4. Write `CREATE FUNCTION insert_embedding(...)` migration.
-- [ ] B5. Write `CREATE FUNCTION insert_code_embedding(...)` migration.
+      `components` + `demos` per A2's locked signature; confirm this ordering — already correct,
+      verify and leave — is unchanged).
+- [ ] B4. Write `CREATE FUNCTION insert_embedding(...)` migration (`ON CONFLICT (item_id, item_type)
+      DO UPDATE`, depends on the Step B0 unique index existing first in the same file).
+- [ ] B5. Write `CREATE FUNCTION insert_code_embedding(...)` migration (same `ON CONFLICT` pattern).
 - [ ] B6. Ensure each migration follows the existing `supabase/*.sql` file's style/comment
       conventions (Fork C3 baseline consistency).
 - [ ] B7. **PVL supplement (Gap 2, 25-07-26) — privilege lockdown, mandatory.** Postgres grants
@@ -115,25 +154,43 @@ Fork B1 (author fresh) — the upstream port path was proven dead this session.
 
 ### Step C — Verify against a scratch/seeded schema
 
-- [ ] C0. **PVL supplement (Gap 3, 25-07-26) — runtime pre-check.** Before attempting scratch-schema
-      verification, check for an available container/Postgres runtime in the actual EXECUTE
-      environment: `docker`, `podman`, `colima`, a bare `psql` reachable against a disposable
-      instance, `testcontainers`/`pg-mem`/`pglite`, or a tracked `docker-compose.yml`. This repo has
-      none of these tracked on disk as of the 25-07-26 PVL pass (no `docker-compose.yml` is tracked
-      in git despite `all-context.md`'s unconfirmed "Local Qdrant: docker compose up -d qdrant"
-      claim); `apps/web` ships the `supabase` CLI as a devDependency with `supabase/config.toml`
-      present, but `supabase start` itself requires a container runtime this environment lacks.
-      EXECUTE must independently re-check its own runtime environment — the constraint found during
-      PVL may not hold at EXECUTE time. If a runtime IS found: proceed to C1-C4 below. If none is
-      found: do NOT silently skip — follow the plan's own documented Known-Gap fallback (see
-      "Blockers That Would Justify BLOCKED Status" below and Execute-Agent Instruction E2), document
-      the rationale in the phase report's Test Infra Improvement Notes, and create the backlog note
-      described under "Backlog artifacts to create during durable capture" in the Validate Contract
-      below. One documented fallback pattern this project has used previously: apply the migration
-      DDL plus synthetic fixtures inside a single `BEGIN … ROLLBACK` transaction against the LIVE
-      database (never committed), assert function behavior inside the transaction, then roll back —
-      this remains subject to the existing C5 hard-stop (no live DDL without explicit approval) and
-      is only a fallback verification technique, not a bypass of that approval gate.
+- [ ] C0. **PVL supplement (26-07-26) — confirmed local-verification path (feasibility probe
+      VERDICT: VIABLE).** Primary verification path is `@electric-sql/pglite` +
+      `@electric-sql/pglite-pgvector` — a feasibility probe
+      (`pglite-local-verification_FEASIBILITY_26-07-26.md`) empirically confirmed all 7 required
+      mechanisms work: vector column creation, plpgsql `CREATE FUNCTION`, `RETURNS TABLE`, `UNION`
+      across two tables, `vector_dims()`, `CREATE UNIQUE INDEX` + `ON CONFLICT ... DO UPDATE`, and
+      `REVOKE`/`GRANT ... TO service_role`. This is no longer an "attempt / confirm first" step —
+      proceed directly to setup. Exact details from the probe, do not rediscover:
+      - Package is `@electric-sql/pglite-pgvector` (NOT `-pglite-vector`, which does not exist).
+      - Its named export is `vector` (NOT `pg_vector`).
+      - `GRANT EXECUTE ... TO service_role` fails with `role "service_role" does not exist` until
+        you first run `CREATE ROLE service_role;` — this bootstrap line is required in the harness.
+      Add `@electric-sql/pglite` and `@electric-sql/pglite-pgvector` as devDependencies to the ROOT
+      `package.json` (ops-time-only tooling, never imported by `apps/web` app code — same precedent
+      as the root `sharp` devDependency). Author the harness at
+      `ops/pglite-verify-embedding-functions.mjs`.
+      **Fallback (only if pglite setup itself fails at EXECUTE time, which the probe did not
+      predict):** container runtime (`docker`/`podman`/`colima`) or a bare `psql` against a
+      disposable instance — none confirmed available on disk as of 25-07-26 (no tracked
+      `docker-compose.yml`; `apps/web`'s `supabase` CLI needs a container runtime this environment
+      lacks). **Tertiary fallback:** static/parse-only check plus the documented
+      `BEGIN … ROLLBACK`-against-live technique (still behind the C5 approval hard-stop) — last
+      resort only, since a parse-only check is a vacuous-green for AC5-b's proving test (see the
+      Validate Contract test-gate table). If even the pglite primary path fails at EXECUTE time,
+      follow the plan's own Known-Gap fallback (see "Blockers That Would Justify BLOCKED Status"
+      below and Execute-Agent Instruction E2), document the rationale in the phase report's Test
+      Infra Improvement Notes, and create the backlog note described under "Backlog artifacts to
+      create during durable capture" in the Validate Contract below.
+- [ ] C0b. **Close the probe's 3 known-gaps as explicit EXECUTE sub-checks** (the feasibility probe
+      used isomorphic mirrors, not the real migration file):
+      (a) run the actual `supabase/migrations/0001_embedding_functions.sql` through pglite
+      end-to-end — this is the step that converts "verified locally" from partially-proven to
+      proven, since the probe only proved the mechanisms in isolation;
+      (b) exercise any pgvector similarity operator/index the migration actually uses (the probe
+      only proved column creation + `vector_dims()`, not `<=>` or ivfflat/hnsw index types);
+      (c) bootstrap any additional Supabase roles the migration references beyond `service_role`
+      (the probe did not exercise `authenticated`/`anon` roles, RLS, or `auth.uid()`).
 - [ ] C1. **HARD STOP — no live DDL against production without explicit approval.** Apply these
       migrations against a scratch/local/disposable schema first (local Supabase CLI instance, or
       a disposable Postgres container) — never directly against the live database for initial
@@ -204,6 +261,13 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
 - [ ] 1. RESEARCH — research-agent: read Phase 1 report; confirm live grant state is settled; test context loaded
 - [ ] 2. INNOVATE — innovate-agent: confirm Fork B1 (author fresh) still holds; lock exact function signatures (including A2's UNION shape per Gap 1); Decision Summary written
 - [x] 3. PLAN-SUPPLEMENT — plan-agent: existing phase plan updated (25-07-26, PVL-supplement mode — 3 gaps applied: A2 UNION scope, B7 privilege lockdown, C0 runtime pre-check); Inner Loop Refresh Note not required (PVL-supplement mode, not inner-loop refresh mode)
+- [x] 3a. INNER LOOP PLAN-SUPPLEMENT (26-07-26) — plan-agent: 8 edits applied incorporating
+      completed RESEARCH+INNOVATE+feasibility-probe findings — vec_dim as thin `vector_dims()`
+      wrapper (A1), unique-index + `ON CONFLICT` design for insert functions (A3/A4/A4a), single-file
+      migration ordering (B0), confirmed pglite-primary local-verification path (C0/C0b), AC5-b
+      test-gate row updated, provider-name + `.upsert()`/`onConflict` evidence notes recorded, and
+      Blast Radius + registry updated with 4 new writable paths. `## Inner Loop Refresh Note` written
+      below — this IS inner-loop refresh mode (not PVL-supplement), so the note is required.
 - [x] 4. PVL — vc-validate-agent: full V1-V7; validate-contract written per `.claude/skills/vc-validate-findings/references/example-validate-output.md`
 - [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
 - [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
@@ -254,13 +318,15 @@ spawn vc-validate-agent first.
 ## Resume and Execution Handoff
 
 - Selected plan file path: `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_PLAN_25-07-26.md`
-- Last completed step: PLAN-SUPPLEMENT (Step 3, PVL-supplement mode) — 3 gaps from outer PVL applied
-  (A2 UNION scope, B7 privilege lockdown, C0 runtime pre-check)
-- Validate-contract status: CONDITIONAL — see `## Validate Contract` below (unchanged by this
-  supplement; PVL-supplement mode does not rewrite the contract)
-- Next step: Re-run PVL from V1 (orchestrator re-spawns vc-validate-agent) to confirm the 3 gaps
-  are resolved, per the `SUPPLEMENT_APPLIED` routing rule — INNOVATE (Step 2) still separately owns
-  locking the exact A2 function signature before Step A/B implementation begins in EXECUTE
+- Last completed step: PLAN-SUPPLEMENT (inner loop, 26-07-26) — 8 edits applied incorporating
+  RESEARCH+INNOVATE+feasibility-probe findings (see `## Inner Loop Refresh Note` above for the full
+  summary)
+- Validate-contract status: 25-07-26 outer-pvl CONDITIONAL — SUPERSEDED PENDING: the
+  `## Inner Loop Refresh Note` dated 26-07-26 requires re-validation from V1 before EXECUTE
+- Next step: PVL re-run from V1 (orchestrator re-spawns vc-validate-agent for this phase plan) —
+  NOT execute. The re-run must confirm: the pglite-primary verification path, the single-file
+  migration ordering (B0), the unique-index/ON CONFLICT design (A3/A4), and the updated Blast
+  Radius/registry entries, before the gate can move from CONDITIONAL to PASS.
 
 ---
 
@@ -275,6 +341,49 @@ spawn vc-validate-agent first.
   Validate Contract's Known Gaps / Test Coverage Plan below for the immediate resolution path, and
   Step C0 above for the mandatory EXECUTE-time re-check + documented fallback (`BEGIN … ROLLBACK`
   against live, still behind the C5 approval hard stop).
+- **Provider-name correction (26-07-26):** `apps/web/lib/ai-config.ts:19`'s `openaiConfig` is the
+  OpenAI SDK pointed at Gemini's OpenAI-compatible endpoint (`gemini-embedding-001`, 1536 dims) —
+  the "OpenAI" naming is misleading; the actual embedding provider is Gemini. Relevant to any
+  future work that assumes real OpenAI usage from this config.
+- **`.upsert()` / `onConflict` evidence note (26-07-26):** the existing edge function's `.upsert()`
+  calls in `supabase/functions/generate-embeddings/index.ts` omit an explicit `onConflict` target,
+  so PostgREST defaults to the table's PK — NOT `(item_id, item_type)`. The pre-existing "upsert"
+  behavior may therefore not already be deduplicating on that key. This is weaker evidence than
+  earlier drafts assumed; it does not block this plan and does not change the Step B0/A3/A4 design
+  (the new unique index + explicit `ON CONFLICT` is correct regardless of what the edge function
+  currently does).
+
+
+---
+
+## Inner Loop Refresh Note
+
+Date: 2026-07-26 (strictly newer than the existing validate-contract's `date: 2026-07-25`) — this
+date is the mechanical Step 4b trigger forcing PVL to re-run from V1 before EXECUTE.
+
+Applied by vc-plan-agent, inner-loop RESEARCH+INNOVATE+feasibility-probe supplement (Step 3 of the
+7-step inner loop). Feasibility VERDICT artifact:
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/pglite-local-verification_FEASIBILITY_26-07-26.md`
+(VERDICT: VIABLE).
+
+Summary of changes: (1) Step A1 rewritten — `vec_dim` is a thin wrapper over pgvector's built-in
+`vector_dims()`, not a hand-rolled implementation; (2) Steps A3/A4 updated to specify `ON CONFLICT
+(item_id, item_type) DO UPDATE` against a new unique index, plus new A4a evidence note on the edge
+function's `.upsert()`/`onConflict` gap; (3) new Step B0 consolidates the migration into ONE
+sequentially-numbered file (`0001_embedding_functions.sql`) with an explicit statement order
+(indexes → functions → grants); (4) Step C0 rewritten from "attempt-first" framing to a confirmed
+pglite-primary local-verification path (container runtime demoted to fallback, static-only to
+tertiary), citing exact package/export/bootstrap details from the probe; (5) new Step C0b closes
+the probe's 3 known-gaps (real migration file, similarity operators/index types, additional
+Supabase roles) as explicit EXECUTE sub-checks; (6) Verification Evidence / validate-contract AC5-b
+row updated to reflect the confirmed pglite path; (7) provider-name correction (Gemini, not real
+OpenAI) and `.upsert()`/`onConflict` evidence note recorded in Test Infra Improvement Notes;
+(8) Blast Radius section and `phase-blast-radius-registry.md` updated with 4 new writable paths
+(new migration file, root `package.json`, `pnpm-lock.yaml`, new `ops/` harness script).
+
+This refresh does not change the Gate verdict text below (still CONDITIONAL from the prior outer-pvl
+pass) — PVL must re-run from V1 to confirm these changes and determine whether the gate can move to
+PASS.
 
 ---
 
@@ -302,7 +411,7 @@ Test gates (C3 5-column table — ADDITIVE; existing consumers still parse the l
 | criterion id | behavior | strategy | proving test | gap-resolution |
 |---|---|---|---|---|
 | AC5-a | 4 CREATE FUNCTION migrations exist (vec_dim, get_missing_usage_embedding_items, insert_embedding, insert_code_embedding) | Fully-Automated | `grep -c "CREATE FUNCTION" supabase/migrations/*.sql` returns 4 (one per function, or a grouped file naming all 4) | B |
-| AC5-b | Each function invokes without error against a seeded scratch/disposable schema | Hybrid | `supabase start` (or disposable Postgres container) → apply migrations → seed 1 `demos` row + 1 `components` row lacking embeddings → `psql` invoke each function → exits 0, returns expected shape — precondition: a container runtime (Docker/Podman/Colima) or equivalent must be available | D (see Known Gaps — no container runtime confirmed in this session's environment; EXECUTE must re-check its own environment first at Step C0) |
+| AC5-b | Each function invokes without error against a seeded scratch/disposable schema | Hybrid | PRIMARY (confirmed VIABLE via feasibility probe, 26-07-26): `node ops/pglite-verify-embedding-functions.mjs` — runs the real `0001_embedding_functions.sql` through `@electric-sql/pglite` + `@electric-sql/pglite-pgvector`, seeds 1 `demos` row + 1 `components` row lacking embeddings, invokes each function, exits 0 with expected shapes. FALLBACK: container runtime (Docker/Podman/Colima) or disposable Postgres. TERTIARY: static/parse-only + `BEGIN … ROLLBACK`-against-live (behind C5 approval). A parse-only check alone is a vacuous green — it does not prove AC5-b. | A (pglite path proven feasible; EXECUTE runs C0/C0b to close the remaining real-file/operator/role gaps) |
 | AC5-c | `vec_dim()` returns 1536 for a 1536-dim test vector, matching the tracked-SQL dimension lock | Fully-Automated | `psql -c "SELECT vec_dim(array_fill(0, ARRAY[1536])::vector);"` returns `1536` — corroborated by `supabase/search-functions.sql:25-26` (`ALTER TABLE ... TYPE vector(1536)`, comment: "gemini-embedding-001 @ 1536 dims") | A |
 | AC6-predecessor | `insert_embedding`/`insert_code_embedding` signatures are compatible with the existing embedding-write shape | Hybrid | Desk cross-check: confirm `(item_id bigint, item_type text, embedding vector(1536), metadata jsonb)` argument shape matches the `.upsert()` calls in `supabase/functions/generate-embeddings/index.ts:156-168,179-191,276-291,303-318` | B — resolved via plan Step A2 UNION fix + INNOVATE (Step 2) signature-locking, see Execute-Agent Instruction E1 below |
 | Security-1 | Each of the 4 functions has EXECUTE revoked from PUBLIC and granted only to service_role (or the narrowest caller role) | Fully-Automated | `psql -c "\df+ <fn>"` (or `information_schema.routine_privileges`) shows no PUBLIC EXECUTE grant for any of the 4 functions | B — fixed by plan Step B7, see Execute-Agent Instruction E3 below |

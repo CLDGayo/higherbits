@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { UseFormReturn } from "react-hook-form"
 import type { TemplateFormData } from "../template/schema"
 
@@ -7,6 +7,7 @@ const TEMPLATE_DRAFT_KEY = "template_draft"
 const isClient = typeof window !== "undefined"
 
 export function useTemplateDraft(form: UseFormReturn<TemplateFormData>) {
+  const [hasDraftData, setHasDraftData] = useState(false)
   const saveDraft = (data: Partial<TemplateFormData>) => {
     if (!isClient) return
     try {
@@ -17,6 +18,7 @@ export function useTemplateDraft(form: UseFormReturn<TemplateFormData>) {
       delete draftData.preview_video_data_url
 
       localStorage.setItem(TEMPLATE_DRAFT_KEY, JSON.stringify(draftData))
+      setHasDraftData(true)
     } catch (error) {}
   }
 
@@ -34,12 +36,12 @@ export function useTemplateDraft(form: UseFormReturn<TemplateFormData>) {
     if (!isClient) return
     try {
       localStorage.removeItem(TEMPLATE_DRAFT_KEY)
+      setHasDraftData(false)
     } catch (error) {}
   }
 
   const hasDraft = (): boolean => {
-    if (!isClient) return false
-    return !!localStorage.getItem(TEMPLATE_DRAFT_KEY)
+    return hasDraftData
   }
 
   const restoreDraft = () => {
@@ -54,6 +56,10 @@ export function useTemplateDraft(form: UseFormReturn<TemplateFormData>) {
   }
 
   useEffect(() => {
+    if (isClient && !!localStorage.getItem(TEMPLATE_DRAFT_KEY)) {
+      setHasDraftData(true)
+    }
+    
     const subscription = form.watch((data) => {
       saveDraft(data)
     })
