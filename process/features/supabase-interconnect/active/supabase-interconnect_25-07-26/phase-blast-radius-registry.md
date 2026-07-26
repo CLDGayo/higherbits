@@ -21,6 +21,10 @@ phases (especially Phase 4 and Phase 5, declared parallel-safe) can be confirmed
   silently excluding cross-user rows). Overlaps Phase 6's claimed `supabase/*.sql` surface — no
   conflict: Phase 6 runs later and sequentially, after Phase 1's SQL is already applied, so there
   is no concurrent-write risk.
+- `supabase/admin-functions.sql` **[added PVL supplement cycle 2, 26-07-26]** — grant-only addition:
+  `GRANT EXECUTE` for the two existing `update_submission_as_admin`/`update_demo_info_as_admin`
+  SECURITY DEFINER RPCs (no function body changes). Overlaps Phase 6's claimed `supabase/*.sql`
+  surface for the same sequential-no-conflict reason as `views.sql` above.
 
 ## Phase 2 — Embedding DB functions
 
