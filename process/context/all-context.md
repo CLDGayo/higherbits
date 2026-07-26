@@ -299,9 +299,23 @@ Cozy Downloads/
   functions defaults to `PUBLIC` grant. See
   `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_REPORT_26-07-26.md`
   and the umbrella plan's `## Current Execution State` / `## Program-Wide Learnings` for full detail
-  and the exact pending-approval SQL. Test baseline re-confirmed 26-07-26: **62 tests / 17 files, 57
-  passing / 5 failing** (corrects the stale "48/15, all passing" figure — see
-  `process/context/tests/all-tests.md`).
+  and the exact pending-approval SQL. **Phase 02 (embedding DB functions) CODE-COMPLETE, LOCALLY
+  VERIFIED FOR REAL, NOT LIVE-APPLIED (26-07-26).** Authored all 4 confirmed-missing functions —
+  `vec_dim`, `get_missing_usage_embedding_items`, `insert_embedding`, `insert_code_embedding` — in
+  one migration, `supabase/migrations/0001_embedding_functions.sql`, locked to `service_role` only
+  (`REVOKE EXECUTE ... FROM PUBLIC` + `GRANT EXECUTE ... TO service_role` for all 4). Proven by
+  running the real migration file end-to-end through a new `@electric-sql/pglite` +
+  `@electric-sql/pglite-pgvector` local-verification harness
+  (`ops/pglite-verify-embedding-functions.mjs`, 11/11 checks pass) — not a mirror or a parse-only
+  check. A single PVL cycle reached `Gate: PASS` (vs. Phase 01's five), attributable to research +
+  innovate + a cheap-local feasibility probe all completing before the contract was written. Two
+  signature deviations from `apps/web/types/supabase.ts` are intentional — that file's entries for
+  these 4 functions are stale phantoms (Phase 6's job to regenerate). Nothing applied to the live
+  database; Phase 3's cron work depends on that eventual live apply. **Test baseline corrected
+  26-07-26 (Phase 02 EVL): 62 tests / 17 files, ALL 62 PASSING** — the 5 vitest failures and 4 `tsc`
+  errors Phase 01 recorded were fixed by a concurrent session; re-measured independently twice this
+  session, byte-identical both times. This supersedes the "57 passing / 5 failing" figure recorded
+  by Phase 01 below — see `process/context/tests/all-tests.md` for the full history.
 - **UI & Front-End Design System (`taste-skill` / Anti-Slop Guidelines):** HigherBits.dev integrates the `taste-skill` engine (`.claude/skills/taste-skill/SKILL.md` / `.agents/skills/taste-skill/SKILL.md`) for all UI, front-end design, and component creation tasks. Every UI/frontend task MUST perform Brief Inference (output a 1-line Design Read stating page kind, audience, vibe language, and design system) and calibrate the 3 core dials (`DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY`). Standard baseline for HigherBits is 8/6/4 (or 5/4/3 for minimalist/cozy components). Avoid LLM slop (purple AI gradients, generic glassmorphism, Inter+slate-900 defaults). Specialized sub-skills are also available: `soft-skill` (luxury/calm UI), `minimalist-skill` (editorial/Linear style), `redesign-skill` (audit-first component overhauls), and `gpt-tasteskill` (stricter layout/motion enforcement).
 
 ---

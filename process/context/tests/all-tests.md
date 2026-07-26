@@ -35,8 +35,19 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 01 inner-PVL/EVL — corrects the
-18-07-26 figure below, which undercounted):** 62 tests / 17 files, **57 passing / 5 failing**.
+**Total (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 02 inner-PVL/EVL — corrects the
+Phase 01 entry immediately below, which is now stale in the better direction): 62 tests / 17
+files, ALL 62 PASSING.** The 4 previously-documented foreign `tsc --noEmit` errors in
+`apps/web/components/features/studio/sandbox/components/add-registry-modal.tsx:168,389` and the 5
+vitest failures recorded by Phase 01 (below) were fixed by a concurrent session between Phase 01's
+26-07-26 close and Phase 02's 26-07-26 close — independently re-measured twice this session (once
+before Phase 02 EXECUTE started, once at EVL confirmation), byte-identical both times:
+`corepack pnpm --filter web exec tsc --noEmit` exit 0/0 errors,
+`corepack pnpm --filter web test` → `Test Files 17 passed (17)`, `Tests 62 passed (62)`. Treat
+**62/17, all passing** as the current regression baseline to hold — not the 57/5 figure below.
+**Prior entry (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 01 inner-PVL/EVL — corrects the
+18-07-26 figure below, which undercounted, SUPERSEDED by the entry above):** 62 tests / 17 files,
+**57 passing / 5 failing**.
 The prior "48/15, all passing" claim was stale — it predates several unrelated test files that
 landed between 18-07-26 and 26-07-26 (not attributable to `supabase-interconnect`, which touched
 zero `apps/web` files). The 5 pre-existing failures span 4 files: `font-cozy-sweep.test.tsx`,
@@ -44,9 +55,10 @@ zero `apps/web` files). The 5 pre-existing failures span 4 files: `font-cozy-swe
 Confirmed live-repeatable across 6 independent PVL/EVL cycles during Phase 01
 (`corepack pnpm --filter web test` → `Test Files 4 failed | 13 passed (17)`,
 `Tests 5 failed | 57 passed (62)`, byte-identical every run) — this is a genuine standing
-baseline, not run-to-run flake. Root cause not yet investigated; flagged as a `vc-audit-context`
-follow-up (see `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/`
-phase-01 report and PVL iteration reports for the confirming commands).
+baseline at the time, not run-to-run flake. Root cause of the fix not investigated (fixed by a
+concurrent session outside this program); flagged as a `vc-audit-context` follow-up (see
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/` phase-01 report
+and PVL iteration reports for the confirming commands from that baseline's era).
 **Prior entry (RE-BASELINED 18-07-26, `claymorphism-reference-parity` Phase 4 EVL — corrects the
 17-07-26 figure below):** 48 tests / 15 files, all passing. Phase 4 added
 `apps/web/app/__tests__/font-cozy-sweep.test.tsx` (3 new AC5 tests — RTL class-presence assertions

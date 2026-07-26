@@ -303,8 +303,8 @@ During /goal execution of a phase program:
 |---|---|
 | 0 — Pre-program (plan creation) | ✅ COMPLETE |
 | 01 — Grant/RLS repair | 🧪 TESTING — code-complete; live verification blocked on Step C3 user approval |
-| 02 — Embedding DB functions | ⏳ PLANNED |
-| 03 — Scheduler + seed | ⏳ PLANNED |
+| 02 — Embedding DB functions | 🧪 TESTING — code-complete, locally verified for real (11/11 pglite harness, EVL-confirmed); live application deferred behind Step C5 user approval |
+| 03 — Scheduler + seed | ⏳ PLANNED — hard-blocked on Phase 02's live apply landing |
 | 04 — Navigation | ⏳ PLANNED |
 | 05 — Billing unification | ⏳ PLANNED |
 | 06 — Schema source of truth | ⏳ PLANNED |
@@ -337,6 +337,38 @@ Full detail: `phase-01-grant-repair_REPORT_26-07-26.md` §Program-Wide Learnings
    does not remove a pre-existing table-level `GRANT UPDATE` — REVOKE must precede it in file
    order. `EXECUTE` defaults to `PUBLIC` on function creation, so an explicit `GRANT EXECUTE` is
    defensive documentation, not a corrective fix — don't over-claim it as closing a live bug.
+
+## Program-Wide Learnings (carried forward from Phase 02, 26-07-26)
+
+6. **Doing RESEARCH and INNOVATE before the contract is written is what made Phase 02 cheap.**
+   Phase 01 needed five PVL cycles to reach a gate; Phase 02 needed one, reaching `PASS` outright
+   (not just `CONDITIONAL`). The difference was not luck — Phase 01's outer contract was written
+   before the surface had been audited with an adequate method, so each cycle exposed the next
+   layer. Phase 02 entered PVL with research, innovate, and a feasibility probe already done and
+   folded into the plan via the Inner Loop Refresh Note mechanism.
+7. **A cheap-local feasibility probe converts the riskiest assumption into evidence before PVL
+   can bless it.** Phase 02's "verified locally" target rested on an unproven pglite premise; no
+   container runtime is available in this environment, so the fallback would have been a
+   static-only check — exactly the vacuous green this program bans. One scratchpad probe
+   (`pglite-local-verification_FEASIBILITY_26-07-26.md`) made the real thing achievable and handed
+   EXECUTE the exact package names, export name, and the `CREATE ROLE service_role;` bootstrap
+   line needed. Apply this pattern to Phase 6's schema-introspection work, which will hit the
+   identical "no live DB connection, no container runtime" constraint.
+8. **Grep-driven completeness beats re-reading the plan.** Both of Phase 02's PVL findings
+   (an already-wired caller the plan never referenced, and a missing evidence citation) came from
+   repo-wide grep during the validate pass, not from re-reading the plan text. Grep for every
+   function/table name a phase's SQL touches before trusting the plan's own reference list is
+   complete.
+9. **`apps/web/types/supabase.ts` is not ground truth — it is stale in both directions.** Two of
+   Phase 02's 4 function signatures in `types.ts` are phantoms (`insert_code_embedding`'s 6-arg
+   entry references a `code` column that does not exist on `code_embeddings`). Derive signatures
+   from real call sites and tracked SQL, never from `types.ts`. Phase 6 owns correcting the file
+   from the real functions, not the other way around.
+10. **Baselines move under you — re-measure at the start of each phase.** The tsc/vitest baseline
+    documented at Phase 02's hand-off was stale in the *better* direction: a concurrent session
+    (outside this program) fixed the 4 foreign tsc errors and 5 vitest failures Phase 01 had
+    recorded. Trust a fresh measurement over the documented figure at the start of every phase,
+    not just when something looks worse than expected.
 
 ---
 
@@ -426,46 +458,66 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-**Last updated:** 26-07-26 (UPDATE PROCESS, Phase 01 inner-loop Step 7)
+**Last updated:** 26-07-26 (UPDATE PROCESS, Phase 02 inner-loop Step 7)
 
-**Current phase N of total:** Phase 1 of 6
+**Current phase N of total:** Phase 2 of 6 (Phase 1 also still open — see below; Phase 2 is the
+most recently closed-out phase and the one blocking Phase 3's start)
 
-**Phase N name:** Phase 01 — Grant/RLS repair
+**Phase N name:** Phase 02 — Embedding DB functions
 
-**Phase N status:** 🧪 TESTING — code-complete, NOT live-verified. Steps A1-A4, B0-B9, C1-C2 done
-(3 SQL files edited, 30 statements authored). Steps C3 (mandatory user-approval hard stop), C4
-(apply), C5, D1-D6 (live verification) are outstanding — nothing has been applied to the live
-database. One genuine new gap found and NOT fixed: `public.templates` has a live `authenticated`
-INSERT call site with no tracked grant (backlog note written, see below). Closeout classification:
-**Keep in active/testing** — not archivable; the phase's own exit gate is live-verification-based.
+**Phase N status:** 🧪 TESTING — code-complete, locally verified for real (NOT vacuously — the
+pglite harness ran the actual committed migration file end-to-end, not a mirror). All Step A-C
+checklist items done except the two live-apply hard stops (C5 request, C6 apply), which remain
+deliberately unchecked. 4 `CREATE FUNCTION` migrations exist in
+`supabase/migrations/0001_embedding_functions.sql`, each with an explicit
+`REVOKE`/`GRANT EXECUTE ... TO service_role` pair. Nothing applied to the live database. Closeout
+classification: **Keep in active/testing** — not archivable; Phase 3's cron work is hard-blocked
+on this phase's eventual live apply landing.
 
-**Phase N EVL:** Both Fully-Automated regression gates (tsc, vitest) green at the documented
-baseline across every PVL/EVL cycle, most recently 26-07-26 (`tsc --noEmit` exit 2 / 4 pre-existing
-errors in `add-registry-modal.tsx`; `vitest` 57/62, 5 pre-existing failures across 4 files — see
-`process/context/tests/all-tests.md` for the corrected baseline). One EVL fix cycle applied: the
-`REVOKE UPDATE ON public.users FROM authenticated;` statement moved from report prose into the SQL
-file itself (ordering is load-bearing — a column-scoped GRANT does not remove a prior table-level
-GRANT). All Agent-Probe/Hybrid live gates (C5, D1-D6, E7, E8) are unrun — correctly outside this
-phase's automated EVL scope; they require the live DB connection gated behind Step C3.
+**Phase N EVL:** Independent EVL confirmation run (not trusting EXECUTE's self-report) found zero
+gaps and closed in one cycle (`results.tsv`: `1 phase-02-evl tests 0 0 PASS HALTED_SUCCESS
+2026-07-26`). All gates green: `tsc --noEmit` exit 0/0 errors; `pnpm --filter web test` 62/62
+passing (17 files); `node ops/pglite-verify-embedding-functions.mjs` exit 0, 11/11 PASS;
+`grep -c "CREATE FUNCTION" supabase/migrations/*.sql` == 4; `validate-agent-parity.mjs` and
+`validate-context-discovery.mjs` both pass; `git diff --check` clean. The regression baseline is
+**better** than documented at hand-off — the 4 foreign `tsc` errors and 5 vitest failures Phase 01
+recorded were fixed by a concurrent session; re-measured independently twice this session
+(pre-EXECUTE and at EVL), byte-identical both times. Test baseline corrected in
+`process/context/tests/all-tests.md` and `process/context/all-context.md`. The one Agent-Probe gate
+(AC5-d, live application + re-verification) is correctly unrun — it requires the live DB connection
+gated behind Step C5, outside this phase's automated EVL scope.
 
-**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_REPORT_26-07-26.md`
+**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_REPORT_26-07-26.md`
 
-**Next phase:** Phase 1 remains current — it is NOT advancing to Phase 2 yet. The next required
-action is presenting the phase report's "AWAITING USER APPROVAL — Step C3 (HARD STOP)" section to
-the user for the live-DDL approval decision. Once approved and applied (C4) and live-verified
-(C5, D1-D6), re-enter UPDATE PROCESS to close Phase 01 for real and advance to Phase 02 (embedding
-DB functions), inner loop Step 1 (RESEARCH).
+**Next phase:** Phase 2 remains current — it is NOT advancing to Phase 3 yet. Phase 3 has a HARD
+dependency on Phase 2's live apply (Steps C5/C6) actually landing — a scheduler cannot be wired to
+functions that exist only in a tracked migration file. Two independent user-approval decisions are
+now outstanding across the program: Phase 1's Step C3 (grants/RLS live apply) and Phase 2's Step C5
+(embedding functions live apply). Both should be presented together for review since they are
+independent SQL statements against the same database. Once both are approved, applied, and
+live-verified, re-enter UPDATE PROCESS to close both phases for real and advance to Phase 03
+(scheduler + seed), inner loop Step 1 (RESEARCH). Phases 4 and 5 (parallel-safe, both depend only
+on Phase 1) could start their RESEARCH/INNOVATE work once Phase 1's live apply lands, independent
+of Phase 2/3's status — not yet started.
 
-**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending C3.
+**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending C5/C6.
 
-**Validate-contract status:** written, inline in `phase-01-grant-repair_PLAN_25-07-26.md`;
-`generated-by: inner-pvl: phase-1`; `Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted by
-orchestrator under standing /goal after 5 PVL supplement cycles — see `results.tsv`).
+**Validate-contract status:** written, inline in `phase-02-embedding-functions_PLAN_25-07-26.md`;
+`generated-by: inner-pvl: phase-2`; `Gate: PASS` (0 FAILs, 0 unresolved CONCERNs — reached in a
+single inner-PVL cycle, see `results.tsv`).
+
+**Phase 1 status (unchanged, still open):** 🧪 TESTING — code-complete, NOT live-verified.
+`Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted after 5 PVL supplement cycles). Blocked on
+Step C3 user approval — see
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_REPORT_26-07-26.md`
+for the exact pending-approval SQL. No change this UPDATE PROCESS pass.
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS.
 Orchestrator rule: read "Phase N status" and "Validate-contract status" before spawning any
-subagent for this phase. Do not spawn execute-agent again for Phase 01 until the user has acted on
-the Step C3 approval request — the remaining EXECUTE-phase work (C4) depends on that decision.
+subagent for this phase. Do not spawn execute-agent again for Phase 01 or Phase 02 until the user
+has acted on the respective C3/C5 approval requests — the remaining live-apply work depends on
+those decisions. Do not start Phase 03 (RESEARCH) until Phase 02's live apply (C5/C6) is confirmed
+landed.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes —
 update-process-agent rewrites it after every phase closeout (overwrite, not append — git history
