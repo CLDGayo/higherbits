@@ -238,7 +238,51 @@ export const useFileSystem = ({
           currentRegistryComponents,
         ),
       )
-      if (rootEntries) setFiles(rootEntries)
+
+      if (rootEntries) {
+        if (advancedView) {
+          setFiles(rootEntries)
+        } else {
+          const flattenEntries = (entries: FileEntry[]): FileEntry[] => {
+            let flat: FileEntry[] = []
+            for (const e of entries) {
+              flat.push(e)
+              if (e.children) flat = flat.concat(flattenEntries(e.children))
+            }
+            return flat
+          }
+          const allFiles = flattenEntries(rootEntries)
+          
+          const componentFiles = allFiles.filter(f => f.path.startsWith('/project/sandbox/src/components/ui/') && f.type === 'file' && !f.isFromRegistry)
+          const indexCssFile = allFiles.find(f => f.name === 'index.css' && f.path === '/project/sandbox/src/index.css')
+          const demoFiles = allFiles.filter(f => f.path.startsWith('/project/sandbox/src/') && (f.name === 'demo.tsx' || f.name === 'default.tsx'))
+          
+          const virtualEntries: FileEntry[] = [
+            {
+              name: "Component",
+              type: "dir",
+              path: "/project/sandbox/src/components/ui",
+              isSymlink: false,
+              children: [
+                ...componentFiles,
+                ...(indexCssFile ? [indexCssFile] : []),
+                { name: "Add dependency", type: "file", path: "ACTION_ADD_DEPENDENCY", isSymlink: false }
+              ]
+            },
+            {
+              name: "Demos",
+              type: "dir",
+              path: "/project/sandbox/src",
+              isSymlink: false,
+              children: [
+                ...demoFiles
+              ]
+            }
+          ]
+          
+          setFiles(virtualEntries)
+        }
+      }
     } catch (error: any) {
       console.error("Failed to load root directory:", error)
       fetch("/api/sandbox/error-log", {
@@ -262,7 +306,7 @@ export const useFileSystem = ({
       const content = await sbWrapper((sandbox) =>
         sandbox.fs.readTextFile(normalizePath(filePath)),
       )
-      if (!content) throw new Error("Failed to load file content")
+      if (content === undefined || content === null) throw new Error("Failed to load file content")
       return content
     } catch (error) {
       console.error(`Failed to load file content for ${filePath}:`, error)
@@ -829,49 +873,125 @@ export const useFileSystem = ({
     await loadRootDirectory()
   }
 
-  const addFrom21Registry = async (jsonUrl: string) => {
-    await sbWrapper(async (sandbox) => {
-      const command = sandbox.shells.run(
-        `npx -y --no-install @21st-dev/cli add "${jsonUrl}" --no-install`,
-      )
-      console.log("command", command)
+  const addFrom21Registry = async (jsonUrl: string, demoCode?: string): Promise<string | undefined> => {
+    return await sbWrapper(async (sandbox) => {
+      let expectedPath: string | undefined;
 
-      return new Promise<void>((resolve, reject) => {
-        let outputTimeout: NodeJS.Timeout | null = null
-        const disposeShellAndClearTimeout = () => {
-          if (outputTimeout) clearTimeout(outputTimeout)
-          // It's good practice to dispose the command observer if the shell/command object has such a method
-          // Assuming 'command.dispose()' or similar might exist based on SDK patterns
+      try {
+        // Fetch the component JSON directly instead of using the CLI to avoid npm hangs in the sandbox
+        const response = await fetch(jsonUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch component registry: ${response.statusText}`);
         }
-
-        command.onOutput((data) => {
-          console.log("HigherBits.dev registry add output:", data)
-          const successMessage1 = "was already tracked in 21st-registry.json."
-          const successMessage2 =
-            "has been added/updated in 21st-registry.json."
-
-          if (
-            data.includes(successMessage1) ||
-            data.includes(successMessage2)
-          ) {
-            console.log("HigherBits.dev registry add command completed successfully.")
-            disposeShellAndClearTimeout()
-            resolve()
+        const registryData = await response.json();
+        
+        // Write component files directly
+        if (registryData.files && Array.isArray(registryData.files)) {
+          for (const file of registryData.files) {
+            let filePath = file.path;
+            // Clean up path if it includes registry/ui/
+            if (filePath.startsWith('registry/ui/')) {
+              filePath = filePath.replace('registry/ui/', '');
+            }
+            if (filePath.startsWith('registry/components/')) {
+              filePath = filePath.replace('registry/components/', '');
+            }
+            
+            const filename = filePath.split('/').pop() || 'component.tsx';
+            const fullPath = normalizePath(`src/components/ui/${filename}`);
+            
+            await sandbox.fs.writeTextFile(fullPath, file.content || "");
+            console.log(`Successfully wrote component file to ${fullPath}`);
+            
+            // Store the expected path of the main component file
+            if (!expectedPath && filename.endsWith('.tsx')) {
+               expectedPath = `/src/components/ui/${filename}`;
+            }
           }
-        })
+        }
+        
+        // Add dependencies to package.json if present
+        if (registryData.dependencies && Array.isArray(registryData.dependencies)) {
+           for (const dep of registryData.dependencies) {
+              await addDependencyToPackageJson(dep, "latest");
+           }
+        }
+        
+      } catch (error) {
+         console.error("Failed to fetch and write registry component:", error);
+         throw error;
+      }
 
-        outputTimeout = setTimeout(() => {
-          console.error(
-            "Timeout waiting for HigherBits.dev registry add command output.",
-          )
-          disposeShellAndClearTimeout()
-          reject(
-            new Error(
-              "Timeout waiting for HigherBits.dev registry add command output.",
-            ),
-          )
-        }, 120000) // 120 seconds timeout, similar to _runTaskAndWaitForOutput
-      })
+      // Ensure demo.tsx is updated so the preview doesn't break
+      if (demoCode && demoCode !== "N/A") {
+        try {
+          // Extract component slug from the jsonUrl (e.g., http://.../r/shadcn/tooltip)
+          const urlParts = jsonUrl.split('/')
+          const componentSlug = urlParts[urlParts.length - 1]
+          
+          if (componentSlug) {
+            // Write a wrapper component to render the primitive
+            const demoPath = `/src/components/ui/${componentSlug}-demo.tsx`
+            await sandbox.fs.writeTextFile(normalizePath(demoPath), demoCode)
+            console.log(`Successfully injected demo code for ${componentSlug} at ${demoPath}`)
+            
+            // Try to find the exported component name from the demo code
+            const exportMatch = demoCode.match(/export default function ([a-zA-Z0-9_]+)/) || demoCode.match(/export function ([a-zA-Z0-9_]+)/)
+            const demoExportName = exportMatch ? exportMatch[1] : null
+
+            let newDemoTsx = ""
+            if (demoExportName) {
+              const isDefaultExport = demoCode.includes(`export default function ${demoExportName}`) || demoCode.includes(`export default ${demoExportName}`)
+              const importStatement = isDefaultExport 
+                ? `import ${demoExportName} from "./components/ui/${componentSlug}-demo";`
+                : `import { ${demoExportName} } from "./components/ui/${componentSlug}-demo";`
+              
+              newDemoTsx = `${importStatement}\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <${demoExportName} />\n  </div>\n);\n\nexport default { Demo };\n`
+            } else {
+              // fallback if we couldn't parse the name but it's likely a default export
+              newDemoTsx = `import Component from "./components/ui/${componentSlug}-demo";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <Component />\n  </div>\n);\n\nexport default { Demo };\n`
+            }
+            
+            await sandbox.fs.writeTextFile(normalizePath("src/demo.tsx"), newDemoTsx)
+            console.log(`Updated src/demo.tsx to render ${demoExportName || "Component"}`)
+          }
+        } catch (error) {
+          console.error("Failed to write demo code:", error)
+        }
+      } else if (expectedPath) {
+        // If there's no demo code, we should still update demo.tsx to point to the newly installed component
+        // This prevents "export named Component not found" errors when component.tsx is overwritten
+        try {
+           const compContent = await sandbox.fs.readTextFile(normalizePath(expectedPath));
+           // Try to find default export or named export
+           const defaultExportMatch = compContent.match(/export default function ([a-zA-Z0-9_]+)/) || compContent.match(/export default ([a-zA-Z0-9_]+)/);
+           const namedExportMatch = compContent.match(/export function ([a-zA-Z0-9_]+)/) || compContent.match(/export const ([a-zA-Z0-9_]+)/);
+           
+           const compFileName = expectedPath.split('/').pop()?.replace('.tsx', '');
+           
+           let newDemoTsx = "";
+           if (defaultExportMatch) {
+              const name = defaultExportMatch[1];
+              newDemoTsx = `import ${name} from "./components/ui/${compFileName}";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <${name} />\n  </div>\n);\n\nexport default { Demo };\n`;
+           } else if (namedExportMatch) {
+              const name = namedExportMatch[1];
+              newDemoTsx = `import { ${name} } from "./components/ui/${compFileName}";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <${name} />\n  </div>\n);\n\nexport default { Demo };\n`;
+           } else {
+              // Generic fallback
+              newDemoTsx = `import { Component } from "./components/ui/${compFileName}";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <Component />\n  </div>\n);\n\nexport default { Demo };\n`;
+           }
+           
+           await sandbox.fs.writeTextFile(normalizePath("src/demo.tsx"), newDemoTsx);
+           console.log(`Updated src/demo.tsx fallback for ${compFileName}`);
+        } catch(e) {
+           console.error("Failed to update fallback demo.tsx:", e);
+        }
+      }
+      
+      // Reload the file tree to reflect new files
+      await loadRootDirectory()
+      
+      return expectedPath
     })
   }
 

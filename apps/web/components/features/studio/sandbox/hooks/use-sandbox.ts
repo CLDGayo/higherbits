@@ -37,6 +37,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const shellCheckFailuresRef = useRef(0)
   const reconnectAttemptsRef = useRef(0)
   const previewTokenRef = useRef<string | null>(null)
+  const isStartingDevServerRef = useRef(false)
 
   const initialize = async (isReconnecting = false) => {
     if (!isReconnecting) {
@@ -77,26 +78,27 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       checkShells()
 
-      connectedSandbox.ports
-        .waitForPort(5173, { timeoutMs: 90_000 })
-        .then((portInfo) => {
-          // Private sandboxes need a signed URL, else CSB serves a "do you trust
-          // this URL" interstitial and the iframe renders blank. Fall back to the
-          // plain URL when no token was issued (public sandboxes).
-          const newPreviewURL = previewToken
-            ? portInfo.getSignedPreviewUrl(previewToken)
-            : portInfo.getPreviewUrl()
-          console.log("newPreviewURL", newPreviewURL)
-          setPreviewURL(newPreviewURL || null)
-          // Port is live: healthy connection, reset the failure/reconnect caps.
-          shellCheckFailuresRef.current = 0
-          reconnectAttemptsRef.current = 0
-          setSandboxUnavailable(false)
-        })
-        .catch((err) => {
-          console.error("Error waiting for port 5173", err)
-          setSandboxUnavailable(true)
-        })
+      // Vite may start on 5174 or 5175 if 5173 is occupied by a zombie process.
+      // Wait for whichever port opens first with a short initial timeout.
+      // If the native CodeSandbox dev server is healthy, this will resolve quickly.
+      try {
+        const portInfo = await Promise.any(
+          [5173, 5174, 5175].map((port) =>
+            connectedSandbox.ports.waitForPort(port, { timeoutMs: 120_000 })
+          )
+        )
+        const newPreviewURL = previewTokenRef.current
+          ? portInfo.getSignedPreviewUrl(previewTokenRef.current)
+          : portInfo.getPreviewUrl()
+        setPreviewURL(newPreviewURL || null)
+        shellCheckFailuresRef.current = 0
+        reconnectAttemptsRef.current = 0
+        setSandboxUnavailable(false)
+      } catch (err) {
+        console.warn("Native dev server did not respond on ports 5173-5175 within 25s. Auto-recovering...")
+        // If the native dev server is dead or wedged, we trigger a manual restart.
+        await restartDevServer(connectedSandbox)
+      }
     } catch (error) {
       console.error("Failed to initialize sandbox in hook:", error)
       sandboxRef.current = null
@@ -117,15 +119,22 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     }
 
     const shells = await sandboxRef.current?.shells.getShells()
+    
+    // Diagnostic log to see ALL shells in the VM
+    console.log("ALL VM SHELLS:", shells?.map(s => `${s.name} (${s.status})`))
+
     const allRunningShells = shells?.filter(
       (shell) =>
-        shell.name === "pnpm run install-and-dev" && shell.status === "RUNNING",
+        shell.name === "pnpm run install-and-dev" && 
+        (shell.status === "RUNNING" || shell.status === "STARTING"),
     )
 
-    const newRunningShells = allRunningShells?.filter(
+    const allRunningOnly = allRunningShells?.filter(s => s.status === "RUNNING")
+
+    const newRunningShells = allRunningOnly?.filter(
       (shell) => !subscribedShells.current.has(shell.id),
     )
-    const shellsToShutdown = allRunningShells?.filter((shell) =>
+    const shellsToShutdown = allRunningOnly?.filter((shell) =>
       subscribedShells.current.has(shell.id),
     )
 
@@ -251,13 +260,16 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   // no error and a plain reload doesn't help, because it re-runs the same stuck
   // dev server. Killing vite and starting a fresh shell gives a clean module
   // graph and a new port 5173.
-  const restartDevServer = async () => {
-    if (!sandboxRef.current || isRestartingDevServer) return
+  // restartDevServer can optionally take a specific sandbox instance if called during initialization
+  const restartDevServer = async (targetSandbox?: SandboxSession) => {
+    const sandbox = targetSandbox || sandboxRef.current;
+    if (!sandbox || isRestartingDevServer) return
     setIsRestartingDevServer(true)
     setSandboxUnavailable(false)
     setPreviewURL(null)
     try {
-      const shells = await sandboxRef.current.shells.getShells()
+      console.log("Attempting to forcefully restart the dev server...")
+      const shells = await sandbox.shells.getShells()
       const devShells = shells.filter(
         (shell) => shell.name === "pnpm run install-and-dev",
       )
@@ -269,23 +281,28 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       // Fire-and-forget: the dev server runs for the lifetime of the VM, so we
       // don't await the command (it never resolves).
-      sandboxRef.current.shells.run("pnpm run install-and-dev", {
+      sandbox.shells.run("pnpm run install-and-dev", {
         shellName: "pnpm run install-and-dev",
       })
 
       checkShells()
 
-      const portInfo = await sandboxRef.current.ports.waitForPort(5173, {
-        timeoutMs: 120_000,
-      })
+      // Vite may start on 5174 or 5175 if 5173 is occupied by a zombie process.
+      const portInfo = await Promise.any(
+        [5173, 5174, 5175].map((port) =>
+          sandbox.ports.waitForPort(port, { timeoutMs: 120_000 })
+        )
+      )
       const newPreviewURL = previewTokenRef.current
         ? portInfo.getSignedPreviewUrl(previewTokenRef.current)
         : portInfo.getPreviewUrl()
       setPreviewURL(newPreviewURL || null)
       shellCheckFailuresRef.current = 0
       reconnectAttemptsRef.current = 0
+      setSandboxUnavailable(false)
+      console.log("Successfully recovered dev server on port", portInfo.port)
     } catch (error) {
-      console.error("Failed to restart dev server:", error)
+      console.error("Failed to recover dev server:", error)
       setSandboxUnavailable(true)
     } finally {
       setIsRestartingDevServer(false)

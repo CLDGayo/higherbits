@@ -35,7 +35,7 @@ interface FileExplorerProps {
   isLoading: boolean
   advancedView: boolean
   onToggleAdvancedView: () => void
-  onAddFrom21Registry: (jsonUrl: string) => Promise<void>
+  onAddFrom21Registry: (jsonUrl: string, demoCode?: string) => Promise<void>
 }
 
 export function FileExplorer({
@@ -134,7 +134,13 @@ export function FileExplorer({
       <div className="overflow-y-auto flex-1">
         <FileTree
           entries={entries}
-          onSelect={onSelect}
+          onSelect={(entry) => {
+            if (entry.path === 'ACTION_ADD_DEPENDENCY') {
+              setIsAddRegistryModalOpen(true);
+            } else {
+              onSelect(entry);
+            }
+          }}
           selectedPath={selectedPath}
           onDelete={onDelete}
           isLoading={isLoading}
@@ -143,96 +149,6 @@ export function FileExplorer({
           onRename={onRename}
         />
       </div>
-
-      <motion.div
-        className="absolute bottom-4 left-4 z-10 rounded-full overflow-hidden transition-all duration-200 ease-in-out w-auto"
-        initial={{ opacity: 0.95 }}
-        whileHover={{
-          opacity: 1,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-        }}
-        transition={{ duration: 0.15 }}
-      >
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onToggleAdvancedView}
-          className={cn(
-            "bg-background/90 backdrop-blur-md shadow-sm border rounded-full pl-1.5 pr-3 h-8",
-            "flex items-center gap-1.5 transition-all duration-200 ease-in-out w-auto",
-            advancedView ? "border-primary/30" : "border-muted-foreground/30",
-          )}
-          disabled={isLoading}
-        >
-          <motion.div
-            initial={false}
-            animate={{
-              rotateY: advancedView ? 180 : 0,
-              backgroundColor: advancedView
-                ? "rgba(var(--primary), 0.1)"
-                : "hsl(var(--muted))",
-            }}
-            transition={{ duration: 0.3 }}
-            className={cn(
-              "rounded-full flex items-center justify-center w-5 h-5",
-              advancedView ? "text-primary" : "text-muted-foreground",
-            )}
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            {advancedView ? (
-              <FolderOpenIcon
-                className="h-3 w-3 absolute transform"
-                style={{
-                  backfaceVisibility: "hidden",
-                  transform: "rotateY(180deg)",
-                }}
-              />
-            ) : (
-              <FolderIcon
-                className="h-3 w-3 absolute transform"
-                style={{ backfaceVisibility: "hidden" }}
-              />
-            )}
-          </motion.div>
-          <span className="text-xs font-medium whitespace-nowrap">
-            {advancedView ? "Hide system files" : "Show all files"}
-          </span>
-        </Button>
-      </motion.div>
-
-      <motion.div
-        className="absolute bottom-[calc(2.5rem+0.5rem+0.5rem)] left-4 z-10 rounded-full overflow-hidden transition-all duration-200 ease-in-out w-auto"
-        initial={{ opacity: 0.95 }}
-        whileHover={{
-          opacity: 1,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-        }}
-        transition={{ duration: 0.15 }}
-      >
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsAddRegistryModalOpen(true)}
-          className={cn(
-            "bg-background/90 backdrop-blur-md shadow-sm border rounded-full pl-1.5 pr-3 h-8",
-            "flex items-center gap-1.5 transition-all duration-200 ease-in-out w-auto",
-            "border-muted-foreground/30 hover:border-primary/30",
-          )}
-          disabled={isLoading}
-          title="Add from Registry"
-        >
-          <motion.div
-            className={cn(
-              "rounded-full flex items-center justify-center w-5 h-5 bg-muted text-muted-foreground",
-            )}
-          >
-            <PlusIcon className="h-3 w-3" />
-          </motion.div>
-          <span className="text-xs font-medium whitespace-nowrap">
-            Add from Registry
-          </span>
-        </Button>
-      </motion.div>
 
       {isAddRegistryModalOpen && (
         <AddRegistryModal
