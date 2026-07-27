@@ -42,6 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <body className={cn("font-sans [scrollbar-gutter:stable]")}>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -79,7 +80,6 @@ export default function RootLayout({
             `,
           }}
         />
-      <body className={cn("font-sans [scrollbar-gutter:stable]")}>
         <div className="h-full">
           <ThemeProvider
             attribute="class"
