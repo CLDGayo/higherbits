@@ -58,6 +58,7 @@ import { useTheme } from "next-themes"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { AnimatePresence, motion } from "motion/react"
 import { PayWall } from "./pay-wall"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
@@ -142,7 +143,7 @@ export function ComponentPreviewDialog({
     capture,
   ])
 
-  const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html
+  const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
 
   const { data: bookmarked } = useHasUserBookmarkedDemo(
     supabase,
@@ -538,7 +539,7 @@ export function ComponentPreviewDialog({
         )}
 
         <div
-          className="flex-1 flex flex-col overflow-hidden"
+          className="relative flex-1 flex flex-col overflow-hidden"
           style={{
             minHeight: 0,
             width: "100%",
@@ -547,6 +548,19 @@ export function ComponentPreviewDialog({
           {bundleUrl && (
             <>
               {isLoading && <PreviewSkeleton />}
+              <AnimatePresence>
+                {!isLoading && (
+                  <motion.div
+                    initial={{ left: "-100%" }}
+                    animate={{ left: "200%" }}
+                    transition={{
+                      duration: 0.8,
+                      ease: "easeInOut",
+                    }}
+                    className="absolute inset-y-0 w-[150%] pointer-events-none bg-gradient-to-r from-transparent via-primary/20 to-transparent z-50 skew-x-[-20deg]"
+                  />
+                )}
+              </AnimatePresence>
               <iframe
                 src={`${bundleUrl}?theme=${previewTheme}${
                   previewTheme === "dark" ? "&dark=true" : ""

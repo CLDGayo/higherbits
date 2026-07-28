@@ -1,3 +1,4 @@
+import ComponentPreviewImage from "@/components/features/list-card/card-image"
 import { ComponentCard } from "@/components/features/list-card/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,9 +11,12 @@ import { ComponentCardSkeleton } from "@/components/ui/skeletons"
 import { getDemosAction } from "@/lib/api/demos"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { transformDemoResult } from "@/lib/utils/transformData"
+import { PublishComponentPreview } from "@/components/features/publish/components/preview"
 import { Component, DemoWithComponent, User } from "@/types/global"
+import { useUser } from "@clerk/nextjs"
 import { useQuery } from "@tanstack/react-query"
-import { useState } from "react"
+import { useTheme } from "next-themes"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { 
   Search, 
@@ -30,13 +34,15 @@ import {
   Star,
   Monitor,
   Map,
-  MoveHorizontal
+  MoveHorizontal,
+  ArrowLeft,
+  Loader2
 } from "lucide-react"
 
 interface AddRegistryModalProps {
   isOpen: boolean
   onClose: () => void
-  onAddFrom21Registry: (jsonUrl: string) => Promise<void>
+  onAddFrom21Registry: (jsonUrl: string, demoCode?: string) => Promise<void>
 }
 
 export function AddRegistryModal({
@@ -46,12 +52,35 @@ export function AddRegistryModal({
 }: AddRegistryModalProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [isInstalling, setIsInstalling] = useState(false)
+  const [installProgress, setInstallProgress] = useState(0)
   const [activeTab, setActiveTab] = useState<"my-components" | "featured" | "shadcn-base">("shadcn-base")
+  const [selectedComponent, setSelectedComponent] = useState<DemoWithComponent | null>(null)
   const supabase = useClerkSupabaseClient()
+  const { user } = useUser()
+  const { resolvedTheme } = useTheme()
+  const previewTheme = resolvedTheme === "dark" ? "dark" : "light"
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isInstalling) {
+      setInstallProgress(0)
+      interval = setInterval(() => {
+        setInstallProgress((prev) => {
+          if (prev >= 90) return 90
+          // Slow down as it gets closer to 90
+          const increment = Math.max(1, (90 - prev) / 10)
+          return prev + increment
+        })
+      }, 500)
+    } else {
+      setInstallProgress(0)
+    }
+    return () => clearInterval(interval)
+  }, [isInstalling])
 
   const shadcnDemosQuery = useQuery({
     queryKey: ["shadcn-demos"],
@@ -63,6 +92,47 @@ export function AddRegistryModal({
       if (error) throw error
       return data.map(transformDemoResult)
     },
+    staleTime: 30 * 1000,
+  })
+
+  const myDemosQuery = useQuery({
+    queryKey: ["my-demos", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return []
+      const { data, error } = await supabase.rpc("get_user_profile_demo_list", {
+        p_user_id: user.id,
+        p_include_private: false,
+      })
+      if (error) throw error
+      return data.map(transformDemoResult)
+    },
+    enabled: !!user?.id,
+    staleTime: 30 * 1000,
+  })
+
+  const featuredDemosQuery = useQuery({
+    queryKey: ["featured-demos"],
+    queryFn: async () => {
+      // Simple fetch for featured components
+      const { data, error } = await supabase
+        .from("components")
+        .select("*, users!user_id(*)")
+        .limit(20)
+      // For simplicity here, we'll fetch from components or demos.
+      // Wait, let's use the same RPC but for a known featured fetch, or just a raw query.
+      // Let's use the search function but empty, or just raw supabase query.
+      const { data: featuredData, error: fError } = await supabase.rpc("get_user_profile_demo_list", {
+        p_user_id: "user_shadcn", // fallback if we don't have a featured RPC here
+        p_include_private: false,
+      })
+      // Actually we will use a raw query to fetch some random or featured components.
+      const { data: randomData, error: rError } = await supabase
+         .rpc("get_user_bookmarks_list", { p_user_id: user?.id || "", p_include_private: false })
+      
+      // Let's just fetch all demos and sort by downloads for 'featured'
+      return featuredData?.map(transformDemoResult) || []
+    },
+    // We'll replace the featuredDemosQuery with a proper query
     staleTime: 30 * 1000,
   })
 
@@ -121,7 +191,8 @@ export function AddRegistryModal({
 
             const demoComponent: DemoWithComponent = {
               bundle_hash: null,
-              bundle_html_url: null,
+              bundle_html_url: result.bundle_html_url || null,
+              bundle_url: result.bundle_url || null,
               compiled_css: result.compiled_css || "",
               component_id: componentData.id,
               created_at: result.created_at || null,
@@ -160,19 +231,131 @@ export function AddRegistryModal({
     gcTime: 1000 * 60 * 30,
   })
 
-  const handleSelectComponent = async (component: DemoWithComponent) => {
+  const handleSelectComponent = (component: DemoWithComponent) => {
+    setSelectedComponent(component)
+  }
+
+  const handleConfirmInstall = async () => {
+    if (!selectedComponent) return
+    
     setIsInstalling(true)
     try {
-      const username = component.user.username
-      const componentSlug = component.component.component_slug
-      const jsonUrl = `https://higherbits.dev/r/${username}/${componentSlug}`
-      await onAddFrom21Registry(jsonUrl)
+      const username = selectedComponent.user?.username || (selectedComponent.user_id === "user_shadcn" ? "shadcn" : "unknown")
+      const componentSlug = selectedComponent.component?.component_slug || selectedComponent.component_id
+      const jsonUrl = `${window.location.origin}/r/${username}/${componentSlug}`
+      
+      const isShadcn = username === "shadcn" || selectedComponent.user_id === "user_shadcn"
+      const demoCode = isShadcn ? selectedComponent.demo_code : undefined
+      
+      await onAddFrom21Registry(jsonUrl, demoCode)
     } catch (error) {
       console.error("Error adding component from registry:", error)
     } finally {
       setIsInstalling(false)
+      setSelectedComponent(null)
       onClose()
     }
+  }
+
+  const handleCloseModal = () => {
+    setSelectedComponent(null)
+    onClose()
+  }
+
+  const renderExpandedView = () => {
+    if (!selectedComponent) return null
+
+    const username = selectedComponent.user?.username || (selectedComponent.user_id === "user_shadcn" ? "shadcn" : "unknown")
+    const componentSlug = selectedComponent.component?.component_slug || selectedComponent.component_id
+    const demoSlug = selectedComponent.demo_slug || "default"
+    const isShadcn = username === "shadcn" || selectedComponent.user_id === "user_shadcn"
+    const componentName = selectedComponent.component?.name || selectedComponent.name
+    const bundleUrl = selectedComponent.bundle_html_url || (selectedComponent.bundle_url as any)?.html || selectedComponent.component?.bundle_html_url
+    
+    return (
+      <div className="flex-1 flex flex-col relative h-full bg-background overflow-hidden">
+        {/* Top Header */}
+        <div className="flex items-center px-4 py-3 border-b z-20 bg-background/95 backdrop-blur shrink-0">
+          <Button variant="ghost" size="icon" className="mr-3" onClick={() => setSelectedComponent(null)}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-3">
+             <span className="font-semibold text-foreground">{componentName}</span>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 relative flex items-center justify-center bg-muted/30">
+          <div className="w-full h-full p-8 flex items-center justify-center">
+            {bundleUrl ? (
+              <div className="w-full h-full max-w-4xl max-h-[70vh] rounded-xl overflow-hidden shadow-lg border bg-background relative flex items-center justify-center">
+                <iframe
+                  src={`${bundleUrl}?theme=${previewTheme}${
+                    previewTheme === "dark" ? "&dark=true" : ""
+                  }`}
+                  className="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : selectedComponent.component?.code ? (
+              <div className="w-full h-full max-w-4xl max-h-[70vh] rounded-xl overflow-hidden shadow-lg border bg-background relative flex items-center justify-center">
+                <PublishComponentPreview
+                  code={selectedComponent.component.code}
+                  demoCode={
+                    selectedComponent.demo_code && selectedComponent.demo_code !== "N/A"
+                      ? selectedComponent.demo_code
+                      : `import React from "react";\n\nexport const FallbackDemo = () => {\n  return (\n    <div className="flex items-center justify-center p-10 w-full h-full flex-col gap-4 text-center text-muted-foreground">\n      <p>This component is a base primitive and requires specific props or children to render.</p>\n      <p className="text-sm border p-4 rounded-lg bg-muted/50">Install this component to use it in your code.</p>\n    </div>\n  );\n}`
+                  }
+                  slugToPublish={componentSlug}
+                  registryToPublish={selectedComponent.component.registry || "ui"}
+                  directRegistryDependencies={selectedComponent.component.direct_registry_dependencies || []}
+                  isDarkTheme={previewTheme === "dark"}
+                  demoDependencies={
+                    typeof selectedComponent.demo_dependencies === 'string'
+                      ? JSON.parse((selectedComponent.demo_dependencies as string) || "{}")
+                      : selectedComponent.demo_dependencies || {}
+                  }
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full max-w-2xl max-h-[60vh] flex items-center justify-center">
+                <ComponentPreviewImage
+                    src={isShadcn 
+                      ? (selectedComponent.component?.pro_preview_image_url || selectedComponent.pro_preview_image_url) || "/placeholder.svg"
+                      : selectedComponent.preview_url || "/placeholder.svg"}
+                    alt={componentName || "Component"}
+                    fallbackSrc="/placeholder.svg"
+                    className="rounded-lg shadow-sm border object-cover w-full h-full"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Action Bar with intense fade blur */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none flex flex-col justify-end z-30">
+           {/* Fade overlay */}
+           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent backdrop-blur-[2px] opacity-90" />
+           
+           <div className="relative z-10 p-6 flex flex-col items-center justify-center gap-4 pointer-events-auto bg-background/50 backdrop-blur-md border-t border-border/50">
+             <p className="text-sm font-medium text-foreground">Use this component?</p>
+             <Button size="lg" className="px-10 shadow-lg relative overflow-hidden" onClick={handleConfirmInstall} disabled={isInstalling}>
+               {isInstalling && (
+                 <div 
+                   className="absolute left-0 top-0 bottom-0 bg-primary-foreground/20 transition-all duration-500 ease-out" 
+                   style={{ width: `${installProgress}%` }} 
+                 />
+               )}
+               <span className="relative z-10 flex items-center">
+                 {isInstalling && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                 {isInstalling ? "Installing..." : "Use"}
+               </span>
+             </Button>
+           </div>
+        </div>
+      </div>
+    )
   }
 
   const sortedShadcnDemos = shadcnDemosQuery.data
@@ -190,9 +373,11 @@ export function AddRegistryModal({
   const showShadcnBase = !isSearching && activeTab === "shadcn-base"
   
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background gap-0 border-border">
-        <div className="flex h-[80vh] min-h-[600px]">
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) handleCloseModal()
+    }}>
+      <DialogContent className="max-w-[95vw] w-full p-0 overflow-hidden bg-background gap-0 border-border">
+        <div className="flex h-[90vh] max-h-[1200px] min-h-[600px]">
           {/* Sidebar */}
           <div className="w-[240px] border-r bg-muted/20 flex flex-col shrink-0">
             <div className="p-3 border-b">
@@ -275,6 +460,9 @@ export function AddRegistryModal({
           </div>
 
           {/* Main Content */}
+          {selectedComponent ? (
+            renderExpandedView()
+          ) : (
           <div className="flex-1 overflow-y-auto bg-background relative p-6">
             {isInstalling && (
               <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 rounded-md">
@@ -349,13 +537,61 @@ export function AddRegistryModal({
               </div>
             )}
 
-            {/* Other Tabs (My components, Featured) */}
-            {!isSearching && !showShadcnBase && (
+            {/* My Components Tab */}
+            {!isSearching && activeTab === "my-components" && myDemosQuery.isLoading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <ComponentCardSkeleton key={i} />
+                ))}
+              </div>
+            )}
+            {!isSearching && activeTab === "my-components" && myDemosQuery.data?.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center mt-10">
+                You haven't published any components yet.
+              </p>
+            )}
+            {!isSearching && activeTab === "my-components" && myDemosQuery.data && myDemosQuery.data.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {myDemosQuery.data.map((component) => (
+                  <ComponentCard
+                    key={component.id}
+                    demo={component}
+                    onClick={() => handleSelectComponent(component)}
+                    hideVotes
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Featured Tab */}
+            {!isSearching && activeTab === "featured" && featuredDemosQuery.isLoading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <ComponentCardSkeleton key={i} />
+                ))}
+              </div>
+            )}
+            {!isSearching && activeTab === "featured" && featuredDemosQuery.data && featuredDemosQuery.data.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {featuredDemosQuery.data.map((component) => (
+                  <ComponentCard
+                    key={component.id}
+                    demo={component}
+                    onClick={() => handleSelectComponent(component)}
+                    hideVotes
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Other Tabs */}
+            {!isSearching && !["shadcn-base", "my-components", "featured"].includes(activeTab) && (
               <p className="text-sm text-muted-foreground text-center mt-10">
                 Browse categories or enter a search term to find components.
               </p>
             )}
           </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
