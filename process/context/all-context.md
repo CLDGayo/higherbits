@@ -483,24 +483,43 @@ Cozy Downloads/
   Do not trust a bare "tsc passes/fails" claim from any agent without confirming which mode (scoped
   delta vs. true repo-wide zero-errors) it used.
 
-- **`supabase-interconnect` program — ALL 6 PHASES CODE-COMPLETE AND EVL-CONFIRMED, program stays
-  in `active/` pending 4 operator actions (closed out 29-07-26).** Phase 06 (Schema source of
-  truth) finished the program: it found and fixed the root cause of the whole `types.ts`-drift
-  saga — `apps/web/package.json:7`'s types-generation script was pointed at a dead Supabase
-  project (`vucvdpamtrjkzmubwlts`, empty since at least 2026-07-09) instead of the live one
-  (`ewktoowpuemgbaaxxbdq`), and 3 sibling files inherited the same wrong ref (one,
-  `scripts/embed-all-demos.js`, was a live bug POSTing to the dead project's Edge Function). All 4
-  sites are now fixed. What did NOT happen: `types.ts` itself was not regenerated and no
-  `supabase/migrations/0000_baseline.sql` was created — the Supabase CLI in this environment is
-  unauthenticated and has no `pg_dump`/`psql`/`docker` fallback, so live introspection was
-  impossible. **The program's practical output is 4 outstanding operator actions**, none requiring
-  further agent work: (1) apply Phase 1's grant/RLS SQL live, (2) apply Phase 2's
-  `0001_embedding_functions.sql` live, (3) install Phase 3's crontab + apply its seed SQL, (4) run
-  `supabase login` then regenerate `types.ts` (mechanical once authenticated). Every phase
-  (01-Grant/RLS, 02-Embedding functions, 03-Scheduler, 04-Navigation, 05-Billing, 06-Schema truth)
-  is individually code-complete and EVL-confirmed with its own accepted validate-contract gate —
-  see each phase's own dated bullet above for detail, and the umbrella plan's `## Program Closeout`
-  section (`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/supabase-interconnect-umbrella_PLAN_25-07-26.md`)
+- **`supabase-interconnect` program — ALL 6 PHASES CODE-COMPLETE AND EVL-CONFIRMED; Phase 1 + Phase
+  2 are now ALSO LIVE-APPLIED AND LIVE-VERIFIED (29-07-26); program stays in `active/` pending 2
+  remaining operator actions.** Phase 06 (Schema source of truth) finished the code-complete phase
+  set: it found and fixed the root cause of the whole `types.ts`-drift saga — `apps/web/package.json:7`'s
+  types-generation script was pointed at a dead Supabase project (`vucvdpamtrjkzmubwlts`, empty
+  since at least 2026-07-09) instead of the live one (`ewktoowpuemgbaaxxbdq`), and 3 sibling files
+  inherited the same wrong ref (one, `scripts/embed-all-demos.js`, was a live bug POSTing to the
+  dead project's Edge Function). All 4 sites are now fixed. **Same day, Phase 1 and Phase 2's SQL
+  were applied to the live database under explicit user approval** — 129 statements total (Phase 1:
+  115 across `views.sql`/`restore-authenticated-grants.sql`/`admin-functions.sql`; Phase 2: 14 in
+  `0001_embedding_functions.sql`), corrected from the "30 statements" figure this file previously
+  carried (documentation drift only — the SQL itself was always accurate). Both committed
+  cleanly in one transaction each; nothing partial. Fresh-connection introspection confirmed the
+  headline fix: the live `is_admin` self-escalation hole on `public.users` (any `authenticated`
+  user could set their own `is_admin = true`) is closed — table-level `UPDATE` revoked,
+  column-scoped `UPDATE` narrowed to 13 non-sensitive columns. **A same-day regression was found
+  and closed**: the newly created `public_profiles` view inherited anonymous
+  INSERT/UPDATE/DELETE via Supabase's `ALTER DEFAULT PRIVILEGES` rule (see the durable operational
+  fact below), giving an unauthenticated caller a live write path into `public.users` through an
+  auto-updatable, `security_invoker = off` view. Approved by the user, applied by the orchestrator
+  directly after 3 failed fix-agent spawn attempts (a stated protocol deviation — see
+  `live-apply_REPORT_29-07-26.md` `## Fix applied and verified`), and re-verified: `anon` and
+  `authenticated` now hold `SELECT` only on `public_profiles`. **Durable operational fact —
+  Postgres/Supabase `ALTER DEFAULT PRIVILEGES` trap:** this database carries a default-privileges
+  rule granting ALL on newly created `public`-schema relations to `anon`/`authenticated`/`service_role`.
+  Any brand-new view or table in this database inherits that and ships anonymously writable unless
+  explicitly revoked — `CREATE OR REPLACE` over a pre-existing relation is unaffected (it keeps the
+  old ACL), but a genuinely new relation is not. Any future migration that creates a new relation
+  needs an explicit `REVOKE`/narrow `GRANT` step; auditing existing relations for unintended `anon`
+  grants is a worthwhile follow-up (see the corresponding backlog note). **The program's remaining
+  practical output is 2 outstanding operator actions**, neither requiring further agent work: (1)
+  install Phase 3's crontab + apply its seed SQL, (2) run `supabase login` then regenerate
+  `types.ts` (mechanical once authenticated). Every phase (01-Grant/RLS, 02-Embedding functions,
+  03-Scheduler, 04-Navigation, 05-Billing, 06-Schema truth) is individually code-complete and
+  EVL-confirmed with its own accepted validate-contract gate — see each phase's own dated bullet
+  above for detail, and the umbrella plan's `## Program Closeout` section
+  (`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/supabase-interconnect-umbrella_PLAN_25-07-26.md`)
   for the full Definition-of-Done scoring against all 14 SPEC acceptance criteria and the durable
   program-wide learnings (root-cause methodology, green-gates-aren't-correctness-evidence,
   self-disclosure value, guard-scoping-by-data-read). Task folder intentionally stays in `active/`

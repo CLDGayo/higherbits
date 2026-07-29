@@ -558,8 +558,10 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-**Last updated:** 29-07-26 (UPDATE PROCESS, Phase 06 inner-loop Step 7 — FINAL phase; program-level
-closeout also written this pass, see `## Program Closeout` above)
+**Last updated:** 29-07-26 (follow-up UPDATE PROCESS pass, post-live-apply — Phase 1 and Phase 2
+SQL were applied to the live database this pass under explicit user approval, plus a critical
+anon-write regression found and closed same day; see `## Program Closeout` for the re-scored
+Definition of Done)
 
 **Current phase N of total:** Phase 6 of 6 — **ALL SIX PHASES NOW CODE-COMPLETE AND
 EVL-CONFIRMED.** There is no next phase to start. The program does not need further RESEARCH,
@@ -588,12 +590,12 @@ would bury that.
 **Phase 6 report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-06-schema-truth_REPORT_29-07-26.md`
 
 **Next phase:** None — this was the final phase. **Recommended next action is NOT another agent
-phase.** It is the 4 outstanding operator actions listed in `## Program Closeout` above (Phase 1
-Step C3 grant/RLS live apply, Phase 2 Step C5 embedding-functions live apply, Phase 3 crontab
-install + seed apply, Phase 6 `supabase login` + `types` regeneration). Once a human completes
-these, a follow-up UPDATE PROCESS pass should re-verify each live and re-score the SPEC ACs
-currently UNMET/PARTIAL (see `## Program Closeout`'s AC table), at which point the program can
-archive.
+phase.** Of the original 4 outstanding operator actions, **2 are now DONE** (Phase 1 grant/RLS live
+apply and Phase 2 embedding-functions live apply — both applied 29-07-26 under explicit user
+approval, see `## Program Closeout`). **2 remain:** Phase 3 crontab install + seed apply, and
+Phase 6 `supabase login` + `types` regeneration. Once a human completes these, a further
+UPDATE PROCESS pass should re-verify each live and re-score the still-UNMET SPEC ACs (see
+`## Program Closeout`'s AC table), at which point the program can archive.
 
 **Current loop step:** 7 (UPDATE-PROCESS) — complete for Phase 6 and for the program as a whole.
 Program stays open pending the same class of residual items (missing live credentials/DB access,
@@ -604,17 +606,29 @@ not agent work) across all 6 phases.
 (accepted — the CONDITIONAL reflects the CLI-auth blocker, not a code defect); `results.tsv`:
 `1 phase-06-inner plan 4 4 CONDITIONAL HALTED_ACCEPTED 2026-07-29`.
 
-**Phase 1 status (unchanged, still open):** 🧪 TESTING — code-complete, NOT live-verified.
-`Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted after 5 PVL supplement cycles). Blocked on
-Step C3 user approval — see
-`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-01-grant-repair_REPORT_26-07-26.md`
-for the exact pending-approval SQL. No change this UPDATE PROCESS pass.
+**Phase 1 status (UPDATED THIS PASS — DONE):** ✅ **LIVE-APPLIED AND VERIFIED** (29-07-26). All 115
+Phase 1 statements (`views.sql` + `restore-authenticated-grants.sql` + `admin-functions.sql`)
+committed in one transaction against `ewktoowpuemgbaaxxbdq`. Independent fresh-connection
+introspection confirmed: `users` table-level `UPDATE` for `authenticated` revoked (was live
+self-escalation via `is_admin`); `authenticated` now reaches 24 relations (was 14), RLS policies
+31→43. `Gate: CONDITIONAL` (accepted after 5 PVL supplement cycles) is now backed by live
+verification, not just scratch review. See
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/live-apply_REPORT_29-07-26.md`.
+**A regression was created and then closed same day:** the new `public_profiles` view inherited
+`ALTER DEFAULT PRIVILEGES`-granted anon write access (INSERT/UPDATE/DELETE) — found by the apply
+agent, approved by the user, and applied by the orchestrator directly after 3 failed fix-agent
+spawn attempts (a stated protocol deviation — see the report's `## Fix applied and verified`
+section). Verified closed: `anon` and `authenticated` now hold `SELECT` only on `public_profiles`.
 
-**Phase 2 status (unchanged, still open):** 🧪 TESTING — code-complete, locally verified for real
-(11/11 pglite harness, EVL-confirmed), NOT live-applied. `Gate: PASS`. Blocked on Step C5 user
-approval — see
-`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_REPORT_26-07-26.md`.
-No change this UPDATE PROCESS pass.
+**Phase 2 status (UPDATED THIS PASS — DONE):** ✅ **LIVE-APPLIED AND VERIFIED** (29-07-26). All 14
+Phase 2 statements (`0001_embedding_functions.sql`) committed in a second transaction. All 4
+functions (`vec_dim`, `get_missing_usage_embedding_items`, `insert_embedding`,
+`insert_code_embedding`) confirmed to exist with `PUBLIC`/`anon`/`authenticated` execute all
+`false` and `service_role` execute `true` — matching the scratch-verified design exactly. The two
+unique indexes (`usage_embeddings_item_id_item_type_key`, `code_embeddings_item_id_item_type_key`)
+were also created without incident (both tables were empty; no duplicate-row failure risk
+materialised). `Gate: PASS` is now backed by live verification. See
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/live-apply_REPORT_29-07-26.md`.
 
 **Phase 3 status (unchanged, still open):** 🧪 TESTING — code-complete, locally verified for real
 (73/73 vitest incl. 11 new, EVL-confirmed). `Gate: PASS`. Crontab install and seed SQL apply remain
@@ -647,38 +661,40 @@ is the audit log).
 
 ---
 
-## Program Closeout (29-07-26, all 6 phases complete)
+## Program Closeout (29-07-26, all 6 phases complete; UPDATED same day — Phase 1 + Phase 2 live-applied)
 
-**Verdict: all 6 phases code-complete and independently EVL-confirmed. Program stays in `active/`
-— NOT archived.** Every phase's remaining gap is the *same class* of item: a live credential,
-live database connection, or operator-only action this environment genuinely cannot perform — not
-unfinished agent work. Four concrete operator actions now stand between this program and full
-Definition-of-Done closure (listed below). This is a deliberate, honest "keep active/testing"
-call, not a stall.
+**Verdict: all 6 phases code-complete and independently EVL-confirmed. Phase 1 and Phase 2 are now
+ALSO live-applied and live-verified. Program stays in `active/` — NOT archived.** 2 of the original
+4 operator actions are done. The remaining 2 (Phase 3 crontab install, Phase 6 CLI auth + types
+regen) are the same class of item as before: operator-only actions this environment genuinely
+cannot perform unattended — not unfinished agent work. This is a deliberate, honest "keep
+active/testing" call, not a stall.
 
 ### Definition of Done — scored against the 6 charter targets
 
 | # | Target | Score | Basis |
 |---|---|---|---|
-| 1 | Bookmark grants persist, zero 42501 across 41 files, live-verified | **Code-complete, NOT live-verified** | Phase 1: SQL authored, `Gate: CONDITIONAL` accepted after 5 PVL cycles; blocked on Step C3 user approval to apply live |
-| 2 | 4 embedding functions exist as version-controlled migrations, invocable against a scratch schema | **MET at scratch-verified level; NOT live-applied** | Phase 2: `0001_embedding_functions.sql` proven end-to-end via `ops/pglite-verify-embedding-functions.mjs` (11/11); `Gate: PASS`; blocked on Step C5 user approval to apply live |
+| 1 | Bookmark grants persist, zero 42501 across 41 files, live-verified | **MET — live-applied and live-verified 29-07-26** | Phase 1: 115 statements committed live; fresh-connection introspection confirms `authenticated` grants restored across the audited relations and the `is_admin` self-escalation hole is closed |
+| 2 | 4 embedding functions exist as version-controlled migrations, invocable against a scratch schema | **MET — live-applied and live-verified 29-07-26** | Phase 2: `0001_embedding_functions.sql` proven end-to-end via `ops/pglite-verify-embedding-functions.mjs` (11/11) AND now live: all 4 functions exist live, `service_role`-only execute confirmed by fresh-connection `pg_proc`/`proacl` read |
 | 3 | Operator hands one crontab install command for the embedding backfill job | **MET as delivered artifact; NOT installed** | Phase 3: `ops/README-embedding-cron.md` + extended cron route, locally dry-run verified; crontab install + seed SQL apply are operator-only, explicitly non-blocking per the charter |
 | 4 | Every main-nav item resolves to one destination | **MET** | Phase 4: `/templates` is now a 308 redirect to `/?tab=templates`; sidebar counts proven live-query-sourced; EVL-confirmed, no live dependency outstanding |
 | 5 | LS subscriber routed to LS-aware cancel/invoice endpoints, not silently Stripe-routed | **MET at fixture level; live LS/live-DB leg untested** | Phase 5: provider-aware guard wired into 5 writers, fixture-tested (113/114 vitest), 1 CRITICAL defect found+fixed in EVL; `users_to_plans` has 0 live rows so live-provider verification is out of this program's automation boundary per its own Cross-Cutting Requirement |
 | 6 | `types.ts` diffed against live catalogs, zero gaps | **NOT MET — root cause found and fixed, regeneration blocked** | Phase 6: the wrong-project-ref root cause (4 sites) is fixed; `supabase gen types` itself cannot run — CLI is unauthenticated in this environment and has no `pg_dump`/`psql`/`docker` fallback |
 
-**Read across:** the program's actual achievement is that every target is either fully met (#4) or
-sitting one credentialed action away from being met (#1, #2, #3, #5, #6) — never blocked on unclear
-design or unresolved code. That is a materially different (better) state than "the program is
-stuck," and the per-phase reports document the exact unblocking step for each.
+**Read across:** the program's actual achievement is that targets #1, #2, and #4 are now fully met,
+target #5 is met at the fixture level (live-provider leg out of this program's automation
+boundary), and only #3 (crontab install) and #6 (`types.ts` regen) still sit one credentialed
+action away — never blocked on unclear design or unresolved code. That is a materially better
+state than at the prior closeout, and the per-phase reports document the exact unblocking step for
+each remaining item.
 
 ### 14 SPEC Acceptance Criteria — final scoring
 
 | AC | Criterion (short) | Status | Note |
 |---|---|---|---|
-| 1 | Zero 42501 across 41 files, live-verified | **UNMET** — blocked on live apply | Phase 1 Step C3 pending-approval SQL is the unblock; `Gate: CONDITIONAL` accepted |
+| 1 | Zero 42501 across 41 files, live-verified | **MET — live-applied and live-verified 29-07-26** | Phase 1 SQL committed live; fresh-connection grant introspection confirms the restored grants took effect |
 | 2 | Bookmark persists across reload (Hybrid E2E) | **UNMET** — no e2e run | No local E2E harness against a live/seeded Supabase session exists in this repo; tracked as a pre-existing gap, not new to this program |
-| 3 | Full audit of 41 files, zero remaining ungranted relations | **PARTIAL** — deskable audit done, final live confirmation pending | Phase 1's recursive-import-closure audit method (Program-Wide Learning #1) found the complete gap list; only the live re-confirmation after fix needs Step C3 |
+| 3 | Full audit of 41 files, zero remaining ungranted relations | **MET** — deskable audit done AND live-confirmed | Phase 1's recursive-import-closure audit method (Program-Wide Learning #1) found the complete gap list; live apply + fresh-connection re-query confirms the grants now exist |
 | 4 | Sidebar counts from live-query hook | **MET** | Phase 4, Fully-Automated vitest/RTL, EVL-confirmed |
 | 5 | DB functions authored + version-controlled before scheduler (embedding half) | **MET** | Phase 2, 4 functions in `0001_embedding_functions.sql`, scratch-verified |
 | 5 | (hunt-scoring half) | **DESCOPED this session** | See "Out-of-Scope Corrections" section above — user-locked descope, not a program failure |
@@ -689,7 +705,7 @@ stuck," and the per-phase reports document the exact unblocking step for each.
 | 10 | LS subscriber routed correctly (fixture leg) | **MET**; Agent-Probe (live LS API) leg **UNMET/Known Gap** | Phase 5, Fully-Automated vitest/RTL for routing logic; no live LS test account available |
 | 11 | Webhooks cannot double-grant a plan | **MET** | Phase 5, Fully-Automated vitest, 1 CRITICAL fifth-writer defect found and closed in EVL |
 | 12 | `types.ts` regenerated, matches live catalogs | **UNMET** | Phase 6, blocked on CLI auth — see `process/features/supabase-interconnect/backlog/types-regen-blocked-on-cli-auth_NOTE_29-07-26.md` |
-| 13 | Grant fix applied to live DB, live-query-verified | **UNMET** | Phase 1, blocked on Step C3 user approval |
+| 13 | Grant fix applied to live DB, live-query-verified | **MET** | Phase 1, applied 29-07-26 and independently re-verified on a fresh connection (before/after grant diff — see live-apply report) |
 | 14 | ≥3 `all-context.md` stale claims corrected | **MET** | Phase 6 corrected 5 (E1/E2/E2b/E3/E6), plus E4 (the root-cause writeup); `validate-context-discovery.mjs` exit 0 |
 
 **Vacuous-green check:** no MET criterion above rests on a Known-Gap-only gate — every MET row
@@ -699,21 +715,23 @@ gap this environment cannot close unattended — not to weak verification standa
 
 ### Outstanding operator actions (the practical output of this program)
 
-1. **Phase 1 Step C3** — apply the grant/RLS SQL (21 statements, 4 ordered batches; `views.sql`
-   before the grants file; the REVOKE ships inside the file) against the live production database.
-2. **Phase 2 Step C5** — apply `supabase/migrations/0001_embedding_functions.sql` against the live
-   production database.
+1. ~~**Phase 1 Step C3** — apply the grant/RLS SQL against the live production database.~~ **DONE
+   29-07-26.** 115 statements committed; live-verified via fresh-connection introspection. A
+   same-day regression (anon write access on the new `public_profiles` view) was found and closed
+   — see `live-apply_REPORT_29-07-26.md`.
+2. ~~**Phase 2 Step C5** — apply `supabase/migrations/0001_embedding_functions.sql` against the
+   live production database.~~ **DONE 29-07-26.** 14 statements committed; all 4 functions
+   live-verified `service_role`-only.
 3. **Phase 3** — install the crontab per `ops/README-embedding-cron.md`, then apply
-   `supabase/seed-embedding-verification.sql`.
+   `supabase/seed-embedding-verification.sql`. **Still outstanding.**
 4. **Phase 6** — run `corepack pnpm --filter web supabase:login` (or set
    `SUPABASE_ACCESS_TOKEN`), then `corepack pnpm --filter web types` to regenerate `types.ts`
    against the now-correctly-pointed project. This step is purely mechanical once authenticated —
-   the investigation and the fix to the generator are both already done.
+   the investigation and the fix to the generator are both already done. **Still outstanding.**
 
-None of these four require further agent research, design, or code — each is a single credentialed
-action a human performs once. This program cannot close its own Definition of Done without them,
-which is why the program stays in `active/` rather than being marked done on code-completeness
-alone.
+Items 3 and 4 do not require further agent research, design, or code — each is a single
+credentialed action a human performs once. This program cannot close its own Definition of Done
+without them, which is why the program stays in `active/` rather than being marked done now.
 
 ### Durable program-wide learnings (the most valuable non-code output)
 
@@ -757,16 +775,16 @@ alone.
 
 ### Archival judgment
 
-**Stays in `active/`.** All 6 phases are code-complete and EVL-confirmed, but the program's own
-Definition of Done requires live verification/application steps (grants, migrations, crontab
-install, `types.ts` regeneration) that no agent in this environment can perform without a human
-credential action. Archiving now would either falsely claim those steps are done, or silently drop
-the fact that they're the necessary next actions. **What would allow archival:** a human completes
-the 4 outstanding operator actions listed above, then a follow-up UPDATE PROCESS pass confirms each
-via live verification (Phase 1's `information_schema.role_table_grants` re-query, Phase 2's live
-function-invocation check, Phase 3's confirmed cron firing, Phase 6's regenerated `types.ts` diffed
-clean against `pg_proc`/`pg_class`) and re-scores the SPEC ACs that are currently UNMET/PARTIAL
-above. At that point the program can close.
+**Stays in `active/`.** All 6 phases are code-complete and EVL-confirmed; Phase 1 and Phase 2 are
+now ALSO live-applied and live-verified. The program's own Definition of Done still requires 2
+remaining operator actions (crontab install, `types.ts` regeneration) that no agent in this
+environment can perform without a human credential action. Archiving now would either falsely
+claim those steps are done, or silently drop the fact that they're the necessary next actions.
+**What would allow archival:** a human completes the 2 remaining operator actions listed above,
+then a follow-up UPDATE PROCESS pass confirms each (Phase 3's confirmed cron firing, Phase 6's
+regenerated `types.ts` diffed clean against `pg_proc`/`pg_class`) and re-scores the SPEC ACs that
+are still UNMET/PARTIAL above (AC2, AC6 partially, AC7, AC8 descoped, AC9 partial, AC10 Known Gap
+leg, AC12). At that point the program can close.
 
 ---
 
