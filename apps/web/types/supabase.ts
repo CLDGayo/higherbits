@@ -841,6 +841,8 @@ export type Database = {
           code: string
           compiled_css: string | null
           component_names: Json
+          bundle_hash: string | null
+          bundle_html_url: string | null
           component_slug: string
           created_at: string
           demo_code: string | null
@@ -875,6 +877,8 @@ export type Database = {
           code?: string
           compiled_css?: string | null
           component_names: Json
+          bundle_hash?: string | null
+          bundle_html_url?: string | null
           component_slug: string
           created_at?: string
           demo_code?: string | null
@@ -909,6 +913,8 @@ export type Database = {
           code?: string
           compiled_css?: string | null
           component_names?: Json
+          bundle_hash?: string | null
+          bundle_html_url?: string | null
           component_slug?: string
           created_at?: string
           demo_code?: string | null
@@ -1862,6 +1868,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          endpoint: string
+          last_request: string | null
+          request_count: number | null
+          user_id: string
+        }
+        Insert: {
+          endpoint: string
+          last_request?: string | null
+          request_count?: number | null
+          user_id: string
+        }
+        Update: {
+          endpoint?: string
+          last_request?: string | null
+          request_count?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       referral_payments: {
         Row: {
           amount: number
@@ -2409,276 +2436,6 @@ export type Database = {
       }
     }
     Views: {
-      component_dependencies_graph_view: {
-        Row: {
-          code: string | null
-          component_id: number | null
-          component_names: Json | null
-          component_slug: string | null
-          created_at: string | null
-          demo_code: string | null
-          demo_dependencies: Json | null
-          demo_direct_registry_dependencies: Json | null
-          dependencies: Json | null
-          dependency_author_display_username: string | null
-          dependency_author_username: string | null
-          dependency_component_id: number | null
-          depth: number | null
-          description: string | null
-          direct_registry_dependencies: Json | null
-          downloads_count: number | null
-          fts: unknown | null
-          id: number | null
-          is_demo_dependency: boolean | null
-          is_public: boolean | null
-          license: string | null
-          likes_count: number | null
-          name: string | null
-          preview_url: string | null
-          registry: string | null
-          source_author_display_username: string | null
-          source_author_username: string | null
-          source_component_slug: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v2"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v3"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "components"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "components_with_username"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "mv_detailed_component_analytics"
-            referencedColumns: ["component_id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v2"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v3"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "components"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "components_with_username"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "mv_detailed_component_analytics"
-            referencedColumns: ["component_id"]
-          },
-          {
-            foreignKeyName: "components_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "referral_analytics"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "components_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      component_dependencies_graph_view_v2: {
-        Row: {
-          code: string | null
-          component_id: number | null
-          component_names: Json | null
-          component_slug: string | null
-          created_at: string | null
-          demo_code: string | null
-          demo_dependencies: Json | null
-          demo_direct_registry_dependencies: Json | null
-          dependencies: Json | null
-          dependency_author_display_username: string | null
-          dependency_author_username: string | null
-          dependency_component_id: number | null
-          depth: number | null
-          description: string | null
-          direct_registry_dependencies: Json | null
-          downloads_count: number | null
-          fts: unknown | null
-          global_css_extension: string | null
-          id: number | null
-          is_demo_dependency: boolean | null
-          is_public: boolean | null
-          license: string | null
-          likes_count: number | null
-          name: string | null
-          preview_url: string | null
-          registry: string | null
-          source_author_display_username: string | null
-          source_author_username: string | null
-          source_component_slug: string | null
-          tailwind_config_extension: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v2"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v3"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "components"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "components_with_username"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_component_id_fkey"
-            columns: ["component_id"]
-            isOneToOne: false
-            referencedRelation: "mv_detailed_component_analytics"
-            referencedColumns: ["component_id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v2"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "component_dependencies_graph_view_v3"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "components"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "components_with_username"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "component_dependencies_closure_dependency_component_id_fkey"
-            columns: ["dependency_component_id"]
-            isOneToOne: false
-            referencedRelation: "mv_detailed_component_analytics"
-            referencedColumns: ["component_id"]
-          },
-          {
-            foreignKeyName: "components_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "referral_analytics"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "components_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       component_dependencies_graph_view_v3: {
         Row: {
           code: string | null
@@ -2815,31 +2572,6 @@ export type Database = {
           },
         ]
       }
-      component_hunt_current_round: {
-        Row: {
-          end_at: string | null
-          id: number | null
-          seasonal_tag_id: number | null
-          start_at: string | null
-          week_number: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "component_hunt_rounds_seasonal_tag_id_fkey"
-            columns: ["seasonal_tag_id"]
-            isOneToOne: false
-            referencedRelation: "tags"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      component_stats: {
-        Row: {
-          count: number | null
-          filter_type: string | null
-        }
-        Relationships: []
-      }
       components_with_username: {
         Row: {
           code: string | null
@@ -2938,15 +2670,6 @@ export type Database = {
           },
         ]
       }
-      monthly_referral_analytics: {
-        Row: {
-          avg_amount: number | null
-          month: string | null
-          payments_count: number | null
-          total_amount: number | null
-        }
-        Relationships: []
-      }
       mv_component_analytics: {
         Row: {
           activity_type: string | null
@@ -2998,35 +2721,45 @@ export type Database = {
           },
         ]
       }
-      mv_detailed_component_analytics: {
+      public_profiles: {
         Row: {
-          anon_cli_download_count: number | null
-          anon_total_installs: number | null
-          anon_view_count: number | null
-          auth_cli_download_count: number | null
-          auth_total_installs: number | null
-          auth_valid_code_copy_count: number | null
-          auth_valid_prompt_copy_count: number | null
-          auth_view_count: number | null
-          component_id: number | null
-          demo_id: number | null
-          total_cli_download_count: number | null
-          total_installs: number | null
-          total_view_count: number | null
-          weighted_auth_installs: number | null
+          bio: string | null
+          display_image_url: string | null
+          display_name: string | null
+          display_username: string | null
+          github_url: string | null
+          id: string | null
+          image_url: string | null
+          name: string | null
+          twitter_url: string | null
+          username: string | null
+          website_url: string | null
         }
-        Relationships: []
-      }
-      referral_analytics: {
-        Row: {
-          avg_payment: number | null
-          email: string | null
-          first_payment: string | null
-          last_payment: string | null
-          referral_code: string | null
-          total_earned: number | null
-          total_payments: number | null
-          user_id: string | null
+        Insert: {
+          bio?: string | null
+          display_image_url?: string | null
+          display_name?: string | null
+          display_username?: string | null
+          github_url?: string | null
+          id?: string | null
+          image_url?: string | null
+          name?: string | null
+          twitter_url?: string | null
+          username?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          bio?: string | null
+          display_image_url?: string | null
+          display_name?: string | null
+          display_username?: string | null
+          github_url?: string | null
+          id?: string | null
+          image_url?: string | null
+          name?: string | null
+          twitter_url?: string | null
+          username?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -3054,45 +2787,9 @@ export type Database = {
           remaining: number
         }
       }
-      analyze_author_payouts: {
+      components_dependencies_trigger: {
         Args: Record<PropertyKey, never>
-        Returns: {
-          author_id: string
-          username: string
-          display_name: string
-          published_components: number
-          total_usage: number
-          free_plan_usage: number
-          paid_plan_usage: number
-          potential_amount: number
-          actual_amount: number
-          has_payouts: boolean
-          last_payout_date: string
-          last_payout_status: string
-        }[]
-      }
-      analyze_component_usage: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          author_id: string
-          username: string
-          display_name: string
-          component_id: number
-          component_name: string
-          total_usage: number
-          free_plan_usage: number
-          paid_plan_usage: number
-          total_amount: number
-          has_payouts: boolean
-        }[]
-      }
-      check_api_key: {
-        Args: { api_key: string }
-        Returns: Json
-      }
-      check_api_key_v2: {
-        Args: { api_key: string }
-        Returns: Json
+        Returns: unknown
       }
       create_api_key: {
         Args: {
@@ -3114,56 +2811,9 @@ export type Database = {
           user_id: string
         }
       }
-      delete_component: {
-        Args: { component_id: number }
-        Returns: boolean
-      }
-      find_pg_column_dependencies: {
-        Args: {
-          schema_name_param: string
-          table_name_param: string
-          column_name_param: string
-        }
-        Returns: {
-          dependent_object_description: string
-          dependency_type_info: string
-        }[]
-      }
-      get_active_authors: {
+      demos_dependencies_trigger: {
         Args: Record<PropertyKey, never>
-        Returns: {
-          id: string
-          username: string
-          name: string
-          image_url: string
-          display_username: string
-          display_name: string
-          display_image_url: string
-          bio: string
-          total_downloads: number
-          total_usages: number
-          total_views: number
-          total_engagement: number
-        }[]
-      }
-      get_active_authors_with_top_components: {
-        Args: { p_offset?: number; p_limit?: number }
-        Returns: {
-          id: string
-          username: string
-          name: string
-          image_url: string
-          display_username: string
-          display_name: string
-          display_image_url: string
-          bio: string
-          total_downloads: number
-          total_usages: number
-          total_views: number
-          total_engagement: number
-          top_components: Json
-          total_count: number
-        }[]
+        Returns: unknown
       }
       get_admin_liked_demos_v1: {
         Args: { p_user_id: string; p_limit?: number }
@@ -3181,54 +2831,6 @@ export type Database = {
           view_count: number
           bookmarks_count: number
           bundle_url: Json
-        }[]
-      }
-      get_all_author_payouts: {
-        Args: {
-          p_period?: string
-          p_min_amount?: number
-          p_max_amount?: number
-          p_status?: string
-          p_sort_by?: string
-          p_sort_order?: string
-          p_limit?: number
-          p_offset?: number
-        }
-        Returns: Json[]
-      }
-      get_all_author_payouts_count: {
-        Args: {
-          p_period?: string
-          p_min_amount?: number
-          p_max_amount?: number
-          p_status?: string
-        }
-        Returns: number
-      }
-      get_author_payout_stats: {
-        Args: { p_author_id: string }
-        Returns: Json
-      }
-      get_collection_components_v1: {
-        Args: {
-          p_collection_id: string
-          p_sort_by: string
-          p_offset: number
-          p_limit: number
-        }
-        Returns: {
-          id: number
-          name: string
-          preview_url: string
-          video_url: string
-          updated_at: string
-          demo_slug: string
-          component_data: Json
-          user_data: Json
-          component_user_data: Json
-          total_count: number
-          view_count: number
-          bookmarks_count: number
         }[]
       }
       get_collections_v1: {
@@ -3251,17 +2853,6 @@ export type Database = {
           user_data: Json
         }[]
       }
-      get_daily_user_earnings: {
-        Args: { p_user_id: string }
-        Returns: {
-          mcp_usages: number
-          mcp_earnings: number
-          views: number
-          views_earnings: number
-          total_earnings: number
-          date: string
-        }[]
-      }
       get_daily_user_earnings_v2: {
         Args: { p_user_id: string }
         Returns: {
@@ -3271,29 +2862,6 @@ export type Database = {
           prompt_copies: number
           cli_downloads: number
           date: string
-        }[]
-      }
-      get_demos_list: {
-        Args: {
-          p_sort_by: string
-          p_offset: number
-          p_limit: number
-          p_tag_slug?: string
-          p_include_private?: boolean
-        }
-        Returns: {
-          id: number
-          name: string
-          preview_url: string
-          video_url: string
-          updated_at: string
-          demo_slug: string
-          component_data: Json
-          user_data: Json
-          component_user_data: Json
-          total_count: number
-          view_count: number
-          bookmarks_count: number
         }[]
       }
       get_demos_list_v2: {
@@ -3346,30 +2914,6 @@ export type Database = {
           moderators_feedback: string
         }[]
       }
-      get_hunt_demos_list: {
-        Args: { p_round_id: number }
-        Returns: {
-          id: number
-          name: string
-          preview_url: string
-          video_url: string
-          updated_at: string
-          demo_slug: string
-          component_data: Json
-          user_data: Json
-          component_user_data: Json
-          total_count: number
-          view_count: number
-          bookmarks_count: number
-          bundle_url: Json
-          votes: number
-          installs: number
-          final_score: number
-          global_rank: number
-          tags: Json
-          has_voted: boolean
-        }[]
-      }
       get_hunt_demos_list_v2: {
         Args: { p_round_id: number }
         Returns: {
@@ -3393,36 +2937,6 @@ export type Database = {
           tags: Json
           has_voted: boolean
         }[]
-      }
-      get_hunt_demos_list_v3: {
-        Args: { p_round_id: number }
-        Returns: {
-          id: number
-          name: string
-          preview_url: string
-          video_url: string
-          updated_at: string
-          demo_slug: string
-          component_data: Json
-          user_data: Json
-          component_user_data: Json
-          total_count: number
-          view_count: number
-          bookmarks_count: number
-          bundle_url: Json
-          votes: number
-          installs: number
-          final_score: number
-          global_rank: number
-          tags: Json
-          has_voted: boolean
-          submission_status: string
-          moderators_feedback: string
-        }[]
-      }
-      get_liked_components: {
-        Args: { p_user_id: string }
-        Returns: Json[]
       }
       get_missing_usage_embedding_items: {
         Args: Record<PropertyKey, never>
@@ -3455,22 +2969,6 @@ export type Database = {
           ref: string
         }[]
       }
-      get_prompt: {
-        Args: {
-          p_prompt_type: string
-          p_rule_id?: number
-          p_additional_context?: string
-        }
-        Returns: string
-      }
-      get_section_previews: {
-        Args: { p_demo_ids: number[] }
-        Returns: {
-          demo_id: number
-          preview_url: string
-          video_url: string
-        }[]
-      }
       get_template_tags: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -3501,20 +2999,6 @@ export type Database = {
           user_data: Json
           downloads_count: number
           likes_count: number
-        }[]
-      }
-      get_top_components_for_email: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          id: string
-          name: string
-          description: string
-          username: string
-          component_slug: string
-          preview_url: string
-          demo_slug: string
-          demo_preview_url: string
-          is_current_week: boolean
         }[]
       }
       get_user_bookmarks_list: {
@@ -3575,67 +3059,32 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: Json
       }
-      hunt_component_tag_slugs: {
-        Args: { cid: number }
-        Returns: string[]
-      }
-      hunt_marketing_slugs: {
-        Args: Record<PropertyKey, never>
-        Returns: string[]
-      }
       hunt_toggle_demo_vote: {
         Args: { p_round_id: number; p_demo_id: number }
         Returns: boolean
       }
-      hunt_ui_slugs: {
-        Args: Record<PropertyKey, never>
-        Returns: string[]
-      }
-      increment: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      increment_api_requests: {
-        Args: { key_id: string }
-        Returns: undefined
-      }
       insert_code_embedding: {
         Args: {
-          p_id: string
           p_item_id: number
           p_item_type: string
           p_embedding: string
-          p_code: string
           p_metadata: Json
         }
         Returns: undefined
       }
       insert_embedding: {
-        Args:
-          | {
-              p_id: string
-              p_item_id: number
-              p_item_type: string
-              p_embedding: string
-              p_usage_description: string
-              p_metadata: Json
-            }
-          | {
-              p_item_id: number
-              p_item_type: string
-              p_embedding: string
-              p_usage_description: string
-              p_metadata: Json
-            }
+        Args: {
+          p_item_id: number
+          p_item_type: string
+          p_embedding: string
+          p_usage_description: string
+          p_metadata: Json
+        }
         Returns: undefined
       }
       is_trigger_operation: {
         Args: Record<PropertyKey, never>
         Returns: boolean
-      }
-      like_component_by_demo: {
-        Args: { p_user_id: string; p_demo_id: number; p_liked: boolean }
-        Returns: undefined
       }
       match_embeddings: {
         Args: {
@@ -3671,14 +3120,6 @@ export type Database = {
           usage_data: Json
         }[]
       }
-      process_next_round: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      process_single_round: {
-        Args: { p_round_id: number }
-        Returns: undefined
-      }
       purchase_component: {
         Args: { p_user_id: string; p_component_id: number }
         Returns: Json
@@ -3706,41 +3147,11 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
-      search_components_preview: {
-        Args: { p_search_query: string }
-        Returns: {
-          id: number
-          name: string
-          description: string
-          preview_url: string
-          user_data: Json
-          downloads_count: number
-          likes_count: number
-          component_slug: string
-        }[]
-      }
-      search_demos_ai: {
+      search_demos_ai_oai_extended: {
         Args: {
-          match_threshold?: number
-          query_embedding?: string
-          search_query?: string
-        }
-        Returns: {
-          id: number
-          name: string
-          preview_url: string
-          video_url: string
-          demo_id: number
-          component_data: Json
-          user_data: Json
-          usage_data: Json
-        }[]
-      }
-      search_demos_ai_oai: {
-        Args: {
-          match_threshold?: number
-          query_embedding?: string
-          search_query?: string
+          search_query: string
+          query_embedding: string
+          match_threshold: number
         }
         Returns: {
           id: number
@@ -3749,6 +3160,7 @@ export type Database = {
           video_url: string
           demo_slug: string
           user_id: string
+          created_at: string
           component_data: Json
           user_data: Json
           usage_data: Json
@@ -3771,10 +3183,6 @@ export type Database = {
           user_data: Json
           usage_data: Json
         }[]
-      }
-      update_all_hunt_scores: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
       }
       update_component_dependencies_closure: {
         Args: { p_component_id: number; p_demo_slug?: string }
@@ -3813,28 +3221,6 @@ export type Database = {
         Args: { p_demo_id: number; p_tags: Json }
         Returns: undefined
       }
-      update_hunt_demos_metrics: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      update_single_demo_score: {
-        Args: { p_round_id: number; p_demo_id: number }
-        Returns: {
-          demo_id: number
-          demo_name: string
-          auth_views: number
-          anon_views: number
-          total_views: number
-          auth_installs: number
-          anon_installs: number
-          total_installs: number
-          votes_count: number
-          old_final_score: number
-          new_final_score: number
-          expected_score: number
-          calculation_details: string
-        }[]
-      }
       update_submission_as_admin: {
         Args: {
           p_component_id: number
@@ -3842,10 +3228,6 @@ export type Database = {
           p_feedback: string
         }
         Returns: Json
-      }
-      update_template_tags: {
-        Args: { p_template_id: number; p_tags: Json }
-        Returns: undefined
       }
       vec_dim: {
         Args: { v: string }
