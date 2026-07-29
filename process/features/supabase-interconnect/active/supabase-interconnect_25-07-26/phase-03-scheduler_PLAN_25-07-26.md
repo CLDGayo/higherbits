@@ -304,9 +304,29 @@ Orchestrator reads this before deciding which subagent to spawn next. The canoni
       fixed all 3 directly in the plan text this cycle (new Step A5, Step A4 precision note + Blast
       Radius correction, Step D1 column-shape note). Gate: PASS. See `## Validate Contract` below
       for full findings.
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
-- [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
-- [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
+- [x] 5. EXECUTE — execute-agent delivered 4 artifacts: additive `?dryRun=true` +
+      `EMBEDDING_CRON_BATCH_CAP` (default 20) extension to
+      `apps/web/app/api/cron/gen-usage-embeddings/route.ts`; new
+      `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts`; the operator install
+      artifact `ops/README-embedding-cron.md`; and `supabase/seed-embedding-verification.sql`. A
+      review-driven additive fix added `totalMissing`/`cap` to the dry-run response (the capped
+      count alone couldn't show operators the true backlog trend). Gates: `tsc --noEmit` exit 0 /
+      0 errors; vitest 73/73 across 18 files (62 baseline + 11 new).
+- [x] 6. EVL — independent confirmation run: all 5 gates green. Verified structurally that the
+      zero-invoke dry-run guarantee holds (early return precedes the `functions.invoke` loop) and
+      via 4 tests asserting `mockInvoke` was never called on dry-run. Confirmed
+      `get_missing_usage_embedding_items()` is `STABLE` (capped items reappear next run, not
+      dropped). Confirmed seed SQL is idempotent and safe on an empty DB (`user_id` sourced via a
+      `FROM public.users LIMIT 1` in-statement, not a scalar subquery — zero users is a clean
+      no-op). Scope confirmed: only the 4 named artifacts touched, `package.json`/`pnpm-lock.yaml`
+      untouched, stash empty.
+- [x] 7. UPDATE PROCESS — phase report finalized; umbrella `## Current Execution State` rewritten;
+      `process/context/tests/all-tests.md` re-baselined to 73/18; `all-context.md` updated. Also
+      corrected a real umbrella defect: its claim that Phase 3 was hard-blocked on Phase 2's live
+      apply contradicted Phase 2's own Exit Gate (accepts scratch verification) and Phase 3's own
+      Entry Gate — orchestrator ruled the phase plans govern; Phase 3 then completed with every
+      gate green on zero live database access, settling it. Committed as `19d06d1` (execution) and
+      `a282d55` (process).
 
 **Validate-contract is current.** The `## Validate Contract` below is dated 26-07-26
 (`generated-by: inner-pvl: phase-3`, Gate: PASS) and supersedes the prior 25-07-26 outer-pvl
@@ -358,16 +378,18 @@ corepack pnpm --filter web exec tsc --noEmit && corepack pnpm --filter web test
 ## Resume and Execution Handoff
 
 - Selected plan file path: `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_PLAN_25-07-26.md`
-- Last completed step: PVL (inner-loop validate, cycle 1) — 26-07-26 — fresh V1-V7 pass against the
-  PLAN-SUPPLEMENT; 3 gaps found and fixed directly in the plan text (see Phase Loop Progress Step 4
-  above); Gate: PASS
+- Last completed step: UPDATE PROCESS — 26-07-26. Phase is CODE-COMPLETE and EVL-CONFIRMED (all
+  5 gates green on the independent EVL re-run); phase report finalized and umbrella state updated.
+  Task folder intentionally stays in `active/` (not archived) pending two operator-only actions
+  (see below) — this is a deliberate archival-timing choice, not an incomplete phase.
 - Validate-contract status: 26-07-26, `generated-by: inner-pvl: phase-3` — **PASS** (supersedes the
   25-07-26 outer-pvl CONDITIONAL contract)
-- Next step: orchestrator spawns vc-execute-agent for Steps A-D (all checklist items, including the
-  new Step A5 test-authoring step). Phase 2 F3 dependency is satisfied on scratch-verified functions
-  per the orchestrator ruling recorded in `## Purpose` above; no further Phase-2-live wait is
-  required. Step D4's hard stop (explicit user approval before any live seed-SQL execution) still
-  applies during EXECUTE.
+- Next step: no further agent action required for this phase. Two OPERATOR-ONLY actions remain
+  outstanding and are explicitly out of any agent's authority: (1) install the crontab per
+  `ops/README-embedding-cron.md` on the target host, and (2) apply
+  `supabase/seed-embedding-verification.sql` to a live database (gated by Step D4's hard stop —
+  explicit user approval required before any live seed-SQL execution). A fresh agent resuming here
+  should treat the phase as done and move to Phase 4's Step 0, not re-run EXECUTE/EVL.
 - Supporting context files loaded: Phase 2 report, umbrella plan `## Current Execution State` and
   `## Program-Wide Learnings`, `process/context/all-context.md`, `phase-blast-radius-registry.md`
 
