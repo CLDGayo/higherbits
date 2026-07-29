@@ -9,7 +9,41 @@ import { HomePageClient } from "./page.client"
 import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
 export const dynamic = "force-dynamic"
 
-export const generateMetadata = async (): Promise<Metadata> => {
+export const generateMetadata = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>
+}): Promise<Metadata> => {
+  const { tab } = await searchParams
+
+  // `/templates` now 308-redirects here (Phase 04 decision B2). A redirect body is
+  // never served, so the retired route's SEO metadata is re-hosted on this branch.
+  if (tab === "templates") {
+    const templatesTitle = `shadcn/ui Templates Collection | ${SITE_NAME} - ${SITE_SLOGAN}`
+    const templatesDescription =
+      "Collection of crafted website templates built with shadcn/ui components, Framer Motion animations and Tailwind CSS by design engineers."
+
+    return {
+      title: templatesTitle,
+      description: templatesDescription,
+      openGraph: {
+        title: templatesTitle,
+        description: templatesDescription,
+        type: "website",
+      },
+      keywords: [
+        ...BASE_KEYWORDS,
+        "website templates",
+        "shadcn templates",
+        "shadcn/ui templates",
+        "shadcn/ui",
+        "Framer Motion",
+        "Tailwind CSS",
+        "React components",
+      ],
+    }
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",

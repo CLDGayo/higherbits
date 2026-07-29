@@ -9,7 +9,13 @@ const routes = [
   "/api-access",
   "/contest",
   "/our-story",
-  "/templates",
+  // `/templates` was removed from this list in Phase 04 (supabase-interconnect):
+  // it now 308-redirects to `/?tab=templates` and renders no body of its own, so
+  // running axe against it is meaningless. The redirect itself is asserted in
+  // e2e/templates-redirect.spec.ts. Auditing the destination (`/?tab=templates`)
+  // is deliberately NOT wired in here — it surfaces 58 pre-existing, foreign
+  // `color-contrast` violations on the tab-browser surface; see the Phase 04
+  // report's "Test Infra Gaps Found" section.
   "/public-dashboard",
 ]
 

@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import React from "react"
-import { describe, it, expect, vi } from "vitest"
-import { render } from "@testing-library/react"
+import { describe, it, expect, vi, beforeEach } from "vitest"
+import { render, fireEvent, screen } from "@testing-library/react"
 
 // next/navigation — pathname "/" with no ?tab makes the "home" nav item active.
 vi.mock("next/navigation", () => ({
@@ -34,8 +34,10 @@ vi.mock("@clerk/nextjs", () => ({
 vi.mock("@/components/features/publish/hooks/use-is-admin", () => ({
   useIsAdmin: () => ({ isAdmin: false, isLoading: false }),
 }))
+// Live-query hook stand-in. Mutable so a test can supply real counts (Phase 04 D3).
+const tagCounts: { current: Record<string, number> } = { current: {} }
 vi.mock("@/lib/queries", () => ({
-  useCategoryTagCounts: () => ({ data: {} }),
+  useCategoryTagCounts: () => ({ data: tagCounts.current }),
 }))
 vi.mock("@/hooks/use-media-query", () => ({ useIsMobile: () => false }))
 
@@ -51,6 +53,10 @@ function renderSidebar() {
 }
 
 describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
+  beforeEach(() => {
+    tagCounts.current = {}
+  })
+
   it("applies the lavender active-pill token on the active nav item (A1)", () => {
     const { container } = renderSidebar()
 
@@ -85,5 +91,44 @@ describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
       el.className.includes("bg-accent text-accent-foreground"),
     )
     expect(stale).toHaveLength(0)
+  })
+})
+
+// Phase 04 (supabase-interconnect) Step D3 / SPEC AC4.
+describe("MainSidebar — sidebar counts come from the live-query hook", () => {
+  beforeEach(() => {
+    tagCounts.current = {}
+  })
+
+  it("renders a non-zero live count as the item badge, and NOT the hardcoded demosCount", () => {
+    // "hero" is the tag slug behind lib/navigation.ts's { title: "Heroes",
+    // href: "/s/hero", demosCount: 73 }. Feeding a different live value proves
+    // the rendered badge is sourced from useCategoryTagCounts(), not demosCount.
+    tagCounts.current = { hero: 42 }
+
+    const { container } = renderSidebar()
+
+    // Explore group renders only because a non-zero live count exists.
+    expect(container.textContent).toContain("Explore")
+
+    // Expand the category that owns /s/hero so its items render.
+    fireEvent.click(screen.getByText("Marketing Blocks"))
+
+    const heroLink = container.querySelector('a[href="/s/hero"]')
+    expect(heroLink).not.toBeNull()
+    expect(heroLink?.textContent).toContain("42")
+    // The hardcoded navigation.ts value must never surface.
+    expect(heroLink?.textContent).not.toContain("73")
+
+    // Zero-count siblings are filtered out entirely for non-admin users.
+    expect(container.querySelector('a[href="/s/background"]')).toBeNull()
+  })
+
+  it("hides the Explore group entirely when the live query returns no counts", () => {
+    tagCounts.current = {}
+
+    const { container } = renderSidebar()
+
+    expect(container.textContent).not.toContain("Explore")
   })
 })
