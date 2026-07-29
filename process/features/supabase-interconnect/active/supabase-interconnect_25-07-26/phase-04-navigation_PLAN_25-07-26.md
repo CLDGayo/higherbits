@@ -31,15 +31,46 @@ D3 is confirmed compatible; the WIP adds `useIsAdmin()` + `useCategoryTagCounts(
 zero-count Explore items, and it already replaces the hardcoded `getTagDemosCount()` at
 `lib/queries.ts:1098-1102` — this phase builds ON that WIP.
 
+**Scope-honesty note (added by inner-loop supplement, 26-07-26):** SPEC AC4 ("sidebar counts are
+live-queried") is ALREADY IMPLEMENTED by committed work — `useCategoryTagCounts()` at
+`apps/web/lib/queries.ts:1105-1142`, wired at `sidebar-layout.tsx:181` (commit `813ab13`). The
+remaining Phase 4 work is genuinely small: one redirect, one metadata function, two documentation
+comments, one test assertion, and several confirm-only checklist items. This phase is not padded
+work — the checklist below is intentionally short because most of AC4 is already done.
+
+**Content divergence (RESEARCH finding, folded in 26-07-26):** `/templates` today renders
+`TemplatesListSEO` (via RPC `get_templates_v3`, article-style static list) while `?tab=templates`
+renders `FilterChips` + `TemplatesContainer` (interactive, filterable). These are two different
+components reaching a similar destination, not one component reached two ways — so Step B's
+redirect unifies to the tab implementation and retires `TemplatesListSEO` as a rendered surface
+(its SEO metadata is separately preserved per the locked decision in Step B1a below).
+
+**Admin-only visibility (context, not scope; folded in 26-07-26):** `sidebar-layout.tsx:349-357`
+gates the Templates/Bundles/Pro nav items behind `isAdmin`. Non-admin visitors never see a
+Templates nav item today, so the tab-vs-route reconciliation in this phase primarily benefits
+admins plus anyone arriving at `/templates` by deep link or crawler. This is documented context
+only — this phase does not change the `isAdmin` gating.
+
 ---
 
 ## Entry Gate
 
-- Phase 1 exit gate passed (grants sane — sidebar count queries and any nav-adjacent Supabase reads
-  must not hit 42501)
-- Confirmed the uncommitted WIP diff in `sidebar-layout.tsx`/`queries.ts` does not conflict with
-  this phase's navigation-model changes (already verified this session — re-confirm at RESEARCH
-  time in case the WIP has changed since)
+- **Grant-dependency correction (added 26-07-26):** `demo_tags` and `component_tags` — the only two
+  tables `useCategoryTagCounts()` reads — are ALREADY in the live 14-relation authenticated grant
+  baseline confirmed by Phase 1's research. This phase does **not** require Phase 1's live SQL
+  apply to function. The line below is retained only as a conservative statement covering any
+  *other* nav-adjacent Supabase read this phase might touch — it is not a hard blocking dependency
+  on Phase 1's pending live apply.
+- Phase 1 exit gate passed (grants sane — any *other* nav-adjacent Supabase reads beyond
+  `demo_tags`/`component_tags` must not hit 42501)
+- **Corrected staleness note (26-07-26):** the line below previously described the
+  `useCategoryTagCounts()` work as in-flight uncommitted WIP requiring re-verification. It is now
+  committed (`813ab13`) and all five blast-radius files listed in this plan are clean per
+  `git status --short`. Confirm the committed implementation still matches this description
+  (rather than re-reading an uncommitted diff that no longer exists).
+- Confirmed the (now-committed) `useCategoryTagCounts()` work in `sidebar-layout.tsx`/`queries.ts`
+  does not conflict with this phase's navigation-model changes (already verified this session —
+  re-confirm at RESEARCH time in case the tree has changed since)
 
 ---
 
@@ -67,10 +98,11 @@ zero-count Explore items, and it already replaces the hardcoded `getTagDemosCoun
 
 ### Step A — Reconcile with in-flight WIP
 
-- [ ] A1. Re-read the current uncommitted diff in `sidebar-layout.tsx` and `queries.ts` at RESEARCH
-      time — confirm it still only adds `useIsAdmin()` + `useCategoryTagCounts()` and hides
+- [ ] A1. **Reworded 26-07-26 (was stale — described committed work as uncommitted WIP):** confirm
+      the committed implementation in `sidebar-layout.tsx` and `queries.ts` (commit `813ab13`) still
+      matches this plan's description — it adds `useIsAdmin()` + `useCategoryTagCounts()` and hides
       zero-count Explore items, with no `href`/`navigateToTab`/`?tab=`/`router.push` changes. If the
-      WIP has materially changed since this session's verification, re-verify D3 compatibility
+      tree has materially changed since this session's verification, re-verify D3 compatibility
       before proceeding.
 - [ ] A2. Build this phase's sidebar-count fix on top of the WIP's `useCategoryTagCounts()` hook —
       do not write a second, competing count-fetching mechanism.
@@ -79,19 +111,30 @@ zero-count Explore items, and it already replaces the hardcoded `getTagDemosCoun
 
 - [ ] B1. Confirm `/templates` is a real, working page today (per SPEC Gap 3 — "real page, but nav
       sends `?tab=templates` instead").
-- [ ] B1a. Before implementing B2, decide and document (in the phase report) how `/templates`'s
-      existing SEO metadata export (`apps/web/app/templates/page.tsx:8-27` — title, description,
-      keywords, OpenGraph) is preserved or intentionally sacrificed by the redirect. Choose one:
-      (a) keep a server-side redirect but retain a `metadata` export with a
-      `<link rel="canonical">` pointing at `/?tab=templates`, (b) move equivalent metadata onto the
-      home page's `?tab=templates` render path via dynamic `generateMetadata` keyed on the `tab`
-      search param, or (c) accept the SEO regression explicitly with recorded rationale. Do not
-      implement B2 until one of these three is chosen and recorded (see Execute-Agent Instruction
-      E2, which this item now makes an explicit checklist gate rather than only an instruction).
-- [ ] B2. Convert `/templates` into a thin redirect (server-side redirect — not client-only
-      `router.replace`, so crawlers and the a11y spec both see a single clean redirect and B1a's
-      chosen mitigation is preserved) into `/?tab=templates`, so the tab model stays canonical and
-      the standalone route no longer disagrees with the nav item's actual destination.
+- [ ] B1a. **LOCKED DECISION (INNOVATE, 26-07-26) — supersedes the prior open (a)/(b)/(c) choice.**
+      Use option (b): move `/templates`'s existing SEO metadata onto the home route via a
+      `generateMetadata({ searchParams })` export on `apps/web/app/page.tsx`, returning the existing
+      `apps/web/app/templates/page.tsx:8-27` title/description/keywords/OpenGraph object when
+      `searchParams.tab === "templates"`.
+      **Why option (a) — "keep a `metadata` export + `<link rel="canonical">` on `/templates`
+      itself" — is rejected:** a page that calls `redirect()`/`permanentRedirect()` returns a 3xx
+      response with no body, so its `metadata` export is never serialized into HTML any crawler
+      sees. That option is a no-op that only resembles a fix — the metadata would be dead code.
+      **Why option (c) — "accept the SEO regression" — is rejected:** a working alternative (b)
+      exists at negligible cost, so accepting a regression is unnecessary.
+      **Pre-check (EXECUTE must confirm before implementing, per INNOVATE):** `apps/web/app/page.tsx`
+      already exports a `generateMetadata` async function (confirmed via `graphify query` +
+      direct read, 26-07-26, lines 10-12) that coexists today with the route's client-heavy
+      rendering (`HomePageClient`) — so hosting a second, `searchParams`-aware branch on the same
+      export is structurally feasible without restructuring the route. EXECUTE must still verify
+      this holds at implementation time; if it cannot without restructuring, that is a real finding
+      to report rather than a redesign to improvise.
+- [ ] B2. **LOCKED DECISION (INNOVATE, 26-07-26):** convert `/templates` into a thin redirect using
+      `permanentRedirect()` (308, from `next/navigation`) — NOT `redirect()` (307) and NOT
+      client-only `router.replace` — into `/?tab=templates`. 308 is the correct crawler signal
+      because this merge is permanent, not temporary; a 307 would tell crawlers to keep re-checking
+      `/templates` indefinitely. Server-side redirect (either status) ensures crawlers and the a11y
+      spec both see a single clean redirect and B1a's `generateMetadata` mitigation is preserved.
 - [ ] B3. Confirm the nav item itself already points at `?tab=templates` (per `use-navigation.ts:96-105`
       → `navigateToTab()`) — no change needed on the nav-item side, only the route side.
 
@@ -114,20 +157,28 @@ zero-count Explore items, and it already replaces the hardcoded `getTagDemosCoun
 
 - [ ] D1. Confirm `useCategoryTagCounts()` (WIP) queries `demo_tags`/`component_tags` live, per SPEC
       AC4's requirement.
-- [ ] D1a. Before applying D2, grep for all remaining call sites of `getTagDemosCount` and any
-      reader of `lib/navigation.ts`'s `demosCount` field. Confirmed at VALIDATE time:
-      `apps/web/components/features/home/home-layout.tsx:8,226` is a live, in-scope consumer
-      (unrelated tag-slider "view all" counts, zero test coverage on that file). Choose one: (a)
-      migrate `home-layout.tsx` to `useCategoryTagCounts()` within this same phase and add it to
-      Blast Radius (note the addition in the phase report), or (b) retain `getTagDemosCount()`/the
-      `demosCount` field values in `lib/navigation.ts` for `home-layout.tsx`'s sake and scope D2
-      down to "confirmed the sidebar no longer depends on them" only. Do not remove the function or
-      field values unless (a) is chosen (see Execute-Agent Instruction E1, which this item now
-      makes an explicit checklist gate).
-- [ ] D2. Remove the hardcoded `demosCount` values from `lib/navigation.ts` and the
-      `getTagDemosCount()` call at `queries.ts:1098-1102` once the WIP hook fully supersedes them —
-      confirm no other consumer still depends on the hardcoded values before removing (per D1a's
-      decision).
+- [ ] D1a. **LOCKED DECISION (INNOVATE, 26-07-26) — supersedes the prior open (a)/(b) choice.**
+      RETAIN `getTagDemosCount()` and `lib/navigation.ts`'s `demosCount` field values — do NOT
+      migrate `home-layout.tsx` to `useCategoryTagCounts()` in this phase. `home-layout.tsx:226`
+      uses `getTagDemosCount(category.id)` for a per-category slider "view all" total-count badge —
+      a genuinely different UI surface from the sidebar's category-count list (a slider badge vs. a
+      sidebar list item), not duplication of the same feature. Migrating it is out of this phase's
+      scope. Scope D2 down to "confirm the sidebar no longer depends on the hardcoded values"; do
+      not remove the function or the field values. (Confirmed at VALIDATE time:
+      `apps/web/components/features/home/home-layout.tsx:8,226` is the live, in-scope consumer;
+      zero test coverage on that file today — see Test Infra Improvement Notes.)
+- [x] D2. **Corrected 29-07-26 (UPDATE PROCESS) — this bullet previously read "Remove the hardcoded
+      `demosCount` values from `lib/navigation.ts` and the `getTagDemosCount()` call...", which
+      directly contradicted D1a's locked RETAIN decision immediately above and Execute-Agent
+      Instruction E1.** EXECUTE correctly followed D1a/E1 (retain, confirm-only) and reported this
+      contradiction in its phase report rather than executing the literal "remove" text — no bug
+      resulted, but a future reader executing D2 literally would have deleted
+      `getTagDemosCount()`/`demosCount`, breaking `home-layout.tsx:226`'s per-category slider "view
+      all" count badge. Corrected wording (confirm-only, matches what was actually done): Confirm
+      the sidebar (`sidebar-layout.tsx`) no longer depends on `lib/navigation.ts`'s hardcoded
+      `demosCount` values or `getTagDemosCount()` (`queries.ts:1098-1102`) — confirmed via `rg`,
+      zero hits in `sidebar-layout.tsx`. RETAIN both the function and the field values (per D1a) for
+      `home-layout.tsx`'s slider badge; do not remove them.
 - [ ] D3. Write/extend a component test asserting the sidebar renders counts from the live-query
       hook, not the hardcoded values (following the existing landing-page test pattern per SPEC
       AC4 `proven by:` note).
@@ -170,13 +221,32 @@ corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts
 Orchestrator reads this before deciding which subagent to spawn next. The canonical 7-step inner loop
 `R → I → P → PVL → E → EVL → UP` SKIPS SPEC (SPEC runs once in the outer program loop).
 
-- [ ] 1. RESEARCH — research-agent: re-verify WIP diff state; read Phase 1 report; test context loaded
-- [ ] 2. INNOVATE — innovate-agent: confirm Fork D3 still holds given current WIP state; Decision Summary written
-- [ ] 3. PLAN-SUPPLEMENT — plan-agent: existing phase plan updated; Inner Loop Refresh Note if sections changed (or "n/a — research clean")
+- [x] 1. RESEARCH — confirmed `useCategoryTagCounts()` work is committed (`813ab13`), not WIP;
+      found content-divergence (`TemplatesListSEO` vs `FilterChips`/`TemplatesContainer`) and
+      admin-only nav gating context; confirmed `apps/web/app/page.tsx` already hosts a
+      `generateMetadata` export compatible with client-heavy rendering; Phase 1 report re-read.
+- [x] 2. INNOVATE — locked 3 decisions: B1a → option (b) dynamic `generateMetadata({searchParams})`
+      on the home route (rejecting (a) dead-metadata-on-redirect and (c) accept-regression); B2 →
+      `permanentRedirect()` 308 not `redirect()` 307; D1a → retain `getTagDemosCount()`/`demosCount`
+      for `home-layout.tsx`, scope D2 to confirm-only. Decision Summary folded into Purpose/Step B/
+      Step D checklist text directly (no separate decision-summary doc for this small supplement).
+- [x] 3. PLAN-SUPPLEMENT — this inner-loop cycle: 7 RESEARCH/INNOVATE findings folded into Purpose,
+      Entry Gate, Step A1, Step B1a, Step B2, Step D1a, and Public Contracts; Inner Loop Refresh
+      Note written below (dated 26-07-26, newer than the existing 25-07-26 validate-contract) to
+      force PVL re-run from V1.
 - [x] 4. PVL — vc-validate-agent: full V1-V7; validate-contract written per `.claude/skills/vc-validate-findings/references/example-validate-output.md` — Gate: CONDITIONAL (first pass, 0 fix cycles) — SUPPLEMENT REQUEST emitted, orchestrator must run one plan-validate-fix cycle before EXECUTE
-- [ ] 5. EXECUTE — all checklist items done; per-section test gates run and green (or gaps documented)
-- [ ] 6. EVL — all EVL gates green; follow-up stubs registered; EVL HANDOFF SUMMARY written
-- [ ] 7. UPDATE PROCESS — phase report written, umbrella state updated, commit done
+- [x] 5. EXECUTE — all checklist items done (A-D + E1-E4); `tsc --noEmit` 0 errors; vitest 82/82
+      across 21 files (baseline 73/18, +9 new, zero regressions); 3 new assertions mutation-tested
+      to confirm non-vacuous. See `phase-04-navigation_REPORT_26-07-26.md`.
+- [x] 6. EVL — independent gate re-run confirmed green (`results.tsv`: `1 phase-04-evl tests 0 0
+      PASS HALTED_SUCCESS 2026-07-26`); no follow-up plan stubs required — all Execute-Agent
+      Instructions (E1-E4) resolved in-phase. Test Infra Gaps (wire-level 308 unprovable — Clerk dev
+      keys absent; 58 foreign color-contrast violations on `/?tab=templates`; no pre-change e2e
+      baseline) carried to backlog, not blocking.
+- [x] 7. UPDATE PROCESS — phase report finalized, umbrella `## Current Execution State` rewritten,
+      context docs updated, backlog note written, D2 wording corrected above. Classification: Keep
+      in active/testing (code-complete, both automated gates green; e2e/a11y baseline debt and
+      wire-level-308 proof are the residual gaps, tracked in backlog — not implementation defects).
 
 **Validate-contract required before execute.** If step 4 (PVL) is unchecked or `## Validate Contract`
 reads "(placeholder — vc-validate-agent writes this section before EXECUTE)", orchestrator must
@@ -200,6 +270,10 @@ spawn vc-validate-agent first.
 - Nav item hrefs/route destinations are the user-facing contract being fixed — `/templates`'s
   redirect target changes from "a disagreeing standalone page" to "the canonical tab view," which
   is the intended behavior change, not a regression.
+- **Locked decision (INNOVATE, 26-07-26):** the redirect's HTTP status code is a public contract
+  detail in its own right — `/templates` will respond with **308 Permanent Redirect**
+  (`permanentRedirect()`), not 307, signaling to crawlers and any external caller that the merge is
+  permanent. See Step B2 for the full rationale.
 - No API route contracts change.
 - **Added by VALIDATE (V2 finding, not in original plan):** `/templates` currently exports
   page-specific SEO metadata (`generateMetadata`-style static export: title "shadcn/ui Templates
@@ -228,9 +302,13 @@ corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts
 ## Resume and Execution Handoff
 
 - Selected plan file path: `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_PLAN_25-07-26.md`
-- Last completed step: V1-V7 VALIDATE pass complete (outer PVL) — Gate: CONDITIONAL, first pass
-- Validate-contract status: written (CONDITIONAL) — requires one plan-validate-fix supplement cycle before EXECUTE
-- Next step: Orchestrator routes SUPPLEMENT REQUEST (below) to vc-plan-agent (PVL-supplement mode), then re-spawns vc-validate-agent from V1
+- Last completed step: PLAN-SUPPLEMENT (inner loop, 26-07-26) — 7 RESEARCH/INNOVATE findings folded
+  in; 3 locked decisions replace prior open (a)/(b)/(c) choices; Inner Loop Refresh Note written
+- Validate-contract status: SUPERSEDED pending re-validation — the existing `date: 2026-07-25`
+  contract is now stale relative to the 26-07-26 Inner Loop Refresh Note; do NOT treat it as current
+- Next step: orchestrator spawns vc-validate-agent for a full PVL re-run from V1 (NOT execute) —
+  V1 will detect the newer Inner Loop Refresh Note and proceed to V2 fan-out rather than
+  early-exiting on the old contract
 
 ---
 
@@ -245,39 +323,62 @@ corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts
 
 ---
 
+## Inner Loop Refresh Note
+
+Date: 26-07-26 (newer than the existing validate-contract's `date: 2026-07-25` — this triggers the
+mechanical Step 4b re-validation check; PVL must re-run from V1 before EXECUTE).
+
+Sections changed this cycle: Purpose (scope-honesty note, content-divergence note, admin-only
+visibility note), Entry Gate (grant-dependency correction, staleness correction), Step A1
+(reworded from "uncommitted diff" to "confirm committed implementation"), Step B1a (locked to
+option (b) + EXECUTE pre-check), Step B2 (locked to `permanentRedirect()` 308), Step D1a (locked to
+retain-and-scope-down), Public Contracts (308 status code recorded as locked decision), Phase Loop
+Progress (Steps 1-3 ticked with summaries).
+
+Reason for re-run: 3 of the 3 original CONDITIONAL-gate CONCERNs (B1a SEO mitigation, D1a
+home-layout.tsx regression risk) are now resolved by locked decisions rather than open
+Execute-Agent Instructions alone — vc-validate-agent should re-check whether these locked decisions
+close the corresponding SUPPLEMENT REQUEST gaps (Gap 1 and Gap 2) or whether residual concerns
+remain. Gap 3 (orphan-route regression check, minor/non-blocking) is unchanged by this cycle.
+
+
 ## Validate Contract
 
 Status: CONDITIONAL
-Date: 25-07-26
-date: 2026-07-25
-generated-by: outer-pvl
+Date: 26-07-26
+date: 2026-07-26
+generated-by: inner-pvl: phase-4
+supersedes: 2026-07-25 (outer-pvl) — inner PVL re-run triggered by the 26-07-26 Inner Loop Refresh
+Note; RESEARCH+INNOVATE+PLAN-SUPPLEMENT ran since the superseded contract and locked 3 decisions
+(B1a, B2, D1a) that substantively close 2 of the prior contract's 3 CONCERNs — this contract
+carries current evidence.
 
 Parallel strategy: sequential
-Rationale: Single self-contained phase plan, one validate-agent instance, no cross-agent
-communication needed for this PVL pass (Layer 1/Layer 2 findings synthesized directly by one
-agent — signal count 1/7: only S7 marginally applies at 6 blast-radius files, below the 3+
-threshold for parallel fan-out).
+Rationale: Single self-contained phase plan re-validation, one validate-agent instance, no
+cross-agent communication needed (signal count 0/7 — 6 blast-radius files, below the 3+/5+
+thresholds; no schema/auth/billing/container surface; not a multi-direction fan-out).
 
 Test gates (C3 5-column table):
 
 | criterion id | behavior | strategy | proving test | gap-resolution |
 |---|---|---|---|---|
-| AC4 | Sidebar renders live category tag counts from `useCategoryTagCounts()`, not hardcoded `demosCount` | Fully-Automated | `corepack pnpm --filter web exec vitest run components/features/main-page/__tests__/sidebar-layout.test.tsx` (extend with a case asserting a non-zero `tagCounts` entry renders as the item's count) | B |
-| AC9 (nav resolution) | Every main-nav item resolves to exactly one destination; `/templates` redirects into `?tab=templates` | Fully-Automated | `corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts` (extend `auditRoute`/route list to assert `/templates` resolves to the `?tab=templates` view, not a distinct page) | B |
+| AC4 | Sidebar renders live category tag counts from `useCategoryTagCounts()`, not hardcoded `demosCount` | Fully-Automated | `corepack pnpm --filter web exec vitest run components/features/main-page/__tests__/sidebar-layout.test.tsx` (extend with a case asserting a non-zero `tagCounts` entry renders as the item's count) — baseline confirmed 3/3 passing this session | B |
+| AC9 (nav resolution) | Every main-nav item resolves to exactly one destination; `/templates` redirects into `?tab=templates` via `permanentRedirect()` (308) | Fully-Automated | `corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts` (extend `auditRoute`/route list to assert `/templates` resolves to the `?tab=templates` view content, not `TemplatesListSEO`) — `playwright.config.ts` defines a `webServer` block, so this runs with no manual precondition | B |
 | AC9 (orphans documented) | `/public-dashboard`, `/import-old` documented as intentionally-unlinked internal routes | Hybrid | Code comment at each route's entry point + phase-report review; precondition: reviewer manually confirms comment text at both files | B |
 | AC4/AC9 (WIP reconciliation) | Phase 4 builds on WIP `useCategoryTagCounts()` rather than duplicating it | Agent-Probe | Code review during EXECUTE confirming no second count-fetching mechanism was introduced; `git diff` shows only 1 hook definition | A |
-| (regression guard, VALIDATE finding) | `home-layout.tsx`'s `getTagDemosCount()`-derived tag-slider counts do not silently regress to 0 when `lib/navigation.ts` `demosCount` values are touched by Step D2 | Hybrid | `corepack pnpm --filter web test` — no existing test covers `home-layout.tsx`; precondition: execute-agent manually confirms (per Execute-Agent Instruction E1) that `getTagDemosCount()`/`demosCount` are retained for `home-layout.tsx`'s sake before Step D2 is applied | D |
-| (SEO regression guard, VALIDATE finding) | `/templates`'s existing SEO metadata (title/description/OG/keywords) is not silently dropped by the Step B2 redirect | Agent-Probe | Manual review during EXECUTE per Execute-Agent Instruction E2 — no automated SEO-crawl test exists in this repo | D |
+| (regression guard) | `home-layout.tsx`'s `getTagDemosCount()`-derived tag-slider counts do not regress to 0 when Step D touches `lib/navigation.ts`/`queries.ts` | Hybrid | `corepack pnpm --filter web test` — no dedicated test covers `home-layout.tsx`; precondition: execute-agent manually confirms (Execute-Agent Instruction E1) that `getTagDemosCount()`/`demosCount` are retained before Step D2 is applied | D |
+| (SEO preservation) | `/templates`'s existing SEO metadata (title/description/OG/keywords) is preserved via `generateMetadata({searchParams})` on the home route (locked decision B1a) | Agent-Probe | Manual review during EXECUTE per Execute-Agent Instruction E2 — no automated SEO-crawl test exists in this repo; confirmed this pass by direct read that `apps/web/app/page.tsx`'s existing `generateMetadata` export and its sibling default export already destructure `searchParams: Promise<{tab?: string}>` in the same file, so the pattern has an in-file precedent | D |
+| (dead-code retirement, NEW this pass) | `TemplatesListSEO` component becomes fully orphaned once `/templates/page.tsx` is converted to a redirect | Agent-Probe | Manual decision + action during EXECUTE per Execute-Agent Instruction E4 — confirmed by repo-wide grep that its only importers are `apps/web/app/templates/page.tsx` (being replaced) and its own file; deletion (recommended) is implicitly checked by the existing `tsc --noEmit` gate (a stray import would fail the build) | D |
 
 gap-resolution legend:
 - A — proven now (gate passes in this cycle)
-- B — fixed in this plan (gate added by this plan's checklist, via Step D3/B2/C1 or the
-  plan-validate-fix supplement this CONDITIONAL gate requires)
+- B — fixed in this plan (gate added by this plan's checklist, via Step D3/B2/C1)
 - C — deferred to a named later phase/plan
-- D — backlog test-building stub (named residual; keep-active; continue) — both D-rows above are
+- D — backlog test-building stub (named residual; keep-active; continue) — all three D-rows are
   resolved for THIS pass via Execute-Agent Instructions (manual guardrail) rather than a new
-  automated test, because the underlying files (`home-layout.tsx`, `/templates` SEO crawl) sit
-  outside this phase's Blast Radius and adding real automated coverage for them is out of scope.
+  automated test, because the underlying files/behaviors sit outside this phase's automation
+  boundary (no live DB, no SEO-crawl harness, no dedicated home-layout.tsx test suite) or are a
+  one-time deletion decision better made by a human/agent reviewer than a test.
 
 Legacy line form (retained so existing validate-contract consumers still parse):
 - Sidebar counts: Fully-automated: `corepack pnpm --filter web exec vitest run components/features/main-page/__tests__/sidebar-layout.test.tsx` (extended)
@@ -285,75 +386,81 @@ Legacy line form (retained so existing validate-contract consumers still parse):
 - Orphaned routes: hybrid: code comment + phase-report review, precondition: manual reviewer confirmation
 - WIP reconciliation: agent-probe: code review during EXECUTE, no second count-fetch mechanism introduced
 - home-layout.tsx count regression: known-gap: documented as Execute-Agent Instruction E1 (no automated test exists for home-layout.tsx; out of Blast Radius)
-- /templates SEO metadata loss: known-gap: documented as Execute-Agent Instruction E2 (no automated SEO-crawl test exists in this repo)
+- /templates SEO metadata loss: known-gap: documented as Execute-Agent Instruction E2 (mitigated by locked decision B1a; no automated SEO-crawl test exists in this repo)
+- TemplatesListSEO dead-code retirement: known-gap: documented as Execute-Agent Instruction E4 (new this pass; no automated dead-code-detection test exists in this repo)
 
 Dimension findings:
-- Infra fit: PASS — all Blast Radius file paths confirmed to exist on disk (`use-navigation.ts`,
-  `atoms.ts`, `navigation.ts`, `sidebar-layout.tsx`, `app/templates/page.tsx`, `queries.ts`). No
-  container/infra/runtime surface touched. `demo_tags` and `component_tags` (the two tables
-  `useCategoryTagCounts()` reads) are ALREADY in the confirmed 14-relation authenticated grant
-  baseline (per SPEC Background) — this phase's count-query mechanism does not actually require
-  Phase 1's grant fix to function, reducing the practical risk of the stated Phase 1 dependency
-  (kept as a conservative Entry Gate per the umbrella's join conditions, not loosened here).
-- Test coverage: CONCERN — AC4/AC9's primary gates are Fully-Automated and well-targeted (extending
-  two files that already exist and already pass: `sidebar-layout.test.tsx` — 3/3 passing baseline
-  confirmed this session — and `e2e/a11y.spec.ts`). The gap is in the two VALIDATE-discovered
-  regression surfaces (home-layout.tsx, /templates SEO) which have zero test coverage and sit
-  outside Blast Radius — see Execute-Agent Instructions E1/E2 for the accepted mitigation.
-- Breaking changes: CONCERN — `/templates`'s dedicated SEO metadata export
-  (`apps/web/app/templates/page.tsx:8-27`) is a public contract not listed in the original plan's
-  Public Contracts section; converting the route to a redirect risks silently dropping it for
-  crawlers. Added to Public Contracts above; mitigation is Execute-Agent Instruction E2.
-- Security surface: PASS — no auth, billing, schema, or secret-handling surface touched by this
-  phase.
-- Section A (WIP reconciliation): PASS — mechanical feasibility confirmed by direct file read:
-  `git status --short` on the 3 claimed WIP files (`sidebar-layout.tsx`, `sidebar-layout.test.tsx`,
-  `queries.ts`) matches exactly; `sidebar-layout.tsx` calls `useCategoryTagCounts()` (not
-  `getTagDemosCount()`); no `href`/`navigateToTab`/`?tab=`/`router.push` changes found in the WIP
-  diff scope. No conflicts found. Highest-risk edit: none — this step is read/confirm only.
-- Section B (`/templates` reconciliation): CONCERN — mechanically feasible (a server-side redirect
-  via `next/navigation`'s `redirect()` is a standard, low-risk implementation, and Playwright's
-  `page.goto()` + `waitForLoadState("networkidle")` in `e2e/a11y.spec.ts` will correctly follow a
-  server-side redirect before auditing, so the existing test is NOT expected to break — only to
-  start auditing the destination content, which is the intended behavior). Gap found: SEO metadata
-  loss (see Breaking changes above) is unaddressed by the checklist. No conflicts found beyond that
-  gap. Highest-risk edit + mitigation: B2's redirect implementation — mitigate by using a
-  server-side `redirect()` (not a client-only `router.replace`) so crawlers and the a11y spec both
-  see a single clean redirect, and apply Execute-Agent Instruction E2 for the metadata question.
-- Section C (orphaned routes documentation): CONCERN (minor) — mechanically feasible (a code
-  comment is trivial to add at both `apps/web/app/public-dashboard/page.tsx` and
-  `apps/web/app/import-old/page.tsx`). Confirmed genuinely zero non-test inbound references to
-  `/import-old`; `/public-dashboard` has zero UI-navigation inbound links but IS referenced by
-  `e2e/a11y.spec.ts` and `e2e/visual-evidence.spec.ts` (test-only, consistent with "orphaned from
-  nav" framing). Gap found: SPEC AC9's `proven by:` note asks for "a regression check," and a bare
-  code comment has no verifiable regression signal (nothing fails if it's later deleted). Highest-
-  risk edit + mitigation: none high-risk; low-severity gap, mitigated via Execute-Agent Instruction
-  E3 (optional, non-blocking).
-- Section D (sidebar counts): CONCERN — mechanically feasible; `D1`/`D3` are straightforward given
-  the WIP already implements `useCategoryTagCounts()` and `sidebar-layout.test.tsx` already mocks
-  it. Gap found: `D2`'s instruction to "confirm no other consumer still depends on the hardcoded
-  values before removing" is correct in spirit but the plan's own Blast Radius does not list the
-  consumer VALIDATE found: `apps/web/components/features/home/home-layout.tsx:8,226` calls
-  `getTagDemosCount(category.id)` for its own (unrelated) tag-slider "view all" counts, reading the
-  same `lib/navigation.ts` `demosCount` values D2 proposes to remove. If D2 is applied literally
-  (remove the hardcoded values), `home-layout.tsx`'s counts silently regress to 0 with no test to
-  catch it (zero test coverage on that file, confirmed by search). Highest-risk edit + mitigation:
-  D2 is the single highest-risk edit in this phase — mitigate via Execute-Agent Instruction E1
-  (retain `getTagDemosCount()`/`demosCount` for `home-layout.tsx`'s sake; only remove the
-  now-already-absent sidebar dependency, i.e. treat D2 as effectively already satisfied for the
-  sidebar and do not touch `lib/navigation.ts`'s `demosCount` field values or the exported
-  `getTagDemosCount()` function itself unless `home-layout.tsx` is also migrated within this
-  phase's scope).
+- Infra fit: PASS — all Blast Radius file paths confirmed to exist on disk this pass (direct
+  `Read`/`find` of `use-navigation.ts`, `atoms.ts`, `navigation.ts`, `sidebar-layout.tsx`,
+  `app/templates/page.tsx`, `queries.ts`, plus the newly-relevant `home-layout.tsx`). No
+  container/infra/runtime surface touched. `demo_tags`/`component_tags` confirmed already in the
+  live 14-relation authenticated grant baseline (Entry Gate correction) — Phase 1's live apply is
+  not a functional blocker for this phase. `phase-blast-radius-registry.md` shows no
+  `status: BLOCKED-skipped` on Phase 1 — Dependency-BLOCKED guard does not trip.
+- Test coverage: CONCERN — AC4/AC9's primary gates remain Fully-Automated and well-targeted
+  (re-ran `sidebar-layout.test.tsx` this session: 3/3 passing, confirmed live not just claimed;
+  confirmed `playwright.config.ts` has a `webServer` block so the a11y gate needs no manual
+  precondition). The residual gap is the 3 Agent-Probe/Hybrid rows above (home-layout.tsx
+  regression, SEO preservation, TemplatesListSEO retirement) which have zero automated coverage
+  and sit outside or at the edge of Blast Radius — mitigated via Execute-Agent Instructions
+  E1/E2/E4, not silently absorbed.
+- Breaking changes: CONCERN — two items: (1) `/templates`'s SEO metadata public contract is now
+  addressed by a locked decision (B1a) rather than an open gap, downgrading its severity, but (2) a
+  NEW breaking-change-adjacent finding this pass: converting `/templates` to a redirect leaves
+  `TemplatesListSEO` (`apps/web/components/features/templates/templates-list-seo.tsx`) with zero
+  remaining importers — the plan does not say what happens to this component. Not a functional
+  regression (its `get_templates_v3` RPC dependency stays live via the separate `templates-list.tsx`
+  consumer used by the `?tab=templates` view), but an unaddressed dead-code gap. See Execute-Agent
+  Instruction E4.
+- Security surface: PASS — no auth, billing, schema, or secret-handling surface touched.
+
+- Section A (WIP reconciliation): PASS — re-confirmed by direct code read this pass:
+  `sidebar-layout.tsx` calls `useCategoryTagCounts()` and `useIsAdmin()`; zero references to
+  `demosCount`/`getTagDemosCount` anywhere in `sidebar-layout.tsx` (grep returned no matches); the
+  `isAdmin` gate at the Templates/Bundles/Pro nav-item filter is present and unchanged. No
+  conflicts found. Highest-risk edit: none — this step is read/confirm only.
+- Section B (`/templates` reconciliation): CONCERN — mechanical feasibility CONFIRMED two ways: (1)
+  `permanentRedirect()`/`redirect()` from `next/navigation` already has live precedent elsewhere in
+  this repo (`apps/web/app/settings/page.tsx`, `apps/web/app/studio/page.tsx`, and others), so B2 is
+  a standard, low-risk pattern; (2) `apps/web/app/page.tsx`'s existing `generateMetadata` export
+  (currently zero-arg, static) sits in the same file as a default export that already destructures
+  `searchParams: Promise<{tab?: string}>` — adding the same parameter to `generateMetadata` and
+  branching on `tab === "templates"` is the same, already-proven pattern, not a restructure. B1a's
+  pre-check claim is confirmed sound. Repo-wide grep found exactly ONE inbound reference to the
+  literal string `/templates` outside the route's own files: `e2e/a11y.spec.ts:12` — the nav item
+  itself already targets `?tab=templates` via `navigateToTab()`/`getMainPageUrlWithTab()`, so there
+  is no second path and no redirect loop (the redirect target `/?tab=templates` does not itself
+  redirect). Gap found (NEW this pass): the plan does not address `TemplatesListSEO`'s disposition
+  once `/templates/page.tsx` no longer imports it — see Breaking changes above and Execute-Agent
+  Instruction E4. No other conflicts found. Highest-risk edit + mitigation: B2's redirect
+  implementation — mitigate by using `permanentRedirect()` (already locked) and applying
+  Execute-Agent Instruction E4 for the orphaned-component question.
+- Section C (orphaned routes documentation): CONCERN (minor, unchanged from the prior cycle) —
+  mechanically feasible; confirmed `/public-dashboard` and `/import-old` still have zero
+  UI-navigation inbound references (only test-file references, consistent with "orphaned from nav"
+  framing). Gap unchanged: SPEC AC9's "regression check" language is stronger than a bare code
+  comment. Non-blocking; Execute-Agent Instruction E3 (optional) stands unchanged.
+- Section D (sidebar counts): PASS — re-confirmed by direct code read this pass that
+  `home-layout.tsx:8,226` genuinely calls `getTagDemosCount(category.id)`, and `getTagDemosCount()`
+  (`queries.ts:1098-1102`) genuinely reads `lib/navigation.ts`'s hardcoded `demosCount` field via the
+  `categories` array — so D1a's locked decision (retain both, do not migrate `home-layout.tsx` in
+  this phase) is confirmed necessary and correctly targeted, and Execute-Agent Instruction E1
+  correctly governs D2's literal execution. Editorial note (non-scored): the Implementation
+  Checklist's own D2 bullet text still reads "Remove the hardcoded `demosCount` values..." which,
+  read in isolation, contradicts D1a's locked "retain, scope down to confirm-only" text directly
+  above it. This is not scored as a gate-affecting CONCERN because two independent, more specific
+  and more recent instructions (D1a's own prose, and Execute-Agent Instruction E1) already govern
+  actual EXECUTE behavior and both correctly say "retain" — but it is worth a future one-line
+  cleanup of D2's checklist wording for clarity. No functional risk found.
 
 What this coverage does NOT prove:
 - The Fully-Automated sidebar-count test proves the component renders `tagCounts` values when
   present — it does NOT prove the live Supabase query itself returns correct counts against
-  production data (that requires a live/seeded DB, out of this phase's automation boundary per the
-  SPEC's Cross-Cutting Requirement).
+  production data (requires a live/seeded DB, out of this phase's automation boundary).
 - The Fully-Automated route-reachability test proves `/templates` resolves to expected page
-  content — it does NOT prove search-engine crawlers will index the redirect target with
-  equivalent SEO value to the current dedicated page (no crawl-simulation harness exists in this
-  repo).
+  content via a real browser (Playwright + its own dev server) — it does NOT prove search-engine
+  crawlers will index the redirect target with equivalent SEO value to the current dedicated page
+  (no crawl-simulation harness exists in this repo).
 - The Hybrid orphan-route documentation gate proves a comment exists at review time — it does NOT
   prove the comment will be preserved on future edits (no automated enforcement).
 - The Agent-Probe WIP-reconciliation review proves no duplicate mechanism exists at EXECUTE time —
@@ -361,64 +468,115 @@ What this coverage does NOT prove:
   this).
 - The Hybrid `home-layout.tsx` regression guard proves a human/execute-agent manually checked the
   dependency before touching `lib/navigation.ts` — it does NOT prove automated regression coverage
-  exists for `home-layout.tsx` going forward (Test Infra Improvement Note above tracks this gap).
+  exists for `home-layout.tsx` going forward (Test Infra Improvement Note tracks this gap).
+- The Agent-Probe SEO-preservation review proves the `generateMetadata` branch was implemented and
+  manually eyeballed — it does NOT prove the resulting HTML actually satisfies real crawler
+  requirements (no crawl-simulation harness exists in this repo).
+- The Agent-Probe dead-code-retirement review proves a human/execute-agent made and recorded an
+  explicit decision about `TemplatesListSEO` — it does NOT prove no other, not-yet-written code will
+  re-import it in the future (no lint rule enforces this); it also does not prove deletion is
+  complete beyond what `tsc --noEmit` would catch (a broken import fails the build, but an unused
+  file that nothing imports would not fail the build if merely left in place undeleted).
 
 Execute-Agent Instructions (apply during EXECUTE regardless of which plan-validate-fix supplement
 cycle folds these into the checklist text):
 - E1. Before applying Step D2, grep for all remaining call sites of `getTagDemosCount` and any
-  reader of `lib/navigation.ts`'s `demosCount` field. Confirmed today: `home-layout.tsx:8,226` is a
-  live, in-scope consumer. Do NOT delete `getTagDemosCount()` or the `demosCount` field values
+  reader of `lib/navigation.ts`'s `demosCount` field. Confirmed this pass: `home-layout.tsx:8,226`
+  is a live, in-scope consumer. Do NOT delete `getTagDemosCount()` or the `demosCount` field values
   unless `home-layout.tsx` is migrated to a live-count source within this same phase (out of the
   current Blast Radius — if migrating it, add it to Blast Radius and note the addition in the
   phase report; if not migrating it, leave the function and hardcoded values in place and scope D2
-  down to "confirmed sidebar no longer depends on them" only).
-- E2. Before applying Step B2, decide and document (in the phase report) how `/templates`'s
-  existing SEO metadata (`page.tsx:8-27` — title, description, keywords, OpenGraph) is preserved
-  or intentionally sacrificed: options are (a) keep a server-side redirect but retain the
-  `metadata` export with a `<link rel="canonical">` pointing at `/?tab=templates`, (b) move the
-  equivalent metadata onto the home page's `?tab=templates` render path via dynamic
-  `generateMetadata` keyed on the `tab` search param, or (c) accept the SEO regression explicitly
-  as a documented trade-off with rationale. Do not implement B2 silently without one of these three
-  being chosen and recorded.
-- E3 (optional, non-blocking). When applying Step C1, consider adding a trivial assertion (e.g. a
-  one-line grep check in a test, or extending `e2e/a11y.spec.ts`'s existing route list assertions)
-  that the orphan-route comment text is present, so SPEC AC9's "regression check" language is
-  literally satisfied rather than only documented. Skip if judged disproportionate; note the
-  decision either way in the phase report.
+  down to "confirmed sidebar no longer depends on them" only). This instruction is authoritative
+  over the Implementation Checklist's D2 bullet text where the two appear to conflict — D1a's
+  locked decision and this instruction both say "retain."
+- E2. **Updated this pass — B1a is now a locked decision, not an open choice.** Implement Step B1a
+  exactly as locked: add a `searchParams` parameter to `apps/web/app/page.tsx`'s existing
+  `generateMetadata` export (mirroring the default export's own
+  `searchParams: Promise<{tab?: string}>` destructuring pattern already in the same file), await
+  it, and when `tab === "templates"` return the metadata object currently defined at
+  `apps/web/app/templates/page.tsx:8-27` (title/description/keywords/OpenGraph) instead of the
+  default WebSite metadata. Do not re-litigate options (a) keep-metadata-on-redirect or (c)
+  accept-the-regression — both are rejected per B1a's rationale. Confirm in the phase report that
+  the branch was implemented and that the existing `generateMetadata` JSON-LD `WebSite` behavior is
+  unaffected for the `!tab` case.
+- E3 (optional, non-blocking, unchanged). When applying Step C1, consider adding a trivial
+  assertion (e.g. a one-line grep check in a test, or extending `e2e/a11y.spec.ts`'s existing route
+  list assertions) that the orphan-route comment text is present, so SPEC AC9's "regression check"
+  language is literally satisfied rather than only documented. Skip if judged disproportionate;
+  note the decision either way in the phase report.
+- E4 (NEW this pass). Before or immediately after applying Step B2, decide and document (in the
+  phase report) the disposition of `apps/web/components/features/templates/templates-list-seo.tsx`
+  (the `TemplatesListSEO` component), which becomes fully orphaned once
+  `apps/web/app/templates/page.tsx` stops importing it. Confirmed this pass via repo-wide grep: its
+  only importers today are `apps/web/app/templates/page.tsx` (being replaced) and its own file — no
+  other file imports it. Its `get_templates_v3` RPC dependency remains safely in use elsewhere via
+  `apps/web/components/features/templates/templates-list.tsx` (the `?tab=templates` view's live
+  consumer), so deleting `TemplatesListSEO` does not touch that RPC contract. Recommended: delete
+  the file. Acceptable alternative: leave it in place with an explicit `// ORPHANED — no longer
+  imported after the /templates redirect (see phase-04-navigation plan)` comment. Do not leave it
+  silently in place undocumented.
 
-Backlog Artifacts: none required this cycle — E1/E2/E3 are resolved as Execute-Agent Instructions,
-not deferred to backlog, because they are actionable within this phase's own EXECUTE step.
+Backlog Artifacts: none required this cycle — E1/E2/E3/E4 are all resolved as Execute-Agent
+Instructions actionable within this phase's own EXECUTE step; none require a separate backlog note
+or a follow-up phase.
 
 Known gaps: none pre-classified via a `## Known Gaps (Resolved via Backlog)` section in this plan
-(no such section exists) — see the two `D`-gap-resolution rows above (home-layout.tsx regression
-guard, /templates SEO regression guard), which are carried as Hybrid/Agent-Probe manual gates via
-Execute-Agent Instructions E1/E2, not silent known-gaps.
+(no such section exists) — see the three `D`-gap-resolution rows above (home-layout.tsx regression
+guard, /templates SEO preservation, TemplatesListSEO retirement), which are carried as
+Hybrid/Agent-Probe manual gates via Execute-Agent Instructions E1/E2/E4, not silent known-gaps.
 
-Gate: CONDITIONAL (first pass, 0 prior plan-validate-fix cycles — per protocol this is NOT
-terminal; requires one plan-validate-fix supplement cycle before EXECUTE unless the orchestrator
-explicitly accepts these concerns as resolved via the Execute-Agent Instructions above without a
-plan-text rewrite)
-Accepted by: session (autonomous, /goal execution) — concerns E1/E2/E3 above are structured as
-Execute-Agent Instructions rather than blocking FAILs; net gate is CONDITIONAL because 3 CONCERNs
-(0 FAILs) were found and the phase's Blast Radius does not yet list the two files VALIDATE found
-as coupled to this phase's changes (`home-layout.tsx`, `/templates` metadata regression).
+### Net Gate Derivation
+
+| Layer 1 dimensions | Status |
+|---|---|
+| Infra fit | PASS |
+| Test coverage | CONCERN |
+| Breaking changes | CONCERN |
+| Security surface | PASS |
+
+| Layer 2 sections | Status |
+|---|---|
+| Section A — WIP reconciliation | PASS |
+| Section B — `/templates` reconciliation | CONCERN |
+| Section C — orphaned routes documentation | CONCERN (minor) |
+| Section D — sidebar counts | PASS |
+
+**Totals: 0 FAILs / 4 CONCERNs / 4 PASSes**
+
+**→ Net Gate: CONDITIONAL**
+
+Gate: CONDITIONAL (this is inner-PVL cycle 1 for this phase, run immediately after the
+RESEARCH+INNOVATE+PLAN-SUPPLEMENT cycle that already resolved 2 of the prior contract's 3 original
+CONCERNs — B1a SEO mitigation and D1a home-layout.tsx risk — via locked decisions folded into plan
+text. This pass found 0 FAILs and 4 CONCERNs: 1 residual/downgraded (test coverage, unchanged in
+kind), 1 partially-resolved-but-newly-surfaced (breaking changes — SEO gap closed, but
+TemplatesListSEO orphan gap newly found), 1 carried-over-minor-unchanged (Section C orphan-route
+regression check), and the Section B concern tracking the same TemplatesListSEO finding. All 4
+CONCERNs are resolved via Execute-Agent Instructions (E1-E4) rather than requiring a further
+plan-text rewrite, consistent with this plan's own established precedent from the prior cycle.
+Recommend the orchestrator accept this CONDITIONAL gate and proceed to EXECUTE without an
+additional supplement loop, since the residual items are small, actionable, execute-time
+decisions rather than open design questions — but this is the orchestrator's call to make per its
+own PVL cycle-count bookkeeping.)
+Accepted by: session (autonomous, /goal execution) — concerns are structured as Execute-Agent
+Instructions E1 (home-layout.tsx retention, carried), E2 (SEO metadata via locked decision B1a,
+updated), E3 (orphan-route regression check, carried, optional), and E4 (TemplatesListSEO
+retirement decision, new this pass) rather than blocking FAILs or open plan-text gaps.
 
 ---
 
-## SUPPLEMENT REQUEST (for orchestrator routing — see V7)
+## SUPPLEMENT REQUEST (for orchestrator routing — see V7; informational this pass, see Gate note above)
 
-- Gap 1: Section: implementation-checklist (Step D — Sidebar counts) | Concern: `home-layout.tsx`
-  (outside Blast Radius) depends on `getTagDemosCount()`/`lib/navigation.ts` `demosCount` values;
-  Step D2 as written risks silently breaking `home-layout.tsx`'s tag-slider counts if the function
-  and field values are removed. | Severity: CONCERN | Suggested addition: add a checklist item
-  under Step D confirming `getTagDemosCount()`/`demosCount` are retained for `home-layout.tsx`'s
-  sake (or add `home-layout.tsx` to Blast Radius and migrate it in-phase).
-- Gap 2: Section: implementation-checklist (Step B — `/templates` reconciliation) | Concern:
-  Converting `/templates` into a redirect discards its dedicated SEO metadata export with no
-  stated mitigation. | Severity: CONCERN | Suggested addition: add a checklist item requiring an
-  explicit SEO-preservation decision (canonical tag, migrated metadata, or documented trade-off)
-  before B2 is implemented.
-- Gap 3: Section: implementation-checklist (Step C — Document orphaned routes) | Concern: SPEC
-  AC9's "regression check" language is stronger than the checklist's bare code-comment mitigation.
-  | Severity: CONCERN (minor, non-blocking) | Suggested addition: optionally add a one-line
-  assertion (grep-based or extended a11y spec check) confirming the orphan-route comments exist.
+- Gap 4 (NEW this pass): Section: implementation-checklist (Step B — `/templates` reconciliation) |
+  Concern: `TemplatesListSEO` becomes a fully orphaned component (zero importers) once
+  `/templates/page.tsx` is converted to a redirect; the plan does not state its disposition. |
+  Severity: CONCERN | Suggested addition: resolved via Execute-Agent Instruction E4 this pass
+  (delete or explicitly mark deprecated); no plan-text checklist rewrite required.
+- Gap 3 (carried, unchanged): Section: implementation-checklist (Step C — Document orphaned
+  routes) | Concern: SPEC AC9's "regression check" language is stronger than the checklist's bare
+  code-comment mitigation. | Severity: CONCERN (minor, non-blocking) | Suggested addition:
+  Execute-Agent Instruction E3 (optional, unchanged) — add a one-line assertion if not judged
+  disproportionate.
+- Gap 1 and Gap 2 from the superseded 25-07-26 contract are RESOLVED this cycle: Gap 1
+  (home-layout.tsx regression risk) closed by locked decision D1a + Execute-Agent Instruction E1;
+  Gap 2 (SEO metadata loss) closed by locked decision B1a + updated Execute-Agent Instruction E2.

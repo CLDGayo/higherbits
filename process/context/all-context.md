@@ -226,6 +226,7 @@ Cozy Downloads/
 - **Node:** Node 22+ required for tooling; pnpm via corepack (`corepack pnpm ...`). v22.22.2 installed; login shell may resolve a different default — prefer an explicit Node 22 for pnpm.
 - **Config files:** `turbo.json`, `pnpm-workspace.yaml`, root + per-package `tsconfig.json`, `tailwind.config.ts`, `postcss.config.mjs`, `next.config.mjs`.
 - **Env vars:** `QDRANT_URL`, `QDRANT_API_KEY`, `OPENAI_API_KEY`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `NEXT_PUBLIC_CDN_URL` — see `.env.example`. `.env` is gitignored.
+- **Local Dev Server:** ALWAYS start the local dev server with internet access (e.g., `BypassSandbox: true` if using run_command) so it can reach the remote Supabase database (`NEXT_PUBLIC_SUPABASE_URL`). Running it sandboxed will cause silent `ENOTFOUND` failures on DB queries (like "User not found" errors).
 - **Local Qdrant:** `docker compose up -d qdrant` (REST :6333, gRPC :6334, dashboard `/dashboard`); mirrors the secured gayo-VPS instance.
 - **n8n:** ingestion (OpenAI embeddings, Qdrant upserts) runs on the gayo-VPS n8n instance; importable blueprint staged in `ops/n8n/`.
 - **Deployment (higherbits.dev) — gayo-vps, NEVER Vercel.** higherbits.dev is self-hosted behind nginx on the user's own VPS (gayo-vps = `ssh root@72.62.196.231`, key auth). **CORRECTED 2026-07-16 (discovered during the `claymorphism-3d-redesign` deploy), RE-CONFIRMED 2026-07-18 (`claymorphism-reference-parity` deploy, SHA `bfa2573`):** the live app runs from `/home/higherbits/htdocs/higherbits.dev` (user `higherbits`), served by pm2 app `higherbits.dev` (`pnpm start` → `next start`, port 3005, nginx proxy unchanged). This supersedes the prior `/home/cozy/htdocs/higherbits.dev` + pm2 app `higherbits` claim (verified 2026-07-13) — that path/user is the STALE/DEAD copy (still present on disk but not the live one). Deploy procedure (same shape, path/user/pm2-name updated): push to `origin main` (github.com/CLDGayo/higherbits), then `su - higherbits -c "cd ~/htdocs/higherbits.dev && git pull --ff-only origin main && corepack pnpm install --no-frozen-lockfile && NODE_OPTIONS=\"--max-old-space-size=3072\" corepack pnpm --filter web build && pm2 restart higherbits.dev"` — always `su - <app-user>`, never `sudo -u <app-user>` (HOME pollution breaks corepack). CRITICAL: the NODE_OPTIONS heap bound is required — unbounded build gets OOM-killed (exit 137); on a flaky SSH session, prefer a detached/`nohup`-backed build so a dropped connection doesn't kill the build. Pushing to GitHub alone does NOT deploy. `apps/web/vercel.json` is an upstream 21st.dev leftover — its two crons (`/api/cron/gen-usage-embeddings` hourly, `/api/subscription/stripe-cron` monthly) never run and need VPS crontab or n8n equivalents.
@@ -246,7 +247,14 @@ Cozy Downloads/
   (both operator-only, nothing applied live), test suite re-baselined 62/17→73/18 all passing,
   `tsc --noEmit` re-confirmed 0 errors; corrected the umbrella plan's stale "Phase 3 hard-blocked
   on Phase 2 live apply" claim (Phase 2's scratch-verified proof was always sufficient per both
-  phases' own gate text) per an orchestrator ruling recorded in the phase plan.
+  phases' own gate text) per an orchestrator ruling recorded in the phase plan.; updated 2026-07-29
+  for `supabase-interconnect` Phase 04 (Navigation reconciliation) CODE-COMPLETE and EVL-confirmed
+  — `/templates` converted to a 308 `permanentRedirect()` into `/?tab=templates`, `TemplatesListSEO`
+  deleted, home-route `generateMetadata` gained a `searchParams`-branch preserving the templates SEO
+  metadata, orphan-route marker comments added and test-enforced on `/public-dashboard`/`/import-old`,
+  sidebar-count-from-live-hook proven by test; test suite re-baselined 73/18→82/21 all passing,
+  `tsc --noEmit` re-confirmed 0 errors; 58 pre-existing foreign color-contrast violations newly
+  surfaced on `/?tab=templates` and a no-baseline 19-red Playwright e2e gap both routed to backlog.
 - Mode: active build phase
 - Package manager: pnpm (Turborepo workspaces)
 
@@ -347,6 +355,31 @@ Cozy Downloads/
   require the operator personally; see the phase report's `## OPERATOR ACTION REQUIRED` section for
   the exact steps. See
   `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_REPORT_26-07-26.md`.
+  **Phase 04 (Navigation reconciliation) CODE-COMPLETE AND EVL-CONFIRMED, NOT ARCHIVED — stays in
+  `active/` pending e2e/a11y baseline debt (29-07-26).** `/templates` is now a thin **308
+  `permanentRedirect()` to `/?tab=templates`** — it is no longer a standalone rendered page. The
+  page that used to render there, `apps/web/components/features/templates/templates-list-seo.tsx`
+  (`TemplatesListSEO`), was **deleted** (its only importer was the now-replaced
+  `templates/page.tsx`); its `get_templates_v3` RPC dependency stays live via
+  `apps/web/components/features/templates/templates-list.tsx`, the `?tab=templates` view's
+  existing consumer. The redirect's SEO metadata (title/description/keywords/OpenGraph, previously
+  a static export on `templates/page.tsx`) moved onto `apps/web/app/page.tsx`'s
+  `generateMetadata({ searchParams })`, which now branches on `tab === "templates"` — the default
+  `WebSite` JSON-LD is unaffected for other tabs. `apps/web/e2e/a11y.spec.ts`'s route-audit list no
+  longer includes `/templates` (a bodyless 3xx has nothing meaningful to audit) — a dedicated
+  `apps/web/e2e/templates-redirect.spec.ts` covers the redirect instead, currently
+  `test.describe.skip`'d because Clerk middleware rewrites every document request before the
+  redirect fires in this environment (real Clerk dev keys are not provisioned — see the existing
+  Clerk gap below). Removing `/templates` from the audit surfaced **58 pre-existing WCAG AA
+  `color-contrast` violations on `/?tab=templates`** (foreign, same muted-foreground family
+  documented elsewhere in this file) — not previously audited at all; tracked in
+  `process/features/supabase-interconnect/backlog/`. Sidebar category counts were already fixed by
+  committed work (`useCategoryTagCounts()`, `sidebar-layout.tsx:181`, commit `813ab13`) before this
+  phase started; Phase 04 added the proving test and left `getTagDemosCount()`/`lib/navigation.ts`'s
+  `demosCount` values untouched (they remain the correct source for `home-layout.tsx`'s unrelated
+  per-category slider badge — a different UI surface, not a duplicate). Test baseline moved 73/18 →
+  **82 tests / 21 files, ALL 82 PASSING**; `tsc --noEmit` re-confirmed 0 errors. See
+  `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_REPORT_26-07-26.md`.
 - **UI & Front-End Design System (`taste-skill` / Anti-Slop Guidelines):** HigherBits.dev integrates the `taste-skill` engine (`.claude/skills/taste-skill/SKILL.md` / `.agents/skills/taste-skill/SKILL.md`) for all UI, front-end design, and component creation tasks. Every UI/frontend task MUST perform Brief Inference (output a 1-line Design Read stating page kind, audience, vibe language, and design system) and calibrate the 3 core dials (`DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY`). Standard baseline for HigherBits is 8/6/4 (or 5/4/3 for minimalist/cozy components). Avoid LLM slop (purple AI gradients, generic glassmorphism, Inter+slate-900 defaults). Specialized sub-skills are also available: `soft-skill` (luxury/calm UI), `minimalist-skill` (editorial/Linear style), `redesign-skill` (audit-first component overhauls), and `gpt-tasteskill` (stricter layout/motion enforcement).
 
 ---

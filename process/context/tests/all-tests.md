@@ -35,9 +35,25 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 03 inner-PVL/EVL — corrects the
-Phase 02 entry immediately below, which is now stale by 11 tests / 1 file): 73 tests / 18 files,
-ALL 73 PASSING.** Phase 03 added `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts`
+**Total (RE-BASELINED 29-07-26, `supabase-interconnect` Phase 04 inner-PVL/EVL — corrects the
+Phase 03 entry immediately below, which is now stale by 9 tests / 3 files): 82 tests / 21 files,
+ALL 82 PASSING.** Phase 04 added 3 new test files —
+`apps/web/app/templates/__tests__/templates-redirect.test.ts` (2 tests, proves `/templates` calls
+`permanentRedirect()` not `redirect()`), `apps/web/app/__tests__/home-metadata.test.ts` (3 tests,
+proves the home route's `generateMetadata({searchParams})` branches to the templates SEO metadata
+for `tab=templates` and preserves the default `WebSite` JSON-LD otherwise), and
+`apps/web/app/__tests__/orphan-route-comments.test.ts` (2 tests, enforces the orphan-route marker
+comments on `/public-dashboard` and `/import-old`) — plus 2 new cases extending
+`apps/web/components/features/main-page/__tests__/sidebar-layout.test.tsx` (asserts sidebar counts
+render from `useCategoryTagCounts()`, not the hardcoded `demosCount` value, and that a zero-count
+Explore item is filtered). All 3 new assertion families were mutation-tested (source deliberately
+broken, observed to fail, restored) before being trusted — see
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_REPORT_26-07-26.md`
+§"Anti-vacuous-green verification". Also re-confirmed `tsc --noEmit` at exit 0/0 errors. Treat
+**82/21, all passing, tsc 0 errors** as the current regression baseline to hold.
+**Prior entry (RE-BASELINED 26-07-26, `supabase-interconnect` Phase 03 inner-PVL/EVL — corrects the
+Phase 02 entry immediately below, which is now stale by 11 tests / 1 file, SUPERSEDED above): 73
+tests / 18 files, ALL 73 PASSING.** Phase 03 added `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts`
 (11 new tests, all passing) on top of the clean 62/17 baseline — pure addition, zero regressions.
 Also re-confirmed `tsc --noEmit` at exit 0 / 0 errors — the single foreign error the Phase 02 entry
 below still lists at `add-registry-modal.tsx:233` (a different line number than the 168/389 pair

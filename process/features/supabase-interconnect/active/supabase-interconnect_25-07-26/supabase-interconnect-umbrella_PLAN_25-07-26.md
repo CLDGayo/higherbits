@@ -323,7 +323,7 @@ During /goal execution of a phase program:
 | 01 — Grant/RLS repair | 🧪 TESTING — code-complete; live verification blocked on Step C3 user approval |
 | 02 — Embedding DB functions | 🧪 TESTING — code-complete, locally verified for real (11/11 pglite harness, EVL-confirmed); live application deferred behind Step C5 user approval |
 | 03 — Scheduler + seed | 🧪 TESTING — code-complete, locally verified for real (73/73 vitest incl. 11 new; tsc 0 errors; EVL-confirmed); crontab install + seed apply are operator-only and outstanding |
-| 04 — Navigation | ⏳ PLANNED |
+| 04 — Navigation | 🧪 TESTING — code-complete, EVL-confirmed (82/82 vitest, tsc clean); e2e/a11y residuals in backlog |
 | 05 — Billing unification | ⏳ PLANNED |
 | 06 — Schema source of truth | ⏳ PLANNED |
 
@@ -419,6 +419,28 @@ Full detail: `phase-01-grant-repair_REPORT_26-07-26.md` §Program-Wide Learnings
     guarantee unaffected). Worth a deliberate check in every future phase: for each observable a
     plan asks an operator to monitor, confirm the implementation actually exposes that value.
 
+## Program-Wide Learnings (carried forward from Phase 04, 29-07-26)
+
+15. **A plan's checklist can contradict its own locked decisions.** Phase 4's Step D2 literally said
+    "remove" while D1a, directly above it, locked "retain." EXECUTE only got it right because
+    Execute-Agent Instruction E1 stated the precedence explicitly ("this instruction is authoritative
+    over the checklist text where they conflict"). When a PLAN-SUPPLEMENT cycle locks a decision that
+    reverses an earlier checklist bullet, sweep the whole checklist for text that decision
+    invalidates — don't assume the newer prose alone is enough for a future reader skimming only the
+    checklist.
+16. **A fix that reads sensibly can be structurally impossible.** The rejected SEO option for
+    Phase 4's `/templates` redirect — keeping the page's own `metadata` export while also redirecting
+    from it — would have shipped as a silent no-op: a page that calls `redirect()`/`permanentRedirect()`
+    returns a 3xx with no body, so a `metadata` export on that same page never reaches HTML any
+    crawler sees. Verify a proposed mechanism can actually execute end-to-end, not just that it
+    sounds plausible on paper.
+17. **An agent reverting its own change mid-EXECUTE can be the correct outcome, not a failure.**
+    Phase 4's execute-agent first wired `/?tab=templates` into the a11y audit list, discovered 58
+    pre-existing contrast violations that would have made 2 tests permanently red, and reverted to
+    removing the route from the audit list instead (documenting why in-file). A documented coverage
+    gap is preferable to a gate that is red by construction — this is not scope creep to avoid, it
+    is the correct call when a naive fix would corrupt the regression gate itself.
+
 ---
 
 ## Touchpoints
@@ -507,57 +529,54 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-**Last updated:** 26-07-26 (UPDATE PROCESS, Phase 03 inner-loop Step 7)
+**Last updated:** 29-07-26 (UPDATE PROCESS, Phase 04 inner-loop Step 7)
 
-**Current phase N of total:** Phase 3 of 6 (Phases 1 and 2 also still open — see below; Phase 3 is
-the most recently closed-out phase and the next phase to start is Phase 4)
+**Current phase N of total:** Phase 4 of 6 (Phases 1, 2, and 3 also still open — see below; Phase 4
+is the most recently closed-out phase and the next phase to start is Phase 5)
 
-**Phase N name:** Phase 03 — Scheduler + seed
+**Phase N name:** Phase 04 — Navigation reconciliation
 
-**Phase N status:** 🧪 TESTING — code-complete, locally verified for real (NOT vacuously — the
-existing vitest suite exercises the actual extended route, not a mock of a mock). All Step A/B/C/D
-checklist items done except the operator-only and live-DB legs, which remain deliberately
-unchecked. `apps/web/app/api/cron/gen-usage-embeddings/route.ts` extended additively (dry-run
-short-circuit + `EMBEDDING_CRON_BATCH_CAP`); `ops/README-embedding-cron.md` (crontab install
-artifact) and `supabase/seed-embedding-verification.sql` (idempotent fixture SQL) delivered.
-Nothing installed on the VPS, nothing applied to the live database — both are explicitly
-operator-only per the Program Goal Charter's hard safety constraints. Closeout classification:
-**Keep in active/testing** — NOT archived; the crontab install and seed apply are outstanding
-operator actions, not agent work items.
+**Phase N status:** 🧪 TESTING — code-complete, locally verified for real (NOT vacuously — three new
+assertions were mutation-tested and observed to fail before being restored). All Step A-D checklist
+items done, plus all 4 Execute-Agent Instructions (E1-E4). `/templates` now issues a 308
+`permanentRedirect()` to `/?tab=templates`; its SEO metadata moved onto `apps/web/app/page.tsx`'s
+`generateMetadata({ searchParams })` branch; the now-orphaned `TemplatesListSEO` component was
+deleted; `/public-dashboard` and `/import-old` carry enforced orphan-route marker comments; the
+sidebar-count test now proves counts render from the live `useCategoryTagCounts()` hook, not the
+hardcoded `demosCount` values (which are correctly retained, unchanged, for `home-layout.tsx`'s
+unrelated slider badge, per locked decision D1a). Closeout classification: **Keep in
+active/testing** — code-complete and both automated gates green, but genuine Known Gaps remain
+(wire-level 308 unprovable locally — Clerk dev keys absent; no e2e regression baseline; 58 foreign
+color-contrast violations newly surfaced on `/?tab=templates`), consistent with how Phases 1-3 were
+each left open pending their own residual items.
 
-**Phase N EVL:** Independent EVL confirmation run (not trusting EXECUTE's self-report) found zero
-gaps and closed in one cycle (`results.tsv`: `1 phase-03-evl tests 0 0 PASS HALTED_SUCCESS
-2026-07-26`). All gates green: `tsc --noEmit` exit 0/0 errors; `pnpm --filter web test` 73/73
-passing (18 files, 62 baseline + 11 new); `validate-agent-parity.mjs` and
-`validate-context-discovery.mjs` both pass; `git diff --check` clean. The regression baseline
-improved again this phase — the single foreign `tsc` error the Phase 02 hand-off recorded (at a
-different line number in `add-registry-modal.tsx` than Phase 01's original pair) is gone, fixed by
-further concurrent work outside this program. Test baseline corrected in
-`process/context/tests/all-tests.md` and `process/context/all-context.md`. The 3 Agent-Probe/
-live-key residuals (full embedding-generation leg, AC7 live search verification, live schedule
-firing) are correctly unrun — all three are pre-accepted Known Gaps in the SPEC and this phase's
-own validate-contract, requiring operator action outside this phase's automated EVL scope.
+**Phase N EVL:** Independent EVL confirmation run found zero gaps and closed in one cycle
+(`results.tsv`: `1 phase-04-evl tests 0 0 PASS HALTED_SUCCESS 2026-07-26`). All gates green:
+`tsc --noEmit` exit 0/0 errors; `pnpm --filter web test` **82/82 passing across 21 files** (baseline
+73/18 + 9 new, zero regressions); `validate-agent-parity.mjs` and `validate-context-discovery.mjs`
+both pass; `git diff --check` clean. Test baseline corrected in `process/context/tests/all-tests.md`
+and `process/context/all-context.md`. The 3 Agent-Probe/Hybrid residuals (wire-level 308 status,
+crawler SEO equivalence, full e2e regression delta) are correctly unrun/unprovable in this
+environment — carried to backlog, not silently absorbed as passing.
 
-**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_REPORT_26-07-26.md`
+**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_REPORT_26-07-26.md`
 
-**Next phase:** Phase 3 stays current — it does NOT advance to Phase 4 automatically. Phase 4 depends
-only on Phase 1 (parallel-safe with Phase 5, per the umbrella's Pre-PVL Conflict Resolution), so it
-is NOT blocked by anything in Phase 3's outstanding operator actions — Phase 4's RESEARCH could
-start now. **Correction applied this pass:** the prior claim that "Phase 3 has a HARD dependency on
-Phase 2's live apply actually landing" was wrong and has been corrected in the Phase Sequence
-section above — Phase 2's scratch-verified proof was always sufficient, and Phase 3 has since
-completed on exactly that basis. Two independent user-approval decisions remain outstanding across
-the program: Phase 1's Step C3 (grants/RLS live apply) and Phase 2's Step C5 (embedding functions
-live apply) — both are still pending and unrelated to Phase 3's completion. **Recommended next
-action:** Phase 4, loop step 1 (RESEARCH). Phase 5 (billing) is also eligible in parallel once
-Phase 1 lands, but Phase 4 is the umbrella's stated next phase.
+**Next phase:** Phase 4 stays current — it does NOT advance to Phase 5 automatically. Phase 5
+(Billing unification) depends only on Phase 1 (parallel-safe with Phase 4, per the umbrella's
+Pre-PVL Conflict Resolution — both already ran without conflict), so it is NOT blocked by anything
+in Phase 4's outstanding items. **Recommended next action:** Phase 5, loop step 1 (RESEARCH). Three
+independent user-approval decisions remain outstanding across the program: Phase 1's Step C3
+(grants/RLS live apply), Phase 2's Step C5 (embedding functions live apply), and Phase 3's operator
+crontab install + seed SQL apply — none block Phase 5 or Phase 6 from proceeding.
 
-**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending
-operator crontab install + seed SQL apply (non-blocking for program advancement).
+**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending the
+same class of residual items (missing local infra/keys, not agent work) that also keep Phases 1-3
+open.
 
-**Validate-contract status:** written, inline in `phase-03-scheduler_PLAN_25-07-26.md`;
-`generated-by: inner-pvl: phase-3`; `Gate: PASS` (0 FAILs, 0 unresolved CONCERNs — reached in a
-single inner-PVL cycle, see `results.tsv`).
+**Validate-contract status:** written, inline in `phase-04-navigation_PLAN_25-07-26.md`;
+`generated-by: inner-pvl: phase-4`; `Gate: CONDITIONAL` (0 FAILs / 4 CONCERNs, all resolved via
+Execute-Agent Instructions E1-E4 rather than blocking — accepted autonomously per `/goal`, see
+`results.tsv`: `1 phase-04-inner plan 4 4 CONDITIONAL HALTED_ACCEPTED 2026-07-26`).
 
 **Phase 1 status (unchanged, still open):** 🧪 TESTING — code-complete, NOT live-verified.
 `Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted after 5 PVL supplement cycles). Blocked on
@@ -569,15 +588,20 @@ for the exact pending-approval SQL. No change this UPDATE PROCESS pass.
 (11/11 pglite harness, EVL-confirmed), NOT live-applied. `Gate: PASS`. Blocked on Step C5 user
 approval — see
 `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-02-embedding-functions_REPORT_26-07-26.md`.
-No change this UPDATE PROCESS pass. **Note:** Phase 2's live apply is no longer a blocker for Phase
-3 (see correction above) — it remains an independent outstanding user decision in its own right.
+No change this UPDATE PROCESS pass.
+
+**Phase 3 status (unchanged, still open):** 🧪 TESTING — code-complete, locally verified for real
+(73/73 vitest incl. 11 new, EVL-confirmed). `Gate: PASS`. Crontab install and seed SQL apply remain
+operator-only actions — see
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_REPORT_26-07-26.md`.
+No change this UPDATE PROCESS pass.
 
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS.
 Orchestrator rule: read "Phase N status" and "Validate-contract status" before spawning any
-subagent for this phase. Do not spawn execute-agent again for Phase 01 or Phase 02 until the user
-has acted on the respective C3/C5 approval requests. Phase 03 is code-complete and does not need
-another execute-agent spawn; its remaining items are operator-only. Phase 04 RESEARCH may start now
-— it is not blocked on any outstanding operator action from Phases 1-3.
+subagent for this phase. Do not spawn execute-agent again for Phase 01, 02, 03, or 04 — each is
+code-complete with its own accepted gate; their remaining items are operator/user-approval actions,
+not agent work. Phase 05 RESEARCH may start now — it is not blocked on any outstanding operator
+action from Phases 1-4.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes —
 update-process-agent rewrites it after every phase closeout (overwrite, not append — git history
