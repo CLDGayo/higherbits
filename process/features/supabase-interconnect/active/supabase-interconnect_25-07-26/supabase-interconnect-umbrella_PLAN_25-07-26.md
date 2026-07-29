@@ -320,14 +320,68 @@ During /goal execution of a phase program:
 | Phase | Status |
 |---|---|
 | 0 — Pre-program (plan creation) | ✅ COMPLETE |
-| 01 — Grant/RLS repair | 🧪 TESTING — code-complete; live verification blocked on Step C3 user approval |
-| 02 — Embedding DB functions | 🧪 TESTING — code-complete, locally verified for real (11/11 pglite harness, EVL-confirmed); live application deferred behind Step C5 user approval |
-| 03 — Scheduler + seed | 🧪 TESTING — code-complete, locally verified for real (73/73 vitest incl. 11 new; tsc 0 errors; EVL-confirmed); crontab install + seed apply are operator-only and outstanding |
+| 01 — Grant/RLS repair | ✅ VERIFIED — applied live 29-07-26 (129 statements, `live-apply_REPORT_29-07-26.md`); the `users` UPDATE privilege-escalation gap it exposed was found and closed same day |
+| 02 — Embedding DB functions | ✅ VERIFIED — applied live 29-07-26 alongside Phase 01 (same apply run); functions `EXECUTE`-granted to `service_role` only, locally proven by the 11/11 pglite harness before apply |
+| 03 — Scheduler + seed | 🧪 TESTING — code-complete, locally verified for real (73/73 vitest incl. 11 new; tsc 0 errors; EVL-confirmed); crontab install + seed apply are operator-only and outstanding (only remaining operator action in the whole program) |
 | 04 — Navigation | 🧪 TESTING — code-complete, EVL-confirmed (82/82 vitest, tsc clean); e2e/a11y residuals in backlog |
 | 05 — Billing unification | 🧪 TESTING — code-complete, EVL-confirmed after 1 fix cycle (CRITICAL fifth-writer defect found by independent review, closed, re-verified; 113/114 vitest, tsc clean); no live-provider/live-DB verification possible |
-| 06 — Schema source of truth | 🧪 TESTING — root cause found and fixed at all 4 sites; `types.ts` regeneration blocked on Supabase CLI auth (operator action) |
+| 06 — Schema source of truth | ✅ VERIFIED — root cause fixed at all 4 sites AND `types.ts` fully reconciled 29-07-26 by hand (`29ad825`/`0cb79f5`): 41 tables / 5 views / 37 functions, 0 phantom, 0 missing, independently re-verified live after editing. AC12 MET by hand-reconciliation, not CLI regen (CLI still unauthenticated in this environment). Surfaced 3 genuinely broken live RPC call sites (backlogged) and 3 known-harmless residual divergences a future CLI regen would still show (backlogged) |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
+
+## Program Closeout (30-07-26)
+
+**Verdict: VERIFIED WITH GAPS.** 4 of 6 phases fully verified (01, 02, 06 now join 04-pending-e2e
+and 05); only Phase 03's operator-only crontab install remains outstanding across the whole
+program — everything else agent-executable is done.
+
+### Operator actions — status
+
+| # | Action | Status |
+|---|---|---|
+| 1 | Apply Phase 1 grant/RLS SQL live | ✅ DONE (29-07-26, `live-apply_REPORT_29-07-26.md`) |
+| 2 | Apply Phase 2 embedding-function SQL live | ✅ DONE (29-07-26, same apply run) |
+| 3 | Reconcile `apps/web/types/supabase.ts` against live schema | ✅ DONE (29-07-26, hand-reconciliation — `29ad825`) |
+| 4 | Install the VPS crontab for the embedding-backfill scheduler (Phase 03) | ⏳ **OUTSTANDING — the only remaining operator action.** Hard stop per the Program Goal Charter; no agent may perform this. See `ops/README-embedding-cron.md`. |
+
+### SPEC re-score (AC12, AC13)
+
+- **AC12** (`types.ts` regenerated and matches reality): **MET**, via hand-reconciliation rather
+  than `supabase gen types` (CLI remains unauthenticated in this environment — see
+  `types-regen-blocked-on-cli-auth_NOTE_29-07-26.md`, now largely superseded since the accuracy
+  gap itself is closed). SPEC's literal numeric targets (33 functions / 4 views, from the
+  25-07-26 audit) are superseded by Phases 01/02's own live additions since that audit
+  (+1 view `public_profiles`, +4 functions from `0001_embedding_functions.sql` → 37 functions /
+  5 views), which is exactly what live re-verification confirms today. Known-Gap residuals:
+  3 broken RPC call sites and 3 cosmetic regen-divergences, both backlogged (see below) —
+  neither blocks AC12 itself, which is about the *declared inventory* matching *live reality*.
+- **AC13** (grant-restoration fix extended + applied live, verified by live query): **MET** —
+  confirmed by the 29-07-26 live apply report's before/after `information_schema` query.
+
+### New backlog notes this pass
+
+- `process/features/supabase-interconnect/backlog/broken-rpc-call-sites_NOTE_30-07-26.md` —
+  3 RPCs (`get_active_authors_with_top_components`, `get_section_previews`,
+  `get_collection_components_v1`) called from 6 live sites that do not exist in the live
+  database. **Highest-value actionable finding of the whole program.**
+- `process/features/supabase-interconnect/backlog/types-regen-residual-divergence_NOTE_30-07-26.md`
+  — 81 dangling `referencedRelation` labels, 1 orphaned CompositeType, 1 function-ordering
+  quirk that a true CLI regen would still show. Cosmetic, non-blocking.
+
+### Durable learning
+
+A stale generated types file doesn't just describe reality wrong — it actively suppresses the
+type errors that would have caught broken code. Six live call sites invoked non-existent RPCs for
+an unknown period, and the file's confident (but false) assertion that those functions existed is
+precisely why nobody noticed. Fixing the file was worth more for what it revealed than for the
+file itself. See `process/context/all-context.md` for the context-level record of this and
+`~/.claude/projects/.../memory/higherbits-supabase-project.md` for the durable memory entry.
+
+**This task folder stays in `active/`** pending the single outstanding operator action (VPS
+crontab install, Phase 03) and the two new backlog items above — archiving now would bury an
+otherwise-complete program behind one human step. Re-evaluate for archival once the crontab is
+installed; the backlog notes do not block archival on their own (they are follow-up work, not
+open program gates).
 
 ---
 

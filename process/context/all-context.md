@@ -328,6 +328,34 @@ Cozy Downloads/
   correctly pointed, so the next regeneration will produce truth. Also note: the numeric table IDs
   in those `SubmissionCard.tsx` deep-links (`29179`, `229472`) were minted against the OLD project
   and are unverified for the new one.
+- **SUPERSEDED 2026-07-30 (`supabase-interconnect` Phase 06, hand-reconciliation, commit
+  `29ad825`) — the "types.ts remains the known-inaccurate file" claim immediately above is now
+  obsolete.** `apps/web/types/supabase.ts` was hand-reconciled against a live-verified inventory
+  (the Supabase CLI is still unauthenticated in this environment, so this was NOT a `supabase gen
+  types` run — it was a targeted edit driven by direct live introspection, then independently
+  re-verified live after editing). It now declares **exactly** the live inventory: 41 tables, 5
+  views, 37 functions — 0 phantom, 0 missing. This reverses the longstanding "never trust
+  `types.ts`, query `pg_proc` instead" guidance above **for existence checks** — as of 2026-07-30
+  it can be trusted for "does this table/view/function exist" questions. It is still not
+  byte-identical to what a real CLI regeneration would produce (81 dangling `referencedRelation`
+  labels to deleted views, 1 orphaned `component_with_user` CompositeType, and 2 functions out of
+  alphabetical order remain — all cosmetic, see
+  `process/features/supabase-interconnect/backlog/types-regen-residual-divergence_NOTE_30-07-26.md`).
+  **Deleting the phantom declarations surfaced a real, separate bug**: 3 RPCs
+  (`get_active_authors_with_top_components`, `get_section_previews`,
+  `get_collection_components_v1`) are called from 6 live application call sites but do not exist
+  in the live database — genuinely broken at runtime, previously hidden because the stale types
+  file asserted they existed. See
+  `process/features/supabase-interconnect/backlog/broken-rpc-call-sites_NOTE_30-07-26.md`. Durable
+  lesson: a stale generated types file doesn't just describe reality wrong, it actively suppresses
+  the type errors that would have caught broken code — worth remembering the next time any
+  generated/derived artifact is treated as "probably fine, low priority to regenerate."
+- **`check_rate_limit` and `increment_api_usage` exist and run live (middleware hot path +
+  `/api/magic/use`) but have NO tracked `CREATE FUNCTION` SQL anywhere in `supabase/`.** Confirmed
+  present in `apps/web/types/supabase.ts` (now a trustworthy source per the correction above) but
+  their defining SQL was never checked into the repo — rebuilding this database from
+  `supabase/migrations/` + the tracked `.sql` files would silently lose both functions. See
+  `process/features/supabase-interconnect/backlog/untracked-rate-limit-rpcs_NOTE_29-07-26.md`.
 - **`CSB_API_KEY` (CodeSandbox) NOT provisioned.** Blocks the studio publish flow's CodeSandbox
   export step. See
   `process/features/higherbits-cozy-rebrand/backlog/csb-api-key-provisioning_NOTE_13-07-26.md`.
