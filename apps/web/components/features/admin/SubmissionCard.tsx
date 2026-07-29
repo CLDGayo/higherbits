@@ -17,9 +17,16 @@ const SubmissionCard: FC<SubmissionCardProps> = ({
   onEditDemo,
   onSetDefaultDemo,
 }) => {
-  // Supabase URLs
-  const componentSupabaseUrl = `https://supabase.com/dashboard/project/vucvdpamtrjkzmubwlts/editor/29179?sort=created_at%3Adesc&filter=id%3Aeq%3A${submission.component_data.id}`
-  const demoSupabaseUrl = `https://supabase.com/dashboard/project/vucvdpamtrjkzmubwlts/editor/229472?sort=created_at:desc&filter=component_id:eq:${submission.component_data.id}`
+  // Supabase dashboard deep-links (admin convenience only).
+  // Project ref repointed from the stale `vucvdpamtrjkzmubwlts` (empty/wrong project)
+  // to the live `ewktoowpuemgbaaxxbdq`. NOTE: the numeric table IDs below (29179 =
+  // components, 229472 = demos) were minted against the OLD project and are almost
+  // certainly wrong for the new one — they are UNVERIFIED. These links may land on the
+  // right project but the wrong table until someone confirms the real IDs from the
+  // Supabase dashboard. See phase-06-schema-truth report.
+  const SUPABASE_PROJECT_REF = "ewktoowpuemgbaaxxbdq"
+  const componentSupabaseUrl = `https://supabase.com/dashboard/project/${SUPABASE_PROJECT_REF}/editor/29179?sort=created_at%3Adesc&filter=id%3Aeq%3A${submission.component_data.id}`
+  const demoSupabaseUrl = `https://supabase.com/dashboard/project/${SUPABASE_PROJECT_REF}/editor/229472?sort=created_at:desc&filter=component_id:eq:${submission.component_data.id}`
 
   return (
     <div className="border rounded-lg p-6 hover:shadow-md transition-shadow">

@@ -6,6 +6,12 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_KEY
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
+// Derive the Edge Function base from the same env-configured project the DB client
+// uses. This previously hardcoded a DIFFERENT (stale, empty) project ref, so the
+// script read from the live DB but POSTed to the wrong project's Edge Function.
+// See process/features/supabase-interconnect .. phase-06-schema-truth.
+const EMBED_FUNCTION_URL = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1/embed-oai`
+
 async function getAllDemoIds() {
   const { data, error } = await supabase
     .from("demos")
@@ -33,7 +39,7 @@ async function embedDemo(demoId) {
 
     try {
       const response = await fetch(
-        "https://vucvdpamtrjkzmubwlts.supabase.co/functions/v1/embed-oai",
+        EMBED_FUNCTION_URL,
         {
           method: "POST",
           headers: {
