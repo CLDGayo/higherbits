@@ -40,6 +40,39 @@ SELECT
   u.website_url
 FROM public.users u;
 
+-- ---------------------------------------------------------------------
+-- MANDATORY: lock public_profiles down to read-only.
+--
+-- WHY THIS IS NOT OPTIONAL: this database carries an
+-- `ALTER DEFAULT PRIVILEGES ... GRANT ALL ... TO anon, authenticated,
+-- service_role` rule for new relations in `public` (visible in
+-- pg_default_acl, objtype 'r'). Any relation created here — including
+-- this view — inherits ALL privileges for the ANONYMOUS role unless we
+-- explicitly revoke them.
+--
+-- That default is exploitable for this view specifically, because:
+--   1. it is a simple single-table column subset, so Postgres marks it
+--      auto-updatable (is_updatable = YES) and writes pass THROUGH to
+--      public.users;
+--   2. it is security_invoker = off, so it executes as its owner
+--      (postgres);
+--   3. public.users has RLS enabled but NOT forced
+--      (relforcerowsecurity = false), so the owner bypasses RLS entirely;
+--   4. PostgREST exposes public-schema views to the public anon key.
+--
+-- Net effect without the two statements below: an unauthenticated caller
+-- can PATCH/DELETE /rest/v1/public_profiles and rewrite or delete ANY
+-- user row. This was live in production on 29-07-26 and was fixed by
+-- exactly these two statements. Do not remove them, and do not reorder
+-- them — the REVOKE must precede the GRANT, since a narrower GRANT does
+-- not displace a broader pre-existing one.
+--
+-- The three views below join this one purely to READ cross-user profile
+-- rows, so SELECT is the only privilege they need.
+-- ---------------------------------------------------------------------
+REVOKE ALL ON public.public_profiles FROM anon, authenticated;
+GRANT SELECT ON public.public_profiles TO anon, authenticated;
+
 -- Used by: components/features/component-page/info-section.tsx
 -- (resolves "username/slug" registry dependency strings to components)
 -- Step B3c-ii: joins public_profiles (not public.users) so cross-user
