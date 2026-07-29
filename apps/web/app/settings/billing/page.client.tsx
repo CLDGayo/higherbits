@@ -6,6 +6,10 @@ import {
   isPaymentsNotConfigured,
   PAYMENTS_UNAVAILABLE_MESSAGE,
 } from "@/lib/checkout-error"
+import {
+  deriveProviderFromPlanInfo,
+  cancelEndpointFor,
+} from "@/lib/billing-provider-guard"
 import { LoaderCircle, ExternalLink, ArrowRight, Check } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -179,9 +183,22 @@ export function BillingSettingsClient({
       SOURCE_DETAIL.SETTINGS_BILLING,
     )
 
+    // Provider-aware routing (Phase 05 A3). Never fall through to the Stripe
+    // endpoint by default — that silent fallthrough is the bug this fixes.
+    const cancelEndpoint = cancelEndpointFor(
+      deriveProviderFromPlanInfo(subscription),
+    )
+    if (!cancelEndpoint) {
+      toast.error("No active subscription found", {
+        description:
+          "We could not determine your payment provider. Contact support@higherbits.dev if this looks wrong.",
+      })
+      return
+    }
+
     setIsLoading(true)
     try {
-      const response = await fetch("/api/stripe/cancel-subscription", {
+      const response = await fetch(cancelEndpoint, {
         method: "POST",
       })
 

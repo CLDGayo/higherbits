@@ -4,15 +4,58 @@ import Stripe from "stripe"
 
 type Plan = Database["public"]["Tables"]["plans"]["Row"]
 
-const stripeSecretKeyV1 = process.env.STRIPE_SECRET_KEY_V1
-const stripeSecretKeyV2 = process.env.STRIPE_SECRET_KEY_V2
-
-if (!stripeSecretKeyV1 || !stripeSecretKeyV2) {
-  throw new Error("Stripe secret key is not set")
+/**
+ * Payments are "not configured" when either Stripe secret key is absent.
+ * Mirrors the local `paymentsNotConfigured()` guard the checkout routes use.
+ */
+export function paymentsNotConfigured(): boolean {
+  return !process.env.STRIPE_SECRET_KEY_V1 || !process.env.STRIPE_SECRET_KEY_V2
 }
 
-export const stripeV1 = new Stripe(stripeSecretKeyV1)
-export const stripeV2 = new Stripe(stripeSecretKeyV2)
+// Lazy construction (Phase 05 D1). Previously these were built eagerly at
+// module scope, which made a missing key throw at IMPORT time and broke
+// build-time page-data collection. The error still surfaces — just on first
+// USE instead of on import. Behaviour when the keys ARE set is unchanged.
+let stripeV1Instance: Stripe | null = null
+let stripeV2Instance: Stripe | null = null
+
+function getStripeV1(): Stripe {
+  if (!stripeV1Instance) {
+    const key = process.env.STRIPE_SECRET_KEY_V1
+    if (!key) {
+      throw new Error("Stripe secret key is not set (STRIPE_SECRET_KEY_V1)")
+    }
+    stripeV1Instance = new Stripe(key)
+  }
+  return stripeV1Instance
+}
+
+function getStripeV2(): Stripe {
+  if (!stripeV2Instance) {
+    const key = process.env.STRIPE_SECRET_KEY_V2
+    if (!key) {
+      throw new Error("Stripe secret key is not set (STRIPE_SECRET_KEY_V2)")
+    }
+    stripeV2Instance = new Stripe(key)
+  }
+  return stripeV2Instance
+}
+
+function createLazyStripe(resolve: () => Stripe): Stripe {
+  return new Proxy({} as Stripe, {
+    get(_target, prop) {
+      const instance = resolve() as any
+      const value = instance[prop]
+      return typeof value === "function" ? value.bind(instance) : value
+    },
+    has(_target, prop) {
+      return prop in (resolve() as any)
+    },
+  })
+}
+
+export const stripeV1 = createLazyStripe(getStripeV1)
+export const stripeV2 = createLazyStripe(getStripeV2)
 
 function createFallbackProxy(primary: any, fallback: any): any {
   return new Proxy(

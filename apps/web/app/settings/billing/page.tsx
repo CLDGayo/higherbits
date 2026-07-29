@@ -13,6 +13,7 @@ export interface PlanInfo {
   cancel_at_period_end?: boolean
   portal_url?: string
   stripe_subscription_id?: string
+  lemon_squeezy_subscription_id?: string
   usage: number
   limit: number
   planData?: {
@@ -51,6 +52,7 @@ async function getCurrentPlan(userId: string | null): Promise<PlanInfo> {
         status,
         plan_id,
         meta,
+        lemon_squeezy_subscription_id,
         last_paid_at,
         plans:plan_id (
           id,
@@ -112,6 +114,9 @@ async function getCurrentPlan(userId: string | null): Promise<PlanInfo> {
       limit: planLimit,
       portal_url: meta?.portal_url || null,
       stripe_subscription_id: meta?.stripe_subscription_id || null,
+      // Provider marker for the client-side cancel branch (Phase 05 A3).
+      lemon_squeezy_subscription_id:
+        userPlan.lemon_squeezy_subscription_id ?? undefined,
       planData: plansData
         ? {
             id: plansData.id,

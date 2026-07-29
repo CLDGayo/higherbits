@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { stripeV1, getPlanByStripeId } from "@/lib/stripe"
+import {
+  guardBillingWrite,
+  clearingPatchFor,
+} from "@/lib/billing-provider-guard"
 
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET_V1
 
@@ -25,6 +29,24 @@ async function handleSubscriptionCreatedOrUpdate(event: Stripe.Event) {
 
     if (!stripePlanId) {
       throw new Error("No plan ID found in subscription")
+    }
+
+    // Mutual exclusion: never overwrite a row actively owned by Lemon Squeezy.
+    // v1 is guarded defensively — its live/dead status could not be determined
+    // read-only (see phase plan B0), so it is treated as potentially live.
+    const { data: guardRow } = await supabaseWithAdminAccess
+      .from("users_to_plans")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle()
+
+    if (
+      guardBillingWrite(guardRow, "stripe", {
+        userId,
+        source: "stripe/webhook/v1",
+      }).skip
+    ) {
+      return
     }
 
     if (subscription.cancel_at_period_end) {
@@ -136,6 +158,8 @@ async function handleSubscriptionCreatedOrUpdate(event: Stripe.Event) {
             plan_id: planId,
             updated_at: new Date().toISOString(),
             meta,
+            // Null the losing provider's marker in the SAME write.
+            ...clearingPatchFor("stripe"),
             last_paid_at: new Date().toISOString(),
           })
           .eq("user_id", userId)
@@ -153,6 +177,7 @@ async function handleSubscriptionCreatedOrUpdate(event: Stripe.Event) {
             plan_id: planId,
             updated_at: new Date().toISOString(),
             meta: updatedMetaWithFutureLimit,
+            ...clearingPatchFor("stripe"),
             last_paid_at: new Date().toISOString(),
           })
           .eq("user_id", userId)
@@ -175,6 +200,7 @@ async function handleSubscriptionCreatedOrUpdate(event: Stripe.Event) {
         plan_id: planId,
         status: "active",
         meta,
+        ...clearingPatchFor("stripe"),
         last_paid_at: new Date().toISOString(),
       })
     }
@@ -187,6 +213,22 @@ async function handleSubscriptionDeleted(event: Stripe.Event) {
   try {
     const subscription = event.data.object as Stripe.Subscription
     const userId = subscription.metadata.userId as string
+
+    // A Stripe cancellation must not deactivate a Lemon-Squeezy-owned row.
+    const { data: guardRow } = await supabaseWithAdminAccess
+      .from("users_to_plans")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle()
+
+    if (
+      guardBillingWrite(guardRow, "stripe", {
+        userId,
+        source: "stripe/webhook/v1:deleted",
+      }).skip
+    ) {
+      return
+    }
 
     const planResult = await supabaseWithAdminAccess
       .from("users_to_plans")

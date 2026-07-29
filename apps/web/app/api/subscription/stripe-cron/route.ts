@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { isAfter } from "date-fns"
 import { stripeV1, stripeV2, getAllPlans } from "@/lib/stripe"
+import { deriveBillingProvider } from "@/lib/billing-provider-guard"
 
 // Define types for our meta object
 interface SubscriptionMeta {
@@ -77,6 +78,15 @@ async function updateSubscriptionStatuses() {
       try {
         // Skip if user_id is null
         if (!subscription.user_id) continue
+
+        // Provider guard (Phase 05 B0b): this cron reasons purely from
+        // Stripe-side signals and sets status: "inactive". It must never
+        // deactivate a row owned by Lemon Squeezy. Explicit skip rather than
+        // relying on the (also true) fact that a post-switch LS row has
+        // meta = null and would fall out at the periodEnd check below.
+        if (deriveBillingProvider(subscription) === "lemonsqueezy") {
+          continue
+        }
 
         // Parse meta object with proper typing
         const meta = (

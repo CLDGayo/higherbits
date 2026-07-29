@@ -3,6 +3,10 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import crypto from "crypto"
 import { getPlanByLemonSqueezyVariantId } from "@/lib/lemonsqueezy"
 import { clerkClient } from "@clerk/nextjs/server"
+import {
+  guardBillingWrite,
+  clearingPatchFor,
+} from "@/lib/billing-provider-guard"
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,12 +41,6 @@ export async function POST(req: NextRequest) {
       const subscriptionId = payload.data.id.toString()
       const customerId = obj.customer_id.toString()
 
-      // Ensure user has lemon_squeezy_customer_id
-      await supabaseWithAdminAccess
-        .from("users")
-        .update({ lemon_squeezy_customer_id: customerId })
-        .eq("id", userId)
-
       // Fetch plan to know usage limit
       let plan
       try {
@@ -61,6 +59,27 @@ export async function POST(req: NextRequest) {
         .eq("user_id", userId)
         .maybeSingle()
 
+      // Mutual exclusion: never overwrite a row actively owned by Stripe.
+      // Must return BEFORE the unconditional Clerk sync below, or Clerk's
+      // isPro claim desynchronizes from the (unwritten) DB row.
+      const guard = guardBillingWrite(existingUserPlan, "lemonsqueezy", {
+        userId,
+        source: "lemonsqueezy/webhook",
+      })
+      if (guard.skip) {
+        return new NextResponse("Skipped: cross-provider conflict", {
+          status: 200,
+        })
+      }
+
+      // Ensure user has lemon_squeezy_customer_id.
+      // Deliberately AFTER the guard: a guard skip must be a clean no-op, so a
+      // cross-provider conflict leaves no Lemon Squeezy residue on `users`.
+      await supabaseWithAdminAccess
+        .from("users")
+        .update({ lemon_squeezy_customer_id: customerId })
+        .eq("id", userId)
+
       const usageLimit = plan.type === "pro_plus" ? null : 15 // Assuming pro has 15 limit or similar, replicate Stripe logic if needed
 
       if (existingUserPlan) {
@@ -70,6 +89,8 @@ export async function POST(req: NextRequest) {
             status,
             plan_id: plan.id,
             lemon_squeezy_subscription_id: subscriptionId,
+            // Null the losing provider's marker in the SAME write.
+            ...clearingPatchFor("lemonsqueezy"),
             updated_at: new Date().toISOString(),
             last_paid_at: new Date().toISOString(),
           })
@@ -80,6 +101,7 @@ export async function POST(req: NextRequest) {
           plan_id: plan.id,
           status,
           lemon_squeezy_subscription_id: subscriptionId,
+          ...clearingPatchFor("lemonsqueezy"),
           last_paid_at: new Date().toISOString(),
         })
         
@@ -105,6 +127,24 @@ export async function POST(req: NextRequest) {
         console.error("Failed to sync Clerk publicMetadata for Lemon Squeezy subscription:", clerkErr)
       }
     } else if (eventName === "subscription_cancelled" || eventName === "subscription_expired") {
+      // Same mutual exclusion on the deactivation path: a Lemon Squeezy
+      // cancellation must not deactivate a row actively owned by Stripe.
+      const { data: existingUserPlan } = await supabaseWithAdminAccess
+        .from("users_to_plans")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle()
+
+      const guard = guardBillingWrite(existingUserPlan, "lemonsqueezy", {
+        userId,
+        source: "lemonsqueezy/webhook:cancel",
+      })
+      if (guard.skip) {
+        return new NextResponse("Skipped: cross-provider conflict", {
+          status: 200,
+        })
+      }
+
       await supabaseWithAdminAccess
         .from("users_to_plans")
         .update({

@@ -3,6 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server"
 import { stripeV1, stripeV2 } from "@/lib/stripe"
 import type Stripe from "stripe"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { hasLemonSqueezyMarker } from "@/lib/billing-provider-guard"
 
 export async function GET() {
   try {
@@ -88,7 +89,23 @@ export async function GET() {
 
       customerId = customer.id
 
-      if (userPlanData && customerId) {
+      // Mutual exclusion (Phase 05 — supabase-interconnect): backfilling
+      // `meta.stripe_customer_id` here would plant a Stripe ownership marker on
+      // a row that Lemon Squeezy owns, flipping it to "ambiguous" — and an
+      // ambiguous row is auto-allowed by the guard, so a stale Stripe
+      // `customer.subscription.deleted` could then deactivate a paying LS
+      // subscriber. A read-only invoices fetch must never change row ownership.
+      //
+      // The backfill is a cache, not a correctness requirement: `customerId` is
+      // already resolved locally and the invoice list below is unaffected.
+      const lemonOwned = hasLemonSqueezyMarker(userPlanData)
+      if (lemonOwned) {
+        console.warn(
+          `[billing-provider-guard] SKIPPED stripe_customer_id backfill from stripe/get-invoices for user ${userId}: row carries a Lemon Squeezy marker`,
+        )
+      }
+
+      if (userPlanData && customerId && !lemonOwned) {
         const existingMeta = userPlanData.meta || {}
 
         const metaObject =
