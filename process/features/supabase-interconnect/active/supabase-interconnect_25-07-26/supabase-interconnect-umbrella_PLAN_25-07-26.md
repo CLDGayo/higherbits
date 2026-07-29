@@ -325,7 +325,7 @@ During /goal execution of a phase program:
 | 03 — Scheduler + seed | 🧪 TESTING — code-complete, locally verified for real (73/73 vitest incl. 11 new; tsc 0 errors; EVL-confirmed); crontab install + seed apply are operator-only and outstanding |
 | 04 — Navigation | 🧪 TESTING — code-complete, EVL-confirmed (82/82 vitest, tsc clean); e2e/a11y residuals in backlog |
 | 05 — Billing unification | 🧪 TESTING — code-complete, EVL-confirmed after 1 fix cycle (CRITICAL fifth-writer defect found by independent review, closed, re-verified; 113/114 vitest, tsc clean); no live-provider/live-DB verification possible |
-| 06 — Schema source of truth | ⏳ PLANNED |
+| 06 — Schema source of truth | 🧪 TESTING — root cause found and fixed at all 4 sites; `types.ts` regeneration blocked on Supabase CLI auth (operator action) |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
 
@@ -558,64 +558,51 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-**Last updated:** 29-07-26 (UPDATE PROCESS, Phase 05 inner-loop Step 7)
+**Last updated:** 29-07-26 (UPDATE PROCESS, Phase 06 inner-loop Step 7 — FINAL phase; program-level
+closeout also written this pass, see `## Program Closeout` above)
 
-**Current phase N of total:** Phase 5 of 6 (Phases 1-4 also still open — see below; Phase 5 is the
-most recently closed-out phase and the next phase to start is Phase 6)
+**Current phase N of total:** Phase 6 of 6 — **ALL SIX PHASES NOW CODE-COMPLETE AND
+EVL-CONFIRMED.** There is no next phase to start. The program does not need further RESEARCH,
+INNOVATE, PLAN, PVL, EXECUTE, or EVL work on any of its 6 phases.
 
-**Phase N name:** Phase 05 — Billing unification
+**Phase 6 name:** Phase 06 — Schema source of truth (the program's final phase)
 
-**Phase N status:** 🧪 TESTING — code-complete, EVL-confirmed after 1 fix cycle. All Steps A-E
-checklist items done (A4 invoices branch explicitly deferred to backlog per plan decision). A new
-shared guard (`apps/web/lib/billing-provider-guard.ts`) is wired into **five** `users_to_plans`
-writers (Stripe v2, Stripe v1, the LS webhook, the dormant Stripe cron, and `get-invoices` — the
-fifth was found and closed during EVL, see below); the billing page's Cancel button is now
-provider-aware with a fail-safe (never silently falls through to Stripe); `lib/stripe.ts` is
-lazy-init. Closeout classification: **Keep in active/testing** — code is complete and
-independently verified, but no live-provider or live-database verification is possible in this
-environment (0 live `users_to_plans` rows; per SPEC's own Cross-Cutting Requirement), Stripe
-webhook v1's production liveness remains genuinely undetermined (guarded defensively, not assumed
-dead), and AC10's button-wiring half is proven only at the decision-function level, not via a full
-component render. Consistent with how Phases 1-4 were each left open pending their own residual
-items.
+**Phase 6 status:** 🧪 TESTING — code-complete, EVL-confirmed. Fixed the root cause of the entire
+`types.ts` drift problem at all 4 source sites (`apps/web/package.json:7`'s wrong Supabase
+project-ref; `scripts/embed-all-demos.js`'s matching live bug; 2 `SubmissionCard.tsx` deep-links).
+Corrected 5 stale `all-context.md` claims (E1/E2/E2b/E3/E6) plus wrote up the root-cause fact
+itself (E4). Ran an RPC cross-reference and found 2 real untracked-function gaps, backlogged.
+**BLOCKED and not done:** `types.ts` regeneration and a `supabase/migrations/0000_baseline.sql` —
+both require an authenticated Supabase CLI (`supabase login` / `SUPABASE_ACCESS_TOKEN`), which is
+absent in this environment with no `pg_dump`/`psql`/`docker` fallback. Gates green: tsc 1165 =
+foreign baseline exactly (zero net new), tests 113/114 (zero new failures, same pre-existing
+`lib/registry.test.ts` failure), `validate-context-discovery.mjs` exit 0, repoint-completeness grep
+clean (1 hit = the explanatory comment). Closeout classification: **Keep in active/testing** — the
+program's headline deliverable (an accurate `types.ts`) is one human login away; archiving now
+would bury that.
 
-**Phase N EVL:** All 5 gates passed on the first run (tsc scoped-clean, 110/111 vitest, both harness
-validators, clean diff-check) — but `vc-execute-agent` disclosed, unprompted, that its own
-`review-decision.json` was a self-review and left `mustStopBeforeFinalize` set. That disclosure
-triggered an independent adversarial review, which found **1 CRITICAL defect**: `GET
-/api/stripe/get-invoices` was a fifth, unguarded `users_to_plans` writer, reachable on an ordinary
-paying-user page load, capable of planting a Stripe ownership marker onto a Lemon-Squeezy-owned row
-and later letting a stale Stripe event deactivate it. Also found 1 MEDIUM write-ordering issue in
-the LS webhook. Both were fixed in EVL Fix Cycle 1 (29-07-26) and independently re-confirmed: 3 new
-tests (113/114 total vitest, the sole failure being the pre-existing unrelated
-`lib/registry.test.ts` case), zero `tsc` errors in every touched path. `mustStopBeforeFinalize` is
-now CLEARED — see the phase report's `## Closeout Finalization` section for the full basis.
-`results.tsv`: `1 phase-05-evl tests 0 0 PASS HALTED_SUCCESS 2026-07-29` then
-`1 phase-05-evl-fix tests 2 2 PASS CYCLE_COMPLETE 2026-07-29`. Test baseline corrected in
-`process/context/tests/all-tests.md` (113 tests / 24 files, 1 pre-existing unrelated failure) and
-`process/context/all-context.md`.
+**Phase 6 EVL:** All reachable gates ran and passed on the first attempt — no fix cycle was needed
+(unlike Phase 5's 1-cycle EVL). `results.tsv`: `1 phase-06-evl tests 0 0 PASS HALTED_SUCCESS
+2026-07-29`. `results.tsv` totals 32 rows across all 6 phases as of this closeout.
 
-**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_REPORT_29-07-26.md`
-(+ `phase-05-billing-evl-iteration-001_REPORT_29-07-26.md` for the fix-cycle detail)
+**Phase 6 report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-06-schema-truth_REPORT_29-07-26.md`
 
-**Next phase:** Phase 5 stays current — it does NOT need further agent work. Phase 6 (Schema
-source of truth) depends on Phases 1-5 (baseline must include Phase 2's new functions; absorbs tsc
-fallout last) — all of Phases 1-5 are code-complete/EVL-confirmed, so Phase 6 is NOT blocked from
-starting. **Recommended next action:** Phase 6, loop step 1 (RESEARCH). Three independent
-user-approval decisions remain outstanding across the program: Phase 1's Step C3 (grants/RLS live
-apply), Phase 2's Step C5 (embedding functions live apply), and Phase 3's operator crontab install +
-seed SQL apply — none block Phase 6 from proceeding. Additionally, Phase 5 carries 3 new backlog
-follow-ups (LS invoices branch, get-invoices backfill removal, Stripe webhook v1 dead-code
-confirmation) that are genuine future work, not blockers.
+**Next phase:** None — this was the final phase. **Recommended next action is NOT another agent
+phase.** It is the 4 outstanding operator actions listed in `## Program Closeout` above (Phase 1
+Step C3 grant/RLS live apply, Phase 2 Step C5 embedding-functions live apply, Phase 3 crontab
+install + seed apply, Phase 6 `supabase login` + `types` regeneration). Once a human completes
+these, a follow-up UPDATE PROCESS pass should re-verify each live and re-score the SPEC ACs
+currently UNMET/PARTIAL (see `## Program Closeout`'s AC table), at which point the program can
+archive.
 
-**Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending the
-same class of residual items (missing live credentials/DB access, not agent work) that also keep
-Phases 1-4 open.
+**Current loop step:** 7 (UPDATE-PROCESS) — complete for Phase 6 and for the program as a whole.
+Program stays open pending the same class of residual items (missing live credentials/DB access,
+not agent work) across all 6 phases.
 
-**Validate-contract status:** written, inline in `phase-05-billing_PLAN_25-07-26.md`;
-`generated-by: inner-pvl: phase-5`; `Gate: PASS` (0 FAILs; all CONCERNs resolved via direct plan-text
-edits in the same PVL cycle — see `results.tsv`: `1 phase-05-inner plan 3 3 PASS HALTED_SUCCESS
-2026-07-29`).
+**Validate-contract status (Phase 6):** written, inline in `phase-06-schema-truth_PLAN_25-07-26.md`;
+`generated-by: inner-pvl: phase-06` (per Inner Loop Refresh Note cycle 3); `Gate: CONDITIONAL`
+(accepted — the CONDITIONAL reflects the CLI-auth blocker, not a code defect); `results.tsv`:
+`1 phase-06-inner plan 4 4 CONDITIONAL HALTED_ACCEPTED 2026-07-29`.
 
 **Phase 1 status (unchanged, still open):** 🧪 TESTING — code-complete, NOT live-verified.
 `Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted after 5 PVL supplement cycles). Blocked on
@@ -640,16 +627,146 @@ No change this UPDATE PROCESS pass.
 (0 FAILs / 4 CONCERNs, accepted autonomously per `/goal`). e2e/a11y residuals carried to backlog.
 No change this UPDATE PROCESS pass.
 
+**Phase 5 status (unchanged, still open):** 🧪 TESTING — code-complete, EVL-confirmed after 1 fix
+cycle (CRITICAL fifth-writer billing defect found by independent review, closed, re-verified;
+113/114 vitest, tsc clean). `Gate: PASS`. No live-provider/live-DB verification possible in this
+environment (0 live `users_to_plans` rows). See
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_REPORT_29-07-26.md`.
+No change this UPDATE PROCESS pass.
+
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS.
-Orchestrator rule: read "Phase N status" and "Validate-contract status" before spawning any
-subagent for this phase. Do not spawn execute-agent again for Phase 01, 02, 03, 04, or 05 — each is
-code-complete with its own accepted gate; their remaining items are operator/user-approval actions
-or named backlog follow-ups, not agent work. Phase 06 RESEARCH may start now — it is not blocked on
-any outstanding operator action from Phases 1-5.
+Orchestrator rule: **do not spawn any further agent for Phases 01-06 — every phase is
+code-complete with its own accepted gate.** Their remaining items are operator/user-approval
+actions or named backlog follow-ups, not agent work. The next legitimate agent action on this
+program is a follow-up UPDATE PROCESS pass AFTER a human completes the 4 outstanding operator
+actions in `## Program Closeout` above — not a RESEARCH/EXECUTE spawn for any existing phase.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes —
 update-process-agent rewrites it after every phase closeout (overwrite, not append — git history
 is the audit log).
+
+---
+
+## Program Closeout (29-07-26, all 6 phases complete)
+
+**Verdict: all 6 phases code-complete and independently EVL-confirmed. Program stays in `active/`
+— NOT archived.** Every phase's remaining gap is the *same class* of item: a live credential,
+live database connection, or operator-only action this environment genuinely cannot perform — not
+unfinished agent work. Four concrete operator actions now stand between this program and full
+Definition-of-Done closure (listed below). This is a deliberate, honest "keep active/testing"
+call, not a stall.
+
+### Definition of Done — scored against the 6 charter targets
+
+| # | Target | Score | Basis |
+|---|---|---|---|
+| 1 | Bookmark grants persist, zero 42501 across 41 files, live-verified | **Code-complete, NOT live-verified** | Phase 1: SQL authored, `Gate: CONDITIONAL` accepted after 5 PVL cycles; blocked on Step C3 user approval to apply live |
+| 2 | 4 embedding functions exist as version-controlled migrations, invocable against a scratch schema | **MET at scratch-verified level; NOT live-applied** | Phase 2: `0001_embedding_functions.sql` proven end-to-end via `ops/pglite-verify-embedding-functions.mjs` (11/11); `Gate: PASS`; blocked on Step C5 user approval to apply live |
+| 3 | Operator hands one crontab install command for the embedding backfill job | **MET as delivered artifact; NOT installed** | Phase 3: `ops/README-embedding-cron.md` + extended cron route, locally dry-run verified; crontab install + seed SQL apply are operator-only, explicitly non-blocking per the charter |
+| 4 | Every main-nav item resolves to one destination | **MET** | Phase 4: `/templates` is now a 308 redirect to `/?tab=templates`; sidebar counts proven live-query-sourced; EVL-confirmed, no live dependency outstanding |
+| 5 | LS subscriber routed to LS-aware cancel/invoice endpoints, not silently Stripe-routed | **MET at fixture level; live LS/live-DB leg untested** | Phase 5: provider-aware guard wired into 5 writers, fixture-tested (113/114 vitest), 1 CRITICAL defect found+fixed in EVL; `users_to_plans` has 0 live rows so live-provider verification is out of this program's automation boundary per its own Cross-Cutting Requirement |
+| 6 | `types.ts` diffed against live catalogs, zero gaps | **NOT MET — root cause found and fixed, regeneration blocked** | Phase 6: the wrong-project-ref root cause (4 sites) is fixed; `supabase gen types` itself cannot run — CLI is unauthenticated in this environment and has no `pg_dump`/`psql`/`docker` fallback |
+
+**Read across:** the program's actual achievement is that every target is either fully met (#4) or
+sitting one credentialed action away from being met (#1, #2, #3, #5, #6) — never blocked on unclear
+design or unresolved code. That is a materially different (better) state than "the program is
+stuck," and the per-phase reports document the exact unblocking step for each.
+
+### 14 SPEC Acceptance Criteria — final scoring
+
+| AC | Criterion (short) | Status | Note |
+|---|---|---|---|
+| 1 | Zero 42501 across 41 files, live-verified | **UNMET** — blocked on live apply | Phase 1 Step C3 pending-approval SQL is the unblock; `Gate: CONDITIONAL` accepted |
+| 2 | Bookmark persists across reload (Hybrid E2E) | **UNMET** — no e2e run | No local E2E harness against a live/seeded Supabase session exists in this repo; tracked as a pre-existing gap, not new to this program |
+| 3 | Full audit of 41 files, zero remaining ungranted relations | **PARTIAL** — deskable audit done, final live confirmation pending | Phase 1's recursive-import-closure audit method (Program-Wide Learning #1) found the complete gap list; only the live re-confirmation after fix needs Step C3 |
+| 4 | Sidebar counts from live-query hook | **MET** | Phase 4, Fully-Automated vitest/RTL, EVL-confirmed |
+| 5 | DB functions authored + version-controlled before scheduler (embedding half) | **MET** | Phase 2, 4 functions in `0001_embedding_functions.sql`, scratch-verified |
+| 5 | (hunt-scoring half) | **DESCOPED this session** | See "Out-of-Scope Corrections" section above — user-locked descope, not a program failure |
+| 6 | Scheduler runs on recurring schedule | **MET as delivered artifact; live firing non-blocking per AC6 text** | Phase 3: cron script + install command delivered, dry-run confirmed; operator install outstanding |
+| 7 | Search returns non-empty after embedding job runs | **UNMET — Known Gap since program start** | Requires live `OPENAI_API_KEY` + live Qdrant/Supabase, both absent; pre-existing gap this program didn't cause and can't close without those creds |
+| 8 | Hunt/contest scoring RPCs invoked, leaderboards render | **DESCOPED this session** | Depends on the hunt-scoring functions explicitly out of scope; see `process/features/supabase-interconnect/backlog/hunt-scoring-engine_NOTE_25-07-26.md` |
+| 9 | Every nav item resolves to exactly one destination | **PARTIAL** — core fix MET, full Playwright e2e coverage backlogged | Phase 4 fixed `/templates`; `process/features/supabase-interconnect/backlog/e2e-suite-no-baseline-and-foreign-red_NOTE_29-07-26.md` tracks the missing e2e baseline |
+| 10 | LS subscriber routed correctly (fixture leg) | **MET**; Agent-Probe (live LS API) leg **UNMET/Known Gap** | Phase 5, Fully-Automated vitest/RTL for routing logic; no live LS test account available |
+| 11 | Webhooks cannot double-grant a plan | **MET** | Phase 5, Fully-Automated vitest, 1 CRITICAL fifth-writer defect found and closed in EVL |
+| 12 | `types.ts` regenerated, matches live catalogs | **UNMET** | Phase 6, blocked on CLI auth — see `process/features/supabase-interconnect/backlog/types-regen-blocked-on-cli-auth_NOTE_29-07-26.md` |
+| 13 | Grant fix applied to live DB, live-query-verified | **UNMET** | Phase 1, blocked on Step C3 user approval |
+| 14 | ≥3 `all-context.md` stale claims corrected | **MET** | Phase 6 corrected 5 (E1/E2/E2b/E3/E6), plus E4 (the root-cause writeup); `validate-context-discovery.mjs` exit 0 |
+
+**Vacuous-green check:** no MET criterion above rests on a Known-Gap-only gate — every MET row
+cites a Fully-Automated or Hybrid-with-completed-automated-leg gate that actually ran and passed.
+Every UNMET/PARTIAL row is honestly attributed to a live-credential, live-provider, or e2e-harness
+gap this environment cannot close unattended — not to weak verification standards.
+
+### Outstanding operator actions (the practical output of this program)
+
+1. **Phase 1 Step C3** — apply the grant/RLS SQL (21 statements, 4 ordered batches; `views.sql`
+   before the grants file; the REVOKE ships inside the file) against the live production database.
+2. **Phase 2 Step C5** — apply `supabase/migrations/0001_embedding_functions.sql` against the live
+   production database.
+3. **Phase 3** — install the crontab per `ops/README-embedding-cron.md`, then apply
+   `supabase/seed-embedding-verification.sql`.
+4. **Phase 6** — run `corepack pnpm --filter web supabase:login` (or set
+   `SUPABASE_ACCESS_TOKEN`), then `corepack pnpm --filter web types` to regenerate `types.ts`
+   against the now-correctly-pointed project. This step is purely mechanical once authenticated —
+   the investigation and the fix to the generator are both already done.
+
+None of these four require further agent research, design, or code — each is a single credentialed
+action a human performs once. This program cannot close its own Definition of Done without them,
+which is why the program stays in `active/` rather than being marked done on code-completeness
+alone.
+
+### Durable program-wide learnings (the most valuable non-code output)
+
+1. **The root cause of the entire schema-drift problem was a single wrong string, not organic
+   drift.** `apps/web/package.json:7`'s `types` script hardcoded `--project-id
+   'vucvdpamtrjkzmubwlts'` — a project that probed empty back in July — while the app runs on
+   `ewktoowpuemgbaaxxbdq`. Every "types.ts is stale fiction" finding across five phases traced back
+   to this one line, plus three sibling sites that inherited the same wrong ref (one of which,
+   `scripts/embed-all-demos.js`, was a live bug POSTing to the dead project's Edge Function). It
+   took six phases to find because nobody had grepped for *where the types file's numbers came
+   from* — everyone treated `types.ts` as ground truth to correct, not as the output of a
+   mis-pointed generator to fix at the source.
+2. **Green gates are not evidence of correctness on a high-risk surface.** Phase 5's CRITICAL
+   billing defect (a fifth, unguarded `users_to_plans` writer) existed with all 5 EVL gates passing
+   both before and after. It was found only because an agent was told to assume something was
+   still wrong and went looking — no automated gate caught it.
+3. **Self-disclosure of a weak verification is worth more than a clean report.** Phase 5's
+   execute-agent volunteered that its own review was a self-review and left
+   `mustStopBeforeFinalize` set. That disclosure is the only reason an independent adversarial
+   review ran at all, and that review is what found the CRITICAL defect above.
+4. **Verification can degrade quietly toward vacuous, and the failure mode is silence, not error.**
+   Twice in this program a check would have passed without exercising what it claimed to verify:
+   Phase 2's "verified locally" nearly collapsed to a parse-only check before a cheap pglite probe
+   made the real thing achievable; Phase 6's scratch-worktree tsc diff would have compared a
+   worktree against itself if followed as originally written. Both were caught before being
+   reported as green — but neither would have thrown an error on its own.
+5. **Doing RESEARCH and INNOVATE properly before writing the validate-contract is what makes PVL
+   cheap.** Phase 1 needed 5 PVL cycles to reach a gate; Phase 2 needed exactly 1, reaching `PASS`
+   outright. The difference was audit adequacy going into the contract, not luck.
+6. **Scope a guard by the fields it reads, not by a plausible-sounding category of route.** Phase
+   5's mutual-exclusion guard covered "writers of `status`" and missed a writer of `meta` — but
+   `meta` feeds the exact same ownership derivation, so a `meta`-only write changed ownership just
+   as silently. Being named in a plan's prose is not the same as being analyzed against a guard's
+   actual invariant.
+7. **Agents (and orchestrator-propagated claims) contradict each other and are sometimes simply
+   wrong, cheaply.** Across the program: a research agent claimed a script didn't exist that did
+   (workspace devDependency, not missing); a plan agent corrected a path the orchestrator itself
+   had propagated; two agents disagreed on whether `ops/seed-placeholder-components.mjs` exists on
+   disk. Every one of these was settled by a direct `ls`/`find`/`grep` — cheap to check, expensive
+   to carry forward wrong.
+
+### Archival judgment
+
+**Stays in `active/`.** All 6 phases are code-complete and EVL-confirmed, but the program's own
+Definition of Done requires live verification/application steps (grants, migrations, crontab
+install, `types.ts` regeneration) that no agent in this environment can perform without a human
+credential action. Archiving now would either falsely claim those steps are done, or silently drop
+the fact that they're the necessary next actions. **What would allow archival:** a human completes
+the 4 outstanding operator actions listed above, then a follow-up UPDATE PROCESS pass confirms each
+via live verification (Phase 1's `information_schema.role_table_grants` re-query, Phase 2's live
+function-invocation check, Phase 3's confirmed cron firing, Phase 6's regenerated `types.ts` diffed
+clean against `pg_proc`/`pg_class`) and re-scores the SPEC ACs that are currently UNMET/PARTIAL
+above. At that point the program can close.
 
 ---
 

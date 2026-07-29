@@ -104,6 +104,25 @@ original entry below; see retraction and revised claim list.
 - `supabase/*.sql` (existing loose files, folded in)
 - `process/context/all-context.md`
 - scoped tsc-fallout fix sites (cataloged during execution, not predetermined)
+- **[added at EXECUTE, 29-07-26 — orchestrator-authorized Blast Radius extension; see phase report
+  `## Plan Deviations`]** The full four-site repoint of the stale project ref
+  `vucvdpamtrjkzmubwlts` → `ewktoowpuemgbaaxxbdq`. A repo-wide grep found exactly four source
+  sites; the plan declared only the first:
+  - `apps/web/package.json:7` (the `types` script `--project-id` — declared, Step A-0c)
+  - `scripts/embed-all-demos.js` (NOT previously declared — a live bug: read the correct DB but
+    POSTed to the wrong project's `embed-oai` Edge Function; now derives the URL from
+    `NEXT_PUBLIC_SUPABASE_URL`)
+  - `apps/web/components/features/admin/SubmissionCard.tsx:21-22` (NOT previously declared — two
+    hardcoded admin dashboard deep-links)
+  Checked against every other phase's claim list: no overlap. Per validate-contract
+  Execute-Agent Instruction E-new-1 (preferred "fix" branch).
+- Not claimed / NOT modified: `supabase/migrations/0000_baseline.sql` was NOT created and
+  `apps/web/types/supabase.ts` was NOT regenerated — the Supabase CLI is unauthenticated in this
+  environment, so live introspection was impossible. See phase report `## What Was Skipped or
+  Deferred`.
+
+**status: DONE (PARTIAL — regeneration/baseline blocked on Supabase CLI auth; repoint and doc
+corrections complete)**
 
 ## Conflict Check
 

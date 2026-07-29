@@ -33,6 +33,12 @@ Squeezy integration (blocked on user-supplied LS account credentials — see
 `process/features/higherbits-cozy-rebrand/backlog/`). Studio publish flow additionally needs a
 `CSB_API_KEY` (CodeSandbox) that is not yet provisioned.
 
+> **[SUPERSEDED 2026-07-29 — `supabase-interconnect` Phase 06, E2b.]** The "pending a Lemon Squeezy
+> integration (blocked on user-supplied LS account credentials)" clause immediately above is
+> **obsolete**. Lemon Squeezy checkout is BUILT and LIVE (11 real files; see §385-413 and the
+> corrected bullet in `## Open Questions / Outstanding Work`). Stripe being dead/unconfigured is
+> still accurate. `CSB_API_KEY` is still genuinely outstanding.
+
 **Original historical description (pre-full-port, retained for registry/Qdrant-catalog subsystem accuracy — the paragraphs below describe the registry-driven curated catalog subsystem, which still exists inside the larger app):**
 
 **HigherBits.dev** is a premium **Next.js + Turborepo monorepo** UI marketplace — a high-end curated component, template, and theme aggregator. It showcases a growing catalog of original React UI components and ingest MIT-licensed components from GitHub via the `ops/github-ingest.mjs` tool. A **Qdrant vector database** powers behavior-based semantic search ("a soft pastel button", "a calm photo card") rather than name search, populated by an **n8n** ingestion pipeline that reads staged `docs/evidence-manifest/registry/` files.
@@ -269,11 +275,59 @@ Cozy Downloads/
 
 ## Open Questions / Outstanding Work
 
-- **Lemon Squeezy checkout integration NOT built (blocked on user LS account creds).** Stripe
-  checkout code paths in this repo are effectively dead/unconfigured. Follow-up work (overlay UI +
-  `@lemonsqueezy/lemonsqueezy.js` + a webhook route mirroring
-  `apps/web/app/api/webhooks/stripe/route.ts`) is tracked in
-  `process/features/higherbits-cozy-rebrand/backlog/lemonsqueezy-checkout-integration_NOTE_13-07-26.md`.
+- **CORRECTED 2026-07-29 (`supabase-interconnect` Phase 06, E2/E2b) — the former "Lemon Squeezy
+  checkout integration NOT built" bullet that stood here was flatly wrong, not merely stale, and
+  contradicted this same file's own §385-413 description.** Lemon Squeezy checkout IS built and
+  live: 11 real (non-build-artifact) files implement it, including
+  `apps/web/app/api/lemonsqueezy/create-checkout/route.ts`,
+  `apps/web/app/api/lemonsqueezy/webhook/route.ts`, and `apps/web/lib/lemonsqueezy.ts`. LS is the
+  live checkout path; **Stripe** is the one that is effectively dead/unconfigured (503-guarded).
+  See §385-413 of this file for the accurate, detailed description. The genuinely outstanding
+  monetization items are `CSB_API_KEY` and the Clerk env keys below — not LS itself. The stale
+  backlog note at
+  `process/features/higherbits-cozy-rebrand/backlog/lemonsqueezy-checkout-integration_NOTE_13-07-26.md`
+  describes work that has since been done and should be treated as historical.
+- **CORRECTED 2026-07-29 (Phase 06, E1) — no `local_users` dual-store exists in this app.** Lines
+  67 and 244 of this file narrate a `users` → `local_users` rename from the `21st-promotion`
+  program. That is not the current state: `apps/web/prisma/schema.prisma:616` declares
+  `model users`, and no `local_users` model exists anywhere in it. Clerk↔`users` sync is complete
+  and single-store. Read lines 67/244 as history, not as current schema.
+- **CORRECTED 2026-07-29 (Phase 06, E3) — the Phase-19 `themes` content type is not a live
+  surface.** Lines 63-65 describe `templates` and `theme` content types as shipped. `themes` has
+  **zero** references anywhere in `apps/web` — no `getCategoryEntries("themes")` call, no catalog
+  `themes` category usage. Treat the Phase-19 themes narrative as describing authored-but-unwired
+  work.
+- **CORRECTED 2026-07-29 (Phase 06, E6) — `apps/web/lib/catalog.ts` DOES NOT EXIST on disk.**
+  This file is referenced pervasively in the "Established surfaces" / registry narrative above
+  (lines 46, 93, 287) as if it were live. It is absent. Every routing claim that depends on it is
+  stale. This is a targeted "the file is gone, stop trusting these references" flag only — the
+  wholesale rewrite of that narrative belongs to the dedicated `vc-audit-context` reconciliation
+  pass already tracked in this section.
+- **ROOT CAUSE OF THE SCHEMA-DRIFT PROBLEM — found and fixed 2026-07-29 (Phase 06, E4). This is
+  the single most valuable durable fact the `supabase-interconnect` program produced; do not
+  re-discover it from scratch.** `apps/web/types/supabase.ts` has for a long time described a
+  database roughly twice the size of the live one (it claims ~70 functions / 11 views; live has
+  33 / 4). The mechanical cause was not organic drift: **the types-generation script was pointed
+  at the wrong Supabase project.** `apps/web/package.json`'s `types` script hardcoded
+  `--project-id 'vucvdpamtrjkzmubwlts'`, a project that was probed on 2026-07-09 and returned
+  `P4001 — introspected database empty`. The project the app actually connects to at runtime is
+  **`ewktoowpuemgbaaxxbdq`** ("CozyDownloads", cited non-secretly at `supabase/enable-rls.sql:3`
+  and present in all three runtime env files). Anyone running `pnpm --filter web types` was
+  regenerating against the wrong project. **Phase 06 repointed all four source sites** that
+  carried the stale ref: `apps/web/package.json:7` (the root cause), `scripts/embed-all-demos.js`
+  (a live bug — it read the correct DB but POSTed to the *wrong* project's `embed-oai` Edge
+  Function; now derives the URL from `NEXT_PUBLIC_SUPABASE_URL` instead of hardcoding), and two
+  admin dashboard deep-links in
+  `apps/web/components/features/admin/SubmissionCard.tsx:21-22`. A third identifier,
+  `supabase/config.toml:3`'s `project_id = "21st"`, is a local-dev CLI alias, not a hosted project
+  ref — intentionally left unchanged. **Still outstanding:** `types.ts` itself has NOT yet been
+  regenerated — the Supabase CLI in this environment is unauthenticated (`supabase gen types`
+  fails with "Access token not provided"), so the regeneration requires a human to run
+  `corepack pnpm --filter web supabase:login` (or set `SUPABASE_ACCESS_TOKEN`) first. Until then
+  `types.ts` remains the known-inaccurate file described above, but the *generator* is now
+  correctly pointed, so the next regeneration will produce truth. Also note: the numeric table IDs
+  in those `SubmissionCard.tsx` deep-links (`29179`, `229472`) were minted against the OLD project
+  and are unverified for the new one.
 - **`CSB_API_KEY` (CodeSandbox) NOT provisioned.** Blocks the studio publish flow's CodeSandbox
   export step. See
   `process/features/higherbits-cozy-rebrand/backlog/csb-api-key-provisioning_NOTE_13-07-26.md`.
@@ -428,6 +482,29 @@ Cozy Downloads/
   the full run and compare against a pre-recorded per-file baseline) rather than an "exit 0" check.
   Do not trust a bare "tsc passes/fails" claim from any agent without confirming which mode (scoped
   delta vs. true repo-wide zero-errors) it used.
+
+- **`supabase-interconnect` program — ALL 6 PHASES CODE-COMPLETE AND EVL-CONFIRMED, program stays
+  in `active/` pending 4 operator actions (closed out 29-07-26).** Phase 06 (Schema source of
+  truth) finished the program: it found and fixed the root cause of the whole `types.ts`-drift
+  saga — `apps/web/package.json:7`'s types-generation script was pointed at a dead Supabase
+  project (`vucvdpamtrjkzmubwlts`, empty since at least 2026-07-09) instead of the live one
+  (`ewktoowpuemgbaaxxbdq`), and 3 sibling files inherited the same wrong ref (one,
+  `scripts/embed-all-demos.js`, was a live bug POSTing to the dead project's Edge Function). All 4
+  sites are now fixed. What did NOT happen: `types.ts` itself was not regenerated and no
+  `supabase/migrations/0000_baseline.sql` was created — the Supabase CLI in this environment is
+  unauthenticated and has no `pg_dump`/`psql`/`docker` fallback, so live introspection was
+  impossible. **The program's practical output is 4 outstanding operator actions**, none requiring
+  further agent work: (1) apply Phase 1's grant/RLS SQL live, (2) apply Phase 2's
+  `0001_embedding_functions.sql` live, (3) install Phase 3's crontab + apply its seed SQL, (4) run
+  `supabase login` then regenerate `types.ts` (mechanical once authenticated). Every phase
+  (01-Grant/RLS, 02-Embedding functions, 03-Scheduler, 04-Navigation, 05-Billing, 06-Schema truth)
+  is individually code-complete and EVL-confirmed with its own accepted validate-contract gate —
+  see each phase's own dated bullet above for detail, and the umbrella plan's `## Program Closeout`
+  section (`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/supabase-interconnect-umbrella_PLAN_25-07-26.md`)
+  for the full Definition-of-Done scoring against all 14 SPEC acceptance criteria and the durable
+  program-wide learnings (root-cause methodology, green-gates-aren't-correctness-evidence,
+  self-disclosure value, guard-scoping-by-data-read). Task folder intentionally stays in `active/`
+  — see the Program Closeout's archival judgment for exactly what would allow it to close.
 
 - **UI & Front-End Design System (`taste-skill` / Anti-Slop Guidelines):** HigherBits.dev integrates the `taste-skill` engine (`.claude/skills/taste-skill/SKILL.md` / `.agents/skills/taste-skill/SKILL.md`) for all UI, front-end design, and component creation tasks. Every UI/frontend task MUST perform Brief Inference (output a 1-line Design Read stating page kind, audience, vibe language, and design system) and calibrate the 3 core dials (`DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY`). Standard baseline for HigherBits is 8/6/4 (or 5/4/3 for minimalist/cozy components). Avoid LLM slop (purple AI gradients, generic glassmorphism, Inter+slate-900 defaults). Specialized sub-skills are also available: `soft-skill` (luxury/calm UI), `minimalist-skill` (editorial/Linear style), `redesign-skill` (audit-first component overhauls), and `gpt-tasteskill` (stricter layout/motion enforcement).
 

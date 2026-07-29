@@ -28,3 +28,5 @@ cycle	phase	domain	gaps_found	gaps_fixed	gate	loop_status	date
 1	phase-05-inner	plan	3	3	PASS	HALTED_SUCCESS	2026-07-29
 1	phase-05-evl	tests	0	0	PASS	HALTED_SUCCESS	2026-07-29
 1	phase-05-evl-fix	tests	2	2	PASS	CYCLE_COMPLETE	2026-07-29
+1	phase-06-inner	plan	4	4	CONDITIONAL	HALTED_ACCEPTED	2026-07-29
+1	phase-06-evl	tests	0	0	PASS	HALTED_SUCCESS	2026-07-29
