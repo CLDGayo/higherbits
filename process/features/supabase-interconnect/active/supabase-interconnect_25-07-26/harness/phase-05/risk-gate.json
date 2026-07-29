@@ -1,0 +1,7 @@
+{
+  "riskClass": "billing or credits",
+  "workDescription": "Phase 05 supabase-interconnect — billing provider unification: new shared mutual-exclusion guard (apps/web/lib/billing-provider-guard.ts) wired into all four users_to_plans writers (stripe webhook v1, stripe webhook v2, lemonsqueezy webhook, subscription/stripe-cron); provider-aware cancel routing on /settings/billing plus a new /api/lemonsqueezy/cancel route; lazy-init conversion of apps/web/lib/stripe.ts; env var name documentation in .env.example.",
+  "approver": "vc-execute-agent (autonomous phase-program execution, 2026-07-29) — pending human review",
+  "mustStopBeforeFinalize": true,
+  "notes": "No live Stripe or Lemon Squeezy API call was made. No live Supabase connection was made. All verification is fixture/mock based against 0 live users_to_plans rows."
+}

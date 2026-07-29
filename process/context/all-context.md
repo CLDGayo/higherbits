@@ -380,6 +380,55 @@ Cozy Downloads/
   per-category slider badge — a different UI surface, not a duplicate). Test baseline moved 73/18 →
   **82 tests / 21 files, ALL 82 PASSING**; `tsc --noEmit` re-confirmed 0 errors. See
   `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_REPORT_26-07-26.md`.
+- **`supabase-interconnect` Phase 05 (Billing unification) — CODE-COMPLETE, EVL-CONFIRMED AFTER 1
+  FIX CYCLE, NOT LIVE-VERIFIED (29-07-26).** Finished the payment-provider migration: `/settings/billing`'s
+  cancel flow is now provider-aware (a Lemon Squeezy subscriber is no longer silently routed to a
+  Stripe-only endpoint), and a documented mutual-exclusion guarantee prevents the Stripe and Lemon
+  Squeezy webhook families from ever both granting a plan for the same row. **New shared guard:**
+  `apps/web/lib/billing-provider-guard.ts` derives row ownership from existing columns (no schema
+  change) — `meta.stripe_customer_id`/`meta.stripe_subscription_id` for Stripe, top-level
+  `lemon_squeezy_subscription_id` for Lemon Squeezy — and is wired into **five** `users_to_plans`
+  writers: Stripe webhook v2, Stripe webhook v1 (guarded defensively; its production liveness could
+  not be determined read-only and remains genuinely undetermined), the Lemon Squeezy webhook, the
+  dormant `stripe-cron` route, and `GET /api/stripe/get-invoices` (the fifth writer — see below).
+  On a legitimate provider switch the guard nulls the losing provider's marker in the same write
+  that establishes the new owner, so the two markers stay mutually exclusive by construction.
+  `apps/web/lib/stripe.ts` converted from eager module-scope Stripe construction (which threw at
+  import time, breaking build-time page-data collection) to lazy-init Proxies behind the repo's
+  existing `paymentsNotConfigured()` pattern. New `apps/web/app/api/lemonsqueezy/cancel/route.ts`
+  route added (auth-gated identically to the Stripe cancel route); the LS **invoices** branch was
+  explicitly deferred to backlog (display-only gap, not a broken destructive action) — see
+  `process/features/supabase-interconnect/backlog/lemonsqueezy-invoices-branch_NOTE_29-07-26.md`.
+  **CRITICAL defect found and closed post-green-gates:** an independent adversarial review (triggered
+  by execute-agent's own honest self-review disclosure) found that `get-invoices` — a nominally
+  read-only route — had an unguarded write that could plant a Stripe ownership marker onto a
+  Lemon-Squeezy-owned row on an ordinary paying-user page load, which could then let a stale Stripe
+  event deactivate that row. Fixed by skipping the backfill when a Lemon Squeezy marker is present;
+  re-verified with 3 new tests and zero new `tsc` errors. Durable lesson: **scope any ownership
+  guard by the fields the derivation reads (`meta`, `lemon_squeezy_subscription_id`), not by a
+  plausible-sounding category of route ("writers of `status`") — a `meta`-only write changes
+  ownership just as silently.** Follow-up backlog note (removing the `get-invoices` backfill
+  entirely, since it's a cache not a requirement):
+  `process/features/supabase-interconnect/backlog/get-invoices-backfill-removal_NOTE_29-07-26.md`.
+  **No live Stripe/Lemon Squeezy API call and no live Supabase connection were made anywhere in this
+  phase** — `users_to_plans` has 0 live rows, so all verification is fixture/mock-based per the
+  program's Cross-Cutting Requirement. Test baseline moved 82/21 → **113 tests / 24 files, 113
+  passing** (1 pre-existing unrelated `lib/registry.test.ts` failure carried since Phase 01) — see
+  `process/context/tests/all-tests.md`. See
+  `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_REPORT_29-07-26.md`
+  for full detail, and its `## EVL Fix Cycle 1` section for the defect writeup.
+
+  **Honest repo-wide `tsc` situation (as of 29-07-26):** a full, unscoped `corepack pnpm --filter web
+  exec tsc --noEmit` currently reports **~1165 errors**, effectively all foreign to any in-flight
+  program — attributable to the user's own uncommitted `package.json`/`pnpm-lock.yaml` state
+  (duplicate React types producing `TS2786` "cannot be used as a JSX component" errors) plus a stale
+  `.next` build cache referencing a deleted route. This makes the repo-wide `tsc` gate **non-functional
+  as a regression detector** until that uncommitted state is resolved or committed — every phase in
+  this program has had to fall back to a **scoped** delta check (grep the touched-file paths out of
+  the full run and compare against a pre-recorded per-file baseline) rather than an "exit 0" check.
+  Do not trust a bare "tsc passes/fails" claim from any agent without confirming which mode (scoped
+  delta vs. true repo-wide zero-errors) it used.
+
 - **UI & Front-End Design System (`taste-skill` / Anti-Slop Guidelines):** HigherBits.dev integrates the `taste-skill` engine (`.claude/skills/taste-skill/SKILL.md` / `.agents/skills/taste-skill/SKILL.md`) for all UI, front-end design, and component creation tasks. Every UI/frontend task MUST perform Brief Inference (output a 1-line Design Read stating page kind, audience, vibe language, and design system) and calibrate the 3 core dials (`DESIGN_VARIANCE`, `MOTION_INTENSITY`, `VISUAL_DENSITY`). Standard baseline for HigherBits is 8/6/4 (or 5/4/3 for minimalist/cozy components). Avoid LLM slop (purple AI gradients, generic glassmorphism, Inter+slate-900 defaults). Specialized sub-skills are also available: `soft-skill` (luxury/calm UI), `minimalist-skill` (editorial/Linear style), `redesign-skill` (audit-first component overhauls), and `gpt-tasteskill` (stricter layout/motion enforcement).
 
 ---

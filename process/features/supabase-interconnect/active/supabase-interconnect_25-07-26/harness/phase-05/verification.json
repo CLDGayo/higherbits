@@ -1,0 +1,82 @@
+{
+  "steps": [
+    {
+      "step": "Baseline vitest before any Phase 5 edit",
+      "command": "corepack pnpm --filter web test",
+      "result": "PASS",
+      "notes": "81 passed / 1 failed (82 total, 21 files). The single failure is the documented pre-existing lib/registry.test.ts failure, unrelated to billing."
+    },
+    {
+      "step": "Baseline scoped tsc before any Phase 5 edit",
+      "command": "corepack pnpm --filter web exec tsc --noEmit 2>&1 | grep -E \"settings/billing/page.client|lemonsqueezy|stripe/webhook|lib/stripe\\.ts|billing-provider-guard\"",
+      "result": "PASS",
+      "notes": "Exactly 3 pre-existing foreign TS2786 errors in page.client.tsx at lines 61, 539, 570 — matches the validate-contract baseline exactly."
+    },
+    {
+      "step": "AC11 happy path — same-provider renewal is ALLOWED (must never block a paying customer)",
+      "command": "vitest app/api/stripe/webhook/__tests__/mutual-exclusion.test.ts (CASE 1) + app/api/lemonsqueezy/__tests__/webhook.test.ts (CASE 1)",
+      "result": "PASS",
+      "notes": "Asserted on the mocked users_to_plans write arguments, not HTTP status. Both directions covered."
+    },
+    {
+      "step": "AC11 boundary — cross-provider write BLOCKED in both directions on an active row",
+      "command": "vitest mutual-exclusion.test.ts CASE 2a (+ delete path) and webhook.test.ts CASE 2b (+ cancel path)",
+      "result": "PASS",
+      "notes": "Asserted write absence (toHaveLength(0)). Non-vacuous: CASE 2a and CASE 3 use identical fixtures differing ONLY in `status`, and CASE 3 does write — so the block is attributable to the guard, not to an early error."
+    },
+    {
+      "step": "AC11 boundary — legitimate provider switch on a canceled row is ALLOWED",
+      "command": "vitest CASE 3 (both routes)",
+      "result": "PASS",
+      "notes": "Prevents the failure mode where the guard blocks all switches."
+    },
+    {
+      "step": "AC11 residual-marker fix — losing provider's marker nulled in the SAME write",
+      "command": "vitest CASE 4 (both routes) + insert-path case",
+      "result": "PASS",
+      "notes": "Stripe write asserts lemon_squeezy_subscription_id === null; LS write asserts meta === null. Insert path also carries the clearing patch."
+    },
+    {
+      "step": "Clerk desync guard — a skipped write does NOT sync publicMetadata",
+      "command": "vitest webhook.test.ts 'CASE 2b — a skipped write does NOT sync Clerk publicMetadata'",
+      "result": "PASS",
+      "notes": "expect(mockUpdateUserMetadata).not.toHaveBeenCalled()"
+    },
+    {
+      "step": "AC10 — cancel endpoint selection per provider fixture",
+      "command": "vitest lib/__tests__/billing-provider-guard.test.ts 'AC10 — cancel routing per provider fixture'",
+      "result": "PASS",
+      "notes": "Stripe fixture -> /api/stripe/cancel-subscription; LS fixture -> /api/lemonsqueezy/cancel; no markers -> null (fail-safe, no silent Stripe fallthrough). PARTIAL: proves the decision function the page calls, NOT the button wiring — see known gap."
+    },
+    {
+      "step": "Regression — existing signature verification and payment_status gates unweakened",
+      "command": "manual diff review + existing LS signature test",
+      "result": "PASS",
+      "notes": "No edit touched constructEvent, the HMAC timingSafeEqual comparison, or any payment_status allow-list. The pre-existing 'rejects invalid signatures with 401' test still passes."
+    },
+    {
+      "step": "Full vitest gate after all Phase 5 edits",
+      "command": "corepack pnpm --filter web test",
+      "result": "PASS",
+      "notes": "110 passed / 1 failed (111 total, 23 files). +29 tests vs baseline, zero new failures; the 1 failure is the same pre-existing registry.test.ts one."
+    },
+    {
+      "step": "Scoped tsc gate after all Phase 5 edits (delta check)",
+      "command": "corepack pnpm --filter web exec tsc --noEmit 2>&1 | grep -E \"...\"",
+      "result": "PASS",
+      "notes": "Still exactly 3 TS2786 errors in page.client.tsx (lines shifted 61/539/570 -> 65/556/587 by added lines). Zero errors in any new or edited file. Total repo errors 1163, of which 1121 are the foreign TS2786 duplicate-React-types baseline."
+    },
+    {
+      "step": "Live Lemon Squeezy API end-to-end cancel",
+      "command": "n/a",
+      "result": "SKIP",
+      "notes": "KNOWN GAP. No live LS test account and no credentials; making a live provider call is explicitly forbidden for this phase. Accepted per SPEC Known Gaps."
+    },
+    {
+      "step": "Stripe webhook v1 live/dead determination",
+      "command": "n/a",
+      "result": "SKIP",
+      "notes": "UNRESOLVED. Could not be determined read-only from this repo, and a local env check proves nothing about the production environment. v1 was guarded defensively rather than assumed dead."
+    }
+  ]
+}

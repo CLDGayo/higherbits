@@ -35,9 +35,28 @@ both light and dark mode. It does not replace authenticated E2E or screenshot vi
 **Runner:** vitest `^1.6.0`
 **Config:** `apps/web/vitest.config.ts` — `environment: "node"`, includes `**/__tests__/**/*.test.ts`, `passWithNoTests: true`, `@/` → `apps/web/` resolve alias (added 2026-07-01, matches tsconfig `@/*→./*`). Per-file `@vitest-environment jsdom` override supported — use in individual test files for client-component render tests (first use: `preview-demo.test.tsx`, Phase 17).
 **Run command:** `corepack pnpm --filter web test`
-**Total (RE-BASELINED 29-07-26, `supabase-interconnect` Phase 04 inner-PVL/EVL — corrects the
-Phase 03 entry immediately below, which is now stale by 9 tests / 3 files): 82 tests / 21 files,
-ALL 82 PASSING.** Phase 04 added 3 new test files —
+**Total (RE-BASELINED 29-07-26, `supabase-interconnect` Phase 05 inner-PVL/EVL — corrects the
+Phase 04 entry immediately below, which is now stale by 32 tests / 3 files): 114 tests / 24 files,
+113 PASSING / 1 pre-existing failing.** Phase 05 added 3 new test files —
+`apps/web/lib/__tests__/billing-provider-guard.test.ts` (15 tests — provider derivation, both-marker
+ambiguity, the exact-`"active"` rule, every allow/block branch, the clearing patch, and the
+fixture→endpoint mapping), `apps/web/app/api/stripe/webhook/__tests__/mutual-exclusion.test.ts` (8
+tests — first-ever Stripe webhook coverage in this repo, v1+v2, all 4 required mutual-exclusion
+cases), and extended `apps/web/app/api/lemonsqueezy/__tests__/webhook.test.ts` (+6 tests) — 29 new
+tests at EVL-green (110/111). An independent adversarial review then found a CRITICAL fifth
+`users_to_plans` writer (`GET /api/stripe/get-invoices`) the automated gates could not catch; the
+EVL fix cycle added a 4th new test file,
+`apps/web/app/api/stripe/get-invoices/__tests__/no-lemon-pollution.test.ts` (3 tests), bringing the
+total to 113/114. The sole failure is the same pre-existing, unrelated `lib/registry.test.ts` case
+carried since Phase 01. Also re-confirmed `tsc --noEmit`: repo-wide 1165 errors (up from the ~1163
+Phase 04 baseline — foreign, from the user's ~147 concurrent uncommitted edits), with **zero errors
+in any file this phase touched**, verified by scoped grep across every new/edited path. See
+`process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_REPORT_29-07-26.md`
+and its `## EVL Fix Cycle 1` section. Treat **113/114 across 24 files (1 pre-existing failure), zero
+new tsc errors** as the current regression baseline to hold.
+**Prior entry (RE-BASELINED 29-07-26, `supabase-interconnect` Phase 04 inner-PVL/EVL — corrects the
+Phase 03 entry immediately below, which is now stale by 9 tests / 3 files, SUPERSEDED above): 82
+tests / 21 files, ALL 82 PASSING.** Phase 04 added 3 new test files —
 `apps/web/app/templates/__tests__/templates-redirect.test.ts` (2 tests, proves `/templates` calls
 `permanentRedirect()` not `redirect()`), `apps/web/app/__tests__/home-metadata.test.ts` (3 tests,
 proves the home route's `generateMetadata({searchParams})` branches to the templates SEO metadata
@@ -121,6 +140,15 @@ Test Infra gap below). The "123 tests across 27 files" text further below was fo
 test files were deleted during that phase's execution (its diff touched only `globals.css`,
 `.env.example`, and 2 new files under `apps/web/scripts/`). The drift predates that phase; root
 cause not yet investigated — flagged as a `vc-audit-context` follow-up.
+
+**Test infra gaps found (Phase 05, `supabase-interconnect`, 29-07-26):** (1) vitest emits a large
+`tsconfig-paths` error block on every run, from stray `tmp/shadcn-ui/ui-main/templates/**/tsconfig.json`
+files with unresolvable `extends` — pre-existing, non-fatal, but buries real output; fix would be
+adding `tmp/**` to the vitest `exclude` or `ignoreConfigErrors`; (2) no RTL harness exists for
+`BillingSettingsClient` — the cancel flow is only reachable through several nested components
+(PricingTable → confirm dialog → `onConfirm`), so button-level wiring for provider-aware routing is
+proven only at the decision-function level (see AC10 partial in the Phase 05 report), not via a full
+click-through render.
 
 **Test infra gaps found (Phase 3, 15-07-26):** (1) no `@testing-library/jest-dom` in `apps/web` —
 `toHaveClass`/DOM matchers unavailable, tests use raw `.className` string assertions instead
@@ -210,6 +238,14 @@ accumulated since the program's Phase 1 (no `agent-browser` CLI was available in
 - File system: `vi.mock("fs", () => ({ readFileSync: vi.fn() }))` for registry unit tests
 - IntersectionObserver (jsdom): `global.IntersectionObserver = class { observe() {} unobserve() {} disconnect() {} }` — required when rendering components that use scroll/intersection hooks under jsdom (established Phase 17, `preview-demo.test.tsx`)
 - jsdom per-file override: add `// @vitest-environment jsdom` at the top of a test file to use jsdom for that file only, without changing the global `environment: "node"` config (use for client-component render tests like pill selectors)
+- Billing/webhook mock-chain shape (established Phase 05, `supabase-interconnect`): the mocked
+  `supabaseWithAdminAccess.from()` chain shape differs per route and must match what that route
+  actually calls — `apps/web/app/api/lemonsqueezy/webhook/route.ts` uses `.maybeSingle()`;
+  `apps/web/app/api/stripe/webhook/{v1,v2}/route.ts` use `.single()`. Copying one route's mock
+  chain onto another silently no-ops the test. Assert on the mocked write call's **arguments or
+  absence** (e.g. `expect(mockUpdate).not.toHaveBeenCalled()` /
+  `expect(mockUpdate).toHaveBeenCalledWith(...)`), never on HTTP status — a webhook can return 200
+  while silently doing (or skipping) the wrong write.
 
 ## Active test runner — packages/db (added 2026-07-09, 21st-promotion Phase 1)
 

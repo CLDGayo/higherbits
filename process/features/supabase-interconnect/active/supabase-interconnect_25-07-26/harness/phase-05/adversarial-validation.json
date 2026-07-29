@@ -1,0 +1,49 @@
+{
+  "scenarios": [
+    {
+      "scenario": "Forged webhook: an attacker POSTs a crafted Lemon Squeezy event to grant themselves Pro.",
+      "ruled_out": true,
+      "rationale": "Unchanged by this phase. The LS route still verifies the HMAC-SHA256 signature with crypto.timingSafeEqual before parsing, and both Stripe routes still call constructEvent. No edit touched any signature path."
+    },
+    {
+      "scenario": "Cross-provider overwrite: a Stripe event silently clobbers an active Lemon Squeezy grant (or vice versa), leaving the user paying one provider while owned by the other.",
+      "ruled_out": true,
+      "rationale": "This is the primary threat the phase closes. evaluateBillingWrite() skips the write on an active cross-provider conflict; proven in both directions by write-absence assertions on the mocked users_to_plans call."
+    },
+    {
+      "scenario": "Denial of service against a paying customer: the guard wrongly blocks a legitimate same-provider renewal, silently cutting off access.",
+      "ruled_out": true,
+      "rationale": "Deliberate design bias: every non-conflicting case (same provider, absent row, no markers, ambiguous both-markers row, non-active row) resolves to ALLOW. Only an active cross-provider mismatch blocks. Covered by explicit renewal-allowed tests on both routes plus unit tests for each allow branch."
+    },
+    {
+      "scenario": "Residual-marker confusion: after a provider switch a row carries both markers, so a later event misidentifies the owner and deactivates a live subscription.",
+      "ruled_out": true,
+      "rationale": "clearingPatchFor() nulls the losing provider's marker in the SAME write that establishes the new owner, making the markers mutually exclusive by construction. Legacy rows that already carry both derive as 'ambiguous', which allows the next write and thereby self-repairs. Asserted on write arguments."
+    },
+    {
+      "scenario": "Clerk privilege desync: the guard skips the DB write but Clerk publicMetadata.isPro is still set, granting Pro entitlement with no backing row.",
+      "ruled_out": true,
+      "rationale": "The LS webhook returns before reaching the unconditional Clerk sync on both the create/update and cancel branches. Asserted with expect(mockUpdateUserMetadata).not.toHaveBeenCalled()."
+    },
+    {
+      "scenario": "Unauthenticated or cross-user cancellation via the new /api/lemonsqueezy/cancel route.",
+      "ruled_out": true,
+      "rationale": "The route requires a Clerk session (401 without userId) and looks the subscription up strictly by that session's userId — the subscription id is never accepted from the request body. It also re-derives the provider server-side and 404s on a Stripe-owned row, so a mis-routed client cannot trigger a wrong-provider cancellation."
+    },
+    {
+      "scenario": "Dormant cron reactivation: someone wires up the currently-unscheduled stripe-cron and it mass-deactivates Lemon Squeezy subscribers.",
+      "ruled_out": true,
+      "rationale": "The cron now explicitly skips rows deriving as lemonsqueezy before any status write. Residual: the guard is only as good as the derivation, and this path has no dedicated test — recorded as a known gap, not claimed as proven."
+    },
+    {
+      "scenario": "Secret exposure through the new .env.example entries.",
+      "ruled_out": true,
+      "rationale": "Variable names only, all values empty. No secret value was read, printed, or written at any point in this phase."
+    },
+    {
+      "scenario": "Lazy-init conversion hides a missing Stripe key so a misconfigured deploy silently no-ops instead of failing.",
+      "ruled_out": false,
+      "rationale": "PARTIALLY MITIGATED, stated honestly. The throw still happens with the same message, just on first use rather than at import. This is the intended repo-standard behavior (it fixes build-time page-data collection), but it does move failure later in the lifecycle. Callers that never touch Stripe now import the module cleanly where they previously crashed — that is the point of the change, and it is a real semantic shift worth a reviewer's attention."
+    }
+  ]
+}

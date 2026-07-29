@@ -324,7 +324,7 @@ During /goal execution of a phase program:
 | 02 — Embedding DB functions | 🧪 TESTING — code-complete, locally verified for real (11/11 pglite harness, EVL-confirmed); live application deferred behind Step C5 user approval |
 | 03 — Scheduler + seed | 🧪 TESTING — code-complete, locally verified for real (73/73 vitest incl. 11 new; tsc 0 errors; EVL-confirmed); crontab install + seed apply are operator-only and outstanding |
 | 04 — Navigation | 🧪 TESTING — code-complete, EVL-confirmed (82/82 vitest, tsc clean); e2e/a11y residuals in backlog |
-| 05 — Billing unification | ⏳ PLANNED |
+| 05 — Billing unification | 🧪 TESTING — code-complete, EVL-confirmed after 1 fix cycle (CRITICAL fifth-writer defect found by independent review, closed, re-verified; 113/114 vitest, tsc clean); no live-provider/live-DB verification possible |
 | 06 — Schema source of truth | ⏳ PLANNED |
 
 Status values: ⏳ PLANNED | 🔨 CODE DONE | 🧪 TESTING | ✅ VERIFIED | 🚧 BLOCKED | ✅ COMPLETE
@@ -441,6 +441,35 @@ Full detail: `phase-01-grant-repair_REPORT_26-07-26.md` §Program-Wide Learnings
     gap is preferable to a gate that is red by construction — this is not scope creep to avoid, it
     is the correct call when a naive fix would corrupt the regression gate itself.
 
+## Program-Wide Learnings (carried forward from Phase 05, 29-07-26)
+
+18. **Green gates are not evidence of correctness on a high-risk surface.** All 5 EVL gates passed
+    both before and after a CRITICAL billing defect existed (a fifth, unguarded `users_to_plans`
+    writer that could plant a Stripe ownership marker on a Lemon-Squeezy-owned row on an ordinary
+    page load). No automated gate could have caught it — it was found only because an agent was
+    told to assume something was still wrong and go looking. Apply this to Phase 6: schema
+    regeneration gates (tsc, vitest) will not catch a semantic mismatch between the regenerated
+    types and real call-site usage either.
+19. **The self-review disclosure was load-bearing, not a formality.** `vc-execute-agent` volunteered
+    that its own `review-decision.json` was a self-review rather than filing it as the evidence
+    pack's independent-review leg, and left `mustStopBeforeFinalize` set. That is the only reason an
+    independent adversarial pass ran at all. A high-risk evidence pack's self-review disclosure
+    should be treated as an actionable signal, not a checkbox.
+20. **Scope a guard by the data it reads, not the field it protects.** Phase 5 scoped its
+    mutual-exclusion guard to "writers of `status`" and missed a writer of `meta` — but `meta`
+    feeds the same ownership derivation, so a `meta`-only write changes ownership just as
+    decisively, and silently. The plan even *named* the missed file as a place `meta` gets written,
+    in a "where does provider data live" sense — but its write path was never evaluated against the
+    guard's own invariant. Being mentioned in a plan is not the same as being analyzed. Apply this
+    check to any future guard/invariant work: enumerate by the fields the invariant reads, not by a
+    plausible-sounding category of route.
+21. **A reviewer's suggested fix can itself be unsafe — verify it against the same invariants before
+    accepting it.** The independent review proposed routing the fifth writer through the existing
+    guard helper; execute-agent correctly rejected it, because that helper only blocks *active*
+    cross-provider rows (an inactive row would still be corrupted) and its clearing-patch behavior
+    would have nulled a real subscription id as a side effect of a read-only invoice fetch. A
+    reviewer finding a real defect does not mean their proposed remedy is automatically correct.
+
 ---
 
 ## Touchpoints
@@ -529,54 +558,64 @@ node .claude/skills/vc-generate-phase-program/scripts/validate-umbrella-artifact
 
 ## Current Execution State
 
-**Last updated:** 29-07-26 (UPDATE PROCESS, Phase 04 inner-loop Step 7)
+**Last updated:** 29-07-26 (UPDATE PROCESS, Phase 05 inner-loop Step 7)
 
-**Current phase N of total:** Phase 4 of 6 (Phases 1, 2, and 3 also still open — see below; Phase 4
-is the most recently closed-out phase and the next phase to start is Phase 5)
+**Current phase N of total:** Phase 5 of 6 (Phases 1-4 also still open — see below; Phase 5 is the
+most recently closed-out phase and the next phase to start is Phase 6)
 
-**Phase N name:** Phase 04 — Navigation reconciliation
+**Phase N name:** Phase 05 — Billing unification
 
-**Phase N status:** 🧪 TESTING — code-complete, locally verified for real (NOT vacuously — three new
-assertions were mutation-tested and observed to fail before being restored). All Step A-D checklist
-items done, plus all 4 Execute-Agent Instructions (E1-E4). `/templates` now issues a 308
-`permanentRedirect()` to `/?tab=templates`; its SEO metadata moved onto `apps/web/app/page.tsx`'s
-`generateMetadata({ searchParams })` branch; the now-orphaned `TemplatesListSEO` component was
-deleted; `/public-dashboard` and `/import-old` carry enforced orphan-route marker comments; the
-sidebar-count test now proves counts render from the live `useCategoryTagCounts()` hook, not the
-hardcoded `demosCount` values (which are correctly retained, unchanged, for `home-layout.tsx`'s
-unrelated slider badge, per locked decision D1a). Closeout classification: **Keep in
-active/testing** — code-complete and both automated gates green, but genuine Known Gaps remain
-(wire-level 308 unprovable locally — Clerk dev keys absent; no e2e regression baseline; 58 foreign
-color-contrast violations newly surfaced on `/?tab=templates`), consistent with how Phases 1-3 were
-each left open pending their own residual items.
+**Phase N status:** 🧪 TESTING — code-complete, EVL-confirmed after 1 fix cycle. All Steps A-E
+checklist items done (A4 invoices branch explicitly deferred to backlog per plan decision). A new
+shared guard (`apps/web/lib/billing-provider-guard.ts`) is wired into **five** `users_to_plans`
+writers (Stripe v2, Stripe v1, the LS webhook, the dormant Stripe cron, and `get-invoices` — the
+fifth was found and closed during EVL, see below); the billing page's Cancel button is now
+provider-aware with a fail-safe (never silently falls through to Stripe); `lib/stripe.ts` is
+lazy-init. Closeout classification: **Keep in active/testing** — code is complete and
+independently verified, but no live-provider or live-database verification is possible in this
+environment (0 live `users_to_plans` rows; per SPEC's own Cross-Cutting Requirement), Stripe
+webhook v1's production liveness remains genuinely undetermined (guarded defensively, not assumed
+dead), and AC10's button-wiring half is proven only at the decision-function level, not via a full
+component render. Consistent with how Phases 1-4 were each left open pending their own residual
+items.
 
-**Phase N EVL:** Independent EVL confirmation run found zero gaps and closed in one cycle
-(`results.tsv`: `1 phase-04-evl tests 0 0 PASS HALTED_SUCCESS 2026-07-26`). All gates green:
-`tsc --noEmit` exit 0/0 errors; `pnpm --filter web test` **82/82 passing across 21 files** (baseline
-73/18 + 9 new, zero regressions); `validate-agent-parity.mjs` and `validate-context-discovery.mjs`
-both pass; `git diff --check` clean. Test baseline corrected in `process/context/tests/all-tests.md`
-and `process/context/all-context.md`. The 3 Agent-Probe/Hybrid residuals (wire-level 308 status,
-crawler SEO equivalence, full e2e regression delta) are correctly unrun/unprovable in this
-environment — carried to backlog, not silently absorbed as passing.
+**Phase N EVL:** All 5 gates passed on the first run (tsc scoped-clean, 110/111 vitest, both harness
+validators, clean diff-check) — but `vc-execute-agent` disclosed, unprompted, that its own
+`review-decision.json` was a self-review and left `mustStopBeforeFinalize` set. That disclosure
+triggered an independent adversarial review, which found **1 CRITICAL defect**: `GET
+/api/stripe/get-invoices` was a fifth, unguarded `users_to_plans` writer, reachable on an ordinary
+paying-user page load, capable of planting a Stripe ownership marker onto a Lemon-Squeezy-owned row
+and later letting a stale Stripe event deactivate it. Also found 1 MEDIUM write-ordering issue in
+the LS webhook. Both were fixed in EVL Fix Cycle 1 (29-07-26) and independently re-confirmed: 3 new
+tests (113/114 total vitest, the sole failure being the pre-existing unrelated
+`lib/registry.test.ts` case), zero `tsc` errors in every touched path. `mustStopBeforeFinalize` is
+now CLEARED — see the phase report's `## Closeout Finalization` section for the full basis.
+`results.tsv`: `1 phase-05-evl tests 0 0 PASS HALTED_SUCCESS 2026-07-29` then
+`1 phase-05-evl-fix tests 2 2 PASS CYCLE_COMPLETE 2026-07-29`. Test baseline corrected in
+`process/context/tests/all-tests.md` (113 tests / 24 files, 1 pre-existing unrelated failure) and
+`process/context/all-context.md`.
 
-**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-04-navigation_REPORT_26-07-26.md`
+**Phase N report:** `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_REPORT_29-07-26.md`
+(+ `phase-05-billing-evl-iteration-001_REPORT_29-07-26.md` for the fix-cycle detail)
 
-**Next phase:** Phase 4 stays current — it does NOT advance to Phase 5 automatically. Phase 5
-(Billing unification) depends only on Phase 1 (parallel-safe with Phase 4, per the umbrella's
-Pre-PVL Conflict Resolution — both already ran without conflict), so it is NOT blocked by anything
-in Phase 4's outstanding items. **Recommended next action:** Phase 5, loop step 1 (RESEARCH). Three
-independent user-approval decisions remain outstanding across the program: Phase 1's Step C3
-(grants/RLS live apply), Phase 2's Step C5 (embedding functions live apply), and Phase 3's operator
-crontab install + seed SQL apply — none block Phase 5 or Phase 6 from proceeding.
+**Next phase:** Phase 5 stays current — it does NOT need further agent work. Phase 6 (Schema
+source of truth) depends on Phases 1-5 (baseline must include Phase 2's new functions; absorbs tsc
+fallout last) — all of Phases 1-5 are code-complete/EVL-confirmed, so Phase 6 is NOT blocked from
+starting. **Recommended next action:** Phase 6, loop step 1 (RESEARCH). Three independent
+user-approval decisions remain outstanding across the program: Phase 1's Step C3 (grants/RLS live
+apply), Phase 2's Step C5 (embedding functions live apply), and Phase 3's operator crontab install +
+seed SQL apply — none block Phase 6 from proceeding. Additionally, Phase 5 carries 3 new backlog
+follow-ups (LS invoices branch, get-invoices backfill removal, Stripe webhook v1 dead-code
+confirmation) that are genuine future work, not blockers.
 
 **Current loop step:** 7 (UPDATE-PROCESS) — complete for this pass; phase stays open pending the
-same class of residual items (missing local infra/keys, not agent work) that also keep Phases 1-3
-open.
+same class of residual items (missing live credentials/DB access, not agent work) that also keep
+Phases 1-4 open.
 
-**Validate-contract status:** written, inline in `phase-04-navigation_PLAN_25-07-26.md`;
-`generated-by: inner-pvl: phase-4`; `Gate: CONDITIONAL` (0 FAILs / 4 CONCERNs, all resolved via
-Execute-Agent Instructions E1-E4 rather than blocking — accepted autonomously per `/goal`, see
-`results.tsv`: `1 phase-04-inner plan 4 4 CONDITIONAL HALTED_ACCEPTED 2026-07-26`).
+**Validate-contract status:** written, inline in `phase-05-billing_PLAN_25-07-26.md`;
+`generated-by: inner-pvl: phase-5`; `Gate: PASS` (0 FAILs; all CONCERNs resolved via direct plan-text
+edits in the same PVL cycle — see `results.tsv`: `1 phase-05-inner plan 3 3 PASS HALTED_SUCCESS
+2026-07-29`).
 
 **Phase 1 status (unchanged, still open):** 🧪 TESTING — code-complete, NOT live-verified.
 `Gate: CONDITIONAL` (0 FAILs / 2 CONCERNs, accepted after 5 PVL supplement cycles). Blocked on
@@ -596,12 +635,17 @@ operator-only actions — see
 `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-03-scheduler_REPORT_26-07-26.md`.
 No change this UPDATE PROCESS pass.
 
+**Phase 4 status (unchanged, still open):** 🧪 TESTING — code-complete, locally verified for real
+(82/82 vitest, tsc clean, EVL-confirmed, 3 assertions mutation-tested). `Gate: CONDITIONAL`
+(0 FAILs / 4 CONCERNs, accepted autonomously per `/goal`). e2e/a11y residuals carried to backlog.
+No change this UPDATE PROCESS pass.
+
 Loop step values: RESEARCH | INNOVATE | PLAN-SUPPLEMENT | PVL | EXECUTE | EVL | UPDATE-PROCESS.
 Orchestrator rule: read "Phase N status" and "Validate-contract status" before spawning any
-subagent for this phase. Do not spawn execute-agent again for Phase 01, 02, 03, or 04 — each is
-code-complete with its own accepted gate; their remaining items are operator/user-approval actions,
-not agent work. Phase 05 RESEARCH may start now — it is not blocked on any outstanding operator
-action from Phases 1-4.
+subagent for this phase. Do not spawn execute-agent again for Phase 01, 02, 03, 04, or 05 — each is
+code-complete with its own accepted gate; their remaining items are operator/user-approval actions
+or named backlog follow-ups, not agent work. Phase 06 RESEARCH may start now — it is not blocked on
+any outstanding operator action from Phases 1-5.
 
 Note: The Stable Program Goal above is fixed. This section is the only part that changes —
 update-process-agent rewrites it after every phase closeout (overwrite, not append — git history

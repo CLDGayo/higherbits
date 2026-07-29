@@ -1,0 +1,39 @@
+{
+  "snippets": [
+    {
+      "file": "apps/web/lib/billing-provider-guard.ts",
+      "lines": "1-200",
+      "description": "New shared guard. deriveBillingProvider() reads meta.stripe_customer_id / meta.stripe_subscription_id for Stripe and the top-level lemon_squeezy_subscription_id column for Lemon Squeezy. evaluateBillingWrite() blocks ONLY an active cross-provider conflict; every ambiguous case resolves to allow so a legitimate renewal can never be blocked. clearingPatchFor() returns the null-patch for the losing provider's marker."
+    },
+    {
+      "file": "apps/web/app/api/stripe/webhook/v2/route.ts",
+      "lines": "31-49 (guard), 156-160 / 176-178 / 196-198 (clearing patch), 219-235 (delete-path guard)",
+      "description": "Guard runs before ANY write in handleSubscriptionCreatedOrUpdate, including the cancel_at_period_end meta pre-update. handleSubscriptionDeleted is guarded separately so a Stripe cancellation cannot deactivate a Lemon-Squeezy-owned row. All three ownership-establishing writes carry clearingPatchFor('stripe')."
+    },
+    {
+      "file": "apps/web/app/api/stripe/webhook/v1/route.ts",
+      "lines": "same structure as v2",
+      "description": "v1 guarded defensively (plan item B0). Its live/dead status could not be determined read-only from this repo, so it is treated as potentially live rather than assumed dead."
+    },
+    {
+      "file": "apps/web/app/api/lemonsqueezy/webhook/route.ts",
+      "lines": "66-79 (guard, create/update), 88 / 98 (clearing patch), 122-140 (guard, cancel path)",
+      "description": "Guard returns a 200 no-op BEFORE the unconditional Clerk publicMetadata.isPro sync, so a skipped DB write can never desynchronize Clerk from the row."
+    },
+    {
+      "file": "apps/web/app/api/subscription/stripe-cron/route.ts",
+      "lines": "82-90",
+      "description": "Fourth writer (plan item B0b). Explicit skip of Lemon-Squeezy-owned rows before its status:'inactive' writes. Belt-and-braces: post-fix an LS row also has meta = null and would fall out at the existing `if (!periodEnd) continue` check."
+    },
+    {
+      "file": "apps/web/lib/stripe.ts",
+      "lines": "7-58",
+      "description": "Lazy getters behind paymentsNotConfigured(). Errors still surface with the same messages, on first USE instead of at import. createFallbackProxy is untouched (backlogged separately)."
+    },
+    {
+      "file": "apps/web/app/settings/billing/page.client.tsx",
+      "lines": "~176-200 (handleCancelSubscription)",
+      "description": "Cancel now routes via cancelEndpointFor(deriveProviderFromPlanInfo(subscription)). A null endpoint surfaces a no-active-subscription error toast instead of silently calling Stripe."
+    }
+  ]
+}

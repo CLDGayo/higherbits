@@ -74,10 +74,28 @@ original entry below; see retraction and revised claim list.
 - `apps/web/app/settings/billing/page.client.tsx`
 - `apps/web/app/api/lemonsqueezy/webhook/route.ts`
 - `apps/web/app/api/stripe/webhook/v2/route.ts`
+- `apps/web/app/api/stripe/webhook/v1/route.ts` (added by outer-PVL 25-07-26 — second live
+  Stripe-writing webhook path, confirmed on disk)
 - `apps/web/lib/lemonsqueezy.ts`
-- `apps/web/lib/stripe.ts`
-- possibly new `apps/web/app/api/lemonsqueezy/cancel/route.ts`,
-  `apps/web/app/api/lemonsqueezy/invoices/route.ts`
+- `apps/web/lib/stripe.ts` (mutual-exclusion guard call sites + lazy-getter conversion)
+- new `apps/web/lib/billing-provider-guard.ts` (added by 29-07-26 inner-loop supplement — shared
+  provider-ownership guard helper)
+- new `apps/web/app/api/lemonsqueezy/cancel/route.ts`,
+  `apps/web/app/api/lemonsqueezy/invoices/route.ts` (confirmed net-new, no route existed on disk
+  as of 25-07-26 or 29-07-26)
+- root `.env.example` (documentation of provider secret NAMES only, no values)
+- `apps/web/app/api/subscription/stripe-cron/route.ts` (added by 29-07-26 inner-PVL — 4th
+  `users_to_plans` writer)
+- **[added at EXECUTE, 29-07-26 — see phase plan `## Deviations`]**
+  `apps/web/app/settings/billing/page.tsx` (additive: select + expose
+  `lemon_squeezy_subscription_id` so the client can derive the provider) and
+  `apps/web/hooks/use-subscription.ts` (additive `stripe_subscription_id?` type field). Both
+  checked against the Phase 4 claim list — no overlap.
+- Not claimed / deferred: `apps/web/app/api/lemonsqueezy/invoices/route.ts` was NOT created
+  (backlog: `lemonsqueezy-invoices-branch_NOTE_29-07-26.md`). `apps/web/lib/lemonsqueezy.ts` was
+  read but NOT modified.
+
+**status: DONE** (EXECUTE complete 29-07-26; both Exit Gate gates green on their delta criteria)
 
 ## Phase 6 — Schema source of truth
 
