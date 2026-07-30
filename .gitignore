@@ -44,3 +44,13 @@ video-converter
 rename
 
 .next-prod/
+
+# Generated knowledge graph — rebuilt by `graphify update .`, ~1.5k files,
+# floods git status and has no review value.
+graphify-out/
+
+# Backend bundler output — one timestamped dir per bundle run.
+apps/backend/react-bundle-*/
+
+# Agent harness hook logs.
+.claude/hooks/.logs/
