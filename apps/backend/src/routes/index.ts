@@ -144,6 +144,20 @@ async function handleCompileCss(req: Request, headers: Record<string, string>) {
 
 async function handleBundle(req: Request, headers: Record<string, string>) {
   try {
+    // TEMPORARILY BYPASS BUNDLER SECRET
+    /*
+    const expectedSecret = process.env.BUNDLER_SECRET
+    if (
+      !expectedSecret ||
+      req.headers.get("x-bundler-secret") !== expectedSecret
+    ) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401, headers },
+      )
+    }
+    */
+
     const {
       files,
       id,
@@ -178,8 +192,6 @@ async function handleBundle(req: Request, headers: Record<string, string>) {
     })
 
     console.log("HTML URL", htmlUrl)
-    console.log("REQUEST", req.headers)
-    console.log("REQUEST2", JSON.stringify(req.body))
 
     return Response.json({ success: true, id, html: htmlUrl }, { headers })
   } catch (error) {

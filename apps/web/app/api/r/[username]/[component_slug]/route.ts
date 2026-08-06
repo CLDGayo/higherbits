@@ -17,7 +17,7 @@ const getShadcnRegistrySlug = (registryName: string) => {
   if (registryName === "blocks") {
     return "registry:block"
   }
-  if (registryName === "icons") {
+  if (registryName === "icons" || registryName === "shadcn") {
     return "registry:ui"
   }
   return `registry:${registryName}`
@@ -150,6 +150,15 @@ export async function GET(
   const { username, component_slug } = params
   console.log("🔍 Fetching component:", { username, component_slug })
 
+  // Validate before interpolating username into the PostgREST .or() filter
+  // below — an unvalidated value injects extra filter predicates.
+  if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+    return NextResponse.json(
+      { error: "Invalid username" },
+      { status: 400 },
+    )
+  }
+
   try {
     const apiKey = request.nextUrl.searchParams.get("api_key")
 
@@ -175,6 +184,7 @@ export async function GET(
       .select("*, user:users!user_id(*)")
       .eq("component_slug", component_slug)
       .eq("user_id", user.id)
+      .eq("is_public", true)
       .not("user", "is", null)
       .returns<(Tables<"components"> & { user: Tables<"users"> })[]>()
       .single()

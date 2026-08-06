@@ -10,11 +10,21 @@ const nextConfig = {
     ignoreDuringBuilds: skipBuildValidation,
   },
   images: {
+    // Explicit allowlist instead of hostname:"**" — a wildcard turns the
+    // /_next/image optimizer into an open SSRF proxy for any https host.
+    // NOTE: review this list against production image sources before deploy;
+    // add any missing legitimate host rather than reverting to "**".
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
+      { protocol: "https", hostname: "**.r2.dev" },
+      { protocol: "https", hostname: "**.r2.cloudflarestorage.com" },
+      { protocol: "https", hostname: "**.higherbits.dev" },
+      { protocol: "https", hostname: "**.supabase.co" },
+      { protocol: "https", hostname: "**.githubusercontent.com" },
+      { protocol: "https", hostname: "img.clerk.com" },
+      { protocol: "https", hostname: "**.clerk.accounts.dev" },
+      { protocol: "https", hostname: "pbs.twimg.com" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "www.gravatar.com" },
     ],
   },
   reactStrictMode: true,
