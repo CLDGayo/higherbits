@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useCallback } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { cn } from "../../../lib/utils"
 import { DemoWithComponent } from "@/types/global"
 
@@ -10,11 +10,13 @@ const videoLoadPromises = new Map<string, Promise<void>>()
 interface ComponentVideoPreviewProps {
   component: DemoWithComponent
   demo?: DemoWithComponent
+  isHovered?: boolean
 }
 
 export function ComponentVideoPreview({
   component,
   demo,
+  isHovered,
 }: ComponentVideoPreviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
@@ -107,19 +109,25 @@ export function ComponentVideoPreview({
     }
   }, [toggleVideoIcon])
 
+  useEffect(() => {
+    if (isHovered) {
+      playVideo()
+    } else {
+      stopVideo()
+    }
+  }, [isHovered, playVideo, stopVideo])
+
   return (
     <div
-      onMouseEnter={playVideo}
-      onMouseLeave={stopVideo}
-      onTouchStart={playVideo}
-      onTouchEnd={stopVideo}
-      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      className={cn(
+        "absolute inset-0 transition-opacity duration-300",
+        isHovered ? "opacity-100" : "opacity-0"
+      )}
     >
       {isLoading && <div className="loading-border" />}
       <video
         ref={videoRef}
         data-video={`${id}`}
-        autoPlay
         muted
         loop
         playsInline

@@ -267,6 +267,7 @@ export const ComponentCard = React.memo(function ComponentCard({
 
   // Hide rankings on weekdays
   const hideRankings = shouldHideLeaderboardRankings()
+  const [isHovered, setIsHovered] = React.useState(false)
 
   return (
     <ContextMenu>
@@ -276,6 +277,8 @@ export const ComponentCard = React.memo(function ComponentCard({
       >
         <div
           className="block select-none cursor-pointer relative"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           <Link
             href={componentUrl}
@@ -315,6 +318,7 @@ export const ComponentCard = React.memo(function ComponentCard({
                   <ComponentVideoPreview
                     component={demo as DemoWithComponent}
                     demo={demo as DemoWithComponent}
+                    isHovered={isHovered}
                   />
                 )}
               </div>
