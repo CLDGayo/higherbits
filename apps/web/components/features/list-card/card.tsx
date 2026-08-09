@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import {
   ContextMenu,
   ContextMenuContent,
@@ -45,7 +46,7 @@ type LeaderboardDemoWithComponent = DemoWithComponent & {
   has_voted?: boolean
 }
 
-export function ComponentCard({
+export const ComponentCard = React.memo(function ComponentCard({
   demo,
   isLoading,
   hideUser,
@@ -54,6 +55,8 @@ export function ComponentCard({
   hideVotes,
   isLeaderboard,
   onVote,
+  currentUser,
+  supabaseClient,
 }: {
   demo?: DemoWithComponent | (Component & { user: User })
   isLoading?: boolean
@@ -63,6 +66,8 @@ export function ComponentCard({
   hideVotes?: boolean
   isLeaderboard?: boolean
   onVote?: (demoId: number) => Promise<void>
+  currentUser?: any
+  supabaseClient?: any
 }) {
   const router = useRouter()
 
@@ -70,8 +75,8 @@ export function ComponentCard({
     return <ComponentCardSkeleton />
   }
 
-  const { user } = useUser()
-  const supabase = useClerkSupabaseClient()
+  const user = currentUser
+  const supabase = supabaseClient
   const userData = "component" in demo ? demo.component?.user : demo.user
   const username = userData?.username || userData?.display_username
   const isDemo = "demo_slug" in demo
@@ -120,12 +125,26 @@ export function ComponentCard({
       return "0"
     }
     if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}k`
+      return `${Math.floor(num / 1000)}k`
     }
     return num.toString()
   }
 
-  const previewUrl = demo.preview_url || "/placeholder.svg"
+  const isShadcn = isDemo 
+    ? demo.user?.id === "user_shadcn" || demo.user?.username === "shadcn" || demo.component?.user_id === "user_shadcn"
+    : demo.user?.id === "user_shadcn" || demo.user?.username === "shadcn" || demo.user_id === "user_shadcn"
+
+  const previewUrl = isShadcn
+    ? `/thumbnails/${componentSlug}-dark.png`
+    : ("preview_url" in demo && demo.preview_url) 
+      ? demo.preview_url 
+      : ("pro_preview_image_url" in demo && demo.pro_preview_image_url)
+        ? demo.pro_preview_image_url
+        : "/placeholder.svg"
+
+  const lightPreviewUrl = isShadcn
+    ? `/thumbnails/${componentSlug}-light.png`
+    : undefined
 
   const componentName = isDemo ? demo.component?.name || "" : demo.name || ""
 
@@ -256,30 +275,36 @@ export function ComponentCard({
         disabled={isTouch}
       >
         <div
-          className="block select-none cursor-pointer"
-          onClick={(e) => {
-            if (e.metaKey || e.ctrlKey) {
-              e.preventDefault()
-              if (onCtrlClick) {
-                onCtrlClick(componentUrl)
-              } else {
-                window.open(componentUrl, "_blank")
-                toast.success(`${componentName} was opened in a new tab`)
-              }
-            } else if (onClick) {
-              e.preventDefault()
-              onClick()
-            } else {
-              router.push(componentUrl)
-            }
-          }}
+          className="block select-none cursor-pointer relative"
         >
+          <Link
+            href={componentUrl}
+            className="absolute inset-0 z-10"
+            prefetch={true}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey) {
+                e.preventDefault()
+                if (onCtrlClick) {
+                  onCtrlClick(componentUrl)
+                } else {
+                  window.open(componentUrl, "_blank")
+                  toast.success(`${componentName} was opened in a new tab`)
+                }
+              } else if (onClick) {
+                e.preventDefault()
+                onClick()
+              }
+            }}
+          >
+            <span className="sr-only">View {componentName}</span>
+          </Link>
           <div className="relative aspect-[4/3] mb-3 group">
             <div className="absolute inset-0">
               <div className="relative w-full h-full rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                 <div className="absolute inset-0">
                   <ComponentPreviewImage
                     src={previewUrl}
+                    lightSrc={lightPreviewUrl}
                     alt={componentName}
                     fallbackSrc="/placeholder.svg"
                     className="rounded-lg"
@@ -396,7 +421,7 @@ export function ComponentCard({
           </div>
           <div className="flex space-x-3 items-center">
             {!hideUser && (
-              <div onClick={(e) => e.stopPropagation()}>
+              <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
                 <UserAvatar
                   src={
                     demo.user.display_image_url ||
@@ -483,4 +508,23 @@ export function ComponentCard({
       </ContextMenuContent>
     </ContextMenu>
   )
-}
+}, (prevProps, nextProps) => {
+  // Custom equality check for React.memo
+  if (prevProps.isLoading !== nextProps.isLoading) return false;
+  if (prevProps.hideUser !== nextProps.hideUser) return false;
+  if (prevProps.hideVotes !== nextProps.hideVotes) return false;
+  if (prevProps.isLeaderboard !== nextProps.isLeaderboard) return false;
+  if (prevProps.currentUser?.id !== nextProps.currentUser?.id) return false;
+
+  const prevDemo = prevProps.demo as any;
+  const nextDemo = nextProps.demo as any;
+  if (!prevDemo || !nextDemo) return prevDemo === nextDemo;
+  if (prevDemo.id !== nextDemo.id) return false;
+  if (prevDemo.updated_at !== nextDemo.updated_at) return false;
+  if (prevDemo.bookmarks_count !== nextDemo.bookmarks_count) return false;
+  if (prevDemo.view_count !== nextDemo.view_count) return false;
+  if (prevDemo.votes_count !== nextDemo.votes_count) return false;
+  if (prevDemo.has_voted !== nextDemo.has_voted) return false;
+  
+  return true;
+})

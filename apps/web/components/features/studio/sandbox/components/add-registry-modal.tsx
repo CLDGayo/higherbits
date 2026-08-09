@@ -16,7 +16,7 @@ import { Component, DemoWithComponent, User } from "@/types/global"
 import { useUser } from "@clerk/nextjs"
 import { useQuery } from "@tanstack/react-query"
 import { useTheme } from "next-themes"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { 
   Search, 
@@ -59,6 +59,9 @@ export function AddRegistryModal({
   const { user } = useUser()
   const { resolvedTheme } = useTheme()
   const previewTheme = resolvedTheme === "dark" ? "dark" : "light"
+  
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [savedScrollPos, setSavedScrollPos] = useState(0)
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
@@ -104,7 +107,7 @@ export function AddRegistryModal({
         p_include_private: false,
       })
       if (error) throw error
-      return data.map(transformDemoResult)
+      return data.map(transformDemoResult).filter((item): item is DemoWithComponent => item !== null)
     },
     enabled: !!user?.id,
     staleTime: 30 * 1000,
@@ -130,7 +133,7 @@ export function AddRegistryModal({
          .rpc("get_user_bookmarks_list", { p_user_id: user?.id || "", p_include_private: false })
       
       // Let's just fetch all demos and sort by downloads for 'featured'
-      return featuredData?.map(transformDemoResult) || []
+      return featuredData?.map(transformDemoResult).filter((item): item is DemoWithComponent => item !== null) || []
     },
     // We'll replace the featuredDemosQuery with a proper query
     staleTime: 30 * 1000,
@@ -192,6 +195,7 @@ export function AddRegistryModal({
             const demoComponent: DemoWithComponent = {
               bundle_hash: null,
               bundle_html_url: result.bundle_html_url || null,
+              ghl_html_content: result.ghl_html_content || null,
               bundle_url: result.bundle_url || null,
               compiled_css: result.compiled_css || "",
               component_id: componentData.id,
@@ -232,8 +236,18 @@ export function AddRegistryModal({
   })
 
   const handleSelectComponent = (component: DemoWithComponent) => {
+    if (scrollContainerRef.current) {
+      setSavedScrollPos(scrollContainerRef.current.scrollTop)
+    }
+    console.log("SELECTED_COMPONENT_DATA:", JSON.stringify(component))
     setSelectedComponent(component)
   }
+
+  useEffect(() => {
+    if (!selectedComponent && scrollContainerRef.current && savedScrollPos > 0) {
+      scrollContainerRef.current.scrollTop = savedScrollPos
+    }
+  }, [selectedComponent, savedScrollPos])
 
   const handleConfirmInstall = async () => {
     if (!selectedComponent) return
@@ -265,30 +279,64 @@ export function AddRegistryModal({
   const renderExpandedView = () => {
     if (!selectedComponent) return null
 
-    const username = selectedComponent.user?.username || (selectedComponent.user_id === "user_shadcn" ? "shadcn" : "unknown")
-    const componentSlug = selectedComponent.component?.component_slug || selectedComponent.component_id
+    const username = selectedComponent.user?.username || (selectedComponent as any).user_data?.username || (selectedComponent.component as any)?.user_data?.username || (selectedComponent.user_id === "user_shadcn" ? "shadcn" : "unknown")
+    const componentSlug = selectedComponent.component?.component_slug || selectedComponent.component_id || selectedComponent.name?.toLowerCase() || "default"
     const demoSlug = selectedComponent.demo_slug || "default"
-    const isShadcn = username === "shadcn" || selectedComponent.user_id === "user_shadcn"
     const componentName = selectedComponent.component?.name || selectedComponent.name
     const bundleUrl = selectedComponent.bundle_html_url || (selectedComponent.bundle_url as any)?.html || selectedComponent.component?.bundle_html_url
+    const rawDemoCode = selectedComponent.demo_code || selectedComponent.component?.demo_code || "";
+    const trimmedDemoCode = rawDemoCode.trim();
+    const hasDemoCode = trimmedDemoCode && trimmedDemoCode !== "N/A" && !trimmedDemoCode.toLowerCase().includes("base primitive");
+    const isShadcn = showShadcnBase || username === "shadcn" || selectedComponent.user_id === "user_shadcn" || selectedComponent.component?.user_id === "user_shadcn";
+    
+    // If it's a shadcn primitive without a real demo, we want to show the thumbnail instead of the fallback iframe
+    const shouldShowThumbnail = !hasDemoCode && isShadcn;
     
     return (
       <div className="flex-1 flex flex-col relative h-full bg-background overflow-hidden">
         {/* Top Header */}
-        <div className="flex items-center px-4 py-3 border-b z-20 bg-background/95 backdrop-blur shrink-0">
-          <Button variant="ghost" size="icon" className="mr-3" onClick={() => setSelectedComponent(null)}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+        <div className="flex items-center justify-between px-4 py-3 border-b z-20 bg-background/95 backdrop-blur shrink-0">
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" className="mr-3" onClick={() => setSelectedComponent(null)}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center gap-3">
+               <span className="font-semibold text-foreground">{componentName}</span>
+            </div>
+          </div>
           <div className="flex items-center gap-3">
-             <span className="font-semibold text-foreground">{componentName}</span>
+             <span className="text-sm font-medium text-foreground">Use this component?</span>
+             <Button size="sm" className="px-6 shadow-sm relative overflow-hidden" onClick={handleConfirmInstall} disabled={isInstalling}>
+               {isInstalling && (
+                 <div 
+                   className="absolute left-0 top-0 bottom-0 bg-primary-foreground/20 transition-all duration-500 ease-out" 
+                   style={{ width: `${installProgress}%` }} 
+                 />
+               )}
+               <span className="relative z-10 flex items-center">
+                 {isInstalling && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                 {isInstalling ? "Installing..." : "Use"}
+               </span>
+             </Button>
           </div>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 relative flex items-center justify-center bg-muted/30">
-          <div className="w-full h-full p-8 flex items-center justify-center">
-            {bundleUrl ? (
-              <div className="w-full h-full max-w-4xl max-h-[70vh] rounded-xl overflow-hidden shadow-lg border bg-background relative flex items-center justify-center">
+        <div className="flex-1 relative flex bg-white dark:bg-black">
+          <div className="w-full h-full flex">
+            {shouldShowThumbnail ? (
+              <div className="w-full h-full flex items-center justify-center p-8 bg-dot-black/[0.1] dark:bg-dot-white/[0.1]">
+                <img 
+                  src={`/thumbnails/${selectedComponent.component?.component_slug || selectedComponent.component_slug || selectedComponent.name.toLowerCase()}.png`} 
+                  alt={`${selectedComponent.name} preview`} 
+                  className="max-w-full max-h-[80%] object-contain drop-shadow-md rounded-lg"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg";
+                  }}
+                />
+              </div>
+            ) : bundleUrl ? (
+              <div className="w-full h-full relative flex">
                 <iframe
                   src={`${bundleUrl}?theme=${previewTheme}${
                     previewTheme === "dark" ? "&dark=true" : ""
@@ -298,28 +346,35 @@ export function AddRegistryModal({
                   allowFullScreen
                 />
               </div>
-            ) : selectedComponent.component?.code ? (
-              <div className="w-full h-full max-w-4xl max-h-[70vh] rounded-xl overflow-hidden shadow-lg border bg-background relative flex items-center justify-center">
-                <PublishComponentPreview
-                  code={selectedComponent.component.code}
-                  demoCode={
-                    selectedComponent.demo_code && selectedComponent.demo_code !== "N/A"
-                      ? selectedComponent.demo_code
-                      : `import React from "react";\n\nexport const FallbackDemo = () => {\n  return (\n    <div className="flex items-center justify-center p-10 w-full h-full flex-col gap-4 text-center text-muted-foreground">\n      <p>This component is a base primitive and requires specific props or children to render.</p>\n      <p className="text-sm border p-4 rounded-lg bg-muted/50">Install this component to use it in your code.</p>\n    </div>\n  );\n}`
-                  }
-                  slugToPublish={componentSlug}
-                  registryToPublish={selectedComponent.component.registry || "ui"}
-                  directRegistryDependencies={selectedComponent.component.direct_registry_dependencies || []}
-                  isDarkTheme={previewTheme === "dark"}
-                  demoDependencies={
-                    typeof selectedComponent.demo_dependencies === 'string'
-                      ? JSON.parse((selectedComponent.demo_dependencies as string) || "{}")
-                      : selectedComponent.demo_dependencies || {}
-                  }
-                />
+            ) : (selectedComponent.component?.code || (selectedComponent as any).code) ? (
+              <div className="w-full h-full relative flex">
+                {(() => {
+
+                  return (
+                    <PublishComponentPreview
+                      code={selectedComponent.component?.code || (selectedComponent as any).code}
+                      demoCode={
+                        (selectedComponent.demo_code && selectedComponent.demo_code !== "N/A")
+                          ? selectedComponent.demo_code
+                          : (selectedComponent.component?.demo_code && selectedComponent.component.demo_code !== "N/A")
+                          ? selectedComponent.component.demo_code
+                          : `import React from "react";\n\nexport const FallbackDemo = () => {\n  return (\n    <div className="flex items-center justify-center p-10 w-full h-full flex-col gap-4 text-center text-muted-foreground">\n      <p>This component is a base primitive and requires specific props or children to render.</p>\n      <p className="text-sm border p-4 rounded-lg bg-muted/50">Install this component to use it in your code.</p>\n    </div>\n  );\n}`
+                      }
+                      slugToPublish={componentSlug}
+                      registryToPublish={selectedComponent.component?.registry || (selectedComponent as any).registry || "ui"}
+                      directRegistryDependencies={selectedComponent.component?.direct_registry_dependencies || (selectedComponent as any).direct_registry_dependencies || []}
+                      isDarkTheme={previewTheme === "dark"}
+                      demoDependencies={
+                        typeof selectedComponent.demo_dependencies === 'string'
+                          ? JSON.parse((selectedComponent.demo_dependencies as string) || "{}")
+                          : selectedComponent.demo_dependencies || {}
+                      }
+                    />
+                  )
+                })()}
               </div>
             ) : (
-              <div className="w-full h-full max-w-2xl max-h-[60vh] flex items-center justify-center">
+              <div className="w-full h-full flex items-center justify-center p-8">
                 <ComponentPreviewImage
                     src={isShadcn 
                       ? (selectedComponent.component?.pro_preview_image_url || selectedComponent.pro_preview_image_url) || "/placeholder.svg"
@@ -333,27 +388,6 @@ export function AddRegistryModal({
           </div>
         </div>
 
-        {/* Bottom Action Bar with intense fade blur */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none flex flex-col justify-end z-30">
-           {/* Fade overlay */}
-           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent backdrop-blur-[2px] opacity-90" />
-           
-           <div className="relative z-10 p-6 flex flex-col items-center justify-center gap-4 pointer-events-auto bg-background/50 backdrop-blur-md border-t border-border/50">
-             <p className="text-sm font-medium text-foreground">Use this component?</p>
-             <Button size="lg" className="px-10 shadow-lg relative overflow-hidden" onClick={handleConfirmInstall} disabled={isInstalling}>
-               {isInstalling && (
-                 <div 
-                   className="absolute left-0 top-0 bottom-0 bg-primary-foreground/20 transition-all duration-500 ease-out" 
-                   style={{ width: `${installProgress}%` }} 
-                 />
-               )}
-               <span className="relative z-10 flex items-center">
-                 {isInstalling && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                 {isInstalling ? "Installing..." : "Use"}
-               </span>
-             </Button>
-           </div>
-        </div>
       </div>
     )
   }
@@ -379,7 +413,10 @@ export function AddRegistryModal({
       <DialogContent className="max-w-[95vw] w-full p-0 overflow-hidden bg-background gap-0 border-border">
         <div className="flex h-[90vh] max-h-[1200px] min-h-[600px]">
           {/* Sidebar */}
-          <div className="w-[240px] border-r bg-muted/20 flex flex-col shrink-0">
+          <div className={cn(
+            "w-[240px] border-r flex flex-col shrink-0 bg-muted/20 dark:bg-black",
+            selectedComponent && "hidden md:flex"
+          )}>
             <div className="p-3 border-b">
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -460,10 +497,18 @@ export function AddRegistryModal({
           </div>
 
           {/* Main Content */}
-          {selectedComponent ? (
-            renderExpandedView()
-          ) : (
-          <div className="flex-1 overflow-y-auto bg-background relative p-6">
+          {selectedComponent && (
+            <div className="absolute inset-0 md:left-[240px] z-50 bg-background">
+              {renderExpandedView()}
+            </div>
+          )}
+          
+          <div 
+            ref={scrollContainerRef}
+            className={cn(
+            "flex-1 overflow-y-auto bg-background relative p-6",
+            selectedComponent ? "opacity-0 pointer-events-none" : "opacity-100"
+          )}>
             {isInstalling && (
               <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 rounded-md">
                 <div className="max-w-xs max-h-xs">
@@ -591,7 +636,6 @@ export function AddRegistryModal({
               </p>
             )}
           </div>
-          )}
         </div>
       </DialogContent>
     </Dialog>
