@@ -39,6 +39,7 @@ import { FormData, formSchema } from "@/components/features/studio/publish/confi
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useUser } from "@clerk/nextjs"
+import { useIsFetching } from "@tanstack/react-query"
 import { Form } from "@/components/ui/form"
 import { ArrowRight, Trash2 } from "lucide-react"
 import {
@@ -452,12 +453,27 @@ function PublishClientPageContent({
   const stages: Stage[] = ["Files", "Component", "Demos", "Controls", "Publish"]
   const currentStageIndex = stages.indexOf(activeStage)
 
+  // Reads the slug check ComponentForm already runs, via the shared query cache,
+  // rather than issuing a second request. Key prefix matches the hook's
+  // ["slugCheck", slug, type, userId, componentId].
+  // Note: that query is `enabled: status === "draft"`, so this is draft-only by design —
+  // a published component's slug matches its own row and would always report "taken".
+  const isCheckingSlug = useIsFetching({ queryKey: ["slugCheck"] }) > 0
+
   const handleNextStage = () => {
+    if (activeStage === "Component" && isCheckingSlug) {
+      toast.error("Wait for the slug check to finish")
+      return
+    }
+
+    if (activeStage === "Publish") {
+      handleSubmit()
+      return
+    }
+
     const nextStage = stages[currentStageIndex + 1]
     if (nextStage) {
       setActiveStage(nextStage)
-    } else {
-      // Final submit could go here
     }
   }
 
@@ -511,9 +527,9 @@ function PublishClientPageContent({
         username={username}
         status={serverSandbox?.component_id ? "edit" : "draft"}
         customNextAction={handleNextStage}
-        customNextIcon={activeStage === "Files" ? <ArrowRight size={16} /> : undefined}
-        customNextLabel={activeStage === "Files" ? "Continue" : "Send to review"}
-        isNextLoading={false}
+        customNextIcon={activeStage === "Publish" ? undefined : <ArrowRight size={16} />}
+        customNextLabel={activeStage === "Publish" ? "Send to review" : "Next"}
+        isNextLoading={activeStage === "Publish" && isSubmitting}
         customBackLabel={currentStageIndex > 0 ? "Back to edit" : (isEditMode ? "Back to component" : undefined)}
         customBackAction={handleBackStage}
       />
