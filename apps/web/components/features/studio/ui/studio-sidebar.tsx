@@ -1,6 +1,6 @@
 "use client"
 
-import { partnerModalOpenAtom } from "@/app/studio/[username]/analytics/page.client"
+import { partnerModalOpenAtom } from "@/lib/store/studio-store"
 import {
   Sidebar,
   SidebarContent,

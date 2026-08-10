@@ -26,7 +26,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useAtom } from "jotai"
 import { userStateAtom } from "@/lib/store/user-store"
-import { partnerModalOpenAtom } from "@/app/studio/[username]/analytics/page.client"
+import { partnerModalOpenAtom } from "@/lib/store/studio-store"
 
 interface StudioHeaderProps {
   user: User
