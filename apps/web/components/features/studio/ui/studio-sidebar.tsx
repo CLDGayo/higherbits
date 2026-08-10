@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
@@ -13,34 +14,51 @@ import {
 import { UserAvatar } from "@/components/ui/user-avatar"
 import { cn } from "@/lib/utils"
 import { User } from "@/types/global"
-import {
-  BarChartBig,
-  CreditCard,
-  Home,
-  Layers,
-  Package,
-  Settings,
-} from "lucide-react"
+import { Home, Settings } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+
+import {
+  STUDIO_NAV_ITEMS,
+  isStudioNavItemActive,
+  studioBasePath,
+  studioNavHref,
+  type StudioNavItem,
+} from "../nav-config"
+import { useStudioNavCounts } from "../studio-counts-context"
+import type { StudioNavCounts } from "../studio-counts-types"
 
 interface StudioSidebarProps {
   user: User
 }
 
+/** `undefined` renders no badge; a real number - including 0 - renders. */
+function countFor(
+  item: StudioNavItem,
+  counts: StudioNavCounts,
+): number | undefined {
+  // Sections without a backing table never get a badge. "0" would claim the
+  // table is empty; it does not exist.
+  if (item.comingSoon) return undefined
+
+  switch (item.slug) {
+    case "components":
+      return counts.components ?? undefined
+    case "libraries":
+      return counts.libraries ?? undefined
+    case "templates":
+      return counts.templates ?? undefined
+    default:
+      return undefined
+  }
+}
+
 export function StudioSidebar({ user }: StudioSidebarProps) {
   const pathname = usePathname()
   const { open } = useSidebar()
+  const counts = useStudioNavCounts()
 
-  // Get the base username path
-  const baseUsername = user.display_username || user.username
-  const basePath = `/studio/${baseUsername}`
-
-  // Check which item should be active
-  const isComponentsActive = pathname === basePath
-  const isBundlesActive = pathname.includes("/bundles")
-  const isAnalyticsActive = pathname.includes("/analytics")
-  const isMonetizationActive = pathname.includes("/monetization")
+  const basePath = studioBasePath(user.display_username || user.username)
 
   return (
     <Sidebar
@@ -76,62 +94,57 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
 
       <SidebarContent className="px-2 py-4  bg-background">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              isActive={isComponentsActive}
-              tooltip="Components"
-            >
-              <Link href={basePath} className="flex items-center gap-2">
-                <Layers className="h-4 w-4" />
-                <span>Components</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {STUDIO_NAV_ITEMS.map((item) => {
+            const Icon = item.icon
+            const href = studioNavHref(basePath, item)
+            const count = countFor(item, counts)
 
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isBundlesActive}>
-              <Link
-                href={`${basePath}/bundles`}
-                className="flex items-center gap-2"
-              >
-                <Package className="h-4 w-4" />
-                <span>Bundles</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+            return (
+              <SidebarMenuItem key={item.slug}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isStudioNavItemActive(pathname, basePath, item)}
+                  tooltip={item.tooltip}
+                  // pr-8 reserves room for the badge: the primitive's base
+                  // styles only reserve it for menu-action, and the label
+                  // truncates against full button width otherwise.
+                  className={cn(
+                    count !== undefined && "pr-8",
+                    item.comingSoon &&
+                      "opacity-50 cursor-not-allowed pointer-events-none",
+                  )}
+                >
+                  <Link
+                    href={item.comingSoon ? "#" : href}
+                    aria-disabled={item.comingSoon}
+                    tabIndex={item.comingSoon ? -1 : undefined}
+                    className="flex items-center gap-2"
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                    {item.comingSoon && (
+                      <span className="ml-auto text-xs px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                        Soon
+                      </span>
+                    )}
+                  </Link>
+                </SidebarMenuButton>
 
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              isActive={isAnalyticsActive}
-              tooltip="Analytics"
-            >
-              <Link
-                href={`${basePath}/analytics`}
-                className="flex items-center gap-2"
-              >
-                <BarChartBig className="h-4 w-4" />
-                <span>Analytics</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              isActive={isMonetizationActive}
-              tooltip="Monetization"
-            >
-              <Link
-                href={`${basePath}/monetization`}
-                className="flex items-center gap-2"
-              >
-                <CreditCard className="h-4 w-4" />
-                <span>Monetization</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+                {/*
+                  Sibling of the button, never a child: the badge is positioned
+                  by `peer-data-*` classes, and Tailwind's peer variant only
+                  looks at preceding siblings. Nested it renders flush to the top.
+                  The active-colour override matches this repo's lavender active
+                  token rather than the primitive's stock sidebar-accent.
+                */}
+                {count !== undefined && (
+                  <SidebarMenuBadge className="peer-data-[active=true]/menu-button:text-accent-lavender-foreground">
+                    {count}
+                  </SidebarMenuBadge>
+                )}
+              </SidebarMenuItem>
+            )
+          })}
         </SidebarMenu>
       </SidebarContent>
 
@@ -147,7 +160,7 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Home">
+            <SidebarMenuButton asChild tooltip="Back to HigherBits.dev">
               <Link href="/" className="flex items-center gap-2">
                 <Home className="h-4 w-4" />
                 <span>Back to HigherBits.dev</span>

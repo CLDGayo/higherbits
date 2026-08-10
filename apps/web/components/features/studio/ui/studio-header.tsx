@@ -16,17 +16,15 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import {
-  Menu,
-  Layers,
-  BarChartBig,
-  CreditCard,
-  ChevronDown,
-} from "lucide-react"
+import { Menu, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useAtom } from "jotai"
-import { userStateAtom } from "@/lib/store/user-store"
-import { partnerModalOpenAtom } from "@/lib/store/studio-store"
+import {
+  STUDIO_NAV_ITEMS,
+  activeStudioNavItem,
+  isStudioNavItemActive,
+  studioBasePath,
+  studioNavHref,
+} from "../nav-config"
 
 interface StudioHeaderProps {
   user: User
@@ -38,29 +36,14 @@ export function StudioHeader({ user }: StudioHeaderProps) {
   const controls = useAnimation()
   const { signOut } = useClerk()
   const { open, setOpen } = useSidebar()
-  const [userState] = useAtom(userStateAtom)
-  const [, setPartnerModalOpen] = useAtom(partnerModalOpenAtom)
-  const isPartner = userState?.profile?.is_partner || false
 
-  // Get the base username path
-  const baseUsername = user.display_username || user.username
-  const basePath = `/studio/${baseUsername}`
+  const basePath = studioBasePath(user.display_username || user.username)
 
-  // Check which item should be active
-  const isComponentsActive = pathname === basePath
-  const isAnalyticsActive = pathname.includes("/analytics")
-  const isMonetizationActive = pathname.includes("/monetization")
-
-  let currentSection = "Components"
-  if (isAnalyticsActive) currentSection = "Analytics"
-  if (isMonetizationActive) currentSection = "Monetization"
-
-  // Handle click on Monetization menu item
-  const handleMonetizationClick = () => {
-    if (!isPartner) {
-      setPartnerModalOpen(true)
-    }
-  }
+  // Same nav list and same active rule as the sidebar. These used to be two
+  // independent copies, which is how the mobile header ended up one section
+  // behind the desktop sidebar.
+  const activeItem = activeStudioNavItem(pathname, basePath)
+  const currentSection = activeItem?.label ?? "Creator Studio"
 
   return (
     <header className="flex fixed top-0 left-0 right-0 h-14 z-50 items-center pl-2 pr-4 py-3 text-foreground border-b border-border/40 bg-background">
@@ -93,45 +76,33 @@ export function StudioHeader({ user }: StudioHeaderProps) {
               <ChevronDown className="h-3.5 w-3.5 ml-1" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-[180px] p-1">
-              <DropdownMenuItem
-                className={cn(
-                  "flex items-center gap-2 text-sm cursor-pointer",
-                  isComponentsActive ? "bg-accent text-accent-foreground" : "",
-                )}
-                onSelect={() => router.push(basePath)}
-              >
-                <Layers className="h-4 w-4" />
-                <span>Components</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={cn(
-                  "flex items-center gap-2 text-sm cursor-pointer",
-                  isAnalyticsActive ? "bg-accent text-accent-foreground" : "",
-                )}
-                onSelect={() => router.push(`${basePath}/analytics`)}
-              >
-                <BarChartBig className="h-4 w-4" />
-                <span>Analytics</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className={cn(
-                  "flex items-center gap-2 text-sm cursor-pointer",
-                  isMonetizationActive
-                    ? "bg-accent text-accent-foreground"
-                    : "",
-                )}
-                onSelect={() => {
-                  if (isPartner) {
-                    router.push(`${basePath}/monetization`)
-                  } else {
-                    router.push(`${basePath}/analytics#monetization`)
-                    handleMonetizationClick()
-                  }
-                }}
-              >
-                <CreditCard className="h-4 w-4" />
-                <span>Monetization</span>
-              </DropdownMenuItem>
+              {STUDIO_NAV_ITEMS.map((item) => {
+                const Icon = item.icon
+                const isActive = isStudioNavItemActive(pathname, basePath, item)
+
+                return (
+                  <DropdownMenuItem
+                    key={item.slug}
+                    disabled={item.comingSoon}
+                    className={cn(
+                      "flex items-center gap-2 text-sm cursor-pointer",
+                      isActive ? "bg-accent text-accent-foreground" : "",
+                    )}
+                    onSelect={() => {
+                      if (item.comingSoon) return
+                      router.push(studioNavHref(basePath, item))
+                    }}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                    {item.comingSoon && (
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        Soon
+                      </span>
+                    )}
+                  </DropdownMenuItem>
+                )
+              })}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
