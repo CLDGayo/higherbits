@@ -141,7 +141,7 @@ export function SandboxHeader({
     } else if (customBackUrl) {
       router.push(customBackUrl)
     } else {
-      router.push(`/studio/${params.username}`)
+      router.push(`/studio/${params.username}/components`)
     }
   }
 

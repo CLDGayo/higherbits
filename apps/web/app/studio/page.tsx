@@ -170,7 +170,7 @@ export default function StudioPage() {
 
     if (usernameFromClerk) {
       setUsername(usernameFromClerk)
-      const targetUrl = `/studio/${usernameFromClerk}${searchString}`
+      const targetUrl = `/studio/${usernameFromClerk}/components${searchString}`
       setStudioUrl(targetUrl)
       router.replace(targetUrl)
       return
@@ -182,7 +182,7 @@ export default function StudioPage() {
       .then((data) => {
         if (cancelled || !data?.username) return
         setUsername(data.username)
-        const targetUrl = `/studio/${data.username}${searchString}`
+        const targetUrl = `/studio/${data.username}/components${searchString}`
         setStudioUrl(targetUrl)
         router.replace(targetUrl)
       })

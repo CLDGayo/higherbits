@@ -280,7 +280,7 @@ const PublishPage = () => {
 
       if (usernameToUse && componentSlugValue) {
         router.push(
-          `/studio/${usernameToUse}?publishSuccess=true&componentSlug=${componentSlugValue}&username=${usernameToUse}&demoSlug=${demoSlugToUse}`,
+          `/studio/${usernameToUse}/components?publishSuccess=true&componentSlug=${componentSlugValue}&username=${usernameToUse}&demoSlug=${demoSlugToUse}`,
         )
         console.log(
           `Redirecting to /${usernameToUse}?publishSuccess=true&componentSlug=${componentSlugValue}&username=${usernameToUse}&demoSlug=${demoSlugToUse}`,

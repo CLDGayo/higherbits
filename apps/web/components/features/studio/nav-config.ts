@@ -100,8 +100,15 @@ export const STUDIO_NAV_ITEMS: StudioNavItem[] = [
   },
 ]
 
-export function studioBasePath(username: string): string {
-  return `/studio/${username}`
+/**
+ * `users.username` and `users.display_username` are both nullable, so every
+ * caller here passes a possibly-null value. Interpolating that directly - which
+ * is what the call sites did before this helper existed - yields the literal
+ * path "/studio/null". Falling back to "/studio" instead sends the user to the
+ * studio landing page, which resolves the username from Clerk on its own.
+ */
+export function studioBasePath(username: string | null | undefined): string {
+  return username ? `/studio/${username}` : "/studio"
 }
 
 export function studioNavHref(basePath: string, item: StudioNavItem): string {

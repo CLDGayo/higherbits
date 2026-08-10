@@ -1,328 +1,69 @@
 "use client"
 
-import { User } from "@/types/global"
 import { StudioLayout } from "@/components/features/studio/studio-layout"
-import { DemosTable } from "@/components/features/studio/ui/components-table"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useRouter, usePathname, useSearchParams } from "next/navigation"
-import { createNewSandbox } from "@/components/features/studio/sandbox/api"
-import { useState, useEffect, useRef, useCallback } from "react"
-import { ExtendedDemoWithComponent } from "@/lib/utils/transformData"
-import {
-  Plus,
-  ChevronDown,
-  LayoutGrid,
-  Palette,
-  LayoutTemplate,
-} from "lucide-react"
-import { useClerkSupabaseClient } from "@/lib/clerk"
-import { toast } from "sonner"
-import { SuccessDialog } from "@/components/features/publish/components/success-dialog"
+import { studioBasePath } from "@/components/features/studio/nav-config"
+import { User } from "@/types/global"
+import { BarChartBig, CreditCard, Package } from "lucide-react"
+import Link from "next/link"
 
-const CREATE_OPTIONS = [
+/**
+ * Overview is the studio landing section. Its dashboard content is owned by a
+ * later phase; what it must do today is be a real, reachable page and carry the
+ * entry points for the three sections that left the sidebar. Without these cards
+ * Bundles, Analytics and Monetization keep their routes but lose every link to
+ * them - and the Partner Program modal, which mounts only inside the analytics
+ * page, becomes reachable only by typing the URL.
+ */
+const ENTRY_POINTS = [
   {
-    id: "component",
-    label: "New component",
-    Icon: LayoutGrid,
-    isSvg: false,
+    segment: "bundles",
+    label: "Bundles",
+    description: "Group components into a bundle and sell them together.",
+    icon: Package,
   },
   {
-    id: "theme",
-    label: "New theme",
-    Icon: Palette,
-    isSvg: false,
+    segment: "analytics",
+    label: "Analytics",
+    description: "Views, payouts, and the Partner Program.",
+    icon: BarChartBig,
   },
   {
-    id: "template",
-    label: "New template",
-    Icon: LayoutTemplate,
-    isSvg: false,
-  },
-  {
-    id: "gradient",
-    label: "New gradient",
-    isSvg: true,
-    renderSvg: () => (
-      <svg
-        className="w-5 h-5 text-neutral-400 shrink-0"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <rect x="3" y="4" width="3" height="16" rx="1.5" />
-        <rect x="8.5" y="4" width="3" height="16" rx="1.5" />
-        <rect x="14" y="4" width="3" height="16" rx="1.5" />
-        <rect x="19.5" y="4" width="3" height="16" rx="1.5" />
-      </svg>
-    ),
-  },
-  {
-    id: "shader",
-    label: "New shader",
-    isSvg: true,
-    renderSvg: () => (
-      <svg
-        className="w-5 h-5 text-neutral-400 shrink-0"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="4" />
-        <path d="M7 10c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0" />
-        <path d="M7 14c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0" />
-      </svg>
-    ),
-  },
-  {
-    id: "library",
-    label: "New library",
-    isSvg: true,
-    renderSvg: () => (
-      <svg
-        className="w-5 h-5 text-neutral-400 shrink-0"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" />
-        <path d="M12 22V12" />
-        <path d="M21 7l-9 5-9-5" />
-        <path d="M3 7l9 5 9-5" />
-      </svg>
-    ),
+    segment: "monetization",
+    label: "Monetization",
+    description: "Payout account and earnings settings.",
+    icon: CreditCard,
   },
 ]
 
-interface StudioUsernameClientProps {
-  user: User
-  demos: ExtendedDemoWithComponent[]
-  isAdmin: boolean
-  isOwnProfile: boolean
-}
-
-export function StudioUsernameClient({
-  user,
-  demos,
-  isAdmin,
-  isOwnProfile,
-}: StudioUsernameClientProps) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const [isCreating, setIsCreating] = useState(false)
-  const hasProcessedBeta = useRef(false)
-  const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [selectedType, setSelectedType] = useState<string>("component")
-  const supabase = useClerkSupabaseClient()
-  const [localDemos, setLocalDemos] =
-    useState<ExtendedDemoWithComponent[]>(demos)
-
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
-  const [successDialogData, setSuccessDialogData] = useState<{
-    componentSlug: string
-    username: string
-    demoSlug: string
-  } | null>(null)
-
-  useEffect(() => {
-    setLocalDemos(demos)
-  }, [demos])
-
-  const handleCreateNewSandbox = useCallback(
-    async (overrideType?: string) => {
-      try {
-        setIsCreating(true)
-        const typeToUse = overrideType || selectedType || "component"
-        const { sandboxId } = await createNewSandbox(user.id)
-        setShowCreateDialog(false)
-        router.push(`${pathname}/sandbox/${sandboxId}?type=${typeToUse}`)
-      } catch (error) {
-        console.error("Failed to create sandbox:", error)
-        toast.error(
-          error instanceof Error ? error.message : "Failed to create sandbox",
-        )
-      } finally {
-        setIsCreating(false)
-      }
-    },
-    [user.id, selectedType, pathname, router],
-  )
-
-  const handleSelectOption = (typeId: string) => {
-    setSelectedType(typeId)
-    setShowCreateDialog(true)
-  }
-
-  const handleOpenSandbox = (shortSandboxId: string) => {
-    router.push(`${pathname}/sandbox/${shortSandboxId}`)
-  }
-
-  const handleUpdateVisibility = async (
-    componentId: number,
-    isPrivate: boolean,
-  ) => {
-    try {
-      // Update in Supabase - change to use is_public (which is the inverse of isPrivate)
-      const { error } = await supabase
-        .from("components")
-        .update({ is_public: !isPrivate } as any) // inverting the boolean
-        .eq("id", componentId)
-
-      if (error) {
-        throw error
-      }
-
-      // Update local state
-      setLocalDemos((prevDemos) =>
-        prevDemos.map((demo) =>
-          demo?.component?.id === componentId
-            ? { ...demo, is_private: isPrivate }
-            : demo,
-        ),
-      )
-
-      toast.success(`Component is now ${isPrivate ? "private" : "public"}`)
-    } catch (error) {
-      console.error("Failed to update visibility:", error)
-      toast.error("Failed to update visibility")
-      throw error
-    }
-  }
-
-  // Show create dialog on ?new=true
-  useEffect(() => {
-    if (searchParams.get("new") === "true") {
-      const typeParam = searchParams.get("type") || "component"
-      setSelectedType(typeParam)
-      setShowCreateDialog(true)
-    }
-  }, [searchParams])
-
-  // Auto-create sandbox if beta=true is in the URL
-  useEffect(() => {
-    const betaParam = searchParams.get("beta")
-    const typeParam = searchParams.get("type")
-    if (
-      betaParam === "true" &&
-      !hasProcessedBeta.current &&
-      (isOwnProfile || isAdmin)
-    ) {
-      hasProcessedBeta.current = true
-      handleCreateNewSandbox(typeParam || undefined)
-    }
-  }, [searchParams, handleCreateNewSandbox, isOwnProfile, isAdmin])
-
-  useEffect(() => {
-    const publishSuccess = searchParams.get("publishSuccess")
-    const componentSlug = searchParams.get("componentSlug")
-    const username = searchParams.get("username")
-    const demoSlug = searchParams.get("demoSlug")
-
-    if (publishSuccess === "true" && componentSlug && username && demoSlug) {
-      setSuccessDialogData({ componentSlug, username, demoSlug })
-      setShowSuccessDialog(true)
-
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.delete("publishSuccess")
-      newSearchParams.delete("componentSlug")
-      newSearchParams.delete("username")
-      newSearchParams.delete("demoSlug")
-      router.replace(`${pathname}?${newSearchParams.toString()}`)
-    }
-  }, [searchParams, router, pathname])
-
-  const handleGoToComponentDialog = useCallback(() => {
-    if (successDialogData) {
-      const { username, componentSlug, demoSlug } = successDialogData
-      router.push(`/${username}/${componentSlug}/${demoSlug}`)
-    }
-    setShowSuccessDialog(false)
-  }, [successDialogData, router])
-
-  const handleAddAnotherDialog = useCallback(() => {
-    setShowCreateDialog(true) // Open the create new sandbox dialog
-    setShowSuccessDialog(false)
-  }, [setShowCreateDialog])
+export function StudioOverviewClient({ user }: { user: User }) {
+  const basePath = studioBasePath(user.display_username || user.username)
 
   return (
-    <StudioLayout
-      user={user}
-      onCreateSandbox={handleCreateNewSandbox}
-      isCreating={isCreating}
-      showCreateDialog={showCreateDialog}
-      setShowCreateDialog={setShowCreateDialog}
-      selectedType={selectedType}
-    >
-      <div className="flex justify-between items-center mb-4">
+    <StudioLayout user={user}>
+      <div className="flex flex-col gap-8">
         <div>
-          <h2 className="text-sm font-medium">Components</h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            Create and manage your UI components
+          <h1 className="text-2xl font-medium">Overview</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Your studio at a glance.
           </p>
         </div>
-        {(isOwnProfile || isAdmin) && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                disabled={isCreating}
-                className="bg-[#0052ff] hover:bg-[#0047e1] text-white font-medium text-base px-4 py-2.5 rounded-xl flex items-center gap-2 border-none shadow-sm transition-colors cursor-pointer outline-none focus:ring-2 focus:ring-blue-500/50"
-              >
-                <Plus className="h-5 w-5 stroke-[2.5]" />
-                <span className="font-semibold text-base">New</span>
-                <ChevronDown className="h-4 w-4 ml-0.5 opacity-90" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-60 p-2 bg-[#121214] border border-neutral-800 text-white rounded-2xl shadow-2xl space-y-1 z-50"
-            >
-              {CREATE_OPTIONS.map((option) => (
-                <DropdownMenuItem
-                  key={option.id}
-                  onClick={() => handleSelectOption(option.id)}
-                  className="flex items-center gap-3.5 px-3 py-2.5 text-base font-medium rounded-xl cursor-pointer text-neutral-200 hover:bg-neutral-800/80 hover:text-white focus:bg-neutral-800 focus:text-white transition-colors outline-none"
-                >
-                  {option.isSvg && option.renderSvg ? (
-                    option.renderSvg()
-                  ) : option.Icon ? (
-                    <option.Icon className="w-5 h-5 text-neutral-400 shrink-0" />
-                  ) : null}
-                  <span>{option.label}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
 
-      <div className="mt-4">
-        <DemosTable
-          demos={localDemos}
-          onOpenSandbox={handleOpenSandbox}
-          onUpdateVisibility={
-            isOwnProfile || isAdmin ? handleUpdateVisibility : undefined
-          }
-          isOwnProfile={isOwnProfile || isAdmin}
-        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {ENTRY_POINTS.map(({ segment, label, description, icon: Icon }) => (
+            <Link
+              key={segment}
+              href={`${basePath}/${segment}`}
+              className="group flex flex-col gap-2 rounded-lg border p-4 transition-colors hover:bg-accent"
+            >
+              <div className="flex items-center gap-2">
+                <Icon className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">{label}</span>
+              </div>
+              <p className="text-sm text-muted-foreground">{description}</p>
+            </Link>
+          ))}
+        </div>
       </div>
-      <SuccessDialog
-        isOpen={showSuccessDialog}
-        onOpenChange={setShowSuccessDialog}
-        onAddAnother={handleAddAnotherDialog}
-        onGoToComponent={handleGoToComponentDialog}
-        mode={"component"}
-      />
     </StudioLayout>
   )
 }

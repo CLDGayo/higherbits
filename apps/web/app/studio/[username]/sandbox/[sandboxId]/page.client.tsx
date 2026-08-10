@@ -499,7 +499,7 @@ function PublishClientPageContent({
           <p className="text-base">Failed to initialize sandbox</p>
           <div className="flex gap-3">
             <Button
-              onClick={() => router.push(`/studio/${username}`)}
+              onClick={() => router.push(`/studio/${username}/components`)}
               variant="outline"
             >
               Go Back

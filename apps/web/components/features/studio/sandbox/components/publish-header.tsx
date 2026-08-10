@@ -44,7 +44,7 @@ export function PublishHeader({
       const { success } = await publishSandbox(sandboxId)
       if (success) {
         toast.success("Sandbox sent to review")
-        await router.push(`/studio/${params.username}`)
+        await router.push(`/studio/${params.username}/components`)
       }
     } finally {
       setIsLoading(false)

@@ -56,7 +56,7 @@ export function VersionSelectorDialog({
       await onCreateSandbox(selectedType)
     } else {
       if (username) {
-        router.push(`/studio/${username}?beta=true&type=${selectedType}`)
+        router.push(`/studio/${username}/components?beta=true&type=${selectedType}`)
       } else {
         router.push(`/studio?beta=true&type=${selectedType}`)
       }

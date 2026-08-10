@@ -216,7 +216,7 @@ function HeaderContent({
     const typeParam = typeof type === "string" ? `&type=${type}` : ""
 
     if (username) {
-      router.push(`/studio/${username}?new=true${typeParam}`)
+      router.push(`/studio/${username}/components?new=true${typeParam}`)
     } else {
       router.push(`/studio?new=true${typeParam}`)
     }
@@ -453,10 +453,12 @@ function HeaderContent({
                         onSelect={() => {
                           if (userState.profile?.display_username) {
                             router.push(
-                              `/studio/${userState.profile.display_username}`,
+                              `/studio/${userState.profile.display_username}/components`,
                             )
                           } else if (userState.profile?.username) {
-                            router.push(`/studio/${userState.profile.username}`)
+                            router.push(
+                              `/studio/${userState.profile.username}/components`,
+                            )
                           } else {
                             router.push("/studio")
                           }
