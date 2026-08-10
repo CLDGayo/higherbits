@@ -30,7 +30,12 @@ const selectedPromptTypeAtom = atomWithStorage<PromptType>(
   PROMPT_TYPES.EXTENDED,
 )
 
-export function InterceptedDemoModal({ demo, componentDemos, hasPurchased = false }: { demo: DemoWithComponent, componentDemos: any[], hasPurchased?: boolean }) {
+// `view_count` is a synthetic field on DemoWithComponent (derived from
+// component_analytics, not a demos column). getComponentWithDemo does not
+// compute it, and this modal never reads it — so it is optional here rather
+// than required. Widening the global type instead would hide its absence
+// in the places that genuinely do need it.
+export function InterceptedDemoModal({ demo, componentDemos, hasPurchased = false }: { demo: Omit<DemoWithComponent, "view_count"> & { view_count?: number | null }, componentDemos: any[], hasPurchased?: boolean }) {
   const router = useRouter()
   const { resolvedTheme } = useTheme()
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("light")

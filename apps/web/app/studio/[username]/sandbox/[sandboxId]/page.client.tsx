@@ -134,7 +134,12 @@ function PublishClientPageContent({
     publishProgress,
     isLoadingDialogOpen,
     isSuccessDialogOpen,
-  } = useSubmitComponent(isEditMode)
+    // NOTE: this was `useSubmitComponent(isEditMode)`. The hook takes no
+    // arguments and never referenced isEditMode, so the value was silently
+    // discarded — the studio submit path has never distinguished edit from
+    // create. Removing the argument changes no runtime behaviour; making edit
+    // mode actually work is a separate change (see Phase 07, publish form).
+  } = useSubmitComponent()
 
   const handleSubmit = (event?: React.FormEvent) => {
     event?.preventDefault()
@@ -177,9 +182,14 @@ function PublishClientPageContent({
           updateComponentNameAndImport,
           optimizeComponentAndDemo,
           sandboxId: currentSandbox.id,
-          username: username,
-          serverSandbox: currentSandbox,
-          code,
+          // `reconnectSandbox` is required by submitComponent and was never
+          // passed — stepContext.reconnectSandbox was undefined, so any step
+          // that called it would have thrown at runtime.
+          reconnectSandbox,
+          // Removed: `username`, `serverSandbox` and `code`. None are
+          // parameters of submitComponent; it destructures its arguments
+          // explicitly, so all three were discarded before the call body ran.
+          // The hook reads publishAsUser.username and form data instead.
         })
       },
       (errors) => {
@@ -443,16 +453,19 @@ function PublishClientPageContent({
   const currentStageIndex = stages.indexOf(activeStage)
 
   const handleNextStage = () => {
-    if (currentStageIndex < stages.length - 1) {
-      setActiveStage(stages[currentStageIndex + 1])
+    const nextStage = stages[currentStageIndex + 1]
+    if (nextStage) {
+      setActiveStage(nextStage)
     } else {
       // Final submit could go here
     }
   }
 
   const handleBackStage = () => {
-    if (currentStageIndex > 0) {
-      setActiveStage(stages[currentStageIndex - 1])
+    const previousStage =
+      currentStageIndex > 0 ? stages[currentStageIndex - 1] : undefined
+    if (previousStage) {
+      setActiveStage(previousStage)
     } else if (isEditMode) {
       router.back()
     }
@@ -503,7 +516,6 @@ function PublishClientPageContent({
         isNextLoading={false}
         customBackLabel={currentStageIndex > 0 ? "Back to edit" : (isEditMode ? "Back to component" : undefined)}
         customBackAction={handleBackStage}
-        hideDimensions={activeStage !== "Files"}
       />
 
       <div className="flex flex-1 min-h-0 w-full relative">

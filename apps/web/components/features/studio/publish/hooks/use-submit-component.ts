@@ -731,6 +731,7 @@ export const useSubmitComponent = () => {
         video_url: videoR2Url,
       }),
       compiled_css: null,
+      ghl_html_content: null,
       pro_preview_image_url: null,
       name: demo.name || "Default Demo",
       demo_direct_registry_dependencies:

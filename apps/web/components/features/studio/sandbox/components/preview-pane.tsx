@@ -27,6 +27,7 @@ interface PreviewPaneProps {
   connectedShellId?: string
   showPreview: boolean
   iframeKey: number
+  onRefresh?: () => void
   sandboxUnavailable?: boolean
   onReconnect?: () => void
   onTogglePreview?: () => void
@@ -130,7 +131,7 @@ export function PreviewPane({
       previousConnectedShellId !== ""
     ) {
       setTimeout(() => {
-        onRefresh()
+        onRefresh?.()
       }, 1000 * 8)
     }
   }, [connectedShellId, onRefresh])

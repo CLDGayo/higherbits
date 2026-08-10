@@ -327,7 +327,7 @@ export function AddRegistryModal({
             {shouldShowThumbnail ? (
               <div className="w-full h-full flex items-center justify-center p-8 bg-dot-black/[0.1] dark:bg-dot-white/[0.1]">
                 <img 
-                  src={`/thumbnails/${selectedComponent.component?.component_slug || selectedComponent.component_slug || selectedComponent.name.toLowerCase()}.png`} 
+                  src={`/thumbnails/${selectedComponent.component?.component_slug || (selectedComponent as any).component_slug || selectedComponent.name?.toLowerCase() || "placeholder"}.png`}
                   alt={`${selectedComponent.name} preview`} 
                   className="max-w-full max-h-[80%] object-contain drop-shadow-md rounded-lg"
                   onError={(e) => {
@@ -360,7 +360,7 @@ export function AddRegistryModal({
                           ? selectedComponent.component.demo_code
                           : `import React from "react";\n\nexport const FallbackDemo = () => {\n  return (\n    <div className="flex items-center justify-center p-10 w-full h-full flex-col gap-4 text-center text-muted-foreground">\n      <p>This component is a base primitive and requires specific props or children to render.</p>\n      <p className="text-sm border p-4 rounded-lg bg-muted/50">Install this component to use it in your code.</p>\n    </div>\n  );\n}`
                       }
-                      slugToPublish={componentSlug}
+                      slugToPublish={String(/* falls back to numeric component_id */ componentSlug)}
                       registryToPublish={selectedComponent.component?.registry || (selectedComponent as any).registry || "ui"}
                       directRegistryDependencies={selectedComponent.component?.direct_registry_dependencies || (selectedComponent as any).direct_registry_dependencies || []}
                       isDarkTheme={previewTheme === "dark"}

@@ -2768,6 +2768,52 @@ export type Database = {
       }
     }
     Functions: {
+      // ─────────────────────────────────────────────────────────────────────
+      // HAND-ADDED — NOT FROM `supabase gen types`
+      //
+      // These three functions exist in the live database and are called with
+      // the argument shapes below, but are absent from the last generated
+      // snapshot of this file. Without them, `supabase.rpc()` rejects the call
+      // and every downstream result widens to `{}` (17 type errors as of
+      // 2026-08-10).
+      //
+      // `Args` are transcribed from the real call sites and are accurate.
+      // `Returns` is deliberately permissive: the true row shapes could not be
+      // verified without database access, and a guessed-but-precise schema
+      // would be worse than an honest loose one.
+      //
+      // THE REAL FIX IS REGENERATION. Run:
+      //     supabase login && pnpm --filter web types
+      // That overwrites this whole file and should make this block redundant.
+      // If these three functions are still missing after a regen, they do not
+      // exist in the database and the call sites are broken at runtime.
+      // ─────────────────────────────────────────────────────────────────────
+      get_active_authors_with_top_components: {
+        // components/features/design-engineers/design-engineers-list.tsx
+        Args: {
+          p_offset: number
+          p_limit: number
+        }
+        Returns: Record<string, any>[]
+      }
+      get_section_previews: {
+        // components/features/categories/category-list.tsx, components/ui/command-menu.tsx
+        Args: {
+          p_demo_ids: number[]
+        }
+        Returns: Record<string, any>[]
+      }
+      get_collection_components_v1: {
+        // components/ui/items-list.tsx
+        Args: {
+          p_collection_id: string
+          p_sort_by: string
+          p_offset: number
+          p_limit: number
+        }
+        Returns: Record<string, any>[]
+      }
+      // ──────────────────── end hand-added block ───────────────────────────
       check_rate_limit: {
         Args: {
           p_user_id: string

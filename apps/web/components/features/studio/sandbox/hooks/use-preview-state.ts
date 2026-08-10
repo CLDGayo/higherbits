@@ -1,6 +1,13 @@
 import { create } from 'zustand'
 
-export const PREVIEW_DEVICES = [
+// Annotated so the mixed number / "100%" literals keep their union type
+// instead of widening to `string | number`, which the store's
+// previewWidth/previewHeight (number | "100%") then rejected.
+export const PREVIEW_DEVICES: {
+  name: string
+  width: number | "100%"
+  height: number | "100%"
+}[] = [
   { name: "Responsive", width: "100%", height: "100%" },
   { name: "Tablet", width: 517, height: "100%" },
   { name: "Mobile", width: 375, height: "100%" },

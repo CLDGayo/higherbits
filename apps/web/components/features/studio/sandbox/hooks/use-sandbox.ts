@@ -123,10 +123,13 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     // Diagnostic log to see ALL shells in the VM
     console.log("ALL VM SHELLS:", shells?.map(s => `${s.name} (${s.status})`))
 
+    // "STARTING" is not a member of the SDK's shell status union, so that
+    // comparison could never be true. It was redundant anyway: allRunningOnly
+    // below immediately narrows to "RUNNING". Dropping it changes nothing.
     const allRunningShells = shells?.filter(
       (shell) =>
-        shell.name === "pnpm run install-and-dev" && 
-        (shell.status === "RUNNING" || shell.status === "STARTING"),
+        shell.name === "pnpm run install-and-dev" &&
+        shell.status === "RUNNING",
     )
 
     const allRunningOnly = allRunningShells?.filter(s => s.status === "RUNNING")

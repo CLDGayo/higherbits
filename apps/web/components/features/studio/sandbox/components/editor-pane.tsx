@@ -8,6 +8,7 @@ import { useTheme } from "next-themes"
 
 import dynamic from "next/dynamic"
 import { useEffect, useState, useRef } from "react"
+import type { FileEntry } from "../hooks/use-file-system"
 
 const activateMonacoJSXHighlighter = async (
   monacoEditor: typeof Editor,
@@ -86,7 +87,9 @@ const activateMonacoJSXHighlighter = async (
 }
 
 interface EditorPaneProps {
-  selectedFile: { path: string; type: string; isFromRegistry?: boolean } | null
+  // Was a hand-rolled structural shape missing `name`, while every caller
+  // passes a FileEntry. Reuse the real type instead of duplicating it.
+  selectedFile: FileEntry | null
   code: string
   onCodeChange: (value: string) => void
   isLoading: boolean

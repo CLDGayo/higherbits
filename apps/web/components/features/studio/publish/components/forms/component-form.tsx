@@ -88,9 +88,19 @@ export const ComponentForm = ({
   }, [nameField.value, form])
 
   const currentSlug = form.watch("component_slug")
-  const { isSlugAvailable, isCheckingSlug } = useIsCheckSlugAvailable({
-    slug: currentSlug,
-  })
+  // The hook returns { isAvailable, isChecking }; it was previously destructured
+  // as { isSlugAvailable, isCheckingSlug } — both always undefined — and called
+  // without `type`/`userId`, which left its internal `enabled` permanently false.
+  // The availability indicator below therefore never rendered. Only check on
+  // drafts: an existing component's slug matches its own row and would always
+  // report "taken" (same rule generateUniqueSlug applies).
+  const { isAvailable: isSlugAvailable, isChecking: isCheckingSlug } =
+    useIsCheckSlugAvailable({
+      slug: currentSlug,
+      type: "component",
+      userId: userId ?? "",
+      enabled: status === "draft",
+    })
 
   return (
     <div className="flex flex-col gap-4 w-full">

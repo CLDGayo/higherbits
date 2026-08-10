@@ -40,7 +40,10 @@ export default function RootLayout({
   modal,
 }: {
   children: React.ReactNode
-  modal?: React.ReactNode
+  // Next 15's generated LayoutProps types parallel-route slots as required
+  // React.ReactNode; marking `modal` optional made the layout fail to satisfy
+  // that constraint. The slot is always supplied by the router.
+  modal: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
