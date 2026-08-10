@@ -1,6 +1,5 @@
 "use client"
 
-import { partnerModalOpenAtom } from "@/lib/store/studio-store"
 import {
   Sidebar,
   SidebarContent,
@@ -12,10 +11,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { UserAvatar } from "@/components/ui/user-avatar"
-import { userStateAtom } from "@/lib/store/user-store"
 import { cn } from "@/lib/utils"
 import { User } from "@/types/global"
-import { useAtom } from "jotai"
 import {
   BarChartBig,
   CreditCard,
@@ -26,7 +23,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
 
 interface StudioSidebarProps {
   user: User
@@ -34,30 +30,11 @@ interface StudioSidebarProps {
 
 export function StudioSidebar({ user }: StudioSidebarProps) {
   const pathname = usePathname()
-  const [userState] = useAtom(userStateAtom)
-  const [currentHash, setCurrentHash] = useState("")
-  const [, setPartnerModalOpen] = useAtom(partnerModalOpenAtom)
   const { open } = useSidebar()
 
   // Get the base username path
   const baseUsername = user.display_username || user.username
   const basePath = `/studio/${baseUsername}`
-
-  // Update hash on client side
-  useEffect(() => {
-    const updateHash = () => {
-      setCurrentHash(window.location.hash)
-    }
-
-    // Set initial hash
-    if (typeof window !== "undefined") {
-      updateHash()
-    }
-
-    // Listen for hash changes
-    window.addEventListener("hashchange", updateHash)
-    return () => window.removeEventListener("hashchange", updateHash)
-  }, [])
 
   // Check which item should be active
   const isComponentsActive = pathname === basePath
