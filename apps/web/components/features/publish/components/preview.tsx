@@ -240,13 +240,13 @@ export function PublishComponentPreview({
   if (css === undefined || isLoading) return <LoadingSpinner />
 
   return (
-    <div className="w-full h-full bg-[#FAFAFA] rounded-lg">
+    <div className="w-full h-full">
       {registryDependenciesError && (
         <div className="text-red-500">{registryDependenciesError.message}</div>
       )}
       {isLoading && <LoadingSpinner />}
       {!registryDependenciesError && !isLoading && (
-        <SandpackProvider {...providerProps}>
+        <SandpackProvider key={slugToPublish || "preview"} {...providerProps}>
           <SandpackPreview
             showSandpackErrorOverlay={false}
             showOpenInCodeSandbox={true}

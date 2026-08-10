@@ -135,6 +135,8 @@ export function HomePageClient() {
     setPrevSidebarState(sidebarOpen)
   }, [sidebarOpen])
 
+  const router = require("next/navigation").useRouter()
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShouldShowBanner(!isMobile)

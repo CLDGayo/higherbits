@@ -393,6 +393,7 @@ model demos {
   bookmarks_count                   Int?                     @default(0)
   bundle_html_url                   String?
   bundle_hash                       String?
+  ghl_html_content                  String?
   demo_bookmarks                    demo_bookmarks[]
   demo_hunt_scores                  demo_hunt_scores[]
   demo_hunt_votes                   demo_hunt_votes[]

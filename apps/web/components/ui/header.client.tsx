@@ -502,7 +502,7 @@ function HeaderContent({
                       <DropdownMenuItem
                         className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
                         onSelect={() =>
-                          window.open("https://x.com/serafimcloud", "_blank")
+                          window.open("https://x.com/CLDGayo", "_blank")
                         }
                       >
                         <span>Twitter</span>

@@ -94,7 +94,7 @@ export default async function ApiAccessPage() {
               <AlertDescription>
                 To help us better understand how you're using our API and provide better support, please reach out to us! Contact Serafim{" "}
                 <a
-                  href="https://twitter.com/serafimcloud"
+                  href="https://twitter.com/CLDGayo"
                   className="underline"
                   target="_blank"
                   rel="noopener noreferrer"

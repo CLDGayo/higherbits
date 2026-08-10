@@ -415,7 +415,7 @@ iframe {
       inset -5px -5px 10px hsl(260 40% 3% / 0.55);
     --clay-pressed: inset -3px -3px 6px hsl(255 40% 82% / 0.1),
       inset 3px 3px 6px hsl(260 40% 3% / 0.55);
-    --sidebar-background: 260 22% 15%;
+    --sidebar-background: 0 0% 0%;
     --sidebar-foreground: 40 24% 88%;
     --sidebar-primary: 255 58% 76%;
     --sidebar-primary-foreground: 258 35% 14%;

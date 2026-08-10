@@ -1,6 +1,6 @@
 "use client"
 
-import { ComponentPreviewDialog } from "@/components/features/component-page/preview-dialog"
+
 import { ComponentCard } from "@/components/features/list-card/card"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
@@ -29,6 +29,8 @@ interface HorizontalSliderProps {
   rightSide?: React.ReactNode
 }
 
+import { useClerkSupabaseClient } from "@/lib/clerk"
+
 export function HorizontalSlider({
   title,
   items,
@@ -46,6 +48,7 @@ export function HorizontalSlider({
 }: HorizontalSliderProps) {
   const router = useRouter()
   const { user } = useUser()
+  const supabaseClient = useClerkSupabaseClient()
   const [showLeftButton, setShowLeftButton] = useState(false)
   const [showRightButton, setShowRightButton] = useState(true)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
@@ -134,8 +137,7 @@ export function HorizontalSlider({
       demo?.bundle_url &&
       typeof demo.bundle_url === "object" &&
       "html" in demo.bundle_url &&
-      demo.bundle_url.html &&
-      false // TODO: Temporary disable previews
+      demo.bundle_url.html
     ) {
       setSelectedDemo(demo)
       setIsPreviewDialogOpen(true)
@@ -222,7 +224,8 @@ export function HorizontalSlider({
                   <ComponentCard
                     demo={item}
                     hideUser={hideUser}
-                    onClick={() => handleCardClick(item)}
+                    currentUser={user}
+                    supabaseClient={supabaseClient}
                     onCtrlClick={(url) => {
                       window.open(url, "_blank")
                       toast.success(
@@ -278,13 +281,7 @@ export function HorizontalSlider({
         />
       </div>
 
-      {selectedDemo && (
-        <ComponentPreviewDialog
-          isOpen={isPreviewDialogOpen}
-          onClose={() => setIsPreviewDialogOpen(false)}
-          demo={selectedDemo}
-        />
-      )}
+
     </div>
   )
 }

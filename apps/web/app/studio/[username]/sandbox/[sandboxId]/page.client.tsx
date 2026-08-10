@@ -25,17 +25,37 @@ import {
   RotateCcw,
   PanelRightOpen,
   PanelRightClose,
+  Trash,
+  ChevronLeft,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { SandboxSkeleton } from "@/components/features/studio/sandbox/components/sandbox-skeleton"
+import { SandboxHeader } from "@/components/features/studio/sandbox/components/sandbox-header"
+import { ComponentForm } from "@/components/features/studio/publish/components/forms/component-form"
+import { FormData, formSchema } from "@/components/features/studio/publish/config/utils"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useUser } from "@clerk/nextjs"
+import { Form } from "@/components/ui/form"
+import { ArrowRight, Trash2 } from "lucide-react"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { DemoDetailsForm } from "@/components/features/studio/publish/components/forms/demo-form"
+import { useSubmitComponent } from "@/components/features/studio/publish/hooks/use-submit-component"
+
+type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 
 function PublishClientPageContent({
-  setServerSandbox,
+  isEditMode,
 }: {
-  setServerSandbox: (serverSandbox: ServerSandbox) => void
+  isEditMode: boolean
 }) {
   const params = useParams()
   const router = useRouter()
@@ -45,8 +65,25 @@ function PublishClientPageContent({
   const [selectedEntry, setSelectedEntry] = useState<FileEntry | null>(null)
   const [code, setCode] = useState<string>("")
   const [showPreview, setShowPreview] = useState<boolean>(true)
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
   const [iframeKey, setIframeKey] = useState<number>(0)
   const [isNavigating, setIsNavigating] = useState(false)
+  const [activeStage, setActiveStage] = useState<Stage>("Files")
+  const { user } = useUser()
+  const { isLoaded: isClerkUserLoaded } = useUser()
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      component_slug: "",
+      registry: "ui",
+      description: "",
+      license: "",
+      website_url: "",
+      is_public: false,
+    },
+  })
 
   const {
     sandboxRef,
@@ -62,8 +99,8 @@ function PublishClientPageContent({
     clearMissingDependencyInfo,
     connectedShellId,
     serverSandbox,
+    sandboxStatus,
   } = useSandbox({ sandboxId })
-
 
   const {
     files,
@@ -80,20 +117,126 @@ function PublishClientPageContent({
     renameEntry,
     addDependencyToPackageJson,
     generateRegistry,
+    bundleDemo,
+    updateComponentNameAndImport,
+    optimizeComponentAndDemo,
     addFrom21Registry,
+    createNewDemo,
   } = useFileSystem({
     sandboxRef,
     reconnectSandbox,
     sandboxConnectionHash,
   })
 
-  const handleAddFrom21Registry = async (jsonUrl: string) => {
+  const {
+    submitComponent,
+    isSubmitting,
+    publishProgress,
+    isLoadingDialogOpen,
+    isSuccessDialogOpen,
+  } = useSubmitComponent(isEditMode)
+
+  const handleSubmit = (event?: React.FormEvent) => {
+    event?.preventDefault()
+
+    if (!isClerkUserLoaded) {
+      toast.info("User data is loading, please wait...")
+      return
+    }
+
+    let finalPublishUser = null
+    if (user?.id) {
+      finalPublishUser = { id: user.id, username: user.username || undefined }
+    }
+
+    if (!finalPublishUser) {
+      toast.error("Cannot determine user to publish as. Please ensure you are logged in.")
+      return
+    }
+
+    const currentSandbox = serverSandbox
+
+    form.handleSubmit(
+      () => {
+        const formData = form.getValues()
+        if (!currentSandbox?.id) {
+          toast.error("Sandbox data is missing. Cannot submit.")
+          return
+        }
+
+        const data = {
+          ...formData,
+          website_url: formData.website_url || "",
+        }
+
+        submitComponent({
+          data,
+          publishAsUser: finalPublishUser,
+          generateRegistry,
+          bundleDemo,
+          updateComponentNameAndImport,
+          optimizeComponentAndDemo,
+          sandboxId: currentSandbox.id,
+          username: username,
+          serverSandbox: currentSandbox,
+          code,
+        })
+      },
+      (errors) => {
+        toast.error("Please fill in all required fields")
+        console.error("Form validation errors:", errors)
+      },
+    )()
+  }
+
+  const handleAddFrom21Registry = async (jsonUrl: string, demoCode?: string) => {
     try {
-      await addFrom21Registry(jsonUrl)
+      const newPath = await addFrom21Registry(jsonUrl, demoCode)
       await loadRootDirectory()
+      if (newPath) {
+        setSelectedEntry({
+          path: newPath,
+          name: newPath.split('/').pop() || '',
+          type: "file",
+          isSymlink: false,
+        })
+        try {
+          const content = await loadFileContent(newPath)
+          setCode(content)
+        } catch (e) {
+          // If it fails to load immediately (e.g., file not completely synced), it will be loaded by the useEffect
+          console.warn("Could not immediately load file content after adding:", e)
+        }
+      }
       toast.success("Added from HigherBits.dev registry")
     } catch (error) {
       toast.error("Failed to add from HigherBits.dev registry")
+      console.error(error)
+    }
+  }
+
+  const handleNewDemo = async () => {
+    try {
+      const result = await createNewDemo()
+      if (result.created && result.newDemoPath) {
+        setSelectedEntry({
+          path: result.newDemoPath,
+          name: "demo.tsx",
+          type: "file",
+          isSymlink: false,
+        })
+        try {
+          const content = await loadFileContent(result.newDemoPath)
+          setCode(content)
+        } catch (e) {
+          console.warn("Could not load new demo content:", e)
+        }
+        toast.success("Created new demo")
+      } else {
+        toast.info("Modify the current demo.tsx before creating a new one")
+      }
+    } catch (error) {
+      toast.error("Failed to create new demo")
       console.error(error)
     }
   }
@@ -116,18 +259,21 @@ function PublishClientPageContent({
         const findFirstUiFile = (entries: FileEntry[]): FileEntry | null => {
           for (const entry of entries) {
             // Check if path starts with /src/components/ui AND is not a directory itself
-            if (entry.path.startsWith("/src/components/ui")) {
+            if (
+              entry.path.startsWith("/src/components/ui") ||
+              entry.path.startsWith("/project/sandbox/src/components/ui")
+            ) {
               if (entry.type === "file") {
                 console.debug("Found potential UI file:", entry.path)
                 return entry
-              } else if (entry.type === "dir" && entry.children) {
+              } else if (entry.children) {
                 // Recurse only if it's a directory within the target path
                 const fileInChildren = findFirstUiFile(entry.children)
                 if (fileInChildren) return fileInChildren
               }
             }
             // Also check children even if parent doesn't match, path might be nested deeper
-            else if (entry.type === "dir" && entry.children) {
+            else if (entry.children) {
               const fileInChildren = findFirstUiFile(entry.children)
               if (fileInChildren) return fileInChildren
             }
@@ -164,8 +310,7 @@ function PublishClientPageContent({
 
   useEffect(() => {
     if (serverSandbox) {
-      console.debug("serverSandbox", serverSandbox)
-      setServerSandbox(serverSandbox)
+      // Just maintaining the useEffect dependency structure without setting external state
     }
   }, [serverSandbox])
 
@@ -294,6 +439,25 @@ function PublishClientPageContent({
     setShowPreview((prev) => !prev)
   }
 
+  const stages: Stage[] = ["Files", "Component", "Demos", "Controls", "Publish"]
+  const currentStageIndex = stages.indexOf(activeStage)
+
+  const handleNextStage = () => {
+    if (currentStageIndex < stages.length - 1) {
+      setActiveStage(stages[currentStageIndex + 1])
+    } else {
+      // Final submit could go here
+    }
+  }
+
+  const handleBackStage = () => {
+    if (currentStageIndex > 0) {
+      setActiveStage(stages[currentStageIndex - 1])
+    } else if (isEditMode) {
+      router.back()
+    }
+  }
+
   if (isSandboxLoading) {
     return <SandboxSkeleton />
   }
@@ -328,27 +492,195 @@ function PublishClientPageContent({
 
   return (
     <div className="h-[calc(100vh-56px)] w-full flex flex-col">
-      {/* Header is rendered in page.tsx */}
+      <SandboxHeader
+        sandboxId={sandboxId}
+        sandboxName={serverSandbox?.name}
+        username={username}
+        status={serverSandbox?.component_id ? "edit" : "draft"}
+        customNextAction={handleNextStage}
+        customNextIcon={activeStage === "Files" ? <ArrowRight size={16} /> : undefined}
+        customNextLabel={activeStage === "Files" ? "Continue" : "Send to review"}
+        isNextLoading={false}
+        customBackLabel={currentStageIndex > 0 ? "Back to edit" : (isEditMode ? "Back to component" : undefined)}
+        customBackAction={handleBackStage}
+        hideDimensions={activeStage !== "Files"}
+      />
 
-      <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
-        <ResizablePanel defaultSize={20} minSize={15}>
-          <FileExplorer
-            entries={files}
-            onSelect={setSelectedEntry}
-            selectedPath={selectedEntry?.path || null}
-            onDelete={handleDeleteEntry}
-            onCreateFile={handleCreateFile}
-            onCreateDirectory={createDirectory}
-            onRename={handleRenameEntry}
-            onRefresh={loadRootDirectory}
-            isLoading={isTreeLoading}
-            advancedView={advancedView}
-            onToggleAdvancedView={toggleAdvancedView}
-            onAddFrom21Registry={handleAddFrom21Registry}
-          />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={80} minSize={20}>
+      <div className="flex flex-1 min-h-0 w-full relative">
+        {/* Fixed Width Sidebar */}
+        <div 
+          className="h-full w-[320px] flex-shrink-0 flex flex-col bg-zinc-950 border-r border-border transition-all duration-300"
+          style={{
+            maxWidth: isFullscreen ? "0px" : "320px",
+            minWidth: isFullscreen ? "0px" : "320px",
+            opacity: isFullscreen ? 0 : 1,
+            overflow: "hidden"
+          }}
+        >
+          <div className="flex flex-col shrink-0 border-b border-border pt-2 px-2">
+            <div className="flex items-center justify-between mb-2 px-1">
+              <button onClick={handleBackStage} className="text-muted-foreground hover:text-foreground transition-colors">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-sm font-medium text-zinc-300">{activeStage}</span>
+              <div className="w-4" /> {/* Spacer for centering */}
+            </div>
+            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar">
+              {stages.map((stage) => (
+                <button 
+                  key={stage}
+                  onClick={() => setActiveStage(stage)}
+                  className={cn(
+                    "text-[13px] font-medium pb-1.5 whitespace-nowrap border-b-2 transition-colors",
+                    activeStage === stage 
+                      ? "text-foreground border-foreground" 
+                      : "text-muted-foreground border-transparent hover:text-foreground/80"
+                  )}
+                >
+                  {stage}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar">
+            {activeStage === "Files" && (
+              <FileExplorer
+                entries={files}
+                onSelect={setSelectedEntry}
+                selectedPath={selectedEntry?.path || null}
+                onDelete={handleDeleteEntry}
+                onCreateFile={handleCreateFile}
+                onCreateDirectory={createDirectory}
+                onRename={handleRenameEntry}
+                onRefresh={loadRootDirectory}
+                isLoading={isTreeLoading}
+                advancedView={advancedView}
+                onToggleAdvancedView={toggleAdvancedView}
+                onAddFrom21Registry={handleAddFrom21Registry}
+                onNewDemo={handleNewDemo}
+              />
+            )}
+            
+            {activeStage === "Component" && (
+              <div className="p-4">
+                <Form {...form}>
+                  <ComponentForm
+                    form={form}
+                    status={serverSandbox?.component_id ? "edit" : "draft"}
+                    isFirstStep={false}
+                    showOptionalFields={true}
+                  />
+                </Form>
+              </div>
+            )}
+            
+            {activeStage === "Demos" && (
+              <div className="p-4">
+                <Form {...form}>
+                  <Accordion
+                    type="multiple"
+                    defaultValue={form.getValues().demos?.map((_, i) => `demo-${i}`) || ["demo-0"]}
+                    className="w-full"
+                  >
+                    {form.getValues().demos?.map((demo, index) => (
+                      <AccordionItem
+                        key={index}
+                        value={`demo-${index}`}
+                        className="bg-background border-none group mb-4 last:mb-0"
+                      >
+                        <AccordionTrigger className="py-2 text-[15px] leading-6 hover:no-underline hover:bg-muted/50 rounded-md data-[state=open]:rounded-b-none transition-all duration-200 ease-in-out px-2 border">
+                          <div className="flex items-center gap-2 w-full">
+                            <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
+                              <div className="truncate flex-shrink min-w-0">
+                                {index === 0 && !demo.name
+                                  ? "Default Demo"
+                                  : demo.name || `Demo ${index + 1}`}
+                              </div>
+                            </div>
+                            {form.getValues().demos?.length > 1 && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 ml-auto mr-1 shrink-0"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  console.log("Delete demo:", index)
+                                  toast.info(
+                                    `Demo deletion for index ${index} not implemented yet.`,
+                                  )
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive transition-colors" />
+                              </Button>
+                            )}
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-4 border border-t-0 rounded-b-md px-4">
+                          <div className="text-foreground space-y-4">
+                            <DemoDetailsForm
+                              form={form as any}
+                              demoIndex={index}
+                            />
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </Form>
+              </div>
+            )}
+            
+            {/* Placeholders for other stages */}
+            {activeStage === "Controls" && (
+              <div className="p-4 flex items-center justify-center h-full text-sm text-muted-foreground">
+                Controls UI coming soon
+              </div>
+            )}
+
+            {activeStage === "Publish" && (
+              <div className="p-6 h-full flex flex-col justify-center max-w-md mx-auto space-y-6">
+                <div className="text-center space-y-2">
+                  <h3 className="text-xl font-semibold text-foreground">Ready to publish</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Review your component details and publish it to the registry.
+                  </p>
+                </div>
+                
+                <div className="bg-muted/50 rounded-xl p-4 space-y-3 border border-border">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Name</span>
+                    <span className="font-medium text-foreground">{form.getValues().name || "Unnamed Component"}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Slug</span>
+                    <span className="font-medium text-foreground">{form.getValues().component_slug || "..."}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Registry</span>
+                    <span className="font-medium text-foreground">{form.getValues().registry || "..."}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Demos</span>
+                    <span className="font-medium text-foreground">{form.getValues().demos?.length || 0} configured</span>
+                  </div>
+                </div>
+
+                <Button 
+                  size="lg" 
+                  className="w-full rounded-full"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Publishing..." : "Publish Component"}
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Editor and Preview Area */}
+        <div className="flex-1 h-full min-w-0">
           <PreviewPane
             connectedShellId={connectedShellId}
             previewURL={previewURL}
@@ -361,72 +693,24 @@ function PublishClientPageContent({
             onRefresh={handleRefreshPreview}
             sandboxUnavailable={sandboxUnavailable}
             onReconnect={retryConnection}
+            onTogglePreview={handleTogglePreview}
+            isFullscreen={isFullscreen}
+            onFullscreenChange={setIsFullscreen}
           />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-
-      {/* Bottom right preview controls */}
-      <div className="fixed top-[65px] right-4 flex gap-2 z-10">
-        <div className="bg-background/80 backdrop-blur-sm shadow-sm border w-10 h-9 flex items-center justify-center rounded-md">
-          <ThemeToggle fillIcon={false} />
         </div>
-        {showPreview && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefreshPreview}
-            title="Reload preview"
-            className="bg-background/80 backdrop-blur-sm shadow-sm border"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </Button>
-        )}
-        {showPreview && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={restartDevServer}
-            disabled={isRestartingDevServer}
-            title="Restart dev server (fixes a blank preview that a reload won't)"
-            className="bg-background/80 backdrop-blur-sm shadow-sm border"
-          >
-            <RotateCcw
-              className={cn(
-                "h-4 w-4",
-                isRestartingDevServer && "animate-spin",
-              )}
-            />
-          </Button>
-        )}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleTogglePreview}
-          title={showPreview ? "Hide Preview" : "Show Preview"}
-          className={cn(
-            "bg-background/80 backdrop-blur-sm shadow-sm border transition-colors",
-            !showPreview && "border-primary text-primary",
-          )}
-        >
-          {showPreview ? (
-            <PanelRightClose className="h-4 w-4" />
-          ) : (
-            <PanelRightOpen className="h-4 w-4" />
-          )}
-        </Button>
       </div>
     </div>
   )
 }
 
-export default function PublishPage({
-  setServerSandbox,
+export default function PageClient({
+  isEditMode,
 }: {
-  setServerSandbox: (serverSandbox: ServerSandbox) => void
+  isEditMode: boolean
 }) {
   return (
-    <Suspense fallback={<div>Loading project...</div>}>
-      <PublishClientPageContent setServerSandbox={setServerSandbox} />
+    <Suspense fallback={<SandboxSkeleton />}>
+      <PublishClientPageContent isEditMode={isEditMode} />
     </Suspense>
   )
 }

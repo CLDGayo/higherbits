@@ -36,6 +36,7 @@ interface FileExplorerProps {
   advancedView: boolean
   onToggleAdvancedView: () => void
   onAddFrom21Registry: (jsonUrl: string, demoCode?: string) => Promise<void>
+  onNewDemo?: () => void
 }
 
 export function FileExplorer({
@@ -51,6 +52,7 @@ export function FileExplorer({
   advancedView,
   onToggleAdvancedView,
   onAddFrom21Registry,
+  onNewDemo,
 }: FileExplorerProps) {
   const [isCreatingFile, setIsCreatingFile] = useState(false)
   const [newFileName, setNewFileName] = useState("")
@@ -147,6 +149,7 @@ export function FileExplorer({
           onCreateFile={onCreateFile}
           onCreateDirectory={onCreateDirectory}
           onRename={onRename}
+          onNewDemo={onNewDemo}
         />
       </div>
 

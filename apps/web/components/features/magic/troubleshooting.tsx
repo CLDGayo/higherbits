@@ -21,7 +21,7 @@ export function TroubleshootingSection({
     async function fetchLatestVersion() {
       try {
         const response = await fetch(
-          "https://registry.npmjs.org/@21st-dev/magic",
+          "https://registry.npmjs.org/@higherbits-dev/cli",
         )
         const data = await response.json()
         if (data && data["dist-tags"] && data["dist-tags"].latest) {
@@ -45,7 +45,7 @@ export function TroubleshootingSection({
       problem: "Client closed",
       solutions: [
         `Go to MCP configuration`,
-        `Use explicit version number: "npx -y @21st-dev/magic@${latestVersion}" instead of "@latest"`,
+        `Use explicit version number: "npx -y @higherbits-dev/cli@${latestVersion}" instead of "@latest"`,
       ],
     },
     {

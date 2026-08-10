@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth, clerkClient } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess as supabaseAdmin } from "@/lib/supabase"
+import { generateGhlTemplate } from "@/lib/ghl-generator"
 
 export async function GET(request: Request) {
   try {
@@ -88,6 +89,25 @@ export async function PATCH(request: Request) {
     if (componentError) {
       console.error("Error updating component is_public:", componentError)
       return NextResponse.json({ error: componentError.message }, { status: 500 })
+    }
+
+    // Trigger AI generation for GoHighLevel template in the background
+    if (status === "posted" || status === "featured") {
+      // Find the demo ID for this component
+      const { data: demo } = await supabaseAdmin
+        .from("demos")
+        .select("id")
+        .eq("component_id", componentId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (demo) {
+        // Run asynchronously, do not await
+        generateGhlTemplate(demo.id).catch((err) => {
+          console.error("Background GHL generation failed:", err)
+        })
+      }
     }
 
 

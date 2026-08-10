@@ -1,2 +1,6 @@
-export { /* @next-codemod-error `default` export is re-exported. Check if this component uses `params` or `searchParams`*/
-default } from "../page"
+import ComponentPageServer from "../page"
+export { generateMetadata } from "../page"
+
+export default function DemoPage(props: any) {
+  return <ComponentPageServer {...props} />
+}

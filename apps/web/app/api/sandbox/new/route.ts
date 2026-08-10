@@ -6,11 +6,12 @@ import ShortUUID from "short-uuid"
 import {
   DEFAULT_COMPONENT_TSX,
   DEFAULT_DEMO_TSX,
+  DEFAULT_INDEX_CSS,
   DEFAULT_HIBERNATION_TIMEOUT,
   DEFAULT_TEMPLATE,
   TEMPLATES,
-  codesandboxSdk,
-} from "@/lib/codesandbox-sdk"
+} from "@/lib/sandbox-templates"
+import { codesandboxSdk } from "@/lib/codesandbox-sdk"
 
 export async function POST(req: NextRequest) {
   try {
@@ -79,6 +80,7 @@ export async function POST(req: NextRequest) {
           "src/components/ui/component.tsx",
           DEFAULT_COMPONENT_TSX,
         ),
+        sandbox.fs.writeTextFile("src/index.css", DEFAULT_INDEX_CSS),
       ])
     } catch (seedError) {
       console.warn("Failed to seed default sandbox files:", seedError)

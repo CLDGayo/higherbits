@@ -8,6 +8,7 @@ import {
   FilePlusIcon,
   FolderPlusIcon,
   PencilIcon,
+  PlusIcon,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,7 +23,7 @@ import React from "react"
 
 interface FileEntry {
   name: string
-  type: "file" | "dir"
+  type: "file" | "dir" | "section"
   path: string
   isSymlink: boolean
   children?: FileEntry[]
@@ -37,6 +38,7 @@ interface FileTreeProps {
   onCreateFile: (filePath: string) => void
   onCreateDirectory: (dirPath: string) => void
   onRename?: (oldPath: string, newName: string) => Promise<string>
+  onNewDemo?: () => void
 }
 
 // Reusable input form for file/directory creation and renaming
@@ -302,7 +304,7 @@ function FileItem({
           <button
             className={`flex items-center flex-1 text-left px-2 py-1 hover:bg-muted rounded truncate select-none ${
               selectedPath === entry.path ? "bg-accent" : ""
-            }`}
+            } ${entry.name === "Add dependency" ? "text-muted-foreground" : ""}`}
             onClick={() => onSelect(entry)}
             onDoubleClick={startRename}
             title={entry.path}
@@ -311,14 +313,86 @@ function FileItem({
             <span>{entry.name}</span>
           </button>
 
-          {/*  <TreeItemActions
-            showActions={showActions}
-            onRename={startRename}
-            onDelete={() => onDelete(entry.path)}
-            itemType="file"
-            itemName={entry.name}
-          /> */}
+          {showActions && !["component.tsx", "index.css", "demo.tsx", "default.tsx", "Add dependency"].includes(entry.name) && (
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-5 w-5 mr-1 flex-shrink-0 opacity-60 hover:opacity-100 hover:text-destructive"
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete(entry.path)
+              }}
+              title={`Delete ${entry.name}`}
+            >
+              <TrashIcon className="h-3 w-3" />
+            </Button>
+          )}
         </div>
+      )}
+    </li>
+  )
+}
+
+// Component for section entries
+function SectionItem({
+  entry,
+  level,
+  onSelect,
+  selectedPath,
+  onDelete,
+  onCreateFile,
+  onCreateDirectory,
+  onRename,
+  onNewDemo,
+  expandedDirs,
+  setExpandedDirs,
+}: {
+  entry: FileEntry
+  level: number
+  onSelect: (entry: FileEntry) => void
+  selectedPath: string | null
+  onDelete: (filePath: string) => void
+  onCreateFile: (filePath: string) => void
+  onCreateDirectory: (dirPath: string) => void
+  onRename?: (oldPath: string, newName: string) => Promise<string>
+  onNewDemo?: () => void
+  expandedDirs: Record<string, boolean>
+  setExpandedDirs: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+}) {
+  const indentStyle = { paddingLeft: `${level * 1 + 0.5}rem` }
+  
+  return (
+    <li className="py-1">
+      <div 
+        className="text-xs text-muted-foreground px-2 py-1 select-none flex items-center h-[28px]"
+        style={indentStyle}
+      >
+        {entry.name}
+      </div>
+      {entry.children && entry.children.length > 0 && (
+        <FileList
+          items={entry.children}
+          level={level}
+          onSelect={onSelect}
+          selectedPath={selectedPath}
+          onDelete={onDelete}
+          onCreateFile={onCreateFile}
+          onCreateDirectory={onCreateDirectory}
+          onRename={onRename}
+          onNewDemo={onNewDemo}
+          expandedDirs={expandedDirs}
+          setExpandedDirs={setExpandedDirs}
+        />
+      )}
+      {entry.name === "Demos" && onNewDemo && (
+        <button
+          className="flex items-center gap-2 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors w-full text-left select-none"
+          style={{ paddingLeft: `${level * 1 + 0.5}rem` }}
+          onClick={onNewDemo}
+        >
+          <PlusIcon className="h-4 w-4" />
+          <span>New demo</span>
+        </button>
       )}
     </li>
   )
@@ -534,6 +608,7 @@ function FileList({
   onCreateFile,
   onCreateDirectory,
   onRename,
+  onNewDemo,
   expandedDirs,
   setExpandedDirs,
 }: {
@@ -545,6 +620,7 @@ function FileList({
   onCreateFile: (filePath: string) => void
   onCreateDirectory: (dirPath: string) => void
   onRename?: (oldPath: string, newName: string) => Promise<string>
+  onNewDemo?: () => void
   expandedDirs: Record<string, boolean>
   setExpandedDirs: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
 }) {
@@ -583,6 +659,20 @@ function FileList({
               expandedDirs={expandedDirs}
               setExpandedDirs={setExpandedDirs}
             />
+          ) : entry.type === "section" ? (
+            <SectionItem
+              entry={entry}
+              level={level}
+              onSelect={onSelect}
+              selectedPath={selectedPath}
+              onDelete={onDelete}
+              onCreateFile={onCreateFile}
+              onCreateDirectory={onCreateDirectory}
+              onRename={onRename}
+              onNewDemo={onNewDemo}
+              expandedDirs={expandedDirs}
+              setExpandedDirs={setExpandedDirs}
+            />
           ) : (
             <FileItem
               entry={entry}
@@ -608,6 +698,7 @@ export function FileTree({
   onCreateFile,
   onCreateDirectory,
   onRename,
+  onNewDemo,
 }: FileTreeProps) {
   const [expandedDirs, setExpandedDirs] = useState<Record<string, boolean>>({})
 
@@ -670,6 +761,7 @@ export function FileTree({
           onCreateFile={onCreateFile}
           onCreateDirectory={onCreateDirectory}
           onRename={onRename}
+          onNewDemo={onNewDemo}
           expandedDirs={expandedDirs}
           setExpandedDirs={setExpandedDirs}
         />

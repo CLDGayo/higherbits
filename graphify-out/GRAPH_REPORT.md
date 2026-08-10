@@ -1,16 +1,16 @@
-# Graph Report - HigherBits.dev  (2026-07-26)
+# Graph Report - HigherBits.dev  (2026-07-30)
 
 ## Corpus Check
-- 1400 files · ~3,818,229 words
+- 1478 files · ~3,976,890 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 18858 nodes · 25503 edges · 1095 communities (889 shown, 206 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 90 edges (avg confidence: 0.8)
+- 19620 nodes · 26288 edges · 1160 communities (945 shown, 215 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 109 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e10cb5bb`
+- Built from commit: `b736998a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -961,6 +961,7 @@
 - [[_COMMUNITY_Community 958|Community 958]]
 - [[_COMMUNITY_Community 959|Community 959]]
 - [[_COMMUNITY_Community 960|Community 960]]
+- [[_COMMUNITY_Community 961|Community 961]]
 - [[_COMMUNITY_Community 966|Community 966]]
 - [[_COMMUNITY_Community 968|Community 968]]
 - [[_COMMUNITY_Community 969|Community 969]]
@@ -1019,6 +1020,8 @@
 - [[_COMMUNITY_Community 1045|Community 1045]]
 - [[_COMMUNITY_Community 1048|Community 1048]]
 - [[_COMMUNITY_Community 1049|Community 1049]]
+- [[_COMMUNITY_Community 1053|Community 1053]]
+- [[_COMMUNITY_Community 1054|Community 1054]]
 - [[_COMMUNITY_Community 1057|Community 1057]]
 - [[_COMMUNITY_Community 1058|Community 1058]]
 - [[_COMMUNITY_Community 1059|Community 1059]]
@@ -1057,13 +1060,75 @@
 - [[_COMMUNITY_Community 1092|Community 1092]]
 - [[_COMMUNITY_Community 1093|Community 1093]]
 - [[_COMMUNITY_Community 1094|Community 1094]]
+- [[_COMMUNITY_Community 1095|Community 1095]]
+- [[_COMMUNITY_Community 1096|Community 1096]]
+- [[_COMMUNITY_Community 1097|Community 1097]]
+- [[_COMMUNITY_Community 1098|Community 1098]]
+- [[_COMMUNITY_Community 1099|Community 1099]]
+- [[_COMMUNITY_Community 1100|Community 1100]]
+- [[_COMMUNITY_Community 1101|Community 1101]]
+- [[_COMMUNITY_Community 1102|Community 1102]]
+- [[_COMMUNITY_Community 1103|Community 1103]]
+- [[_COMMUNITY_Community 1104|Community 1104]]
+- [[_COMMUNITY_Community 1105|Community 1105]]
+- [[_COMMUNITY_Community 1106|Community 1106]]
+- [[_COMMUNITY_Community 1107|Community 1107]]
+- [[_COMMUNITY_Community 1108|Community 1108]]
+- [[_COMMUNITY_Community 1109|Community 1109]]
+- [[_COMMUNITY_Community 1110|Community 1110]]
+- [[_COMMUNITY_Community 1111|Community 1111]]
+- [[_COMMUNITY_Community 1113|Community 1113]]
+- [[_COMMUNITY_Community 1114|Community 1114]]
+- [[_COMMUNITY_Community 1115|Community 1115]]
+- [[_COMMUNITY_Community 1121|Community 1121]]
+- [[_COMMUNITY_Community 1122|Community 1122]]
+- [[_COMMUNITY_Community 1123|Community 1123]]
+- [[_COMMUNITY_Community 1125|Community 1125]]
+- [[_COMMUNITY_Community 1126|Community 1126]]
+- [[_COMMUNITY_Community 1128|Community 1128]]
+- [[_COMMUNITY_Community 1129|Community 1129]]
+- [[_COMMUNITY_Community 1130|Community 1130]]
+- [[_COMMUNITY_Community 1132|Community 1132]]
+- [[_COMMUNITY_Community 1133|Community 1133]]
+- [[_COMMUNITY_Community 1134|Community 1134]]
+- [[_COMMUNITY_Community 1142|Community 1142]]
+- [[_COMMUNITY_Community 1145|Community 1145]]
+- [[_COMMUNITY_Community 1231|Community 1231]]
+- [[_COMMUNITY_Community 1239|Community 1239]]
+- [[_COMMUNITY_Community 1264|Community 1264]]
+- [[_COMMUNITY_Community 1351|Community 1351]]
+- [[_COMMUNITY_Community 1493|Community 1493]]
+- [[_COMMUNITY_Community 1865|Community 1865]]
+- [[_COMMUNITY_Community 2137|Community 2137]]
+- [[_COMMUNITY_Community 2138|Community 2138]]
+- [[_COMMUNITY_Community 2574|Community 2574]]
+- [[_COMMUNITY_Community 2575|Community 2575]]
+- [[_COMMUNITY_Community 2581|Community 2581]]
+- [[_COMMUNITY_Community 2695|Community 2695]]
+- [[_COMMUNITY_Community 2715|Community 2715]]
+- [[_COMMUNITY_Community 2775|Community 2775]]
+- [[_COMMUNITY_Community 2786|Community 2786]]
+- [[_COMMUNITY_Community 2834|Community 2834]]
+- [[_COMMUNITY_Community 2846|Community 2846]]
+- [[_COMMUNITY_Community 2882|Community 2882]]
+- [[_COMMUNITY_Community 2887|Community 2887]]
+- [[_COMMUNITY_Community 3020|Community 3020]]
+- [[_COMMUNITY_Community 3478|Community 3478]]
+- [[_COMMUNITY_Community 3525|Community 3525]]
+- [[_COMMUNITY_Community 3890|Community 3890]]
+- [[_COMMUNITY_Community 4464|Community 4464]]
+- [[_COMMUNITY_Community 5483|Community 5483]]
+- [[_COMMUNITY_Community 5503|Community 5503]]
+- [[_COMMUNITY_Community 5504|Community 5504]]
+- [[_COMMUNITY_Community 5505|Community 5505]]
+- [[_COMMUNITY_Community 5506|Community 5506]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `$()` - 349 edges
-2. `cn()` - 233 edges
-3. `useClerkSupabaseClient()` - 122 edges
-4. `Button` - 113 edges
-5. `supabaseWithAdminAccess` - 57 edges
+2. `cn()` - 232 edges
+3. `useClerkSupabaseClient()` - 120 edges
+4. `Button` - 112 edges
+5. `supabaseWithAdminAccess` - 58 edges
 6. `T()` - 44 edges
 7. `T()` - 44 edges
 8. `T()` - 41 edges
@@ -1075,17 +1140,17 @@
   process/features/21st-promotion/active/21st-promotion_08-07-26/phase-01-backend-merge_REPORT_08-07-26.md → packages/db/prisma/schema.prisma
 - `Phase 12 REPORT: Organization Billing (Team Seats)` --references--> `api/webhooks/clerk/route.ts`  [EXTRACTED]
   process/features/monetization-catalog/completed/phase-12-organization-billing_30-06-26/phase-12-organization-billing_REPORT_30-06-26.md → apps/web/app/api/webhooks/clerk/route.ts
+- `NewPromptRulePage()` --calls--> `redirect`  [INFERRED]
+  apps/web/app/settings/rules/new/page.tsx → apps/web/app/templates/__tests__/templates-redirect.test.ts
 - `useIsCheckSlugAvailable()` --calls--> `useClerkSupabaseClient()`  [INFERRED]
   apps/web/components/features/publish/hooks/use-is-check-slug-available.ts → apps/web/lib/clerk.ts
-- `Orchestration Protocol` --calls--> `Execute Agent`  [EXTRACTED]
-  process/development-protocols/orchestration.md → .claude/agents/vc-execute-agent.md
-- `Orchestration Protocol` --calls--> `VC Tester`  [EXTRACTED]
-  process/development-protocols/orchestration.md → .claude/agents/vc-tester.md
+- `useIsCheckSlugAvailable()` --calls--> `useClerkSupabaseClient()`  [INFERRED]
+  apps/web/components/features/studio/publish/hooks/use-is-check-slug-available.ts → apps/web/lib/clerk.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (1095 total, 206 thin omitted)
+## Communities (1160 total, 215 thin omitted)
 
 ### Community 0 - "index Cluster"
 Cohesion: 0.00
@@ -1097,111 +1162,111 @@ Nodes (331): AccelerateEngineConfig, AccelerateUtils, Action, ActiveConnectorTyp
 
 ### Community 2 - "Button Cluster"
 Cohesion: 0.03
-Nodes (105): DeleteComponentDialogProps, DeleteMode, PaginationControlsProps, SubmissionStatusFilterProps, TermsDialog(), TermsDialogProps, DemoDetailsForm(), DemoDetailsForm() (+97 more)
+Nodes (72): ApiAccessPage(), getApiKey(), metadata, ApiDocs(), ApiKeyManager(), generateMetadata(), Round, Tag (+64 more)
 
 ### Community 3 - "useClerkSupabaseClient() Cluster"
-Cohesion: 0.03
-Nodes (82): PublishHeaderProps, CodeGuidelinesAlert(), DebugInfoDisplay(), DemoComponentGuidelinesAlert(), GlobalStylesGuidelinesAlert(), pageStyles, ResolveUnknownDependenciesAlertForm(), TailwindGuidelinesAlert() (+74 more)
+Cohesion: 0.05
+Nodes (61): ApiKeyManagerProps, PlanInfo, createPlatformCommand(), getInstallCommand(), getMcpConfigJson(), IdeOption, McpCommandConfig, OsType (+53 more)
 
 ### Community 4 - "react-native Cluster"
 Cohesion: 0.02
-Nodes (73): ap(), At(), Br(), bt(), build(), buildCaptureSettings(), _c(), Cc() (+65 more)
+Nodes (62): ap(), At(), Br(), bt(), _c(), Cc(), di(), ds() (+54 more)
 
 ### Community 5 - "edge Cluster"
 Cohesion: 0.02
-Nodes (49): An(), as(), bl(), co(), connect(), constructor(), cs(), dispatchEngineSpans() (+41 more)
+Nodes (50): An(), as(), bl(), co(), connect(), constructor(), cs(), dispatchEngineSpans() (+42 more)
 
 ### Community 6 - "edge-esm Cluster"
 Cohesion: 0.02
 Nodes (59): au(), bc(), build(), buildCaptureSettings(), dispatchEngineSpans(), Do(), ea(), ec() (+51 more)
 
 ### Community 7 - "wasm Cluster"
-Cohesion: 0.04
-Nodes (60): DbLinks(), EditDemoModal(), SubmissionStatusFilter(), UserPicker(), AppProvidersContent(), queryClient, CategoryCard, CategoryCardProps (+52 more)
+Cohesion: 0.06
+Nodes (33): 1. All four files read from disk and verified as committed, 2. Load-bearing ordering verified mechanically, 3. A statement splitter was written and self-tested, 4. Prisma client confirmed built, `admin-functions.sql` — what actually changed, ATTEMPT 2 — APPLIED (29-07-26), Before/after grant diff (Phase 1 AC13 evidence), CRITICAL follow-up — anonymous write access on `public_profiles` — FOUND AND CLOSED SAME-DAY (+25 more)
 
 ### Community 8 - "library Cluster"
 Cohesion: 0.02
-Nodes (55): Ao(), bm(), $c(), Cf(), cu(), Da(), Ds(), El() (+47 more)
+Nodes (56): Ao(), bm(), $c(), Cf(), cu(), Da(), Ds(), El() (+48 more)
 
 ### Community 9 - "Icons Cluster"
-Cohesion: 0.02
-Nodes (129): HomePageClient(), MainContent, debouncedPrefillSlug, usePrefillAutogeneratedSlug(), checkSlugUnique(), generateDemoSlug(), generateUniqueSlug(), makeSlugFromName() (+121 more)
+Cohesion: 0.03
+Nodes (86): PublishHeaderProps, ComponentPagePreview(), CopyCommandSection(), useInstallUrl(), LegacyFlowPreviewRenderer(), LegacyFlowPreviewRendererProps, NewFlowPreviewRender(), PreviewRenderer() (+78 more)
 
 ### Community 10 - "page Cluster"
 Cohesion: 0.03
-Nodes (88): metadata, RootLayout(), viewport, AppProviders(), PublishHeaderProps, PayWall(), SubscriptionPaywall(), AddRegistryModal() (+80 more)
+Nodes (74): checkSlugUnique(), generateDemoSlug(), generateUniqueSlug(), makeSlugFromName(), SlugType, useIsCheckSlugAvailable(), debouncedPrefillSlug, usePrefillAutogeneratedSlug() (+66 more)
 
 ### Community 11 - "global Cluster"
 Cohesion: 0.02
-Nodes (56): Ne(), $(), al(), bo(), bs(), di(), dispatchEngineSpans(), dn() (+48 more)
+Nodes (55): $(), al(), bo(), constructor(), di(), dispatchEngineSpans(), Ei(), enabled() (+47 more)
 
 ### Community 12 - "dependencies Cluster"
-Cohesion: 0.06
-Nodes (26): ClapIcon(), clapVariants, variants, CursorDark(), CursorLight(), Icon, LogoutIcon(), pathVariants (+18 more)
+Cohesion: 0.08
+Nodes (37): DbLinks(), ComponentPreviewDialog(), selectedPromptTypeAtom, ComponentPage(), ComponentPageProps, isShowCodeAtom, selectedPromptTypeAtom, useAnalytics() (+29 more)
 
 ### Community 13 - "cn() Cluster"
-Cohesion: 0.04
-Nodes (63): AdminHeaderProps, PayoutStatsChart(), PayoutStatsChartProps, Round, Tag, IconProps, Icons, Invoice (+55 more)
+Cohesion: 0.03
+Nodes (80): AdminHeaderProps, EditDemoModal(), SubmissionStatusFilter(), UserPicker(), getUsersAction(), getUsersActionSchema, BundleItem(), CategoryCard (+72 more)
 
 ### Community 14 - "page Cluster"
-Cohesion: 0.05
-Nodes (55): PayoutStats, AnalyticsClient(), AuthorStats, partnerModalOpenAtom, metadata, useNavigation(), categories, magicNavItem (+47 more)
+Cohesion: 0.04
+Nodes (74): HomePageClient(), MainContent, CollectionCard, CollectionCardProps, CollectionHeader(), CollectionHeaderProps, CollectionsContainer(), CollectionsContainerProps (+66 more)
 
 ### Community 15 - "publish-layout Cluster"
 Cohesion: 0.03
-Nodes (66): BillingHeader(), ConfirmationDialog(), AllPlansTrigger(), BillingSettingsClient(), BillingSettingsClientProps, Invoice, PlanLevel, PricingTable() (+58 more)
+Nodes (85): BillingHeader(), ConfirmationDialog(), BillingSettingsPage(), AllPlansTrigger(), BillingSettingsClient(), BillingSettingsClientProps, Invoice, getCurrentPlan() (+77 more)
 
 ### Community 16 - "page Cluster"
 Cohesion: 0.02
 Nodes (96): dependencies, @amplitude/analytics-browser, @amplitude/plugin-session-replay-browser, autoprefixer, @aws-sdk/client-s3, @aws-sdk/credential-providers, @aws-sdk/s3-request-presigner, @babel/parser (+88 more)
 
 ### Community 17 - "command-menu Cluster"
-Cohesion: 0.03
-Nodes (67): Round, Tag, MobileControls(), useIsMobile(), useMediaQuery(), metadata, getCurrentRoundWithTag(), LeaderboardPage() (+59 more)
+Cohesion: 0.04
+Nodes (59): CodeGuidelinesAlert(), DebugInfoDisplay(), DemoComponentGuidelinesAlert(), GlobalStylesGuidelinesAlert(), pageStyles, TailwindGuidelinesAlert(), EditorFieldName, EditorStep() (+51 more)
 
 ### Community 18 - "subscription-plans Cluster"
 Cohesion: 0.13
 Nodes (54): applyAuthSession(), AUTH_SESSION_FILE, clearAuthSession(), clearSession(), closeBrowser(), __dirname, disconnectBrowser(), getBrowser() (+46 more)
 
 ### Community 19 - "getBrowser() Cluster"
-Cohesion: 0.06
-Nodes (39): ComponentPageInfo(), ComponentCardProps, LeaderboardCardProps, videoLoadingCache, videoLoadPromises, useIntersectionObserver(), UseIntersectionObserverProps, getLicenseBySlug() (+31 more)
+Cohesion: 0.04
+Nodes (73): PaginationControlsProps, SubmissionStatusFilterProps, PayoutStatsChart(), PayoutStatsChartProps, DemoDetailsForm(), DemoDetailsForm(), IconProps, Icons (+65 more)
 
 ### Community 20 - "editor-state Cluster"
 Cohesion: 0.07
 Nodes (49): actionRequiredFilesAtom, actionRequiredPathsAtom, activeFileAtom, loadingComponentsAtom, previewReadyAtom, userModifiedFilesAtom, CodeManagerContext, CodeManagerProvider() (+41 more)
 
 ### Community 21 - "header Cluster"
-Cohesion: 0.10
-Nodes (60): ac(), addErrorMessage(), addField(), addSuggestion(), asObject(), bc(), cc(), dc() (+52 more)
+Cohesion: 0.13
+Nodes (44): ac(), addErrorMessage(), addField(), asObject(), cc(), dc(), Er(), fc() (+36 more)
 
 ### Community 22 - "info-section Cluster"
-Cohesion: 0.05
-Nodes (34): DatabaseAuthor, getActiveAuthorsAction(), shortUUID, GET(), Image(), size, POST(), PlanData (+26 more)
+Cohesion: 0.06
+Nodes (31): shortUUID, GET(), mocks, GET(), Image(), size, POST(), PlanData (+23 more)
 
 ### Community 23 - "sidebar Cluster"
-Cohesion: 0.11
-Nodes (23): ApiAccessPage(), getApiKey(), metadata, ApiKeyManager(), BundleItem(), BundlesLayout(), appendQueryParam(), Alert (+15 more)
+Cohesion: 0.05
+Nodes (58): AppProvidersContent(), queryClient, useSidebarVisibility(), initAmplitude(), categories, magicNavItem, MainNavigationItem, mainNavigationItems (+50 more)
 
 ### Community 24 - "supabase Cluster"
 Cohesion: 0.06
-Nodes (38): ac(), bo(), cs(), fl(), fn(), fr(), get(), getAllBatchQueryCallbacks() (+30 more)
+Nodes (39): ac(), bo(), constructor(), cs(), fl(), fn(), fr(), get() (+31 more)
 
 ### Community 25 - "addErrorMessage() Cluster"
-Cohesion: 0.03
-Nodes (59): FileEntry, FileTreeProps, SuccessDialog(), EditPromptRulePage(), metadata, PageProps, AdminLikedDemo, createPromptRule() (+51 more)
+Cohesion: 0.08
+Nodes (25): Accepted by, Backlog artifacts to create during durable capture, Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, EVL HANDOFF SUMMARY, Execute-agent instructions, Exit Gate (+17 more)
 
 ### Community 26 - "page Cluster"
-Cohesion: 0.10
-Nodes (58): aa(), addErrorMessage(), addField(), addItem(), addSuggestion(), append(), asObject(), ba() (+50 more)
+Cohesion: 0.12
+Nodes (48): aa(), addErrorMessage(), addField(), addItem(), addSuggestion(), append(), asObject(), ba() (+40 more)
 
 ### Community 27 - "t() Cluster"
 Cohesion: 0.04
 Nodes (47): Agent Parity Check, all-context.md Population Instructions, all-tests.md Population Instructions, Context Group Detection Table, Deep Codebase Analysis Checklist, DETECT Phase, Detection Summary Format, Directory Existence Checks (+39 more)
 
 ### Community 28 - "SCAFFOLD Phase Cluster"
-Cohesion: 0.08
-Nodes (32): GET(), POST(), Plan, UserPlanMeta, UserPlanWithPlans, GET(), GET(), SubscriptionMeta (+24 more)
+Cohesion: 0.09
+Nodes (27): clearingPatchFor(), guardBillingWrite(), getPlanByStripeId(), ACTIVE_LEMON_ROW, ACTIVE_STRIPE_ROW, CANCELED_LEMON_ROW, insertCalls, Row (+19 more)
 
 ### Community 29 - "stripe Cluster"
 Cohesion: 0.12
@@ -1209,7 +1274,7 @@ Nodes (45): addErrorMessage(), addField(), addSuggestion(), ao(), asObject(), bu
 
 ### Community 30 - "addErrorMessage() Cluster"
 Cohesion: 0.14
-Nodes (43): _d(), aa(), ad(), addErrorMessage(), addItem(), addSuggestion(), append(), asObject() (+35 more)
+Nodes (44): _d(), aa(), ad(), addErrorMessage(), addItem(), addSuggestion(), append(), asObject() (+36 more)
 
 ### Community 31 - "Performance Analysis Guide Cluster"
 Cohesion: 0.05
@@ -1220,12 +1285,12 @@ Cohesion: 0.05
 Nodes (40): Autonomous Execution Rules (During /goal), Blast Radius, Creator Studio Publish & Draft Flow — Umbrella Plan, Current Execution State, Durable Report Destinations, Global Constraints, Join Conditions, Per-Phase Entry / Exit Gates (+32 more)
 
 ### Community 33 - "addErrorMessage() Cluster"
-Cohesion: 0.13
-Nodes (44): addErrorMessage(), addField(), addItem(), addSuggestion(), asObject(), au(), bu(), Ct() (+36 more)
+Cohesion: 0.12
+Nodes (46): addErrorMessage(), addField(), addItem(), addSuggestion(), ar(), asObject(), au(), bu() (+38 more)
 
 ### Community 34 - "page Cluster"
-Cohesion: 0.03
-Nodes (102): ComponentPagePreview(), CopyCommandSection(), useInstallUrl(), LegacyFlowPreviewRenderer(), LegacyFlowPreviewRendererProps, NewFlowPreviewRender(), PayWallProps, ComponentPreviewDialog() (+94 more)
+Cohesion: 0.10
+Nodes (19): GET(), POST(), Plan, UserPlanMeta, UserPlanWithPlans, GET(), GET(), SubscriptionMeta (+11 more)
 
 ### Community 35 - "page Cluster"
 Cohesion: 0.05
@@ -1260,20 +1325,20 @@ Cohesion: 0.05
 Nodes (39): Prisma__api_keysClient, Prisma__author_payoutsClient, Prisma__bundle_itemsClient, Prisma__bundle_plansClient, Prisma__bundle_purchasesClient, Prisma__bundlesClient, Prisma__code_embeddingsClient, Prisma__collectionsClient (+31 more)
 
 ### Community 43 - "ai() Cluster"
-Cohesion: 0.12
-Nodes (18): a(), Aa(), ar(), Ca(), d(), Ei(), enabled(), Fa() (+10 more)
+Cohesion: 0.09
+Nodes (20): a(), Aa(), Ca(), d(), Ei(), enabled(), Fa(), g() (+12 more)
 
 ### Community 44 - "Community 44"
-Cohesion: 0.11
-Nodes (19): constructor(), de(), fc(), getGlobalOmit(), _getName(), _getNamespace(), ho(), jt() (+11 more)
+Cohesion: 0.02
+Nodes (118): DatabaseAuthor, getActiveAuthorsAction(), AnalyticsClient(), metadata, Round, Tag, debouncedPrefillSlug, usePrefillAutogeneratedSlug() (+110 more)
 
 ### Community 45 - "ka() Cluster"
 Cohesion: 0.10
 Nodes (7): gi(), hi(), Le(), T(), te(), W(), yi()
 
 ### Community 46 - "write() Cluster"
-Cohesion: 0.09
-Nodes (27): generateMetadata(), getUser(), CollectionPageContent(), CollectionPage(), CollectionPageProps, generateMetadata(), getCachedCollectionInfo, getCollectionInfo() (+19 more)
+Cohesion: 0.08
+Nodes (35): AnalyticsPage(), generateMetadata(), getUser(), CollectionPageContent(), CollectionPage(), CollectionPageProps, generateMetadata(), getCachedCollectionInfo (+27 more)
 
 ### Community 47 - "T() Cluster"
 Cohesion: 0.08
@@ -1293,7 +1358,7 @@ Nodes (23): ac(), be(), cc(), findField(), fn(), getArgumentName(), getArgumentP
 
 ### Community 51 - "slice() Cluster"
 Cohesion: 0.08
-Nodes (33): ap(), Ba(), ci(), Ei(), mo(), Ul(), He(), j() (+25 more)
+Nodes (32): ap(), Ba(), ci(), Ei(), Ul(), He(), j(), ja() (+24 more)
 
 ### Community 52 - "slice() Cluster"
 Cohesion: 0.06
@@ -1308,12 +1373,12 @@ Cohesion: 0.07
 Nodes (35): append(), _c(), Dc(), e(), Ee(), Es(), gc(), get() (+27 more)
 
 ### Community 55 - "submission-status-template Cluster"
-Cohesion: 0.08
-Nodes (34): a(), ai(), Ba(), be(), Cn(), e(), ed(), en() (+26 more)
+Cohesion: 0.06
+Nodes (52): a(), ai(), append(), be(), ci(), Cn(), Da(), di() (+44 more)
 
 ### Community 56 - "main-page-header Cluster"
-Cohesion: 0.07
-Nodes (33): addItem(), bp(), br(), _c(), Do(), Es(), _getName(), gr() (+25 more)
+Cohesion: 0.11
+Nodes (22): GET(), BillingProvider, cancelEndpointFor(), deriveBillingProvider(), DerivedProvider, deriveProviderFromPlanInfo(), evaluateBillingWrite(), GuardDecision (+14 more)
 
 ### Community 57 - "Asset Generation Workflow Cluster"
 Cohesion: 0.09
@@ -1324,8 +1389,8 @@ Cohesion: 0.07
 Nodes (26): args, candidateFiles, copiedFiles, copyFile(), dirtyStatus, dryRun, ensureDir(), escapeRegex() (+18 more)
 
 ### Community 59 - "T() Cluster"
-Cohesion: 0.09
-Nodes (27): EditDemoModalProps, ManageSubmissionModalProps, SubmissionCardProps, AdminRpcResponse, Submission, SubmissionStatus, UpdateDemoParams, UpdateSubmissionParams (+19 more)
+Cohesion: 0.17
+Nodes (18): getDemosAction(), getDemosActionSchema, POST(), fetchBundle(), FetchBundleRequest, prepareBundle(), PrepareBundleRequest, PreparedBundle (+10 more)
 
 ### Community 60 - "values() Cluster"
 Cohesion: 0.06
@@ -1336,12 +1401,12 @@ Cohesion: 0.10
 Nodes (7): bi(), Le(), Pi(), T(), te(), W(), xi()
 
 ### Community 62 - "Required 6-Phase Process Cluster"
-Cohesion: 0.15
-Nodes (25): be(), dn(), ec(), findField(), getArgumentName(), getArgumentPath(), getComputedFields(), getOutputTypeDescription() (+17 more)
+Cohesion: 0.08
+Nodes (40): be(), de(), dn(), ec(), fc(), findField(), getArgumentName(), getArgumentPath() (+32 more)
 
 ### Community 63 - "sandbox-header Cluster"
-Cohesion: 0.10
-Nodes (26): bl(), Bn(), dl(), fl(), fs(), gl(), Hc(), hn() (+18 more)
+Cohesion: 0.12
+Nodes (18): _e(), un(), addField(), dt(), ea(), eu(), getGlobalOmit(), hd() (+10 more)
 
 ### Community 64 - "Community 64"
 Cohesion: 0.06
@@ -1353,15 +1418,15 @@ Nodes (32): Accepted by, Backlog Artifacts, Blast Radius, Blast Radius (risk cla
 
 ### Community 66 - "use-editor-dialog Cluster"
 Cohesion: 0.11
-Nodes (26): hasUserComponentAccessAction(), hasUserComponentAccessSchema, deleteComponentAction(), deleteComponentSchema, getComponentBundlesAction(), getComponentBundlesSchema, transferOwnershipAction(), transferOwnershipSchema (+18 more)
+Nodes (22): Action, ActionType, actionTypes, addToRemoveQueue(), dispatch(), genId(), listeners, memoryState (+14 more)
 
 ### Community 67 - "Phase 02 — Brand Sweep Cluster"
 Cohesion: 0.06
 Nodes (33): Agent Frontmatter Conventions (spawn context), Approval Gates Still Apply in Parallel, Context Isolation, Delegation Context, EVL confirmation run message (suggested plain rendering), EXECUTE-VALIDATE-LOOP (EVL), Feature Scope Detection, Gather Context for Execute and Tester (+25 more)
 
 ### Community 68 - "gemini-asset-gen Cluster"
-Cohesion: 0.07
-Nodes (33): append(), bo(), bt(), cp(), dp(), fp(), ge(), get() (+25 more)
+Cohesion: 0.08
+Nodes (31): bo(), bt(), cp(), dp(), fp(), ge(), get(), getAllBatchQueryCallbacks() (+23 more)
 
 ### Community 69 - "request() Cluster"
 Cohesion: 0.07
@@ -1388,8 +1453,8 @@ Cohesion: 0.09
 Nodes (28): bn(), Cl(), Da(), Er(), ge(), gl(), gr(), hp() (+20 more)
 
 ### Community 75 - "checkIsAdmin() Cluster"
-Cohesion: 0.08
-Nodes (35): _a(), addMarginSymbol(), afterNextNewline(), am(), Ba(), cd(), getCurrentLineLength(), $i() (+27 more)
+Cohesion: 0.11
+Nodes (27): ac(), di(), Dr(), ec(), es(), Ho(), hr(), ic() (+19 more)
 
 ### Community 76 - "write() Cluster"
 Cohesion: 0.11
@@ -1416,12 +1481,12 @@ Cohesion: 0.10
 Nodes (30): 21st.dev Promotion — Umbrella Plan, Autonomous Execution Rules (During /goal), Backlog notes created across the program (4 total), Blast Radius, Current Execution State, Definition of Done — scored against the Program Goal Charter, Durable Report Destinations, Global Constraints (+22 more)
 
 ### Community 82 - "runInChildSpan() Cluster"
-Cohesion: 0.13
-Nodes (20): AnalyticsPage(), generateMetadata(), getUser(), BundlesPage(), BundlesClient(), metadata, authUsername(), getUserData() (+12 more)
+Cohesion: 0.09
+Nodes (27): EditDemoModalProps, ManageSubmissionModalProps, SubmissionCardProps, AdminRpcResponse, Submission, SubmissionStatus, UpdateDemoParams, UpdateSubmissionParams (+19 more)
 
 ### Community 83 - "xi() Cluster"
-Cohesion: 0.10
-Nodes (19): getBundlesAction(), getBundlesActionSchema, deleteSandboxSchema, getUsersAction(), getUsersActionSchema, BundleSliderProps, config, fs (+11 more)
+Cohesion: 0.06
+Nodes (42): hasUserComponentAccessAction(), hasUserComponentAccessSchema, getBundlesAction(), getBundlesActionSchema, deleteComponentAction(), deleteComponentSchema, getComponentBundlesAction(), getComponentBundlesSchema (+34 more)
 
 ### Community 84 - "dependencies Cluster"
 Cohesion: 0.07
@@ -1445,7 +1510,7 @@ Nodes (29): Acceptance Criteria, Autonomous Goal Block, Blast Radius, Dependenci
 
 ### Community 89 - "Phase 00 — Setup Cluster"
 Cohesion: 0.11
-Nodes (27): ac(), di(), Dr(), ec(), es(), Ho(), hr(), ic() (+19 more)
+Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, incremental, isolatedModules, lib, module (+9 more)
 
 ### Community 90 - "Phase 01 — Foundation Cluster"
 Cohesion: 0.08
@@ -1476,8 +1541,8 @@ Cohesion: 0.07
 Nodes (28): Acceptance Criteria, Autonomous Goal Block, Blast Radius, Dependencies, Dependencies and Risks, High-Risk Class Assessment, Implementation Checklist, Known Gaps Carried from Phase 17 (+20 more)
 
 ### Community 97 - "validate-context-discovery Cluster"
-Cohesion: 0.10
-Nodes (27): ci(), cu(), De(), di(), dr(), ka(), ku(), Lt() (+19 more)
+Cohesion: 0.17
+Nodes (17): addSuggestion(), bc(), cu(), De(), dr(), ec(), eo(), fo() (+9 more)
 
 ### Community 98 - "Phase 02 — Frontend & UI Migration Cluster"
 Cohesion: 0.07
@@ -1509,15 +1574,15 @@ Nodes (25): addMarginSymbol(), afterNextNewline(), Cr(), getCurrentLineLength(),
 
 ### Community 105 - "devDependencies Cluster"
 Cohesion: 0.08
-Nodes (30): ar(), e(), Fm(), Fr(), get(), getAllBatchQueryCallbacks(), getAllClientExtensions(), getAllComputedFields() (+22 more)
+Nodes (28): ar(), e(), Fm(), Fr(), get(), getAllBatchQueryCallbacks(), getAllClientExtensions(), getAllComputedFields() (+20 more)
 
 ### Community 106 - "route Cluster"
-Cohesion: 0.11
-Nodes (27): addMarginSymbol(), afterNextNewline(), Bi(), Bt(), copy(), ea(), getCurrentLineLength(), handleRequestError() (+19 more)
+Cohesion: 0.12
+Nodes (24): addMarginSymbol(), afterNextNewline(), copy(), e(), getAllComputedFields(), getCurrentLineLength(), getOrCreate(), Gs() (+16 more)
 
 ### Community 107 - "Vulnerability Code Patterns Cluster"
-Cohesion: 0.10
-Nodes (30): _a(), be(), Ci(), constructor(), Ct(), Dl(), getArgumentName(), getArgumentPath() (+22 more)
+Cohesion: 0.09
+Nodes (28): be(), Ct(), Dl(), getAllClientExtensions(), getAllModelExtensions(), getGlobalOmit(), Ie(), il() (+20 more)
 
 ### Community 108 - "devDependencies Cluster"
 Cohesion: 0.11
@@ -1668,16 +1733,16 @@ Cohesion: 0.11
 Nodes (25): applyPendingMigrations(), buildQueryError(), commitTransaction(), consumeError(), emit(), getExternalAdapterError(), handleAndLogRequestError(), jc() (+17 more)
 
 ### Community 145 - "vc-predict — Multi-Persona Pre-Analysis Cluster"
-Cohesion: 0.13
-Nodes (7): buildEarningsChart(), buildUsageChart(), PublicDashboardClient(), metadata, { routerPush }, sampleAuthors, sampleAuthors
+Cohesion: 0.12
+Nodes (17): addItem(), bo(), constructor(), getGlobalOmit(), _getName(), _getNamespace(), jr(), lt() (+9 more)
 
 ### Community 146 - "Cozy 21st Mirror — Umbrella Plan Cluster"
 Cohesion: 0.10
 Nodes (19): agentsSkills, assertContains(), claudeAgents, codexAgents, concreteRefs, criticalHookParityPairs, exists(), fail() (+11 more)
 
 ### Community 147 - "Phase 02 — Layout Cluster"
-Cohesion: 0.05
-Nodes (60): ApiDocs(), ApiKeyManagerProps, BillingSettingsPage(), getCurrentPlan(), PlanInfo, createPlatformCommand(), getInstallCommand(), getMcpConfigJson() (+52 more)
+Cohesion: 0.11
+Nodes (18): 1. Route extended additively — `apps/web/app/api/cron/gen-usage-embeddings/route.ts`, 2. Test coverage — `apps/web/app/api/cron/gen-usage-embeddings/__tests__/route.test.ts` (new), 3. Install artifact — `ops/README-embedding-cron.md` (new), 4. Seed SQL — `supabase/seed-embedding-verification.sql` (new, NOT APPLIED), Closeout Packet, Contract row coverage, `corepack pnpm --filter web exec tsc --noEmit`, `corepack pnpm --filter web test` (+10 more)
 
 ### Community 148 - "Phase 04 — Details Cluster"
 Cohesion: 0.08
@@ -1701,7 +1766,7 @@ Nodes (23): Autonomous /goal Execution Rule, BLOCKED and Escalation Path, Comple
 
 ### Community 153 - "validate-autopilot-goal-block Cluster"
 Cohesion: 0.08
-Nodes (23): bin, higherbits-ai, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @repo/eslint-config, @repo/typescript-config (+15 more)
+Nodes (23): bin, higherbits-dev-cli, dependencies, @modelcontextprotocol/sdk, description, devDependencies, @repo/eslint-config, @repo/typescript-config (+15 more)
 
 ### Community 154 - "validate-phase-stub Cluster"
 Cohesion: 0.08
@@ -1712,16 +1777,16 @@ Cohesion: 0.08
 Nodes (24): Archive-Readiness Semantics, Archiving, Artifact Types, Backlog, Backlog Rule, Backward Compatibility, Canonical Plan Surface, Closed Feature State (+16 more)
 
 ### Community 156 - "Phase NN — {Phase Title} Cluster"
-Cohesion: 0.11
-Nodes (20): ComponentPublishDialog(), useComponentProcessing(), UseComponentProcessingProps, useCssCompiler(), UseCssCompilerProps, useDependencies(), useDialogState(), usePublishDialog() (+12 more)
+Cohesion: 0.16
+Nodes (15): useComponentProcessing(), UseComponentProcessingProps, useCssCompiler(), UseCssCompilerProps, useDependencies(), useDialogState(), usePublishDialog(), UsePublishDialogProps (+7 more)
 
 ### Community 157 - "package Cluster"
 Cohesion: 0.14
 Nodes (20): claudeConfig, openaiConfig, anthropic, fetchCodeFromUrl(), generateComponentEmbeddings(), generateDemoDescription(), generateDemoEmbedding(), generateEmbedding() (+12 more)
 
 ### Community 158 - "components Cluster"
-Cohesion: 0.11
-Nodes (22): Action, ActionType, actionTypes, addToRemoveQueue(), dispatch(), genId(), listeners, memoryState (+14 more)
+Cohesion: 0.22
+Nodes (12): checkoutSchema, PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST(), PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST(), configureLemonSqueezy() (+4 more)
 
 ### Community 159 - "Phase 2 — Frontend & UI Migration — EXECUTE Exit Summary Cluster"
 Cohesion: 0.08
@@ -1861,7 +1926,7 @@ Nodes (20): Begin, Complex decision table, Complexity selection, Critical: Phase
 
 ### Community 193 - "Application Log Analysis Cluster"
 Cohesion: 0.08
-Nodes (37): alloc(), allocUnsafe(), allocUnsafeSlow(), bn(), byteLength(), ce(), concat(), construct() (+29 more)
+Nodes (32): alloc(), allocUnsafe(), allocUnsafeSlow(), Bi(), Bt(), byteLength(), construct(), fi() (+24 more)
 
 ### Community 194 - "Component Categories Cluster"
 Cohesion: 0.10
@@ -1876,8 +1941,8 @@ Cohesion: 0.10
 Nodes (20): Blast Radius Changes, Closeout Packet, Commands to Stay Green, Dependency Changes, Forward Preview, Phase 1: Conversation Analysis, Phase 2: Improvement Generation, Phase 3: Approval (single exit gate) (+12 more)
 
 ### Community 197 - "Workflow Steps Cluster"
-Cohesion: 0.19
-Nodes (14): getDemosAction(), getDemosActionSchema, POST(), getComponentInstallPrompt(), ResolvedComponent, resolveRegistryDependenciesV2(), transformToFlatDependencyTree(), Phase 18 — Cloudflare R2 Asset Migration — PLAN (+6 more)
+Cohesion: 0.25
+Nodes (12): DeleteDemoDialog(), DeleteDemoDialogProps, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader() (+4 more)
 
 ### Community 198 - "handleRequestError() Cluster"
 Cohesion: 0.10
@@ -2048,8 +2113,8 @@ Cohesion: 0.11
 Nodes (17): 1. Meta Information & Core Directive, 2. THE "ABSOLUTE ZERO" DIRECTIVE (STRICT ANTI-PATTERNS), 3. THE CREATIVE VARIANCE ENGINE, 4. HAPTIC MICRO-AESTHETICS (COMPONENT MASTERY), 5. MOTION CHOREOGRAPHY (FLUID DYNAMICS), 6. PERFORMANCE GUARDRAILS, 7. EXECUTION PROTOCOL, 8. PRE-OUTPUT CHECKLIST (+9 more)
 
 ### Community 240 - "Workflow Steps Cluster"
-Cohesion: 0.11
-Nodes (17): compilerOptions, declaration, declarationMap, esModuleInterop, incremental, isolatedModules, lib, module (+9 more)
+Cohesion: 0.21
+Nodes (11): BundlesPage(), BundlesClient(), metadata, authUsernameCached, authUsernameOrRedirect(), BundleExtended, getCachedUser, getCachedUserBundles (+3 more)
 
 ### Community 241 - "ThoughtProcessor Cluster"
 Cohesion: 0.11
@@ -2096,8 +2161,8 @@ Cohesion: 0.15
 Nodes (14): button, container, footer, h1, image, InviteEmail(), InviteEmailProps, main (+6 more)
 
 ### Community 252 - "Phase 02 — Database & Backend Port Cluster"
-Cohesion: 0.12
-Nodes (16): 10. SECTION RHYTHM RULE, 12. DENSITY & SPACING DISCIPLINE, 14. IMAGE / MEDIA DIRECTION, 16. MULTI-IMAGE CONSISTENCY RULE, 17. CLARITY CHECK, 19. RESPONSE BEHAVIOR, 1. ACTIVE BASELINE CONFIGURATION, 21. FINAL GOAL (+8 more)
+Cohesion: 0.14
+Nodes (14): 10. SECTION RHYTHM RULE, 12. DENSITY & SPACING DISCIPLINE, 14. IMAGE / MEDIA DIRECTION, 16. MULTI-IMAGE CONSISTENCY RULE, 17. CLARITY CHECK, 19. RESPONSE BEHAVIOR, 1. ACTIVE BASELINE CONFIGURATION, 21. FINAL GOAL (+6 more)
 
 ### Community 253 - "Phase 03 — Creator Studio & Marketplace UI Cluster"
 Cohesion: 0.12
@@ -2220,8 +2285,8 @@ Cohesion: 0.12
 Nodes (15): Blind (Time-based), Command Injection, Cookie Theft, CSRF Testing, DOM-based, NoSQL Injection (MongoDB), Numeric Input, Path Traversal (+7 more)
 
 ### Community 283 - "require Cluster"
-Cohesion: 0.19
-Nodes (16): addMarginSymbol(), afterNextNewline(), getCurrentLineLength(), indent(), indentedCurrentLine(), newLine(), setColor(), underline() (+8 more)
+Cohesion: 0.10
+Nodes (27): addMarginSymbol(), afterNextNewline(), br(), getCurrentLineLength(), handleRequestError(), ht(), Ii(), indent() (+19 more)
 
 ### Community 284 - "Implementation Standards Cluster"
 Cohesion: 0.12
@@ -2312,8 +2377,8 @@ Cohesion: 0.15
 Nodes (15): fromContent(), handleRequestError(), In(), kf(), kn(), lineAt(), mapLines(), Of() (+7 more)
 
 ### Community 306 - "validate-plan-discovery-output Cluster"
-Cohesion: 0.08
-Nodes (26): ai(), e(), get(), getAllBatchQueryCallbacks(), getAllComputedFields(), getAllQueryCallbacks(), getOrCreate(), getPrintWidth() (+18 more)
+Cohesion: 0.15
+Nodes (14): ai(), get(), getAllBatchQueryCallbacks(), getPrintWidth(), li(), mapQueryEngineResult(), na(), ra() (+6 more)
 
 ### Community 307 - "validate-skill-invocation-wiring Cluster"
 Cohesion: 0.17
@@ -2340,8 +2405,8 @@ Cohesion: 0.13
 Nodes (14): 1. Visual Theme & Atmosphere, 2. Color Palette & Roles, 3. Typography Rules, 4. Component Stylings, 5. Hero Section, 6. Layout Principles, 7. Responsive Rules, 8. Motion & Interaction (Code-Phase Intent) (+6 more)
 
 ### Community 313 - "all-context Cluster"
-Cohesion: 0.18
-Nodes (11): 0.A Read these signals first, 0.B Output a one-line "Design Read" before generating, 0. BRIEF INFERENCE (Read the Room Before Anything Else), 0.C If the brief is ambiguous, ask one question, do not guess, 0.D Anti-Default Discipline, 13. OUT OF SCOPE, 14. FINAL PRE-FLIGHT CHECK, 2.A When to reach for a real design system (use official packages) (+3 more)
+Cohesion: 0.13
+Nodes (15): 0.A Read these signals first, 0.B Output a one-line "Design Read" before generating, 0. BRIEF INFERENCE (Read the Room Before Anything Else), 0.C If the brief is ambiguous, ask one question, do not guess, 0.D Anti-Default Discipline, 13. OUT OF SCOPE, 14. FINAL PRE-FLIGHT CHECK, 1.A Dial Inference (design read → dial values) (+7 more)
 
 ### Community 314 - "exports Cluster"
 Cohesion: 0.13
@@ -2380,8 +2445,8 @@ Cohesion: 0.14
 Nodes (14): Blast Radius Changes, Closeout Packet, Commands to Stay Green, Dependency Changes, Forward Preview, Phase 1 Report — Billing + Auth + Pro-gate Migration, Plan Deviations, SPEC Achievement (+6 more)
 
 ### Community 323 - "seed-placeholder-components Cluster"
-Cohesion: 0.17
-Nodes (12): ap(), at(), getGlobalOmit(), it(), je(), ju(), mapQueryEngineResult(), Me() (+4 more)
+Cohesion: 0.09
+Nodes (31): Bs(), _c(), getArgumentName(), getArgumentPath(), getSelectionPath(), gn(), gr(), highlight() (+23 more)
 
 ### Community 324 - "page Cluster"
 Cohesion: 0.14
@@ -2440,8 +2505,8 @@ Cohesion: 0.07
 Nodes (29): Backlog artifacts, Blast Radius, Blockers That Would Justify BLOCKED Status, Dimension findings, Entry Gate, Execute-agent instructions, Exit Gate, Findings (+21 more)
 
 ### Community 338 - "backup-r2 Cluster"
-Cohesion: 0.24
-Nodes (12): getAllClientExtensions(), getAllModelExtensions(), Ie(), K(), le(), nl(), ol(), rl() (+4 more)
+Cohesion: 0.08
+Nodes (23): Anti-vacuous-green verification (mutation checks I actually ran), Archival judgment, Closeout Packet, Context Envelope, CONTEXT_PARTIAL Items, E4 — `TemplatesListSEO` disposition: **DELETED**, Files Changed, Follow-up Plan Stubs Created (+15 more)
 
 ### Community 339 - "convert-readme-assets-webp Cluster"
 Cohesion: 0.14
@@ -2480,8 +2545,8 @@ Cohesion: 0.25
 Nodes (13): Backlog Notes Written, Closeout Packet, Phase 01 — Backend & Schema Merge — Phase Report, Plan Deviations, Security / Consent Learnings (durable — carry forward to future high-risk EXECUTE phases), SPEC Achievement, Test Gate Outcomes, Test Infra Gaps Found (+5 more)
 
 ### Community 349 - "utils Cluster"
-Cohesion: 0.20
-Nodes (11): checkoutSchema, PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST(), configureLemonSqueezy(), getAllPlans(), getIdBySubscriptionPlanDetails(), getPlanByLemonSqueezyVariantId() (+3 more)
+Cohesion: 0.08
+Nodes (23): Accepted by, Backlog artifacts to create during durable capture, Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Execute-agent instructions, Exit Gate, High-risk pack (+15 more)
 
 ### Community 350 - "use-is-check-slug-available Cluster"
 Cohesion: 0.15
@@ -2592,8 +2657,8 @@ Cohesion: 0.17
 Nodes (11): Acceptance Criteria (Testable Outcomes), Analogous Mapping Table (Reference → Our Surface/Data), Background / Research Findings, Claymorphism Reference Parity — SPEC, Constraints, Flow / State Diagram, Open Questions, Out Of Scope (+3 more)
 
 ### Community 377 - "vc-plan-discovery Cluster"
-Cohesion: 0.33
-Nodes (10): import, import, browser, default, edge-light, node, types, worker (+2 more)
+Cohesion: 0.26
+Nodes (12): import, ./sql, import, browser, default, edge-light, node, types (+4 more)
 
 ### Community 378 - "Phase 20 Report Cluster"
 Cohesion: 0.17
@@ -2777,11 +2842,11 @@ Nodes (10): 1. Start Design Process, 2. Implement, 3. Generate Assets, 4. Report
 
 ### Community 423 - "Phase 01: Backend & Schema Merge Plan Cluster"
 Cohesion: 0.08
-Nodes (23): Accepted by, Backlog artifacts to create during durable capture, Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Execute-Agent Instructions, Exit Gate, Implementation Checklist (+15 more)
+Nodes (24): Accepted by, Backlog artifacts to create during durable capture, Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Execute-Agent Instructions, Exit Gate, Implementation Checklist (+16 more)
 
 ### Community 424 - "Security Hardening Plan Cluster"
-Cohesion: 0.18
-Nodes (10): Bs(), gn(), isRawAction(), jl(), kc(), ms(), nt(), pa() (+2 more)
+Cohesion: 0.26
+Nodes (14): B(), compare(), equals(), Mt(), readIntBE(), readIntLE(), readUIntBE(), readUIntLE() (+6 more)
 
 ### Community 425 - "vc-quick-fix-agent Cluster"
 Cohesion: 0.20
@@ -2792,8 +2857,8 @@ Cohesion: 0.20
 Nodes (10): agentFiles, agentFlagIdx, checkAgent(), checkedAgents, globalFailures, globalWarnings, parseFrontmatter(), result (+2 more)
 
 ### Community 427 - "Backlog: Pre-existing test failures (tech debt cleanup) Cluster"
-Cohesion: 0.18
-Nodes (4): failures, result, root, warnings
+Cohesion: 0.22
+Nodes (11): build(), buildCaptureSettings(), dispatchEngineSpans(), getActiveContext(), getGlobalTracingHelper(), getTraceParent(), handleError(), isEnabled() (+3 more)
 
 ### Community 428 - "post-commit-lint Cluster"
 Cohesion: 0.20
@@ -2809,7 +2874,7 @@ Nodes (11): dependsOn, inputs, outputs, cache, persistent, dependsOn, outputs, t
 
 ### Community 431 - "Cozy Promotion — Phase 04: Cleanup Report Cluster"
 Cohesion: 0.18
-Nodes (10): compilerOptions, allowJs, jsx, module, moduleResolution, noEmit, plugins, display (+2 more)
+Nodes (4): failures, result, root, warnings
 
 ### Community 432 - "Phase 02 — Core Editor Shell & State Cluster"
 Cohesion: 0.18
@@ -2848,8 +2913,8 @@ Cohesion: 0.20
 Nodes (7): DemoFormData, demoSchema, FormData, formSchema, TagOption, Demo, Tag
 
 ### Community 441 - "Phase 18 PVL — Iteration 001 Cluster"
-Cohesion: 0.26
-Nodes (12): require, ./sql, require, browser, default, edge-light, node, types (+4 more)
+Cohesion: 0.33
+Nodes (10): require, require, browser, default, edge-light, node, types, worker (+2 more)
 
 ### Community 442 - "PVL Iteration 001 — Phase 19 Templates & Themes Cluster"
 Cohesion: 0.20
@@ -2876,8 +2941,8 @@ Cohesion: 0.20
 Nodes (9): 1. Protocol Overview, 2. Absolute Negative Constraints (Banned Elements), 3. Typographic Architecture, 4. Color Palette (Warm Monochrome + Spot Pastels), 5. Component Specifications, 6. Iconography & Imagery Directives, 7. Subtle Motion & Micro-Animations, 8. Execution Protocol (+1 more)
 
 ### Community 448 - "Active Plans Cluster"
-Cohesion: 0.20
-Nodes (9): devDependencies, prettier, sharp, stripe-cli, turbo, typescript, globalEnv, $schema (+1 more)
+Cohesion: 0.17
+Nodes (11): devDependencies, @electric-sql/pglite, @electric-sql/pglite-pgvector, prettier, sharp, stripe-cli, turbo, typescript (+3 more)
 
 ### Community 449 - "Advanced Sequential Thinking Strategies Cluster"
 Cohesion: 0.20
@@ -2944,12 +3009,12 @@ Cohesion: 0.24
 Nodes (10): b(), be(), Fn(), jn(), ni(), On(), p(), U() (+2 more)
 
 ### Community 465 - "Phase Example Plan Cluster"
-Cohesion: 0.25
-Nodes (8): Core Protocol, Engineering Standards, Mode Detection & Auto-Orchestration, Orchestrator Role (Main Codex Session), Repository Context, RIPER-5 Spec-Driven Development System, Shared Development Protocols, Technology Stack
+Cohesion: 0.18
+Nodes (10): compilerOptions, allowJs, jsx, module, moduleResolution, noEmit, plugins, display (+2 more)
 
 ### Community 466 - "Repository Analysis (No llms Cluster"
-Cohesion: 0.29
-Nodes (8): getLocation(), hu(), is(), lineAt(), mapLineAt(), mapLines(), prependSymbolAt(), zc()
+Cohesion: 0.11
+Nodes (18): Autonomous Execution Rules (During /goal), Blast Radius, Current Execution State, Durable Report Destinations, Global Constraints, Join Conditions, Per-Phase Entry / Exit Gates, Per-Phase Loop (+10 more)
 
 ### Community 467 - "Topic-Specific Documentation Search Cluster"
 Cohesion: 0.20
@@ -2960,8 +3025,8 @@ Cohesion: 0.20
 Nodes (5): failures, result, root, target, warnings
 
 ### Community 469 - "Phase 10: Full-Text Search + Qdrant Integration Report Cluster"
-Cohesion: 0.20
-Nodes (8): AGENT_NAME_TOKENS, agentFiles, CATALOG_CANDIDATES, failures, registeredSkills, result, root, warnings
+Cohesion: 0.22
+Nodes (8): engines, node, name, packageManager, pnpm, private, resolutions, jotai
 
 ### Community 470 - " Deferred Work Note Cluster"
 Cohesion: 0.20
@@ -3053,7 +3118,7 @@ Nodes (8): __dirname, discoverUserId(), main(), requireFromWeb, rollback(), seed
 
 ### Community 492 - "index Cluster"
 Cohesion: 0.22
-Nodes (8): engines, node, name, packageManager, pnpm, private, resolutions, jotai
+Nodes (9): bs(), dn(), el(), F(), includes(), indexOf(), isEncoding(), isRawAction() (+1 more)
 
 ### Community 493 - "index Cluster"
 Cohesion: 0.36
@@ -3137,7 +3202,7 @@ Nodes (7): Audit Context, Context Bootstrap (when process/context/ doesn't exist
 
 ### Community 512 - "14 Cluster"
 Cohesion: 0.09
-Nodes (21): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Inner Loop Refresh Note, Phase 06 — Schema Source of Truth, Phase Loop Progress (+13 more)
+Nodes (22): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Inner Loop Refresh Note, Inner Loop Refresh Note (29-07-26), Phase 06 — Schema Source of Truth (+14 more)
 
 ### Community 513 - "Example: Architecture Decision with Sequential Thinking Cluster"
 Cohesion: 0.22
@@ -3156,16 +3221,16 @@ Cohesion: 0.25
 Nodes (8): 1. Goal Verification, 2. Execution Summary, 3. EVL Results, 4. Phase 4 Handoff Notes, EXECUTE, Phase 3 — Catalog Routing Rebuild — REPORT, RESEARCH & INNOVATE, Phase 4 — Ingestion Run + Qdrant Population + Attribution Display — PLAN
 
 ### Community 517 - "Performance Cluster"
-Cohesion: 0.09
-Nodes (22): Autonomous Execution Rules (During /goal), Blast Radius, Current Execution State, Durable Report Destinations, Global Constraints, Join Conditions, Out-of-Scope Corrections (session-locked, supersedes SPEC AC5 in part), Per-Phase Entry / Exit Gates (+14 more)
+Cohesion: 0.05
+Nodes (37): 14 SPEC Acceptance Criteria — final scoring, Archival judgment, Autonomous Execution Rules (During /goal), Blast Radius, Current Execution State, Definition of Done — scored against the 6 charter targets, Durable learning, Durable program-wide learnings (the most valuable non-code output) (+29 more)
 
 ### Community 518 - "Detailed Examples Cluster"
 Cohesion: 0.25
 Nodes (5): DemoFormData, demoSchema, FormData, formSchema, TagOption
 
 ### Community 519 - "pn() Cluster"
-Cohesion: 0.36
-Nodes (6): checkSlugUnique(), generateDemoSlug(), generateUniqueSlug(), makeSlugFromName(), SlugType, useIsCheckSlugAvailable()
+Cohesion: 0.25
+Nodes (8): Core Protocol, Engineering Standards, Mode Detection & Auto-Orchestration, Orchestrator Role (Main Codex Session), Repository Context, RIPER-5 Spec-Driven Development System, Shared Development Protocols, Technology Stack
 
 ### Community 520 - "NullTypesEnumValue Cluster"
 Cohesion: 0.25
@@ -3181,7 +3246,7 @@ Nodes (7): ⚠️ Deploy path re-verification — UNRESOLVED, re-verify before d
 
 ### Community 523 - "Validate Findings Cluster"
 Cohesion: 0.36
-Nodes (5): EditorPane, EditorPaneOriginal(), EditorPaneProps, getFileExtension(), getMonacoLanguage()
+Nodes (6): checkSlugUnique(), generateDemoSlug(), generateUniqueSlug(), makeSlugFromName(), SlugType, useIsCheckSlugAvailable()
 
 ### Community 524 - "Validate Findings Cluster"
 Cohesion: 0.25
@@ -3208,8 +3273,8 @@ Cohesion: 0.25
 Nodes (8): 8. ANTI-AI-SLOP RULES, Carousel / marquee slop (layout), Content slop, Data / KPI slop, Density slop, Layout slop, Typography slop, Visual slop
 
 ### Community 530 - "SKILL Cluster"
-Cohesion: 0.25
-Nodes (8): dependencies, emblor, jotai, @monaco-editor/react, next, @radix-ui/react-radio-group, recharts, @tanstack/react-table
+Cohesion: 0.18
+Nodes (11): dependencies, dotenv, emblor, jotai, @monaco-editor/react, next, playwright, @radix-ui/react-radio-group (+3 more)
 
 ### Community 531 - "Generate Plan Cluster"
 Cohesion: 0.25
@@ -3253,7 +3318,7 @@ Nodes (7): Architectural Patterns, Architecture Components, Chunked Task Executi
 
 ### Community 541 - "Phase 05: AI & MCP - Report Cluster"
 Cohesion: 0.10
-Nodes (19): Autonomous Goal Block, Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 03 — Scheduler Foundation (Embeddings Only) + Seed Data, Phase Loop Progress (+11 more)
+Nodes (20): Autonomous Goal Block, Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Inner Loop Refresh Note, Phase 03 — Scheduler Foundation (Embeddings Only) + Seed Data (+12 more)
 
 ### Community 542 - "Cozy 21st Mirror — Phase 4: Component UI Cluster"
 Cohesion: 0.32
@@ -3292,8 +3357,8 @@ Cohesion: 0.25
 Nodes (8): 9.A Visual & CSS, 9. AI TELLS (Forbidden Patterns), 9.B Typography, 9.C Layout & Spacing, 9.D Content & Data ("Jane Doe" Effect), 9.E External Resources & Components, 9.F Production-Test Tells (banned outright), 9.G EM-DASH BAN (the single most-violated Tell)
 
 ### Community 551 - "Phase 19 — Templates & Themes — REPORT Cluster"
-Cohesion: 0.10
-Nodes (19): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 04 — Navigation Reconciliation, Phase Loop Progress, Public Contracts (+11 more)
+Cohesion: 0.09
+Nodes (21): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Inner Loop Refresh Note, Net Gate Derivation, Phase 04 — Navigation Reconciliation (+13 more)
 
 ### Community 552 - "HigherBits Cozy Rebrand — Umbrella Plan Cluster"
 Cohesion: 0.25
@@ -3308,8 +3373,8 @@ Cohesion: 0.25
 Nodes (7): Frontmatter Reading, Invocation, Output Format, Purpose, Scope Rules, vc-plan-discovery, When To Invoke
 
 ### Community 555 - "Phase 4 Report: Vanilla Web Editor Cluster"
-Cohesion: 0.12
-Nodes (18): _e(), un(), addField(), dt(), ea(), eu(), getGlobalOmit(), hd() (+10 more)
+Cohesion: 0.19
+Nodes (21): _a(), Ci(), concat(), er(), Et(), findField(), ge(), getArgumentName() (+13 more)
 
 ### Community 556 - "Phase 5 Report: Submission Pipeline Cluster"
 Cohesion: 0.25
@@ -3368,8 +3433,8 @@ Cohesion: 0.38
 Nodes (6): extractWrittenPath(), HOOK_DIR, main(), readPayload(), REPO_ROOT, ROUTES
 
 ### Community 570 - "Network Interception Cluster"
-Cohesion: 0.11
-Nodes (17): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 05 — Billing Unification, Phase Loop Progress, Public Contracts (+9 more)
+Cohesion: 0.09
+Nodes (21): Blast Radius, Blockers That Would Justify BLOCKED Status, Deviations (EXECUTE, 29-07-26), Entry Gate, Exit Gate, Implementation Checklist, Inner Loop Refresh Note, Phase 05 — Billing Unification (+13 more)
 
 ### Community 571 - "xl() Cluster"
 Cohesion: 0.29
@@ -3404,24 +3469,20 @@ Cohesion: 0.29
 Nodes (7): 4. HERO MINIMALISM RULES, Absolute Hero Rules, Graphic Restraint, Headline Rule, Hero Composition Bias, Pre-output check, Typography Execution
 
 ### Community 579 - "check-comp Cluster"
-Cohesion: 0.52
-Nodes (5): AllowedMimeType, detectMagicBytes(), processUploadBuffer(), sanitizeSvgBuffer(), SecurityProcessResult
+Cohesion: 0.29
+Nodes (8): getLocation(), hu(), is(), lineAt(), mapLineAt(), mapLines(), prependSymbolAt(), zc()
 
 ### Community 580 - "check-demos Cluster"
 Cohesion: 0.29
 Nodes (6): Banned Output Patterns, Baseline, Execution Process, Full-Output Enforcement, Handling Long Outputs, Quick Check
-
-### Community 581 - "check-enum Cluster"
-Cohesion: 0.29
-Nodes (6): apiCode, apiFile, fs, path, serverCode, serverFile
 
 ### Community 582 - "check-pg Cluster"
 Cohesion: 0.29
 Nodes (6): Planning Context, Quick Routing, Read When, Scope, Source Paths, Update Triggers
 
 ### Community 583 - "check-preview Cluster"
-Cohesion: 0.48
-Nodes (6): checkSlugUnique(), generateUniqueSlug(), MOCK_RESPONSE, openai, POST(), preprocessComponent()
+Cohesion: 0.08
+Nodes (35): _a(), addMarginSymbol(), afterNextNewline(), am(), Ba(), cd(), getCurrentLineLength(), $i() (+27 more)
 
 ### Community 584 - "check-public Cluster"
 Cohesion: 0.29
@@ -3472,8 +3533,8 @@ Cohesion: 0.33
 Nodes (5): bounds, isBackground(), out, removeOuterBackground(), rgba
 
 ### Community 596 - "README Cluster"
-Cohesion: 0.29
-Nodes (6): failures, result, skills, tally, VALID_LAYERS, warnings
+Cohesion: 0.38
+Nodes (3): mocks, GET(), resolveBatchCap()
 
 ### Community 597 - "reload-schema Cluster"
 Cohesion: 0.38
@@ -3501,7 +3562,7 @@ Nodes (7): 6.A Hardware Acceleration, 6.B Reduced Motion (mandatory), 6.C Dark M
 
 ### Community 603 - "Phase 02 - Layout (Report) Cluster"
 Cohesion: 0.29
-Nodes (6): license, name, private, publishConfig, access, version
+Nodes (6): 1. 81 dangling `referencedRelation` string literals (largest remaining item), 2. Orphaned `component_with_user` CompositeType, 3. `check_rate_limit` / `increment_api_usage` out of alphabetical order, Related, `types.ts` regen would still diverge in 3 known ways (none are correctness gaps), Why this matters
 
 ### Community 604 - "AdminHeader Cluster"
 Cohesion: 0.28
@@ -3766,8 +3827,8 @@ Cohesion: 0.33
 Nodes (5): Brevity Bias Through Alignment, Dynamic Throttling, RLHF and Compute Economics, Stopping Pressure, The Cost of Token Generation
 
 ### Community 665 - "Mode Selection Cluster"
-Cohesion: 0.12
-Nodes (17): addItem(), bo(), constructor(), getGlobalOmit(), _getName(), _getNamespace(), jr(), lt() (+9 more)
+Cohesion: 0.19
+Nodes (14): bn(), ce(), hn(), it(), me(), $n(), Pe(), Pr() (+6 more)
 
 ### Community 666 - "check-db Cluster"
 Cohesion: 0.40
@@ -3790,24 +3851,24 @@ Cohesion: 0.33
 Nodes (5): blocks, doc, docPath, here, REQUIRED
 
 ### Community 672 - "check-supabase Cluster"
-Cohesion: 0.33
-Nodes (5): compilerOptions, jsx, display, extends, $schema
+Cohesion: 0.52
+Nodes (5): AllowedMimeType, detectMagicBytes(), processUploadBuffer(), sanitizeSvgBuffer(), SecurityProcessResult
 
 ### Community 673 - "check-template Cluster"
 Cohesion: 0.33
 Nodes (5): compilerOptions, outDir, exclude, extends, include
 
 ### Community 674 - "check-users Cluster"
-Cohesion: 0.33
-Nodes (5): compilerOptions, outDir, exclude, extends, include
+Cohesion: 0.48
+Nodes (6): checkSlugUnique(), generateUniqueSlug(), MOCK_RESPONSE, openai, POST(), preprocessComponent()
 
 ### Community 675 - "check-vite Cluster"
 Cohesion: 0.33
 Nodes (5): Blast Radius, Implementation Checklist, Phase Example Plan, Test Infra Improvement Notes, Verification Evidence
 
 ### Community 676 - "fix-db Cluster"
-Cohesion: 0.33
-Nodes (5): Error details, Instructions, Page snapshot, Test info, Test source
+Cohesion: 0.11
+Nodes (18): Autonomous Execution Rules (During /goal), Blast Radius, Component Registry UX Improvements — Umbrella Plan, Current Execution State, Durable Report Destinations, Global Constraints, Join Conditions, Per-Phase Entry / Exit Gates (+10 more)
 
 ### Community 677 - "middleware Cluster"
 Cohesion: 0.33
@@ -3850,12 +3911,12 @@ Cohesion: 0.40
 Nodes (5): Blast Radius Changes, Commands to Stay Green, Dependency Changes, Forward Preview, Test Infra Found
 
 ### Community 687 - "test-sb Cluster"
-Cohesion: 0.50
-Nodes (3): RECORDED_ROUTES, SessionRecorder(), initPostHog()
+Cohesion: 0.29
+Nodes (6): failures, result, skills, tally, VALID_LAYERS, warnings
 
 ### Community 688 - "test-sb2 Cluster"
-Cohesion: 0.50
-Nodes (4): checkoutSchema, PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST()
+Cohesion: 0.29
+Nodes (6): license, name, private, publishConfig, access, version
 
 ### Community 689 - "test-sb3 Cluster"
 Cohesion: 0.40
@@ -3956,12 +4017,12 @@ Cohesion: 0.40
 Nodes (4): Next Steps, Phase 02 — Components Report, Summary, Verification
 
 ### Community 710 - "Current Plan API Cluster"
-Cohesion: 0.50
-Nodes (4): checkoutSchema, PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST()
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 01 — Install Component Fix, Phase Loop Progress, Public Contracts (+7 more)
 
 ### Community 711 - "Cursor Dark Component Cluster"
-Cohesion: 0.40
-Nodes (4): Development Protocols, File Roles, Maintenance Rules, Read Order
+Cohesion: 0.60
+Nodes (5): generateMetadata(), getUser(), getUserDemos(), getUserSandboxes(), StudioUsernamePage()
 
 ### Community 712 - "DemoDetailsForm Cluster"
 Cohesion: 0.40
@@ -3984,8 +4045,8 @@ Cohesion: 0.40
 Nodes (5): Directory Structure, Findings, LLM Output Truncation Research, Remediation, Root Causes
 
 ### Community 717 - "README Cluster"
-Cohesion: 0.47
-Nodes (3): GET(), mocks, POST()
+Cohesion: 0.11
+Nodes (18): Autonomous Execution Rules (During /goal), Blast Radius, Current Execution State, Durable Report Destinations, Global Constraints, Join Conditions, Per-Phase Entry / Exit Gates, Per-Phase Loop (+10 more)
 
 ### Community 719 - "Favicon 16x16 Cluster"
 Cohesion: 0.40
@@ -4340,8 +4401,8 @@ Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
 
 ### Community 828 - "Evaluate Script Cluster"
-Cohesion: 0.32
-Nodes (7): Da(), Ia(), La(), Na(), nr(), Wa(), xi()
+Cohesion: 0.18
+Nodes (11): Phase 10 — AI component generation (Magic-style) ⏳, Phase 11 — Component versioning + changelog ⏳, Phase 12 — Team / organization billing ⏳, Phase 13 — Search ranking + trending + analytics ⏳, Phase 14 — Deploy + scale hardening ⏳, Phase 5 — Component detail experience ⏳, Phase 6 — Landing / marketing pages + 21st.dev visual identity ⏳, Phase 7 — User collections + favorites ⏳ (+3 more)
 
 ### Community 844 - "validator Cluster"
 Cohesion: 0.67
@@ -4352,8 +4413,8 @@ Cohesion: 0.67
 Nodes (3): Features Illustration 1, Features Illustration 2, Features Illustration 3
 
 ### Community 857 - "getInstallCommand Cluster"
-Cohesion: 0.26
-Nodes (14): B(), compare(), equals(), Mt(), readIntBE(), readIntLE(), readUIntBE(), readUIntLE() (+6 more)
+Cohesion: 0.17
+Nodes (11): Embedding Backfill Cron — Operator Install Guide, Environment variables, Operator safety notes, Related files, Step 1 — Re-verify the deploy target, Step 2 — Dry-run manually BEFORE installing the schedule, Step 3 — Create the log directory, Step 4 — Install the crontab (the one privileged step) (+3 more)
 
 ### Community 864 - "Next Cluster"
 Cohesion: 0.67
@@ -4399,9 +4460,25 @@ Nodes (11): Baselines re-confirmed live this cycle, Follow-up actions taken by t
 Cohesion: 0.67
 Nodes (3): ErrorWithBatchIndex, PrismaClientKnownRequestError, PrismaClientUnknownRequestError
 
+### Community 961 - "Community 961"
+Cohesion: 0.11
+Nodes (17): Autonomous Execution Rules (During /goal), Current Execution State, Durable Report Destinations, Global Constraints, Join Conditions, Per-Phase Entry / Exit Gates, Per-Phase Loop, Phase Sequence (+9 more)
+
 ### Community 969 - "Community 969"
-Cohesion: 0.18
-Nodes (11): Phase 10 — AI component generation (Magic-style) ⏳, Phase 11 — Component versioning + changelog ⏳, Phase 12 — Team / organization billing ⏳, Phase 13 — Search ranking + trending + analytics ⏳, Phase 14 — Deploy + scale hardening ⏳, Phase 5 — Component detail experience ⏳, Phase 6 — Landing / marketing pages + 21st.dev visual identity ⏳, Phase 7 — User collections + favorites ⏳ (+3 more)
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 01 — Uniform Cards, Phase Loop Progress, Public Contracts (+7 more)
+
+### Community 971 - "Community 971"
+Cohesion: 0.33
+Nodes (5): 3 phantom RPCs are actually called by live application code (6 call sites, 6 files), Related, The three broken RPCs and their 6 call sites, What needs to happen (not done here), Why this stayed hidden
+
+### Community 1053 - "Community 1053"
+Cohesion: 0.40
+Nodes (6): al(), et(), ji(), Pr(), tl(), Vi()
+
+### Community 1054 - "Community 1054"
+Cohesion: 0.33
+Nodes (5): compilerOptions, jsx, display, extends, $schema
 
 ### Community 1059 - "Community 1059"
 Cohesion: 0.18
@@ -4416,8 +4493,8 @@ Cohesion: 0.20
 Nodes (10): Intra-File Conflict Resolution, Known-Gap Exclusion, Layer 1 (4 agents, always run in parallel), Layer 2 (one agent per plan section, run in parallel), Net Gate Rule, Required Skills, Required Skills, [V2-PROBE] Layer 2 Feasibility Probe — Halt Point (+2 more)
 
 ### Community 1062 - "Community 1062"
-Cohesion: 0.22
-Nodes (8): append(), bs(), e(), It(), ps(), Qr(), So(), us()
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 02 — Interactive Previews, Phase Loop Progress, Public Contracts (+7 more)
 
 ### Community 1063 - "Community 1063"
 Cohesion: 0.22
@@ -4444,53 +4521,265 @@ Cohesion: 0.33
 Nodes (5): Current state (as of live-DB audit, 25-07-26), Hunt/Contest Scoring Engine — Backlog Note, The 5 functions never authored by this program, What already exists and is wired (starting point for a future program), Why descoped
 
 ### Community 1069 - "Community 1069"
-Cohesion: 0.40
-Nodes (4): Autonomous /goal Behavior, Diff-Aware Mode (Default), Project Test Configuration, Report Output
+Cohesion: 0.33
+Nodes (5): compilerOptions, outDir, exclude, extends, include
 
 ### Community 1070 - "Community 1070"
 Cohesion: 0.50
 Nodes (4): Bookkeeping ownership (per `vc-autoresearch`), EVL routing (execute-validate-fix), PVL/EVL Loop Routing (Orchestrator Is the Loop Driver), PVL routing (plan-validate-fix)
 
 ### Community 1071 - "Community 1071"
-Cohesion: 0.40
-Nodes (6): al(), et(), ji(), Pr(), tl(), Vi()
+Cohesion: 0.50
+Nodes (4): checkoutSchema, PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST()
+
+### Community 1090 - "Community 1090"
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 03 — Wave Glow, Phase Loop Progress, Public Contracts (+7 more)
 
 ### Community 1091 - "Community 1091"
+Cohesion: 0.12
+Nodes (16): Closeout Packet, Compatibility confirmation: `gen-usage-embeddings/route.ts` (E5), EVL Confirmation (26-07-26, UPDATE PROCESS inner-loop Step 7), Forward Preview, Grant decision (Step B7 / E3), Harness output (verbatim), Phase 02 — Embedding Functions: EXECUTE Report, Plan Deviations (+8 more)
+
+### Community 1092 - "Community 1092"
+Cohesion: 0.28
+Nodes (7): __dirname, fetchShadcnJSON(), main(), requireFromWeb, supabase, toCapitalizedWords(), webPkg
+
+### Community 1093 - "Community 1093"
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 01 — Schema Updates, Phase Loop Progress, Public Contracts (+7 more)
+
+### Community 1094 - "Community 1094"
+Cohesion: 0.50
+Nodes (4): checkoutSchema, PAYMENTS_NOT_CONFIGURED_RESPONSE, paymentsNotConfigured(), POST()
+
+### Community 1095 - "Community 1095"
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 02 — Compilation Pipeline, Phase Loop Progress, Public Contracts (+7 more)
+
+### Community 1096 - "Community 1096"
+Cohesion: 0.18
+Nodes (10): Evidence Captured, Feasibility Probe: pglite as local Postgres for Phase 2 embedding-function verification, Hypothesis, Mechanism Under Test, Probe Cost Class, Probe Family, Probe Method, Resulting Design Constraint (+2 more)
+
+### Community 1097 - "Community 1097"
+Cohesion: 0.10
+Nodes (26): bl(), Bn(), dl(), fl(), fs(), gl(), Hc(), hn() (+18 more)
+
+### Community 1098 - "Community 1098"
+Cohesion: 0.28
+Nodes (6): check(), main(), MIGRATION_PATH, record(), REPO_ROOT, results
+
+### Community 1099 - "Community 1099"
+Cohesion: 0.25
+Nodes (7): Editing safety, Next action, Phase 02 — Inner-PVL Iteration 001, The one residual, The two findings this cycle, What the cycle confirmed rather than assumed, Why one cycle here, five in Phase 1
+
+### Community 1100 - "Community 1100"
+Cohesion: 0.40
+Nodes (4): Development Protocols, File Roles, Maintenance Rules, Read Order
+
+### Community 1101 - "Community 1101"
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 03 — Frontend Integration, Phase Loop Progress, Public Contracts (+7 more)
+
+### Community 1102 - "Community 1102"
+Cohesion: 0.25
+Nodes (7): Backlog Note — SECURITY DEFINER Rationale Gap (Phase 02 Embedding Functions), Fix options, Problem, Recommendation, Root cause, Self-contained references, Why EVL judged it defensible (not why it's undocumented)
+
+### Community 1104 - "Community 1104"
+Cohesion: 0.33
+Nodes (4): __dirname, requireFromWeb, supabase, webPkg
+
+### Community 1105 - "Community 1105"
+Cohesion: 0.33
+Nodes (5): Explaining Package Managers, Next Steps, Phase 01 Report: Install Component Fix, Summary of Changes, Verification
+
+### Community 1106 - "Community 1106"
+Cohesion: 0.25
+Nodes (7): Next action, Phase 03 — Inner-PVL Iteration 001, Residuals, The contradiction this phase had to resolve first, Two agents disagreed; the orchestrator checked, What cycle 1 found, What was checked and found clean
+
+### Community 1107 - "Community 1107"
+Cohesion: 0.40
+Nodes (4): Blockers and Decisions, Execution Facts, Next Steps, Phase 02 Execution Report: Copy AI Prompt Upgrade
+
+### Community 1108 - "Community 1108"
+Cohesion: 0.40
+Nodes (4): Execution Facts, Net Gate, Phase 03 — Shadcn Primitives Integration Execution Report, Verification & Tests
+
+### Community 1109 - "Community 1109"
+Cohesion: 0.60
+Nodes (4): getContestRounds(), getWeekData(), Params, WeekArchivePage()
+
+### Community 1110 - "Community 1110"
+Cohesion: 0.22
+Nodes (8): append(), bs(), e(), It(), ps(), Qr(), So(), us()
+
+### Community 1111 - "Community 1111"
 Cohesion: 0.83
 Nodes (3): addToAudience(), addToMagicWaitlist(), addToNewsletter()
 
-### Community 1092 - "Community 1092"
-Cohesion: 0.50
-Nodes (4): 1.A Dial Inference (design read → dial values), 1.B Use-Case Presets, 1.C How the Dials Drive Output, 1. THE THREE DIALS (Core Configuration)
-
-### Community 1093 - "Community 1093"
+### Community 1113 - "Community 1113"
 Cohesion: 0.50
 Nodes (3): addVariablesForColors(), {
   default: flattenColorPalette,
 }, plugin
 
-### Community 1094 - "Community 1094"
+### Community 1121 - "Community 1121"
+Cohesion: 0.10
+Nodes (21): addItem(), ap(), at(), bp(), Do(), Es(), getGlobalOmit(), gt() (+13 more)
+
+### Community 1122 - "Community 1122"
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 01 — Initialization & Stability Fixes, Phase Loop Progress, Public Contracts (+7 more)
+
+### Community 1123 - "Community 1123"
+Cohesion: 0.12
+Nodes (15): Blast Radius, Blockers That Would Justify BLOCKED Status, Entry Gate, Exit Gate, Implementation Checklist, Phase 02 — Editor Defaults & File Explorer UX, Phase Loop Progress, Public Contracts (+7 more)
+
+### Community 1125 - "Community 1125"
+Cohesion: 0.29
+Nodes (6): Commands Executed, Findings and Learnings, Next Actions, Phase 01 Report — Uniform Cards, Purpose, Regression Check
+
+### Community 1126 - "Community 1126"
+Cohesion: 0.29
+Nodes (6): Archiving, Completed Phases, Drift & Learnings, End of Program, Executive Summary, Program Closeout — sandbox-stability
+
+### Community 1128 - "Community 1128"
+Cohesion: 0.40
+Nodes (4): Next Steps, Phase 1 Schema Updates Report, Summary of Updates, Validation Results
+
+### Community 1129 - "Community 1129"
+Cohesion: 0.40
+Nodes (4): Hand-off Notes, Phase 02 — Interactive Previews Report, Summary, Verification
+
+### Community 1130 - "Community 1130"
+Cohesion: 0.40
+Nodes (4): Hand-off Notes, Phase 03 — Wave Glow Report, Summary, Verification
+
+### Community 1132 - "Community 1132"
+Cohesion: 0.11
+Nodes (18): Blast Radius Changes, Closeout Packet, Commands to Stay Green, Dependency Changes, Follow-up Artifacts Created, Forward Preview, Phase 06 — Schema Source of Truth — EXECUTE Report, Plan Deviations (+10 more)
+
+### Community 1133 - "Community 1133"
+Cohesion: 0.50
+Nodes (3): EVL Handoff Summary, Next Steps, Phase 01 — Initialization & Stability Fixes
+
+### Community 1134 - "Community 1134"
+Cohesion: 0.50
+Nodes (3): EVL Handoff Summary, Next Steps, Phase 02 — Editor Defaults & File Explorer UX
+
+### Community 1142 - "Community 1142"
+Cohesion: 0.40
+Nodes (4): Autonomous /goal Behavior, Diff-Aware Mode (Default), Project Test Configuration, Report Output
+
+### Community 1145 - "Community 1145"
+Cohesion: 0.50
+Nodes (3): Learnings & Next Steps, Phase 02 — Compilation Pipeline Report, Summary of Execution
+
+### Community 1231 - "Community 1231"
+Cohesion: 0.03
+Nodes (60): MobileControls(), useIntersectionObserver(), UseIntersectionObserverProps, useIsMobile(), useMediaQuery(), ClapIcon(), clapVariants, variants (+52 more)
+
+### Community 1239 - "Community 1239"
+Cohesion: 0.20
+Nodes (9): Gates, Phase 05 — EVL Iteration 001, Residual, Test, The defect, The fix, and why the reviewer's own suggestion was rejected, What this cycle says about the process, Why it was missed, and the durable correction (+1 more)
+
+### Community 1264 - "Community 1264"
+Cohesion: 0.11
+Nodes (17): Added — 3 real functions, Added — `public_profiles` (view) and `rate_limits` (table), Constraints honoured, Corrected — 2 stale signatures, Deleted — 35 phantom functions, Deleted — 7 phantom views, Deliberately not touched, Follow-ups for backlog (not done here) (+9 more)
+
+### Community 1351 - "Community 1351"
+Cohesion: 0.07
+Nodes (27): After, `apps/web/lib/stripe.ts` — narrow lazy-init fix (D1), Baselines re-measured at session start (both matched the contract exactly), Closeout Finalization (UPDATE PROCESS, 29-07-26), Closeout Packet, Corrected framing — what the guard's blast radius actually is, `.env.example` (E1), EVL Fix Cycle 1 (+19 more)
+
+### Community 1493 - "Community 1493"
+Cohesion: 0.13
+Nodes (14): Diff Against `apps/web/types/supabase.ts`, Full Sorted Lists, Functions — 69 declared in types.ts (not ~70 — see correction below) vs 37 distinct live names, Functions (public schema, live) — 37 distinct names, 38 signatures, Live Schema Inventory — `supabase-interconnect` Phase 6, Open Question — Settled, Tables — 40 declared in types.ts vs 42 live (41 reconciled), Tables (public schema, live, base tables only) — 42 raw / 41 reconciled (+6 more)
+
+### Community 1865 - "Community 1865"
+Cohesion: 0.06
+Nodes (27): FileEntry, FileTreeProps, HelpProps, KeyboardKey(), KeyboardKeyProps, createNewSandbox(), metadata, SettingsLayoutProps (+19 more)
+
+### Community 2137 - "Community 2137"
+Cohesion: 0.29
+Nodes (6): Backlog — Playwright e2e suite has no working baseline, Fix options (not attempted this phase — needs its own scoped decision), Recommendation, Root cause (two families, both foreign to this program), What, Why this matters going forward
+
+### Community 2138 - "Community 2138"
+Cohesion: 0.29
+Nodes (6): Related, `types.ts` regeneration blocked on Supabase CLI authentication, What a human needs to do, What can then be done unattended, What is blocked, Why
+
+### Community 2574 - "Community 2574"
+Cohesion: 0.33
+Nodes (5): Backlog — No alerting on billing provider-guard conflicts, Status, Suggested resolution (future task, not scoped), What, Why it's a risk
+
+### Community 2575 - "Community 2575"
+Cohesion: 0.33
+Nodes (5): Backlog — Silent Stripe version-mixing proxy (`apps/web/lib/stripe.ts`), Status, Suggested resolution (future task, not scoped), What, Why it's a risk
+
+### Community 2581 - "Community 2581"
+Cohesion: 0.33
+Nodes (5): Not done here because, Recommended fix (future phase / standalone task), Remove the `get-invoices` `meta.stripe_customer_id` backfill entirely (A4 deprecation), What exists today, Why this is worth revisiting
+
+### Community 2695 - "Community 2695"
+Cohesion: 0.33
+Nodes (5): Files Modified, Learnings & Next Steps, Phase 03 — Frontend Integration Report, Summary of Execution, Test Results
+
+### Community 2715 - "Community 2715"
+Cohesion: 0.43
+Nodes (5): EditorPane, EditorPaneOriginal(), EditorPaneProps, getFileExtension(), getMonacoLanguage()
+
+### Community 2775 - "Community 2775"
+Cohesion: 0.20
+Nodes (9): Ba(), ed(), Fa(), ja(), mi(), qa(), tt(), Ua() (+1 more)
+
+### Community 2786 - "Community 2786"
+Cohesion: 0.33
+Nodes (5): Evidence, Next step, Two live-called RPCs have no tracked SQL definition, Two possible states, both worth knowing, Why it was not resolved
+
+### Community 2834 - "Community 2834"
+Cohesion: 0.33
+Nodes (5): Detail, Fix, Impact, `SubmissionCard.tsx` dashboard deep-link table IDs are unverified, Why it was not fixed
+
+### Community 2846 - "Community 2846"
+Cohesion: 0.33
+Nodes (5): Outcome, Phase 06 — Inner-PVL Iteration 001, What the cycle checked and found sound, What this cycle found, Why the CONDITIONAL was accepted rather than supplemented again
+
+### Community 2882 - "Community 2882"
+Cohesion: 0.20
+Nodes (8): AGENT_NAME_TOKENS, agentFiles, CATALOG_CANDIDATES, failures, registeredSkills, result, root, warnings
+
+### Community 2887 - "Community 2887"
+Cohesion: 0.40
+Nodes (4): Backlog — generalize the default-privileges trap found during Phase 1 live apply, Related, What is needed, What was found
+
+### Community 3020 - "Community 3020"
+Cohesion: 0.19
+Nodes (9): metadata, RootLayout(), viewport, AppProviders(), RECORDED_ROUTES, SessionRecorder(), initPostHog(), Toaster() (+1 more)
+
+### Community 3478 - "Community 3478"
 Cohesion: 0.67
 Nodes (3): Hn(), n(), Ve()
 
+### Community 3525 - "Community 3525"
+Cohesion: 0.04
+Nodes (64): DeleteComponentDialogProps, DeleteMode, PayoutStats, AuthorStats, partnerModalOpenAtom, TermsDialog(), TermsDialogProps, ConfirmationDialogProps (+56 more)
+
 ## Knowledge Gaps
-- **12205 isolated node(s):** `HOOK_DIR`, `REPO_ROOT`, `ROUTES`, `$schema`, `SessionStart` (+12200 more)
+- **12754 isolated node(s):** `HOOK_DIR`, `REPO_ROOT`, `ROUTES`, `$schema`, `SessionStart` (+12749 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **206 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **215 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `x()` connect `get() Cluster` to `library Cluster`, `write() Cluster`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
 - **Why does `$c()` connect `library Cluster` to `supabase Cluster`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **Why does `qn()` connect `supabase Cluster` to `library Cluster`, `react-native Cluster`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+- **Why does `Button` connect `Community 3525` to `Button Cluster`, `useClerkSupabaseClient() Cluster`, `Workflow Steps Cluster`, `Community 1865`, `page Cluster`, `Icons Cluster`, `dependencies Cluster`, `cn() Cluster`, `Community 44`, `publish-layout Cluster`, `page Cluster`, `command-menu Cluster`, `runInChildSpan() Cluster`, `getBrowser() Cluster`, `editor-state Cluster`, `Community 1231`, `sidebar Cluster`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `useClerkSupabaseClient()` (e.g. with `useIsCheckSlugAvailable()` and `usePrefillAutogeneratedSlug()`) actually correct?**
   _`useClerkSupabaseClient()` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `HOOK_DIR`, `REPO_ROOT`, `ROUTES` to the rest of the system?**
-  _12216 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _12765 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `index Cluster` be split into smaller, more focused modules?**
   _Cohesion score 0.0004816955684007707 - nodes in this community are weakly interconnected._
 - **Should `library Cluster` be split into smaller, more focused modules?**

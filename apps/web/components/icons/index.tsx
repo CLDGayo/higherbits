@@ -378,10 +378,12 @@ export const Icons = {
       <path d="M5 3.5L11 8L5 12.5V3.5Z" fill="currentColor" />
     </svg>
   ),
-  claudeLogo: (props: LucideProps) => (
-    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" {...props}>
-      <path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" />
-    </svg>
+  claudeLogo: ({ className }: LucideProps) => (
+    <img
+      src="/logos/claude.png"
+      alt="Claude"
+      className={className}
+    />
   ),
   codexLogo: (props: LucideProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" {...props}>
@@ -395,30 +397,11 @@ export const Icons = {
       className={className}
     />
   ),
-  goHighLevelLogo: (props: LucideProps) => (
-    <svg viewBox="-10 -10 490 120" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      {/* Yellow Arrow */}
-      <path d="M20,0 L0,20 L20,20 Z" fill="#FFCA28" />
-      <path d="M10,20 L20,20 L20,100 L10,100 Z" fill="#FFCA28" />
-      <path d="M20,0 L40,20 L20,20 Z" fill="#FFB300" />
-      <path d="M20,20 L30,20 L30,100 L20,100 Z" fill="#FFB300" />
-
-      {/* Blue Arrow */}
-      <path d="M50,30 L30,50 L50,50 Z" fill="#42A5F5" />
-      <path d="M40,50 L50,50 L50,100 L40,100 Z" fill="#42A5F5" />
-      <path d="M50,30 L70,50 L50,50 Z" fill="#1E88E5" />
-      <path d="M50,50 L60,50 L60,100 L50,100 Z" fill="#1E88E5" />
-
-      {/* Green Arrow */}
-      <path d="M80,0 L60,20 L80,20 Z" fill="#66BB6A" />
-      <path d="M70,20 L80,20 L80,100 L70,100 Z" fill="#66BB6A" />
-      <path d="M80,0 L100,20 L80,20 Z" fill="#43A047" />
-      <path d="M80,20 L90,20 L90,100 L80,100 Z" fill="#43A047" />
-
-      {/* Text */}
-      <text x="115" y="85" fontFamily="Inter, system-ui, sans-serif" fontSize="76" fontWeight="800" fill="currentColor" letterSpacing="-2.5">
-        HighLevel
-      </text>
-    </svg>
+  goHighLevelLogo: ({ className }: LucideProps) => (
+    <img
+      src="/logos/gohighlevel.png"
+      alt="GoHighLevel"
+      className={className}
+    />
   ),
 }

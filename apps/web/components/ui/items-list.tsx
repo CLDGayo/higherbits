@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation"
 import React from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { toast } from "sonner"
-import { ComponentPreviewDialog } from "../features/component-page/preview-dialog"
+import { useUser } from "@clerk/nextjs"
 import { ComponentCard } from "../features/list-card/card"
 import { tagPageSearchAtom } from "../features/tag-page/tag-page-header"
 import { ComponentCardSkeleton } from "./skeletons"
@@ -312,6 +312,7 @@ function useSearchDemos(
             const demoComponent: DemoWithComponent = {
               bundle_hash: null,
               bundle_html_url: null,
+              ghl_html_content: null,
               compiled_css: "",
               component_id: componentData.id,
               created_at: result.created_at || null,
@@ -404,6 +405,9 @@ export function ComponentsList({
   const [selectedDemo, setSelectedDemo] =
     React.useState<DemoWithComponent | null>(null)
   const [isPreviewDialogOpen, setIsPreviewDialogOpen] = React.useState(false)
+
+  const { user } = useUser()
+  const supabaseClient = useClerkSupabaseClient()
 
   let rawComponents: DemoWithComponent[] | undefined
   let isLoading = false
@@ -622,19 +626,8 @@ export function ComponentsList({
               <ComponentCard
                 key={`${component.id}-${component.updated_at}`}
                 demo={component}
-                onClick={() => {
-                  if (
-                    component.bundle_url?.html &&
-                    false // TODO: Temporary disable previews
-                  ) {
-                    setSelectedDemo(component)
-                    setIsPreviewDialogOpen(true)
-                  } else {
-                    router.push(
-                      `/${component.user.username}/${component.component.component_slug}/${component.demo_slug}`,
-                    )
-                  }
-                }}
+                currentUser={user}
+                supabaseClient={supabaseClient}
                 onCtrlClick={(url) => {
                   window.open(url, "_blank")
                   toast.success(
@@ -657,18 +650,7 @@ export function ComponentsList({
           <Loader2 className="h-5 w-5 animate-spin text-foreground/20 -mt-6" />
         </div>
       )}
-
-      {/* Preview Dialog */}
-      {selectedDemo && (
-        <ComponentPreviewDialog
-          isOpen={isPreviewDialogOpen}
-          onClose={() => {
-            setIsPreviewDialogOpen(false)
-          }}
-          demo={selectedDemo}
-        />
-      )}
-    </>
+</>
   )
 }
 

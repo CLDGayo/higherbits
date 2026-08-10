@@ -498,6 +498,8 @@ export const useSubmitComponent = () => {
       | "downloads_count"
       | "likes_count"
       | "views_count"
+      | "bundle_hash"
+      | "bundle_html_url"
       | "version"
       | "hunter_username"
       | "payment_url"

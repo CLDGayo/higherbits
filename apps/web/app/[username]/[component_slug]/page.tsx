@@ -101,6 +101,10 @@ const fetchFileTextContent = async (url: string | null | undefined) => {
     console.error("Empty URL provided to fetchFileTextContent")
     return { data: null, error: new Error("Empty URL provided") }
   }
+  const isUrl = url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")
+  if (!isUrl) {
+    return { data: url, error: null }
+  }
   const filename = url.split("/").slice(-1)[0]
   try {
     const response = await fetch(url)
@@ -132,7 +136,13 @@ export default async function ComponentPageServer(props: {
     redirect("/")
   }
 
-  const { userId } = await auth()
+  let userId: string | null = null
+  try {
+    const authResult = await auth()
+    userId = authResult.userId
+  } catch (e) {
+    console.warn("Clerk auth() failed (likely due to parallel route interception):", e)
+  }
   const demo_slug = params.demo_slug || "default"
 
   try {

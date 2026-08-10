@@ -53,11 +53,19 @@ export async function resolveRegistryDependenciesV2(
     visitedSlugs.add(fullSlug)
 
     const parts = fullSlug.split("/")
-    if (parts.length !== 2) {
+    let author: string
+    let componentSlug: string
+
+    if (parts.length === 1) {
+      author = "shadcn"
+      componentSlug = parts[0]!
+    } else if (parts.length === 2) {
+      author = parts[0]!
+      componentSlug = parts[1]!
+    } else {
       console.error("Invalid authorSlug format:", fullSlug)
       continue
     }
-    const [author, componentSlug] = parts
 
     if (!author || !componentSlug) {
       console.error("Author or componentSlug is missing after split:", fullSlug)
@@ -98,17 +106,19 @@ export async function resolveRegistryDependenciesV2(
     const globalCssUrl = newComponent.global_css_extension
     const tailwindConfigUrl = newComponent.tailwind_config_extension
 
-    const fetchR2Asset = async (url: string | null) => {
-      if (!url) {
+    const fetchR2Asset = async (urlOrCode: string | null) => {
+      if (!urlOrCode) {
         return null
       }
-      const response = await fetch(url)
-      if (!response.ok) {
-        console.error("Error fetching R2 asset:", response.statusText, url)
-        return null
+      if (urlOrCode.startsWith("http://") || urlOrCode.startsWith("https://")) {
+        const response = await fetch(urlOrCode)
+        if (!response.ok) {
+          console.error("Error fetching R2 asset:", response.statusText, urlOrCode)
+          return null
+        }
+        return await response.text()
       }
-      const code = await response.text()
-      return code
+      return urlOrCode
     }
 
     const [code, globalCss, tailwindConfig] = await Promise.all([
@@ -120,10 +130,23 @@ export async function resolveRegistryDependenciesV2(
     const dependenciesRaw = newComponent.dependencies
     let dependencies: Record<string, string> = {}
     if (typeof dependenciesRaw === "object" && dependenciesRaw !== null) {
-      dependencies = dependenciesRaw as Record<string, string>
+      if (Array.isArray(dependenciesRaw)) {
+        dependenciesRaw.forEach((dep) => {
+          if (typeof dep === "string") dependencies[dep] = "latest"
+        })
+      } else {
+        dependencies = dependenciesRaw as Record<string, string>
+      }
     } else if (typeof dependenciesRaw === "string") {
       try {
-        dependencies = JSON.parse(dependenciesRaw)
+        const parsed = JSON.parse(dependenciesRaw)
+        if (Array.isArray(parsed)) {
+          parsed.forEach((dep) => {
+            if (typeof dep === "string") dependencies[dep] = "latest"
+          })
+        } else {
+          dependencies = parsed
+        }
       } catch (e) {
         console.error("Error parsing dependencies:", e)
       }

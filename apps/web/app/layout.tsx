@@ -37,49 +37,14 @@ export const viewport = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode
+  modal?: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("font-sans [scrollbar-gutter:stable]")}>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Suppress React DevTools and Clerk dev warnings
-              const originalWarn = console.warn;
-              const originalLog = console.log;
-              const originalInfo = console.info;
-
-              function suppressMessages(originalFn) {
-                return function(...args) {
-                  if (typeof args[0] === 'string' && (
-                    args[0].includes('Clerk has been loaded with development keys') ||
-                    args[0].includes('Download the React DevTools')
-                  )) {
-                    return;
-                  }
-                  originalFn.apply(console, args);
-                };
-              }
-
-              console.warn = suppressMessages(originalWarn);
-              console.log = suppressMessages(originalLog);
-              console.info = suppressMessages(originalInfo);
-
-              // Fix Radix UI handleScroll Node contains error when interacting with iframes
-              if (typeof Node !== 'undefined' && Node.prototype && Node.prototype.contains) {
-                const originalContains = Node.prototype.contains;
-                Node.prototype.contains = function(node) {
-                  if (node && !(node instanceof Node)) {
-                    return false;
-                  }
-                  return originalContains.call(this, node);
-                };
-              }
-            `,
-          }}
-        />
         <div className="h-full">
           <ThemeProvider
             attribute="class"
@@ -91,6 +56,7 @@ export default function RootLayout({
               <AppProviders>
                 <SessionRecorder />
                 {children}
+                {modal}
               </AppProviders>
             </TooltipProvider>
             <Toaster />
