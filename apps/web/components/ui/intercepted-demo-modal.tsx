@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType } from "@/types/global"
 import { useState, useEffect } from "react"
-import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp } from "lucide-react"
+import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
@@ -35,7 +35,14 @@ const selectedPromptTypeAtom = atomWithStorage<PromptType>(
 // compute it, and this modal never reads it — so it is optional here rather
 // than required. Widening the global type instead would hide its absence
 // in the places that genuinely do need it.
-export function InterceptedDemoModal({ demo, componentDemos, hasPurchased = false }: { demo: Omit<DemoWithComponent, "view_count"> & { view_count?: number | null }, componentDemos: any[], hasPurchased?: boolean }) {
+// `componentDemos` is optional so callers that hold a single demo (the studio
+// components list) can reuse this modal without making a second query purely to
+// populate the demo-switcher; it simply does not render when empty.
+//
+// `onClose` exists because the default close behaviour is `router.back()`, which
+// is right for the intercepting route but would navigate a state-driven caller
+// backwards out of its own page.
+export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased = false, onClose }: { demo: Omit<DemoWithComponent, "view_count"> & { view_count?: number | null }, componentDemos?: any[], hasPurchased?: boolean, onClose?: () => void }) {
   const router = useRouter()
   const { resolvedTheme } = useTheme()
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("light")
@@ -69,7 +76,8 @@ export function InterceptedDemoModal({ demo, componentDemos, hasPurchased = fals
 
   function handleOpenChange(open: boolean) {
     if (!open) {
-      router.back()
+      if (onClose) onClose()
+      else router.back()
     }
   }
 
@@ -201,29 +209,44 @@ export function InterceptedDemoModal({ demo, componentDemos, hasPurchased = fals
           {/* Top Right Dropdown & Fullscreen */}
           <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-2">
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 cursor-pointer hover:bg-background/90 transition-colors">
-                  <Code2 className="w-3.5 h-3.5 text-blue-500" />
-                  <span className="truncate max-w-[200px]">{!demo.name || demo.name === "Default" ? "demo.tsx" : demo.name}</span>
-                  <ChevronDown size={14} className="opacity-70" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-xl border-border/50">
-                <DropdownMenuLabel>Select Demo</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {componentDemos.map(d => (
-                  <DropdownMenuItem key={d.id} asChild className="cursor-pointer">
-                    <Link href={`/${d.component.user.display_username || d.component.user.username}/${d.component.component_slug}/${d.demo_slug || 'default'}`} replace>
-                      <Code2 className="w-3.5 h-3.5 text-blue-500 mr-2" />
-                      {!d.name || d.name === "Default" ? "demo.tsx" : d.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {componentDemos.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 cursor-pointer hover:bg-background/90 transition-colors">
+                    <Code2 className="w-3.5 h-3.5 text-blue-500" />
+                    <span className="truncate max-w-[200px]">{!demo.name || demo.name === "Default" ? "demo.tsx" : demo.name}</span>
+                    <ChevronDown size={14} className="opacity-70" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-xl border-border/50">
+                  <DropdownMenuLabel>Select Demo</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {componentDemos.map(d => (
+                    <DropdownMenuItem key={d.id} asChild className="cursor-pointer">
+                      <Link href={`/${d.component.user.display_username || d.component.user.username}/${d.component.component_slug}/${d.demo_slug || 'default'}`} replace>
+                        <Code2 className="w-3.5 h-3.5 text-blue-500 mr-2" />
+                        {!d.name || d.name === "Default" ? "demo.tsx" : d.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
             <TooltipProvider>
+              {/* The iframe has always accepted a `?theme=` param, but nothing
+                  ever let the viewer change it - `setPreviewTheme` was only
+                  called by the effect mirroring the global theme. This toggles
+                  the preview alone, not the page. */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => setPreviewTheme(previewTheme === "dark" ? "light" : "dark")} className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground p-1.5 rounded-full shadow-lg hover:bg-background/90 transition-colors">
+                    {previewTheme === "dark" ? <Moon size={14} className="opacity-70" /> : <Sun size={14} className="opacity-70" />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{previewTheme === "dark" ? "Light preview" : "Dark preview"}</TooltipContent>
+              </Tooltip>
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button onClick={() => setIsFullscreen(!isFullscreen)} className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground p-1.5 rounded-full shadow-lg hover:bg-background/90 transition-colors">
