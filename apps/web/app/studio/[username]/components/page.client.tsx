@@ -25,6 +25,7 @@ import { useClerkSupabaseClient } from "@/lib/clerk"
 import { toast } from "sonner"
 import { SuccessDialog } from "@/components/features/publish/components/success-dialog"
 import { studioBasePath } from "@/components/features/studio/nav-config"
+import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
 
 const CREATE_OPTIONS = [
   {
@@ -173,6 +174,19 @@ export function StudioUsernameClient({
     router.push(`${studioBase}/sandbox/${shortSandboxId}`)
   }
 
+  // Row click for anything that is not a draft. Rendered from local state rather
+  // than by pushing the public URL, so the studio stays mounted underneath and
+  // closing returns here instead of unwinding browser history.
+  const [previewDemo, setPreviewDemo] =
+    useState<ExtendedDemoWithComponent | null>(null)
+
+  // "Edit Details" has no dedicated surface in the codebase yet, so it opens the
+  // sandbox editor - the only existing place a creator can change a component.
+  // Retargeting it is a Phase 07 concern.
+  const handleEditDetails = (demo: ExtendedDemoWithComponent) => {
+    handleOpenSandbox(demo.component?.sandbox_id || String(demo.id))
+  }
+
   const handleUpdateVisibility = async (
     componentId: number,
     isPrivate: boolean,
@@ -315,12 +329,23 @@ export function StudioUsernameClient({
         <DemosTable
           demos={localDemos}
           onOpenSandbox={handleOpenSandbox}
+          onPreview={setPreviewDemo}
+          onEdit={isOwnProfile || isAdmin ? handleEditDetails : undefined}
           onUpdateVisibility={
             isOwnProfile || isAdmin ? handleUpdateVisibility : undefined
           }
           isOwnProfile={isOwnProfile || isAdmin}
         />
       </div>
+      {previewDemo && (
+        <InterceptedDemoModal
+          // Remounts on row change so the iframe reloads rather than showing
+          // the previous component's preview.
+          key={String(previewDemo.id)}
+          demo={previewDemo as any}
+          onClose={() => setPreviewDemo(null)}
+        />
+      )}
       <SuccessDialog
         isOpen={showSuccessDialog}
         onOpenChange={setShowSuccessDialog}
