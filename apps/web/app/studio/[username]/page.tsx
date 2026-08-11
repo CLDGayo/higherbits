@@ -1,3 +1,4 @@
+import { getStudioOverviewData } from "@/components/features/studio/overview/overview-data"
 import { getUserData } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { auth } from "@clerk/nextjs/server"
@@ -60,5 +61,11 @@ export default async function StudioOverviewPage({
     redirect("/studio")
   }
 
-  return <StudioOverviewClient user={user} />
+  // Analytics are fetched here, after the ownership check above. The RPC is
+  // SECURITY DEFINER with no internal authorisation - it trusts whatever
+  // p_user_id it is handed - so this gate is the only thing standing between a
+  // caller and someone else's numbers.
+  const overview = await getStudioOverviewData(user.id)
+
+  return <StudioOverviewClient user={user} overview={overview} />
 }
