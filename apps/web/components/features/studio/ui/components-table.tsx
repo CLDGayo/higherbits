@@ -4,7 +4,6 @@ import { DbLinks } from "@/components/features/admin/db-links"
 import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   Pagination,
@@ -58,10 +57,7 @@ import {
   ChevronUp,
   ExternalLink,
   InfoIcon,
-  LayoutGrid,
-  List,
   Pencil,
-  Search,
   Trash2,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -78,6 +74,7 @@ import {
   statusLabel,
   statusPillClass,
 } from "./component-status"
+import { StudioToolbar } from "./studio-toolbar"
 import { VisibilityToggle } from "./visibility-toggle"
 
 interface DemosTableProps {
@@ -368,6 +365,11 @@ export function DemosTable({
   // extra query - `submission_status` is present on every row.
   const tabCounts = useMemo(() => countByTab(safeData), [safeData])
 
+  const toolbarTabs = useMemo(
+    () => STUDIO_TABS.map((tab) => ({ ...tab, count: tabCounts[tab.id] })),
+    [tabCounts],
+  )
+
   const visibleRows = useMemo(
     () =>
       filterByTab(safeData, activeTab).filter((demo) =>
@@ -601,86 +603,17 @@ export function DemosTable({
 
   return (
     <div className="space-y-4">
-      {/* Toolbar */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div
-          role="tablist"
-          aria-label="Filter components by moderation state"
-          className="flex flex-wrap items-center gap-1 rounded-lg border border-border bg-muted/40 p-1"
-        >
-          {STUDIO_TABS.map((tab) => {
-            const isActive = tab.id === activeTab
-            return (
-              <button
-                key={tab.id}
-                role="tab"
-                type="button"
-                aria-selected={isActive}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors",
-                  isActive
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {tab.label}
-                <span
-                  className={cn(
-                    "rounded px-1.5 py-0.5 text-xs tabular-nums",
-                    isActive
-                      ? "bg-muted text-foreground"
-                      : "bg-transparent text-muted-foreground",
-                  )}
-                >
-                  {tabCounts[tab.id]}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search
-              size={14}
-              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search components"
-              aria-label="Search components"
-              className="h-9 w-full pl-8 sm:w-64"
-            />
-          </div>
-
-          <div className="flex items-center rounded-lg border border-border p-0.5">
-            {(
-              [
-                { id: "list" as const, Icon: List, label: "List view" },
-                { id: "grid" as const, Icon: LayoutGrid, label: "Grid view" },
-              ]
-            ).map(({ id: viewId, Icon, label }) => (
-              <Button
-                key={viewId}
-                type="button"
-                variant="ghost"
-                size="icon"
-                aria-label={label}
-                aria-pressed={view === viewId}
-                onClick={() => setView(viewId)}
-                className={cn(
-                  "h-8 w-8",
-                  view === viewId && "bg-muted text-foreground",
-                )}
-              >
-                <Icon size={16} />
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <StudioToolbar
+        tabs={toolbarTabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        tabsLabel="Filter components by moderation state"
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Search components"
+        view={view}
+        onViewChange={setView}
+      />
 
       {view === "list" ? (
         <div className="rounded-lg border border-border bg-background overflow-auto">
