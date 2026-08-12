@@ -2,6 +2,8 @@ import { CollectionWithUser } from "@/types/global"
 import { UserAvatar } from "@/components/ui/user-avatar"
 import Link from "next/link"
 
+import { LibraryInstallCommand } from "./library-install-command"
+
 interface CollectionHeaderProps {
   collection: CollectionWithUser
 }
@@ -42,6 +44,11 @@ export function CollectionHeader({ collection }: CollectionHeaderProps) {
           </Link>
         </div>
       </div>
+
+      <LibraryInstallCommand
+        slug={collection.slug}
+        owner={collection.user_data}
+      />
     </div>
   )
 }
