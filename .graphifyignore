@@ -1,0 +1,9 @@
+# Patterns here use gitignore syntax and are merged on top of .gitignore.
+# graphify reads .gitignore first and this file last, so these win on conflict.
+# Adding a pattern here can only ever exclude more from the knowledge graph.
+
+# Generated Prisma client. index.d.ts alone is 3.2 MB and produced 6,836 nodes
+# — 34.3% of the entire graph — plus 5 of the 10 highest-degree "god nodes",
+# all of them minified runtime symbols ($(), T()). None of it is authored code,
+# and it crowded out apps/web, which was only 15.2% of its own project's graph.
+apps/web/prisma/client/
