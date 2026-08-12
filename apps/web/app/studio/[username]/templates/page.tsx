@@ -1,6 +1,6 @@
-import { StudioSectionPlaceholder } from "@/components/features/studio/ui/studio-section-placeholder"
+import { TemplatesClient } from "@/components/features/studio/templates/templates-client"
+import { listUserTemplates } from "@/lib/api/server/templates"
 import { authUsernameOrRedirect } from "@/lib/user"
-import { LayoutTemplate } from "lucide-react"
 
 export async function generateMetadata({
   params,
@@ -8,25 +8,36 @@ export async function generateMetadata({
   params: Promise<{ username: string }>
 }) {
   const { username } = await params
-  return { title: `Templates | Studio | HigherBits.dev`, description: `Templates for @${username}` }
+  return {
+    title: `Templates | Studio | HigherBits.dev`,
+    description: `Templates for @${username}`,
+  }
 }
 
+/**
+ * Server component on purpose.
+ *
+ * `templates`' live grant state was never version-controlled, so a browser read
+ * may or may not work - and `get_templates_v3` must not be used for an owner's
+ * own list regardless. See lib/api/server/templates.ts.
+ */
 export default async function StudioTemplatesPage({
   params,
 }: {
   params: Promise<{ username: string }>
 }) {
-  const { user } = await authUsernameOrRedirect(
+  const { user, isOwnProfile, isAdmin } = await authUsernameOrRedirect(
     (await params).username,
     "/studio",
   )
 
+  const templates = await listUserTemplates(user.id)
+
   return (
-    <StudioSectionPlaceholder
+    <TemplatesClient
       user={user}
-      title="Templates"
-      description="Full page and site templates you've published."
-      icon={LayoutTemplate}
+      initialTemplates={templates}
+      isOwnProfile={isOwnProfile || isAdmin}
     />
   )
 }
