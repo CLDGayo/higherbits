@@ -560,6 +560,20 @@ $$;
 
 -- ============ templates ============
 
+-- =====================================================================
+-- !!  NOT YET APPLIED TO THE LIVE DATABASE  !!
+-- =====================================================================
+-- Updated 2026-08-12. The `p_include_private` branch below is now gated on
+-- ownership, matching the sibling get_collections_v1 (line ~555 above).
+--
+-- This file is a tracked definition, not a migration, so editing it changes
+-- nothing on its own. Run this definition against the database, then verify
+-- that a signed-in caller requesting private rows receives only their own.
+--
+-- Until that is done, the live function's behaviour differs from what is
+-- written here. Rationale and verification steps: private engineering notes,
+-- Phase 06.
+-- =====================================================================
 CREATE OR REPLACE FUNCTION public.get_templates_v3(
   p_offset integer DEFAULT 0,
   p_limit integer DEFAULT 50,
@@ -602,7 +616,13 @@ AS $$
     COALESCE(t.likes_count, 0) AS likes_count
   FROM public.templates t
   JOIN public.users u ON u.id = t.user_id
-  WHERE (COALESCE(p_include_private, false) OR t.is_public = true)
+  WHERE (
+      t.is_public = true
+      OR (
+        COALESCE(p_include_private, false)
+        AND t.user_id = public.requesting_user_id()
+      )
+    )
     AND (
       p_tag_slug IS NULL
       OR EXISTS (
