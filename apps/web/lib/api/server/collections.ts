@@ -200,6 +200,44 @@ export const addComponentToLibrary = async (
   })
 }
 
+/**
+ * Membership is exclusive after this call: the component ends up in
+ * `collectionId` and in none of the caller's other libraries.
+ *
+ * The delete is scoped to `collections.user_id = userId`, not just to the
+ * component. A component can also sit in a library owned by someone else - a
+ * move out of yours must not silently evict it from theirs. Both statements run
+ * in one transaction so a failed insert cannot leave the component orphaned
+ * with no library at all.
+ */
+export const moveComponentToLibrary = async (
+  collectionId: string,
+  componentId: number,
+  userId: string,
+) => {
+  await assertOwned(collectionId, userId)
+
+  await prisma.$transaction([
+    prisma.components_to_collections.deleteMany({
+      where: {
+        component_id: componentId,
+        collection_id: { not: collectionId },
+        collections: { user_id: userId },
+      },
+    }),
+    prisma.components_to_collections.upsert({
+      where: {
+        collection_id_component_id: {
+          collection_id: collectionId,
+          component_id: componentId,
+        },
+      },
+      create: { collection_id: collectionId, component_id: componentId },
+      update: {},
+    }),
+  ])
+}
+
 export const removeComponentFromLibrary = async (
   collectionId: string,
   componentId: number,

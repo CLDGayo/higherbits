@@ -10,6 +10,7 @@ import {
   createLibrary,
   deleteLibrary,
   listUserLibraries,
+  moveComponentToLibrary,
   removeComponentFromLibrary,
   setLibraryPublished,
   updateLibrary,
@@ -121,6 +122,16 @@ export const addComponentToLibraryAction = async (
   const userId = await requireUserId()
   const { collectionId, componentId } = libraryComponentSchema.parse(input)
   await addComponentToLibrary(collectionId, componentId, userId)
+  return { success: true }
+}
+
+/** Exclusive membership: adds to `collectionId`, clears the caller's others. */
+export const moveComponentToLibraryAction = async (
+  input: z.infer<typeof libraryComponentSchema>,
+) => {
+  const userId = await requireUserId()
+  const { collectionId, componentId } = libraryComponentSchema.parse(input)
+  await moveComponentToLibrary(collectionId, componentId, userId)
   return { success: true }
 }
 
