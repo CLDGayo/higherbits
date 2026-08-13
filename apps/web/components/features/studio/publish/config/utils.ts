@@ -64,6 +64,8 @@ export const formSchema = z.object({
   slug_available: z.boolean().optional(),
   tailwind_config: z.string().optional(),
   globals_css: z.string().optional(),
+  library_id: z.string().optional(),
+  submit_for_featuring: z.boolean().default(true),
 })
 
 export type FormData = {
@@ -82,6 +84,8 @@ export type FormData = {
   slug_available?: boolean
   tailwind_config?: string
   globals_css?: string
+  library_id?: string
+  submit_for_featuring?: boolean
 }
 
 export type Demo = {

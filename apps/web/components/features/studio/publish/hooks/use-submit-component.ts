@@ -2,6 +2,7 @@ import { generateDemoSlug } from "@/components/features/publish/hooks/use-is-che
 import { useR2Upload } from "@/components/features/publish/hooks/use-r2-upload"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { addTagsToDemo } from "@/lib/queries"
+import { addComponentToLibraryAction } from "@/lib/api/collections"
 import { uploadToR2 } from "@/lib/r2"
 import { Tag } from "@/types/global"
 import { Tables } from "@/types/supabase"
@@ -65,6 +66,101 @@ type SubmissionProcessState = {
   demoSlug?: string
   isNewComponent: boolean
   componentRegistryJSON?: string
+}
+
+// Hoisted to module scope (behaviour unchanged - it only ever read its own
+// arguments) so the featuring and library-link branches are directly testable.
+export async function _stepManageSandboxLinkAndSubmission(
+  context: StepContext,
+  state: SubmissionProcessState,
+): Promise<SubmissionProcessState> {
+  const { componentIdToUse, sandboxData } = state
+
+  if (!componentIdToUse) {
+    throw new Error("Component ID is missing after create/update.")
+  }
+
+  // Link sandbox to component if it's a new component
+  if (state.isNewComponent) {
+    context.setPublishProgress("Linking sandbox to new component...")
+    const { error: updateSandboxError } = await context.supabase
+      .from("sandboxes")
+      .update({ component_id: componentIdToUse })
+      .eq("id", context.sandboxId)
+
+    if (updateSandboxError) {
+      console.error("Error updating sandbox link:", updateSandboxError)
+      toast.warning("Failed to link sandbox to the new component.")
+    }
+  }
+
+  // Create or update submission entry for catalog review
+  if (typeof componentIdToUse === "number" && context.form.submit_for_featuring) {
+    context.setPublishProgress("Ensuring submission status is on review…")
+
+    const { data: existingSubmission, error: submissionFetchError } =
+      await context.supabase
+        .from("submissions")
+        .select("id,status")
+        .eq("component_id", componentIdToUse)
+        .maybeSingle()
+
+    if (submissionFetchError && submissionFetchError.code !== "PGRST116") {
+      console.error("Error fetching submission:", submissionFetchError)
+      throw submissionFetchError
+    }
+
+    if (!existingSubmission) {
+      const { error: insertError } = await context.supabase
+        .from("submissions")
+        .insert({ component_id: componentIdToUse, status: "on_review" })
+
+      if (insertError) {
+        console.error("Error inserting submission:", insertError)
+        throw insertError
+      }
+    } else {
+      const { error: updateError } = await context.supabase
+        .from("submissions")
+        .update({ status: "on_review", moderators_feedback: null })
+        .eq("id", existingSubmission.id)
+
+      if (updateError) {
+        console.error("Error updating submission:", updateError)
+        throw updateError
+      }
+    }
+  }
+
+  // Update sandbox link if needed
+  if (!sandboxData?.component_id) {
+    context.setPublishProgress("Updating sandbox link...")
+    const { error: updateSandboxError } = await context.supabase
+      .from("sandboxes")
+      .update({ component_id: componentIdToUse })
+      .eq("id", context.sandboxId)
+
+    if (updateSandboxError) {
+      console.error("Error updating sandbox link:", updateSandboxError)
+      toast.warning("Failed to update sandbox component link.")
+    }
+  }
+
+  // Link to library if selected
+  if (context.form.library_id) {
+    context.setPublishProgress("Linking to library...")
+    try {
+      await addComponentToLibraryAction({
+        collectionId: context.form.library_id,
+        componentId: componentIdToUse,
+      })
+    } catch (error) {
+      console.error("Error linking to library:", error)
+      toast.warning("Failed to link component to the selected library.")
+    }
+  }
+
+  return state
 }
 
 export const useSubmitComponent = () => {
@@ -601,85 +697,6 @@ export const useSubmitComponent = () => {
     }
   }
 
-  async function _stepManageSandboxLinkAndSubmission(
-    context: StepContext,
-    state: SubmissionProcessState,
-  ): Promise<SubmissionProcessState> {
-    const { componentIdToUse, sandboxData } = state
-
-    if (!componentIdToUse) {
-      throw new Error("Component ID is missing after create/update.")
-    }
-
-    // Link sandbox to component if it's a new component
-    if (state.isNewComponent) {
-      context.setPublishProgress("Linking sandbox to new component...")
-      const { error: updateSandboxError } = await context.supabase
-        .from("sandboxes")
-        .update({ component_id: componentIdToUse })
-        .eq("id", context.sandboxId)
-
-      if (updateSandboxError) {
-        console.error("Error updating sandbox link:", updateSandboxError)
-        toast.warning("Failed to link sandbox to the new component.")
-      }
-    }
-
-    // Create or update submission entry for private components
-    if (typeof componentIdToUse === "number") {
-      context.setPublishProgress("Ensuring submission status is on review…")
-
-      const { data: existingSubmission, error: submissionFetchError } =
-        await context.supabase
-          .from("submissions")
-          .select("id,status")
-          .eq("component_id", componentIdToUse)
-          .maybeSingle()
-
-      if (submissionFetchError && submissionFetchError.code !== "PGRST116") {
-        console.error("Error fetching submission:", submissionFetchError)
-        throw submissionFetchError
-      }
-
-      if (!existingSubmission) {
-        const { error: insertError } = await context.supabase
-          .from("submissions")
-          .insert({ component_id: componentIdToUse, status: "on_review" })
-
-        if (insertError) {
-          console.error("Error inserting submission:", insertError)
-          throw insertError
-        }
-      } else {
-        const { error: updateError } = await context.supabase
-          .from("submissions")
-          .update({ status: "on_review", moderators_feedback: null })
-          .eq("id", existingSubmission.id)
-
-        if (updateError) {
-          console.error("Error updating submission:", updateError)
-          throw updateError
-        }
-      }
-    }
-
-    // Update sandbox link if needed
-    if (!sandboxData?.component_id) {
-      context.setPublishProgress("Updating sandbox link...")
-      const { error: updateSandboxError } = await context.supabase
-        .from("sandboxes")
-        .update({ component_id: componentIdToUse })
-        .eq("id", context.sandboxId)
-
-      if (updateSandboxError) {
-        console.error("Error updating sandbox link:", updateSandboxError)
-        toast.warning("Failed to update sandbox component link.")
-      }
-    }
-
-    return state
-  }
-
   async function _stepUpsertDemo(
     context: StepContext,
     state: SubmissionProcessState,
@@ -920,18 +937,6 @@ export const useSubmitComponent = () => {
       // Final success handling
       setPublishProgress("Done!")
       setIsSuccessDialogOpen(true)
-
-      // Check submission status for private components
-      if (
-        !data.is_public &&
-        typeof submissionState.componentIdToUse === "number"
-      ) {
-        await client
-          .from("submissions")
-          .select()
-          .eq("component_id", submissionState.componentIdToUse)
-          .maybeSingle()
-      }
     } catch (error) {
       console.error("Error submitting component:", error)
       toast.error(

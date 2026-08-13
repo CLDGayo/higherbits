@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/accordion"
 import { DemoDetailsForm } from "@/components/features/studio/publish/components/forms/demo-form"
 import { useSubmitComponent } from "@/components/features/studio/publish/hooks/use-submit-component"
+import { PublishStageForm } from "@/components/features/studio/publish/publish-stage-form"
 
 type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 
@@ -82,7 +83,6 @@ function PublishClientPageContent({
       description: "",
       license: "",
       website_url: "",
-      is_public: false,
     },
   })
 
@@ -667,42 +667,11 @@ function PublishClientPageContent({
             )}
 
             {activeStage === "Publish" && (
-              <div className="p-6 h-full flex flex-col justify-center max-w-md mx-auto space-y-6">
-                <div className="text-center space-y-2">
-                  <h3 className="text-xl font-semibold text-foreground">Ready to publish</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Review your component details and publish it to the registry.
-                  </p>
-                </div>
-                
-                <div className="bg-muted/50 rounded-xl p-4 space-y-3 border border-border">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Name</span>
-                    <span className="font-medium text-foreground">{form.getValues().name || "Unnamed Component"}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Slug</span>
-                    <span className="font-medium text-foreground">{form.getValues().component_slug || "..."}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Registry</span>
-                    <span className="font-medium text-foreground">{form.getValues().registry || "..."}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Demos</span>
-                    <span className="font-medium text-foreground">{form.getValues().demos?.length || 0} configured</span>
-                  </div>
-                </div>
-
-                <Button 
-                  size="lg" 
-                  className="w-full rounded-full"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Publishing..." : "Publish Component"}
-                </Button>
-              </div>
+              <PublishStageForm
+                form={form}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+              />
             )}
           </div>
         </div>
