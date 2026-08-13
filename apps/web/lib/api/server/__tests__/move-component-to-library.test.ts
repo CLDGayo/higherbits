@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const findUnique = vi.fn()
-const deleteMany = vi.fn(() => ({ op: "deleteMany" }))
-const upsert = vi.fn(() => ({ op: "upsert" }))
+const deleteMany = vi.fn((_args: unknown) => ({ op: "deleteMany" }))
+const upsert = vi.fn((_args: unknown) => ({ op: "upsert" }))
 const $transaction = vi.fn(async (ops: unknown[]) => ops)
 
 vi.mock("server-only", () => ({}))
@@ -10,8 +10,8 @@ vi.mock("../../../prisma", () => ({
   default: {
     collections: { findUnique: (...args: unknown[]) => findUnique(...args) },
     components_to_collections: {
-      deleteMany: (...args: unknown[]) => deleteMany(...args),
-      upsert: (...args: unknown[]) => upsert(...args),
+      deleteMany: (args: unknown) => deleteMany(args),
+      upsert: (args: unknown) => upsert(args),
     },
     $transaction: (ops: unknown[]) => $transaction(ops),
   },
@@ -43,7 +43,7 @@ describe("moveComponentToLibrary", () => {
     await moveComponentToLibrary(LIBRARY_ID, 42, OWNER)
 
     expect(deleteMany).toHaveBeenCalledTimes(1)
-    expect(deleteMany.mock.calls[0][0]).toEqual({
+    expect(deleteMany.mock.calls[0]?.[0]).toEqual({
       where: {
         component_id: 42,
         collection_id: { not: LIBRARY_ID },
@@ -58,7 +58,7 @@ describe("moveComponentToLibrary", () => {
     await moveComponentToLibrary(LIBRARY_ID, 42, OWNER)
 
     expect(upsert).toHaveBeenCalledTimes(1)
-    expect(upsert.mock.calls[0][0]).toEqual({
+    expect(upsert.mock.calls[0]?.[0]).toEqual({
       where: {
         collection_id_component_id: {
           collection_id: LIBRARY_ID,
@@ -76,6 +76,6 @@ describe("moveComponentToLibrary", () => {
     // Both statements must commit together, or a failed add would leave the
     // component sitting in no library at all.
     expect($transaction).toHaveBeenCalledTimes(1)
-    expect($transaction.mock.calls[0][0]).toHaveLength(2)
+    expect($transaction.mock.calls[0]?.[0]).toHaveLength(2)
   })
 })
