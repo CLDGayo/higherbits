@@ -59,11 +59,10 @@ export function StudioHeader({ user }: StudioHeaderProps) {
           <Menu className="h-5 w-5" />
         </Button>
 
-        <Logo
-          position="flex"
-          hasLink={false}
-          className="w-5 h-5 sm:ml-0 ml-3"
-        />
+        {/* Links to the marketing home. toggleMenu inside Logo only fires on
+            right-click or meta/ctrl-click, so the brand assets menu still works
+            and a plain click navigates. */}
+        <Logo position="flex" className="w-5 h-5 sm:ml-0 ml-3" />
 
         <div className="flex items-center gap-2 ml-2">
           <Icons.Slash className="text-border w-[22px] h-[22px]" />
