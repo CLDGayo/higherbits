@@ -8,6 +8,7 @@ interface ComponentPreviewImageProps {
   alt: string
   fallbackSrc: string
   className?: string
+  scale?: number
 }
 
 export default function ComponentPreviewImage({
@@ -16,6 +17,7 @@ export default function ComponentPreviewImage({
   alt,
   fallbackSrc,
   className,
+  scale = 1,
 }: ComponentPreviewImageProps) {
   const [imgSrc, setImgSrc] = useState(src)
   const [lightImgSrc, setLightImgSrc] = useState(lightSrc)
@@ -48,6 +50,7 @@ export default function ComponentPreviewImage({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            transform: `scale(${scale})`,
             backgroundColor: isPlaceholder ? "transparent" : "",
           }}
         />
@@ -65,6 +68,7 @@ export default function ComponentPreviewImage({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            transform: `scale(${scale})`,
             backgroundColor: isLightPlaceholder ? "transparent" : "",
           }}
         />
@@ -87,6 +91,7 @@ export default function ComponentPreviewImage({
         width: "100%",
         height: "100%",
         objectFit: "cover",
+        transform: `scale(${scale})`,
         backgroundColor: isPlaceholder ? "transparent" : "",
       }}
     />

@@ -38,6 +38,7 @@ import { ComponentCardSkeleton } from "../../ui/skeletons"
 import { UserAvatar } from "../../ui/user-avatar"
 import ComponentPreviewImage from "./card-image"
 import { ComponentVideoPreview } from "./card-video"
+import { getPreviewCropScale } from "./preview-crop"
 
 // Extended type to include leaderboard fields
 type LeaderboardDemoWithComponent = DemoWithComponent & {
@@ -145,6 +146,7 @@ export const ComponentCard = React.memo(function ComponentCard({
   const lightPreviewUrl = isShadcn
     ? `/thumbnails/${componentSlug}-light.png`
     : undefined
+  const previewCropScale = getPreviewCropScale(isShadcn)
 
   const componentName = isDemo ? demo.component?.name || "" : demo.name || ""
 
@@ -311,6 +313,7 @@ export const ComponentCard = React.memo(function ComponentCard({
                     alt={componentName}
                     fallbackSrc="/placeholder.svg"
                     className="rounded-lg"
+                    scale={previewCropScale}
                   />
                 </div>
                 <div className="absolute inset-0 rounded-lg" />
