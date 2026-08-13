@@ -4,6 +4,15 @@ import { DbLinks } from "@/components/features/admin/db-links"
 import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
 import {
   Pagination,
@@ -45,6 +54,7 @@ import {
   ColumnDef,
   PaginationState,
   Row,
+  RowSelectionState,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -56,9 +66,13 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  Globe,
   InfoIcon,
+  Library,
+  Lock,
   Pencil,
   Trash2,
+  X,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useId, useMemo, useState } from "react"
@@ -89,6 +103,13 @@ interface DemosTableProps {
     isPrivate: boolean,
   ) => Promise<void>
   isOwnProfile?: boolean
+  /** Libraries the selection can be moved into. Empty disables "Move to". */
+  libraries?: { id: string; name: string }[]
+  onBulkMoveToLibrary?: (
+    componentIds: number[],
+    collectionId: string,
+  ) => Promise<void>
+  onBulkVisibility?: (componentIds: number[], isPrivate: boolean) => Promise<void>
 }
 
 // Format text with clickable links
@@ -263,7 +284,15 @@ function RowActionsCell({
   )
 }
 
-function ComponentCell({ demo }: { demo: ExtendedDemoWithComponent }) {
+function ComponentCell({
+  demo,
+  onOpenSandbox,
+  canEdit,
+}: {
+  demo: ExtendedDemoWithComponent
+  onOpenSandbox?: (shortSandboxId: string) => void
+  canEdit?: boolean
+}) {
   const router = useRouter()
 
   const isDraft = resolveStatus(demo) === "draft"
@@ -281,6 +310,17 @@ function ComponentCell({ demo }: { demo: ExtendedDemoWithComponent }) {
     }
   }
 
+  // Owners get the editor here. The sandbox is the only surface that can change
+  // a component, and the pencil that reaches it is hover-only in a column that
+  // is often scrolled off, so the always-visible action leads there instead of
+  // to the public page. Visitors keep the public page - they have nothing to edit.
+  // Same target resolution as openRow: drafts have no component, so their own id
+  // is the sandbox id.
+  const editTarget = demo.component?.sandbox_id || String(demo.id)
+  const showEdit = Boolean(canEdit && onOpenSandbox && editTarget)
+  const handleLeadingAction = () =>
+    showEdit ? onOpenSandbox!(editTarget) : openPublicPage()
+
   return (
     <div className="flex items-center gap-3 pl-1">
       <Tooltip>
@@ -289,15 +329,21 @@ function ComponentCell({ demo }: { demo: ExtendedDemoWithComponent }) {
             <Button
               variant="ghost"
               size="icon"
-              disabled={!isComponentAvailable}
-              onClick={openPublicPage}
+              disabled={showEdit ? false : !isComponentAvailable}
+              onClick={handleLeadingAction}
             >
-              <ExternalLink size={16} className="text-primary" />
+              {showEdit ? (
+                <Pencil size={16} className="text-primary" />
+              ) : (
+                <ExternalLink size={16} className="text-primary" />
+              )}
             </Button>
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          {isComponentAvailable ? (
+          {showEdit ? (
+            <p>Edit component</p>
+          ) : isComponentAvailable ? (
             <p>Open component page</p>
           ) : (
             <p>Component page is not available</p>
@@ -340,6 +386,9 @@ export function DemosTable({
   onPreview,
   onUpdateVisibility,
   isOwnProfile = false,
+  libraries = [],
+  onBulkMoveToLibrary,
+  onBulkVisibility,
 }: DemosTableProps) {
   const id = useId()
   const [pagination, setPagination] = useState<PaginationState>({
@@ -355,6 +404,11 @@ export function DemosTable({
   const [sorting, setSorting] = useState<SortingState>([
     { id: "created_at", desc: true },
   ])
+
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const canBulkEdit = Boolean(
+    isOwnProfile && (onBulkVisibility || onBulkMoveToLibrary),
+  )
 
   const safeData = useMemo(
     () => (Array.isArray(demos) ? demos : []),
@@ -405,10 +459,46 @@ export function DemosTable({
   }
 
   const columns: ColumnDef<ExtendedDemoWithComponent>[] = [
+    // Bulk actions act on components, so drafts with no component row yet are
+    // not selectable. enableRowSelection below enforces the same rule.
+    ...(canBulkEdit
+      ? ([
+          {
+            id: "select",
+            size: 40,
+            header: ({ table }) => (
+              <Checkbox
+                checked={
+                  table.getIsAllPageRowsSelected() ||
+                  (table.getIsSomePageRowsSelected() && "indeterminate")
+                }
+                onCheckedChange={(value) =>
+                  table.toggleAllPageRowsSelected(!!value)
+                }
+                aria-label="Select all components on this page"
+              />
+            ),
+            cell: ({ row }) => (
+              <Checkbox
+                checked={row.getIsSelected()}
+                disabled={!row.getCanSelect()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label={`Select ${row.original.component?.name || row.original.name}`}
+              />
+            ),
+          },
+        ] as ColumnDef<ExtendedDemoWithComponent>[])
+      : []),
     {
       header: "Component",
       accessorKey: "name",
-      cell: ({ row }) => <ComponentCell demo={row.original} />,
+      cell: ({ row }) => (
+        <ComponentCell
+          demo={row.original}
+          onOpenSandbox={onOpenSandbox}
+          canEdit={isOwnProfile}
+        />
+      ),
       size: 300,
       sortingFn: "alphanumeric",
     },
@@ -514,7 +604,9 @@ export function DemosTable({
     },
   ]
 
-  if (isOwnProfile || isAdmin) {
+  // Actions and Admin are both admin-only. Owners edit through the pencil in the
+  // Component column, which is why losing "Edit Details" here costs them nothing.
+  if (isAdmin) {
     columns.push({
       header: "Actions",
       id: "actions",
@@ -561,11 +653,41 @@ export function DemosTable({
     enableSortingRemoval: false,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    // Keyed by demo id rather than row index, so a selection survives sorting,
+    // paging and tab filtering instead of silently sliding onto another row.
+    getRowId: (row) => String(row.id),
+    enableRowSelection: (row) => Boolean(componentIdOf(row.original)),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       pagination,
+      rowSelection,
     },
   })
+
+  const selectedRows = table.getSelectedRowModel().rows
+  const selectedComponentIds = selectedRows
+    .map((row) => componentIdOf(row.original))
+    .filter((id): id is number => typeof id === "number")
+  const selectedCount = selectedComponentIds.length
+  const [isBulkRunning, setIsBulkRunning] = useState(false)
+
+  const runBulk = async (action: () => Promise<void>) => {
+    setIsBulkRunning(true)
+    try {
+      await action()
+      // Only clear once the write succeeded; a failed bulk keeps the selection
+      // so the user can retry without picking every row again.
+      setRowSelection({})
+    } catch (error) {
+      console.error("Bulk action failed:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Bulk action failed",
+      )
+    } finally {
+      setIsBulkRunning(false)
+    }
+  }
 
   const pageCount = table.getPageCount()
   const currentPage = table.getState().pagination.pageIndex + 1
@@ -705,7 +827,9 @@ export function DemosTable({
                             isLastColumn && "pr-6",
                           )}
                           onClick={
-                            ["is_private", "admin"].includes(cell.column.id)
+                            ["select", "is_private", "admin"].includes(
+                              cell.column.id,
+                            )
                               ? (e) => e.stopPropagation()
                               : undefined
                           }
@@ -772,9 +896,7 @@ export function DemosTable({
                       <StatusCell demo={demo} />
                     </div>
                   </div>
-                  {(isOwnProfile || isAdmin) && (
-                    <RowActionsCell demo={demo} onEdit={onEdit} />
-                  )}
+                  {isAdmin && <RowActionsCell demo={demo} onEdit={onEdit} />}
                 </div>
               </div>
             )
@@ -896,6 +1018,100 @@ export function DemosTable({
               </PaginationItem>
             </PaginationContent>
           </Pagination>
+        </div>
+      )}
+
+      {canBulkEdit && selectedCount > 0 && (
+        <div className="sticky bottom-4 z-40 mt-4 flex justify-center">
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 shadow-lg">
+            <span className="px-1 text-sm text-muted-foreground">
+              {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
+            </span>
+
+            {onBulkMoveToLibrary && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
+                    <Library size={14} className="mr-1.5" />
+                    Move to
+                    <ChevronDown size={14} className="ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuLabel>
+                    Move {selectedCount}{" "}
+                    {selectedCount === 1 ? "component" : "components"} to
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {libraries.length === 0 ? (
+                    <DropdownMenuItem disabled>
+                      No libraries yet
+                    </DropdownMenuItem>
+                  ) : (
+                    libraries.map((library) => (
+                      <DropdownMenuItem
+                        key={library.id}
+                        onSelect={() =>
+                          runBulk(() =>
+                            onBulkMoveToLibrary(
+                              selectedComponentIds,
+                              library.id,
+                            ),
+                          )
+                        }
+                      >
+                        {library.name}
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {onBulkVisibility && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
+                    Visibility
+                    <ChevronDown size={14} className="ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      runBulk(() =>
+                        onBulkVisibility(selectedComponentIds, false),
+                      )
+                    }
+                  >
+                    <Globe size={14} className="mr-2 text-green-500" />
+                    Public
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      runBulk(() =>
+                        onBulkVisibility(selectedComponentIds, true),
+                      )
+                    }
+                  >
+                    <Lock size={14} className="mr-2" />
+                    Private
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setRowSelection({})}
+              disabled={isBulkRunning}
+              aria-label="Clear selection"
+            >
+              <X size={14} />
+            </Button>
+          </div>
         </div>
       )}
     </div>

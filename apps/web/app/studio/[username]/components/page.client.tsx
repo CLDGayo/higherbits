@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { createNewSandbox } from "@/components/features/studio/sandbox/api"
+import {
+  listLibrariesAction,
+  moveComponentToLibraryAction,
+} from "@/lib/api/collections"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ExtendedDemoWithComponent } from "@/lib/utils/transformData"
 import {
@@ -187,6 +191,86 @@ export function StudioUsernameClient({
     handleOpenSandbox(demo.component?.sandbox_id || String(demo.id))
   }
 
+  // Libraries the bulk "Move to" menu offers. Fetched here rather than in the
+  // table so the table stays presentational and the list is shared if another
+  // surface needs it later.
+  const [libraries, setLibraries] = useState<{ id: string; name: string }[]>([])
+
+  useEffect(() => {
+    if (!isOwnProfile && !isAdmin) return
+    listLibrariesAction()
+      .then((rows) =>
+        setLibraries(rows.map((row: any) => ({ id: row.id, name: row.name }))),
+      )
+      .catch((error) => console.error("Failed to load libraries:", error))
+  }, [isOwnProfile, isAdmin])
+
+  // Sequential rather than Promise.all: these are per-row writes against the
+  // same table, and a partial failure should report how far it got instead of
+  // leaving the user guessing which of N rows landed.
+  const runOverComponents = async (
+    componentIds: number[],
+    write: (componentId: number) => Promise<void>,
+  ) => {
+    const failed: number[] = []
+    for (const componentId of componentIds) {
+      try {
+        await write(componentId)
+      } catch (error) {
+        console.error(`Bulk write failed for component ${componentId}:`, error)
+        failed.push(componentId)
+      }
+    }
+    if (failed.length) {
+      throw new Error(
+        `${failed.length} of ${componentIds.length} could not be updated`,
+      )
+    }
+  }
+
+  const handleBulkVisibility = async (
+    componentIds: number[],
+    isPrivate: boolean,
+  ) => {
+    await runOverComponents(componentIds, async (componentId) => {
+      const { error } = await supabase
+        .from("components")
+        .update({ is_public: !isPrivate } as any)
+        .eq("id", componentId)
+      if (error) throw error
+    })
+
+    setLocalDemos((prevDemos) =>
+      prevDemos.map((demo) =>
+        demo?.component?.id && componentIds.includes(demo.component.id)
+          ? { ...demo, is_private: isPrivate }
+          : demo,
+      ),
+    )
+
+    toast.success(
+      `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} set to ${isPrivate ? "private" : "public"}`,
+    )
+  }
+
+  const handleBulkMoveToLibrary = async (
+    componentIds: number[],
+    collectionId: string,
+  ) => {
+    // A real move, not an add: moveComponentToLibraryAction clears the
+    // component out of your other libraries in the same transaction.
+    await runOverComponents(componentIds, async (componentId) => {
+      await moveComponentToLibraryAction({ collectionId, componentId })
+    })
+
+    const libraryName =
+      libraries.find((library) => library.id === collectionId)?.name ||
+      "the library"
+    toast.success(
+      `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} moved to ${libraryName}`,
+    )
+  }
+
   const handleUpdateVisibility = async (
     componentId: number,
     isPrivate: boolean,
@@ -335,6 +419,13 @@ export function StudioUsernameClient({
             isOwnProfile || isAdmin ? handleUpdateVisibility : undefined
           }
           isOwnProfile={isOwnProfile || isAdmin}
+          libraries={libraries}
+          onBulkMoveToLibrary={
+            isOwnProfile || isAdmin ? handleBulkMoveToLibrary : undefined
+          }
+          onBulkVisibility={
+            isOwnProfile || isAdmin ? handleBulkVisibility : undefined
+          }
         />
       </div>
       {previewDemo && (
