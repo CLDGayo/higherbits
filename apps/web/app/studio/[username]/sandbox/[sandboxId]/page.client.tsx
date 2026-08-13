@@ -1,6 +1,7 @@
 "use client"
 
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
+import { LoadingDialog } from "@/components/ui/loading-dialog"
 import { useEffect, useState, Suspense } from "react"
 import { useParams, useRouter, usePathname } from "next/navigation"
 import {
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/resizable"
 import { FileExplorer } from "@/components/features/studio/sandbox/components/file-explorer"
 import { PreviewPane } from "@/components/features/studio/sandbox/components/preview-pane"
+import { ComponentCard } from "@/components/features/list-card/card"
 import {
   ServerSandbox,
   useSandbox,
@@ -36,7 +38,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { SandboxSkeleton } from "@/components/features/studio/sandbox/components/sandbox-skeleton"
 import { SandboxHeader } from "@/components/features/studio/sandbox/components/sandbox-header"
 import { ComponentForm } from "@/components/features/studio/publish/components/forms/component-form"
-import { FormData, formSchema } from "@/components/features/studio/publish/config/utils"
+import { FormData, formSchema, collectFormErrors } from "@/components/features/studio/publish/config/utils"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useUser } from "@clerk/nextjs"
@@ -52,6 +54,7 @@ import {
 import { DemoDetailsForm } from "@/components/features/studio/publish/components/forms/demo-form"
 import { useSubmitComponent } from "@/components/features/studio/publish/hooks/use-submit-component"
 import { PublishStageForm } from "@/components/features/studio/publish/publish-stage-form"
+import { useComponentData } from "@/components/features/studio/publish/hooks/use-component-data"
 
 type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 
@@ -84,6 +87,11 @@ function PublishClientPageContent({
       description: "",
       license: "",
       website_url: "",
+      // `is_public` is z.boolean() with no .default() in formSchema, so leaving
+      // it out made every create-mode submit fail validation before the user
+      // ever touched the visibility toggle.
+      is_public: true,
+      demos: [{ name: "Default Demo", demo_slug: "default", preview_image_data_url: "", tags: [] }],
     },
   })
 
@@ -103,6 +111,22 @@ function PublishClientPageContent({
     serverSandbox,
     sandboxStatus,
   } = useSandbox({ sandboxId })
+
+  const { isLoading: isComponentDataLoading, formData: componentFormData } = useComponentData(serverSandbox?.component_id ?? null)
+
+  useEffect(() => {
+    if (componentFormData) {
+      const { code, demos, ...rest } = componentFormData
+      form.reset({
+        ...rest,
+        code: "",
+        demos: demos && demos.length > 0 ? demos.map((demo, i) => ({
+          ...demo,
+          demo_code: "",
+        })) : [{ name: "Default Demo", demo_slug: "default", preview_image_data_url: "", tags: [] }],
+      })
+    }
+  }, [componentFormData, form])
 
   const {
     files,
@@ -136,12 +160,48 @@ function PublishClientPageContent({
     publishProgress,
     isLoadingDialogOpen,
     isSuccessDialogOpen,
+    createdDemoSlug,
+    setIsSuccessDialogOpen,
     // NOTE: this was `useSubmitComponent(isEditMode)`. The hook takes no
     // arguments and never referenced isEditMode, so the value was silently
     // discarded — the studio submit path has never distinguished edit from
     // create. Removing the argument changes no runtime behaviour; making edit
     // mode actually work is a separate change (see Phase 07, publish form).
   } = useSubmitComponent()
+
+  // useSubmitComponent flips isSuccessDialogOpen when the pipeline finishes, but
+  // this page destructured the flag and never rendered or watched it: a publish
+  // ran end to end, wrote the component, and left the UI exactly as it was.
+  // Mirrors the redirect the /publish subroute performs.
+  useEffect(() => {
+    if (!isSuccessDialogOpen) return
+
+    const usernameToUse = user?.username || username
+    const componentSlugValue = form.getValues("component_slug")
+    setIsSuccessDialogOpen(false)
+
+    if (!usernameToUse || !componentSlugValue) {
+      toast.error("Published, but could not work out where to redirect you.")
+      return
+    }
+
+    const query = new URLSearchParams({
+      publishSuccess: "true",
+      componentSlug: componentSlugValue,
+      username: usernameToUse,
+      demoSlug: createdDemoSlug || "default",
+    })
+    // studioHardNavigate rather than router.push: every other studio hop in this
+    // file avoids a soft three-segment navigation for the interception reason.
+    studioHardNavigate(`/studio/${usernameToUse}/components?${query}`)
+  }, [
+    isSuccessDialogOpen,
+    setIsSuccessDialogOpen,
+    createdDemoSlug,
+    user,
+    username,
+    form,
+  ])
 
   const handleSubmit = (event?: React.FormEvent) => {
     event?.preventDefault()
@@ -195,10 +255,23 @@ function PublishClientPageContent({
         })
       },
       (errors) => {
-        toast.error("Please fill in all required fields")
+        const problems = collectFormErrors(errors)
+        toast.error(
+          problems.length > 0
+            ? `Cannot submit: ${problems.join(" · ")}`
+            : "Please fill in all required fields",
+        )
         console.error("Form validation errors:", errors)
       },
-    )()
+    )().catch((error) => {
+      // react-hook-form's handleSubmit returns a promise. Nothing awaited it, so
+      // anything thrown by the resolver or the submit body surfaced only as an
+      // unhandled rejection — the button appeared to do nothing at all.
+      console.error("Submit threw:", error)
+      toast.error(
+        `Submit failed: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    })
   }
 
   const handleAddFrom21Registry = async (jsonUrl: string, demoCode?: string) => {
@@ -522,6 +595,8 @@ function PublishClientPageContent({
 
   return (
     <div className="h-[calc(100vh-56px)] w-full flex flex-col">
+      <LoadingDialog isOpen={isLoadingDialogOpen} message={publishProgress} />
+
       <SandboxHeader
         sandboxId={sandboxId}
         sandboxName={serverSandbox?.name}
@@ -531,7 +606,7 @@ function PublishClientPageContent({
         customNextIcon={activeStage === "Publish" ? undefined : <ArrowRight size={16} />}
         customNextLabel={activeStage === "Publish" ? "Send to review" : "Next"}
         isNextLoading={activeStage === "Publish" && isSubmitting}
-        customBackLabel={currentStageIndex > 0 ? "Back to edit" : (isEditMode ? "Back to component" : undefined)}
+        customBackLabel={currentStageIndex > 0 ? "Back" : (isEditMode ? "Back to component" : undefined)}
         customBackAction={handleBackStage}
       />
 
@@ -634,9 +709,10 @@ function PublishClientPageContent({
                                 className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 ml-auto mr-1 shrink-0"
                                 onClick={(e) => {
                                   e.stopPropagation()
-                                  console.log("Delete demo:", index)
-                                  toast.info(
-                                    `Demo deletion for index ${index} not implemented yet.`,
+                                  const currentDemos = form.getValues().demos || []
+                                  form.setValue(
+                                    "demos",
+                                    currentDemos.filter((_, i) => i !== index),
                                   )
                                 }}
                               >
@@ -668,33 +744,63 @@ function PublishClientPageContent({
             )}
 
             {activeStage === "Publish" && (
-              <PublishStageForm
-                form={form}
-                onSubmit={handleSubmit}
-                isSubmitting={isSubmitting}
-              />
+              <Form {...form}>
+                <PublishStageForm
+                  form={form}
+                  onSubmit={handleSubmit}
+                  isSubmitting={isSubmitting}
+                />
+              </Form>
             )}
           </div>
         </div>
 
         {/* Editor and Preview Area */}
         <div className="flex-1 h-full min-w-0">
-          <PreviewPane
-            connectedShellId={connectedShellId}
-            previewURL={previewURL}
-            selectedFile={selectedEntry}
-            code={code}
-            onCodeChange={handleCodeChange}
-            isFileLoading={isFileLoading}
-            showPreview={showPreview}
-            iframeKey={iframeKey}
-            onRefresh={handleRefreshPreview}
-            sandboxUnavailable={sandboxUnavailable}
-            onReconnect={retryConnection}
-            onTogglePreview={handleTogglePreview}
-            isFullscreen={isFullscreen}
-            onFullscreenChange={setIsFullscreen}
-          />
+          {activeStage === "Demos" ? (
+            <div className="h-full w-full flex items-center justify-center bg-zinc-950/50 p-8">
+              <div className="w-full max-w-[500px]">
+                <ComponentCard
+                  // @ts-ignore - Mocking demo object to render preview card
+                  demo={{
+                    id: 0,
+                    component_id: 0,
+                    name: form.watch("demos")?.[0]?.name || form.watch("name") || "Component Name",
+                    demo_slug: form.watch("demos")?.[0]?.demo_slug || "default",
+                    preview_url: form.watch("demos")?.[0]?.preview_image_data_url || (form.watch("demos")?.[0] as any)?.preview_url || "",
+                    video_url: form.watch("demos")?.[0]?.preview_video_data_url || (form.watch("demos")?.[0] as any)?.video_url || "",
+                    component: {
+                      id: 0,
+                      name: form.watch("name") || "Component Name",
+                      description: form.watch("description") || "",
+                      component_slug: form.watch("component_slug") || "component-slug",
+                      user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
+                    },
+                    user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
+                  } as any}
+                  hideVotes={true}
+                  hideUser={false}
+                />
+              </div>
+            </div>
+          ) : (
+            <PreviewPane
+              connectedShellId={connectedShellId}
+              previewURL={previewURL}
+              selectedFile={selectedEntry}
+              code={code}
+              onCodeChange={handleCodeChange}
+              isFileLoading={isFileLoading}
+              showPreview={showPreview}
+              iframeKey={iframeKey}
+              onRefresh={handleRefreshPreview}
+              sandboxUnavailable={sandboxUnavailable}
+              onReconnect={retryConnection}
+              onTogglePreview={handleTogglePreview}
+              isFullscreen={isFullscreen}
+              onFullscreenChange={setIsFullscreen}
+            />
+          )}
         </div>
       </div>
     </div>

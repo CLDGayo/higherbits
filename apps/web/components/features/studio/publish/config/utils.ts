@@ -142,3 +142,48 @@ export const isFormValid = (form: UseFormReturn<FormData>): boolean => {
       unknown_dependencies?.length === 0,
   )
 }
+
+const FIELD_LABELS: Record<string, string> = {
+  name: "Name",
+  component_slug: "Slug",
+  description: "Description",
+  license: "License",
+  registry: "Registry",
+  is_public: "Visibility",
+  demos: "Demos",
+  tags: "Tags",
+  demo_slug: "Demo slug",
+  preview_image_data_url: "Cover image",
+}
+
+const labelFor = (path: string[]): string =>
+  path
+    .filter((segment) => !/^\d+$/.test(segment))
+    .map((segment) => FIELD_LABELS[segment] ?? segment)
+    .join(" → ")
+
+/**
+ * Flattens a react-hook-form error tree into readable "Field → message" lines.
+ *
+ * The studio form is a field array (`demos.0.tags`), so errors arrive nested and
+ * a plain Object.keys() only ever reports "demos" — which is what made a failed
+ * submit look like nothing happening at all. Walks the tree and keeps the leaves,
+ * which are the objects carrying a string `message`.
+ */
+export const collectFormErrors = (
+  errors: unknown,
+  path: string[] = [],
+): string[] => {
+  if (!errors || typeof errors !== "object") return []
+
+  const node = errors as Record<string, unknown>
+
+  if (typeof node.message === "string" && node.message.length > 0) {
+    const label = labelFor(path)
+    return [label ? `${label}: ${node.message}` : node.message]
+  }
+
+  return Object.entries(node)
+    .filter(([key]) => key !== "ref" && key !== "type")
+    .flatMap(([key, value]) => collectFormErrors(value, [...path, key]))
+}
