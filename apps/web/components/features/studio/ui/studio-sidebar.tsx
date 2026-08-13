@@ -114,7 +114,13 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
                       "opacity-50 cursor-not-allowed pointer-events-none",
                   )}
                 >
-                  <Link
+                  {/*
+                    A plain anchor, not next/link: <Link> soft-navigates, and a
+                    soft navigation to /studio/{username}/{section} is swallowed
+                    by the root-intercepted @modal route, which leaves the URL
+                    changed and the studio unrendered. See studioHardNavigate.
+                  */}
+                  <a
                     href={item.comingSoon ? "#" : href}
                     aria-disabled={item.comingSoon}
                     tabIndex={item.comingSoon ? -1 : undefined}
@@ -127,7 +133,7 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
                         Soon
                       </span>
                     )}
-                  </Link>
+                  </a>
                 </SidebarMenuButton>
 
                 {/*

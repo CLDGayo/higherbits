@@ -1,3 +1,4 @@
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { Spinner } from "@/components/icons/spinner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -141,7 +142,7 @@ export function SandboxHeader({
     } else if (customBackUrl) {
       router.push(customBackUrl)
     } else {
-      router.push(`/studio/${params.username}/components`)
+      studioHardNavigate(`/studio/${params.username}/components`)
     }
   }
 

@@ -23,6 +23,7 @@ import {
   activeStudioNavItem,
   isStudioNavItemActive,
   studioBasePath,
+  studioHardNavigate,
   studioNavHref,
 } from "../nav-config"
 
@@ -90,7 +91,7 @@ export function StudioHeader({ user }: StudioHeaderProps) {
                     )}
                     onSelect={() => {
                       if (item.comingSoon) return
-                      router.push(studioNavHref(basePath, item))
+                      studioHardNavigate(studioNavHref(basePath, item))
                     }}
                   >
                     <Icon className="h-4 w-4" />

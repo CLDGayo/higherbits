@@ -1,3 +1,4 @@
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { Button } from "@/components/ui/button"
 import { useParams, usePathname, useRouter } from "next/navigation"
 import { publishSandbox, editSandbox } from "../api"
@@ -44,7 +45,7 @@ export function PublishHeader({
       const { success } = await publishSandbox(sandboxId)
       if (success) {
         toast.success("Sandbox sent to review")
-        await router.push(`/studio/${params.username}/components`)
+        studioHardNavigate(`/studio/${params.username}/components`)
       }
     } finally {
       setIsLoading(false)

@@ -3,7 +3,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { hasUserComponentAccess } from "@/lib/api/server/components"
 import { auth } from "@clerk/nextjs/server"
 import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 
 export default async function InterceptedDemoComponentPage(props: {
   params: Promise<{
@@ -32,8 +32,18 @@ export default async function InterceptedDemoComponentPage(props: {
       demo_slug,
     )
 
+    // This route is `(...)`-intercepted from the app root, so on a soft
+    // navigation it matches ANY three-segment path — including real static
+    // routes like /studio/{username}/components, /settings/rules/new and
+    // /publish/{a}/{b}. A failed lookup therefore means "this navigation was
+    // never a component modal", not "this component is missing".
+    //
+    // Redirecting here used to throw the entire navigation to "/", so clicking
+    // Creator Studio flashed this modal and dumped the user on the marketing
+    // landing page. A modal slot must never redirect the app: render nothing
+    // and let the real route in the children slot stand.
     if (shouldRedirectToDefault || error || !data) {
-      return redirect("/")
+      return null
     }
 
     const { component, demo } = data

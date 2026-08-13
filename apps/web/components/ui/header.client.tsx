@@ -1,5 +1,6 @@
 "use client"
 
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import React, { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
@@ -216,7 +217,7 @@ function HeaderContent({
     const typeParam = typeof type === "string" ? `&type=${type}` : ""
 
     if (username) {
-      router.push(`/studio/${username}/components?new=true${typeParam}`)
+      studioHardNavigate(`/studio/${username}/components?new=true${typeParam}`)
     } else {
       router.push(`/studio?new=true${typeParam}`)
     }
@@ -452,11 +453,11 @@ function HeaderContent({
                         className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
                         onSelect={() => {
                           if (userState.profile?.display_username) {
-                            router.push(
+                            studioHardNavigate(
                               `/studio/${userState.profile.display_username}/components`,
                             )
                           } else if (userState.profile?.username) {
-                            router.push(
+                            studioHardNavigate(
                               `/studio/${userState.profile.username}/components`,
                             )
                           } else {

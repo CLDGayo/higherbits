@@ -1,5 +1,6 @@
 "use client"
 
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { useEffect, useState, Suspense } from "react"
 import { useParams, useRouter, usePathname } from "next/navigation"
 import {
@@ -499,7 +500,7 @@ function PublishClientPageContent({
           <p className="text-base">Failed to initialize sandbox</p>
           <div className="flex gap-3">
             <Button
-              onClick={() => router.push(`/studio/${username}/components`)}
+              onClick={() => studioHardNavigate(`/studio/${username}/components`)}
               variant="outline"
             >
               Go Back

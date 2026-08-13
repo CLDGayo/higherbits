@@ -116,6 +116,40 @@ export function studioNavHref(basePath: string, item: StudioNavItem): string {
 }
 
 /**
+ * Enter or move around the studio with a full page load.
+ *
+ * `app/@modal/(...)[username]/[component_slug]/[demo_slug]` is intercepted from
+ * the app root, so it matches ANY three-segment soft navigation whose route
+ * carries dynamic segments - which is exactly the shape of
+ * /studio/{username}/{section}. When it matches, Next renders the component
+ * quick-view modal into the @modal slot and leaves the page underneath
+ * untouched: the URL changes and the studio never appears.
+ *
+ * Interception is matched ahead of normal slot ranking, so nothing added to the
+ * slot can outrank it. A `default.tsx`, a catch-all `[...rest]` page, a plain
+ * dynamic `[username]/[section]` page and an exact-shape `[username]/components`
+ * page were each tried and each lost to the interceptor.
+ *
+ * A hard navigation sends no `Next-Url` header, so nothing is intercepted. Use
+ * this for any /studio/{username}/{section} destination. Two-segment paths such
+ * as /studio and /studio/{username} are unaffected and should keep using the
+ * router - measured, not assumed.
+ */
+export function studioHardNavigate(
+  href: string,
+  { replace = false }: { replace?: boolean } = {},
+): void {
+  // `replace` mirrors router.replace: the studio landing page resolves your
+  // username and forwards, and must not leave that hop in history or Back
+  // lands on a page that immediately forwards again.
+  if (replace) {
+    window.location.replace(href)
+    return
+  }
+  window.location.assign(href)
+}
+
+/**
  * Exact match for the index route, prefix match for children.
  *
  * The previous implementation used `pathname.includes("/bundles")` and friends,
