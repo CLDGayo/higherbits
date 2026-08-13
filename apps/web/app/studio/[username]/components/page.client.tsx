@@ -423,9 +423,14 @@ export function StudioUsernameClient({
           onBulkMoveToLibrary={
             isOwnProfile || isAdmin ? handleBulkMoveToLibrary : undefined
           }
-          onBulkVisibility={
-            isOwnProfile || isAdmin ? handleBulkVisibility : undefined
-          }
+          // Bulk visibility is withheld pending an unexplained write: on
+          // 2026-08-13 a component that was not in the selection came back
+          // public after a bulk apply. The selection mapping was checked and is
+          // 1:1, and every write is scoped .eq("id", componentId), so no path
+          // to an unselected row has been found - which is exactly why this
+          // stays off until the Postgres log names the statement. handleBulkVisibility
+          // is left wired up so restoring it is a one-line change.
+          onBulkVisibility={undefined}
         />
       </div>
       {previewDemo && (
