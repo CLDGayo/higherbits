@@ -52,7 +52,7 @@ create index if not exists studio_artifacts_kind_public_idx
 -- `components.updated_at` in this database is default-only, with no trigger, so
 -- rows carry a stale timestamp forever unless a writer sets it explicitly. That
 -- cost a forensic investigation on 2026-08-13. This table gets the trigger.
-create or replace function public.set_updated_at()
+create or replace function public.studio_artifacts_set_updated_at()
 returns trigger
 language plpgsql
 as $$
@@ -65,7 +65,7 @@ $$;
 drop trigger if exists studio_artifacts_set_updated_at on public.studio_artifacts;
 create trigger studio_artifacts_set_updated_at
   before update on public.studio_artifacts
-  for each row execute function public.set_updated_at();
+  for each row execute function public.studio_artifacts_set_updated_at();
 
 alter table public.studio_artifacts enable row level security;
 
@@ -106,10 +106,31 @@ create policy studio_artifacts_delete_own
   to authenticated
   using (user_id = (auth.jwt() ->> 'sub'::text));
 
--- Grants matching the baseline's shape for authoring tables. `anon` is
--- deliberately omitted: Phase 09 is authoring-only, and public browse of
--- artifacts is Phase 10 scope. Adding anon SELECT later is a one-line change
--- and the select policy above already expresses the right condition.
+-- Grants.
+--
+-- The REVOKEs are not defensive noise, they are required. This database carries
+-- a schema-wide default privilege:
+--
+--   pg_default_acl, schema public, owner postgres:
+--     {anon=arwdDxtm/postgres, authenticated=arwdDxtm/postgres,
+--      service_role=arwdDxtm/postgres}
+--
+-- `arwdDxtm` is the full set including TRUNCATE. So *every* new table in public
+-- is auto-granted everything to anon and authenticated at CREATE time, before a
+-- single GRANT here runs. enable-rls.sql revoked those grants from the tables
+-- that existed in 2026-07 but never dropped the default privilege, so it
+-- re-arms on every migration. Verified on this table: anon held 7 privileges it
+-- was never granted.
+--
+-- RLS still denied anon every row - all four policies above are `to
+-- authenticated` and anon has none, so anon is deny-all. But TRUNCATE and
+-- REFERENCES are not row-level, and a grant nobody intended is one permissive
+-- policy away from being an exposure.
+--
+-- anon gets nothing: Phase 09 is authoring-only and public browse is Phase 10.
+-- authenticated gets exactly the four DML verbs, not TRUNCATE.
+revoke all on public.studio_artifacts from anon;
+revoke all on public.studio_artifacts from authenticated;
 grant select, insert, update, delete on public.studio_artifacts to authenticated;
 
 -- ---------------------------------------------------------------------------
@@ -117,6 +138,4 @@ grant select, insert, update, delete on public.studio_artifacts to authenticated
 -- ---------------------------------------------------------------------------
 -- drop trigger if exists studio_artifacts_set_updated_at on public.studio_artifacts;
 -- drop table if exists public.studio_artifacts;
--- -- set_updated_at() is intentionally left in place; it is generic and other
--- -- tables may adopt it. Drop it only if nothing else references it:
--- -- drop function if exists public.set_updated_at();
+-- drop function if exists public.studio_artifacts_set_updated_at();
