@@ -1,6 +1,8 @@
 import "server-only"
 import prisma from "../../prisma"
 import {
+  ARTIFACT_KINDS,
+  ARTIFACT_STATUSES,
   type ArtifactKind,
   type ArtifactStatus,
   getKindConfig,
@@ -87,8 +89,25 @@ const assertOwned = async (id: string, userId: string) => {
   return artifact
 }
 
+/**
+ * `kind` and `status` are text columns with CHECK constraints, so Prisma types
+ * them as `string` while the database guarantees the union. This is the single
+ * boundary where that gap is closed, and it is closed by checking rather than
+ * asserting: a row that somehow violated its own constraint would throw here
+ * instead of flowing into the UI mistyped.
+ */
+const narrowRow = <T extends { kind: string; status: string }>(row: T) => {
+  if (!ARTIFACT_KINDS.includes(row.kind as ArtifactKind)) {
+    throw new Error(`Unexpected artifact kind in database: ${row.kind}`)
+  }
+  if (!ARTIFACT_STATUSES.includes(row.status as ArtifactStatus)) {
+    throw new Error(`Unexpected artifact status in database: ${row.status}`)
+  }
+  return row as T & { kind: ArtifactKind; status: ArtifactStatus }
+}
+
 export const listArtifacts = async (userId: string, kind: ArtifactKind) =>
-  prisma.studio_artifacts.findMany({
+  (await prisma.studio_artifacts.findMany({
     where: { user_id: userId, kind },
     orderBy: { created_at: "desc" },
     select: {
@@ -102,7 +121,7 @@ export const listArtifacts = async (userId: string, kind: ArtifactKind) =>
       created_at: true,
       updated_at: true,
     },
-  })
+  })).map(narrowRow)
 
 /**
  * Reads one artifact for viewing. Unlike the mutations this allows a non-owner

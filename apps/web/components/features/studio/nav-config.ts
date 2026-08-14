@@ -72,7 +72,6 @@ export const STUDIO_NAV_ITEMS: StudioNavItem[] = [
     icon: Palette,
     tooltip: "Themes",
     segment: "themes",
-    comingSoon: true,
   },
   {
     slug: "ascii",

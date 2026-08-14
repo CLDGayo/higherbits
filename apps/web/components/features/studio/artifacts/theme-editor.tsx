@@ -54,6 +54,7 @@ type Scheme = "light" | "dark"
 export function ThemeEditor({
   artifact,
   onSaved,
+  onChange,
 }: {
   artifact: {
     id: string
@@ -64,6 +65,18 @@ export function ThemeEditor({
     status: "draft" | "published"
   }
   onSaved?: () => void
+  /**
+   * Publish and visibility take effect immediately, but the list that opened
+   * this editor holds its own copy of the row. Without this the tab badges read
+   * the old status until a reload - a write that succeeded while the UI said
+   * otherwise, which is the exact failure this program already shipped once.
+   */
+  onChange?: (patch: {
+    name?: string
+    slug?: string
+    status?: "draft" | "published"
+    is_public?: boolean
+  }) => void
 }) {
   const { resolvedTheme } = useTheme()
   const [name, setName] = useState(artifact.name)
@@ -145,6 +158,7 @@ export function ThemeEditor({
         return
       }
 
+      onChange?.({ name, slug: slug.slug })
       toast.success("Theme saved")
       onSaved?.()
     } catch (error) {
@@ -159,6 +173,7 @@ export function ThemeEditor({
     try {
       await setArtifactStatusAction({ id: artifact.id, status: next })
       setStatus(next)
+      onChange?.({ status: next })
       toast.success(next === "published" ? "Theme published" : "Moved to drafts")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not update")
@@ -170,6 +185,7 @@ export function ThemeEditor({
     try {
       await setArtifactVisibilityAction({ id: artifact.id, isPublic: next })
       setIsPublic(next)
+      onChange?.({ is_public: next })
       toast.success(next ? "Theme is public" : "Theme is private")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not update")

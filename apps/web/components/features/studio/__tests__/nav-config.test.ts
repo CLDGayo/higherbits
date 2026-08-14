@@ -43,10 +43,13 @@ describe("studio nav config", () => {
     }
   })
 
-  it("marks exactly the four sections with no backing table as coming soon", () => {
+  it("marks exactly the three sections with no backing table as coming soon", () => {
+    // Themes left this list in Phase 09: studio_artifacts was applied
+    // 2026-08-14 and /studio/[username]/themes is a real route. The remaining
+    // three share that table but have no route or renderer yet.
     expect(
       STUDIO_NAV_ITEMS.filter((i) => i.comingSoon).map((i) => i.slug),
-    ).toEqual(["themes", "ascii", "gradients", "shaders"])
+    ).toEqual(["ascii", "gradients", "shaders"])
   })
 })
 
