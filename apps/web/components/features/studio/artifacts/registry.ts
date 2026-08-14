@@ -1,3 +1,4 @@
+import type React from "react"
 import { Palette, Sparkles, Type, Waves } from "lucide-react"
 import { z } from "zod"
 
@@ -148,6 +149,19 @@ const shaderPayloadSchema = z.object({
 
 // --- the registry ----------------------------------------------------------
 
+/**
+ * A kind's preview renderer. Receives the already-validated payload, so a
+ * renderer never has to defend against a shape its schema would have rejected.
+ *
+ * Registered lazily by kind rather than imported here, so the registry stays a
+ * plain config module that server code can import without pulling React
+ * components into a server bundle.
+ */
+export type ArtifactPreviewRenderer = (props: {
+  payload: unknown
+  className?: string
+}) => React.ReactNode
+
 export interface ArtifactKindConfig {
   kind: ArtifactKind
   label: string
@@ -159,6 +173,24 @@ export interface ArtifactKindConfig {
   /** Which editor shell §6.5 mounts for this kind. */
   editorMode: "tokens" | "text" | "css" | "glsl"
 }
+
+const previewRenderers = new Map<ArtifactKind, ArtifactPreviewRenderer>()
+
+/**
+ * Registered from the client bundle at module load (see theme-preview.tsx).
+ * Kinds without a renderer fall back to their preview image, which is what a
+ * newly added kind gets for free before its renderer is written.
+ */
+export const registerPreviewRenderer = (
+  kind: ArtifactKind,
+  renderer: ArtifactPreviewRenderer,
+) => {
+  previewRenderers.set(kind, renderer)
+}
+
+export const getPreviewRenderer = (
+  kind: ArtifactKind,
+): ArtifactPreviewRenderer | undefined => previewRenderers.get(kind)
 
 export const ARTIFACT_REGISTRY: Record<ArtifactKind, ArtifactKindConfig> = {
   theme: {
