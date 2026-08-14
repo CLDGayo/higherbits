@@ -1,0 +1,231 @@
+import { Palette, Sparkles, Type, Waves } from "lucide-react"
+import { z } from "zod"
+
+/**
+ * The kind registry (Phase 09, §6.2).
+ *
+ * Themes, ASCII art, gradients and shaders are the same object: a user-authored
+ * artifact with a payload, a preview, a visibility flag and a draft/published
+ * status. They differ only in payload shape, preview renderer and label copy.
+ * Everything downstream - the list surface, the CRUD layer, the routes - reads
+ * this file and is otherwise kind-agnostic.
+ *
+ * Adding a kind is a config change here plus a preview renderer. It must not
+ * require touching the list, the CRUD layer or the table. That is gate G9.10.
+ */
+
+export const ARTIFACT_KINDS = ["theme", "ascii", "gradient", "shader"] as const
+
+export type ArtifactKind = (typeof ARTIFACT_KINDS)[number]
+
+export const ARTIFACT_STATUSES = ["draft", "published"] as const
+
+export type ArtifactStatus = (typeof ARTIFACT_STATUSES)[number]
+
+/**
+ * Tab sets differ per kind by product decision, not by accident: Themes filters
+ * on publication state, the other three on visibility. The list reads whichever
+ * set the kind declares and never hardcodes either.
+ */
+export type ArtifactTabId =
+  | "all"
+  | "published"
+  | "drafts"
+  | "public"
+  | "private"
+
+export interface ArtifactTab {
+  id: ArtifactTabId
+  label: string
+}
+
+const PUBLICATION_TABS: readonly ArtifactTab[] = [
+  { id: "all", label: "All" },
+  { id: "published", label: "Published" },
+  { id: "drafts", label: "Drafts" },
+] as const
+
+const VISIBILITY_TABS: readonly ArtifactTab[] = [
+  { id: "all", label: "All" },
+  { id: "public", label: "Public" },
+  { id: "private", label: "Private" },
+] as const
+
+/** A row as the list surface sees it, independent of how it was loaded. */
+export interface ArtifactSummary {
+  id: string
+  kind: ArtifactKind
+  name: string
+  slug: string
+  preview_url: string | null
+  is_public: boolean
+  status: ArtifactStatus
+  created_at: string | Date
+  updated_at: string | Date
+}
+
+/**
+ * Whether a row belongs in a tab. Kept here rather than in the list so the
+ * meaning of "Published" lives beside the tab that declares it, and so the
+ * server can reuse the same predicate for counts.
+ */
+export const matchesTab = (
+  artifact: Pick<ArtifactSummary, "is_public" | "status">,
+  tab: ArtifactTabId,
+): boolean => {
+  switch (tab) {
+    case "all":
+      return true
+    case "published":
+      return artifact.status === "published"
+    case "drafts":
+      return artifact.status === "draft"
+    case "public":
+      return artifact.is_public
+    case "private":
+      return !artifact.is_public
+  }
+}
+
+// --- payload schemas -------------------------------------------------------
+
+/**
+ * A theme is a token set: CSS custom property names mapped to values, split by
+ * colour scheme. Deliberately a record rather than a fixed key list - shadcn
+ * token sets differ between projects and a closed enum would reject valid
+ * themes.
+ *
+ * Keys are constrained because this lands in a JSONB column that is later
+ * interpolated into a stylesheet: a key carrying `:` or `}` could break out of
+ * the declaration it is written into.
+ */
+const cssTokenKey = z
+  .string()
+  .regex(
+    /^--[a-z0-9-]+$/,
+    "Token names must look like --foo-bar (lowercase, digits, hyphens)",
+  )
+
+const cssTokenValue = z
+  .string()
+  .trim()
+  .min(1)
+  .max(200)
+  .refine(
+    (value) => !/[;{}<>]/.test(value),
+    "Token values cannot contain ; { } < or >",
+  )
+
+const themePayloadSchema = z.object({
+  light: z.record(cssTokenKey, cssTokenValue).default({}),
+  dark: z.record(cssTokenKey, cssTokenValue).default({}),
+  radius: z.string().trim().max(32).optional(),
+})
+  // .strict(): with light/dark defaulted and radius optional, a non-strict
+  // object accepts ANY input - a gradient payload parsed cleanly as a theme.
+  // Rejecting unknown keys is what makes cross-kind payloads fail.
+  .strict()
+
+const asciiPayloadSchema = z.object({
+  source: z.string().max(20_000),
+  columns: z.number().int().positive().max(500).optional(),
+  charset: z.string().max(200).optional(),
+}).strict()
+
+const gradientPayloadSchema = z.object({
+  css: z.string().trim().min(1).max(2_000),
+  stops: z
+    .array(z.object({ color: z.string().max(64), position: z.number() }))
+    .max(32)
+    .optional(),
+}).strict()
+
+const shaderPayloadSchema = z.object({
+  fragment: z.string().max(50_000),
+  vertex: z.string().max(50_000).optional(),
+  uniforms: z.record(z.string(), z.union([z.number(), z.string()])).optional(),
+}).strict()
+
+// --- the registry ----------------------------------------------------------
+
+export interface ArtifactKindConfig {
+  kind: ArtifactKind
+  label: string
+  pluralLabel: string
+  icon: typeof Palette
+  emptyState: { title: string; description: string }
+  tabs: readonly ArtifactTab[]
+  payloadSchema: z.ZodTypeAny
+  /** Which editor shell §6.5 mounts for this kind. */
+  editorMode: "tokens" | "text" | "css" | "glsl"
+}
+
+export const ARTIFACT_REGISTRY: Record<ArtifactKind, ArtifactKindConfig> = {
+  theme: {
+    kind: "theme",
+    label: "Theme",
+    pluralLabel: "Themes",
+    icon: Palette,
+    emptyState: {
+      title: "No themes yet",
+      description:
+        "A theme is a set of design tokens you can apply to any component.",
+    },
+    tabs: PUBLICATION_TABS,
+    payloadSchema: themePayloadSchema,
+    editorMode: "tokens",
+  },
+  ascii: {
+    kind: "ascii",
+    label: "ASCII art",
+    pluralLabel: "ASCII art",
+    icon: Type,
+    emptyState: {
+      title: "No ASCII art yet",
+      description: "Turn text and images into character art.",
+    },
+    tabs: VISIBILITY_TABS,
+    payloadSchema: asciiPayloadSchema,
+    editorMode: "text",
+  },
+  gradient: {
+    kind: "gradient",
+    label: "Gradient",
+    pluralLabel: "Gradients",
+    icon: Waves,
+    emptyState: {
+      title: "No gradients yet",
+      description: "Build a gradient once and reuse it across components.",
+    },
+    tabs: VISIBILITY_TABS,
+    payloadSchema: gradientPayloadSchema,
+    editorMode: "css",
+  },
+  shader: {
+    kind: "shader",
+    label: "Shader",
+    pluralLabel: "Shaders",
+    icon: Sparkles,
+    emptyState: {
+      title: "No shaders yet",
+      description: "Write GLSL and preview it live.",
+    },
+    tabs: VISIBILITY_TABS,
+    payloadSchema: shaderPayloadSchema,
+    editorMode: "glsl",
+  },
+}
+
+export const getKindConfig = (kind: ArtifactKind): ArtifactKindConfig => {
+  const config = ARTIFACT_REGISTRY[kind]
+  if (!config) {
+    // Reachable from a URL segment or a database row, neither of which the type
+    // system constrains, so this is a real guard rather than an assertion.
+    throw new Error(`Unknown artifact kind: ${kind}`)
+  }
+  return config
+}
+
+export const isArtifactKind = (value: unknown): value is ArtifactKind =>
+  typeof value === "string" &&
+  (ARTIFACT_KINDS as readonly string[]).includes(value)

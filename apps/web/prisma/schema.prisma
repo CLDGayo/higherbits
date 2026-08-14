@@ -658,6 +658,7 @@ model users {
   referral_payments                            referral_payments[]
   sandboxes                                    sandboxes[]
   templates                                    templates[]
+  studio_artifacts                             studio_artifacts[]
   usages                                       usages?
   users_to_plans                               users_to_plans?
 
@@ -719,4 +720,29 @@ enum user_role {
   backend_developer
   product_manager
   entrepreneur
+}
+
+/// Phase 09 substrate for user-authored creative artifacts: themes, ascii art,
+/// gradients and shaders. One table discriminated by `kind`.
+///
+/// Hand-written to match supabase/migrations/0002_studio_artifacts.sql so the
+/// generated client is typed before the migration is applied. `prisma db pull`
+/// after applying should be a no-op against this block; if it is not, the
+/// migration and this model have drifted and the migration wins.
+model studio_artifacts {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String
+  kind        String
+  name        String
+  slug        String
+  payload     Json     @default("{}")
+  preview_url String?
+  is_public   Boolean  @default(false)
+  status      String   @default("draft")
+  created_at  DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  updated_at  DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  users       users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, kind, slug], map: "studio_artifacts_user_kind_slug_key")
+  @@index([user_id, kind], map: "studio_artifacts_user_kind_idx")
 }

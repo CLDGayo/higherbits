@@ -1,0 +1,223 @@
+import "server-only"
+import prisma from "../../prisma"
+import {
+  type ArtifactKind,
+  type ArtifactStatus,
+  getKindConfig,
+} from "@/components/features/studio/artifacts/registry"
+
+/**
+ * Kind-agnostic CRUD for studio_artifacts (Phase 09, §6.4).
+ *
+ * Two rules hold on every mutation here, and neither can move up into the
+ * action layer:
+ *
+ * 1. Ownership is re-checked against the loaded row. Prisma connects as
+ *    service_role and `relforcerowsecurity` is false on every table in this
+ *    database, so RLS does not apply to this path at all. The policies in
+ *    0002_studio_artifacts.sql constrain the browser client only. Here, this
+ *    check is the whole control.
+ * 2. The payload is parsed against the registry's zod schema for the row's
+ *    kind. `payload` is a JSONB column, so an unvalidated write stores whatever
+ *    it is handed - a client-side check alone is not a control.
+ */
+
+export class ArtifactNotFoundError extends Error {
+  constructor() {
+    super("Artifact not found")
+    this.name = "ArtifactNotFoundError"
+  }
+}
+
+export class ArtifactForbiddenError extends Error {
+  constructor() {
+    super("You do not have access to this artifact")
+    this.name = "ArtifactForbiddenError"
+  }
+}
+
+export class ArtifactPayloadError extends Error {
+  readonly issues: string[]
+  constructor(issues: string[]) {
+    super(`Invalid payload: ${issues.join("; ")}`)
+    this.name = "ArtifactPayloadError"
+    this.issues = issues
+  }
+}
+
+/**
+ * Parses `payload` against the schema the registry declares for `kind`.
+ *
+ * Returns the parsed value rather than the input, so stored defaults are the
+ * ones zod applied. The schemas are `.strict()`, so an unknown key is an error
+ * rather than something quietly dropped - without that, every theme field being
+ * optional or defaulted meant a gradient payload parsed cleanly as a theme.
+ */
+export const validatePayload = (kind: ArtifactKind, payload: unknown) => {
+  const result = getKindConfig(kind).payloadSchema.safeParse(payload)
+  if (!result.success) {
+    throw new ArtifactPayloadError(
+      result.error.issues.map(
+        (issue) =>
+          `${issue.path.join(".") || "payload"}: ${issue.message}`,
+      ),
+    )
+  }
+  return result.data
+}
+
+/** Throws unless the artifact exists and belongs to `userId`. */
+const assertOwned = async (id: string, userId: string) => {
+  const artifact = await prisma.studio_artifacts.findUnique({
+    where: { id },
+    select: { id: true, user_id: true, kind: true },
+  })
+
+  if (!artifact) {
+    throw new ArtifactNotFoundError()
+  }
+
+  // Deliberately not folded into the findUnique above. Distinguishing "missing"
+  // from "not yours" here keeps the error accurate for the owner; the action
+  // layer is what decides how much of that reaches a caller.
+  if (artifact.user_id !== userId) {
+    throw new ArtifactForbiddenError()
+  }
+
+  return artifact
+}
+
+export const listArtifacts = async (userId: string, kind: ArtifactKind) =>
+  prisma.studio_artifacts.findMany({
+    where: { user_id: userId, kind },
+    orderBy: { created_at: "desc" },
+    select: {
+      id: true,
+      kind: true,
+      name: true,
+      slug: true,
+      preview_url: true,
+      is_public: true,
+      status: true,
+      created_at: true,
+      updated_at: true,
+    },
+  })
+
+/**
+ * Reads one artifact for viewing. Unlike the mutations this allows a non-owner
+ * through, but only on the same condition the RLS select policy encodes:
+ * public *and* published. A public draft stays invisible.
+ */
+export const getArtifact = async (id: string, viewerId: string | null) => {
+  const artifact = await prisma.studio_artifacts.findUnique({ where: { id } })
+
+  if (!artifact) {
+    throw new ArtifactNotFoundError()
+  }
+
+  const isOwner = viewerId !== null && artifact.user_id === viewerId
+  const isPublished = artifact.is_public && artifact.status === "published"
+
+  if (!isOwner && !isPublished) {
+    throw new ArtifactForbiddenError()
+  }
+
+  return artifact
+}
+
+export const createArtifact = async (
+  userId: string,
+  input: {
+    kind: ArtifactKind
+    name: string
+    slug: string
+    payload: unknown
+    preview_url?: string | null
+  },
+) =>
+  prisma.studio_artifacts.create({
+    data: {
+      user_id: userId,
+      kind: input.kind,
+      name: input.name,
+      slug: input.slug,
+      payload: validatePayload(input.kind, input.payload),
+      preview_url: input.preview_url ?? null,
+    },
+  })
+
+export const updateArtifact = async (
+  id: string,
+  userId: string,
+  input: {
+    name?: string
+    slug?: string
+    payload?: unknown
+    preview_url?: string | null
+  },
+) => {
+  // The kind comes from the stored row, never from the caller. Letting a caller
+  // supply it would let them pick which schema their payload is validated
+  // against, which is the same as not validating it.
+  const { kind } = await assertOwned(id, userId)
+
+  return prisma.studio_artifacts.update({
+    where: { id },
+    data: {
+      ...(input.name !== undefined && { name: input.name }),
+      ...(input.slug !== undefined && { slug: input.slug }),
+      ...(input.preview_url !== undefined && {
+        preview_url: input.preview_url,
+      }),
+      ...(input.payload !== undefined && {
+        payload: validatePayload(kind as ArtifactKind, input.payload),
+      }),
+    },
+  })
+}
+
+export const setArtifactStatus = async (
+  id: string,
+  userId: string,
+  status: ArtifactStatus,
+) => {
+  await assertOwned(id, userId)
+  return prisma.studio_artifacts.update({ where: { id }, data: { status } })
+}
+
+export const setArtifactVisibility = async (
+  id: string,
+  userId: string,
+  isPublic: boolean,
+) => {
+  await assertOwned(id, userId)
+  return prisma.studio_artifacts.update({
+    where: { id },
+    data: { is_public: isPublic },
+  })
+}
+
+export const deleteArtifact = async (id: string, userId: string) => {
+  await assertOwned(id, userId)
+  await prisma.studio_artifacts.delete({ where: { id } })
+}
+
+/** True when the slug is free for this owner and kind. */
+export const isArtifactSlugAvailable = async (
+  userId: string,
+  kind: ArtifactKind,
+  slug: string,
+  excludeId?: string,
+) => {
+  const existing = await prisma.studio_artifacts.findFirst({
+    where: {
+      user_id: userId,
+      kind,
+      slug,
+      ...(excludeId && { id: { not: excludeId } }),
+    },
+    select: { id: true },
+  })
+  return existing === null
+}
