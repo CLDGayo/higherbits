@@ -33,7 +33,7 @@ interface StudioSidebarProps {
 }
 
 /** `undefined` renders no badge; a real number - including 0 - renders. */
-function countFor(
+export function countFor(
   item: StudioNavItem,
   counts: StudioNavCounts,
 ): number | undefined {
@@ -48,6 +48,8 @@ function countFor(
       return counts.libraries ?? undefined
     case "templates":
       return counts.templates ?? undefined
+    case "themes":
+      return counts.themes ?? undefined
     default:
       return undefined
   }

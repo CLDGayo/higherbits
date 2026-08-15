@@ -10,10 +10,12 @@ export interface StudioNavCounts {
   components: number | null
   libraries: number | null
   templates: number | null
+  themes: number | null
 }
 
 export const EMPTY_STUDIO_NAV_COUNTS: StudioNavCounts = {
   components: null,
   libraries: null,
   templates: null,
+  themes: null,
 }

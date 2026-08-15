@@ -1,7 +1,9 @@
 import "server-only"
 
+import prisma from "@/lib/prisma"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 
+import type { ArtifactKind } from "./artifacts/registry"
 import type { StudioNavCounts } from "./studio-counts-types"
 
 export type { StudioNavCounts } from "./studio-counts-types"
@@ -35,6 +37,37 @@ async function countRows(
   }
 
   return count ?? null
+}
+
+/**
+ * Counted through Prisma, unlike every other badge on this page.
+ *
+ * `studio_artifacts` arrived in migration `0002` and the generated supabase-js
+ * types were never regenerated for it - `prisma db pull` was run, `supabase gen
+ * types` was not - so `supabaseWithAdminAccess.from("studio_artifacts")` does
+ * not typecheck. Prisma is already this table's access path everywhere else
+ * (`lib/api/server/artifacts.ts`), and it bypasses RLS the same way the
+ * service-role client does, so the reachability argument above still holds.
+ *
+ * The `kind` filter is not optional in spirit: one table backs all four artifact
+ * kinds, so an unfiltered count would silently inflate as Phase 10 lands ascii,
+ * gradients and shaders.
+ */
+async function countArtifacts(
+  userId: string,
+  kind: ArtifactKind,
+): Promise<number | null> {
+  try {
+    return await prisma.studio_artifacts.count({
+      where: { user_id: userId, kind },
+    })
+  } catch (error) {
+    console.error(
+      `Error counting studio_artifacts (kind=${kind}) for studio sidebar:`,
+      error,
+    )
+    return null
+  }
 }
 
 /**
@@ -79,11 +112,12 @@ async function countComponents(userId: string): Promise<number | null> {
 export async function getStudioNavCounts(
   userId: string,
 ): Promise<StudioNavCounts> {
-  const [components, libraries, templates] = await Promise.all([
+  const [components, libraries, templates, themes] = await Promise.all([
     countComponents(userId),
     countRows("collections", userId),
     countRows("templates", userId),
+    countArtifacts(userId, "theme"),
   ])
 
-  return { components, libraries, templates }
+  return { components, libraries, templates, themes }
 }
