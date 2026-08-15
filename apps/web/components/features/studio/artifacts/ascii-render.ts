@@ -99,7 +99,9 @@ export function charForLuminance(
     ramp.length - 1,
     Math.max(0, Math.round(lit * (ramp.length - 1))),
   )
-  return ramp[index] ?? ramp[0]
+  // Both fallbacks are for `noUncheckedIndexedAccess`, not for a reachable case:
+  // `index` is already clamped into the ramp, and every ramp is non-empty.
+  return ramp[index] ?? ramp[0] ?? " "
 }
 
 /**
@@ -149,9 +151,13 @@ export function renderAsciiRows({
       for (let y = y0; y < y1; y++) {
         for (let x = x0; x < x1; x++) {
           const i = (y * width + x) * 4
-          const alpha = pixels[i + 3] / 255
+          // `?? 0` satisfies noUncheckedIndexedAccess; a short buffer would
+          // read as black rather than throwing mid-render.
+          const alpha = (pixels[i + 3] ?? 0) / 255
           // Transparent pixels read as background, not as black.
-          total += luminance(pixels[i], pixels[i + 1], pixels[i + 2]) * alpha
+          total +=
+            luminance(pixels[i] ?? 0, pixels[i + 1] ?? 0, pixels[i + 2] ?? 0) *
+            alpha
           count++
         }
       }

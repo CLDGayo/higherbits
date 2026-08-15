@@ -68,8 +68,14 @@ export const validatePayload = (kind: ArtifactKind, payload: unknown) => {
   return result.data
 }
 
-/** Throws unless the artifact exists and belongs to `userId`. */
-const assertOwned = async (id: string, userId: string) => {
+/**
+ * Throws unless the artifact exists and belongs to `userId`.
+ *
+ * Exported since Phase 10a: the ASCII upload route needs exactly this check
+ * before it will write an object into a key namespaced by an artifact id, and a
+ * second implementation of "is this yours" is how the two drift apart.
+ */
+export const assertOwned = async (id: string, userId: string) => {
   const artifact = await prisma.studio_artifacts.findUnique({
     where: { id },
     select: { id: true, user_id: true, kind: true },
