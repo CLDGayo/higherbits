@@ -127,11 +127,96 @@ const themePayloadSchema = z.object({
   // Rejecting unknown keys is what makes cross-kind payloads fail.
   .strict()
 
+/**
+ * ASCII art (Phase 10a, §10a.2).
+ *
+ * The placeholder this replaced held `source` / `columns` / `charset` - roughly
+ * three of the thirty-odd parameters the reference exposes. Rewriting it was
+ * free because a read-only probe confirmed zero `ascii` rows existed; because
+ * these schemas are `.strict()`, the same change after rows exist would reject
+ * every stored payload on read. Do the same check before rewriting the gradient
+ * and shader schemas in 10b and 10c.
+ *
+ * **Every numeric is bounded, and that is a safety property rather than
+ * tidiness.** `cellSize` and `coverage` become loop counts in the renderer:
+ * an unbounded `cellSize` of 0 or a negative divides the image into infinite
+ * cells and hangs the tab. The theme schema's header makes the same argument
+ * about unbounded strings interpolated into a stylesheet.
+ *
+ * `sourceType` is a one-member union rather than an enum with unreachable
+ * members. 10a ships the photo source only - the reference's Video, Shader and
+ * Gradient sources were cut at entry because the capture never opened those
+ * tabs. Widening this later is additive.
+ */
+
+/** The six styles 10a ships, of the reference's 25. All pure character mapping. */
+export const ASCII_STYLES = [
+  { id: "characters", label: "Characters", ramp: " .:-=+*#%@" },
+  { id: "braille", label: "Braille", ramp: " ⠁⠃⠇⠧⠷⠿⡿⣿" },
+  { id: "matrix", label: "Matrix", ramp: " 01" },
+  { id: "dots", label: "Dots", ramp: " ·∙•●" },
+  { id: "dither", label: "Dither", ramp: " ░▒▓█" },
+  { id: "halfblocks", label: "Half Blocks", ramp: " ▁▂▃▄▅▆▇█" },
+] as const
+
+export type AsciiStyleId = (typeof ASCII_STYLES)[number]["id"]
+
+export const ASCII_CHARSETS = ["style", "binary", "hex", "alpha"] as const
+export const ASCII_BLEND_MODES = ["normal", "multiply", "screen", "overlay"] as const
+export const ASCII_BACKGROUND_MODES = ["solid-black", "solid-white", "transparent"] as const
+
+const asciiStyleId = z.enum(
+  ASCII_STYLES.map((style) => style.id) as [AsciiStyleId, ...AsciiStyleId[]],
+)
+
 const asciiPayloadSchema = z.object({
-  source: z.string().max(20_000),
-  columns: z.number().int().positive().max(500).optional(),
-  charset: z.string().max(200).optional(),
+  sourceType: z.literal("photo"),
+  /**
+   * R2 object key, always derived server-side from the authenticated user id.
+   * Constrained here as a second line: a key carrying `..` or a leading slash
+   * is a path-traversal attempt, and this value is later concatenated into a
+   * URL. The upload route is the first line and does not trust the client for
+   * this at all.
+   */
+  sourceKey: z
+    .string()
+    .trim()
+    .min(1)
+    .max(400)
+    .regex(
+      /^[a-zA-Z0-9][a-zA-Z0-9/_.-]*$/,
+      "Object keys are alphanumerics, slashes, dots, underscores and hyphens",
+    )
+    .refine((key) => !key.includes(".."), "Object keys cannot traverse")
+    // Optional because an artifact is created before a photo is chosen: "+ New"
+    // makes the row, the editor uploads into it. A required key would make the
+    // create action unable to write its own default payload.
+    .optional(),
+  styleId: asciiStyleId,
+  cellSize: z.number().int().min(4).max(64),
+  coverage: z.number().min(1).max(100),
+  invert: z.boolean(),
+  blendMode: z.enum(ASCII_BLEND_MODES),
+  charset: z.enum(ASCII_CHARSETS),
+  background: z.object({
+    mode: z.enum(ASCII_BACKGROUND_MODES),
+    opacity: z.number().min(0).max(100),
+  }),
 }).strict()
+
+export type AsciiPayload = z.infer<typeof asciiPayloadSchema>
+
+/** Reference defaults, used for a newly created artifact that has no photo yet. */
+export const ASCII_DEFAULT_PAYLOAD: AsciiPayload = {
+  sourceType: "photo",
+  styleId: "characters",
+  cellSize: 14,
+  coverage: 96,
+  invert: false,
+  blendMode: "normal",
+  charset: "style",
+  background: { mode: "solid-black", opacity: 90 },
+}
 
 const gradientPayloadSchema = z.object({
   css: z.string().trim().min(1).max(2_000),
