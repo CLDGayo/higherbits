@@ -423,14 +423,27 @@ export function StudioUsernameClient({
           onBulkMoveToLibrary={
             isOwnProfile || isAdmin ? handleBulkMoveToLibrary : undefined
           }
-          // Bulk visibility is withheld pending an unexplained write: on
-          // 2026-08-13 a component that was not in the selection came back
-          // public after a bulk apply. The selection mapping was checked and is
-          // 1:1, and every write is scoped .eq("id", componentId), so no path
-          // to an unselected row has been found - which is exactly why this
-          // stays off until the Postgres log names the statement. handleBulkVisibility
-          // is left wired up so restoring it is a one-line change.
-          onBulkVisibility={undefined}
+          // Restored 2026-08-15. This was withheld after the 2026-08-13 write
+          // that made an unselected component public, on the reasoning that no
+          // path to an unselected row had been found. That reasoning was sound
+          // and the conclusion was right: there is no such path. The selection
+          // mapping is 1:1 and every write here is scoped .eq("id", componentId).
+          //
+          // The cause was elsewhere. The admin submissions route asserted
+          // is_public from submissions.status on every PATCH, so an admin action
+          // on a *featured* component republished it regardless of what its owner
+          // had chosen, and it left no timestamp because submissions has no
+          // updated_at and nothing writes components.updated_at. Fixed in
+          // lib/submission-visibility.ts: visibility now follows a transition.
+          //
+          // The old comment said this stays off "until the Postgres log names the
+          // statement". That never happened and is still not available. What
+          // replaced it: every other writer was eliminated by direct query - no
+          // trigger, no rule, no Postgres function writing the column, no pg_cron,
+          // no Edge Function - and the republish path was ruled out by timestamps.
+          onBulkVisibility={
+            isOwnProfile || isAdmin ? handleBulkVisibility : undefined
+          }
         />
       </div>
       {previewDemo && (
