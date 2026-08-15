@@ -561,18 +561,40 @@ $$;
 -- ============ templates ============
 
 -- =====================================================================
--- !!  NOT YET APPLIED TO THE LIVE DATABASE  !!
+-- APPLIED TO THE LIVE DATABASE 2026-08-15
 -- =====================================================================
--- Updated 2026-08-12. The `p_include_private` branch below is now gated on
--- ownership, matching the sibling get_collections_v1 (line ~555 above).
+-- Written 2026-08-12, applied 2026-08-15 to project ewktoowpuemgbaaxxbdq via
+-- `prisma db execute`. The `p_include_private` branch is gated on ownership,
+-- matching the sibling get_collections_v1 (line ~555 above).
 --
--- This file is a tracked definition, not a migration, so editing it changes
--- nothing on its own. Run this definition against the database, then verify
--- that a signed-in caller requesting private rows receives only their own.
+-- Why it mattered: this function is SECURITY DEFINER, so it runs as the owner
+-- and bypasses RLS on public.templates entirely. The WHERE clause below is the
+-- only access control there is. The old predicate was
+--   (COALESCE(p_include_private, false) OR t.is_public = true)
+-- so ANY caller passing p_include_private = true received every user's private
+-- templates.
 --
--- Until that is done, the live function's behaviour differs from what is
--- written here. Rationale and verification steps: private engineering notes,
--- Phase 06.
+-- Verified after applying, by reading pg_get_functiondef back out of the
+-- database: the ownership predicate is present and the old one is gone. Under
+-- realistic claim shapes the public path is unchanged -- {"role":"anon"} and a
+-- signed-in {"sub":...} both return the same row count as before.
+--
+-- Measured at apply time: the templates table held ZERO private rows, so the
+-- defect had never actually exposed anything. It was one private template away
+-- from doing so.
+--
+-- NOT proven: that an actual private row is hidden from a non-owner AND still
+-- visible to its owner. That test needs a transient INSERT and was not run, so
+-- over-tightening is untested. Low risk -- the studio reads a user's own
+-- templates through Prisma server-side (see lib/api/server/templates.ts:16),
+-- not through this function, and the only runtime caller passes
+-- p_include_private: false.
+--
+-- Pre-existing, NOT introduced here: requesting_user_id() does
+-- current_setting('request.jwt.claims', true)::json, which throws on an empty
+-- string. The unchanged, long-deployed get_collections_v1 throws identically
+-- under the same condition, so this is a property of requesting_user_id()
+-- rather than of this change. Real PostgREST traffic always sets valid claims.
 -- =====================================================================
 CREATE OR REPLACE FUNCTION public.get_templates_v3(
   p_offset integer DEFAULT 0,
