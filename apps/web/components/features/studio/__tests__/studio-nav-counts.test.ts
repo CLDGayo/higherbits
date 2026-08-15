@@ -27,6 +27,7 @@ const ALL_COUNTS: StudioNavCounts = {
   libraries: 0,
   templates: 1,
   themes: 2,
+  ascii: 3,
 }
 
 /**
@@ -75,11 +76,14 @@ describe("countFor", () => {
     expect(countFor(themes, EMPTY_STUDIO_NAV_COUNTS)).toBeUndefined()
   })
 
-  it("counts themes independently of templates", () => {
+  it("counts each artifact kind independently", () => {
     const themes = STUDIO_NAV_ITEMS.find((i) => i.slug === "themes")!
+    const ascii = STUDIO_NAV_ITEMS.find((i) => i.slug === "ascii")!
 
-    // Regression: `studio_artifacts` holds all four kinds in one table, so a
-    // themes badge that ignored `kind` would drift as Phase 10 lands.
+    // `studio_artifacts` holds all four kinds in one table, so a badge that
+    // ignored `kind` would show the same total for every section. Distinct
+    // fixture values are what make that visible.
     expect(countFor(themes, ALL_COUNTS)).toBe(2)
+    expect(countFor(ascii, ALL_COUNTS)).toBe(3)
   })
 })

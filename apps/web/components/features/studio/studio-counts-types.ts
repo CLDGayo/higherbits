@@ -11,6 +11,7 @@ export interface StudioNavCounts {
   libraries: number | null
   templates: number | null
   themes: number | null
+  ascii: number | null
 }
 
 export const EMPTY_STUDIO_NAV_COUNTS: StudioNavCounts = {
@@ -18,4 +19,5 @@ export const EMPTY_STUDIO_NAV_COUNTS: StudioNavCounts = {
   libraries: null,
   templates: null,
   themes: null,
+  ascii: null,
 }

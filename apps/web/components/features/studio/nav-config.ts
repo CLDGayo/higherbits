@@ -79,7 +79,6 @@ export const STUDIO_NAV_ITEMS: StudioNavItem[] = [
     icon: Type,
     tooltip: "ASCII art",
     segment: "ascii",
-    comingSoon: true,
   },
   {
     slug: "gradients",

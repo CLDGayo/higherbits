@@ -50,6 +50,8 @@ export function countFor(
       return counts.templates ?? undefined
     case "themes":
       return counts.themes ?? undefined
+    case "ascii":
+      return counts.ascii ?? undefined
     default:
       return undefined
   }
