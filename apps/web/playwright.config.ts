@@ -21,6 +21,9 @@ const storageState = fs.existsSync(storageStatePath)
 
 export default defineConfig({
   testDir: "./e2e",
+  // Compiles every route once before any spec runs, so no assertion races the
+  // dev server's first-request compile. See e2e/global-setup.ts.
+  globalSetup: "./e2e/global-setup.ts",
   timeout: 60_000,
   expect: {
     timeout: 5_000,
