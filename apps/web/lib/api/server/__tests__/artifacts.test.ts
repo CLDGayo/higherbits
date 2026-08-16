@@ -68,8 +68,28 @@ describe("validatePayload", () => {
     expect(() => validatePayload("gradient", { source: "x" })).toThrow(
       ArtifactPayloadError,
     )
-    expect(validatePayload("gradient", { css: "linear-gradient(red, blue)" }))
-      .toEqual({ css: "linear-gradient(red, blue)" })
+    // The old css-based shape (Phase 10b, §10b.2 rewrite) must not validate -
+    // `css` is a derived approximation, never the stored source of truth.
+    expect(() =>
+      validatePayload("gradient", { css: "linear-gradient(red, blue)" }),
+    ).toThrow(ArtifactPayloadError)
+    expect(
+      validatePayload("gradient", {
+        formId: "bloom-field",
+        geometry: { scale: 1, distortion: 0.5 },
+        stops: [{ name: "Start", hex: "#7c3aed" }],
+        baseColour: "#0b0b12",
+        surface: { blur: 0, grain: 0, edgeShade: 0 },
+        motion: { animate: false },
+      }),
+    ).toEqual({
+      formId: "bloom-field",
+      geometry: { scale: 1, distortion: 0.5 },
+      stops: [{ name: "Start", hex: "#7c3aed" }],
+      baseColour: "#0b0b12",
+      surface: { blur: 0, grain: 0, edgeShade: 0 },
+      motion: { animate: false },
+    })
   })
 })
 

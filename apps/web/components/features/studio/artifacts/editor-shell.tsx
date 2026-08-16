@@ -68,13 +68,19 @@ export interface ArtifactEditorShellProps<TPayload> {
   renderBody: (props: ArtifactBodyProps<TPayload>) => ReactNode
   renderPreview: (payload: TPayload) => ReactNode
   /**
-   * Optional action bar under the preview. Unpopulated in 10a and deliberately
-   * left here: Phase 10b adds the shared Inspire / Recolour / Restyle bar, which
-   * the entry ruling established is a cross-editor idiom rather than a gradient
-   * feature. Leaving the seam now is cheap; cutting one into a shell three
-   * bodies already use is not.
+   * Optional action bar under the preview. Unpopulated in 10a and populated
+   * in Phase 10b with the shared Inspire / Recolour / Restyle bar - a
+   * cross-editor idiom rather than a gradient feature.
+   *
+   * **Shaped as a render prop, matching `renderBody` (Phase 10b, §10b.5).**
+   * The bar needs the shell's live `payload`/`setPayload` to randomise
+   * anything, and those are internal state this component owns - a plain
+   * `ReactNode` computed once by the caller has no way to reach them. This
+   * widens the slot's type; it does not teach the shell what a gradient is,
+   * and it adds no `kind` branch (G10b.8). 10c passes its own bar through
+   * this same shape - how 10b uses it is the precedent.
    */
-  actions?: ReactNode
+  actions?: (props: ArtifactBodyProps<TPayload>) => ReactNode
   onSaved?: () => void
   /**
    * Publish and visibility take effect immediately, but the list that opened
@@ -233,7 +239,7 @@ export function ArtifactEditorShell<TPayload>({
 
       <div className="flex flex-1 flex-col gap-3">
         {renderPreview(payload)}
-        {actions}
+        {actions?.({ payload, setPayload })}
       </div>
     </div>
   )

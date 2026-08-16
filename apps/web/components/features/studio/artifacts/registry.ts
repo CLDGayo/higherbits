@@ -218,13 +218,101 @@ export const ASCII_DEFAULT_PAYLOAD: AsciiPayload = {
   background: { mode: "solid-black", opacity: 90 },
 }
 
-const gradientPayloadSchema = z.object({
-  css: z.string().trim().min(1).max(2_000),
-  stops: z
-    .array(z.object({ color: z.string().max(64), position: z.number() }))
-    .max(32)
-    .optional(),
+/**
+ * Gradients (Phase 10b, §10b.2).
+ *
+ * The placeholder this replaces was wrong three ways: `css` as required
+ * source-of-truth (CSS is a derived approximation, never stored - nobody
+ * exports a CSS gradient as a 1080p PNG), stops carrying a numeric
+ * `position` (dropped per §7.0b decision 7 - positions belong to a form's
+ * own geometry, because Bloom Field treats stops as independent 2D points,
+ * not offsets along a 1D axis), and `editorMode: "css"` (corrected below;
+ * the runtime is WebGL, not a stylesheet).
+ *
+ * Rewriting was free because the §10b.0 probe confirmed zero `gradient` rows
+ * before this schema changed - `.strict()` means the rewrite is a rejection
+ * of every stored payload the moment one exists.
+ *
+ * **Every numeric is bounded** for the same reason `asciiPayloadSchema`
+ * bounds its numerics: these values reach a GPU uniform and a canvas sizer,
+ * not just a rendering quirk if they are wrong.
+ */
+
+/**
+ * §7.0b chose one form per family before the runtime was known. Checked
+ * against the adopted library (§10b.0 step 4): Bloom Field and Core Glow map
+ * directly onto `MeshGradient` and `StaticRadialGradient`. Axis Blend and
+ * Pulse Bars have no native match; they render through `GrainGradient`
+ * (shape "wave") and `Waves` respectively - the closest same-family effect
+ * the library ships. The swap is recorded here because this list is the
+ * schema's source of truth for what a stored `formId` may be; the runtime
+ * mapping itself lives in `gradient-form-props.ts`.
+ */
+export const GRADIENT_FORMS = [
+  { id: "bloom-field", label: "Bloom Field", family: "Atmosphere" },
+  { id: "core-glow", label: "Core Glow", family: "Focus" },
+  { id: "axis-blend", label: "Axis Blend", family: "Direction" },
+  { id: "pulse-bars", label: "Pulse Bars", family: "Pattern" },
+] as const
+
+export type GradientFormId = (typeof GRADIENT_FORMS)[number]["id"]
+
+const gradientFormIdSchema = z.enum(
+  GRADIENT_FORMS.map((form) => form.id) as [GradientFormId, ...GradientFormId[]],
+)
+
+/**
+ * Six hex digits only - no `#fff` shorthand, no `transparent`, no CSS colour
+ * keywords. This value reaches `getShaderColorFromString` in the runtime
+ * wrapper and a stray keyword there is a runtime failure, not a rendering
+ * quirk.
+ */
+const hexColour = z
+  .string()
+  .trim()
+  .regex(/^#[0-9a-fA-F]{6}$/, "Colours must be a 6-digit hex value like #7c3aed")
+
+const gradientColourStop = z.object({
+  name: z.string().trim().min(1).max(40),
+  hex: hexColour,
 }).strict()
+
+const gradientPayloadSchema = z.object({
+  formId: gradientFormIdSchema,
+  geometry: z.object({
+    scale: z.number().min(0.1).max(4),
+    distortion: z.number().min(0).max(1),
+  }).strict(),
+  // At least one stop so a runtime mapping is never handed an empty colour
+  // list; capped so the Palette panel and the stored payload cannot grow
+  // without bound.
+  stops: z.array(gradientColourStop).min(1).max(8),
+  baseColour: hexColour,
+  surface: z.object({
+    blur: z.number().int().min(0).max(64),
+    grain: z.number().min(0).max(100),
+    edgeShade: z.number().min(0).max(100),
+  }).strict(),
+  // Motion is one boolean (§7.0b Finding 5): the reference's Motion panel has
+  // no parameters at all, because movement is baked per form.
+  motion: z.object({
+    animate: z.boolean(),
+  }).strict(),
+}).strict()
+
+export type GradientPayload = z.infer<typeof gradientPayloadSchema>
+
+export const GRADIENT_DEFAULT_PAYLOAD: GradientPayload = {
+  formId: "bloom-field",
+  geometry: { scale: 1, distortion: 0.5 },
+  stops: [
+    { name: "Start", hex: "#7c3aed" },
+    { name: "End", hex: "#f472b6" },
+  ],
+  baseColour: "#0b0b12",
+  surface: { blur: 0, grain: 0, edgeShade: 0 },
+  motion: { animate: false },
+}
 
 const shaderPayloadSchema = z.object({
   fragment: z.string().max(50_000),
@@ -256,7 +344,7 @@ export interface ArtifactKindConfig {
   tabs: readonly ArtifactTab[]
   payloadSchema: z.ZodTypeAny
   /** Which editor shell §6.5 mounts for this kind. */
-  editorMode: "tokens" | "text" | "css" | "glsl"
+  editorMode: "tokens" | "text" | "webgl" | "glsl"
 }
 
 const previewRenderers = new Map<ArtifactKind, ArtifactPreviewRenderer>()
@@ -312,11 +400,11 @@ export const ARTIFACT_REGISTRY: Record<ArtifactKind, ArtifactKindConfig> = {
     icon: Waves,
     emptyState: {
       title: "No gradients yet",
-      description: "Build a gradient once and reuse it across components.",
+      description: "Create a gradient in the editor and save it here.",
     },
     tabs: VISIBILITY_TABS,
     payloadSchema: gradientPayloadSchema,
-    editorMode: "css",
+    editorMode: "webgl",
   },
   shader: {
     kind: "shader",
