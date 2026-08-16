@@ -193,6 +193,9 @@ importers:
       '@number-flow/react':
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.1.0)(react@19.1.0)
+      '@paper-design/shaders-react':
+        specifier: 0.0.80
+        version: 0.0.80(@types/react@19.1.1)(react@19.1.0)
       '@prisma/client':
         specifier: ^6.8.2
         version: 6.8.2(prisma@6.8.2)(typescript@5.8.3)
@@ -3161,6 +3164,24 @@ packages:
 
   /@open-draft/deferred-promise@2.2.0:
     resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
+    dev: false
+
+  /@paper-design/shaders-react@0.0.80(@types/react@19.1.1)(react@19.1.0):
+    resolution: {integrity: sha512-Y1oxUeh5D2AECo05O+4UYRbaMfQzKKYH3Q5jcvirOcoX0hTPYbezCLn5g94nvcuzxy5LN/uqwsL3jDUp8r3E+A==}
+    peerDependencies:
+      '@types/react': ^18 || ^19
+      react: ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@paper-design/shaders': 0.0.80
+      '@types/react': 19.1.1
+      react: 19.1.0
+    dev: false
+
+  /@paper-design/shaders@0.0.80:
+    resolution: {integrity: sha512-pcabvt5xDlFoEhpjUj4b1tGJMfqb0i5mXifWMNQf6z7FoOJYxYDo7F8R6k0JAh5D/7ouxjX5+N0cIq5WURyQ1Q==}
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
