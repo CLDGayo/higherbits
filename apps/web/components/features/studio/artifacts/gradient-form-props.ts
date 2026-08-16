@@ -20,10 +20,16 @@ import type { GradientPayload } from "./registry"
  * `Waves` for the periodic banding Pulse Bars implies. The one-per-family
  * intent survives; the specific components do not.
  *
- * **A recorded limitation of the swap, not a bug.** `Waves` has no `speed`
- * prop in the library at all - the shader has no time-varying uniform - so
- * `motion.animate` has no visible effect on Pulse Bars. Every other form
- * animates. This is stated here so it is not rediscovered as a defect.
+ * **Which controls actually do anything is a table, not prose.** This
+ * docblock used to claim two no-ops - `distortion` on Axis Blend and
+ * `animate` on Pulse Bars - and assert that "every other form animates".
+ * Both claims were wrong: an adversarial review (P11-D4, P11-D5) found
+ * **seven** further controls the resolver silently drops, and only **two of
+ * the four** shipped forms animate at all. The comment went stale because it
+ * was hand-maintained beside the code it described. `GRADIENT_FORM_SUPPORT`
+ * below replaces it: the resolver reads it, and the editor body reads it to
+ * decide what to disable, so a control cannot be enabled in the UI and
+ * dropped in the mapping without the table saying so.
  */
 
 export type GradientComponentId =
@@ -31,6 +37,110 @@ export type GradientComponentId =
   | "StaticRadialGradient"
   | "GrainGradient"
   | "Waves"
+
+export type GradientFormId = GradientPayload["formId"]
+
+/** Every payload control whose support varies by form. */
+export interface GradientControlSupport {
+  /** `surface.blur` -> a softness uniform. */
+  blur: boolean
+  /** `surface.grain` -> grain/noise uniforms. */
+  grain: boolean
+  /** `surface.edgeShade` -> an intensity uniform. */
+  edgeShade: boolean
+  /** `baseColour` -> a back-colour uniform. */
+  baseColour: boolean
+  /** `geometry.distortion` -> any uniform at all, remapped or direct. */
+  distortion: boolean
+  /** `motion.animate` -> a shader that actually has `u_time`. */
+  animate: boolean
+}
+
+export interface GradientFormSupport {
+  component: GradientComponentId
+  /**
+   * The component's `maxColorCount`. The palette is sliced to this before it
+   * reaches the props, because the library uploads array uniforms unsliced
+   * while also uploading a `u_colorsCount` taken from the full list - so an
+   * over-long palette does not merely lose its tail, it mis-bands what is
+   * left (P11-D3).
+   */
+  maxColors: number
+  supports: GradientControlSupport
+}
+
+/**
+ * Verified against `@paper-design/shaders@0.0.80` by reading each shader's
+ * uniform declarations, not by inference:
+ *
+ * - `MeshGradient`   - `u_time`, `u_distortion`, `u_grainMixer/Overlay`; **no**
+ *   `u_colorBack`, **no** `u_softness`, **no** `u_intensity`
+ * - `StaticRadialGradient` - `u_colorBack`, `u_distortion`,
+ *   `u_grainMixer/Overlay`; **no `u_time`**, **no** `u_softness`
+ * - `GrainGradient`  - `u_time`, `u_colorBack`, `u_softness`, `u_intensity`,
+ *   `u_noise`; **no** `u_distortion`
+ * - `Waves`          - `u_colorFront/Back`, `u_softness`, `u_frequency`; **no
+ *   `u_time`**, no grain, no colours array
+ *
+ * Re-derive this table against the source on every library bump - it is
+ * exactly the kind of thing a `0.0.x` release changes silently.
+ */
+export const GRADIENT_FORM_SUPPORT: Record<GradientFormId, GradientFormSupport> = {
+  "bloom-field": {
+    component: "MeshGradient",
+    maxColors: 10,
+    supports: {
+      blur: false,
+      grain: true,
+      edgeShade: false,
+      baseColour: false,
+      distortion: true,
+      animate: true,
+    },
+  },
+  "core-glow": {
+    component: "StaticRadialGradient",
+    maxColors: 10,
+    supports: {
+      blur: false,
+      grain: true,
+      edgeShade: false,
+      baseColour: true,
+      distortion: true,
+      // No `u_time` in the shader. Passing a non-zero speed here starts a
+      // render loop that redraws bit-identical pixels forever (P11-D5).
+      animate: false,
+    },
+  },
+  "axis-blend": {
+    component: "GrainGradient",
+    maxColors: 7,
+    supports: {
+      blur: true,
+      grain: true,
+      edgeShade: true,
+      baseColour: true,
+      distortion: false,
+      animate: true,
+    },
+  },
+  "pulse-bars": {
+    component: "Waves",
+    // Waves takes two flat colours rather than a ramp, so only the first stop
+    // reaches the render.
+    maxColors: 1,
+    supports: {
+      blur: true,
+      grain: false,
+      edgeShade: false,
+      baseColour: true,
+      // Not a direct uniform - deliberately remapped onto `frequency` below so
+      // the slider still does something visible.
+      distortion: true,
+      animate: false,
+    },
+  },
+}
 
 export interface ResolvedGradientRender {
   component: GradientComponentId
@@ -47,13 +157,26 @@ const MAX_BLUR_PX = 64
 export function resolveGradientRender(
   payload: GradientPayload,
 ): ResolvedGradientRender {
+  const support = GRADIENT_FORM_SUPPORT[payload.formId]
   const colors = payload.stops.map((stop) => stop.hex)
   // Defensive only: the schema requires at least one stop, so this branch is
   // unreachable through a validated payload. Kept because this function is
   // also called by the action bar's randomizers before their output is
   // re-validated.
-  const paletteColors = colors.length > 0 ? colors : [payload.baseColour]
-  const speed = payload.motion.animate ? ANIMATE_SPEED : STILL_SPEED
+  const allColors = colors.length > 0 ? colors : [payload.baseColour]
+  // Sliced to what the target shader's `u_colors` array can hold. Without
+  // this, the library uploads all of them AND a `u_colorsCount` larger than
+  // the declared array - which does not error, but mis-bands the palette that
+  // does fit (P11-D3). Axis Blend is the one that bites: `maxColorCount` 7
+  // against a schema that permits 8.
+  const paletteColors = allColors.slice(0, support.maxColors)
+  // Only forms whose shader actually has `u_time` get a non-zero speed. The
+  // others would otherwise run a permanent render loop for no visual change
+  // (P11-D5).
+  const speed =
+    payload.motion.animate && support.supports.animate
+      ? ANIMATE_SPEED
+      : STILL_SPEED
   const grain = payload.surface.grain / 100
   const edgeShade = payload.surface.edgeShade / 100
   const softness = Math.min(1, payload.surface.blur / MAX_BLUR_PX)
@@ -111,9 +234,9 @@ export function resolveGradientRender(
     case "pulse-bars":
       // Swapped from a native "Pattern" pulse form, which does not exist in
       // the library. Waves takes exactly two colours (front/back), so only
-      // the first stop is used - additional stops are visible in the
-      // Palette panel but do not reach this form's render, which is a
-      // documented limitation of the swap.
+      // the first stop is used - hence `maxColors: 1` in the table above,
+      // which is what the Palette panel now annotates rather than leaving the
+      // user to discover.
       return {
         component: "Waves",
         props: {

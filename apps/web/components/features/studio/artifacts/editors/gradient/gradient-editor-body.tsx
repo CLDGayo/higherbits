@@ -10,6 +10,7 @@ import { getArtifactAction, listArtifactsAction } from "@/lib/api/artifacts"
 import { cn } from "@/lib/utils"
 
 import type { ArtifactBodyProps } from "../../editor-shell"
+import { GRADIENT_FORM_SUPPORT } from "../../gradient-form-props"
 import { GRADIENT_FORMS, type GradientPayload } from "../../registry"
 import { contrastRatio, wcagRating } from "./gradient-color"
 import {
@@ -36,6 +37,36 @@ import { resetGeometry, shuffleStops } from "./gradient-randomizers"
 
 const HEX_PATTERN = /^#[0-9a-fA-F]{6}$/
 const MAX_STOPS = 8
+/**
+ * Mirrors `gradientColourStop.name.max(40)` in the registry schema. Enforced
+ * here, at both places a name is authored, because the bound used to surface
+ * only at save time as a raw zod path - `stops.0.name: String must contain at
+ * most 40 character(s)` - which names a schema field rather than a control
+ * (P11-D7).
+ */
+const STOP_NAME_MAX = 40
+
+/** The form the payload currently selects, and what it actually supports. */
+function useFormContext(payload: GradientPayload) {
+  const support = GRADIENT_FORM_SUPPORT[payload.formId]
+  const label =
+    GRADIENT_FORMS.find((form) => form.id === payload.formId)?.label ??
+    payload.formId
+  return { support, label }
+}
+
+/**
+ * Marks a control the resolver will silently drop for the selected form.
+ * Seven of these shipped enabled and inert (P11-D4); the truth now comes from
+ * `GRADIENT_FORM_SUPPORT` rather than from a hand-maintained comment.
+ */
+function InertNote({ formLabel }: { formLabel: string }) {
+  return (
+    <p className="text-[10px] leading-tight text-muted-foreground/70">
+      Not used by {formLabel}
+    </p>
+  )
+}
 
 export function GradientEditorBody({
   payload,
@@ -58,6 +89,8 @@ export function GradientEditorBody({
 }
 
 function FormPanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload>) {
+  const { support, label } = useFormContext(payload)
+
   return (
     <div className="space-y-3">
       <Label>Form</Label>
@@ -103,7 +136,9 @@ function FormPanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload>) 
         />
       </div>
 
-      <div className="space-y-2">
+      <div
+        className={cn("space-y-2", !support.supports.distortion && "opacity-50")}
+      >
         <Label htmlFor="gradient-distortion">
           Distortion — {payload.geometry.distortion.toFixed(2)}
         </Label>
@@ -114,6 +149,7 @@ function FormPanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload>) 
           max={1}
           step={0.01}
           value={payload.geometry.distortion}
+          disabled={!support.supports.distortion}
           onChange={(event) =>
             setPayload((prev) => ({
               ...prev,
@@ -123,8 +159,9 @@ function FormPanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload>) 
               },
             }))
           }
-          className="w-full"
+          className="w-full disabled:cursor-not-allowed"
         />
+        {!support.supports.distortion && <InertNote formLabel={label} />}
       </div>
 
       <div className="flex gap-2">
@@ -150,6 +187,7 @@ function FormPanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload>) 
 }
 
 function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload>) {
+  const { support, label } = useFormContext(payload)
   const [themes, setThemes] = useState<{ id: string; name: string }[]>([])
   const [isSeeding, setIsSeeding] = useState(false)
 
@@ -190,7 +228,10 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
       setPayload((prev) => ({
         ...prev,
         stops: hexTokens.slice(0, MAX_STOPS).map(([name, hex]) => ({
-          name: name.replace(/^--/, ""),
+          // `cssTokenKey` has no length bound, `gradientColourStop.name` caps
+          // at 40, so an unclamped token key seeds a payload the server will
+          // reject on save (P11-D7).
+          name: name.replace(/^--/, "").slice(0, STOP_NAME_MAX),
           hex,
         })),
         baseColour:
@@ -204,13 +245,23 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
     }
   }
 
+  // Capped by what the selected form can actually render as well as by the
+  // schema, so the panel cannot offer a stop that will never reach a uniform
+  // (P11-D3). Existing stops are never removed on a form switch - they come
+  // back when the user switches to a form with more room - they are just
+  // marked as unused below.
+  const renderableStops = Math.min(MAX_STOPS, support.maxColors)
+
   const addStop = () => {
-    if (payload.stops.length >= MAX_STOPS) return
+    if (payload.stops.length >= renderableStops) return
     setPayload((prev) => ({
       ...prev,
       stops: [
         ...prev.stops,
-        { name: `Colour ${prev.stops.length + 1}`, hex: "#ffffff" },
+        {
+          name: `Colour ${prev.stops.length + 1}`.slice(0, STOP_NAME_MAX),
+          hex: "#ffffff",
+        },
       ],
     }))
   }
@@ -237,7 +288,9 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
     <div className="space-y-3">
       <Label>Palette</Label>
 
-      <div className="space-y-2">
+      <div
+        className={cn("space-y-2", !support.supports.baseColour && "opacity-50")}
+      >
         <Label htmlFor="gradient-base-colour" className="text-xs text-muted-foreground">
           Base colour
         </Label>
@@ -246,22 +299,33 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
             id="gradient-base-colour"
             type="color"
             value={payload.baseColour}
+            disabled={!support.supports.baseColour}
             onChange={(event) =>
               setPayload((prev) => ({ ...prev, baseColour: event.target.value }))
             }
-            className="h-8 w-10 rounded border border-border bg-transparent p-0"
+            className="h-8 w-10 rounded border border-border bg-transparent p-0 disabled:cursor-not-allowed"
           />
           <span className="font-mono text-xs text-muted-foreground">
             {payload.baseColour}
           </span>
         </div>
+        {/* Still used for the WCAG contrast ratings below even when it does
+            not reach a uniform, so it is dimmed rather than hidden. */}
+        {!support.supports.baseColour && <InertNote formLabel={label} />}
       </div>
 
       <div className="space-y-2">
         {payload.stops.map((stop, index) => {
           const rating = wcagRating(contrastRatio(stop.hex, payload.baseColour))
+          // Beyond the selected form's `maxColorCount`. Kept in the payload
+          // and shown, because switching form brings it back - but it does
+          // not reach a uniform right now, so say so (P11-D3).
+          const unusedHere = index >= support.maxColors
           return (
-            <div key={index} className="flex items-center gap-2">
+            <div
+              key={index}
+              className={cn("flex items-center gap-2", unusedHere && "opacity-50")}
+            >
               <input
                 type="color"
                 value={stop.hex}
@@ -273,7 +337,12 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
                 type="text"
                 value={stop.name}
                 aria-label={`${stop.name} label`}
-                onChange={(event) => updateStop(index, { name: event.target.value })}
+                maxLength={STOP_NAME_MAX}
+                onChange={(event) =>
+                  updateStop(index, {
+                    name: event.target.value.slice(0, STOP_NAME_MAX),
+                  })
+                }
                 className="w-24 rounded-md border border-border bg-background px-2 py-1 text-xs"
               />
               <span className="font-mono text-[10px] text-muted-foreground">
@@ -282,12 +351,14 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
               <span
                 className={cn(
                   "ml-auto rounded px-1.5 py-0.5 text-[10px] font-medium",
-                  rating === "Fail"
-                    ? "bg-destructive/10 text-destructive"
-                    : "bg-muted text-muted-foreground",
+                  unusedHere
+                    ? "bg-muted text-muted-foreground"
+                    : rating === "Fail"
+                      ? "bg-destructive/10 text-destructive"
+                      : "bg-muted text-muted-foreground",
                 )}
               >
-                {rating}
+                {unusedHere ? "Unused" : rating}
               </span>
               <button
                 type="button"
@@ -303,15 +374,25 @@ function PalettePanel({ payload, setPayload }: ArtifactBodyProps<GradientPayload
         })}
       </div>
 
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={addStop}
-        disabled={payload.stops.length >= MAX_STOPS}
-      >
-        Add colour
-      </Button>
+      <div className="space-y-1">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={addStop}
+          disabled={payload.stops.length >= renderableStops}
+        >
+          Add colour
+        </Button>
+        {payload.stops.length >= renderableStops && (
+          <p className="text-[10px] leading-tight text-muted-foreground/70">
+            {label} renders{" "}
+            {support.maxColors === 1
+              ? "one colour"
+              : `up to ${support.maxColors} colours`}
+          </p>
+        )}
+      </div>
 
       <div className="space-y-1 border-t border-border pt-2">
         <Label
@@ -352,13 +433,14 @@ function SurfacePanel({
   payload: GradientPayload
   set: <K extends keyof GradientPayload>(key: K, value: GradientPayload[K]) => void
 }) {
+  const { support, label } = useFormContext(payload)
   const setSurface = (patch: Partial<GradientPayload["surface"]>) =>
     set("surface", { ...payload.surface, ...patch })
 
   return (
     <div className="space-y-2">
       <Label>Surface</Label>
-      <div className="space-y-2">
+      <div className={cn("space-y-2", !support.supports.blur && "opacity-50")}>
         <Label htmlFor="gradient-blur" className="text-xs text-muted-foreground">
           Blur — {payload.surface.blur}px
         </Label>
@@ -369,11 +451,13 @@ function SurfacePanel({
           max={64}
           step={1}
           value={payload.surface.blur}
+          disabled={!support.supports.blur}
           onChange={(event) => setSurface({ blur: Number(event.target.value) })}
-          className="w-full"
+          className="w-full disabled:cursor-not-allowed"
         />
+        {!support.supports.blur && <InertNote formLabel={label} />}
       </div>
-      <div className="space-y-2">
+      <div className={cn("space-y-2", !support.supports.grain && "opacity-50")}>
         <Label htmlFor="gradient-grain" className="text-xs text-muted-foreground">
           Grain — {payload.surface.grain}%
         </Label>
@@ -384,11 +468,15 @@ function SurfacePanel({
           max={100}
           step={1}
           value={payload.surface.grain}
+          disabled={!support.supports.grain}
           onChange={(event) => setSurface({ grain: Number(event.target.value) })}
-          className="w-full"
+          className="w-full disabled:cursor-not-allowed"
         />
+        {!support.supports.grain && <InertNote formLabel={label} />}
       </div>
-      <div className="space-y-2">
+      <div
+        className={cn("space-y-2", !support.supports.edgeShade && "opacity-50")}
+      >
         <Label htmlFor="gradient-edge-shade" className="text-xs text-muted-foreground">
           Edge shade — {payload.surface.edgeShade}%
         </Label>
@@ -399,9 +487,11 @@ function SurfacePanel({
           max={100}
           step={1}
           value={payload.surface.edgeShade}
+          disabled={!support.supports.edgeShade}
           onChange={(event) => setSurface({ edgeShade: Number(event.target.value) })}
-          className="w-full"
+          className="w-full disabled:cursor-not-allowed"
         />
+        {!support.supports.edgeShade && <InertNote formLabel={label} />}
       </div>
     </div>
   )
@@ -414,15 +504,27 @@ function MotionPanel({
   payload: GradientPayload
   set: <K extends keyof GradientPayload>(key: K, value: GradientPayload[K]) => void
 }) {
+  const { support, label } = useFormContext(payload)
+
   return (
-    <div className="flex items-center justify-between">
-      <Label htmlFor="gradient-animate">Animate</Label>
-      <input
-        id="gradient-animate"
-        type="checkbox"
-        checked={payload.motion.animate}
-        onChange={(event) => set("motion", { animate: event.target.checked })}
-      />
+    <div className={cn("space-y-1", !support.supports.animate && "opacity-50")}>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="gradient-animate">Animate</Label>
+        <input
+          id="gradient-animate"
+          type="checkbox"
+          checked={payload.motion.animate}
+          disabled={!support.supports.animate}
+          onChange={(event) => set("motion", { animate: event.target.checked })}
+          className="disabled:cursor-not-allowed"
+        />
+      </div>
+      {/* Two of the four shipped forms have no `u_time` at all (P11-D5). */}
+      {!support.supports.animate && (
+        <p className="text-[10px] leading-tight text-muted-foreground/70">
+          {label} does not animate
+        </p>
+      )}
     </div>
   )
 }
