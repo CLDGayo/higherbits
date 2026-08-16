@@ -47,11 +47,11 @@ describe("studio nav config", () => {
     // Themes left this list in Phase 09: studio_artifacts was applied
     // 2026-08-14 and /studio/[username]/themes is a real route. ASCII art left
     // it in Phase 10a for the same reason - a route, an editor body and a
-    // preview renderer. Gradients and shaders share the table but have neither
-    // yet, and 10b/10c remove them one at a time.
+    // preview renderer. Gradients left it in Phase 10b, same reason again.
+    // Shaders still share the table but have neither yet; 10c removes it.
     expect(
       STUDIO_NAV_ITEMS.filter((i) => i.comingSoon).map((i) => i.slug),
-    ).toEqual(["gradients", "shaders"])
+    ).toEqual(["shaders"])
   })
 })
 

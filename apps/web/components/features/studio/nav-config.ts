@@ -86,7 +86,6 @@ export const STUDIO_NAV_ITEMS: StudioNavItem[] = [
     icon: Waves,
     tooltip: "Gradients",
     segment: "gradients",
-    comingSoon: true,
   },
   {
     slug: "shaders",

@@ -112,13 +112,15 @@ async function countComponents(userId: string): Promise<number | null> {
 export async function getStudioNavCounts(
   userId: string,
 ): Promise<StudioNavCounts> {
-  const [components, libraries, templates, themes, ascii] = await Promise.all([
-    countComponents(userId),
-    countRows("collections", userId),
-    countRows("templates", userId),
-    countArtifacts(userId, "theme"),
-    countArtifacts(userId, "ascii"),
-  ])
+  const [components, libraries, templates, themes, ascii, gradients] =
+    await Promise.all([
+      countComponents(userId),
+      countRows("collections", userId),
+      countRows("templates", userId),
+      countArtifacts(userId, "theme"),
+      countArtifacts(userId, "ascii"),
+      countArtifacts(userId, "gradient"),
+    ])
 
-  return { components, libraries, templates, themes, ascii }
+  return { components, libraries, templates, themes, ascii, gradients }
 }

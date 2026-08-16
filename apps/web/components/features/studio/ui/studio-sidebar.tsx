@@ -52,6 +52,8 @@ export function countFor(
       return counts.themes ?? undefined
     case "ascii":
       return counts.ascii ?? undefined
+    case "gradients":
+      return counts.gradients ?? undefined
     default:
       return undefined
   }
