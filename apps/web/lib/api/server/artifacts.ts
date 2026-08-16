@@ -126,6 +126,12 @@ export const listArtifacts = async (userId: string, kind: ArtifactKind) =>
       status: true,
       created_at: true,
       updated_at: true,
+      // Selected so the list can render a per-row preview (P11-D8). Without it
+      // the registered renderers have nothing to render and every row is an
+      // empty frame, which is the defect. The payloads are small - bounded by
+      // each kind's `.strict()` schema - so this is not the N+1 shape that
+      // section 8.5 watches for.
+      payload: true,
     },
   })).map(narrowRow)
 

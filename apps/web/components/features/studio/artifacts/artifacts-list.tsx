@@ -15,6 +15,7 @@ import {
   type ArtifactSummary,
   type ArtifactTabId,
   getKindConfig,
+  getPreviewRenderer,
   matchesTab,
 } from "./registry"
 
@@ -146,6 +147,40 @@ export function ArtifactsList({
   )
 }
 
+/**
+ * What a row shows in its frame (P11-D8).
+ *
+ * Order: a stored `preview_url` if there is one, else the kind's registered
+ * preview renderer, else nothing. Until this existed, `getPreviewRenderer` had
+ * **zero call sites** - every kind registered into a map nothing read, and since
+ * no studio path ever writes `preview_url` for an artifact, every row rendered
+ * an empty grey box. Registered since Phase 09 `e8cc5a1`, unread until now.
+ *
+ * **Renderers reached from here must not create a WebGL context.** A list can
+ * hold dozens of rows, browsers cap live contexts at 16 (measured in Chrome
+ * while fixing P11-D2's sibling defect), and eviction takes the *oldest*
+ * context - so one live canvas per card would blank both earlier cards and the
+ * editor's own preview. That is why `gradient-preview.tsx` registers a CSS
+ * approximation rather than the shader it shows in the editor.
+ */
+function ArtifactThumbnail({ artifact }: { artifact: ArtifactSummary }) {
+  if (artifact.preview_url) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={artifact.preview_url}
+        alt=""
+        className="h-full w-full object-cover"
+      />
+    )
+  }
+
+  const renderer = getPreviewRenderer(artifact.kind)
+  if (!renderer || artifact.payload === undefined) return null
+
+  return <>{renderer({ payload: artifact.payload, className: "h-full w-full" })}</>
+}
+
 function ArtifactCard({
   artifact,
   view,
@@ -174,14 +209,7 @@ function ArtifactCard({
           view === "grid" ? "aspect-video w-full" : "h-10 w-16 rounded shrink-0",
         )}
       >
-        {artifact.preview_url && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={artifact.preview_url}
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        )}
+        <ArtifactThumbnail artifact={artifact} />
       </div>
 
       <div className={cn("min-w-0", view === "grid" ? "p-3" : "flex-1")}>

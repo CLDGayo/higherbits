@@ -63,6 +63,13 @@ export interface ArtifactSummary {
   status: ArtifactStatus
   created_at: string | Date
   updated_at: string | Date
+  /**
+   * Carried on the summary so the list can render a live preview per row
+   * (P11-D8). Optional because a caller that does not select it is still a
+   * valid summary - the card falls back to `preview_url`, then to an empty
+   * frame, in that order.
+   */
+  payload?: unknown
 }
 
 /**

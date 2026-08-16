@@ -154,6 +154,44 @@ const STILL_SPEED = 0
 /** Caps `surface.blur` (px) into the roughly 0-1 range these shaders expect. */
 const MAX_BLUR_PX = 64
 
+/**
+ * The world box Axis Blend is drawn into, in world units (P11-D6).
+ *
+ * **Why this exists at all.** `fit: "cover"` is applied to all four forms to
+ * make a gradient look the same at any container size. It genuinely does that
+ * for the object-UV forms, and was a **measured complete no-op** for the
+ * pattern-UV ones - GrainGradient `shape: "wave"` and Waves rendered
+ * pixel-identically at `none`, `contain` and `cover`.
+ *
+ * The reason is `worldWidth`/`worldHeight`, which both `defaultObjectSizing`
+ * and `defaultPatternSizing` ship as `0` and this repo never overrode. At zero,
+ * the pattern box collapses to the resolution, the vertex shader's fit factor
+ * `patternBoxNoFitBoxWidth / v_patternBoxSize.x` is identically 1, and the
+ * pattern stays pixel-anchored: a wider container revealed *more bands* rather
+ * than showing the same picture larger.
+ *
+ * Giving the pattern a fixed world makes `fit` mean something. 1920 x 1080
+ * deliberately matches the PNG export size, so the export frames exactly the
+ * world the editor previews.
+ *
+ * **Measured, at 1100px against 1280px, mean absolute pixel difference /255:**
+ * Axis Blend 7.08 -> 1.31, against Bloom Field 0.16 and Core Glow 0.23 which
+ * were already resolution-independent.
+ *
+ * **Waves does not get a world, because measurement said not to.** The same
+ * change on Pulse Bars moved it only 33.27 -> 28.60. The uniform reaches the
+ * shader - changing the world changes the output - it just does not make Waves
+ * resolution-independent. Pulse Bars is re-deferred in section 8.8 rather than
+ * carrying a change that does not work.
+ *
+ * ⚠️ **This changes rendered output for Axis Blend.** Saved artifacts of that
+ * form render differently after this change - by design, since the old
+ * rendering was resolution-dependent - and no payload is migrated, because the
+ * payload never carried the sizing.
+ */
+const PATTERN_WORLD_WIDTH = 1920
+const PATTERN_WORLD_HEIGHT = 1080
+
 export function resolveGradientRender(
   payload: GradientPayload,
 ): ResolvedGradientRender {
@@ -220,6 +258,9 @@ export function resolveGradientRender(
         component: "GrainGradient",
         props: {
           fit: "cover",
+          // Without a world, `fit` is a no-op on this shader - see P11-D6.
+          worldWidth: PATTERN_WORLD_WIDTH,
+          worldHeight: PATTERN_WORLD_HEIGHT,
           shape: "wave",
           colorBack: payload.baseColour,
           colors: paletteColors,
@@ -240,6 +281,14 @@ export function resolveGradientRender(
       return {
         component: "Waves",
         props: {
+          // No world here, deliberately. Giving Waves a world was tried for
+          // P11-D6 and **measured not to work**: mean pixel difference between
+          // a 1100px and a 1280px render moved only 33.27 -> 28.60 out of 255,
+          // where Axis Blend went 7.08 -> 1.31. The uniform does reach the
+          // shader - changing the world changes the output - it simply does not
+          // make Waves resolution-independent, so shipping it here would be a
+          // change with no benefit. Pulse Bars stays resolution-dependent and
+          // is re-deferred in Phase 11 section 8.8 with those numbers.
           fit: "cover",
           colorFront: paletteColors[0],
           colorBack: payload.baseColour,

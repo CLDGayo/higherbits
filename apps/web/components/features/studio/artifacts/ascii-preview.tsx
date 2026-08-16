@@ -252,9 +252,24 @@ export function AsciiPreview({
  * Registered for the list surface, which shows a small preview per row. Same
  * component, so a thumbnail cannot drift from what the editor renders.
  */
-registerPreviewRenderer("ascii", (payload) => (
+/**
+ * Note the destructuring (P11-D8). This previously took its single parameter as
+ * `payload` and spread the whole **props object** over the defaults, which put
+ * `payload` and `className` keys into the payload and none of the real ASCII
+ * fields - so every row would have rendered the default artwork rather than its
+ * own. It never showed because the renderer map had no readers until now, and
+ * `as Partial<AsciiPayload>` hid it from the compiler. `gradient-preview.tsx`
+ * had the identical bug; `theme-preview.tsx` always got it right.
+ *
+ * Safe to reach from a list: this renderer is image plus 2D canvas, and creates
+ * no WebGL context.
+ */
+registerPreviewRenderer("ascii", ({ payload, className }) => (
   <AsciiPreview
     payload={{ ...ASCII_DEFAULT_PAYLOAD, ...(payload as Partial<AsciiPayload>) }}
-    className="flex h-full w-full items-center justify-center overflow-hidden"
+    className={
+      className ??
+      "flex h-full w-full items-center justify-center overflow-hidden"
+    }
   />
 ))
