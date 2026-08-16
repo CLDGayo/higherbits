@@ -1,3 +1,13 @@
+/**
+ * The R2 bucket studio artifacts write their per-artifact objects into.
+ *
+ * Lives here rather than in `lib/r2.ts` because that module is `"use server"`,
+ * which permits only async exports. Shared so the ASCII upload route and the
+ * delete sweep in `lib/api/server/artifacts.ts` cannot drift apart - they did,
+ * and the result was P11-D1: orphaned objects on every artifact delete.
+ */
+export const ARTIFACT_BUCKET = "components-code"
+
 export const SITE_NAME = "HigherBits.dev"
 export const SITE_URL = "https://higherbits.dev"
 export const SITE_SLOGAN = "Sophisticated Calm Development"

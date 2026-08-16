@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import {
   CHAR_ASPECT,
+  charAspectFrom,
   charForLuminance,
   gridSizeFor,
   luminance,
@@ -21,6 +22,31 @@ const solid = (w: number, h: number, r: number, g: number, b: number, a = 255) =
   }
   return px
 }
+
+describe("charAspectFrom", () => {
+  it("returns the measured advance as a fraction of the font size", () => {
+    expect(charAspectFrom({ advancePx: 6, fontSizePx: 10 })).toBeCloseTo(0.6)
+    // The braille case that produced P11-D2.
+    expect(charAspectFrom({ advancePx: 6.84, fontSizePx: 10 })).toBeCloseTo(0.684)
+  })
+
+  it("falls back to the constant rather than throwing on an unusable measurement", () => {
+    // A zero width means the font has not loaded yet - a stretched first paint
+    // beats a crash, and the effect re-measures on document.fonts.ready.
+    for (const input of [
+      { advancePx: 0, fontSizePx: 10 },
+      { advancePx: 6, fontSizePx: 0 },
+      { advancePx: -6, fontSizePx: 10 },
+      { advancePx: Number.NaN, fontSizePx: 10 },
+      { advancePx: Number.POSITIVE_INFINITY, fontSizePx: 10 },
+      // Outside any plausible monospace advance - a measurement artifact.
+      { advancePx: 100, fontSizePx: 10 },
+      { advancePx: 1, fontSizePx: 10 },
+    ]) {
+      expect(charAspectFrom(input)).toBe(CHAR_ASPECT)
+    }
+  })
+})
 
 describe("gridSizeFor", () => {
   it("derives rows from the character-cell aspect, not from a square grid", () => {
@@ -50,6 +76,58 @@ describe("gridSizeFor", () => {
 
     expect(wide.rows).toBe(Math.round(100 * 0.5 * CHAR_ASPECT))
     expect(tall.rows).toBe(Math.round(100 * 2 * CHAR_ASPECT))
+  })
+
+  // P11-D2. The braille ramp falls back to a face advancing 6.84px at 10px, so
+  // assuming 0.6 for every ramp rendered Braille ~14% wide while the other five
+  // styles were correct.
+  it("honours a measured character aspect instead of the 0.6 assumption", () => {
+    const assumed = gridSizeFor({
+      imageWidth: 1000, imageHeight: 1000, cellSize: 10, targetWidth: 1000,
+    })
+    const measured = gridSizeFor({
+      imageWidth: 1000, imageHeight: 1000, cellSize: 10, targetWidth: 1000,
+      charAspect: 0.684,
+    })
+
+    expect(assumed.rows).toBe(60)
+    expect(measured.rows).toBe(68)
+    // Same columns - only the row count corrects, which is what un-stretches it.
+    expect(measured.cols).toBe(assumed.cols)
+  })
+
+  it("keeps the rendered aspect equal to the source aspect at any advance", () => {
+    // rendered aspect = (cols * advance) / (rows * lineHeight), and the art is
+    // painted with leading-none so lineHeight === cellSize.
+    for (const charAspect of [0.5, 0.6, 0.684, 1]) {
+      const sources: ReadonlyArray<readonly [number, number]> = [
+        [1000, 1000],
+        [1600, 900],
+        [900, 1600],
+      ]
+      for (const [w, h] of sources) {
+        const cellSize = 10
+        const { cols, rows } = gridSizeFor({
+          imageWidth: w, imageHeight: h, cellSize, targetWidth: 1000, charAspect,
+        })
+        const renderedAspect = (cols * charAspect * cellSize) / (rows * cellSize)
+        expect(Math.abs(renderedAspect - w / h) / (w / h)).toBeLessThan(0.02)
+      }
+    }
+  })
+
+  it("falls back to the constant when charAspect is nonsense", () => {
+    const base = gridSizeFor({
+      imageWidth: 1000, imageHeight: 1000, cellSize: 10, targetWidth: 1000,
+    })
+    for (const bad of [0, -1]) {
+      expect(
+        gridSizeFor({
+          imageWidth: 1000, imageHeight: 1000, cellSize: 10, targetWidth: 1000,
+          charAspect: bad,
+        }).rows,
+      ).toBe(base.rows)
+    }
   })
 
   it("scales with cellSize and viewport width", () => {

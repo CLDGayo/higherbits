@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import {
+  CHAR_ASPECT,
+  charAspectFrom,
   gridSizeFor,
   rampFor,
   renderAsciiRows,
@@ -43,11 +45,47 @@ export function AsciiPreview({
   className?: string
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const measureRef = useRef<HTMLSpanElement>(null)
   const [rows, setRows] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [width, setWidth] = useState(640)
+  const [charAspect, setCharAspect] = useState(CHAR_ASPECT)
 
   const ramp = useMemo(() => rampFor(payload), [payload])
+
+  /**
+   * Measures how wide this ramp's glyphs actually render (P11-D2).
+   *
+   * Measured in the DOM rather than through canvas `measureText`, because the
+   * question is what *this* `<pre>` does - same classes, same font size, same
+   * cascade - and a reconstructed canvas font string is a second guess at the
+   * resolved stack. The hidden span below carries the identical classes.
+   *
+   * Waits on `document.fonts.ready`: measuring before the webfont lands reports
+   * the system fallback's advance and would bake a wrong grid into the render.
+   */
+  useEffect(() => {
+    let cancelled = false
+
+    const measure = () => {
+      const element = measureRef.current
+      if (cancelled || !element) return
+      const next = charAspectFrom({
+        advancePx: element.getBoundingClientRect().width / ramp.length,
+        fontSizePx: payload.cellSize,
+      })
+      setCharAspect((prev) => (Math.abs(prev - next) < 0.0005 ? prev : next))
+    }
+
+    measure()
+    // `document.fonts` is absent in jsdom and in older Safari; the sync measure
+    // above is the whole behaviour there.
+    document.fonts?.ready.then(measure).catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [ramp, payload.cellSize])
 
   // Re-render on resize: G10a.5 requires the cell aspect to hold at two
   // viewport widths, and column count is derived from the measured width.
@@ -86,6 +124,7 @@ export function AsciiPreview({
           imageHeight: image.naturalHeight,
           cellSize: payload.cellSize,
           targetWidth: width,
+          charAspect,
         })
         if (cols === 0 || rowCount === 0) {
           setRows([])
@@ -140,7 +179,15 @@ export function AsciiPreview({
     return () => {
       cancelled = true
     }
-  }, [payload.sourceKey, payload.cellSize, payload.invert, payload.coverage, ramp, width])
+  }, [
+    payload.sourceKey,
+    payload.cellSize,
+    payload.invert,
+    payload.coverage,
+    ramp,
+    width,
+    charAspect,
+  ])
 
   const background =
     payload.background.mode === "solid-white"
@@ -164,6 +211,24 @@ export function AsciiPreview({
         mixBlendMode: payload.blendMode === "normal" ? undefined : payload.blendMode,
       }}
     >
+      {/*
+        The ruler for P11-D2. Carries the same classes and font size as the
+        <pre> below so it resolves through the identical font cascade, including
+        whatever fallback face supplies glyphs the primary font lacks - which is
+        the entire braille problem. Always mounted, because the grid it feeds is
+        needed before there are any rows to show.
+        `absolute` keeps it out of layout; it is not `hidden` or `display:none`,
+        which would make it unmeasurable.
+      */}
+      <span
+        ref={measureRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute -z-10 whitespace-pre font-mono leading-none opacity-0"
+        style={{ fontSize: `${payload.cellSize}px` }}
+      >
+        {ramp}
+      </span>
+
       {!payload.sourceKey ? (
         <p className="p-6 text-sm text-muted-foreground">
           Upload a photo to see it as ASCII art

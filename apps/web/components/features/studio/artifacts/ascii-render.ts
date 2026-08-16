@@ -12,14 +12,52 @@ import {
 /**
  * Advance width divided by line height for the monospace stack this renders in.
  *
- * **This is a calibration knob, not a constant of nature.** A character cell is
- * taller than it is wide - about 0.6 for most monospace faces - and sampling the
- * source on a *square* grid while painting it into a *tall* cell is what makes
- * naive ASCII art come out vertically stretched. G10a.5 checks the result at two
- * viewport widths. If the rendered art looks squashed or stretched after a font
- * change, this is the number to tune.
+ * **This is a fallback, not a constant of nature.** A character cell is taller
+ * than it is wide - about 0.6 for most monospace faces - and sampling the source
+ * on a *square* grid while painting it into a *tall* cell is what makes naive
+ * ASCII art come out vertically stretched.
+ *
+ * **It is no longer the value normally used.** Assuming 0.6 for every ramp was
+ * P11-D2: Fira Code has no braille block, so braille glyphs fall back to another
+ * face that advances 6.84px at a 10px size - 0.684, not 0.6 - and the Braille
+ * style rendered ~14% wide while the other five were correct. The advance is a
+ * property of *the glyphs a ramp actually uses in the font that ends up
+ * rendering them*, which no constant can know. `ascii-preview.tsx` measures it
+ * per ramp and passes it to `gridSizeFor`; this value is what that measurement
+ * falls back to before it lands, or where no DOM exists to measure in.
  */
 export const CHAR_ASPECT = 0.6
+
+/**
+ * Turns a measured advance into the ratio `gridSizeFor` wants.
+ *
+ * `advancePx` is the width of one character as actually rendered, and
+ * `fontSizePx` is the cell size - the art is painted with `leading-none`, so
+ * line height and font size are the same number.
+ *
+ * Returns `CHAR_ASPECT` for nonsense input rather than throwing: a zero-width
+ * measurement means the font has not loaded yet, and a stretched first paint is
+ * better than a crash.
+ */
+export function charAspectFrom({
+  advancePx,
+  fontSizePx,
+}: {
+  advancePx: number
+  fontSizePx: number
+}): number {
+  if (!Number.isFinite(advancePx) || !Number.isFinite(fontSizePx)) {
+    return CHAR_ASPECT
+  }
+  if (advancePx <= 0 || fontSizePx <= 0) return CHAR_ASPECT
+
+  const ratio = advancePx / fontSizePx
+  // Guards a pathological font, not a plausible one. Real monospace advances sit
+  // between about 0.4 and 1.0; anything outside that is a measurement artifact.
+  if (ratio < 0.2 || ratio > 2) return CHAR_ASPECT
+
+  return ratio
+}
 
 const RAMPS: Record<AsciiStyleId, string> = Object.fromEntries(
   ASCII_STYLES.map((style) => [style.id, style.ramp]),
@@ -44,30 +82,39 @@ export function rampFor(payload: Pick<AsciiPayload, "styleId" | "charset">): str
 /**
  * How many character cells the art is divided into.
  *
- * Rows are derived, never chosen: `rows = cols * (height/width) * CHAR_ASPECT`.
- * Dropping the `CHAR_ASPECT` term is the stretch bug described above.
+ * Rows are derived, never chosen: `rows = cols * (height/width) * charAspect`.
+ * Dropping the `charAspect` term is the stretch bug described above.
+ *
+ * `charAspect` defaults to `CHAR_ASPECT` so existing callers and tests keep
+ * working, but the preview passes a **measured** value - see P11-D2 on the
+ * ascii-render docblock. Getting it from the caller is what keeps this function
+ * pure and DOM-free while still being right about a font it cannot see.
  */
 export function gridSizeFor({
   imageWidth,
   imageHeight,
   cellSize,
   targetWidth,
+  charAspect = CHAR_ASPECT,
 }: {
   imageWidth: number
   imageHeight: number
   cellSize: number
   targetWidth: number
+  charAspect?: number
 }): { cols: number; rows: number } {
   if (imageWidth <= 0 || imageHeight <= 0 || cellSize <= 0 || targetWidth <= 0) {
     return { cols: 0, rows: 0 }
   }
+
+  const aspect = charAspect > 0 ? charAspect : CHAR_ASPECT
 
   // At least one cell, and capped so a tiny cellSize on a wide viewport cannot
   // ask for a grid with more cells than there are pixels to sample.
   const cols = Math.max(1, Math.min(400, Math.round(targetWidth / cellSize)))
   const rows = Math.max(
     1,
-    Math.round((cols * imageHeight * CHAR_ASPECT) / imageWidth),
+    Math.round((cols * imageHeight * aspect) / imageWidth),
   )
 
   return { cols, rows }

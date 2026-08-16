@@ -6,7 +6,15 @@ const update = vi.fn(async (_args: unknown) => ({ ok: true }))
 const del = vi.fn(async (_args: unknown) => ({ ok: true }))
 const create = vi.fn(async (_args: unknown) => ({ ok: true }))
 
+const deleteR2Prefix = vi.fn(async (_args: unknown) => 0)
+
 vi.mock("server-only", () => ({}))
+// `lib/r2` asserts its credentials at module load, so it is mocked rather than
+// imported for real. `deleteArtifact` imports it dynamically; vitest resolves
+// that through this mock the same way it would a static import.
+vi.mock("../../../r2", () => ({
+  deleteR2Prefix: (args: unknown) => deleteR2Prefix(args),
+}))
 vi.mock("../../../prisma", () => ({
   default: {
     studio_artifacts: {
@@ -113,6 +121,37 @@ describe("ownership", () => {
     )
 
     expect(del).not.toHaveBeenCalled()
+    // The sweep must not run either - a non-owner must not be able to reach
+    // another user's object prefix through a rejected delete.
+    expect(deleteR2Prefix).not.toHaveBeenCalled()
+  })
+
+  // P11-D1: deleting a row used to leave its R2 objects behind forever.
+  it("sweeps the artifact's object prefix after deleting the row", async () => {
+    await deleteArtifact(ID, OWNER)
+
+    expect(del).toHaveBeenCalledWith({ where: { id: ID } })
+    expect(deleteR2Prefix).toHaveBeenCalledWith({
+      // kind/userId/artifactId/ - the namespace the upload route writes into.
+      prefix: `theme/${OWNER}/${ID}/`,
+      bucketName: "components-code",
+    })
+  })
+
+  it("still deletes the row when the object sweep fails", async () => {
+    // Storage is not the source of truth. An orphaned object costs storage; a
+    // row that refuses to delete because R2 is down costs the user their action.
+    deleteR2Prefix.mockRejectedValueOnce(new Error("R2 unreachable"))
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {})
+
+    await expect(deleteArtifact(ID, OWNER)).resolves.toBeUndefined()
+
+    expect(del).toHaveBeenCalledWith({ where: { id: ID } })
+    // Loud, or orphans accumulate silently - which is how this went unnoticed.
+    expect(consoleError).toHaveBeenCalled()
+    consoleError.mockRestore()
   })
 
   it("refuses a visibility change from a non-owner", async () => {

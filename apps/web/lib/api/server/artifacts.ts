@@ -223,9 +223,44 @@ export const setArtifactVisibility = async (
   })
 }
 
+/**
+ * Deletes the row, then sweeps the artifact's R2 objects (P11-D1).
+ *
+ * **Row first, storage second, and the order is the whole design.** The row is
+ * the source of truth. Deleting objects first and then failing to delete the
+ * row leaves an artifact the user can still open with its asset gone - a
+ * visibly broken record. Failing the other way leaves an orphaned object, which
+ * costs storage and nothing else. So the sweep is best-effort and never blocks
+ * or reverses the delete.
+ *
+ * The prefix covers every object the artifact ever wrote, not only the one its
+ * payload currently points at: the upload route mints a fresh UUID key per
+ * upload, so re-uploading a photo already supersedes the previous object.
+ * Those superseded objects are collected here too.
+ */
 export const deleteArtifact = async (id: string, userId: string) => {
-  await assertOwned(id, userId)
+  const { kind } = await assertOwned(id, userId)
   await prisma.studio_artifacts.delete({ where: { id } })
+
+  try {
+    // Imported lazily on purpose: `lib/r2` asserts its credentials at module
+    // load, and only this branch needs them. A static import would make every
+    // server module that merely reads an artifact require R2 env vars.
+    const { ARTIFACT_BUCKET } = await import("../../constants")
+    const { deleteR2Prefix } = await import("../../r2")
+    await deleteR2Prefix({
+      prefix: `${kind}/${userId}/${id}/`,
+      bucketName: ARTIFACT_BUCKET,
+    })
+  } catch (error) {
+    // Loud, because the alternative is orphans accumulating silently - which is
+    // exactly how P11-D1 went unnoticed for a whole phase.
+    console.error(
+      `[artifacts] deleted row ${id} but could not sweep R2 prefix ` +
+        `${kind}/${userId}/${id}/ - objects orphaned:`,
+      error,
+    )
+  }
 }
 
 /** True when the slug is free for this owner and kind. */

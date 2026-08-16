@@ -4,6 +4,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 
 import { assertOwned } from "@/lib/api/server/artifacts"
+import { ARTIFACT_BUCKET } from "@/lib/constants"
 import { uploadToR2 } from "@/lib/r2"
 
 /**
@@ -33,7 +34,8 @@ import { uploadToR2 } from "@/lib/r2"
  * here would add an XSS surface for no feature.
  */
 
-const BUCKET = "components-code"
+/** Shared with the delete sweep in `lib/api/server/artifacts.ts` (P11-D1). */
+const BUCKET = ARTIFACT_BUCKET
 
 /** Raster only. `image/gif` is out too - the renderer samples one frame. */
 const ALLOWED = {
