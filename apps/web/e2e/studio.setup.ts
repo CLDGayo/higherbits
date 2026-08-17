@@ -5,6 +5,7 @@ import { test as setup } from "@playwright/test"
 
 import {
   STUDIO_STORAGE_STATE,
+  hasStoredSession,
   signIn,
   studioCredentials,
 } from "./support/studio-auth"
@@ -20,6 +21,15 @@ import {
  * keeps an unauthenticated run from looking green.
  */
 setup("authenticate the studio account", async ({ page }) => {
+  // A session was supplied out of band (see studio-auth.ts route 2). Signing in
+  // again would overwrite it, and on this repo that means driving /sign-in with
+  // credentials this environment does not have. Delete e2e/.auth/ to force a
+  // fresh sign-in.
+  setup.skip(
+    hasStoredSession(),
+    `reusing the cached session at ${STUDIO_STORAGE_STATE}`,
+  )
+
   const credentials = studioCredentials()
   setup.skip(
     !credentials,

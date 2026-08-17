@@ -23,22 +23,35 @@ import { test as base, expect, type Page } from "@playwright/test"
  *   mock works rather than that the app does. The ownership checks in
  *   `lib/api/server/artifacts.ts` are the actual control being exercised by
  *   these flows; bypassing them tests nothing worth committing.
- * - *Reusing a developer's own browser session over CDP.* Tried, and it does
- *   not connect - `connectOverCDP` against the debug Chrome fails with
- *   "Browser context management is not supported". It would also be unusable
- *   in CI.
+ * - *Driving a developer's own browser over CDP.* Does not work -
+ *   `connectOverCDP` against the debug Chrome fails with "Browser context
+ *   management is not supported", and it would be unusable in CI anyway.
  *
- * **These specs are skipped, loudly and by name, when the credentials are
- * absent** - never silently passed. A green run that proved nothing is worse
- * than a skip that says why.
+ * **These specs are skipped, loudly and by name, when no session is
+ * available** - never silently passed. A green run that proved nothing is
+ * worse than a skip that says why.
  *
- * To enable, set both in `apps/web/.env` (or the CI secret store):
+ * ## Two ways to get a session
  *
- *     E2E_CLERK_EMAIL=...
- *     E2E_CLERK_PASSWORD=...
+ * 1. *Credentials.* Set both in `apps/web/.env` (or the CI secret store) and
+ *    `studio.setup.ts` signs in through the real sign-in UI:
  *
- * The account must already exist, own no artifacts the specs depend on, and be
- * safe to create and delete rows under.
+ *        E2E_CLERK_EMAIL=...
+ *        E2E_CLERK_PASSWORD=...
+ *
+ *    The account must already exist, own no artifacts the specs depend on, and
+ *    be safe to create and delete rows under.
+ *
+ * 2. *A copied browser session.* Write a Playwright `storageState` to
+ *    `STUDIO_STORAGE_STATE` by hand - the localhost cookies out of an
+ *    already-signed-in browser are enough. `connectOverCDP` cannot drive that
+ *    browser, but raw CDP `Network.getAllCookies` reads its cookies fine.
+ *    Locally this is the cheaper path: it needs no second account and no
+ *    password on disk. Not available in CI, which is why route 1 stays.
+ *
+ * The gate below is therefore **"is there a usable session"**, not "are
+ * credentials present" - a stored session with no credentials is a valid setup,
+ * and gating on credentials would skip a suite that could have run.
  */
 
 export const STUDIO_STORAGE_STATE = path.join(
@@ -60,9 +73,11 @@ export function studioCredentials(): StudioCredentials | null {
 }
 
 export const MISSING_CREDENTIALS_REASON =
-  "studio specs need E2E_CLERK_EMAIL and E2E_CLERK_PASSWORD - see e2e/support/studio-auth.ts"
+  "studio specs need a session at e2e/.auth/studio.json - either set E2E_CLERK_EMAIL " +
+  "and E2E_CLERK_PASSWORD, or copy a signed-in browser session into that file - see " +
+  "e2e/support/studio-auth.ts"
 
-/** True once a sign-in has been cached for this run. */
+/** True once a session has been cached - by `studio.setup.ts` or by hand. */
 export function hasStoredSession(): boolean {
   return fs.existsSync(STUDIO_STORAGE_STATE)
 }
@@ -120,10 +135,7 @@ export const studioTest = base.extend<{ studioUsername: string }>({
 
 /** Applied at the top of every studio spec file. */
 export function skipWithoutStudioAuth() {
-  studioTest.skip(
-    !studioCredentials() || !hasStoredSession(),
-    MISSING_CREDENTIALS_REASON,
-  )
+  studioTest.skip(!hasStoredSession(), MISSING_CREDENTIALS_REASON)
 }
 
 export { expect }
