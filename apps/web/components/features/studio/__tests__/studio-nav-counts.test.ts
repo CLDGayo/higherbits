@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { STUDIO_NAV_ITEMS } from "../nav-config"
+import { STUDIO_NAV_ITEMS, type StudioNavItem } from "../nav-config"
 import { countFor } from "../ui/studio-sidebar"
 import {
   EMPTY_STUDIO_NAV_COUNTS,
@@ -29,6 +29,7 @@ const ALL_COUNTS: StudioNavCounts = {
   themes: 2,
   ascii: 3,
   gradients: 4,
+  shaders: 5,
 }
 
 /**
@@ -58,13 +59,33 @@ describe("countFor", () => {
     expect(countFor(overview, ALL_COUNTS)).toBeUndefined()
   })
 
+  /**
+   * Phase 10c shipped Shaders, which was the last `comingSoon` section, so this
+   * used to assert `soon.length > 0` and would now fail against an empty set.
+   *
+   * The rule it protects has not gone away - the next section to gain a count
+   * before a list will need it - so the test constructs the item instead of
+   * fishing for one in `STUDIO_NAV_ITEMS`. Asserting over a list that happens to
+   * be empty proves nothing; this proves the branch.
+   */
   it("never gives a coming-soon section a badge", () => {
-    const soon = STUDIO_NAV_ITEMS.filter((item) => item.comingSoon)
-    expect(soon.length).toBeGreaterThan(0)
-
-    for (const item of soon) {
-      expect(countFor(item, ALL_COUNTS)).toBeUndefined()
+    const unbuilt: StudioNavItem = {
+      slug: "components",
+      label: "Not built",
+      icon: STUDIO_NAV_ITEMS[0]!.icon,
+      tooltip: "Not built",
+      segment: "not-built",
+      comingSoon: true,
     }
+
+    // Keyed to a slug that HAS a count, so a pass cannot come from the switch
+    // falling through to `default:` - only from the `comingSoon` guard above it.
+    expect(ALL_COUNTS.components).toBe(6)
+    expect(countFor(unbuilt, ALL_COUNTS)).toBeUndefined()
+  })
+
+  it("every nav section is live - none are coming soon", () => {
+    expect(STUDIO_NAV_ITEMS.filter((item) => item.comingSoon)).toEqual([])
   })
 
   it("renders a real zero but not a null", () => {

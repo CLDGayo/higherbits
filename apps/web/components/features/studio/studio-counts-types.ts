@@ -13,6 +13,7 @@ export interface StudioNavCounts {
   themes: number | null
   ascii: number | null
   gradients: number | null
+  shaders: number | null
 }
 
 export const EMPTY_STUDIO_NAV_COUNTS: StudioNavCounts = {
@@ -22,4 +23,5 @@ export const EMPTY_STUDIO_NAV_COUNTS: StudioNavCounts = {
   themes: null,
   ascii: null,
   gradients: null,
+  shaders: null,
 }

@@ -93,7 +93,6 @@ export const STUDIO_NAV_ITEMS: StudioNavItem[] = [
     icon: Sparkles,
     tooltip: "Shaders",
     segment: "shaders",
-    comingSoon: true,
   },
 ]
 

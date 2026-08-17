@@ -54,6 +54,8 @@ export function countFor(
       return counts.ascii ?? undefined
     case "gradients":
       return counts.gradients ?? undefined
+    case "shaders":
+      return counts.shaders ?? undefined
     default:
       return undefined
   }

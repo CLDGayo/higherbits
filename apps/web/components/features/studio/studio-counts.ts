@@ -132,7 +132,7 @@ async function countComponents(userId: string): Promise<number | null> {
 export async function getStudioNavCounts(
   userId: string,
 ): Promise<StudioNavCounts> {
-  const [components, libraries, templates, themes, ascii, gradients] =
+  const [components, libraries, templates, themes, ascii, gradients, shaders] =
     await Promise.all([
       countComponents(userId),
       countRows("collections", userId),
@@ -140,7 +140,8 @@ export async function getStudioNavCounts(
       countArtifacts(userId, "theme"),
       countArtifacts(userId, "ascii"),
       countArtifacts(userId, "gradient"),
+      countArtifacts(userId, "shader"),
     ])
 
-  return { components, libraries, templates, themes, ascii, gradients }
+  return { components, libraries, templates, themes, ascii, gradients, shaders }
 }

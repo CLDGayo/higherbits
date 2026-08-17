@@ -321,11 +321,72 @@ export const GRADIENT_DEFAULT_PAYLOAD: GradientPayload = {
   motion: { animate: false },
 }
 
-const shaderPayloadSchema = z.object({
-  fragment: z.string().max(50_000),
-  vertex: z.string().max(50_000).optional(),
-  uniforms: z.record(z.string(), z.union([z.number(), z.string()])).optional(),
-}).strict()
+/**
+ * A control the author declares, which becomes one GLSL uniform.
+ *
+ * `name` is interpolated straight into shader source, so the pattern is the
+ * validation - it admits a GLSL identifier and nothing else. `u_` is refused
+ * because the harness owns that prefix (`u_time`, `u_resolution`) and a
+ * collision would be a redeclaration error the author did not write.
+ */
+const shaderUniformSchema = z
+  .object({
+    name: z
+      .string()
+      .regex(
+        /^[a-zA-Z][a-zA-Z0-9_]{0,23}$/,
+        "Letters, digits and underscore; must start with a letter",
+      )
+      .refine((n) => !n.startsWith("u_"), "u_ is reserved for the harness"),
+    label: z.string().min(1).max(40),
+    type: z.enum(["float", "color"]),
+    value: z.union([z.number(), z.string()]),
+    min: z.number().optional(),
+    max: z.number().optional(),
+  })
+  .strict()
+
+export type ShaderUniform = z.infer<typeof shaderUniformSchema>
+
+/**
+ * Rewritten in Phase 10c, replacing an unused `{ fragment, vertex, uniforms }`
+ * placeholder that Phase 09 scaffolded and nothing ever wrote.
+ *
+ * **Free to change only because the table held zero `shader` rows** - measured
+ * 2026-08-17: theme 2, ascii 1, gradient 2, shader 0. That is the same licence
+ * 10a had for `asciiPayloadSchema`, and it expires the moment a row exists.
+ *
+ * The author writes a `shade()` body, not a whole fragment. The library imposes
+ * no convention - `ShaderMount` takes any complete fragment string - so the
+ * narrow contract is a deliberate choice (10c D2): it is what makes presets,
+ * declared uniforms and error line-mapping tractable.
+ */
+const shaderPayloadSchema = z
+  .object({
+    body: z.string().max(20_000),
+    uniforms: z.array(shaderUniformSchema).max(8),
+    motion: z.object({
+      animate: z.boolean(),
+      speed: z.number().min(0).max(4),
+    }),
+  })
+  .strict()
+
+export type ShaderPayload = z.infer<typeof shaderPayloadSchema>
+
+export const SHADER_DEFAULT_PAYLOAD: ShaderPayload = {
+  body: `// uv is 0..1 across the canvas, t is seconds.
+vec3 a = colorA;
+vec3 b = colorB;
+float w = 0.5 + 0.5 * sin(uv.x * 6.2831 * frequency + t);
+return mix(a, b, w * uv.y);`,
+  uniforms: [
+    { name: "colorA", label: "Colour A", type: "color", value: "#7c3aed" },
+    { name: "colorB", label: "Colour B", type: "color", value: "#f472b6" },
+    { name: "frequency", label: "Frequency", type: "float", value: 1, min: 0, max: 8 },
+  ],
+  motion: { animate: true, speed: 1 },
+}
 
 // --- the registry ----------------------------------------------------------
 

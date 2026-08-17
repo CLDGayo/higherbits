@@ -48,10 +48,15 @@ describe("studio nav config", () => {
     // 2026-08-14 and /studio/[username]/themes is a real route. ASCII art left
     // it in Phase 10a for the same reason - a route, an editor body and a
     // preview renderer. Gradients left it in Phase 10b, same reason again.
-    // Shaders still share the table but have neither yet; 10c removes it.
+    // **Shaders left it in Phase 10c, and the list is now empty**: every one of
+    // the eight sections has a route, a backing table and a count.
+    //
+    // An empty expectation is still worth asserting - it fails the moment a
+    // section is added to the nav ahead of the surface behind it, which is the
+    // drift this test was written for.
     expect(
       STUDIO_NAV_ITEMS.filter((i) => i.comingSoon).map((i) => i.slug),
-    ).toEqual(["shaders"])
+    ).toEqual([])
   })
 })
 
