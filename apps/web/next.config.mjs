@@ -25,6 +25,13 @@ const nextConfig = {
       { protocol: "https", hostname: "pbs.twimg.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
       { protocol: "https", hostname: "www.gravatar.com" },
+      // The screenshot service behind components/ui/link-preview.tsx. Its
+      // absence was not a missing image but a hard render error - next/image
+      // throws "Invalid src prop ... is not configured" - so /our-story
+      // crashed to Next's error page, and the a11y suite ended up auditing
+      // that error overlay rather than the page. Added per the note above:
+      // name the legitimate host, do not widen to "**".
+      { protocol: "https", hostname: "api.microlink.io" },
     ],
   },
   reactStrictMode: true,

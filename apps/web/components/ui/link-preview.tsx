@@ -78,18 +78,27 @@ export const LinkPreview = ({
 
   return (
     <>
+      {/*
+        A <span>, not a <div>, and that is not cosmetic. This component is
+        designed to sit inline in prose - `our-story` puts several inside a
+        <p> - and a <div> there is invalid HTML that React reports as a
+        hydration error ("<div> cannot be a descendant of <p>"). The wrapper
+        exists only to hold a hidden preload image and has no layout role, so
+        an inline element does the same job legally.
+      */}
       {isMounted ? (
-        <div className="hidden">
+        <span className="hidden">
           <Image
             src={src}
             width={width}
             height={height}
             quality={quality}
             priority={true}
-            alt="hidden image"
+            alt=""
+            aria-hidden="true"
             style={{ objectFit }}
           />
-        </div>
+        </span>
       ) : null}
 
       <HoverCardPrimitive.Root

@@ -246,6 +246,12 @@ iframe {
     --popover-foreground: 25 25% 20%;
     --primary: 255 55% 72%;
     --primary-foreground: 258 40% 16%;
+    /*
+     * Primary, dark enough to be read as text on the light surfaces (§8.3).
+     * Measured 5.64:1 on #ede9f6, against AA's 4.5:1 for body text; --primary
+     * itself measures 2.30:1 and cannot be changed, being a button surface.
+     */
+    --primary-emphasis: 255 55% 52%;
     --primary-gradient-start: 255 55% 78%;
     --primary-gradient-end: 262 50% 68%;
     --mono-gradient-start: 25 25% 20%;
@@ -254,7 +260,26 @@ iframe {
     --secondary-foreground: 20 45% 24%;
     --muted: 258 28% 90%;
     --kbd: 258 28% 90%;
-    --muted-foreground: 25 12% 42%;
+    /*
+     * 42% -> 37% for WCAG AA (Phase 11, §8.3).
+     *
+     * This one token accounted for 48 of the 65 contrast failures in the axe
+     * audit, and it was missing by a hair: 4.22-4.47:1 against the light
+     * surfaces muted text actually sits on, where AA wants 4.5:1 for body
+     * text.
+     *
+     * The value is set against `--muted` (258 28% 90%), the darkest surface
+     * this token is painted on, not against the page background - checked with
+     * `scripts/wcag-contrast.mjs`. That distinction matters: 39% clears every
+     * background axe happened to sample, but lands on exactly 4.50:1 over
+     * `--muted`, i.e. passing with no margin at all. 37% measures 4.86:1
+     * there, so rounding, a future surface a shade darker, or an antialiasing
+     * difference cannot silently reopen this.
+     *
+     * The dark theme's --muted-foreground needs no change - it already
+     * measures 7.15:1 on #282334.
+     */
+    --muted-foreground: 25 12% 37%;
     --accent: 210 70% 86%;
     --accent-foreground: 212 45% 26%;
     --destructive: 0 72% 62%;
@@ -349,6 +374,8 @@ iframe {
     --popover-foreground: 40 30% 92%;
     --primary: 255 58% 76%;
     --primary-foreground: 258 35% 14%;
+    /* On dark, the brand tint is already legible as text: 6.43:1 on #282334. */
+    --primary-emphasis: 255 58% 76%;
     --primary-gradient-start: 255 58% 76%;
     --primary-gradient-end: 262 52% 68%;
     --mono-gradient-start: 40 30% 96%;

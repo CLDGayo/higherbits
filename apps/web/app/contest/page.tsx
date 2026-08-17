@@ -298,7 +298,7 @@ export default async function Page() {
                   href="https://discord.gg/Qx4rFunHfm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
+                  className="text-primary-emphasis underline underline-offset-4"
                 >
                   Discord community
                 </a>
@@ -368,7 +368,7 @@ export default async function Page() {
                   href="https://discord.gg/Qx4rFunHfm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-4"
+                  className="text-primary-emphasis underline underline-offset-4"
                 >
                   Hop into our Discord
                 </a>{" "}

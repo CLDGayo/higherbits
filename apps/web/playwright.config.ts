@@ -24,11 +24,26 @@ export default defineConfig({
   // Compiles every route once before any spec runs, so no assertion races the
   // dev server's first-request compile. See e2e/global-setup.ts.
   globalSetup: "./e2e/global-setup.ts",
-  timeout: 60_000,
+  timeout: 90_000,
   expect: {
     timeout: 5_000,
   },
   fullyParallel: false,
+  /*
+   * One worker, deliberately (Phase 11, §8.1).
+   *
+   * `fullyParallel: false` only serialises tests *within* a file - Playwright
+   * still runs files concurrently, and every worker competes for the same
+   * single `next dev` process. Measured: `/` reaches networkidle in 10.3s on
+   * an idle server, but exceeded the 60s test timeout under concurrent
+   * workers, while `/magic` and `/contest` finished in 5-23s. The result was
+   * a suite whose failures moved run to run.
+   *
+   * Serial costs a few minutes of wall clock and buys results that mean
+   * something. Revisit if the suite is ever pointed at a production build,
+   * where the compile-under-contention cost disappears.
+   */
+  workers: 1,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: {
