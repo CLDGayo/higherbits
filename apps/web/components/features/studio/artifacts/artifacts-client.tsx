@@ -10,6 +10,7 @@ import {
 } from "@/lib/api/artifacts"
 
 import { StudioLayout } from "@/components/features/studio/studio-layout"
+import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
 import type { User } from "@/types/global"
 
 import { ArtifactsList } from "./artifacts-list"
@@ -197,11 +198,8 @@ export function ArtifactsClient({
 
   return (
     <StudioLayout user={user}>
-      <div className="flex flex-col gap-4">
-        <div>
-          <h2 className="text-xl font-semibold">{heading}</h2>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
+      <div className="flex flex-col gap-6">
+        <StudioSectionHeader title={heading} description={description} />
 
         <ArtifactsList
           kind={kind}

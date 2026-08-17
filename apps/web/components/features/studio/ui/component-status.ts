@@ -20,7 +20,17 @@ export const DB_STATUSES = [
  * `sandboxes.component_id IS NULL`. `none` is likewise synthetic — see
  * {@link resolveStatus}.
  */
-export const KNOWN_STATUSES = [...DB_STATUSES, "draft", "none"] as const
+export const KNOWN_STATUSES = [
+  ...DB_STATUSES,
+  "draft",
+  "none",
+  // `studio_artifacts.status`, which is its own two-member enum
+  // (`draft` | `published`) and shares nothing with `submission_status`. Listed
+  // here so the artifact sections render the same pill as every other section
+  // instead of the plain grey text they carried until Phase 11 §8.6. `draft`
+  // is deliberately shared: it means the same thing in both.
+  "published",
+] as const
 
 export type KnownStatus = (typeof KNOWN_STATUSES)[number]
 
@@ -55,6 +65,7 @@ const STATUS_LABELS: Record<KnownStatus, string> = {
   rejected: "Needs changes",
   draft: "Draft",
   none: "No submission",
+  published: "Published",
 }
 
 export function statusLabel(status: StudioStatus): string {
@@ -84,6 +95,8 @@ const STATUS_PILL: Record<KnownStatus, string> = {
     "border-red-500/25 bg-red-500/15 text-red-700 dark:text-red-300",
   draft: "border-border bg-muted text-muted-foreground",
   none: "border-dashed border-border bg-transparent text-muted-foreground",
+  // Same treatment as `posted`, which is the submission enum's word for it.
+  published: "border-primary/25 bg-primary/15 text-primary",
 }
 
 export function statusPillClass(status: StudioStatus): string {

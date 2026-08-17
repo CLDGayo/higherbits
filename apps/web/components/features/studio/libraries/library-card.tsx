@@ -2,7 +2,7 @@
 
 import { Library } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+import { StudioPrivateBadge } from "@/components/features/studio/ui/studio-state-badge"
 import type { LibrarySummary } from "@/lib/api/server/collections"
 import {
   libraryIdentifier,
@@ -37,14 +37,7 @@ export function LibraryCard({
           <Library className="h-4 w-4 text-muted-foreground" />
         </div>
 
-        {!library.is_public && (
-          <Badge
-            variant="outline"
-            className="border-dashed text-xs font-normal text-muted-foreground"
-          >
-            Not published
-          </Badge>
-        )}
+        {!library.is_public && <StudioPrivateBadge />}
       </div>
 
       <div className="min-w-0">

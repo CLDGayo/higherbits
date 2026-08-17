@@ -68,6 +68,7 @@ import {
   ExternalLink,
   Globe,
   InfoIcon,
+  Layers,
   Library,
   Lock,
   Pencil,
@@ -88,6 +89,7 @@ import {
   statusLabel,
   statusPillClass,
 } from "./component-status"
+import { StudioEmptyState } from "./studio-empty-state"
 import { StudioToolbar } from "./studio-toolbar"
 import { VisibilityToggle } from "./visibility-toggle"
 
@@ -110,6 +112,12 @@ interface DemosTableProps {
     collectionId: string,
   ) => Promise<void>
   onBulkVisibility?: (componentIds: number[], isPrivate: boolean) => Promise<void>
+  /**
+   * Trailing toolbar controls, e.g. the "New" menu. It used to sit in the page
+   * header, which made Components the one section whose primary action was not
+   * on the toolbar row (Phase 11 §8.6).
+   */
+  actions?: React.ReactNode
 }
 
 // Format text with clickable links
@@ -389,6 +397,7 @@ export function DemosTable({
   libraries = [],
   onBulkMoveToLibrary,
   onBulkVisibility,
+  actions,
 }: DemosTableProps) {
   const id = useId()
   const [pagination, setPagination] = useState<PaginationState>({
@@ -642,7 +651,6 @@ export function DemosTable({
     })
   }
 
-  const columnCount = columns.length
 
   const table = useReactTable({
     data: visibleRows,
@@ -717,11 +725,18 @@ export function DemosTable({
 
   const rows = table.getRowModel().rows
 
-  const emptyMessage = search
-    ? "No components match your search"
+  // Title + description rather than one line, because that is the shape every
+  // other section's empty state has (Phase 11 §8.6).
+  const emptyTitle = search
+    ? "No components match"
     : activeTab === "all"
-      ? "No demos published yet"
+      ? "No components yet"
       : "Nothing in this tab"
+  const emptyDescription = search
+    ? "Try a different tab or search term."
+    : activeTab === "all"
+      ? "Publish a component and it will appear here."
+      : "Nothing is waiting in this state right now."
 
   return (
     <div className="space-y-4">
@@ -735,9 +750,16 @@ export function DemosTable({
         searchPlaceholder="Search components"
         view={view}
         onViewChange={setView}
+        actions={actions}
       />
 
-      {view === "list" ? (
+      {rows.length === 0 ? (
+        <StudioEmptyState
+          icon={Layers}
+          title={emptyTitle}
+          description={emptyDescription}
+        />
+      ) : view === "list" ? (
         <div className="rounded-lg border border-border bg-background overflow-auto">
           <Table className="table-fixed min-w-full">
             <TableHeader>
@@ -843,28 +865,34 @@ export function DemosTable({
                     })}
                   </TableRow>
                 ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columnCount}
-                    className="h-24 text-center text-muted-foreground"
-                  >
-                    {emptyMessage}
-                  </TableCell>
-                </TableRow>
-              )}
+              ) : null}
             </TableBody>
           </Table>
         </div>
-      ) : rows.length ? (
+      ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {rows.map((row: Row<ExtendedDemoWithComponent>) => {
             const demo = row.original
             return (
               <div
                 key={row.id}
-                className="group cursor-pointer overflow-hidden rounded-lg border border-border bg-background transition-colors hover:bg-muted/50"
+                // A div rather than a button: RowActionsCell puts its own
+                // dropdown trigger inside this card, and a button inside a
+                // button is invalid. role + tabIndex + a key handler is what
+                // makes it reachable - before Phase 11 §8.6 this was the one
+                // card in the studio that could not be focused or activated
+                // from the keyboard at all.
+                role="button"
+                tabIndex={0}
+                className="group cursor-pointer overflow-hidden rounded-lg border border-border bg-background transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => openRow(demo)}
+                onKeyDown={(e) => {
+                  if (e.target !== e.currentTarget) return
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    openRow(demo)
+                  }
+                }}
               >
                 <div className="aspect-video w-full overflow-hidden border-b bg-muted">
                   {demo.preview_url ? (
@@ -901,10 +929,6 @@ export function DemosTable({
               </div>
             )
           })}
-        </div>
-      ) : (
-        <div className="rounded-lg border border-border bg-background p-10 text-center text-muted-foreground">
-          {emptyMessage}
         </div>
       )}
 

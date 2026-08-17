@@ -1,13 +1,15 @@
 "use client"
 
-import { Plus, Search } from "lucide-react"
+import { Library, Plus } from "lucide-react"
 import { useMemo, useState } from "react"
 
 import { StudioLayout } from "@/components/features/studio/studio-layout"
+import { StudioEmptyState } from "@/components/features/studio/ui/studio-empty-state"
+import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
+import { StudioToolbar } from "@/components/features/studio/ui/studio-toolbar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import type { LibrarySummary } from "@/lib/api/server/collections"
 import { libraryNamespace } from "@/lib/utils/library-identity"
 import { User } from "@/types/global"
@@ -70,7 +72,13 @@ export function LibrariesClient({
   return (
     <StudioLayout user={user}>
       <div className="flex flex-col gap-6">
-        {/* Author header */}
+        <StudioSectionHeader
+          title="Libraries"
+          description="Installable sets of your components, published under your handle."
+        />
+
+        {/* Author header. The h1 that used to live here was the *user's name* -
+            this section was the only one with no section title at all. */}
         <div className="flex items-start gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage
@@ -83,9 +91,9 @@ export function LibrariesClient({
           </Avatar>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="truncate text-lg font-medium">
+              <div className="truncate font-medium">
                 {user.display_name || user.name || user.username}
-              </h1>
+              </div>
               <Badge variant="secondary" className="text-xs font-normal">
                 Personal
               </Badge>
@@ -98,52 +106,49 @@ export function LibrariesClient({
           </div>
         </div>
 
-        {/* Toolbar */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative">
-            <Search
-              size={14}
-              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search libraries"
-              aria-label="Search libraries"
-              className="h-9 w-full pl-8 sm:w-64"
-            />
-          </div>
-
-          {isOwnProfile && (
-            <Button onClick={() => setCreateOpen(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              New library
-            </Button>
-          )}
-        </div>
+        <StudioToolbar
+          tabs={[{ id: "all", label: "All", count: libraries.length }]}
+          activeTab="all"
+          tabsLabel="Filter libraries"
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search libraries"
+          // No `view`: this section has a single grid layout, so there is
+          // nothing to toggle to. See the toolbar's own note.
+          actions={
+            isOwnProfile ? (
+              <Button onClick={() => setCreateOpen(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                New library
+              </Button>
+            ) : null
+          }
+        />
 
         {libraries.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center">
-            <p className="text-sm font-medium">No libraries yet</p>
-            <p className="max-w-sm text-sm text-muted-foreground">
-              Group related components under one installable name so people can
-              take the whole set at once.
-            </p>
-            {isOwnProfile && (
-              <Button
-                variant="outline"
-                onClick={() => setCreateOpen(true)}
-                className="mt-1 gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                Create your first library
-              </Button>
-            )}
-          </div>
+          <StudioEmptyState
+            icon={Library}
+            title="No libraries yet"
+            description="Group related components under one installable name so people can take the whole set at once."
+            action={
+              isOwnProfile ? (
+                <Button
+                  variant="outline"
+                  onClick={() => setCreateOpen(true)}
+                  className="gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create your first library
+                </Button>
+              ) : null
+            }
+          />
         ) : visible.length === 0 ? (
-          <div className="rounded-lg border border-border p-10 text-center text-muted-foreground">
-            No libraries match your search
-          </div>
+          <StudioEmptyState
+            icon={Library}
+            title="No libraries match"
+            description="Try a different search term."
+          />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {visible.map((library) => (

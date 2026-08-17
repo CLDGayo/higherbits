@@ -1,8 +1,8 @@
 "use client"
 
-import { Download, Heart, Lock } from "lucide-react"
+import { Download, Heart } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+import { StudioPrivateBadge } from "@/components/features/studio/ui/studio-state-badge"
 import type { TemplateSummary } from "@/lib/api/server/templates"
 import { cn } from "@/lib/utils"
 import {
@@ -47,7 +47,7 @@ export function TemplateCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate font-medium">{template.name}</span>
-            {!template.is_public && <PrivateBadge />}
+            {!template.is_public && <StudioPrivateBadge />}
           </div>
           <p
             className={cn(
@@ -79,7 +79,7 @@ export function TemplateCard({
       <div className="flex flex-col gap-2 p-3">
         <div className="flex items-start justify-between gap-2">
           <span className="truncate font-medium">{template.name}</span>
-          {!template.is_public && <PrivateBadge />}
+          {!template.is_public && <StudioPrivateBadge />}
         </div>
         <p
           className={cn(
@@ -99,17 +99,6 @@ export function TemplateCard({
   )
 }
 
-function PrivateBadge() {
-  return (
-    <Badge
-      variant="outline"
-      className="shrink-0 gap-1 border-dashed text-xs font-normal text-muted-foreground"
-    >
-      <Lock size={10} />
-      Private
-    </Badge>
-  )
-}
 
 function Thumbnail({
   template,

@@ -4,6 +4,11 @@ import { useMemo, useState } from "react"
 import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { StudioEmptyState } from "@/components/features/studio/ui/studio-empty-state"
+import {
+  StudioPrivateBadge,
+  StudioStatusBadge,
+} from "@/components/features/studio/ui/studio-state-badge"
 import {
   StudioToolbar,
   type StudioView,
@@ -101,7 +106,7 @@ export function ArtifactsList({
           Loading {config.pluralLabel.toLowerCase()}…
         </div>
       ) : visible.length === 0 ? (
-        <EmptyState
+        <StudioEmptyState
           // The registry's copy describes an empty *section*. Once a filter or a
           // search is responsible for the emptiness, saying "No themes yet" is
           // simply false.
@@ -115,7 +120,7 @@ export function ArtifactsList({
               ? config.emptyState.description
               : "Try a different tab or search term."
           }
-          icon={<Icon size={24} className="text-muted-foreground" />}
+          icon={Icon}
           action={
             artifacts.length === 0 && onCreate ? (
               <Button onClick={onCreate} variant="outline" className="gap-1.5">
@@ -129,7 +134,7 @@ export function ArtifactsList({
         <div
           className={cn(
             view === "grid"
-              ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              ? "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
               : "flex flex-col divide-y divide-border rounded-lg border border-border",
           )}
         >
@@ -190,14 +195,12 @@ function ArtifactCard({
   view: StudioView
   onOpen?: (artifact: ArtifactSummary) => void
 }) {
-  const isPublished = artifact.status === "published"
-
   return (
     <button
       type="button"
       onClick={() => onOpen?.(artifact)}
       className={cn(
-        "group text-left transition-colors hover:bg-muted/50",
+        "group bg-background text-left transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         view === "grid"
           ? "flex flex-col overflow-hidden rounded-lg border border-border"
           : "flex items-center gap-3 p-3",
@@ -214,37 +217,11 @@ function ArtifactCard({
 
       <div className={cn("min-w-0", view === "grid" ? "p-3" : "flex-1")}>
         <div className="truncate text-sm font-medium">{artifact.name}</div>
-        <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{isPublished ? "Published" : "Draft"}</span>
-          <span aria-hidden>·</span>
-          <span>{artifact.is_public ? "Public" : "Private"}</span>
+        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+          <StudioStatusBadge status={artifact.status} />
+          {!artifact.is_public && <StudioPrivateBadge />}
         </div>
       </div>
     </button>
-  )
-}
-
-function EmptyState({
-  title,
-  description,
-  icon,
-  action,
-}: {
-  title: string
-  description: string
-  icon: React.ReactNode
-  action?: React.ReactNode
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border py-16 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-        {icon}
-      </div>
-      <div>
-        <p className="text-sm font-medium">{title}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-      </div>
-      {action}
-    </div>
   )
 }

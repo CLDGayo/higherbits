@@ -1,10 +1,12 @@
 "use client"
 
-import { Plus } from "lucide-react"
+import { LayoutTemplate, Plus } from "lucide-react"
 import Link from "next/link"
 import { useMemo, useState } from "react"
 
 import { StudioLayout } from "@/components/features/studio/studio-layout"
+import { StudioEmptyState } from "@/components/features/studio/ui/studio-empty-state"
+import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
 import {
   StudioToolbar,
   StudioView,
@@ -60,12 +62,10 @@ export function TemplatesClient({
   return (
     <StudioLayout user={user}>
       <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-lg font-medium">Templates</h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            Full page and site templates you&apos;ve listed.
-          </p>
-        </div>
+        <StudioSectionHeader
+          title="Templates"
+          description="Full page and site templates you've listed."
+        />
 
         <StudioToolbar
           tabs={[{ id: "all", label: "All", count: templates.length }]}
@@ -80,24 +80,27 @@ export function TemplatesClient({
         />
 
         {templates.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center">
-            <p className="text-sm font-medium">No templates yet</p>
-            <p className="max-w-sm text-sm text-muted-foreground">
-              List your first template in the community catalog.
-            </p>
-            {isOwnProfile && (
-              <Button asChild variant="outline" className="mt-1 gap-2">
-                <Link href="/publish/template">
-                  <Plus className="h-4 w-4" />
-                  New template
-                </Link>
-              </Button>
-            )}
-          </div>
+          <StudioEmptyState
+            icon={LayoutTemplate}
+            title="No templates yet"
+            description="List your first template in the community catalog."
+            action={
+              isOwnProfile ? (
+                <Button asChild variant="outline" className="gap-2">
+                  <Link href="/publish/template">
+                    <Plus className="h-4 w-4" />
+                    New template
+                  </Link>
+                </Button>
+              ) : null
+            }
+          />
         ) : visible.length === 0 ? (
-          <div className="rounded-lg border border-border p-10 text-center text-muted-foreground">
-            No templates match your search
-          </div>
+          <StudioEmptyState
+            icon={LayoutTemplate}
+            title="No templates match"
+            description="Try a different search term."
+          />
         ) : (
           <div
             className={

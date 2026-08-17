@@ -25,6 +25,12 @@ export interface StudioToolbarTab<TId extends string = string> {
  *
  * Deliberately controlled and state-free - each section owns its own filtering,
  * because what a tab *means* differs per section.
+ *
+ * `view` is optional (Phase 11 §8.6). Libraries carried a hand-rolled third
+ * toolbar shape - a bare Input and a button, no tabs, no toggle - because it has
+ * no list layout to toggle *to*. Omitting the control is the honest rendering;
+ * faking a toggle that switches between one layout and itself is not. Every
+ * other part of the row is now the same markup in every section.
  */
 export function StudioToolbar<TId extends string = string>({
   tabs = [],
@@ -46,8 +52,9 @@ export function StudioToolbar<TId extends string = string>({
   search: string
   onSearchChange: (value: string) => void
   searchPlaceholder?: string
-  view: StudioView
-  onViewChange: (view: StudioView) => void
+  /** Omit in a section that has only one layout - the toggle is then hidden. */
+  view?: StudioView
+  onViewChange?: (view: StudioView) => void
   /** Trailing controls, e.g. a "+ New template" button. */
   actions?: React.ReactNode
 }) {
@@ -122,6 +129,7 @@ export function StudioToolbar<TId extends string = string>({
           />
         </div>
 
+        {view !== undefined && onViewChange && (
         <div className="flex items-center rounded-lg border border-border p-0.5">
           {(
             [
@@ -146,6 +154,7 @@ export function StudioToolbar<TId extends string = string>({
             </Button>
           ))}
         </div>
+        )}
 
         {actions}
       </div>

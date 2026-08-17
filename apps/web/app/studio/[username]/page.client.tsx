@@ -23,6 +23,7 @@ import {
   type MetricWindow,
 } from "@/components/features/studio/overview/windowing"
 import { useStudioNavCounts } from "@/components/features/studio/studio-counts-context"
+import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
 import { User } from "@/types/global"
 import { BarChartBig, CreditCard, Package } from "lucide-react"
 import Link from "next/link"
@@ -95,13 +96,13 @@ export function StudioOverviewClient({
 
   return (
     <StudioLayout user={user}>
+      {/* gap-10 rather than the list sections' gap-6: this page stacks five
+          blocks of its own rather than a header and a single list. */}
       <div className="flex flex-col gap-10">
-        <div>
-          <h1 className="text-2xl font-medium">Overview</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Last {WINDOW_DAYS} days.
-          </p>
-        </div>
+        <StudioSectionHeader
+          title="Overview"
+          description={`Last ${WINDOW_DAYS} days.`}
+        />
 
         <StatRow>
           {views ? (

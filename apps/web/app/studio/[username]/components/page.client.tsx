@@ -3,6 +3,7 @@
 import { User } from "@/types/global"
 import { StudioLayout } from "@/components/features/studio/studio-layout"
 import { DemosTable } from "@/components/features/studio/ui/components-table"
+import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -56,7 +57,7 @@ const CREATE_OPTIONS = [
     isSvg: true,
     renderSvg: () => (
       <svg
-        className="w-5 h-5 text-neutral-400 shrink-0"
+        className="h-4 w-4 shrink-0 text-muted-foreground"
         viewBox="0 0 24 24"
         fill="currentColor"
       >
@@ -73,7 +74,7 @@ const CREATE_OPTIONS = [
     isSvg: true,
     renderSvg: () => (
       <svg
-        className="w-5 h-5 text-neutral-400 shrink-0"
+        className="h-4 w-4 shrink-0 text-muted-foreground"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -93,7 +94,7 @@ const CREATE_OPTIONS = [
     isSvg: true,
     renderSvg: () => (
       <svg
-        className="w-5 h-5 text-neutral-400 shrink-0"
+        className="h-4 w-4 shrink-0 text-muted-foreground"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -367,51 +368,48 @@ export function StudioUsernameClient({
       setShowCreateDialog={setShowCreateDialog}
       selectedType={selectedType}
     >
-      <div className="flex justify-between items-center mb-4">
-        <div>
-          <h2 className="text-sm font-medium">Components</h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            Create and manage your UI components
-          </p>
-        </div>
-        {(isOwnProfile || isAdmin) && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                disabled={isCreating}
-                className="bg-[#0052ff] hover:bg-[#0047e1] text-white font-medium text-base px-4 py-2.5 rounded-xl flex items-center gap-2 border-none shadow-sm transition-colors cursor-pointer outline-none focus:ring-2 focus:ring-blue-500/50"
-              >
-                <Plus className="h-5 w-5 stroke-[2.5]" />
-                <span className="font-semibold text-base">New</span>
-                <ChevronDown className="h-4 w-4 ml-0.5 opacity-90" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-60 p-2 bg-[#121214] border border-neutral-800 text-white rounded-2xl shadow-2xl space-y-1 z-50"
-            >
-              {CREATE_OPTIONS.map((option) => (
-                <DropdownMenuItem
-                  key={option.id}
-                  onClick={() => handleSelectOption(option.id)}
-                  className="flex items-center gap-3.5 px-3 py-2.5 text-base font-medium rounded-xl cursor-pointer text-neutral-200 hover:bg-neutral-800/80 hover:text-white focus:bg-neutral-800 focus:text-white transition-colors outline-none"
-                >
-                  {option.isSvg && option.renderSvg ? (
-                    option.renderSvg()
-                  ) : option.Icon ? (
-                    <option.Icon className="w-5 h-5 text-neutral-400 shrink-0" />
-                  ) : null}
-                  <span>{option.label}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
+      <div className="flex flex-col gap-6">
+        <StudioSectionHeader
+          title="Components"
+          description="Create and manage your UI components"
+        />
 
-      <div className="mt-4">
         <DemosTable
           demos={localDemos}
+          /* The primary action moved onto the toolbar row, where every other
+             section already put it. It also stopped hardcoding #0052ff and a
+             dark #121214 panel - the one place in the studio that painted its
+             own brand colour instead of using the themed Button, and the one
+             menu that stayed dark in the light theme. */
+          actions={
+            isOwnProfile || isAdmin ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button disabled={isCreating} className="gap-1.5">
+                    <Plus size={16} />
+                    New
+                    <ChevronDown size={14} className="opacity-70" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {CREATE_OPTIONS.map((option) => (
+                    <DropdownMenuItem
+                      key={option.id}
+                      onClick={() => handleSelectOption(option.id)}
+                      className="gap-2.5"
+                    >
+                      {option.isSvg && option.renderSvg ? (
+                        option.renderSvg()
+                      ) : option.Icon ? (
+                        <option.Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      ) : null}
+                      <span>{option.label}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null
+          }
           onOpenSandbox={handleOpenSandbox}
           onPreview={setPreviewDemo}
           onEdit={isOwnProfile || isAdmin ? handleEditDetails : undefined}

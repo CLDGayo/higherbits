@@ -1,6 +1,8 @@
 "use client"
 
 import { StudioLayout } from "@/components/features/studio/studio-layout"
+import { StudioEmptyState } from "@/components/features/studio/ui/studio-empty-state"
+import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
 import { User } from "@/types/global"
 import type { LucideIcon } from "lucide-react"
 
@@ -11,6 +13,12 @@ import type { LucideIcon } from "lucide-react"
  * count badge; only the list UI is owned by a later phase. This renders the
  * correct heading and says plainly that nothing is here yet - it must never
  * render a fake list.
+ *
+ * ⚠️ **Currently unreferenced.** Shaders is `comingSoon: true` in
+ * `nav-config.ts`, so it has no route and nothing mounts this. Kept because the
+ * next kind to gain a live count before a list will want it; rebuilt on the
+ * shared header and empty state in Phase 11 §8.6 so it cannot drift away from
+ * the sections it stands in for while it waits.
  */
 export function StudioSectionPlaceholder({
   user,
@@ -25,20 +33,14 @@ export function StudioSectionPlaceholder({
 }) {
   return (
     <StudioLayout user={user}>
-      <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-2xl font-medium">{title}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{description}</p>
-        </div>
+      <div className="flex flex-col gap-6">
+        <StudioSectionHeader title={title} description={description} />
 
-        <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center">
-          <Icon className="h-6 w-6 text-muted-foreground" />
-          <p className="text-sm font-medium">This section isn&apos;t built yet</p>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Your {title.toLowerCase()} are counted in the sidebar, but managing
-            them here is still in progress.
-          </p>
-        </div>
+        <StudioEmptyState
+          icon={Icon}
+          title="This section isn't built yet"
+          description={`Your ${title.toLowerCase()} are counted in the sidebar, but managing them here is still in progress.`}
+        />
       </div>
     </StudioLayout>
   )
