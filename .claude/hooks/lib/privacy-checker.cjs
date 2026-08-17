@@ -117,6 +117,45 @@ function isPrivacySensitive(testPath) {
   return false;
 }
 
+// Quoted heredocs (<<'EOF' and <<"EOF") carry literal file CONTENT, and the
+// shell performs NO substitution inside them, so nothing in the body can reach
+// a sensitive file. Scanning that body is what produced false blocks when
+// writing code or docs that merely mention a dotenv path.
+//
+// Unquoted heredocs (<<EOF) DO expand $(...) and ${...}, so their bodies stay
+// in scope. An unterminated heredoc also fails to match and stays in scope.
+const QUOTED_HEREDOC = /<<-?\s*(['"])([A-Za-z_][A-Za-z0-9_]*)\1[\s\S]*?^\s*\2\s*$/gm;
+
+// Property reads on an environment object -- process.env.FOO,
+// import.meta.env.VITE_X, Deno.env.get(...) -- are not file paths. Narrow
+// allowlist by design: a real dotenv path is never preceded by these tokens.
+const ENV_OBJECT_ACCESS = /(?:process|import\.meta|Deno|globalThis)$/;
+
+/**
+ * Remove inert write-content regions from a bash command before path scanning.
+ * @param {string} command - Raw bash command
+ * @returns {string} Command with quoted heredoc bodies replaced by a placeholder
+ */
+function stripWriteContent(command) {
+  return command.replace(QUOTED_HEREDOC, '<<HEREDOC_BODY_ELIDED');
+}
+
+/**
+ * Collect dotenv-looking paths from a command, skipping environment-object reads.
+ * @param {string} command - Bash command (already stripped of write content)
+ * @param {RegExp} pattern - Global regex whose match[0] is the candidate path
+ * @returns {Array<string>} Candidate paths
+ */
+function collectEnvPaths(command, pattern) {
+  const found = [];
+  for (const match of command.matchAll(pattern)) {
+    const before = command.slice(Math.max(0, match.index - 24), match.index);
+    if (ENV_OBJECT_ACCESS.test(before)) continue;
+    found.push(match[0]);
+  }
+  return found;
+}
+
 /**
  * Extract paths from tool input
  * @param {Object} toolInput - Tool input object with file_path, path, pattern, or command
@@ -132,24 +171,25 @@ function extractPaths(toolInput) {
 
   // Check bash commands for file paths
   if (toolInput.command) {
-    // Look for APPROVED:.env or .env patterns
-    const approvedMatch = toolInput.command.match(/APPROVED:[^\s]+/g) || [];
+    const command = stripWriteContent(toolInput.command);
+
+    // Look for APPROVED: paths first
+    const approvedMatch = command.match(/APPROVED:[^\s]+/g) || [];
     approvedMatch.forEach(p => paths.push({ value: p, field: 'command' }));
 
-    // Only look for .env if no APPROVED: version found
+    // Only look for dotenv paths if no APPROVED: version found
     if (approvedMatch.length === 0) {
-      const envMatch = toolInput.command.match(/\.env[^\s]*/g) || [];
-      envMatch.forEach(p => paths.push({ value: p, field: 'command' }));
+      collectEnvPaths(command, /\.env[^\s]*/g)
+        .forEach(p => paths.push({ value: p, field: 'command' }));
 
       // Also check bash variable assignments (FILE=.env, ENV_FILE=.env.local)
-      const varAssignments = toolInput.command.match(/\w+=[^\s]*\.env[^\s]*/g) || [];
-      varAssignments.forEach(a => {
+      collectEnvPaths(command, /\w+=[^\s]*\.env[^\s]*/g).forEach(a => {
         const value = a.split('=')[1];
         if (value) paths.push({ value, field: 'command' });
       });
 
-      // Check command substitution containing sensitive patterns - extract .env from inside
-      const cmdSubst = toolInput.command.match(/\$\([^)]*?(\.env[^\s)]*)[^)]*\)/g) || [];
+      // Check command substitution containing sensitive patterns - extract path from inside
+      const cmdSubst = command.match(/\$\([^)]*?(\.env[^\s)]*)[^)]*\)/g) || [];
       for (const subst of cmdSubst) {
         const inner = subst.match(/\.env[^\s)]*/);
         if (inner) paths.push({ value: inner[0], field: 'command' });
@@ -307,6 +347,7 @@ module.exports = {
   stripApprovalPrefix,
   isSuspiciousPath,
   extractPaths,
+  stripWriteContent,
   isPrivacyBlockDisabled,
   isPrivacyAllowlisted,
   buildPromptData,
