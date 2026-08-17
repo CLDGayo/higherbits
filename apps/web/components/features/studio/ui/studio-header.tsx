@@ -36,7 +36,7 @@ export function StudioHeader({ user }: StudioHeaderProps) {
   const pathname = usePathname()
   const controls = useAnimation()
   const { signOut } = useClerk()
-  const { open, setOpen } = useSidebar()
+  const { toggleSidebar } = useSidebar()
 
   const basePath = studioBasePath(user.display_username || user.username)
 
@@ -49,11 +49,19 @@ export function StudioHeader({ user }: StudioHeaderProps) {
   return (
     <header className="flex fixed top-0 left-0 right-0 h-14 z-50 items-center pl-2 pr-4 py-3 text-foreground border-b border-border/40 bg-background">
       <div className="flex items-center flex-1">
+        {/*
+          toggleSidebar, not setOpen: below 768px the sidebar primitive renders
+          as a Sheet driven by `openMobile`, and `setOpen` only moves the desktop
+          state. The button was visible from 640px up and did nothing between 640
+          and 767. It was also `hidden sm:flex`, so under 640px there was no
+          control at all and the sheet could not be opened by any means.
+          toggleSidebar branches on isMobile and is correct at every width.
+        */}
         <Button
           variant="ghost"
           size="icon"
-          className="mr-3 hidden sm:flex"
-          onClick={() => setOpen(!open)}
+          className="mr-3"
+          onClick={toggleSidebar}
           aria-label="Toggle sidebar"
         >
           <Menu className="h-5 w-5" />
@@ -62,7 +70,7 @@ export function StudioHeader({ user }: StudioHeaderProps) {
         {/* Links to the marketing home. toggleMenu inside Logo only fires on
             right-click or meta/ctrl-click, so the brand assets menu still works
             and a plain click navigates. */}
-        <Logo position="flex" className="w-5 h-5 sm:ml-0 ml-3" />
+        <Logo position="flex" className="w-5 h-5" />
 
         <div className="flex items-center gap-2 ml-2">
           <Icons.Slash className="text-border w-[22px] h-[22px]" />

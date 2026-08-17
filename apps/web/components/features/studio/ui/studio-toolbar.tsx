@@ -98,8 +98,17 @@ export function StudioToolbar<TId extends string = string>({
         <div />
       )}
 
-      <div className="flex items-center gap-2">
-        <div className="relative">
+      <div className="flex flex-wrap items-center gap-2">
+        {/*
+          The input is `w-full sm:w-64`, so under 640px it fills whatever the
+          wrapper got - and the wrapper was a shrink-to-fit flex item on a row
+          the view toggle and the primary action had already filled, leaving it
+          ~114px and a truncated placeholder. `flex-1` cannot fix that: there is
+          no free space to grow into. The row wraps instead, so search owns a
+          full line under sm and shrink-wraps to w-64 above it - the same shape
+          the Libraries section already used.
+        */}
+        <div className="relative w-full sm:w-auto">
           <Search
             size={14}
             className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
