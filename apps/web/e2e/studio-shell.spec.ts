@@ -53,8 +53,14 @@ test.describe("studio shell", () => {
       expect(response?.status(), `${section} did not respond 200`).toBeLessThan(400)
       // A rewritten-to-marketing page is the signed-out failure mode, and it
       // answers 200 - so assert on content, not only on status.
+      //
+      // The landmark has to be the NAMED one. Plain `getByRole("navigation")`
+      // was inverted: the marketing layout renders a <nav> and the studio
+      // sidebar rendered none, so this assertion passed on precisely the
+      // failure the comment above describes, and failed whenever the studio
+      // did render. The sidebar now carries aria-label="Studio".
       await expect(
-        page.getByRole("navigation").first(),
+        page.getByRole("navigation", { name: /studio/i }),
         `${section} did not render the studio shell`,
       ).toBeVisible()
       expect(errors, `${section} logged console errors`).toEqual([])

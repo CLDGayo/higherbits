@@ -44,10 +44,30 @@ import { test as base, expect, type Page } from "@playwright/test"
  *
  * 2. *A copied browser session.* Write a Playwright `storageState` to
  *    `STUDIO_STORAGE_STATE` by hand - the localhost cookies out of an
- *    already-signed-in browser are enough. `connectOverCDP` cannot drive that
- *    browser, but raw CDP `Network.getAllCookies` reads its cookies fine.
- *    Locally this is the cheaper path: it needs no second account and no
- *    password on disk. Not available in CI, which is why route 1 stays.
+ *    already-signed-in browser. `connectOverCDP` cannot drive that browser,
+ *    but raw CDP `Network.getAllCookies` reads its cookies fine. Locally this
+ *    needs no second account and no password on disk.
+ *
+ *    **Known limitation, measured 2026-08-17.** A session copied out of
+ *    `document.cookie` is missing Clerk's `__refresh_*` token, because that
+ *    cookie is HttpOnly and JavaScript cannot read it. Once the 60-second
+ *    `__session` JWT expires, Clerk cannot refresh silently and falls back to
+ *    a full handshake - `__clerk_hs_reason=session-token-expired-refresh-non-
+ *    eligible-no-refresh-cookie` - which costs three 307s and can land the
+ *    page on `/` before it settles.
+ *
+ *    Re-saving after a handshake does not fix it: Clerk sets `__refresh_*`
+ *    with `SameSite=None` and no `Secure`, which Chrome refuses over plain
+ *    http://localhost, so the cookie never persists.
+ *
+ *    This is a property of the copy, NOT a bug in the app. A real browser
+ *    session holds the refresh cookie and never handshakes; verified by
+ *    fetching three studio sections from a signed-in browser - all 200 at
+ *    their own URLs, no redirect.
+ *
+ *    Route 1 has no such problem: signing in through the UI lets the server
+ *    set every cookie, HttpOnly included, straight into the Playwright
+ *    context. **Prefer route 1 whenever credentials exist.**
  *
  * The gate below is therefore **"is there a usable session"**, not "are
  * credentials present" - a stored session with no credentials is a valid setup,
@@ -125,8 +145,25 @@ export const studioTest = base.extend<{ studioUsername: string }>({
    * hand-made account state §8.1 warns about.
    */
   studioUsername: async ({ page }, use) => {
-    await page.goto("/studio")
-    await page.waitForURL(/\/studio\/[^/]+/, { timeout: 30_000 })
+    // One retry, on purpose rather than as a flake patch. When Clerk has to run
+    // a handshake (see the limitation above), the redirects can land this first
+    // navigation on `/` - but that navigation is also what completes the
+    // handshake and installs a fresh session token. The second attempt then
+    // succeeds. Without this, any studio spec can fail in the fixture for a
+    // reason that has nothing to do with what it asserts.
+    // 20s per attempt, not 30: two attempts plus the navigations have to fit
+    // inside the 90s per-test timeout, and at 30s they did not - specs started
+    // failing with "timeout exceeded while setting up studioUsername", which is
+    // a worse failure than the one the retry fixes.
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      await page.goto("/studio")
+      try {
+        await page.waitForURL(/\/studio\/[^/]+/, { timeout: 20_000 })
+        break
+      } catch (error) {
+        if (attempt === 2) throw error
+      }
+    }
     const username = new URL(page.url()).pathname.split("/")[2]
     expect(username, "could not discover the studio username").toBeTruthy()
     await use(username!)

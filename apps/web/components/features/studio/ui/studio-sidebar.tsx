@@ -101,7 +101,20 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-4  bg-background">
-        <SidebarMenu>
+        {/*
+          A labelled navigation landmark. shadcn's Sidebar renders plain divs
+          carrying data-sidebar attributes and no role, so until now the studio
+          shell had no landmark at all - a screen reader was handed a list of
+          links with nothing naming them as navigation.
+
+          The label matters as much as the element. The marketing layout also
+          renders a <nav>, so an unlabelled landmark is satisfied by the very
+          page that means the studio failed to render; studio-shell.spec.ts
+          asserted `getByRole("navigation")` and so passed on the failure state
+          and failed on the success state.
+        */}
+        <nav aria-label="Studio">
+          <SidebarMenu>
           {STUDIO_NAV_ITEMS.map((item) => {
             const Icon = item.icon
             const href = studioNavHref(basePath, item)
@@ -159,7 +172,8 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
               </SidebarMenuItem>
             )
           })}
-        </SidebarMenu>
+          </SidebarMenu>
+        </nav>
       </SidebarContent>
 
       <SidebarFooter className="border-t bg-background">
