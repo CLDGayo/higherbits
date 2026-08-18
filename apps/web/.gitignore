@@ -48,3 +48,11 @@ css/*
 # Cached Playwright sign-in for studio E2E specs. Contains a real session
 # token - never commit it.
 e2e/.auth/
+
+# One-off debug/probe scripts dropped at the apps/web top level. Root-anchored
+# so real source under app/, lib/, components/ and e2e/ is unaffected.
+/test-*.js
+/sync-*.js
+/get-*.js
+/scratch-*.ts
+/scratch-*.tsx

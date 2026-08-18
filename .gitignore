@@ -54,3 +54,14 @@ apps/backend/react-bundle-*/
 
 # Agent harness hook logs.
 .claude/hooks/.logs/
+
+# One-off debug/probe scripts dropped at the repo root. Root-anchored so real
+# source under apps/ and packages/ is never swallowed.
+/test-*.js
+/sync-*.js
+/get-*.js
+
+# Scratch notes and unapplied patches — working files, never committed.
+/scratch-*.ts
+/scratch-*.tsx
+*.patch
