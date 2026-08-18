@@ -20,25 +20,54 @@ const storageState = fs.existsSync(storageStatePath)
   : undefined
 
 /*
- * Shard-scoped artifact paths.
+ * SHARD-SCOPED ARTIFACT PATHS - SET BY AN ENV VAR, NOT SNIFFED FROM argv.
  *
- * Playwright clears `outputDir` at the start of every run, so three
- * `--shard=N/3` invocations left only the last shard's traces and screenshots
- * behind - measured, and the reason one failure could only ever be reported
- * as a bare timeout. Giving each shard its own directory keeps all three.
+ * REQUIRED INVOCATION. A sharded run must set `PW_SHARD` to match its
+ * `--shard` flag; the two are passed together, deliberately:
  *
- * `--shard` is a CLI flag with no env equivalent, so it is read from argv.
- * An unsharded run finds no flag, `shardSuffix` stays empty, and both the
- * output directory and the JSON report keep their original paths.
+ *   PW_SHARD=1of3 pnpm exec playwright test --shard=1/3
+ *   PW_SHARD=2of3 pnpm exec playwright test --shard=2/3
+ *   PW_SHARD=3of3 pnpm exec playwright test --shard=3/3
+ *
+ * An unsharded run sets nothing and keeps the original paths:
+ *
+ *   pnpm exec playwright test
+ *
+ * WHY NOT argv. The previous version parsed `--shard` out of `process.argv`.
+ * That was verified statically against five argv shapes and it does not work,
+ * for a reason no static check could see: Playwright re-loads this config
+ * inside every WORKER process, and a worker's argv is measured as exactly
+ *
+ *   ["<node>", ".../playwright/lib/worker/workerProcessEntry.js"]
+ *
+ * - no `--shard`, no test arguments, nothing. So the main process resolved
+ * the suffix and wrote `.last-run.json` into the shard directory, while every
+ * worker resolved the empty default and wrote all traces, screenshots and
+ * videos into the shared `test-results/`. That is precisely the measured
+ * symptom: per-shard directories containing `.last-run.json` and nothing else.
+ *
+ * Environment variables ARE inherited by workers (`PLAYWRIGHT_PORT` and
+ * `PLAYWRIGHT_TEST` were both observed in the worker argv/env dumps), so an
+ * env var reads identically in the main process and in every worker.
+ *
+ * It also cannot fail quietly. A malformed `PW_SHARD` throws here and aborts
+ * the run, rather than degrading to the unsharded default and silently
+ * merging three shards' artifacts into one directory - which is how the
+ * previous mechanism lost a whole shard's evidence without anyone noticing.
  */
-const shardArgIndex = process.argv.findIndex((arg) => arg.startsWith("--shard"))
-// Both spellings: `--shard=2/3` and `--shard 2/3`.
-const shardArg =
-  shardArgIndex === -1
-    ? undefined
-    : `${process.argv[shardArgIndex]} ${process.argv[shardArgIndex + 1] ?? ""}`
-const shardMatch = shardArg?.match(/(\d+)\s*\/\s*(\d+)/)
-const shardSuffix = shardMatch ? `-shard-${shardMatch[1]}-of-${shardMatch[2]}` : ""
+const SHARD_PATTERN = /^(\d+)\s*(?:of|\/)\s*(\d+)$/i
+const rawShard = process.env.PW_SHARD?.trim()
+if (rawShard && !SHARD_PATTERN.test(rawShard)) {
+  throw new Error(
+    `PW_SHARD is set to "${rawShard}", which is not a shard descriptor. ` +
+      `Use the form "2of3" (matching --shard=2/3), or leave PW_SHARD unset ` +
+      `for an unsharded run.`,
+  )
+}
+const shardMatch = rawShard ? rawShard.match(SHARD_PATTERN) : null
+const shardSuffix = shardMatch
+  ? `-shard-${shardMatch[1]}-of-${shardMatch[2]}`
+  : ""
 
 export default defineConfig({
   testDir: "./e2e",
@@ -67,14 +96,26 @@ export default defineConfig({
    */
   workers: 1,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI
-    ? [["list"], ["html", { open: "never" }]]
-    : // Locally the suite emitted scrollback and nothing machine-readable, so
-      // no run could be compared per-spec against the previous one.
-      [
-        ["list"],
-        ["json", { outputFile: `./test-results${shardSuffix}/results.json` }],
-      ],
+  /*
+   * The JSON reporter runs ALWAYS, not only locally.
+   *
+   * Previously it sat in the non-CI branch alone, so any run with `CI` set in
+   * the environment produced `[list, html]` and no `results.json` at all - a
+   * second, independent reason a sharded run can leave per-shard directories
+   * holding nothing but `.last-run.json`. A durable per-spec record is what
+   * makes one run comparable to the next, so it is now unconditional and CI
+   * merely adds the HTML report on top.
+   */
+  reporter: [
+    ["list"] as const,
+    [
+      "json",
+      { outputFile: `./test-results${shardSuffix}/results.json` },
+    ] as const,
+    ...(process.env.CI
+      ? [["html", { open: "never" }] as const]
+      : []),
+  ],
   use: {
     baseURL,
     trace: "retain-on-failure",

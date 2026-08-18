@@ -38,22 +38,91 @@ test.describe("studio empty and loading states", () => {
       page,
       studioUsername,
     }) => {
+      /*
+       * THE ASSERTION INPUT. `crashes` is fed by `pageerror` only and is
+       * compared to `[]` below. Nothing else in this test is ever pushed
+       * into it - the diagnostic channels below are read into the failure
+       * MESSAGE and never into the asserted value, so what this spec fails
+       * on is byte-for-byte what it failed on last run and the ledger stays
+       * comparable.
+       */
       const crashes: string[] = []
-      page.on("pageerror", (e) => crashes.push(String(e)))
 
       /*
-       * Diagnostic only - never an assertion input.
+       * Diagnostic channel 1 - the stack behind the crash.
        *
-       * React reports "The above error occurred in the <X> component" through
-       * console.error, not through `pageerror`, so a spec that watches only
-       * `pageerror` can prove a component crashed but never name it. These
-       * lines are attached to the failure message below; folding them into
-       * `crashes` would change what this spec fails on and make its results
-       * incomparable to previous runs.
+       * `String(e)` renders only "Error: message" and throws the stack away.
+       * React 19 appends the component stack ("The above error occurred in
+       * the <X> component") to the error it reports, so the stack is where
+       * the component NAME actually lives. Captured separately from the
+       * asserted value.
+       */
+      const crashStacks: string[] = []
+      page.on("pageerror", (e) => {
+        crashes.push(String(e))
+        crashStacks.push(e.stack ?? String(e))
+      })
+
+      /*
+       * Diagnostic channel 2 - Playwright's console event.
+       *
+       * `msg.text()` renders a console.error called with an Error object as
+       * the useless "JSHandle@error", so the args are resolved individually.
+       * Warnings are included: React 19 downgrades some recoverable render
+       * errors to console.warn.
        */
       const consoleErrors: string[] = []
       page.on("console", (msg) => {
-        if (msg.type() === "error") consoleErrors.push(msg.text())
+        const type = msg.type()
+        if (type !== "error" && type !== "warning") return
+        const loc = msg.location()
+        const where = loc?.url ? ` (${loc.url}:${loc.lineNumber})` : ""
+        consoleErrors.push(`[${type}]${where} ${msg.text()}`)
+      })
+
+      /*
+       * Diagnostic channel 3 - an in-page mirror, installed before any app
+       * code runs.
+       *
+       * Channel 2 measured EMPTY on a run that definitely crashed, because
+       * Next.js's dev error overlay patches `console.error` and can consume
+       * the message before it ever reaches CDP. Patching first, from
+       * `addInitScript`, means the app's own patch wraps ours and we see the
+       * arguments regardless. `window.onerror` and `unhandledrejection` are
+       * mirrored here too, so an error that never reaches `pageerror` is
+       * still visible. Read back synchronously at assert time, which also
+       * avoids the async race in the listener above.
+       */
+      await page.addInitScript(() => {
+        const w = window as unknown as { __e2eDiag?: string[] }
+        if (w.__e2eDiag) return
+        const sink: string[] = []
+        w.__e2eDiag = sink
+        const render = (a: unknown) =>
+          a instanceof Error ? `${a.message}\n${a.stack ?? ""}` : String(a)
+        for (const level of ["error", "warn"] as const) {
+          const original = console[level].bind(console)
+          console[level] = (...args: unknown[]) => {
+            try {
+              sink.push(`[console.${level}] ${args.map(render).join(" ")}`)
+            } catch {}
+            return original(...(args as []))
+          }
+        }
+        window.addEventListener("error", (event) => {
+          try {
+            sink.push(
+              `[window.onerror] ${event.message}\n${
+                (event.error as Error | undefined)?.stack ?? ""
+              }`,
+            )
+          } catch {}
+        })
+        window.addEventListener("unhandledrejection", (event) => {
+          try {
+            sink.push(`[unhandledrejection] ${render(event.reason)}`)
+          } catch {}
+        })
       })
 
       await page.goto(`/studio/${studioUsername}/${section}`)
@@ -76,11 +145,36 @@ test.describe("studio empty and loading states", () => {
         }).length
       })
       expect(stillLoading, `${section} still shows a loading affordance`).toBe(0)
-      const consoleContext = consoleErrors.length
-        ? `\nconsole errors (diagnostic, not asserted):\n${consoleErrors
-            .map((line) => `  - ${line}`)
-            .join("\n")}`
-        : "\nconsole errors (diagnostic, not asserted): none captured"
+      /*
+       * Read the in-page mirror. Wrapped, because a page that crashed hard
+       * enough can reject `evaluate` - and losing the diagnostic must never
+       * change what the assertion sees.
+       */
+      let inPageDiagnostics: string[] = []
+      try {
+        inPageDiagnostics = await page.evaluate(
+          () =>
+            (window as unknown as { __e2eDiag?: string[] }).__e2eDiag ?? [],
+        )
+      } catch (error) {
+        inPageDiagnostics = [`[mirror unreadable] ${String(error)}`]
+      }
+
+      const block = (label: string, lines: string[]) =>
+        lines.length
+          ? `\n${label}:\n${lines.map((line) => `  - ${line}`).join("\n")}`
+          : `\n${label}: none captured`
+
+      /*
+       * Diagnostics are concatenated into the failure MESSAGE only. The
+       * asserted value stays `crashes` from `pageerror`, compared to `[]`.
+       */
+      const consoleContext = [
+        block("pageerror stacks (diagnostic, not asserted)", crashStacks),
+        block("console errors (diagnostic, not asserted)", consoleErrors),
+        block("in-page mirror (diagnostic, not asserted)", inPageDiagnostics),
+      ].join("")
+
       expect(
         crashes,
         `${section} raised an unhandled error${consoleContext}`,
