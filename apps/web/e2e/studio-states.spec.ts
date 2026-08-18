@@ -41,6 +41,21 @@ test.describe("studio empty and loading states", () => {
       const crashes: string[] = []
       page.on("pageerror", (e) => crashes.push(String(e)))
 
+      /*
+       * Diagnostic only - never an assertion input.
+       *
+       * React reports "The above error occurred in the <X> component" through
+       * console.error, not through `pageerror`, so a spec that watches only
+       * `pageerror` can prove a component crashed but never name it. These
+       * lines are attached to the failure message below; folding them into
+       * `crashes` would change what this spec fails on and make its results
+       * incomparable to previous runs.
+       */
+      const consoleErrors: string[] = []
+      page.on("console", (msg) => {
+        if (msg.type() === "error") consoleErrors.push(msg.text())
+      })
+
       await page.goto(`/studio/${studioUsername}/${section}`)
       try {
         await page.waitForLoadState("networkidle", { timeout: 30_000 })
@@ -61,7 +76,15 @@ test.describe("studio empty and loading states", () => {
         }).length
       })
       expect(stillLoading, `${section} still shows a loading affordance`).toBe(0)
-      expect(crashes, `${section} raised an unhandled error`).toEqual([])
+      const consoleContext = consoleErrors.length
+        ? `\nconsole errors (diagnostic, not asserted):\n${consoleErrors
+            .map((line) => `  - ${line}`)
+            .join("\n")}`
+        : "\nconsole errors (diagnostic, not asserted): none captured"
+      expect(
+        crashes,
+        `${section} raised an unhandled error${consoleContext}`,
+      ).toEqual([])
     })
   }
 

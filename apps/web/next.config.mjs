@@ -58,6 +58,7 @@ const nextConfig = {
         "../graphify-out/**",
         "./.next/**",
         "./test-results/**",
+        "./test-results-shard-*/**",
       ],
     }
 

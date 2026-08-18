@@ -19,8 +19,30 @@ const storageState = fs.existsSync(storageStatePath)
   ? storageStatePath
   : undefined
 
+/*
+ * Shard-scoped artifact paths.
+ *
+ * Playwright clears `outputDir` at the start of every run, so three
+ * `--shard=N/3` invocations left only the last shard's traces and screenshots
+ * behind - measured, and the reason one failure could only ever be reported
+ * as a bare timeout. Giving each shard its own directory keeps all three.
+ *
+ * `--shard` is a CLI flag with no env equivalent, so it is read from argv.
+ * An unsharded run finds no flag, `shardSuffix` stays empty, and both the
+ * output directory and the JSON report keep their original paths.
+ */
+const shardArgIndex = process.argv.findIndex((arg) => arg.startsWith("--shard"))
+// Both spellings: `--shard=2/3` and `--shard 2/3`.
+const shardArg =
+  shardArgIndex === -1
+    ? undefined
+    : `${process.argv[shardArgIndex]} ${process.argv[shardArgIndex + 1] ?? ""}`
+const shardMatch = shardArg?.match(/(\d+)\s*\/\s*(\d+)/)
+const shardSuffix = shardMatch ? `-shard-${shardMatch[1]}-of-${shardMatch[2]}` : ""
+
 export default defineConfig({
   testDir: "./e2e",
+  outputDir: `./test-results${shardSuffix}`,
   // Compiles every route once before any spec runs, so no assertion races the
   // dev server's first-request compile. See e2e/global-setup.ts.
   globalSetup: "./e2e/global-setup.ts",
@@ -45,7 +67,14 @@ export default defineConfig({
    */
   workers: 1,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
+  reporter: process.env.CI
+    ? [["list"], ["html", { open: "never" }]]
+    : // Locally the suite emitted scrollback and nothing machine-readable, so
+      // no run could be compared per-spec against the previous one.
+      [
+        ["list"],
+        ["json", { outputFile: `./test-results${shardSuffix}/results.json` }],
+      ],
   use: {
     baseURL,
     trace: "retain-on-failure",
