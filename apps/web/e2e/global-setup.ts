@@ -14,37 +14,12 @@ import type { FullConfig } from "@playwright/test"
  * thing worth asserting on. It costs one pass over the routes and removes the
  * single largest source of variance in the suite.
  */
-/**
- * Studio section routes, warmed under a placeholder username.
- *
- * Next compiles per route PATTERN, not per param value, so any username warms
- * `app/studio/[username]/<section>/page.tsx` for every real one. The request
- * redirects, being unauthenticated - but the redirect is issued *by* the route
- * module, so the module has already compiled by the time it happens, and
- * compiling is the whole cost being moved out of the tests.
- *
- * Before this, `/studio` was warmed but no section beneath it was, so each
- * studio spec paid a first compile inside a 90s test and the suite failed with
- * "Test timeout of 90000ms exceeded while setting up studioUsername".
- */
-const STUDIO_SECTIONS = [
-  "",
-  "/components",
-  "/libraries",
-  "/templates",
-  "/themes",
-  "/ascii",
-  "/gradients",
-  "/shaders",
-]
-
 const ROUTES = [
   "/",
   "/?tab=home",
   "/magic",
   "/magic-chat",
   "/studio",
-  ...STUDIO_SECTIONS.map((section) => `/studio/_warm${section}`),
   "/api-access",
   "/contest",
   "/our-story",
