@@ -27,6 +27,54 @@ const KINDS = [
 test.beforeEach(skipWithoutStudioAuth)
 
 test.describe("artifact lifecycle", () => {
+  /*
+   * QUARANTINE (EVL cycle 5, 2026-08-18) - NOT A FIX.
+   *
+   * `theme: create, publish, delete` was classified FLAKE, not a defect, after
+   * five targeted single-spec invocations. Nothing below this comment changed;
+   * the app is not known to be wrong and the assertions are not known to be
+   * wrong. This block only stops a measured environmental variance from being
+   * reported as a product failure. Gate G11.2 requires a flake to be "either
+   * fixed or quarantined, not ignored" - this is the quarantine half.
+   *
+   * MEASURED MECHANISM. `next dev` route-compile warm-up varied between 42s and
+   * 346s across those five runs - a 7x spread on identical input. That is not a
+   * race in the test and not app logic; it is cold-compile cost landing inside a
+   * budget that was set from the fast end of the range. The same pressure is
+   * already recorded three separate times in this phase's ledger against
+   * nav-render timeouts, so it is a property of this harness, not of this spec.
+   *
+   * FOUR OBSERVED FAILURE SIGNATURES, and which instrument addresses each:
+   *
+   *   1. 90s aggregate test timeout          -> timeout raise (below)
+   *   2. `waitForURL` 20s timeout            -> retries (see note)
+   *   3. `net::ERR_ABORTED; maybe frame was
+   *      detached?`                          -> retries
+   *   4. cold `ERR_ABORTED`                  -> retries
+   *
+   * WHY BOTH INSTRUMENTS. A 346s compile against a 90s budget is not a race, it
+   * is an under-budgeted wait, and only a larger budget addresses it; raising it
+   * costs nothing once the route is warm, because a warm test never approaches
+   * the ceiling. But a longer budget cannot help signatures 3 and 4 at all - an
+   * aborted navigation fails immediately, however long you are willing to wait -
+   * so retries are the only cover for those, at the price of re-running a ~90s
+   * test. Signature 2 lives in the `studioUsername` fixture, whose 20s-per-
+   * attempt bound is internal to `support/studio-auth.ts` and is therefore NOT
+   * reached by the timeout raise here; retries are what cover it.
+   *
+   * SCOPED TO THIS DESCRIBE BLOCK ON PURPOSE. The variance was measured here, so
+   * the disposition belongs here. A blanket `retries` in `playwright.config.ts`
+   * would mask first-run failures across every spec in the suite, including ones
+   * where a single red run is exactly the signal wanted.
+   *
+   * STILL OPEN - DO NOT READ THIS AS SOLVED. The 42s-346s warm-up variance
+   * itself is untouched and remains a separate follow-up. This annotation hides
+   * its symptom in one block; it does not diagnose it, bound it, or remove it.
+   * If a future reader is tempted to delete this comment because "the specs are
+   * green now", the greenness is the retry, not a repair.
+   */
+  test.describe.configure({ retries: 2, timeout: 420_000 })
+
   for (const { kind, section } of KINDS) {
     test(`${kind}: create, publish, delete`, async ({
       page,
