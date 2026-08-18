@@ -13,17 +13,23 @@ import {
  * on purpose: this spec's job is to fail when a destination silently
  * disappears, and importing the same source the app renders from would make it
  * agree with any change automatically.
+ *
+ * `segment` is the URL path segment, which is NOT always the section name:
+ * overview has no segment of its own - it is the bare studio index.
  */
 const SECTIONS = [
-  "overview",
-  "components",
-  "libraries",
-  "templates",
-  "themes",
-  "ascii",
-  "gradients",
-  "shaders",
+  { name: "overview", segment: "" },
+  { name: "components", segment: "components" },
+  { name: "libraries", segment: "libraries" },
+  { name: "templates", segment: "templates" },
+  { name: "themes", segment: "themes" },
+  { name: "ascii", segment: "ascii" },
+  { name: "gradients", segment: "gradients" },
+  { name: "shaders", segment: "shaders" },
 ] as const
+
+const sectionHref = (username: string, segment: string) =>
+  segment ? `/studio/${username}/${segment}` : `/studio/${username}`
 
 test.beforeEach(skipWithoutStudioAuth)
 
@@ -36,7 +42,7 @@ test.describe("studio shell", () => {
     await expect(page).toHaveURL(new RegExp(`/studio/${studioUsername}`))
   })
 
-  for (const section of SECTIONS) {
+  for (const { name: section, segment } of SECTIONS) {
     test(`${section} loads without a console error`, async ({
       page,
       studioUsername,
@@ -48,7 +54,7 @@ test.describe("studio shell", () => {
       })
       page.on("pageerror", (error) => errors.push(String(error)))
 
-      const response = await page.goto(`/studio/${studioUsername}/${section}`)
+      const response = await page.goto(sectionHref(studioUsername, segment))
 
       expect(response?.status(), `${section} did not respond 200`).toBeLessThan(400)
       // A rewritten-to-marketing page is the signed-out failure mode, and it
@@ -71,9 +77,9 @@ test.describe("studio shell", () => {
     page,
     studioUsername,
   }) => {
-    await page.goto(`/studio/${studioUsername}/overview`)
+    await page.goto(sectionHref(studioUsername, ""))
 
-    for (const section of SECTIONS) {
+    for (const { name: section } of SECTIONS) {
       const link = page
         .getByRole("link", { name: new RegExp(section, "i") })
         .first()
