@@ -12,16 +12,39 @@ import {
  * `empty-loading-states.spec.ts`; this is the half that needs a session, and
  * it skips by name when the environment has none.
  */
+/**
+ * `segment` is the URL path segment, which is NOT always the section name:
+ * overview has no segment of its own - it is the bare studio index.
+ * `nav-config.ts` declares its segment as the empty string and there is no
+ * `overview/` folder under `app/studio/[username]/`, so interpolating the
+ * NAME into a `/studio/{u}/{section}` template built a URL matching no route.
+ * That is not a typo but a different failure entirely: nothing under the route
+ * boundary ever mounts, so the throw comes from Next's route resolution ABOVE
+ * the matched subtree and `error.tsx` cannot catch it.
+ *
+ * Same shape as `studio-shell.spec.ts`, deliberately - one problem, one answer.
+ *
+ * The list is duplicated here rather than imported from `nav-config.ts` on
+ * purpose: importing the source the app renders from would make this spec
+ * agree with any app-side change automatically.
+ */
 const SECTIONS = [
-  "overview",
-  "components",
-  "libraries",
-  "templates",
-  "themes",
-  "ascii",
-  "gradients",
-  "shaders",
+  { name: "overview", segment: "" },
+  { name: "components", segment: "components" },
+  { name: "libraries", segment: "libraries" },
+  { name: "templates", segment: "templates" },
+  { name: "themes", segment: "themes" },
+  { name: "ascii", segment: "ascii" },
+  { name: "gradients", segment: "gradients" },
+  { name: "shaders", segment: "shaders" },
 ] as const
+
+/**
+ * An empty segment yields the bare index, NOT a trailing slash:
+ * `/studio/{u}/` is not equivalent to `/studio/{u}`.
+ */
+const sectionHref = (username: string, segment: string) =>
+  segment ? `/studio/${username}/${segment}` : `/studio/${username}`
 
 const LEAKED_VALUES: Array<{ label: string; pattern: RegExp }> = [
   { label: "NaN", pattern: /(^|[^A-Za-z])NaN([^A-Za-z]|$)/ },
@@ -41,7 +64,7 @@ const LEAKED_VALUES: Array<{ label: string; pattern: RegExp }> = [
  * exact match on the section's own heading separates "this section rendered"
  * from "the boundary rendered in its place".
  */
-const SECTION_HEADINGS: Record<(typeof SECTIONS)[number], string> = {
+const SECTION_HEADINGS: Record<(typeof SECTIONS)[number]["name"], string> = {
   overview: "Overview",
   components: "Components",
   libraries: "Libraries",
@@ -55,7 +78,7 @@ const SECTION_HEADINGS: Record<(typeof SECTIONS)[number], string> = {
 test.beforeEach(skipWithoutStudioAuth)
 
 test.describe("studio empty and loading states", () => {
-  for (const section of SECTIONS) {
+  for (const { name: section, segment } of SECTIONS) {
     test(`${section} settles without leaking a raw value`, async ({
       page,
       studioUsername,
@@ -147,7 +170,7 @@ test.describe("studio empty and loading states", () => {
         })
       })
 
-      await page.goto(`/studio/${studioUsername}/${section}`)
+      await page.goto(sectionHref(studioUsername, segment))
       try {
         await page.waitForLoadState("networkidle", { timeout: 30_000 })
       } catch {}
@@ -333,7 +356,7 @@ test.describe("studio empty and loading states", () => {
           }),
         )
 
-        await page.goto(`/studio/${studioUsername}/${section}`)
+        await page.goto(sectionHref(studioUsername, section))
         try {
           await page.waitForLoadState("networkidle", { timeout: 30_000 })
         } catch {}
