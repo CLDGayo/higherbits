@@ -16,6 +16,19 @@ export const authUsernameCached = unstable_cache(
   },
 )
 
+/**
+ * The 1.5s admin-check budget expiring. A distinct type so the catch below can
+ * tell an expected timeout apart from a genuine Clerk API failure - the two
+ * deserve different log severities, and matching on `err.message` would break
+ * the moment the message is reworded.
+ */
+class ClerkAdminCheckTimeout extends Error {
+  constructor() {
+    super("Clerk API timeout")
+    this.name = "ClerkAdminCheckTimeout"
+  }
+}
+
 export const authUsernameOrRedirect = async (
   username: string,
   redirectTo: string,
@@ -33,7 +46,7 @@ export const authUsernameOrRedirect = async (
     
     // Create a promise that rejects after 1.5s
     const timeoutPromise = new Promise<never>((_, reject) => 
-      setTimeout(() => reject(new Error("Clerk API timeout")), 1500)
+      setTimeout(() => reject(new ClerkAdminCheckTimeout()), 1500)
     )
     
     // Race the Clerk API call against the timeout
@@ -46,7 +59,24 @@ export const authUsernameOrRedirect = async (
       clerkUser.publicMetadata?.role === "admin" ||
       clerkUser.publicMetadata?.is_admin === true
   } catch (err) {
-    console.error("Error fetching Clerk user in authUsernameOrRedirect:", err)
+    if (err instanceof ClerkAdminCheckTimeout) {
+      /*
+       * NOT AN ERROR. The 1.5s race is a budget, not a health check: losing it
+       * is an expected, handled outcome and the fallback below (treat as
+       * non-admin) is the correct behaviour. Reporting it at error level made a
+       * correct fallback read as a failure - and because Next forwards
+       * server-side console output to the browser console in dev, it failed the
+       * `loads without a console error` specs on a cold dev server.
+       *
+       * Kept visible at warn level. A genuine Clerk API failure still gets
+       * console.error, below.
+       */
+      console.warn(
+        "Clerk admin check exceeded its 1.5s budget in authUsernameOrRedirect; treating user as non-admin",
+      )
+    } else {
+      console.error("Error fetching Clerk user in authUsernameOrRedirect:", err)
+    }
   }
 
   const result = await authUsernameCached(userId, username)
