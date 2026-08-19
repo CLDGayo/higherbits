@@ -10,11 +10,18 @@ export function HeroVisual() {
         <div className="z-10 flex flex-col items-center gap-8 w-full px-4">
           <AnimatedGlowingSearchBar />
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl mt-8">
-            <div className="h-24 rounded-lg bg-background border shadow-sm flex items-center justify-center text-xs text-muted-foreground">Widget 1</div>
-            <div className="h-24 rounded-lg bg-background border shadow-sm flex items-center justify-center text-xs text-muted-foreground">Widget 2</div>
-            <div className="h-24 rounded-lg bg-background border shadow-sm flex items-center justify-center text-xs text-muted-foreground hidden md:flex">Widget 3</div>
-            <div className="h-24 rounded-lg bg-background border shadow-sm flex items-center justify-center text-xs text-muted-foreground hidden md:flex">Widget 4</div>
+          {/* The four "Widget N" placeholder tiles that used to sit here were
+              removed: this is the site's only server-rendered surface, so
+              placeholder copy was the text crawlers ingested. Drop a real
+              visual in when one exists. */}
+          <div
+            aria-hidden
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl mt-8"
+          >
+            <div className="h-24 rounded-lg bg-background border shadow-sm" />
+            <div className="h-24 rounded-lg bg-background border shadow-sm" />
+            <div className="h-24 rounded-lg bg-background border shadow-sm hidden md:block" />
+            <div className="h-24 rounded-lg bg-background border shadow-sm hidden md:block" />
           </div>
         </div>
       </div>

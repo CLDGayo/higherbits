@@ -6,8 +6,49 @@ import { Footer } from "@/components/ui/footer"
 import { LandingPageLayout } from "@/components/ui/landing-page-layout"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { HomePageClient } from "./page.client"
-import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
+import { JsonLd } from "@/components/seo/json-ld"
+import type { CatalogueEntry } from "@/components/ui/component-catalogue"
+import { faqPageJsonLd } from "@/lib/seo/faq"
+import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { unstable_cache } from "next/cache"
+import {
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  SITE_DESCRIPTION,
+  BASE_KEYWORDS,
+} from "@/lib/constants"
 export const dynamic = "force-dynamic"
+
+/**
+ * The catalogue rendered into the landing page's HTML.
+ *
+ * Cached rather than queried per request: the route is `force-dynamic` (it reads
+ * `searchParams`), so without this every crawler hit would run the query afresh.
+ */
+const getCachedCatalogue = unstable_cache(
+  async (): Promise<CatalogueEntry[]> => {
+    const { data } = await supabaseWithAdminAccess
+      .from("components")
+      .select(
+        "name, description, component_slug, users!components_user_id_fkey(username)",
+      )
+      .eq("is_public", true)
+      .order("likes_count", { ascending: false })
+      .limit(48)
+
+    return (data ?? [])
+      .filter((row) => row.users?.username)
+      .map((row) => ({
+        name: row.name,
+        description: row.description,
+        component_slug: row.component_slug,
+        username: row.users!.username as string,
+      }))
+  },
+  ["landing-catalogue"],
+  { revalidate: 300, tags: ["landing-catalogue"] },
+)
 
 
 export const generateMetadata = async ({
@@ -20,12 +61,12 @@ export const generateMetadata = async ({
   // `/templates` now 308-redirects here (Phase 04 decision B2). A redirect body is
   // never served, so the retired route's SEO metadata is re-hosted on this branch.
   if (tab === "templates") {
-    const templatesTitle = `shadcn/ui Templates Collection | ${SITE_NAME} - ${SITE_SLOGAN}`
+    const templatesTitle = `shadcn/ui Templates Collection | ${SITE_NAME}`
     const templatesDescription =
       "Collection of crafted website templates built with shadcn/ui components, Framer Motion animations and Tailwind CSS by design engineers."
 
     return {
-      title: templatesTitle,
+      title: { absolute: templatesTitle },
       description: templatesDescription,
       openGraph: {
         title: templatesTitle,
@@ -45,33 +86,15 @@ export const generateMetadata = async ({
     }
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: `${SITE_NAME} - ${SITE_SLOGAN}`,
-    description:
-      "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
-    url: process.env.NEXT_PUBLIC_APP_URL,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${process.env.NEXT_PUBLIC_APP_URL}/q/{search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
-    keywords: BASE_KEYWORDS,
-  }
-
   return {
-    title: `${SITE_NAME} – ${SITE_SLOGAN}`,
+    title: { absolute: SITE_TITLE },
     description:
-      "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+      SITE_DESCRIPTION,
     keywords: [...BASE_KEYWORDS],
     openGraph: {
-      title: `${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: SITE_TITLE,
       description:
-        "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+        SITE_DESCRIPTION,
       images: [
         {
           url: `${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`,
@@ -82,16 +105,53 @@ export const generateMetadata = async ({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: SITE_TITLE,
       description:
-        "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+        SITE_DESCRIPTION,
       images: [`${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`],
-    },
-    other: {
-      "script:ld+json": JSON.stringify(jsonLd),
     },
   }
 }
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || SITE_URL
+
+/**
+ * WebSite + SoftwareApplication + FAQPage.
+ *
+ * These used to be handed to `metadata.other["script:ld+json"]`, which renders a
+ * `<meta name="script:ld+json">` and nothing else - so the site shipped zero
+ * `<script type="application/ld+json">` tags and no parser ever read them.
+ */
+const homeJsonLd = () => [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: siteUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/q/{search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+    keywords: BASE_KEYWORDS,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: SITE_NAME,
+    url: siteUrl,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Web",
+    description: SITE_DESCRIPTION,
+    offers: { "@type": "Offer", priceCurrency: "USD", price: "0" },
+    publisher: { "@type": "Organization", name: "Higher Bits Labs Inc." },
+  },
+  faqPageJsonLd(),
+]
 
 export default async function HomePage({
   searchParams,
@@ -102,11 +162,16 @@ export default async function HomePage({
 
   // The marketing landing page owns the bare root URL; tabs opt into the browser.
   if (!tab) {
+    const components = await getCachedCatalogue()
+
     return (
       <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+        {homeJsonLd().map((data) => (
+          <JsonLd key={String(data["@type"])} data={data} />
+        ))}
         <div className="flex-1 flex flex-col gap-6 min-w-0">
           <div className="flex flex-col min-w-0">
-            <LandingPageLayout />
+            <LandingPageLayout components={components} />
           </div>
           <NewsletterDialog />
         </div>

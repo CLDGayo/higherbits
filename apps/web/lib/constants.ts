@@ -10,80 +10,48 @@ export const ARTIFACT_BUCKET = "components-code"
 
 export const SITE_NAME = "HigherBits.dev"
 export const SITE_URL = "https://higherbits.dev"
-export const SITE_SLOGAN = "Sophisticated Calm Development"
+export const SITE_SLOGAN = "Production UI for Developers and Agencies"
 export const SITE_TITLE = `${SITE_NAME} - ${SITE_SLOGAN}`
+/**
+ * Canonical entity sentence. One definition on purpose: answer engines treat a
+ * site that describes itself three different ways as three weaker signals.
+ */
+export const SITE_DESCRIPTION =
+  "HigherBits.dev is a marketplace of production-ready shadcn/ui components, templates, and UI blocks for developers, agencies, and technical virtual assistants."
 export const SUPPORT_EMAIL = "support@higherbits.dev"
 
 
-// Base keywords used across the site for SEO purposes
+// Base keywords used across the site for SEO purposes.
+// Trimmed from 67 to 24 and re-pointed at developers / agencies / technical VAs.
+// The competitor-brand terms that used to live here (v0, bolt.new, lovable ai,
+// replit agent) drew comparison traffic rather than buyers, and brand-stuffed
+// keyword lists read as spam. Note that `meta keywords` carries little to no
+// weight with search or answer engines - SITE_DESCRIPTION does the real work.
 export const BASE_KEYWORDS = [
-  "UI components",
-  "React components", 
-  "Tailwind components",
-  "Component library",
-  "Design blocks",
+  "shadcn/ui components",
+  "production-ready UI components",
+  "React component marketplace",
+  "Tailwind CSS components",
   "UI blocks",
-  "Component marketplace",
-  "Reusable components",
-  "Code snippets",
-  "Modular UI",
-  "Build faster",
-  "Developer toolkit",
-  "Frontend boilerplate",
-  "Copy paste components",
-  "Drop-in components",
-  "Rapid prototyping",
-  "Web UI kits",
-  "Component sharing",
-  "Plug and play code",
-  "Developer productivity tools",
-  "AI UI builder",
-  "AI for developers",
-  "AI generated components",
-  "ChatGPT UI builder",
-  "Prompt to UI",
-  "Code from text",
-  "AI design to code",
-  "UI generation with AI",
-  "GPT code examples",
-  "AI for frontend devs",
-  "Design system components",
-  "UI design for developers",
-  "Figma to code",
-  "Frontend code templates",
-  "Developer-friendly design",
-  "Full-stack components",
-  "Code for product design",
-  "Low-code components",
-  "Design engineer tools",
-  "Frontend component hub",
-  "Publish code online",
-  "Monetize your components",
-  "Developer portfolio platform",
-  "Build in public",
-  "Share your code",
-  "UI component marketplace",
-  "Open source components",
-  "Developer community platform", 
-  "Code marketplace",
-  "Frontend inspiration",
-  "Vibe coding tools",
-  "vibe coding",
-  "vibe coder",
-  "lovable ai",
-  "bolt.new",
-  "replit agent",
-  "v0",
-  "v0 templates",
-  "AI code generation",
-  "Prompt-based coding", 
-  "Natural language programming",
-  "AI-assisted development",
-  "Voice-driven coding",
-  "AI pair programmer",
-  "No-code AI solutions",
-  "AI coding assistant",
-  "Rapid prototyping with AI"
+  "React templates",
+  "shadcn/ui templates",
+  "copy paste components",
+  "accessible React components",
+  "design system components",
+  "UI components for developers",
+  "UI components for agencies",
+  "components for technical virtual assistants",
+  "white label UI components for agencies",
+  "client website components",
+  "freelance developer tools",
+  "agency web development toolkit",
+  "ship client sites faster",
+  "reusable UI for client projects",
+  "landing page components",
+  "dashboard UI components",
+  "commercial use React components",
+  "component licensing",
+  "sell UI components",
 ]
 
 export const backgroundImageBase64 =

@@ -1,5 +1,5 @@
 import { Footer } from "@/components/ui/footer"
-import { BASE_KEYWORDS, SITE_NAME, SITE_SLOGAN } from "@/lib/constants"
+import { BASE_KEYWORDS, SITE_TITLE } from "@/lib/constants"
 import { getUserData } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { validateRouteParams } from "@/lib/utils/validateRouteParams"
@@ -33,10 +33,10 @@ export const generateMetadata = async (props: {
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     ),
-    title: `${user.display_name || user.name || user.username} | ${SITE_NAME} - ${SITE_SLOGAN}`,
+    title: `${user.display_name || user.name || user.username}`,
     description: `Collection of free open source shadcn/ui React Tailwind components by ${user.display_name || user.name || user.username}.`,
     openGraph: {
-      title: `${user.display_name || user.name || user.username}'s Components | ${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: `${user.display_name || user.name || user.username}'s Components | ${SITE_TITLE}`,
       description: `Browse ${user.display_name || user.name || user.username}'s collection of React Tailwind components inspired by shadcn/ui.`,
       images: [
         {
@@ -49,7 +49,7 @@ export const generateMetadata = async (props: {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${user.display_name || user.name || user.username}'s Components | ${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: `${user.display_name || user.name || user.username}'s Components | ${SITE_TITLE}`,
       description: `Browse ${user.display_name || user.name || user.username}'s collection of React Tailwind components inspired by shadcn/ui.`,
       images: [ogImageUrl],
     },

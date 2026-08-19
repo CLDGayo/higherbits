@@ -9,7 +9,12 @@ import { AppProviders } from "./providers"
 import SessionRecorder from "./SessionRecorder"
 
 import "./globals.css"
-import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
+import {
+  SITE_NAME,
+  SITE_SLOGAN,
+  SITE_DESCRIPTION,
+  BASE_KEYWORDS,
+} from "@/lib/constants"
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -20,11 +25,11 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+    SITE_DESCRIPTION,
   openGraph: {
     title: `${SITE_NAME} - ${SITE_SLOGAN}`,
     description:
-      "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+      SITE_DESCRIPTION,
   },
   keywords: BASE_KEYWORDS,
 }
