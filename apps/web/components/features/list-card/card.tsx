@@ -25,6 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { bookmarkDemo } from "@/lib/queries"
 import { cn, shouldHideLeaderboardRankings } from "@/lib/utils"
@@ -71,6 +72,11 @@ export const ComponentCard = React.memo(function ComponentCard({
   supabaseClient?: any
 }) {
   const router = useRouter()
+  // This render body is executed on the server too ("use client" still SSRs), so
+  // matchMedia must never be read directly here. useMediaQuery returns false on the
+  // server and on the first client render, keeping SSR safe and hydration-stable.
+  // Must stay above the early returns below — moving it down breaks rules of hooks.
+  const isTouch = useMediaQuery("(pointer: coarse)")
 
   if (isLoading || !demo) {
     return <ComponentCardSkeleton />
@@ -84,7 +90,6 @@ export const ComponentCard = React.memo(function ComponentCard({
   const componentSlug = isDemo
     ? demo.component?.component_slug
     : demo.component_slug
-  const isTouch = window.matchMedia("(pointer: coarse)").matches
 
   if (!userData || !username || !componentSlug) {
     console.warn("Missing required data:", {
