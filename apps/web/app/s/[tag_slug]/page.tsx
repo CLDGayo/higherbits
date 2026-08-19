@@ -43,16 +43,27 @@ async function getTagInfo(tagSlug: string) {
   return getCachedTagInfo(tagSlug)
 }
 
+/**
+ * `mainEntity` is deliberately absent.
+ *
+ * It used to carry an ItemList whose `itemListElement` was a bare string, which
+ * is invalid - the property takes an array of ListItem. That went unnoticed
+ * because the markup was inert: it was emitted through `metadata.other`, which
+ * only ever produces a `<meta>` tag, never a script.
+ *
+ * It is not repaired in place, because a CollectionPage's ItemList must describe
+ * items the reader can actually see, and this route still fetches its component
+ * list after hydration - so any list here would document content missing from
+ * the HTML. That is the same policy problem `lib/seo/faq.ts` exists to make
+ * impossible. Add the ItemList when the visible list is server-rendered, built
+ * from that same data rather than a second source.
+ */
 const tagJsonLd = (tagName: string, tagSlug: string) => ({
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   name: `${tagName} Components | ${SITE_TITLE}`,
   description: `Ready-to-use ${tagName.toLowerCase()} React components inspired by shadcn/ui.`,
   url: `${process.env.NEXT_PUBLIC_APP_URL}/s/${tagSlug}`,
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: `${tagName} React components`,
-  },
 })
 
 export default async function TagPage(props: TagPageProps) {
