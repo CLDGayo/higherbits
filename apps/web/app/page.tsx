@@ -11,6 +11,7 @@ import type { CatalogueEntry } from "@/components/ui/component-catalogue"
 import { faqPageJsonLd } from "@/lib/seo/faq"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { getLandingCatalogueRows } from "@/lib/landing-catalogue-rows"
+import { getCachedFeaturedExample } from "@/lib/landing-featured-example"
 import { unstable_cache } from "next/cache"
 import {
   SITE_NAME,
@@ -165,6 +166,7 @@ export default async function HomePage({
   if (!tab) {
     const components = await getCachedCatalogue()
     const { mostLoved, newest } = await getLandingCatalogueRows()
+    const featured = await getCachedFeaturedExample()
 
     return (
       <>
@@ -183,6 +185,7 @@ export default async function HomePage({
                 components={components}
                 mostLoved={mostLoved}
                 newest={newest}
+                featured={featured}
               />
             </div>
             <NewsletterDialog />
