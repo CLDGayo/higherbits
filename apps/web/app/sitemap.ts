@@ -15,10 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .from("tags")
     .select("slug")
 
-  const { data: users } = await supabaseWithAdminAccess
-    .from("users")
-    .select("username, updated_at")
-
   const componentUrls = (components || []).map((component) => ({
     url: `${baseUrl}/${component.users?.username}/${component.component_slug}`,
     lastModified: component.updated_at,
@@ -32,12 +28,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  const userUrls = (users || []).map((user) => ({
-    url: `${baseUrl}/${user.username}`,
-    lastModified: user.updated_at,
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }))
+  // Profile URLs are derived from the public components above: a user is only
+  // advertised if they own at least one public component, and the profile's
+  // lastModified is the newest updated_at across those components.
+  const profileLastModified = new Map<string, string | undefined>()
+  for (const component of components || []) {
+    const username = component.users?.username
+    if (!username) continue
+
+    const updatedAt = component.updated_at ?? undefined
+    if (!profileLastModified.has(username)) {
+      profileLastModified.set(username, updatedAt)
+      continue
+    }
+
+    const current = profileLastModified.get(username)
+    if (
+      updatedAt &&
+      (!current || new Date(updatedAt).getTime() > new Date(current).getTime())
+    ) {
+      profileLastModified.set(username, updatedAt)
+    }
+  }
+
+  const userUrls = Array.from(profileLastModified.entries()).map(
+    ([username, lastModified]) => ({
+      url: `${baseUrl}/${username}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    }),
+  )
 
   return [
     {
