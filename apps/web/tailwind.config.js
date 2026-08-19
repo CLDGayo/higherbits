@@ -38,6 +38,7 @@ module.exports = {
         cozy: ["var(--font-cozy)", "Quicksand", "sans-serif"],
         mono: ["var(--font-fira-code)", "Fira Code", "monospace"],
         arial: ["Arial", "sans-serif"],
+        accent: ["var(--font-accent)", "Instrument Serif", "serif"],
       },
       zIndex: {
         9999: "9999",

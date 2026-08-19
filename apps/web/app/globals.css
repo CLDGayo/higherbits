@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&family=Quicksand:wght@300..700&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&family=Quicksand:wght@300..700&family=Instrument+Serif:ital@0;1&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -21,6 +21,7 @@ body {
     --font-urbanist: 'Urbanist', sans-serif;
     --font-fira-code: 'Fira Code', monospace;
     --font-cozy: 'Quicksand', sans-serif;
+    --font-accent: 'Instrument Serif', serif;
   }
 }
 
@@ -30,6 +31,7 @@ body {
     --font-urbanist: 'Urbanist', sans-serif;
     --font-fira-code: 'Fira Code', monospace;
     --font-cozy: 'Quicksand', sans-serif;
+    --font-accent: 'Instrument Serif', serif;
   }
 }
 
