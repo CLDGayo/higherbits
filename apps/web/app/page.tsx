@@ -165,18 +165,25 @@ export default async function HomePage({
     const components = await getCachedCatalogue()
 
     return (
-      <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
-        {homeJsonLd().map((data) => (
-          <JsonLd key={String(data["@type"])} data={data} />
-        ))}
-        <div className="flex-1 flex flex-col gap-6 min-w-0">
-          <div className="flex flex-col min-w-0">
-            <LandingPageLayout components={components} />
+      <>
+        {/* The landing branch shipped without a Header, so `/` had no nav, no
+            Log in / Sign up, and no way to reach <LandingAuthModals> — which is
+            mounted inside the header. LandingPageLayout's pt-24 was reserving
+            space for a header that never rendered. */}
+        <Header variant="default" />
+        <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+          {homeJsonLd().map((data) => (
+            <JsonLd key={String(data["@type"])} data={data} />
+          ))}
+          <div className="flex-1 flex flex-col gap-6 min-w-0">
+            <div className="flex flex-col min-w-0">
+              <LandingPageLayout components={components} />
+            </div>
+            <NewsletterDialog />
           </div>
-          <NewsletterDialog />
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </>
     )
   }
 

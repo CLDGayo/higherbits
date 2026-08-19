@@ -13,8 +13,10 @@ vi.mock("next/navigation", () => ({
 vi.mock("../page.client", () => ({
   HomePageClient: () => "Component browser",
 }))
+// Renders a real <header> like the component it stands in for, so a test can
+// assert the header is actually mounted rather than just matching stub text.
 vi.mock("@/components/ui/header.client", () => ({
-  Header: () => "Marketplace header",
+  Header: () => <header>Marketplace header</header>,
 }))
 vi.mock("@clerk/nextjs", () => ({
   SignInButton: () => <button>Sign In</button>,
@@ -77,9 +79,21 @@ describe("Landing Smoke Test", () => {
     const { container } = await renderPage()
 
     expect(container).toBeDefined()
-    expect(container.textContent).toContain(
-      "The react component library for design engineers",
-    )
+    // This used to assert "The react component library for design engineers",
+    // which is 21st.dev's own tagline. Pinning it here is part of why the
+    // ported copy survived a branding audit: the grep looked for a "21st"
+    // token, and the test actively defended the phrasing.
+    expect(container.textContent).toContain("Production UI for")
+    expect(container.textContent).toContain("developers and agencies")
+  })
+
+  // `/` shipped without a Header, so the landing page had no nav, no
+  // Log in / Sign up, and no route to <LandingAuthModals> (mounted inside the
+  // header). Its pt-24 was reserving space for a header that never rendered.
+  it("renders the site header on the landing page", async () => {
+    const { container } = await renderPage()
+
+    expect(container.querySelector("header")).not.toBeNull()
   })
 
   // The reason this route is server-rendered at all: every other catalogue
