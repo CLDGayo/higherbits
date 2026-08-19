@@ -45,6 +45,7 @@ import {
   SOURCE_DETAIL,
 } from "@/lib/attribution-tracking"
 import { Logo } from "./logo"
+import { LandingAuthModals } from "@/components/auth/landing-auth-modals"
 
 interface UserProfile {
   id: string
@@ -642,9 +643,7 @@ function HeaderContent({
                 >
                   <Icons.search className="h-6 w-6" />
                 </Button>
-                <SignInButton>
-                  <Button size={isMobile ? "sm" : "default"}>Sign up</Button>
-                </SignInButton>
+                <LandingAuthModals />
               </SignedOut>
             </>
           ) : (

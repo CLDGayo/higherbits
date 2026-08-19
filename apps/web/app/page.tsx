@@ -3,11 +3,12 @@ import { Metadata } from "next"
 
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
-import { HeroSection } from "@/components/ui/hero-section"
+import { LandingPageLayout } from "@/components/ui/landing-page-layout"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { HomePageClient } from "./page.client"
 import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
 export const dynamic = "force-dynamic"
+
 
 export const generateMetadata = async ({
   searchParams,
@@ -105,7 +106,7 @@ export default async function HomePage({
       <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
         <div className="flex-1 flex flex-col gap-6 min-w-0">
           <div className="flex flex-col min-w-0">
-            <HeroSection />
+            <LandingPageLayout />
           </div>
           <NewsletterDialog />
         </div>
