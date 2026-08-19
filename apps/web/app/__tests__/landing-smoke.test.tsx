@@ -2,9 +2,41 @@
 import React from "react"
 import { describe, it, expect, vi } from "vitest"
 import { render } from "@testing-library/react"
+import ReactDOMServer from "react-dom/server"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import HomePage from "../page"
 import { HOMEPAGE_FAQ } from "@/lib/seo/faq"
+import {
+  buildExclusionList,
+  getLandingCatalogueRows,
+  getNewestRow,
+  sortByLikesDesc,
+} from "@/lib/landing-catalogue-rows"
+
+// jsdom ships no IntersectionObserver, and embla (mounted by the catalogue
+// rows' carousel) calls it during mount. Test-environment gap only.
+if (!("IntersectionObserver" in globalThis)) {
+  class IntersectionObserverStub {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return []
+    }
+    root = null
+    rootMargin = ""
+    thresholds: number[] = []
+  }
+  ;(globalThis as any).IntersectionObserver = IntersectionObserverStub
+}
+if (!("ResizeObserver" in globalThis)) {
+  class ResizeObserverStub {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  ;(globalThis as any).ResizeObserver = ResizeObserverStub
+}
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
@@ -48,14 +80,75 @@ const CATALOGUE_FIXTURE = [
   },
 ]
 
-vi.mock("@/lib/supabase", () => {
-  const builder: any = {
-    select: () => builder,
-    eq: () => builder,
-    order: () => builder,
-    limit: () => Promise.resolve({ data: CATALOGUE_FIXTURE, error: null }),
+// 14 demos: more than one row's 12 slots, so the cross-row dedup leaves real
+// items in row 2 instead of emptying it — the case a 2-item fixture would miss.
+const DEMOS_FIXTURE = Array.from({ length: 14 }, (_, index) => {
+  const n = index + 1
+  return {
+    id: n,
+    demo_slug: "default",
+    video_url: null,
+    bookmarks_count: 0,
+    preview_url: `https://cdn.test/preview-${n}.png`,
+    pro_preview_image_url: null,
+    component_id: n,
+    created_at: `2026-08-${String(n).padStart(2, "0")}T00:00:00Z`,
+    user: { id: `user_${n}`, username: `author${n}`, display_image_url: null },
+    tags: [{ tag: { id: n, name: `Tag ${n}`, slug: `tag-${n}` } }],
+    component: {
+      id: n,
+      name: `Demo Component ${n}`,
+      component_slug: `demo-component-${n}`,
+      user_id: `user_${n}`,
+      is_public: true,
+      // Descending, distinct and non-zero: a flat or all-equal fixture would
+      // let a comparator reading the wrong field path pass anyway.
+      likes_count: 100 - n,
+      user: { id: `user_${n}`, username: `author${n}`, display_image_url: null },
+    },
   }
-  return { supabaseWithAdminAccess: { from: () => builder } }
+})
+
+/**
+ * Table-aware Supabase mock.
+ *
+ * Three things this builder must do that the original could not:
+ *  - `not()` exists at all (the row queries filter with it),
+ *  - `then` makes the builder a genuine thenable, so a chain that never calls
+ *    `limit()` (row 1 fetches its whole candidate pool) still resolves to
+ *    `{ data, error }` instead of the plain mock object,
+ *  - `not("id", "in", "(1,2)")` actually filters, so the dedup between the two
+ *    rows is exercised rather than assumed.
+ */
+vi.mock("@/lib/supabase", () => {
+  const makeBuilder = (table: string) => {
+    let excluded: number[] = []
+    const rows = () =>
+      table === "demos"
+        ? DEMOS_FIXTURE.filter((demo) => !excluded.includes(demo.id))
+        : CATALOGUE_FIXTURE
+    const builder: any = {
+      select: () => builder,
+      eq: () => builder,
+      order: () => builder,
+      not: (column: string, operator: string, value: unknown) => {
+        if (column === "id" && operator === "in" && typeof value === "string") {
+          excluded = value
+            .replace(/[()]/g, "")
+            .split(",")
+            .filter(Boolean)
+            .map(Number)
+        }
+        return builder
+      },
+      limit: (count: number) =>
+        Promise.resolve({ data: rows().slice(0, count), error: null }),
+      then: (resolve: (result: unknown) => unknown) =>
+        resolve({ data: rows(), error: null }),
+    }
+    return builder
+  }
+  return { supabaseWithAdminAccess: { from: (table: string) => makeBuilder(table) } }
 })
 
 describe("Landing Smoke Test", () => {
@@ -119,6 +212,71 @@ describe("Landing Smoke Test", () => {
       expect(container.textContent).toContain(entry.question)
       expect(container.textContent).toContain(entry.answer)
     }
+  })
+
+  // Both rows come from ONE pool split only by sort order, so an item showing
+  // up in both reads as a bug. The dedup is what stops that.
+  it("renders both catalogue rows with real component names, sharing no items", async () => {
+    const { container } = await renderPage()
+
+    expect(container.textContent).toContain("Most Loved")
+    expect(container.textContent).toContain("Newest Additions")
+    // Highest likes_count -> row 1; the two the slice leaves behind -> row 2.
+    expect(
+      container.querySelector('a[href^="/author1/demo-component-1/"]'),
+    ).not.toBeNull()
+    expect(
+      container.querySelector('a[href^="/author14/demo-component-14/"]'),
+    ).not.toBeNull()
+
+    const { mostLoved, newest } = await getLandingCatalogueRows()
+    expect(mostLoved.length).toBeGreaterThan(0)
+    expect(newest.length).toBeGreaterThan(0)
+    const overlap = newest.filter((demo) =>
+      mostLoved.some((other) => other.id === demo.id),
+    )
+    expect(overlap).toHaveLength(0)
+  })
+
+  // The rows must be in the HTML the server emits. RTL's render() flushes
+  // effects via act(), so it would pass even if the data arrived from a client
+  // fetch — renderToString is what actually proves the claim.
+  it("server-renders the catalogue rows without any client fetch", async () => {
+    const jsx = await HomePage({ searchParams: Promise.resolve({}) })
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+    const html = ReactDOMServer.renderToString(
+      <QueryClientProvider client={queryClient}>{jsx}</QueryClientProvider>,
+    )
+
+    expect(html).toContain("Most Loved")
+    expect(html).toContain("Newest Additions")
+    expect(html).toContain("Demo Component 1")
+  })
+
+  it("sorts row 1 by the nested component.likes_count, breaking ties on id", () => {
+    // Nested exactly as a real row is. A flat { id, likes_count } fixture would
+    // pass while validating the wrong field path.
+    const sorted = sortByLikesDesc([
+      { id: 3, component: { likes_count: 5 } },
+      { id: 1, component: { likes_count: 9 } },
+      { id: 2, component: { likes_count: 5 } },
+    ])
+
+    expect(sorted.map((item) => item.id)).toEqual([1, 2, 3])
+  })
+
+  it("builds a PostgREST-safe exclusion list, including the empty case", () => {
+    // A bare [] throws PGRST100; "()" is the no-op form.
+    expect(buildExclusionList([])).toBe("()")
+    expect(buildExclusionList([1, 2, 3])).toBe("(1,2,3)")
+  })
+
+  it("keeps row 2 populated when row 1 is empty", async () => {
+    const newest = await getNewestRow([])
+
+    expect(newest.length).toBeGreaterThan(0)
   })
 
   it("renders the component browser for a tab URL", async () => {

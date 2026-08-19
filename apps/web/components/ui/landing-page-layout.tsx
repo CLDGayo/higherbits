@@ -3,6 +3,8 @@ import { HeroVisual } from "./hero-visual"
 import { FaqSection } from "./faq-section"
 import { LandingSection } from "./landing-section"
 import { ComponentCatalogue, type CatalogueEntry } from "./component-catalogue"
+import { CatalogueRowSection } from "@/components/features/home/catalogue-row-section"
+import type { DemoWithComponent } from "@/types/global"
 
 /**
  * Prop contract convention for this file:
@@ -20,13 +22,29 @@ import { ComponentCatalogue, type CatalogueEntry } from "./component-catalogue"
  */
 export interface LandingPageLayoutProps {
   components: CatalogueEntry[]
+  /** Row 1 — ordered by `components.likes_count` desc (phase plan D2/E13). */
+  mostLoved: DemoWithComponent[]
+  /** Row 2 — ordered by `demos.created_at` desc, deduped against row 1 (D4). */
+  newest: DemoWithComponent[]
 }
 
-export function LandingPageLayout({ components }: LandingPageLayoutProps) {
+export function LandingPageLayout({
+  components,
+  mostLoved,
+  newest,
+}: LandingPageLayoutProps) {
   return (
     <div className="flex flex-col min-w-0 w-full relative pt-24">
       <LandingSection>
         <HeroVisual />
+      </LandingSection>
+
+      <LandingSection>
+        <CatalogueRowSection title="Most Loved" items={mostLoved} />
+      </LandingSection>
+
+      <LandingSection>
+        <CatalogueRowSection title="Newest Additions" items={newest} />
       </LandingSection>
 
       <LandingSection className="bg-muted/30">
