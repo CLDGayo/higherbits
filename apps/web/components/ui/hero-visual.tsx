@@ -1,30 +1,32 @@
 import React from "react"
-import { AnimatedGlowingSearchBar } from "./animated-glowing-search-bar"
 
+import { AccentWord } from "./accent-word"
+import { HeroCta } from "./hero-cta"
+
+/**
+ * The landing hero's composition container.
+ *
+ * Root is a plain `<div>` on purpose. The parent LandingSection, mounted in
+ * `landing-page-layout.tsx`, already supplies the page width wrapper and the
+ * `py-20 md:py-28` vertical rhythm. Re-declaring either of those here would
+ * double the page's vertical rhythm — the double-wrap trap recorded in Phase 00.
+ *
+ * Left-aligned by design: the 21st.dev capture's hero is left-aligned, not
+ * centred. The headline and subhead text are byte-identical to what the landing
+ * smoke test pins — only their container and alignment moved here.
+ */
 export function HeroVisual() {
   return (
-    <div className="w-full flex flex-col items-center justify-center py-12">
-      <div className="relative w-full max-w-5xl aspect-video rounded-xl border bg-muted/20 shadow-2xl overflow-hidden flex flex-col items-center justify-center">
-        {/* Placeholder for the complex hero interactive visual */}
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px_32px]" />
-        <div className="z-10 flex flex-col items-center gap-8 w-full px-4">
-          <AnimatedGlowingSearchBar />
-          
-          {/* The four "Widget N" placeholder tiles that used to sit here were
-              removed: this is the site's only server-rendered surface, so
-              placeholder copy was the text crawlers ingested. Drop a real
-              visual in when one exists. */}
-          <div
-            aria-hidden
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl mt-8"
-          >
-            <div className="h-24 rounded-lg bg-background border shadow-sm" />
-            <div className="h-24 rounded-lg bg-background border shadow-sm" />
-            <div className="h-24 rounded-lg bg-background border shadow-sm hidden md:block" />
-            <div className="h-24 rounded-lg bg-background border shadow-sm hidden md:block" />
-          </div>
-        </div>
-      </div>
+    <div className="flex w-full flex-col items-start gap-6 text-left">
+      <h1 className="text-4xl md:text-6xl font-bold tracking-tight max-w-3xl text-left">
+        Production UI for developers and{" "}
+        <AccentWord>agencies</AccentWord>
+      </h1>
+      <p className="text-muted-foreground text-lg md:text-xl max-w-2xl">
+        Production-ready shadcn/ui components, templates, and UI blocks for
+        developers, agencies, and technical virtual assistants.
+      </p>
+      <HeroCta />
     </div>
   )
 }

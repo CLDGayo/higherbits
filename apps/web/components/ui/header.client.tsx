@@ -609,6 +609,39 @@ function HeaderContent({
               </SignedIn>
 
               <SignedOut>
+                  {/* Nav parity with the 21st.dev capture's signed-out header.
+                      Only routes proven to exist ship here. A fourth link was
+                      deliberately omitted because no public route or tab value
+                      exists for it anywhere in the app. */}
+                  <nav className="hidden md:flex items-center gap-1 mr-2">
+                    <Link
+                      href="/?tab=home"
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                      )}
+                    >
+                      Components
+                    </Link>
+                    <Link
+                      href="/templates"
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                      )}
+                    >
+                      Templates
+                    </Link>
+                    <Link
+                      href="/pricing"
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                      )}
+                    >
+                      Pricing
+                    </Link>
+                  </nav>
                   <a
                     href="/support"
                     onClick={() =>
