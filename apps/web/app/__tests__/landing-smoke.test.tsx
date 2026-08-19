@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import React from "react"
-import { describe, it, expect, vi } from "vitest"
-import { render } from "@testing-library/react"
+import { describe, it, expect, vi, beforeEach } from "vitest"
+import { render, waitFor } from "@testing-library/react"
 import ReactDOMServer from "react-dom/server"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import HomePage from "../page"
@@ -152,6 +152,31 @@ vi.mock("@/lib/supabase", () => {
 })
 
 describe("Landing Smoke Test", () => {
+  // The project-wide setupFiles entry `apps/web/__tests__/setup.ts` installs a
+  // URL-AGNOSTIC fetch mock: it binds `url` and never reads it, always resolving
+  // `{ ok: true, json: () => ({ stargazers_count: 0 }) }`. So SocialProofCounter's
+  // `fetch("/api/platform/stats")` SUCCEEDS with no `.users` field, and the
+  // headline correctly renders nothing — which would make a lenient assertion
+  // pass vacuously and a real one fail for the wrong reason.
+  //
+  // This override is URL-SCOPED on purpose: only `/api/platform/stats` is
+  // redirected; every other URL keeps the shared mock's exact behavior, because
+  // other suites (GitHub stargazer count, R2 code fetch) depend on it verbatim.
+  // Installed in beforeEach so it is live inside every render() below, not just
+  // the counter's own assertion.
+  beforeEach(() => {
+    vi.spyOn(global, "fetch").mockImplementation(async (url: any) => {
+      if (String(url).includes("/api/platform/stats")) {
+        return { ok: true, json: async () => ({ users: 1234 }) } as any
+      }
+      return {
+        ok: true,
+        json: async () => ({ stargazers_count: 0 }),
+        text: async () => "mocked code content",
+      } as any
+    })
+  })
+
   const renderPage = async (tab?: string) => {
     const jsx = await HomePage({
       searchParams: Promise.resolve(tab ? { tab } : {}),
@@ -277,6 +302,27 @@ describe("Landing Smoke Test", () => {
     const newest = await getNewestRow([])
 
     expect(newest.length).toBeGreaterThan(0)
+  })
+
+  // Client-fetched on purpose, so it is absent from the server-rendered HTML —
+  // asserting it there would be wrong. What must hold is that the real `.users`
+  // field (not a fabricated 0, and not the shared mock's `stargazers_count`)
+  // reaches the headline once the fetch resolves.
+  it("renders the builders accent word and the fetched users count once /api/platform/stats resolves", async () => {
+    const { container } = await renderPage()
+
+    await waitFor(() => {
+      expect(container.textContent).toContain("builders")
+    })
+    expect(container.textContent).toContain("Used by")
+    expect(container.textContent).toMatch(/1,?234/)
+  })
+
+  it("renders the works-with strip with all four real tool marks", async () => {
+    const { container } = await renderPage()
+
+    expect(container.textContent).toContain("Works with your favorite tools")
+    expect(container.querySelectorAll('img[src^="/logos/"]').length).toBeGreaterThanOrEqual(3)
   })
 
   it("renders the component browser for a tab URL", async () => {

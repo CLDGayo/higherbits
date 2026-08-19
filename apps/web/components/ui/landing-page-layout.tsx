@@ -2,6 +2,7 @@ import React from "react"
 import { HeroVisual } from "./hero-visual"
 import { FaqSection } from "./faq-section"
 import { LandingSection } from "./landing-section"
+import { SocialProofCounter } from "./social-proof-counter"
 import { ComponentCatalogue, type CatalogueEntry } from "./component-catalogue"
 import { CatalogueRowSection } from "@/components/features/home/catalogue-row-section"
 import type { DemoWithComponent } from "@/types/global"
@@ -49,6 +50,10 @@ export function LandingPageLayout({
 
       <LandingSection className="bg-muted/30">
         <ComponentCatalogue components={components} />
+      </LandingSection>
+
+      <LandingSection>
+        <SocialProofCounter />
       </LandingSection>
 
       <LandingSection>
