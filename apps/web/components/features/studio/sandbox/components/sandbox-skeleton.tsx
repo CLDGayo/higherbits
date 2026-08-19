@@ -1,8 +1,23 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
-export function SandboxSkeleton() {
+export type SandboxConnectionPhase = "connecting" | "starting-dev-server"
+
+const PHASE_COPY: Record<SandboxConnectionPhase, string> = {
+  connecting: "Connecting to sandbox\u2026",
+  "starting-dev-server":
+    "Starting dev server \u2014 this can take a moment on a hibernated draft\u2026",
+}
+
+// `phase` is optional so the route-level / Suspense fallbacks, which have no
+// hook state to read, keep rendering the original copy-free skeleton.
+export function SandboxSkeleton({ phase }: { phase?: SandboxConnectionPhase }) {
   return (
     <div className="h-[calc(100vh-56px)] w-full flex flex-col bg-background">
+      {phase ? (
+        <div className="px-4 py-2 text-sm text-muted-foreground border-b border-border">
+          {PHASE_COPY[phase]}
+        </div>
+      ) : null}
       <div className="flex flex-1 min-h-0">
         <div className="w-[20%] p-2 space-y-2 overflow-hidden">
           <Skeleton className="h-6 w-3/4" />

@@ -17,7 +17,26 @@ export async function POST(request: NextRequest) {
 
     const { isAdmin } = await checkIsAdmin(userId)
 
-    const { shortSandboxId } = await request.json()
+    let shortSandboxId: string | undefined
+    try {
+      ;({ shortSandboxId } = await request.json())
+    } catch {
+      // A malformed/absent JSON body used to throw past this handler's own
+      // error convention and surface as an unhandled 500. It is a client error.
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 },
+      )
+    }
+
+    // Typed narrowing for the destructured body value. Behaviour matches the
+    // pre-existing missing-id check below (same status, same message).
+    if (!shortSandboxId) {
+      return NextResponse.json(
+        { error: "Sandbox ID is required" },
+        { status: 400 },
+      )
+    }
 
     const sandboxId = ShortUUID().toUUID(shortSandboxId)
 

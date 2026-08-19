@@ -105,6 +105,7 @@ function PublishClientPageContent({
     restartDevServer,
     isRestartingDevServer,
     sandboxUnavailable,
+    connectionPhase,
     missingDependencyInfo,
     clearMissingDependencyInfo,
     connectedShellId,
@@ -562,7 +563,7 @@ function PublishClientPageContent({
   }
 
   if (isSandboxLoading) {
-    return <SandboxSkeleton />
+    return <SandboxSkeleton phase={connectionPhase} />
   }
 
   if (!sandboxRef.current) {
