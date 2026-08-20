@@ -436,4 +436,23 @@ describe("Landing Smoke Test", () => {
       container.querySelector('a[href="/milo_reyes"]'),
     ).not.toBeNull()
   })
+
+  // Phase 07 tool-integrations logo cloud. Deliberately NOT an
+  // `img[src^="/logos/"]` count — Phase 04's works-with strip already owns that
+  // selector class, so a count there proves nothing Phase-07-specific. What is
+  // unique to this section is that each mark is PAIRED with its real
+  // `promptOptions` description string, read from `lib/prompts.tsx` rather than
+  // retyped. Reverting to Phase-04-style icon-only rendering drops all four of
+  // these strings and turns this assertion red.
+  it("renders the tool-integrations cloud pairing each mark with its real prompt description", async () => {
+    const { container } = await renderPage()
+
+    expect(container.textContent).toContain(
+      "Paste it into the tools you already build with.",
+    )
+    expect(container.textContent).toContain("Optimized for Claude")
+    expect(container.textContent).toContain("Optimized for Codex")
+    expect(container.textContent).toContain("Optimized for Antigravity")
+    expect(container.textContent).toContain("Raw HTML/JS for GoHighLevel")
+  })
 })
