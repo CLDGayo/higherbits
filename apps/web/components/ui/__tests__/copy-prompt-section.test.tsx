@@ -46,6 +46,12 @@ vi.mock("@clerk/nextjs", () => ({
   useUser: () => ({ user: null, isSignedIn: false, isLoaded: true }),
   SignedIn: ({ children }: any) => <>{children}</>,
   SignedOut: ({ children }: any) => <>{children}</>,
+  // Phase 08's agents band and marketing footer are mounted by
+  // `landing-page-layout.tsx`, which this suite renders for its mount-order
+  // assertion — so this mock must now cover Clerk's modal triggers too.
+  // Both render their child as the trigger, matching real Clerk behaviour.
+  SignInButton: ({ children }: any) => <>{children}</>,
+  SignUpButton: ({ children }: any) => <>{children}</>,
 }))
 vi.mock("@/lib/clerk", () => ({
   useClerkSupabaseClient: () => ({}),

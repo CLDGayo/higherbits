@@ -10,6 +10,7 @@ import type { DemoWithComponent } from "@/types/global"
 import type { FeaturedExample } from "@/lib/landing-featured-example"
 import { AuthorsBand } from "./authors-band"
 import { ToolIntegrationsCloud } from "./tool-integrations-cloud"
+import { AgentsCtaBand } from "./agents-cta-band"
 import type { LandingAuthor } from "@/lib/landing-authors"
 
 /**
@@ -99,6 +100,10 @@ export function LandingPageLayout({
 
       <LandingSection>
         <ToolIntegrationsCloud />
+      </LandingSection>
+
+      <LandingSection>
+        <AgentsCtaBand />
       </LandingSection>
 
       <LandingSection>

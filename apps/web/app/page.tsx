@@ -3,6 +3,7 @@ import { Metadata } from "next"
 
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
+import { FooterMarketing } from "@/components/ui/footer-marketing"
 import { LandingPageLayout } from "@/components/ui/landing-page-layout"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { HomePageClient } from "./page.client"
@@ -193,7 +194,13 @@ export default async function HomePage({
             </div>
             <NewsletterDialog />
           </div>
-          <Footer />
+          {/*
+            Phase 08 (D-1): the landing branch renders the new 4-column
+            marketing footer. The tab branch below deliberately keeps the
+            shared <Footer />, which stays byte-for-byte untouched along with
+            its 13 other route consumers.
+          */}
+          <FooterMarketing />
         </div>
       </>
     )

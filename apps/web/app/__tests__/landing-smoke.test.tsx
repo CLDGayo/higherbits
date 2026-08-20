@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import React from "react"
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { render, waitFor } from "@testing-library/react"
+import { render, waitFor, within } from "@testing-library/react"
 import ReactDOMServer from "react-dom/server"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import HomePage from "../page"
@@ -50,9 +50,14 @@ vi.mock("../page.client", () => ({
 vi.mock("@/components/ui/header.client", () => ({
   Header: () => <header>Marketplace header</header>,
 }))
+// Real Clerk `SignInButton`/`SignUpButton` render their CHILD as the modal
+// trigger. The original stubs dropped children entirely, so any CTA copy
+// wrapped in them was invisible to this suite — a stub that silently deletes
+// the thing under test. Fall back to the old stub text only when a call site
+// passes no children, so every pre-existing assertion is unaffected.
 vi.mock("@clerk/nextjs", () => ({
-  SignInButton: () => <button>Sign In</button>,
-  SignUpButton: () => <button>Sign Up</button>,
+  SignInButton: ({ children }: any) => <>{children ?? <button>Sign In</button>}</>,
+  SignUpButton: ({ children }: any) => <>{children ?? <button>Sign Up</button>}</>,
   SignedIn: ({ children }: any) => <div>{children}</div>,
   SignedOut: ({ children }: any) => <div>{children}</div>,
   useClerk: () => ({ signOut: vi.fn() }),
@@ -454,5 +459,68 @@ describe("Landing Smoke Test", () => {
     expect(container.textContent).toContain("Optimized for Codex")
     expect(container.textContent).toContain("Optimized for Antigravity")
     expect(container.textContent).toContain("Raw HTML/JS for GoHighLevel")
+  })
+
+  // Phase 08 agents band. Every assertion is scoped to the band's own subtree
+  // via `within()`, and the headline is asserted as the FULL string
+  // "Built by humans" — never the bare "Built by", which already renders on
+  // `/` today via authors-band.tsx's "Built by real design engineers" and would
+  // make this test pass with zero lines of Phase 08 mounted.
+  it("renders the agents band's two-line headline and both CTAs, scoped to the band", async () => {
+    const { container } = await renderPage()
+
+    const band = container.querySelector('[data-testid="agents-cta-band"]')
+    expect(band).not.toBeNull()
+    const inBand = within(band as HTMLElement)
+
+    expect((band as HTMLElement).textContent).toContain("Built by humans")
+    expect((band as HTMLElement).textContent).toContain("Ready for agents")
+    // Browse components is a real link to a real tab route, not a bare label.
+    const browse = inBand.getByRole("link", { name: "Browse components" })
+    expect(browse.getAttribute("href")).toBe("/?tab=home")
+    // Ungated per D-2: no <SignedOut> wrapper, so it is present unconditionally.
+    expect(inBand.getByRole("button", { name: "Join for free" })).not.toBeNull()
+  })
+
+  // Phase 08 marketing footer. "Product" is a live substring of the hero's
+  // "Production UI for developers and agencies", so a bare textContent check
+  // would pass whether or not this footer rendered. Scoped + exact-name role
+  // queries are what make these assertions discriminating.
+  it("renders the marketing footer's four column headers and their real links", async () => {
+    const { container } = await renderPage()
+
+    const footer = container.querySelector('[data-testid="footer-marketing"]')
+    expect(footer).not.toBeNull()
+    const inFooter = within(footer as HTMLElement)
+
+    for (const heading of ["Product", "Resources", "Company", "Connect"]) {
+      expect(inFooter.getByRole("heading", { name: heading })).not.toBeNull()
+    }
+
+    const hrefs = Array.from(
+      (footer as HTMLElement).querySelectorAll("a[href]"),
+    ).map((a) => a.getAttribute("href"))
+    for (const href of [
+      "/?tab=components",
+      "/?tab=templates",
+      "/pricing",
+      "/publish",
+      "/our-story",
+      "mailto:support@higherbits.dev",
+      "/privacy",
+      "/terms",
+      "/refunds",
+      "https://discord.gg/Qx4rFunHfm",
+      "https://github.com/CLDGayo/higherbits",
+    ]) {
+      expect(hrefs).toContain(href)
+    }
+
+    // Sign in is a Clerk modal trigger, not a route — assert the mechanism.
+    expect(inFooter.getByRole("button", { name: "Sign in" })).not.toBeNull()
+
+    // The two columns with no honest destination stay ABSENT, not fabricated.
+    expect((footer as HTMLElement).textContent).not.toContain("Icons")
+    expect((footer as HTMLElement).textContent).not.toContain("Themes")
   })
 })
