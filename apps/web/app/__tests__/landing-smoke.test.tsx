@@ -523,4 +523,43 @@ describe("Landing Smoke Test", () => {
     expect((footer as HTMLElement).textContent).not.toContain("Icons")
     expect((footer as HTMLElement).textContent).not.toContain("Themes")
   })
+
+  // Phase 10 / B3 — JSON-LD regression gate.
+  //
+  // `grep -c 'application/ld+json'` is documented as wrong in BOTH directions for
+  // this repo: it counts matching LINES rather than occurrences, and Next's RSC
+  // flight payload carries an escaped second copy of every script. The only
+  // honest count is a recursive walk over the PARSED payload, which is why this
+  // counter is written here rather than shelled out to grep.
+  it("server-renders 3 JSON-LD scripts carrying 13 @type keys in total", async () => {
+    const { container } = await renderPage()
+
+    const scripts = Array.from(
+      container.querySelectorAll('script[type="application/ld+json"]'),
+    )
+    expect(scripts).toHaveLength(3)
+
+    const countTypeKeys = (node: unknown): number => {
+      if (Array.isArray(node)) {
+        return node.reduce<number>((sum, item) => sum + countTypeKeys(item), 0)
+      }
+      if (node === null || typeof node !== "object") return 0
+      return Object.entries(node as Record<string, unknown>).reduce<number>(
+        (sum, [key, value]) =>
+          sum + (key === "@type" ? 1 : 0) + countTypeKeys(value),
+        0,
+      )
+    }
+
+    const total = scripts.reduce<number>(
+      (sum, script) =>
+        sum + countTypeKeys(JSON.parse(script.textContent ?? "{}")),
+      0,
+    )
+
+    // WebSite 3          (WebSite, SearchAction, EntryPoint)
+    // SoftwareApplication 3 (SoftwareApplication, Offer, Organization)
+    // FAQPage 7          (FAQPage + 3x(Question, Answer))
+    expect(total).toBe(13)
+  })
 })

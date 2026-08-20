@@ -92,7 +92,7 @@ export function CopyPromptSection({
         whatever tool you live in.
       </p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid gap-4 md:grid-cols-3">
         {featuredTools.map((tool, index) => (
           <div
             key={tool.id}
@@ -114,7 +114,7 @@ export function CopyPromptSection({
 
       {featured ? (
         <div className="mt-10 rounded-xl border overflow-hidden">
-          <div className="grid gap-0 lg:grid-cols-2">
+          <div className="grid gap-0 md:grid-cols-2">
             <div className="bg-[#333A41] p-4 min-w-0">
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-3 h-3 rounded-full bg-[#FF5F56]" />
@@ -132,7 +132,7 @@ export function CopyPromptSection({
               </pre>
             </div>
 
-            <div className="flex flex-col gap-4 p-6 border-t lg:border-t-0 lg:border-l bg-background">
+            <div className="flex flex-col gap-4 p-6 border-t md:border-t-0 md:border-l bg-background">
               {/* Suspense boundary, not decoration. `ComponentCard` reads
                   `window.matchMedia` in its render body (card.tsx:87), so it
                   THROWS during server rendering. Unbounded, that throw bails the

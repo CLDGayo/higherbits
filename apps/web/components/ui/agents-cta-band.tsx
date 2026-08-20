@@ -46,7 +46,7 @@ export function AgentsCtaBand({ className }: { className?: string }) {
         <span className="block">Ready for agents</span>
       </h2>
 
-      <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+      <div className="mt-10 flex flex-row flex-wrap items-center justify-center gap-4">
         <Button asChild size="lg" variant="default">
           <Link href="/?tab=home">Browse components</Link>
         </Button>
