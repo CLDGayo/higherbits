@@ -20,6 +20,12 @@ const nextConfig = {
       { protocol: "https", hostname: "**.higherbits.dev" },
       { protocol: "https", hostname: "**.supabase.co" },
       { protocol: "https", hostname: "**.githubusercontent.com" },
+      // GitHub profile avatars, e.g. https://github.com/shadcn.png, stored
+      // as users.display_image_url. Bare github.com is NOT covered by the
+      // **.githubusercontent.com entry above; next/image treats an unlisted
+      // host as a hard render error, which took down the whole / shell.
+      // Named per the note above: add the legitimate host, do not widen to "**".
+      { protocol: "https", hostname: "github.com" },
       { protocol: "https", hostname: "img.clerk.com" },
       { protocol: "https", hostname: "**.clerk.accounts.dev" },
       { protocol: "https", hostname: "pbs.twimg.com" },

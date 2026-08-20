@@ -12,6 +12,7 @@ import { faqPageJsonLd } from "@/lib/seo/faq"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { getLandingCatalogueRows } from "@/lib/landing-catalogue-rows"
 import { getCachedFeaturedExample } from "@/lib/landing-featured-example"
+import { getCachedLandingAuthors } from "@/lib/landing-authors"
 import { unstable_cache } from "next/cache"
 import {
   SITE_NAME,
@@ -167,6 +168,7 @@ export default async function HomePage({
     const components = await getCachedCatalogue()
     const { mostLoved, newest } = await getLandingCatalogueRows()
     const featured = await getCachedFeaturedExample()
+    const authors = await getCachedLandingAuthors()
 
     return (
       <>
@@ -186,6 +188,7 @@ export default async function HomePage({
                 mostLoved={mostLoved}
                 newest={newest}
                 featured={featured}
+                authors={authors}
               />
             </div>
             <NewsletterDialog />

@@ -92,6 +92,7 @@ export async function getActiveAuthorsAction(offset: number, limit: number) {
             total_views: totalViews,
             total_engagement: totalViews + (totalUsages || totalDownloads),
             top_components: topComponents,
+            component_count: componentIds.length,
             total_count: count ?? usersData.length,
           } as DatabaseAuthor
         })

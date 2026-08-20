@@ -8,6 +8,8 @@ import { ComponentCatalogue, type CatalogueEntry } from "./component-catalogue"
 import { CatalogueRowSection } from "@/components/features/home/catalogue-row-section"
 import type { DemoWithComponent } from "@/types/global"
 import type { FeaturedExample } from "@/lib/landing-featured-example"
+import { AuthorsBand } from "./authors-band"
+import type { LandingAuthor } from "@/lib/landing-authors"
 
 /**
  * Prop contract convention for this file:
@@ -49,6 +51,12 @@ export interface LandingPageLayoutProps {
    * without its demo panel rather than showing a fabricated one.
    */
   featured: FeaturedExample | null
+  /**
+   * Phase 06's authors band. REQUIRED with no default, matching the four data
+   * props above: an optional `authors` would let a caller forget it and
+   * silently render an empty band that compiles cleanly.
+   */
+  authors: LandingAuthor[]
 }
 
 export function LandingPageLayout({
@@ -56,6 +64,7 @@ export function LandingPageLayout({
   mostLoved,
   newest,
   featured,
+  authors,
 }: LandingPageLayoutProps) {
   return (
     <div className="flex flex-col min-w-0 w-full relative pt-24">
@@ -81,6 +90,10 @@ export function LandingPageLayout({
 
       <LandingSection>
         <CopyPromptSection featured={featured} />
+      </LandingSection>
+
+      <LandingSection>
+        <AuthorsBand authors={authors} />
       </LandingSection>
 
       <LandingSection>

@@ -221,6 +221,7 @@ describe("landing mount position (TC8)", () => {
         mostLoved={[]}
         newest={[]}
         featured={FEATURED}
+        authors={[]}
       />,
     )
 

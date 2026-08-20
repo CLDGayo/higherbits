@@ -94,17 +94,96 @@ const DEMOS_FIXTURE = Array.from({ length: 3 }, (_, index) => {
 // Table-aware builder: `not("id","in","(1,2)")` really filters, `limit` returns
 // a promise, and `then` makes the builder a genuine thenable so a chain that
 // never calls `limit()` still resolves to `{ data, error }`.
+/**
+ * Author fixtures for the Phase 06 authors band.
+ *
+ * DELIBERATELY carries NO `component_count` field: `users` has no such column
+ * and the production code never reads one. The count is DERIVED from a separate
+ * `.from("components").eq("user_id", ...)` query (see `app/actions/authors.ts:53-68`
+ * and `lib/landing-authors.ts`), so a static field here would be inert and the
+ * assertion resting on it decorative.
+ */
+const AUTHORS_FIXTURE = [
+  {
+    id: "ssr_user_a",
+    username: "nadia_kerr",
+    display_username: "nadia_kerr",
+    name: "Nadia Kerr",
+    display_name: "Nadia Kerr",
+    image_url: null,
+    display_image_url: null,
+  },
+  {
+    id: "ssr_user_b",
+    username: "teo_lange",
+    display_username: "teo_lange",
+    name: "Teo Lange",
+    display_name: "Teo Lange",
+    image_url: null,
+    display_image_url: null,
+  },
+  {
+    id: "ssr_user_c",
+    username: "null_render",
+    display_username: "null_render",
+    name: "Null Render",
+    display_name: "Null Render",
+    image_url: null,
+    display_image_url: null,
+  },
+]
+
+/**
+ * Per-user component rows, keyed by the SAME ids `AUTHORS_FIXTURE` uses, so
+ * `eq("user_id", <author id>)` resolves to the intended slice. Sized so the
+ * derived counts genuinely differ: 5 / exactly 1 / 0. The 1 is what exercises
+ * the singular caption through the real computation path; the 0 is what
+ * exercises the `component_count > 0` filter.
+ */
+const COMPONENTS_BY_USER: Record<string, { id: number; downloads_count: number }[]> = {
+  ssr_user_a: [1, 2, 3, 4, 5].map((id) => ({ id, downloads_count: 0 })),
+  ssr_user_b: [{ id: 6, downloads_count: 0 }],
+  ssr_user_c: [],
+}
+
 vi.mock("@/lib/supabase", () => {
   const makeBuilder = (table: string) => {
     let excluded: number[] = []
-    const rows = () =>
-      table === "demos"
-        ? DEMOS_FIXTURE.filter((demo) => !excluded.includes(demo.id))
-        : CATALOGUE_FIXTURE
+    // Captured by an argument-aware `eq()`; only a `components` query filtered
+    // by `user_id` sets it. Without this, the `components` table would serve
+    // CATALOGUE_FIXTURE to the authors query and every author would derive the
+    // same count — the derived-count assertion would prove nothing.
+    let componentsUserFilter: string | null = null
+    let includedComponentIds: number[] | null = null
+    const rows = () => {
+      if (table === "users") return AUTHORS_FIXTURE
+      if (table === "components" && componentsUserFilter !== null) {
+        return COMPONENTS_BY_USER[componentsUserFilter] ?? []
+      }
+      if (table === "demos") {
+        return DEMOS_FIXTURE.filter((demo) => !excluded.includes(demo.id))
+      }
+      if (table === "component_analytics" && includedComponentIds !== null) {
+        return includedComponentIds.map((id) => ({ component_id: id }))
+      }
+      return CATALOGUE_FIXTURE
+    }
     const builder: any = {
       select: () => builder,
-      eq: () => builder,
+      eq: (column: string, value: unknown) => {
+        if (table === "components" && column === "user_id") {
+          componentsUserFilter = String(value)
+        }
+        return builder
+      },
       order: () => builder,
+      range: () => builder,
+      in: (column: string, values: unknown) => {
+        if (column === "component_id" && Array.isArray(values)) {
+          includedComponentIds = values.map(Number)
+        }
+        return builder
+      },
       not: (column: string, operator: string, value: unknown) => {
         if (column === "id" && operator === "in" && typeof value === "string") {
           excluded = value
@@ -116,9 +195,13 @@ vi.mock("@/lib/supabase", () => {
         return builder
       },
       limit: (count: number) =>
-        Promise.resolve({ data: rows().slice(0, count), error: null }),
+        Promise.resolve({
+          data: rows().slice(0, count),
+          error: null,
+          count: rows().length,
+        }),
       then: (resolve: (result: unknown) => unknown) =>
-        resolve({ data: rows(), error: null }),
+        resolve({ data: rows(), error: null, count: rows().length }),
     }
     return builder
   }
@@ -147,5 +230,33 @@ describe("Landing SSR gate (node environment — no window)", () => {
     expect(html).toContain("Most Loved")
     expect(html).toContain("Newest Additions")
     expect(html).toContain("Demo Component 1")
+  })
+
+  // Phase 06 authors band — the crawler-visibility gate. Counts are DERIVED via
+  // the argument-aware `eq()` + per-user components fixture, not read off a
+  // static field. `ssr_user_b` owns exactly one row, so the singular caption is
+  // produced by the real computation path; a naive `${n} components` renders
+  // "1 components" and fails here.
+  it("server-renders the authors band with derived, correctly-pluralized counts", async () => {
+    expect(typeof window).toBe("undefined")
+
+    const jsx = await HomePage({ searchParams: Promise.resolve({}) })
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+
+    const html = ReactDOMServer.renderToString(
+      <QueryClientProvider client={queryClient}>{jsx}</QueryClientProvider>,
+    )
+
+    expect(html).toContain("Built by real design")
+    expect(html).toContain("engineers")
+    expect(html).toContain("Nadia Kerr")
+    expect(html).toContain("5 components")
+    expect(html).toContain("Teo Lange")
+    expect(html).toContain("1 component")
+    expect(html).not.toContain("1 components")
+    expect(html).not.toContain("Null Render")
+    expect(typeof window).toBe("undefined")
   })
 })

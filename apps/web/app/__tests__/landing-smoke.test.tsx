@@ -120,17 +120,96 @@ const DEMOS_FIXTURE = Array.from({ length: 14 }, (_, index) => {
  *  - `not("id", "in", "(1,2)")` actually filters, so the dedup between the two
  *    rows is exercised rather than assumed.
  */
+/**
+ * Author fixtures for the Phase 06 authors band.
+ *
+ * DELIBERATELY carries NO `component_count` field: `users` has no such column
+ * and the production code never reads one. The count is DERIVED from a separate
+ * `.from("components").eq("user_id", ...)` query (see `app/actions/authors.ts:53-68`
+ * and `lib/landing-authors.ts`), so a static field here would be inert and the
+ * assertion resting on it decorative.
+ */
+const AUTHORS_FIXTURE = [
+  {
+    id: "user_a",
+    username: "aria_stone",
+    display_username: "aria_stone",
+    name: "Aria Stone",
+    display_name: "Aria Stone",
+    image_url: null,
+    display_image_url: null,
+  },
+  {
+    id: "user_b",
+    username: "milo_reyes",
+    display_username: "milo_reyes",
+    name: "Milo Reyes",
+    display_name: "Milo Reyes",
+    image_url: null,
+    display_image_url: null,
+  },
+  {
+    id: "user_c",
+    username: "quiet_pixel",
+    display_username: "quiet_pixel",
+    name: "Quiet Pixel",
+    display_name: "Quiet Pixel",
+    image_url: null,
+    display_image_url: null,
+  },
+]
+
+/**
+ * Per-user component rows, keyed by the SAME ids `AUTHORS_FIXTURE` uses, so
+ * `eq("user_id", <author id>)` resolves to the intended slice. Sized so the
+ * derived counts genuinely differ: 5 / exactly 1 / 0. The 1 is what exercises
+ * the singular caption through the real computation path; the 0 is what
+ * exercises the `component_count > 0` filter.
+ */
+const COMPONENTS_BY_USER: Record<string, { id: number; downloads_count: number }[]> = {
+  user_a: [1, 2, 3, 4, 5].map((id) => ({ id, downloads_count: 0 })),
+  user_b: [{ id: 6, downloads_count: 0 }],
+  user_c: [],
+}
+
 vi.mock("@/lib/supabase", () => {
   const makeBuilder = (table: string) => {
     let excluded: number[] = []
-    const rows = () =>
-      table === "demos"
-        ? DEMOS_FIXTURE.filter((demo) => !excluded.includes(demo.id))
-        : CATALOGUE_FIXTURE
+    // Captured by an argument-aware `eq()`; only a `components` query filtered
+    // by `user_id` sets it. Without this, the `components` table would serve
+    // CATALOGUE_FIXTURE to the authors query and every author would derive the
+    // same count — the derived-count assertion would prove nothing.
+    let componentsUserFilter: string | null = null
+    let includedComponentIds: number[] | null = null
+    const rows = () => {
+      if (table === "users") return AUTHORS_FIXTURE
+      if (table === "components" && componentsUserFilter !== null) {
+        return COMPONENTS_BY_USER[componentsUserFilter] ?? []
+      }
+      if (table === "demos") {
+        return DEMOS_FIXTURE.filter((demo) => !excluded.includes(demo.id))
+      }
+      if (table === "component_analytics" && includedComponentIds !== null) {
+        return includedComponentIds.map((id) => ({ component_id: id }))
+      }
+      return CATALOGUE_FIXTURE
+    }
     const builder: any = {
       select: () => builder,
-      eq: () => builder,
+      eq: (column: string, value: unknown) => {
+        if (table === "components" && column === "user_id") {
+          componentsUserFilter = String(value)
+        }
+        return builder
+      },
       order: () => builder,
+      range: () => builder,
+      in: (column: string, values: unknown) => {
+        if (column === "component_id" && Array.isArray(values)) {
+          includedComponentIds = values.map(Number)
+        }
+        return builder
+      },
       not: (column: string, operator: string, value: unknown) => {
         if (column === "id" && operator === "in" && typeof value === "string") {
           excluded = value
@@ -142,9 +221,13 @@ vi.mock("@/lib/supabase", () => {
         return builder
       },
       limit: (count: number) =>
-        Promise.resolve({ data: rows().slice(0, count), error: null }),
+        Promise.resolve({
+          data: rows().slice(0, count),
+          error: null,
+          count: rows().length,
+        }),
       then: (resolve: (result: unknown) => unknown) =>
-        resolve({ data: rows(), error: null }),
+        resolve({ data: rows(), error: null, count: rows().length }),
     }
     return builder
   }
@@ -329,5 +412,28 @@ describe("Landing Smoke Test", () => {
     const { container } = await renderPage("home")
 
     expect(container.textContent).toContain("Component browser")
+  })
+
+  // Phase 06 authors band. The counts asserted here are DERIVED — the fixture
+  // hangs no `component_count` on any users row, because production reads none.
+  // `user_b` owns exactly one components row, so "1 component" (singular) is the
+  // real output of the real computation path; a naive `${n} components` template
+  // renders "1 components" and fails this assertion. `user_c` owns zero and must
+  // not appear at all.
+  it("renders the authors band with derived, correctly-pluralized component counts", async () => {
+    const { container } = await renderPage()
+
+    expect(container.textContent).toContain("Built by real design")
+    expect(container.textContent).toContain("engineers")
+    expect(container.textContent).toContain("Aria Stone")
+    expect(container.textContent).toContain("5 components")
+    expect(container.textContent).toContain("Milo Reyes")
+    expect(container.textContent).toContain("1 component")
+    expect(container.textContent).not.toContain("1 components")
+    // Zero-component author is filtered out, not padded in.
+    expect(container.textContent).not.toContain("Quiet Pixel")
+    expect(
+      container.querySelector('a[href="/milo_reyes"]'),
+    ).not.toBeNull()
   })
 })
