@@ -357,9 +357,26 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const restartDevServer = async (targetSandbox?: SandboxSession) => {
     const sandbox = targetSandbox || sandboxRef.current;
     if (!sandbox || isRestartingDevServer) return
+    // Defense-in-depth (A7 step 18a-a): unpark the ambient checkShells() poller
+    // for the duration of the restart, mirroring retryConnection()'s own reset.
+    // restartDevServer() is often reached precisely because things were already
+    // failing, so an elevated counter is likely here. The bail-out's actual
+    // correctness guarantee comes from the direct checkShells() calls below,
+    // not from this reset.
+    shellCheckFailuresRef.current = 0
     setIsRestartingDevServer(true)
     setSandboxUnavailable(false)
     setPreviewURL(null)
+
+    // Declared before the try so the finally block below has a reachable handle.
+    // The bail-out chain nests a second setTimeout inside the first, so the
+    // handle is reassigned at each mark — a handle captured once would go stale.
+    let restartBailoutTimer: ReturnType<typeof setTimeout> | undefined
+    const clearRestartBailout = () => {
+      if (restartBailoutTimer !== undefined) clearTimeout(restartBailoutTimer)
+      restartBailoutTimer = undefined
+    }
+
     try {
       console.log("Attempting to forcefully restart the dev server...")
       const shells = await sandbox.shells.getShells()
@@ -378,14 +395,80 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         shellName: "pnpm run install-and-dev",
       })
 
+      // Snapshot taken after the .clear() above, so it is empty by construction.
+      // Kept for structural parity with initialize()'s own shellsAtStart, so the
+      // same hasDevShell() shape is reused verbatim on both wait paths.
+      const shellsAtStart = new Set(subscribedShells.current)
+
       checkShells()
 
+      const hasDevShell = () =>
+        Array.from(subscribedShells.current).some((id) => !shellsAtStart.has(id))
+
+      // Resolves only if NO shell has registered in the VM within ~10s of the
+      // restart command being issued. This is not a shorter clock than the 120s
+      // port wait — it bails on evidence that no process exists to bind a port
+      // at all. If a shell IS running (even mid dependency-install), this never
+      // resolves and the full 120s budget below remains available.
+      //
+      // Each mark calls checkShells() DIRECTLY rather than passively reading
+      // subscribedShells.current: within this 10s window the ambient 5s poller
+      // is the only other writer of that ref, and it may be parked
+      // (shellCheckFailuresRef >= MAX_SHELL_CHECK_FAILURES) or simply out of
+      // phase — either way a passive read alone would bail out false-positive
+      // on a legitimately recovering VM.
+      // Timing trap (A7): DEV_SHELL_POLL_INTERVAL_MS is SHARED with the ambient
+      // checkShells() poller, whose setInterval ticks are anchored to mount
+      // (…30s/35s/40s) regardless of when it is unparked. These restart-local
+      // marks land offset from those ticks (invocation + the 1500ms port-release
+      // wait + two intervals), and in the poller-parked case in
+      // __tests__/use-sandbox.test.ts only the second mark is positioned to
+      // observe the recovered dev shell — the ambient ticks straddle and miss it.
+      // Changing this constant or the port-release wait independently can
+      // realign the marks with the ambient ticks and silently collapse that
+      // test's discrimination window, with no code regression to signal it.
+      const restartPollBailoutPromise = new Promise<void>((resolve) => {
+        restartBailoutTimer = setTimeout(async () => {
+          await checkShells().catch(() => {})
+          if (hasDevShell()) return
+          restartBailoutTimer = setTimeout(async () => {
+            await checkShells().catch(() => {})
+            if (hasDevShell()) return
+            resolve()
+          }, DEV_SHELL_POLL_INTERVAL_MS)
+        }, DEV_SHELL_POLL_INTERVAL_MS)
+      })
+
       // Vite may start on 5174 or 5175 if 5173 is occupied by a zombie process.
-      const portInfo = await Promise.any(
+      // No await is introduced before this race starts, so a shell that
+      // registers and binds a port quickly is unaffected in timing.
+      const portWait = Promise.any(
         [5173, 5174, 5175].map((port) =>
           sandbox.ports.waitForPort(port, { timeoutMs: 120_000 })
         )
       )
+
+      const raceOutcome = await Promise.race([
+        portWait.then((portInfo) => ({ kind: "port" as const, portInfo })),
+        restartPollBailoutPromise.then(() => ({ kind: "poll-bailout" as const })),
+      ])
+
+      if (raceOutcome.kind === "poll-bailout") {
+        // Bail-out won: the still-pending port wait cannot be cancelled, so
+        // neutralize it explicitly. Its eventual resolution or rejection must
+        // never set previewURL after the failure branch already fired.
+        portWait.then(() => {}).catch(() => {})
+        console.error(
+          "Failed to recover dev server: no shell registered in the VM within ~10s of restarting it, so no process exists to bind ports 5173-5175. Bailing out instead of waiting out the full 120s port timeout.",
+        )
+        setSandboxUnavailable(true)
+        return
+      }
+
+      // Port won: neutralize the orphaned bail-out timer so it can never fire
+      // the failure branch after a legitimate recovery.
+      clearRestartBailout()
+      const { portInfo } = raceOutcome
       const newPreviewURL = previewTokenRef.current
         ? portInfo.getSignedPreviewUrl(previewTokenRef.current)
         : portInfo.getPreviewUrl()
@@ -395,9 +478,12 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       setSandboxUnavailable(false)
       console.log("Successfully recovered dev server on port", portInfo.port)
     } catch (error) {
+      // All three ports exhausted their full 120s budget (shells ran, but no
+      // port ever opened) — distinct from the bail-out branch above.
       console.error("Failed to recover dev server:", error)
       setSandboxUnavailable(true)
     } finally {
+      clearRestartBailout()
       setIsRestartingDevServer(false)
     }
   }
