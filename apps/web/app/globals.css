@@ -22,6 +22,11 @@ body {
     --font-fira-code: 'Fira Code', monospace;
     --font-cozy: 'Quicksand', sans-serif;
     --font-accent: 'Instrument Serif', serif;
+    --ease-entrance: cubic-bezier(0.2,0.6,0.2,1);
+    --ease-lift: cubic-bezier(0.23,1,0.32,1);
+    --ease-morph: cubic-bezier(0.22,1,0.36,1);
+    --ease-glow: cubic-bezier(0.33,1,0.68,1);
+    --ease-slide: cubic-bezier(0,0,0.2,1);
   }
 }
 
@@ -32,6 +37,11 @@ body {
     --font-fira-code: 'Fira Code', monospace;
     --font-cozy: 'Quicksand', sans-serif;
     --font-accent: 'Instrument Serif', serif;
+    --ease-entrance: cubic-bezier(0.2,0.6,0.2,1);
+    --ease-lift: cubic-bezier(0.23,1,0.32,1);
+    --ease-morph: cubic-bezier(0.22,1,0.36,1);
+    --ease-glow: cubic-bezier(0.33,1,0.68,1);
+    --ease-slide: cubic-bezier(0,0,0.2,1);
   }
 }
 
@@ -751,4 +761,127 @@ iframe {
 
 .animate-slide-up-fade {
   animation: slide-up-fade 0.4s ease-out;
+}
+
+/* ---------------------------------------------------------------------------
+   Landing motion foundation (Phase 00, landing-behaviors-program).
+   Keyframes verbatim from landing-behaviors-measured_REF_21-08-26.md §B.
+   Top-level / unlayered on purpose: matches the `appear` / `slide-up-fade`
+   precedent above, and keeps the reduced-motion kill-switch below outranking
+   any future layered `lp-*` rule (unlayered CSS beats layered CSS).
+   --------------------------------------------------------------------------- */
+
+@property --lp-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes lp-hero-in {
+  0% {
+    filter: blur(14px);
+    transform: translateY(14px);
+  }
+
+  100% {
+    filter: blur(0px);
+    transform: none;
+  }
+}
+
+@keyframes lp-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lp-glow-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(40svh);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes lp-glow-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-49%, -51%) scale(1.06);
+    opacity: 0.82;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lp-faq-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lp-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lp-ring-spin {
+  100% {
+    --lp-angle: 360deg;
+  }
+}
+
+/* Reduced-motion kill-switch for every keyframe declared above (_REF_ §K).
+   NEW, separate block — deliberately not merged into the pre-existing
+   `.clay-interactive` / `.rounded-pill` block, which has zero `lp-` overlap.
+   Every later phase in this program appends its own `lp-` reduced-motion
+   rules HERE rather than opening a third block. */
+@media (prefers-reduced-motion: reduce) {
+  .lp-hero-in,
+  .lp-fade-in {
+    animation: none;
+  }
+
+  .lp-glow-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .lp-glow-pulse {
+    animation: none;
+  }
+
+  .lp-faq-in,
+  .lp-faq[open] .lp-faq-a {
+    animation: none;
+  }
+
+  .lp-spin,
+  .lp-ring-spin {
+    animation: none;
+  }
 }
