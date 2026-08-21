@@ -147,7 +147,9 @@ describe("Phase 00 motion foundation — globals.css", () => {
   //   (a) isolate the NEW `lp-`-scoped reduced-motion @media block (the SECOND
   //       occurrence; the first is the pre-existing .clay-interactive block,
   //       which carries zero `lp-` selectors), captured by brace-depth counting.
-  //   (b) only WITHIN that substring, isolate `.lp-glow-enter { ... }`.
+  //   (b) only WITHIN that substring, isolate `.lp-glow-in { ... }` — Phase 01
+  //       renamed this selector away from the keyframe name (`lp-glow-enter`)
+  //       so the normal-state rule and the kill-switch cannot be confused.
   //
   // Both scopes are mandatory. `opacity: 1` already occurs twice elsewhere in
   // this file (the pre-existing `appear` / `slide-up-fade` keyframes) and
@@ -155,14 +157,14 @@ describe("Phase 00 motion foundation — globals.css", () => {
   // so a whole-file assertion would be vacuous. Once a later phase adds a
   // NORMAL-STATE `.lp-glow-enter` rule, a single-scope assertion could also
   // match the wrong occurrence entirely.
-  describe("reduced-motion kill-switch for .lp-glow-enter", () => {
+  describe("reduced-motion kill-switch for .lp-glow-in", () => {
     const REDUCED = "@media (prefers-reduced-motion: reduce)"
 
     const firstIdx = css.indexOf(REDUCED)
     const secondIdx = firstIdx === -1 ? -1 : css.indexOf(REDUCED, firstIdx + REDUCED.length)
     const lpBlock = secondIdx === -1 ? "" : captureBlock(css, secondIdx)
 
-    const glowIdx = lpBlock.indexOf(".lp-glow-enter {")
+    const glowIdx = lpBlock.indexOf(".lp-glow-in {")
     const glowRule = glowIdx === -1 ? "" : captureBlock(lpBlock, glowIdx)
 
     it("step (a): isolates a non-empty second reduced-motion block that contains lp- selectors", () => {
@@ -176,7 +178,7 @@ describe("Phase 00 motion foundation — globals.css", () => {
       expect(lpBlock.split(".lp-").length - 1).toBeGreaterThan(1)
     })
 
-    it("step (b): isolates a non-empty .lp-glow-enter rule within that block", () => {
+    it("step (b): isolates a non-empty .lp-glow-in rule within that block", () => {
       expect(glowIdx).toBeGreaterThan(-1)
       expect(glowRule.length).toBeGreaterThan(0)
     })
@@ -195,8 +197,15 @@ describe("Phase 00 motion foundation — globals.css", () => {
     const secondIdx = css.indexOf(REDUCED, firstIdx + REDUCED.length)
     const lpBlock = captureBlock(css, secondIdx)
     expect(lpBlock).toContain(".lp-")
+    // Phase 01 renamed the glow's normal-state selector to `.lp-glow-in` while
+    // leaving the KEYFRAME name `lp-glow-enter` unchanged (the array above is
+    // still correct for the @keyframes declaration checks). Only the
+    // reduced-motion SELECTOR moved, so only this assertion is special-cased.
+    const REDUCED_MOTION_SELECTOR: Record<string, string> = {
+      "lp-glow-enter": "lp-glow-in",
+    }
     for (const name of KEYFRAMES) {
-      expect(lpBlock).toContain(`.${name}`)
+      expect(lpBlock).toContain(`.${REDUCED_MOTION_SELECTOR[name] ?? name}`)
     }
   })
 })

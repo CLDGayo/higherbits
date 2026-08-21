@@ -854,6 +854,52 @@ iframe {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Landing entrance cascade (Phase 01, landing-behaviors-program).
+   Normal-state rules for the Phase 00 keyframes above. Every value is
+   byte-exact from landing-behaviors-measured_REF_21-08-26.md §C and must NOT
+   be "tidied" — the gate in app/__tests__/entrance-cascade.test.tsx matches
+   this declaration text exactly, which is what makes its mutation proof
+   discriminating.
+
+   The glow is TWO nested elements, not one: `lp-glow-enter` and
+   `lp-glow-pulse` animate incompatible `transform` value shapes, so on a
+   single element the pulse (delay 0s) would win `transform` for the whole
+   timeline and the entrance would never render.
+   --------------------------------------------------------------------------- */
+
+.lp-hero-in {
+  animation: lp-hero-in 1s var(--ease-entrance) 0s both;
+}
+
+.lp-fade-in {
+  animation: lp-fade-in 0.9s var(--ease-entrance) 0s both;
+}
+
+/* Declared AFTER `.lp-fade-in` on purpose: same specificity, so the later rule
+   wins the `animation-delay` tie against the shorthand's embedded `0s`. A
+   single shared class cannot carry two different delays at once. */
+.lp-delay-550 {
+  animation-delay: 0.55s;
+}
+
+.lp-delay-800 {
+  animation-delay: 0.8s;
+}
+
+/* Selector name deliberately DIVERGES from the `lp-glow-enter` keyframe name:
+   keyframe names and rule selectors are independent namespaces, and reusing
+   the keyframe name as the normal-state selector would plant a fragile
+   "second occurrence = normal-state rule" invariant for later phases. The
+   reduced-motion block below is renamed to match. */
+.lp-glow-in {
+  animation: lp-glow-enter 1.6s var(--ease-glow) 1.05s both;
+}
+
+.lp-glow-pulse {
+  animation: lp-glow-pulse 10s ease-in-out 0s infinite;
+}
+
 /* Reduced-motion kill-switch for every keyframe declared above (_REF_ §K).
    NEW, separate block — deliberately not merged into the pre-existing
    `.clay-interactive` / `.rounded-pill` block, which has zero `lp-` overlap.
@@ -865,7 +911,7 @@ iframe {
     animation: none;
   }
 
-  .lp-glow-enter {
+  .lp-glow-in {
     animation: none;
     opacity: 1;
     transform: none;

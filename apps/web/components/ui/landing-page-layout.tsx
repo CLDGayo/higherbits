@@ -69,16 +69,40 @@ export function LandingPageLayout({
   authors,
 }: LandingPageLayoutProps) {
   return (
-    <div className="flex flex-col min-w-0 w-full relative pt-24">
+    <div className="flex flex-col min-w-0 w-full relative pt-24 isolate">
+      {/*
+        Phase 01 ambient glow. Three strictly-nested elements, in this order:
+          wrapper  — clips the entrance overshoot, sits behind all content
+          entrance — carries `translateY(40svh) -> 0` (lp-glow-in)
+          pulse    — carries `translate(-50%,-50%) scale()` (lp-glow-pulse)
+        A different nesting order or mount position silently reproduces the
+        single-element transform conflict or the stacking-order bug.
+
+        `isolate` on the root above is required TOGETHER with `-z-10` here:
+        the root has no background of its own, but `page.tsx`'s opaque
+        `bg-background` ancestor establishes no stacking context, so without a
+        local boundary the negative-z-index glow bubbles to the document root
+        and paints BEHIND that background — fully invisible.
+
+        Bounded `top-0 h-[100svh]`, never `inset-0`: the root is page-tall, so
+        a full-height wrapper would make the pulse element's `top-1/2` centre
+        on the page midpoint instead of behind the hero.
+      */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] -z-10 overflow-hidden">
+        <div className="absolute inset-0 lp-glow-in">
+          <div className="absolute top-1/2 left-1/2 h-[60svh] w-[60svh] max-w-[900px] rounded-full bg-[radial-gradient(circle,hsl(var(--primary)/0.30)_0%,transparent_70%)] blur-3xl lp-glow-pulse" />
+        </div>
+      </div>
+
       <LandingSection>
         <HeroVisual />
       </LandingSection>
 
-      <LandingSection>
+      <LandingSection className="lp-fade-in lp-delay-550">
         <CatalogueRowSection title="Most Loved" items={mostLoved} />
       </LandingSection>
 
-      <LandingSection>
+      <LandingSection className="lp-fade-in lp-delay-800">
         <CatalogueRowSection title="Newest Additions" items={newest} />
       </LandingSection>
 

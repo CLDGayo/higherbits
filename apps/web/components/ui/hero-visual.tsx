@@ -18,11 +18,11 @@ import { HeroCta } from "./hero-cta"
 export function HeroVisual() {
   return (
     <div className="flex w-full flex-col items-start gap-6 text-left">
-      <h1 className="text-4xl md:text-6xl font-bold tracking-tight max-w-3xl text-left">
+      <h1 className="lp-hero-in text-4xl md:text-6xl font-bold tracking-tight max-w-3xl text-left">
         Production UI for developers and{" "}
         <AccentWord>agencies</AccentWord>
       </h1>
-      <p className="text-muted-foreground text-lg md:text-xl max-w-2xl">
+      <p className="lp-hero-in text-muted-foreground text-lg md:text-xl max-w-2xl">
         Production-ready shadcn/ui components, templates, and UI blocks for
         developers, agencies, and technical virtual assistants.
       </p>
