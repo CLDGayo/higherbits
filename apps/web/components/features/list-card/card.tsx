@@ -279,12 +279,20 @@ export const ComponentCard = React.memo(function ComponentCard({
   return (
     <ContextMenu>
       <ContextMenuTrigger
-        className="block p-[1px] select-none"
+        className="group/cardroot block p-[1px] select-none"
         disabled={isTouch}
       >
         <div
-          className="block select-none cursor-pointer relative"
-          onMouseEnter={() => setIsHovered(true)}
+          className="group/card block select-none cursor-pointer relative"
+          data-testid="card-interactive-wrapper"
+          // DEC-5 (AC10): the video FETCH path is pointer-only. On a coarse
+          // pointer a tap fires a synthetic mouseenter, which would pull a
+          // video per card (~51 on the catalogue) — the exact regression C3
+          // exists to prevent. The CSS lift stays ungated by design.
+          onMouseEnter={() => {
+            if (isTouch) return
+            setIsHovered(true)
+          }}
           onMouseLeave={() => setIsHovered(false)}
         >
           <Link
@@ -308,7 +316,15 @@ export const ComponentCard = React.memo(function ComponentCard({
           >
             <span className="sr-only">View {componentName}</span>
           </Link>
-          <div className="relative aspect-[4/3] mb-3 group">
+          {/* Parallax layer 1 (Phase 05, AC1): rests 18px low, rises to 0 on
+              any of the four triggers. Same 300ms / --ease-lift as the meta
+              layer below — the separation comes from the DISTANCE difference
+              (18 vs 30), never from a delay. `transform` is compositor-only,
+              so neither layer changes the card's layout height. */}
+          <div
+            data-testid="card-body-layer"
+            className="relative aspect-[4/3] mb-3 group translate-y-[18px] transition-transform duration-300 [transition-timing-function:var(--ease-lift)] group-hover/card:translate-y-0 group-focus-within/card:translate-y-0 group-has-[[data-state=open]]/card:translate-y-0 group-data-[state=open]/cardroot:translate-y-0 motion-reduce:translate-y-0 motion-reduce:transition-none"
+          >
             <div className="absolute inset-0">
               <div className="relative w-full h-full rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                 <div className="absolute inset-0">
@@ -431,7 +447,12 @@ export const ComponentCard = React.memo(function ComponentCard({
                 </div>
               )}
           </div>
-          <div className="flex space-x-3 items-center">
+          {/* Parallax layer 2 (Phase 05, AC1): rests 30px low. Identical
+              duration and easing to the body layer — only the distance differs. */}
+          <div
+            data-testid="card-meta-layer"
+            className="flex space-x-3 items-center translate-y-[30px] transition-transform duration-300 [transition-timing-function:var(--ease-lift)] group-hover/card:translate-y-0 group-focus-within/card:translate-y-0 group-has-[[data-state=open]]/card:translate-y-0 group-data-[state=open]/cardroot:translate-y-0 motion-reduce:translate-y-0 motion-reduce:transition-none"
+          >
             {!hideUser && (
               <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
                 <UserAvatar

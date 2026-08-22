@@ -120,7 +120,7 @@ export function ComponentVideoPreview({
   return (
     <div
       className={cn(
-        "absolute inset-0 transition-opacity duration-300",
+        "absolute inset-0 transition-opacity duration-200",
         isHovered ? "opacity-100" : "opacity-0"
       )}
     >
