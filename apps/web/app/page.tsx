@@ -177,7 +177,7 @@ export default async function HomePage({
             Log in / Sign up, and no way to reach <LandingAuthModals> — which is
             mounted inside the header. LandingPageLayout's pt-24 was reserving
             space for a header that never rendered. */}
-        <Header variant="default" />
+        <Header variant="default" transparentAtTop />
         <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
           {homeJsonLd().map((data) => (
             <JsonLd key={String(data["@type"])} data={data} />

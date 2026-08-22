@@ -1,7 +1,7 @@
 "use client"
 
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
-import React, { useEffect, useState, Suspense } from "react"
+import React, { useEffect, useLayoutEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -101,10 +101,12 @@ export const searchQueryAtom = atom("")
 function HeaderContent({
   text,
   variant = "default",
+  transparentAtTop = false,
   shouldRender,
 }: {
   text?: string
   variant?: "default" | "publish"
+  transparentAtTop?: boolean
   shouldRender: boolean
 }) {
   if (!shouldRender) return null
@@ -122,6 +124,49 @@ function HeaderContent({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Phase 02 — header scroll state. Only active when `transparentAtTop` is set
+  // (the `/` landing branch); every other route keeps its always-opaque header.
+  //
+  // `window.scrollY` is read ONLY inside this effect, never in the render body:
+  // this is a "use client" component that STILL server-renders, and an
+  // unguarded browser-global read here would throw during SSR and take down the
+  // whole route shell, not just the header.
+  //
+  // useLayoutEffect (not useEffect) is deliberate: it runs synchronously before
+  // paint, so a reader who reloads mid-page never sees a one-frame flash of the
+  // transparent header over content. React's SSR hooks dispatcher treats
+  // useLayoutEffect as a no-op, so this emits no server warning.
+  const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false)
+  const scrollRafRef = React.useRef<number | null>(null)
+  useLayoutEffect(() => {
+    if (!transparentAtTop) return
+
+    const readScrollPosition = () => {
+      scrollRafRef.current = null
+      // Threshold measured on the reference at exactly 10px (0/1/2/4/8
+      // unchanged, 10 changed). Do not round this to a "nicer" number.
+      setScrolledPastThreshold(window.scrollY > 10)
+    }
+
+    // Initialise from the real scroll position on mount (mid-page reload).
+    readScrollPosition()
+
+    const handleScroll = () => {
+      // Coalesce to at most one scrollY read + setState per paint frame.
+      if (scrollRafRef.current !== null) return
+      scrollRafRef.current = window.requestAnimationFrame(readScrollPosition)
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current)
+        scrollRafRef.current = null
+      }
+    }
+  }, [transparentAtTop])
   const { user: clerkUser } = useUser()
   const [userState, setUserState] = useAtom(userStateAtom)
   const client = useClerkSupabaseClient()
@@ -230,7 +275,17 @@ function HeaderContent({
         className={cn(
           "texture-cushion flex !fixed top-0 left-0 right-0 h-14 z-50 items-center px-4 md:px-8 py-3 text-foreground",
           {
-            "border-b border-border/40 bg-background/95 backdrop-blur-sm": variant !== "publish",
+            "border-b": variant !== "publish",
+            // Default (every non-landing route): unchanged, always opaque.
+            "border-border/40 bg-background/95 backdrop-blur-sm":
+              variant !== "publish" && !transparentAtTop,
+            // Landing route only: 300ms on exactly these three properties.
+            "transition-[background-color,border-color,backdrop-filter] duration-300":
+              variant !== "publish" && transparentAtTop,
+            "bg-transparent border-transparent":
+              variant !== "publish" && transparentAtTop && !scrolledPastThreshold,
+            "bg-background/70 backdrop-blur-md border-border/50":
+              variant !== "publish" && transparentAtTop && scrolledPastThreshold,
           },
         )}
       >
@@ -710,9 +765,11 @@ function HeaderContent({
 function HeaderWithParams({
   text,
   variant = "default",
+  transparentAtTop = false,
 }: {
   text?: string
   variant?: "default" | "publish"
+  transparentAtTop?: boolean
 }) {
   const searchParams = useSearchParams()
   const step = searchParams.get("step")
@@ -720,20 +777,36 @@ function HeaderWithParams({
   const shouldRender = !(variant === "publish" && step)
 
   return (
-    <HeaderContent text={text} variant={variant} shouldRender={shouldRender} />
+    <HeaderContent
+      text={text}
+      variant={variant}
+      transparentAtTop={transparentAtTop}
+      shouldRender={shouldRender}
+    />
   )
 }
 
 export function Header({
   text,
   variant = "default",
+  transparentAtTop = false,
 }: {
   text?: string
   variant?: "default" | "publish"
+  /**
+   * Landing-only. When true the header starts fully transparent and resolves
+   * into a blurred, bordered bar past a 10px scroll threshold. Defaults to
+   * false so every existing call site is unaffected.
+   */
+  transparentAtTop?: boolean
 }) {
   return (
     <Suspense fallback={null}>
-      <HeaderWithParams text={text} variant={variant} />
+      <HeaderWithParams
+        text={text}
+        variant={variant}
+        transparentAtTop={transparentAtTop}
+      />
     </Suspense>
   )
 }
