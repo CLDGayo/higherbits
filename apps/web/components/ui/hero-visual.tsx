@@ -18,7 +18,7 @@ import { HeroCta } from "./hero-cta"
 export function HeroVisual() {
   return (
     <div className="flex w-full flex-col items-start gap-6 text-left">
-      <h1 className="lp-hero-in text-4xl md:text-6xl font-bold tracking-tight max-w-3xl text-left">
+      <h1 className="lp-hero-in text-4xl md:text-[64px] md:leading-[70px] font-bold tracking-tight max-w-3xl text-left">
         Production UI for developers and{" "}
         <AccentWord>agencies</AccentWord>
       </h1>

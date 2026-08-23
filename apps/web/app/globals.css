@@ -854,6 +854,33 @@ iframe {
   }
 }
 
+/* Catalogue marquee (landing rows 1 and 2).
+
+   The track holds the slide list TWICE, so translating it by exactly -50%
+   advances by one full copy and lands on a pixel-identical frame — that is
+   what makes the loop seamless. The 50% is therefore load-bearing and tied to
+   the duplication in catalogue-carousel-row.tsx; changing one without the
+   other produces a visible jump on every cycle. */
+@keyframes lp-marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes lp-marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Landing entrance cascade (Phase 01, landing-behaviors-program).
    Normal-state rules for the Phase 00 keyframes above. Every value is
@@ -867,6 +894,27 @@ iframe {
    single element the pulse (delay 0s) would win `transform` for the whole
    timeline and the entrance would never render.
    --------------------------------------------------------------------------- */
+
+.lp-marquee {
+  /* Clips the second copy of the track. */
+  overflow: hidden;
+}
+
+.lp-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: lp-marquee-rtl var(--lp-marquee-duration, 90s) linear 0s infinite;
+}
+
+.lp-marquee-track[data-direction="ltr"] {
+  animation-name: lp-marquee-ltr;
+}
+
+/* Pause under the pointer so a card can actually be read and clicked. */
+.lp-marquee:hover .lp-marquee-track,
+.lp-marquee:focus-within .lp-marquee-track {
+  animation-play-state: paused;
+}
 
 .lp-hero-in {
   animation: lp-hero-in 1s var(--ease-entrance) 0s both;
@@ -919,6 +967,10 @@ iframe {
 
   .lp-glow-pulse {
     animation: none;
+    /* The centring translate lives in the lp-glow-pulse keyframe, so killing
+       the animation also kills the centring. Restate it or the glow jumps
+       by half its own size under reduced motion. */
+    transform: translate(-50%, -50%);
   }
 
   .lp-faq-in,
@@ -929,5 +981,14 @@ iframe {
   .lp-spin,
   .lp-ring-spin {
     animation: none;
+  }
+
+  /* Stopping the animation must also reset the transform: the rtl track's
+     resting frame is translateX(0), but the ltr track's is translateX(-50%),
+     so without this the ltr row would freeze one full copy to the left and
+     render as an empty gap. */
+  .lp-marquee-track {
+    animation: none;
+    transform: translateX(0);
   }
 }

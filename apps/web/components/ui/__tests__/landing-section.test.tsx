@@ -19,8 +19,10 @@ describe("LandingSection", () => {
     expect(anchor).not.toBeNull()
     expect(anchor!.textContent).toBe("Metaballs")
     // Direct descendant of the inner container div — nothing was wrapped,
-    // portalled, or re-parented around it.
-    expect(anchor!.parentElement!.className).toContain("container")
+    // portalled, or re-parented around it. Asserted as an identity check, not
+    // via a class name: the width class is a design value that moves, the
+    // parent-child relationship is the actual contract.
+    expect(anchor!.parentElement).toBe(container.querySelector("section > div"))
   })
 
   it("renders composite/multi-child content unaltered, in order (D3, B1a)", () => {
@@ -67,7 +69,7 @@ describe("LandingSection", () => {
     expect(container.querySelector("p")).not.toBeNull()
   })
 
-  it("applies the locked spacing contract: container + py-20 + md:py-28 (D2)", () => {
+  it("applies the locked spacing contract: max-w-6xl + px-8 + py-12 + md:py-[60px] (D2)", () => {
     const { container } = render(
       <LandingSection>
         <p>content</p>
@@ -75,9 +77,17 @@ describe("LandingSection", () => {
     )
 
     const inner = container.querySelector("section > div")!
-    expect(inner.className).toContain("container")
-    expect(inner.className).toContain("py-20")
-    expect(inner.className).toContain("md:py-28")
+    // max-w-6xl (1152px) + px-8, NOT Tailwind's `container` (1400px + 2rem).
+    // Measured from 21st.dev-capture_19-08-26/02-hero/01-hero.webp: all four
+    // hero text lines start at x=168-170 CSS at a 1440 viewport. Tailwind's
+    // `container` puts them at 52.
+    expect(inner.className).toContain("max-w-6xl")
+    expect(inner.className).toContain("px-8")
+    // ~60px/side is the reference's section padding, measured as a 520px
+    // section pitch around 402px of content. The previous md:py-28 (112) was
+    // the largest single contributor to the page running 2,100px taller.
+    expect(inner.className).toContain("py-12")
+    expect(inner.className).toContain("md:py-[60px]")
   })
 
   it("merges an optional className onto the outer section alongside w-full", () => {

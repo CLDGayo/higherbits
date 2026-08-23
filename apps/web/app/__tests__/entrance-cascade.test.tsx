@@ -169,6 +169,7 @@ describe("Phase 01 entrance cascade — Part B: rendered DOM structure", () => {
       <LandingPageLayout
         components={[]}
         mostLoved={[]}
+        cataloguePool={[]}
         newest={[]}
         featured={null}
         authors={[]}
@@ -207,7 +208,11 @@ describe("Phase 01 entrance cascade — Part B: rendered DOM structure", () => {
 
     const pulse = entrance!.querySelector(".lp-glow-pulse")
     expect(pulse).not.toBeNull()
-    expect(pulse!.classList.contains("top-1/2")).toBe(true)
+    // Anchored low in the first viewport, not at its midpoint: the reference
+    // capture's glow peaks at the BOTTOM of the hero band and bleeds into the
+    // section below it (measured #163268 across the full width of
+    // 02-hero/01-hero.webp's last row, vs #0b0b0d at the top).
+    expect(pulse!.classList.contains("top-[72svh]")).toBe(true)
     expect(pulse!.classList.contains("left-1/2")).toBe(true)
   })
 

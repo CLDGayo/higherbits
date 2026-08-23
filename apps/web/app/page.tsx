@@ -11,7 +11,10 @@ import { JsonLd } from "@/components/seo/json-ld"
 import type { CatalogueEntry } from "@/components/ui/component-catalogue"
 import { faqPageJsonLd } from "@/lib/seo/faq"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
-import { getLandingCatalogueRows } from "@/lib/landing-catalogue-rows"
+import {
+  getCatalogueChipPool,
+  getLandingCatalogueRows,
+} from "@/lib/landing-catalogue-rows"
 import { getCachedFeaturedExample } from "@/lib/landing-featured-example"
 import { getCachedLandingAuthors } from "@/lib/landing-authors"
 import { unstable_cache } from "next/cache"
@@ -168,6 +171,7 @@ export default async function HomePage({
   if (!tab) {
     const components = await getCachedCatalogue()
     const { mostLoved, newest } = await getLandingCatalogueRows()
+    const cataloguePool = await getCatalogueChipPool()
     const featured = await getCachedFeaturedExample()
     const authors = await getCachedLandingAuthors()
 
@@ -187,6 +191,7 @@ export default async function HomePage({
               <LandingPageLayout
                 components={components}
                 mostLoved={mostLoved}
+                cataloguePool={cataloguePool}
                 newest={newest}
                 featured={featured}
                 authors={authors}

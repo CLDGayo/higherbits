@@ -6,6 +6,7 @@ import { SocialProofCounter } from "./social-proof-counter"
 import { CopyPromptSection } from "./copy-prompt-section"
 import { ComponentCatalogue, type CatalogueEntry } from "./component-catalogue"
 import { CatalogueRowSection } from "@/components/features/home/catalogue-row-section"
+import { CatalogueChipRow } from "@/components/features/home/catalogue-chip-row"
 import type { DemoWithComponent } from "@/types/global"
 import type { FeaturedExample } from "@/lib/landing-featured-example"
 import { AuthorsBand } from "./authors-band"
@@ -45,6 +46,12 @@ export interface LandingPageLayoutProps {
   components: CatalogueEntry[]
   /** Row 1 — ordered by `components.likes_count` desc (phase plan D2/E13). */
   mostLoved: DemoWithComponent[]
+  /**
+   * The full public pool with tags, feeding Row 1's chip strip. Distinct from
+   * `mostLoved`, which is the same data pre-sliced to 12: the strip needs every
+   * candidate so a tag chip can draw items outside the top 12.
+   */
+  cataloguePool: DemoWithComponent[]
   /** Row 2 — ordered by `demos.created_at` desc, deduped against row 1 (D4). */
   newest: DemoWithComponent[]
   /**
@@ -64,6 +71,7 @@ export interface LandingPageLayoutProps {
 export function LandingPageLayout({
   components,
   mostLoved,
+  cataloguePool,
   newest,
   featured,
   authors,
@@ -90,20 +98,48 @@ export function LandingPageLayout({
       */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] -z-10 overflow-hidden">
         <div className="absolute inset-0 lp-glow-in">
-          <div className="absolute top-1/2 left-1/2 h-[60svh] w-[60svh] max-w-[900px] rounded-full bg-[radial-gradient(circle,hsl(var(--primary)/0.30)_0%,transparent_70%)] blur-3xl lp-glow-pulse" />
+          <div className="absolute top-[72svh] left-1/2 h-[62svh] w-[128%] max-w-none rounded-[50%] bg-[radial-gradient(ellipse_at_center,hsl(255_65%_25%)_0%,hsl(255_60%_18%/0.55)_45%,transparent_72%)] blur-3xl lp-glow-pulse" />
         </div>
       </div>
 
-      <LandingSection>
+      {/* 96px root pt-24 + 60px = the reference's 156px headline top. */}
+      <LandingSection innerClassName="pt-10 pb-12 md:pt-[60px] md:pb-[60px]">
         <HeroVisual />
       </LandingSection>
 
-      <LandingSection className="lp-fade-in lp-delay-550">
-        <CatalogueRowSection title="Most Loved" items={mostLoved} />
+      {/* Both catalogue rows drop the container so their carousels can bleed to
+          the viewport edge; each row re-applies the inset to its own chip strip.
+          The two rows travel in opposite directions.
+
+          Both draw from the SAME pool rather than a pre-deduped slice. Phase
+          03's D4 dedup was a property of two fixed 12-item slices; with chips,
+          each row is a view over the whole catalogue, and excluding row 1's
+          items starved row 2's strip to a single chip — every tag fell below
+          the two-item floor. The default views stay disjoint because row 1
+          sorts by likes (all currently 0, so it tiebreaks to the twelve OLDEST
+          ids) while row 2 sorts newest-first. Asserted, not assumed, in
+          catalogue-chip-row.test.ts. */}
+      <LandingSection
+        className="lp-fade-in lp-delay-550"
+        innerClassName="max-w-none px-0"
+      >
+        <CatalogueChipRow
+          items={cataloguePool}
+          allLabel="Most Loved"
+          autoScroll="ltr"
+        />
       </LandingSection>
 
-      <LandingSection className="lp-fade-in lp-delay-800">
-        <CatalogueRowSection title="Newest Additions" items={newest} />
+      <LandingSection
+        className="lp-fade-in lp-delay-800"
+        innerClassName="max-w-none px-0"
+      >
+        <CatalogueChipRow
+          items={cataloguePool}
+          allLabel="Newest Additions"
+          sortBy="newest"
+          autoScroll="rtl"
+        />
       </LandingSection>
 
       <LandingSection className="bg-muted/30">

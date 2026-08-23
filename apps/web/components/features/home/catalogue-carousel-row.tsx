@@ -12,14 +12,35 @@ import { ComponentCardSkeleton } from "@/components/ui/skeletons"
 import { cn } from "@/lib/utils"
 import type { DemoWithComponent } from "@/types/global"
 
-const SLIDE_CLASSES = "min-w-[280px] max-w-[280px]"
+// 400px matches the reference carousel card measured from
+// 21st.dev-capture_19-08-26/03-marketing-blocks/01-strip-and-carousel.webp:
+// cards are 400x298 CSS on a 465px pitch at a 1440 viewport.
+const SLIDE_CLASSES = "min-w-[400px] max-w-[400px]"
 const SKELETON_SLIDE_COUNT = 6
+
+/** Card width + the 64px gap: the reference's 465px pitch, near enough. */
+const SLIDE_PITCH_PX = 464
+
+/** A marquee copy shorter than this can leave a visible gap on wide screens. */
+const MIN_COPY_WIDTH_PX = 1600
+
+/** Seconds of travel per card, so both rows move at the same speed. */
+const SECONDS_PER_CARD = 7.5
 
 export interface CatalogueCarouselRowProps {
   /** Already-fetched items. This component never fetches — Phase 03 owns data wiring. */
   items: DemoWithComponent[]
   isLoading?: boolean
   className?: string
+  /**
+   * Continuous auto-scroll. Omit for the draggable embla carousel.
+   *
+   * `"ltr"` travels left-to-right, `"rtl"` right-to-left. Implemented as a CSS
+   * marquee rather than embla: no auto-scroll plugin is installed, and
+   * `scrollNext()` on a timer steps rather than glides. The trade-off is that a
+   * marquee row is not drag-scrollable — it pauses on hover/focus instead.
+   */
+  autoScroll?: "ltr" | "rtl"
 }
 
 /**
@@ -32,7 +53,46 @@ export function CatalogueCarouselRow({
   items,
   isLoading,
   className,
+  autoScroll,
 }: CatalogueCarouselRowProps) {
+  if (!isLoading && autoScroll && items.length > 0) {
+    // One copy must be wide enough to cover the viewport, or a two-item chip
+    // selection would leave dead space mid-cycle. The track then holds that
+    // copy TWICE, which is what makes the -50% translate land on an identical
+    // frame — see the lp-marquee keyframes in globals.css.
+    const repeats = Math.max(
+      1,
+      Math.ceil(MIN_COPY_WIDTH_PX / (items.length * SLIDE_PITCH_PX)),
+    )
+    const copy = Array.from({ length: repeats }, () => items).flat()
+    const track = [...copy, ...copy]
+
+    return (
+      <div
+        className={cn("lp-marquee", className)}
+        style={
+          {
+            "--lp-marquee-duration": `${(copy.length * SECONDS_PER_CARD).toFixed(0)}s`,
+          } as React.CSSProperties
+        }
+      >
+        <div className="lp-marquee-track gap-16" data-direction={autoScroll}>
+          {track.map((item, index) => (
+            <div
+              key={`${item.id}-${index}`}
+              className={SLIDE_CLASSES}
+              // The second copy is decorative duplication; without this a
+              // screen reader announces every card twice.
+              aria-hidden={index >= copy.length || undefined}
+            >
+              <ComponentCard demo={item} hideUser />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   if (isLoading) {
     return (
       <Carousel className={className}>

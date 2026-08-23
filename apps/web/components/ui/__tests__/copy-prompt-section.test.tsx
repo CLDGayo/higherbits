@@ -225,6 +225,7 @@ describe("landing mount position (TC8)", () => {
       <LandingPageLayout
         components={[]}
         mostLoved={[]}
+        cataloguePool={[]}
         newest={[]}
         featured={FEATURED}
         authors={[]}

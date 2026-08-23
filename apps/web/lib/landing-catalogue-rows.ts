@@ -30,6 +30,23 @@ import type { DemoWithComponent } from "@/types/global"
 export const LANDING_ROW_SIZE = 12
 
 /**
+ * Shared column list. Hoisted so the chip pool below cannot drift from the two
+ * row queries — in particular the ALIASED `component:components!inner` embed
+ * and the absence of the non-existent view-count column, both of which the
+ * file header warns about.
+ */
+const ROW_SELECT = `
+        id, demo_slug, video_url, bookmarks_count, preview_url,
+        pro_preview_image_url, component_id, created_at,
+        user:users!demos_user_id_fkey (*),
+        tags:demo_tags(tag:tag_id(*)),
+        component:components!inner (
+          id, name, component_slug, user_id, is_public, likes_count,
+          user:users!components_user_id_fkey (*)
+        )
+`
+
+/**
  * Row 1's ordering, run in JavaScript because PostgREST cannot order outer rows
  * by a many-to-one embedded column. Ties break on ascending `id` so the row is
  * stable across requests while `likes_count` has no live variance.
@@ -70,14 +87,7 @@ export const getMostLovedRow = unstable_cache(
       .from("demos")
       .select(
         `
-        id, demo_slug, video_url, bookmarks_count, preview_url,
-        pro_preview_image_url, component_id, created_at,
-        user:users!demos_user_id_fkey (*),
-        tags:demo_tags(tag:tag_id(*)),
-        component:components!inner (
-          id, name, component_slug, user_id, is_public, likes_count,
-          user:users!components_user_id_fkey (*)
-        )
+        ${ROW_SELECT}
       `,
       )
       .eq("components.is_public", true)
@@ -106,14 +116,7 @@ export const getNewestRow = unstable_cache(
       .from("demos")
       .select(
         `
-        id, demo_slug, video_url, bookmarks_count, preview_url,
-        pro_preview_image_url, component_id, created_at,
-        user:users!demos_user_id_fkey (*),
-        tags:demo_tags(tag:tag_id(*)),
-        component:components!inner (
-          id, name, component_slug, user_id, is_public, likes_count,
-          user:users!components_user_id_fkey (*)
-        )
+        ${ROW_SELECT}
       `,
       )
       .eq("components.is_public", true)
@@ -155,3 +158,32 @@ export async function getLandingCatalogueRows(): Promise<LandingCatalogueRows> {
     newest: newestRaw.filter((demo) => !excluded.has(demo.id)),
   }
 }
+
+/**
+ * The full public, image-bearing demo pool with its tags attached, sorted
+ * `likes_count desc, id asc` — the same ordering as Row 1, unsliced.
+ *
+ * Feeds the chip strip. Chips are derived from the tags actually present in
+ * this data, never from a hardcoded taxonomy: `apps/web/lib/navigation.ts`'s
+ * category list has zero rows behind 46 of its 47 slugs (re-measured live
+ * 2026-08-23: 9 tags total, `component_tags` empty, best tag yields 4), so a
+ * hardcoded strip would render chips that filter to nothing.
+ */
+export const getCatalogueChipPool = unstable_cache(
+  async (): Promise<DemoWithComponent[]> => {
+    const { data, error } = await supabaseWithAdminAccess
+      .from("demos")
+      .select(`${ROW_SELECT}`)
+      .eq("components.is_public", true)
+      .not("preview_url", "is", null)
+
+    if (error) {
+      console.error("[landing] chip pool query failed:", error)
+      return []
+    }
+
+    return sortByLikesDesc(flattenTags(data as any[]))
+  },
+  ["landing-catalogue-chip-pool"],
+  { revalidate: 300, tags: ["landing-catalogue-chip-pool"] },
+)
