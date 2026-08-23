@@ -70,7 +70,7 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </div>
-        <GoogleAnalytics gaId="G-X7C2K3V7GX" />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? "G-Z0NZTJ4B1B"} />
       </body>
     </html>
   )
