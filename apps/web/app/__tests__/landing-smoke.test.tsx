@@ -446,6 +446,14 @@ describe("Landing Smoke Test", () => {
 
     expect(container.textContent).toContain("Built by real design")
     expect(container.textContent).toContain("engineers")
+    // The heading and the description are two inline elements sharing one
+    // 44px run (measured off the capture), joined by an explicit `{" "}`. Drop
+    // that separator and the DOM reads "engineers.Every" — invisible to a
+    // per-element assertion, visible on the page. Asserting the seam is the
+    // only thing that catches it.
+    expect(container.textContent).toContain(
+      "engineers. Every component has an author. Indexed, searchable, one prompt away.",
+    )
     expect(container.textContent).toContain("Aria Stone")
     expect(container.textContent).toContain("5 components")
     expect(container.textContent).toContain("Milo Reyes")
