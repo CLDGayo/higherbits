@@ -37,7 +37,7 @@ export interface AuthorsBandProps {
 export function AuthorsBand({ authors, className }: AuthorsBandProps) {
   return (
     <div className={cn("flex flex-col", className)}>
-      <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
+      <h2 className="text-4xl md:text-[44px] md:leading-[50px] font-semibold tracking-tight">
         Built by real design <AccentWord>engineers</AccentWord>.
       </h2>
       <p className="mt-4 max-w-2xl text-lg text-muted-foreground">

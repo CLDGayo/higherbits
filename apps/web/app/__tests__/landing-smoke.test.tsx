@@ -243,7 +243,7 @@ describe("Landing Smoke Test", () => {
   // The project-wide setupFiles entry `apps/web/__tests__/setup.ts` installs a
   // URL-AGNOSTIC fetch mock: it binds `url` and never reads it, always resolving
   // `{ ok: true, json: () => ({ stargazers_count: 0 }) }`. So SocialProofCounter's
-  // `fetch("/api/platform/stats")` SUCCEEDS with no `.users` field, and the
+  // `fetch("/api/platform/stats")` SUCCEEDS with no `.components` field, and the
   // headline correctly renders nothing — which would make a lenient assertion
   // pass vacuously and a real one fail for the wrong reason.
   //
@@ -255,7 +255,7 @@ describe("Landing Smoke Test", () => {
   beforeEach(() => {
     vi.spyOn(global, "fetch").mockImplementation(async (url: any) => {
       if (String(url).includes("/api/platform/stats")) {
-        return { ok: true, json: async () => ({ users: 1234 }) } as any
+        return { ok: true, json: async () => ({ components: 1234 }) } as any
       }
       return {
         ok: true,
@@ -393,24 +393,40 @@ describe("Landing Smoke Test", () => {
   })
 
   // Client-fetched on purpose, so it is absent from the server-rendered HTML —
-  // asserting it there would be wrong. What must hold is that the real `.users`
-  // field (not a fabricated 0, and not the shared mock's `stargazers_count`)
-  // reaches the headline once the fetch resolves.
-  it("renders the builders accent word and the fetched users count once /api/platform/stats resolves", async () => {
+  // asserting it there would be wrong. What must hold is that the real
+  // `.components` field (not a fabricated 0, and not the shared mock's
+  // `stargazers_count`) reaches the headline once the fetch resolves.
+  //
+  // The field is `components`, not `users`: the live `users` count is 3, so the
+  // headline points at the catalogue instead. Swapping the field is the honest
+  // fix — inflating the value would not be.
+  it("renders the components accent word and the fetched component count once /api/platform/stats resolves", async () => {
     const { container } = await renderPage()
 
     await waitFor(() => {
-      expect(container.textContent).toContain("builders")
+      expect(container.textContent).toMatch(/1,?234/)
     })
-    expect(container.textContent).toContain("Used by")
-    expect(container.textContent).toMatch(/1,?234/)
+    expect(container.textContent).toContain("Ship with")
+    expect(container.textContent).toContain("From first paste to shipped product")
   })
 
+  // Scoped to the strip's own testid, NOT the whole page. All four labels
+  // ("Claude", "Codex", "Antigravity", "GoHighLevel") ALSO render inside
+  // ToolIntegrationsCloud on this same page, so a bare `container.textContent`
+  // check would stay green with this strip deleted. The previous form of this
+  // test asserted `img[src^="/logos/"]` — these marks are inline SVGs from
+  // `@/components/icons`, never `<img>`, so that count was satisfied entirely by
+  // images belonging to other sections and proved nothing about this one.
   it("renders the works-with strip with all four real tool marks", async () => {
     const { container } = await renderPage()
 
-    expect(container.textContent).toContain("Works with your favorite tools")
-    expect(container.querySelectorAll('img[src^="/logos/"]').length).toBeGreaterThanOrEqual(3)
+    const strip = container.querySelector('[data-testid="works-with-strip"]')
+    expect(strip).not.toBeNull()
+    expect(strip!.textContent).toContain("Works with:")
+    for (const label of ["Claude", "Codex", "Antigravity", "GoHighLevel"]) {
+      expect(strip!.textContent).toContain(label)
+    }
+    expect(strip!.querySelectorAll("li").length).toBe(4)
   })
 
   it("renders the component browser for a tab URL", async () => {

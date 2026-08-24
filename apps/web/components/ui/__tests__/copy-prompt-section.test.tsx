@@ -8,6 +8,8 @@ import { LandingPageLayout } from "@/components/ui/landing-page-layout"
 import {
   isLiteralCode,
   selectFeaturedExample,
+  hasLegiblePreview,
+  LEGIBLE_PREVIEW_SLUGS,
   type FeaturedExample,
 } from "@/lib/landing-featured-example"
 import type { DemoWithComponent } from "@/types/global"
@@ -303,5 +305,63 @@ describe("selectFeaturedExample — unpaid-only filter", () => {
   it("builds the detail href from the real username and slug", () => {
     const picked = selectFeaturedExample([freeCandidate], new Set())
     expect(picked!.href).toBe("/realauthor/shimmer-button")
+  })
+})
+
+/**
+ * Preview legibility.
+ *
+ * Shadcn-authored components ignore `preview_url` and render a local
+ * `/thumbnails/{slug}-dark.png` at a 2x crop scale, so only the centre ~50% is
+ * ever visible. Measured over the visible region of all 46 shipped dark
+ * thumbnails, 32 fall under 2% ink and paint as a flat black rectangle —
+ * including `accordion`, at 0.0%, which is exactly what this module used to
+ * pick (lowest id at a uniform `likes_count` of 0).
+ *
+ * Every assertion here is COMPARATIVE, in the same spirit as the paid-filter
+ * gate above: the blank candidate is always given the id that would WIN under
+ * the previous ordering, so these only pass if the legibility term genuinely
+ * reorders the pool. A test that merely asserted "the pick has a legible slug"
+ * would pass vacuously the moment the fixture ids happened to line up.
+ */
+describe("selectFeaturedExample — prefers a legible preview", () => {
+  const shadcn = (id: number, slug: string) =>
+    makeDemo({
+      id,
+      user: { id: "user_shadcn", username: "shadcn", display_image_url: null },
+      component: {
+        id,
+        component_slug: slug,
+        user_id: "user_shadcn",
+        user: { id: "user_shadcn", username: "shadcn", display_image_url: null },
+      },
+    })
+
+  it("skips a blank-thumbnail shadcn component for a legible one that would LOSE on id", () => {
+    const blank = shadcn(1, "accordion")
+    const legible = shadcn(2, "card")
+
+    // id-ascending is the old tiebreak, so `blank` wins without the new term.
+    expect(selectFeaturedExample([blank, legible], new Set())!.demo.component.id)
+      .toBe(2)
+  })
+
+  it("does not penalise a non-shadcn component, which renders its real preview_url", () => {
+    const blankShadcn = shadcn(1, "accordion")
+    const other = makeDemo({ id: 5, component: { id: 5 } }) // realauthor
+
+    expect(hasLegiblePreview(other)).toBe(true)
+    expect(hasLegiblePreview(blankShadcn)).toBe(false)
+    expect(selectFeaturedExample([blankShadcn, other], new Set())!.demo.component.id)
+      .toBe(5)
+  })
+
+  it("is a preference, not a filter: an all-blank pool still yields a pick", () => {
+    const picked = selectFeaturedExample(
+      [shadcn(1, "accordion"), shadcn(2, "input")],
+      new Set(),
+    )
+    expect(picked).not.toBeNull()
+    expect(LEGIBLE_PREVIEW_SLUGS.includes(picked!.demo.component.component_slug)).toBe(false)
   })
 })

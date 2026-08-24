@@ -50,16 +50,6 @@ const FEATURED_TOOL_IDS: string[] = [
   PROMPT_TYPES.LOVABLE,
 ]
 
-/**
- * Panel tints for the three cards. Colour only — the honest substitute for the
- * capture's three fabricated screenshots.
- */
-const TOOL_CARD_TINTS = [
-  "from-orange-500/10 to-rose-500/10",
-  "from-indigo-500/10 to-violet-500/10",
-  "from-rose-400/10 to-amber-300/10",
-]
-
 const featuredTools = FEATURED_TOOL_IDS.map((id) =>
   promptOptions.find(
     (option) => option.type === "option" && option.id === id,
@@ -81,7 +71,7 @@ export function CopyPromptSection({
 }: CopyPromptSectionProps) {
   return (
     <div className={cn("flex flex-col", className)}>
-      <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
+      <h2 className="text-4xl md:text-[44px] md:leading-[50px] font-semibold tracking-tight">
         Copy the prompt.
         <span className="block">
           Paste it <AccentWord>anywhere</AccentWord>
@@ -91,26 +81,6 @@ export function CopyPromptSection({
         Every component ships as a prompt. One copy — and it builds itself in
         whatever tool you live in.
       </p>
-
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        {featuredTools.map((tool, index) => (
-          <div
-            key={tool.id}
-            className={cn(
-              "rounded-xl border bg-gradient-to-br p-5",
-              TOOL_CARD_TINTS[index] ?? TOOL_CARD_TINTS[0],
-            )}
-          >
-            <div className="flex items-center gap-3">
-              {tool.icon}
-              <span className="text-base font-semibold">{tool.label}</span>
-            </div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {tool.description}
-            </p>
-          </div>
-        ))}
-      </div>
 
       {featured ? (
         <div className="mt-10 rounded-xl border overflow-hidden">
@@ -127,7 +97,7 @@ export function CopyPromptSection({
               {/* Real source, server-rendered as text: `<Code>` highlights in an
                   effect, so its first paint carries an EMPTY code body and a
                   crawler would see nothing. See the phase report, Deviation 1. */}
-              <pre className="overflow-auto max-h-[22rem] text-xs leading-relaxed text-white/90 font-fira-code whitespace-pre-wrap break-words">
+              <pre className="overflow-auto max-h-[30rem] text-xs leading-relaxed text-white/90 font-fira-code whitespace-pre-wrap break-words">
                 <code>{featured.code}</code>
               </pre>
             </div>
@@ -146,7 +116,15 @@ export function CopyPromptSection({
                   "fix" it by dropping the real card for a screenshot — the real,
                   working copy-prompt context menu is this section's entire point
                   (decision D-A). See the backlog note filed with this phase. */}
-              <div className="max-w-[320px] w-full">
+              {/* `pb-[30px]` is NOT arbitrary spacing. `ComponentCard`'s meta strip rests
+                  at `translate-y-[30px]` and rises to 0 on hover — the card-hover
+                  parallax. A transform does not affect layout height, so the card
+                  paints 30px LOWER than its own box and any content placed directly
+                  beneath it overlaps: measured here as a 13px collision between the
+                  card's author row and the caption below. The grid and carousel
+                  consumers never hit this because nothing sits under a card in their
+                  flow. Keep this in step with the parallax rest offset. */}
+              <div className="max-w-[380px] w-full pb-[30px]">
                 <Suspense fallback={<ComponentCardSkeleton />}>
                   <ComponentCard demo={featured.demo} />
                 </Suspense>
@@ -166,6 +144,30 @@ export function CopyPromptSection({
           </div>
         </div>
       ) : null}
+
+      {/* One prompt, three destinations. The capture puts a DIFFERENT fabricated
+          screenshot in each of three tall cards; we cannot mirror that honestly,
+          and not only because the screenshots are fake — `getComponentInstallPrompt`
+          (`lib/prompts.tsx:436-442`) routes CLAUDE, CODEX and LOVABLE through one
+          shared branch, so all three receive byte-identical prompt text. Three
+          differentiated panels would either repeat the same content verbatim or
+          invent differences that do not exist. One block plus three recipients is
+          what the product actually does, and what this section's own subhead
+          already claims. */}
+      <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+        <span className="text-sm text-muted-foreground">Paste it into:</span>
+        {featuredTools.map((tool) => (
+          <div key={tool.id} className="flex items-center gap-3">
+            <span className="[&_svg]:h-5 [&_svg]:w-5 [&_img]:h-5 [&_img]:w-5">
+              {tool.icon}
+            </span>
+            <span className="text-base font-medium">{tool.label}</span>
+            <span className="text-sm text-muted-foreground">
+              {tool.description}
+            </span>
+          </div>
+        ))}
+      </div>
 
       <div className="mt-10 grid gap-8 rounded-xl border p-6 sm:grid-cols-2">
         <div>

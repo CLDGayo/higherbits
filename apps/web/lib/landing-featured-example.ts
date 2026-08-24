@@ -46,8 +46,62 @@ import type { DemoWithComponent } from "@/types/global"
  *    render a plausible-looking lie and pass green (plan decision D-B).
  */
 
+/**
+ * Shadcn-authored components ignore `preview_url` entirely and render a LOCAL
+ * `/thumbnails/{slug}-dark.png` (`card.tsx:143-150`). Those thumbnails are
+ * tightly-cropped renders of small primitives, and the card additionally
+ * applies a 2x crop scale (`getPreviewCropScale(isShadcn)`), so only the centre
+ * ~50% of each file is ever on screen.
+ *
+ * Measured across all 46 shipped dark thumbnails, sampling ONLY that visible
+ * centre region and counting the fraction of pixels differing from the modal
+ * background by more than 18/255: 32 of 46 come in under 2% and render as a
+ * flat black rectangle. `accordion` — which this module used to pick, being the
+ * lowest id at a uniform `likes_count` of 0 — measures 0.0%. The demo panel's
+ * entire visual payload was therefore invisible.
+ *
+ * These are the 14 that clear 2%, ORDERED best-first — the pick ranks by this
+ * order, not merely by membership. A binary in-set test picks the lowest id
+ * among them, which is `breadcrumb` at 2.2%: legible, but the weakest of the
+ * set when `card` at 12.3% was available for free. Measuring the WHOLE file instead
+ * of the visible centre ranks them differently (`collapsible` is 1.1% whole /
+ * 4.4% centre, `table` 7.2% / 3.7%), so the centre crop is the only valid
+ * signal — it is what a visitor actually sees.
+ *
+ * The list is a constant rather than a generated manifest because these 46
+ * thumbnails are static seeded assets. If they are ever regenerated, re-measure
+ * rather than trusting this list.
+ */
+export const LEGIBLE_PREVIEW_SLUGS: readonly string[] = [
+  "card", "calendar", "tabs", "progress", "scroll-area", "separator",
+  "collapsible", "table", "button", "slider", "radio-group", "label",
+  "checkbox", "breadcrumb",
+]
+
+/**
+ * Mirrors `card.tsx:139-141`. Only shadcn-authored components fall back to the
+ * local thumbnail set; everything else renders its real `preview_url`, so it is
+ * not subject to the blank-thumbnail problem and must not be penalised for
+ * being absent from `LEGIBLE_PREVIEW_SLUGS`.
+ */
+export function previewLegibilityRank(demo: DemoWithComponent): number {
+  const isShadcn =
+    demo.user?.id === "user_shadcn" ||
+    demo.user?.username === "shadcn" ||
+    demo.component?.user_id === "user_shadcn"
+  // Non-shadcn renders its real `preview_url`; rank it alongside the best
+  // measured thumbnails rather than behind them.
+  if (!isShadcn) return 0
+  const i = LEGIBLE_PREVIEW_SLUGS.indexOf(demo.component?.component_slug ?? "")
+  return i === -1 ? Number.MAX_SAFE_INTEGER : i
+}
+
+export function hasLegiblePreview(demo: DemoWithComponent): boolean {
+  return previewLegibilityRank(demo) !== Number.MAX_SAFE_INTEGER
+}
+
 /** Longest source excerpt rendered into the demo panel, in characters. */
-export const FEATURED_CODE_MAX_CHARS = 1400
+export const FEATURED_CODE_MAX_CHARS = 2000
 
 export interface FeaturedExample {
   /** Feeds `ComponentCard` verbatim — real preview, real counts, real menu. */
@@ -77,10 +131,16 @@ export function isLiteralCode(code: unknown): code is string {
  * data happens to contain no paid components. (Phase 03's lesson: a negative
  * result is only as strong as the discriminating power of the data behind it.)
  *
- * Ordering mirrors `sortByLikesDesc`: `component.likes_count` desc, ties broken
- * on ascending `id` so the pick is stable while `likes_count` has no live
- * variance (every public component currently sits at 0 — decision D-C: the card
- * shows those real zeros rather than a fabricated number).
+ * Ordering: by measured preview legibility (see `LEGIBLE_PREVIEW_SLUGS`), then
+ * `component.likes_count` desc, then ascending
+ * `id` so the pick stays stable while `likes_count` has no live variance (every
+ * public component currently sits at 0 — decision D-C: the card shows those
+ * real zeros rather than a fabricated number).
+ *
+ * Legibility is a PREFERENCE, not a filter: if nothing legible is eligible the
+ * pick still returns the best remaining candidate. An ugly panel is a better
+ * outcome than a vanished one, and a hard filter here could empty the section
+ * silently the first time the thumbnail set changes.
  */
 export function selectFeaturedExample(
   candidates: DemoWithComponent[],
@@ -100,6 +160,7 @@ export function selectFeaturedExample(
 
   const [best] = [...eligible].sort(
     (a, b) =>
+      previewLegibilityRank(a) - previewLegibilityRank(b) ||
       (b.component?.likes_count ?? 0) - (a.component?.likes_count ?? 0) ||
       a.id - b.id,
   )
