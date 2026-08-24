@@ -65,8 +65,14 @@ export function SocialProofCounter() {
 
   return (
     <div className="flex flex-col items-start">
+      {/* Measured off the 19-08-26 capture at all three captured widths: cap
+          height ~41 device at BOTH 768 and 500 (= 28px type), against 63 at
+          1440 (= 44px). `md:text-[44px]` renders 44px at 768, where the
+          capture renders 28. The clamp hits 44.06 / 28 / 28; `leading-[1.13]`
+          gives 49.8 / 31.6 against measured 50 / ~30.5. Shared verbatim with
+          copy-prompt-section.tsx and authors-band.tsx. */}
       {count !== undefined ? (
-        <h2 className="max-w-[995px] text-4xl md:text-[44px] md:leading-[50px] font-semibold tracking-tight">
+        <h2 className="max-w-[995px] text-[clamp(28px,3.06vw,44px)] leading-[1.13] font-semibold tracking-tight">
           Ship with{" "}
           <span className="underline decoration-2 underline-offset-4 decoration-foreground/40">
             {count.toLocaleString("en-US")}
