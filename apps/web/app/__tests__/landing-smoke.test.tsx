@@ -410,10 +410,12 @@ describe("Landing Smoke Test", () => {
     expect(container.textContent).toContain("From first paste to shipped product")
   })
 
-  // Scoped to the strip's own testid, NOT the whole page. All four labels
-  // ("Claude", "Codex", "Antigravity", "GoHighLevel") ALSO render inside
-  // ToolIntegrationsCloud on this same page, so a bare `container.textContent`
-  // check would stay green with this strip deleted. The previous form of this
+  // Scoped to the strip's own testid, NOT the whole page. Three of the four
+  // labels ("Claude", "Codex", "GoHighLevel") ALSO render inside
+  // CopyPromptSection's "Paste it into:" row on this same page, so a bare
+  // `container.textContent` check would stay green with this strip deleted.
+  // (It used to be all four, via ToolIntegrationsCloud — deleted 2026-08-24 for
+  // having no counterpart in the capture.) The previous form of this
   // test asserted `img[src^="/logos/"]` — these marks are inline SVGs from
   // `@/components/icons`, never `<img>`, so that count was satisfied entirely by
   // images belonging to other sections and proved nothing about this one.
@@ -464,25 +466,6 @@ describe("Landing Smoke Test", () => {
     expect(
       container.querySelector('a[href="/milo_reyes"]'),
     ).not.toBeNull()
-  })
-
-  // Phase 07 tool-integrations logo cloud. Deliberately NOT an
-  // `img[src^="/logos/"]` count — Phase 04's works-with strip already owns that
-  // selector class, so a count there proves nothing Phase-07-specific. What is
-  // unique to this section is that each mark is PAIRED with its real
-  // `promptOptions` description string, read from `lib/prompts.tsx` rather than
-  // retyped. Reverting to Phase-04-style icon-only rendering drops all four of
-  // these strings and turns this assertion red.
-  it("renders the tool-integrations cloud pairing each mark with its real prompt description", async () => {
-    const { container } = await renderPage()
-
-    expect(container.textContent).toContain(
-      "Paste it into the tools you already build with.",
-    )
-    expect(container.textContent).toContain("Optimized for Claude")
-    expect(container.textContent).toContain("Optimized for Codex")
-    expect(container.textContent).toContain("Optimized for Antigravity")
-    expect(container.textContent).toContain("Raw HTML/JS for GoHighLevel")
   })
 
   // Phase 08 agents band. Every assertion is scoped to the band's own subtree
