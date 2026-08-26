@@ -151,7 +151,14 @@ export function LandingPageLayout({
         <SocialProofCounter />
       </LandingSection>
 
-      <LandingSection>
+      {/* Bottom override, not the shared 60: the capture draws copy-prompt ->
+          authors at ~182 box-to-box (card-grid bottom edge CSS 3242 -> heading
+          box top ~3424 in 00-full-page/01-desktop-1440.webp), against ~138 at
+          the boundary above it -- the reference has no single rhythm value, so
+          this is a per-boundary correction and NOT a reason to move the shared
+          token, which carries its own Phase 00 measurement (520px pitch around
+          402px of content) and a locked test. 122 + authors' shared 60 = 182. */}
+      <LandingSection innerClassName="md:pb-[122px]">
         <CopyPromptSection featured={featured} />
       </LandingSection>
 
@@ -159,7 +166,12 @@ export function LandingPageLayout({
         <AuthorsBand authors={authors} />
       </LandingSection>
 
-      <LandingSection>
+      {/* The one boundary in this program measured with no font-metric
+          estimation at either end: in 09-agents/01-*.webp the CTA button rect
+          bottoms out at CSS 245 and the FAQ's full-bleed divider sits at 382 --
+          137px of clear space, against 60 before this override. The divider ->
+          FAQ heading half (113) already matched the FAQ's own md:py-[100px]. */}
+      <LandingSection innerClassName="md:pb-[137px]">
         <AgentsCtaBand />
       </LandingSection>
 

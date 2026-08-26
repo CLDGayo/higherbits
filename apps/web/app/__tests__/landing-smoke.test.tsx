@@ -374,6 +374,32 @@ describe("Landing Smoke Test", () => {
     expect(browseAll.getAttribute("href")).toBe("/?tab=home")
   })
 
+  // Two boundaries where the reference is measurably looser than the shared
+  // md:py-[60px], pinned the same way landing-section.test.tsx pins D2: the
+  // value is a MEASUREMENT, and without a pin a later refactor drops it back to
+  // the shared rhythm silently. jsdom applies no CSS, so this asserts the
+  // wiring (this section carries this override) rather than the rendered box —
+  // the boxes themselves were confirmed in a real browser at 137 and 182 CSS.
+  it("pins the two measured rhythm overrides to their own sections", async () => {
+    const { container } = await renderPage()
+
+    const innerOf = (re: RegExp) => {
+      const section = Array.from(container.querySelectorAll("section")).find(
+        (s) => re.test(s.textContent || ""),
+      )
+      expect(section, `no section matching ${re}`).toBeTruthy()
+      return section!.querySelector(":scope > div")!.className
+    }
+
+    // agents CTA button rect -> FAQ divider measures 137 CSS in
+    // 09-agents/01-built-by-humans-ready-for-agents.webp (hard edges both ends).
+    expect(innerOf(/Ready for agents/i)).toContain("md:pb-[137px]")
+    // copy-prompt -> authors measures ~182 box-to-box; 122 + authors' 60.
+    expect(innerOf(/Copy the prompt/i)).toContain("md:pb-[122px]")
+    // The shared rhythm is NOT overridden on a section that measured correct.
+    expect(innerOf(/Built by real design engineers/i)).not.toContain("md:pb-[")
+  })
+
   it("server-renders the FAQ answers its FAQPage markup declares", async () => {
     const { container } = await renderPage()
 
