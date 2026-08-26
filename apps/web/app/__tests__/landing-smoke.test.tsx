@@ -5,6 +5,10 @@ import { render, waitFor, within } from "@testing-library/react"
 import ReactDOMServer from "react-dom/server"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import HomePage from "../page"
+import {
+  CATALOGUE_GRID_LIMIT,
+  ComponentCatalogue,
+} from "@/components/ui/component-catalogue"
 import { HOMEPAGE_FAQ } from "@/lib/seo/faq"
 import {
   buildExclusionList,
@@ -324,13 +328,50 @@ describe("Landing Smoke Test", () => {
     expect(
       inCatalogue.querySelector('a[href^="/author1/demo-component-1/"]'),
     ).not.toBeNull()
-    // The grid is the whole pool, unsliced — not one row's 12-item slice.
-    expect(inCatalogue.querySelectorAll("li").length).toBe(DEMOS_FIXTURE.length)
+    // Capped at CATALOGUE_GRID_LIMIT. This fixture (14) is under the cap, so
+    // this assertion does NOT exercise the slice — the direct-render test
+    // below is what actually holds it. Kept accurate rather than deleted.
+    expect(inCatalogue.querySelectorAll("li").length).toBe(
+      Math.min(DEMOS_FIXTURE.length, CATALOGUE_GRID_LIMIT),
+    )
     // Every card carries a real preview image; this is what the section gained
     // when it stopped rendering a text-only card of its own.
     expect(inCatalogue.querySelectorAll("img").length).toBeGreaterThanOrEqual(
       DEMOS_FIXTURE.length,
     )
+  })
+
+  // The page fixture is 14 items — under the cap — so nothing above can tell a
+  // capped grid from an uncapped one. Rendering the section directly with a
+  // pool LARGER than the cap is what makes the slice load-bearing: drop the
+  // `.slice()` in component-catalogue.tsx and this goes red at 30 !== 24.
+  it("caps the grid at CATALOGUE_GRID_LIMIT and links out to the rest", () => {
+    const pool = Array.from(
+      { length: CATALOGUE_GRID_LIMIT + 6 },
+      (_, index) => DEMOS_FIXTURE[index % DEMOS_FIXTURE.length],
+    ).map((demo, index) => ({ ...demo, id: index + 1 }))
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ComponentCatalogue components={pool as any} />
+      </QueryClientProvider>,
+    )
+
+    const grid = container.querySelector('[data-testid="component-catalogue"]')
+    expect(grid).not.toBeNull()
+    expect(
+      (grid as HTMLElement).querySelectorAll("li").length,
+    ).toBe(CATALOGUE_GRID_LIMIT)
+
+    // The remainder must stay reachable, and the count must name the whole
+    // pool rather than the slice.
+    const browseAll = within(grid as HTMLElement).getByRole("link", {
+      name: `Browse all ${pool.length} components`,
+    })
+    expect(browseAll.getAttribute("href")).toBe("/?tab=home")
   })
 
   it("server-renders the FAQ answers its FAQPage markup declares", async () => {
