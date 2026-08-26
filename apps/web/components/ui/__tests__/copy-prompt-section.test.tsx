@@ -225,7 +225,6 @@ describe("landing mount position (TC8)", () => {
   it("renders CopyPromptSection after SocialProofCounter and before FaqSection", () => {
     const html = renderToStaticMarkup(
       <LandingPageLayout
-        components={[]}
         mostLoved={[]}
         cataloguePool={[]}
         newest={[]}

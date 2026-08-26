@@ -306,16 +306,31 @@ describe("Landing Smoke Test", () => {
   // surface fetches after hydration, so a crawler that does not run JS sees no
   // component names anywhere on the site. If this assertion ever fails, the
   // catalogue has gone back to being invisible to non-JS clients.
+  //
+  // Scoped to the catalogue's own subtree, not the whole page: the two carousel
+  // rows above render the SAME pool through the same card, so a page-wide
+  // `toContain("Demo Component 1")` would stay green with this section deleted
+  // entirely (the non-discriminating-assertion trap this suite has hit before).
   it("server-renders real component names and links for non-JS clients", async () => {
     const { container } = await renderPage()
 
-    expect(container.textContent).toContain("Iridescent Glass Metaballs")
-    expect(container.textContent).toContain("Raymarched glass blobs")
+    const catalogue = container.querySelector(
+      '[data-testid="component-catalogue"]',
+    )
+    expect(catalogue).not.toBeNull()
+
+    const inCatalogue = catalogue as HTMLElement
+    expect(inCatalogue.textContent).toContain("Demo Component 1")
     expect(
-      container.querySelector(
-        'a[href="/cozy_downloads/iridescent-glass-metaballs"]',
-      ),
+      inCatalogue.querySelector('a[href^="/author1/demo-component-1/"]'),
     ).not.toBeNull()
+    // The grid is the whole pool, unsliced — not one row's 12-item slice.
+    expect(inCatalogue.querySelectorAll("li").length).toBe(DEMOS_FIXTURE.length)
+    // Every card carries a real preview image; this is what the section gained
+    // when it stopped rendering a text-only card of its own.
+    expect(inCatalogue.querySelectorAll("img").length).toBeGreaterThanOrEqual(
+      DEMOS_FIXTURE.length,
+    )
   })
 
   it("server-renders the FAQ answers its FAQPage markup declares", async () => {

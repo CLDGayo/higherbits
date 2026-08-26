@@ -4,7 +4,7 @@ import { FaqSection } from "./faq-section"
 import { LandingSection } from "./landing-section"
 import { SocialProofCounter } from "./social-proof-counter"
 import { CopyPromptSection } from "./copy-prompt-section"
-import { ComponentCatalogue, type CatalogueEntry } from "./component-catalogue"
+import { ComponentCatalogue } from "./component-catalogue"
 import { CatalogueRowSection } from "@/components/features/home/catalogue-row-section"
 import { CatalogueChipRow } from "@/components/features/home/catalogue-chip-row"
 import type { DemoWithComponent } from "@/types/global"
@@ -33,7 +33,7 @@ import type { LandingAuthor } from "@/lib/landing-authors"
  * put the `unstable_cache` call in a `lib/` module and await it in `page.tsx` —
  * do not make a landing child async.
  * Each future landing phase adds its own typed prop to `LandingPageLayoutProps`
- * the same way `components: CatalogueEntry[]` already works, fetched in
+ * the same way `authors: LandingAuthor[]` already works, fetched in
  * `page.tsx` and passed down. No speculative or unused props are declared ahead
  * of the phase that actually renders them.
  *
@@ -42,7 +42,6 @@ import type { LandingAuthor } from "@/lib/landing-authors"
  * clearance, not section rhythm — do not fold it into `LandingSection`.
  */
 export interface LandingPageLayoutProps {
-  components: CatalogueEntry[]
   /** Row 1 — ordered by `components.likes_count` desc (phase plan D2/E13). */
   mostLoved: DemoWithComponent[]
   /**
@@ -68,7 +67,6 @@ export interface LandingPageLayoutProps {
 }
 
 export function LandingPageLayout({
-  components,
   mostLoved,
   cataloguePool,
   newest,
@@ -142,7 +140,11 @@ export function LandingPageLayout({
       </LandingSection>
 
       <LandingSection className="bg-muted/30">
-        <ComponentCatalogue components={components} />
+        {/* Same pool the two carousel rows above draw from — the grid is the
+            unsliced, non-scrolling view of it. Previously this section had its
+            own `components`-table query returning a preview-less 4-field shape;
+            that query is gone, so `/` runs one fewer round trip per cache miss. */}
+        <ComponentCatalogue components={cataloguePool} />
       </LandingSection>
 
       <LandingSection>

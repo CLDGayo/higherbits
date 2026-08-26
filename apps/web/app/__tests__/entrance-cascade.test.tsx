@@ -167,7 +167,6 @@ describe("Phase 01 entrance cascade — Part B: rendered DOM structure", () => {
   function renderLayout() {
     return render(
       <LandingPageLayout
-        components={[]}
         mostLoved={[]}
         cataloguePool={[]}
         newest={[]}

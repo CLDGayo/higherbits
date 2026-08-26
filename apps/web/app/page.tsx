@@ -8,7 +8,6 @@ import { LandingPageLayout } from "@/components/ui/landing-page-layout"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { HomePageClient } from "./page.client"
 import { JsonLd } from "@/components/seo/json-ld"
-import type { CatalogueEntry } from "@/components/ui/component-catalogue"
 import { faqPageJsonLd } from "@/lib/seo/faq"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import {
@@ -27,35 +26,6 @@ import {
 } from "@/lib/constants"
 export const dynamic = "force-dynamic"
 
-/**
- * The catalogue rendered into the landing page's HTML.
- *
- * Cached rather than queried per request: the route is `force-dynamic` (it reads
- * `searchParams`), so without this every crawler hit would run the query afresh.
- */
-const getCachedCatalogue = unstable_cache(
-  async (): Promise<CatalogueEntry[]> => {
-    const { data } = await supabaseWithAdminAccess
-      .from("components")
-      .select(
-        "name, description, component_slug, users!components_user_id_fkey(username)",
-      )
-      .eq("is_public", true)
-      .order("likes_count", { ascending: false })
-      .limit(48)
-
-    return (data ?? [])
-      .filter((row) => row.users?.username)
-      .map((row) => ({
-        name: row.name,
-        description: row.description,
-        component_slug: row.component_slug,
-        username: row.users!.username as string,
-      }))
-  },
-  ["landing-catalogue"],
-  { revalidate: 300, tags: ["landing-catalogue"] },
-)
 
 
 export const generateMetadata = async ({
@@ -169,7 +139,6 @@ export default async function HomePage({
 
   // The marketing landing page owns the bare root URL; tabs opt into the browser.
   if (!tab) {
-    const components = await getCachedCatalogue()
     const { mostLoved, newest } = await getLandingCatalogueRows()
     const cataloguePool = await getCatalogueChipPool()
     const featured = await getCachedFeaturedExample()
@@ -189,7 +158,6 @@ export default async function HomePage({
           <div className="flex-1 flex flex-col gap-6 min-w-0">
             <div className="flex flex-col min-w-0">
               <LandingPageLayout
-                components={components}
                 mostLoved={mostLoved}
                 cataloguePool={cataloguePool}
                 newest={newest}
