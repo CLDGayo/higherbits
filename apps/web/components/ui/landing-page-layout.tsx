@@ -161,7 +161,7 @@ export function LandingPageLayout({
         <AgentsCtaBand />
       </LandingSection>
 
-      <LandingSection>
+      <LandingSection className="border-y border-border/50" innerClassName="md:py-[100px]">
         <FaqSection />
       </LandingSection>
     </div>
