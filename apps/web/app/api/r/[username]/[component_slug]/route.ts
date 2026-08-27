@@ -8,6 +8,7 @@ import { AnalyticsActivityType } from "@/types/global"
 import { Tables } from "@/types/supabase"
 import { NextRequest, NextResponse } from "next/server"
 import { ComponentRegistryResponse } from "./types"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 // registry:hooks in HigherBits.dev -> registry:hook in shadcn/ui
 const getShadcnRegistrySlug = (registryName: string) => {
@@ -156,7 +157,7 @@ export async function GET(
     console.log("📊 Executing Supabase query...")
     const { data: user, error: userError } = await supabaseWithAdminAccess
       .from("users")
-      .select("*")
+      .select(PUBLIC_USER_COLUMNS)
       .or(`username.eq.${username},display_username.eq.${username}`)
       .single()
 
@@ -172,7 +173,7 @@ export async function GET(
 
     const { data: component, error } = await supabaseWithAdminAccess
       .from("components")
-      .select("*, user:users!user_id(*)")
+      .select(`*, user:users!user_id(${PUBLIC_USER_COLUMNS})`)
       .eq("component_slug", component_slug)
       .eq("user_id", user.id)
       .not("user", "is", null)

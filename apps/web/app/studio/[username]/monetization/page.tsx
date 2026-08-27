@@ -4,7 +4,7 @@ import { StudioLayout } from "@/components/features/studio/studio-layout"
 import { auth } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { redirect } from "next/navigation"
-import { getUserData } from "@/lib/queries"
+import { getUserDataFull } from "@/lib/queries"
 
 export const metadata: Metadata = {
   title: "Monetization",
@@ -23,7 +23,7 @@ export default async function MonetizationPage({
   }
 
   // Get user data from Supabase
-  const { data: user } = await getUserData(supabaseWithAdminAccess, username)
+  const { data: user } = await getUserDataFull(supabaseWithAdminAccess, username)
 
   if (!user) {
     console.error("User not found")

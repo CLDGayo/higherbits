@@ -58,6 +58,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { isEditingCodeAtom } from "@/components/ui/edit-component-dialog"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 import { Logo } from "@/components/ui/logo"
 import {
   Popover,
@@ -498,7 +499,7 @@ export default function ComponentPage({
               .select(
                 `
                 *,
-                user:users!components_user_id_fkey(*),
+                user:users!components_user_id_fkey(${PUBLIC_USER_COLUMNS}),
                 tags:component_tags(tag:tag_id(*))
               `,
               )

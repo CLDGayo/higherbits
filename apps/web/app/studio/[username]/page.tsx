@@ -1,4 +1,4 @@
-import { getUserData } from "@/lib/queries"
+import { getUserDataFull } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import {
   ExtendedDemoWithComponent,
@@ -11,7 +11,7 @@ import { StudioUsernameClient } from "./page.client"
 
 // Get user data by username
 const getUser = async (username: string) => {
-  const { data: user } = await getUserData(supabaseWithAdminAccess, username)
+  const { data: user } = await getUserDataFull(supabaseWithAdminAccess, username)
   return user
 }
 

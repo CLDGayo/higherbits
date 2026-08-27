@@ -21,6 +21,7 @@ import { useAtom } from "jotai"
 import { Globe, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { type PublicUser } from "@/lib/user-select"
 
 const useProfileAnalytics = ({
   username,
@@ -38,7 +39,14 @@ const useProfileAnalytics = ({
 }
 
 interface UserPageClientProps {
-  user: User
+  /**
+   * Deliberately `PublicUser`, not `User`. This page renders somebody else's
+   * profile to anonymous visitors, and every prop crossing this "use client"
+   * boundary is serialised into the RSC payload embedded in the HTML. Typing it
+   * to the full row is what previously shipped `email`, `paypal_email`,
+   * `stripe_id` and `is_admin` to logged-out visitors of /{username}.
+   */
+  user: PublicUser
   initialTab: UserComponentsTab | string
 }
 
