@@ -84,8 +84,16 @@ export const authUsernameOrRedirect = async (
   // 2. If result is null, they aren't the owner or a Supabase admin
   if (result === null) {
     if (isClerkAdmin) {
-      // If they are a Clerk admin, we still need to return the user object
-      const targetUser = await getCachedUser(username)
+      // If they are a Clerk admin, we still need to return the user object.
+      // Admin is already proven here, so the FULL row is legitimate — but
+      // `getCachedUser` is deliberately narrowed to PUBLIC_USER_COLUMNS because
+      // it also serves the anonymous /{username} profile page. Query directly
+      // rather than widening it and re-opening that leak for everyone.
+      const { data: targetUser } = await supabaseWithAdminAccess
+        .from("users")
+        .select("*")
+        .or(`username.eq.${username},display_username.eq.${username}`)
+        .maybeSingle()
       if (targetUser) {
         return { user: targetUser, isAdmin: true, isOwnProfile: false }
       }

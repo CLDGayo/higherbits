@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache"
 
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 /**
  * One author tile's worth of data for the landing "Built by real design
@@ -44,7 +45,7 @@ export const getCachedLandingAuthors = unstable_cache(
   async (): Promise<LandingAuthor[]> => {
     const { data: usersData, error: usersError } = await supabaseWithAdminAccess
       .from("users")
-      .select("*", { count: "exact" })
+      .select(PUBLIC_USER_COLUMNS, { count: "exact" })
       .range(0, 9)
 
     if (usersError) {

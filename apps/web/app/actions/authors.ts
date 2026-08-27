@@ -2,6 +2,7 @@
 
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { Database } from "@/types/supabase"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 type DatabaseAuthor =
   Database["public"]["Functions"]["get_active_authors_with_top_components"]["Returns"][0]
@@ -11,7 +12,7 @@ export async function getActiveAuthorsAction(offset: number, limit: number) {
     const { data: usersData, error: usersError, count } =
       await supabaseWithAdminAccess
         .from("users")
-        .select("*", { count: "exact" })
+        .select(PUBLIC_USER_COLUMNS, { count: "exact" })
         .range(offset, offset + limit - 1)
 
     if (usersError) {

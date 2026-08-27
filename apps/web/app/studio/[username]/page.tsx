@@ -1,12 +1,12 @@
 import { getStudioOverviewData } from "@/components/features/studio/overview/overview-data"
-import { getUserData } from "@/lib/queries"
+import { getUserDataFull } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { StudioOverviewClient } from "./page.client"
 
 const getUser = async (username: string) => {
-  const { data: user } = await getUserData(supabaseWithAdminAccess, username)
+  const { data: user } = await getUserDataFull(supabaseWithAdminAccess, username)
   return user
 }
 

@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache"
 
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import type { DemoWithComponent } from "@/types/global"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 /**
  * Landing-page catalogue rows (Phase 03).
@@ -38,11 +39,11 @@ export const LANDING_ROW_SIZE = 12
 const ROW_SELECT = `
         id, demo_slug, video_url, bookmarks_count, preview_url,
         pro_preview_image_url, component_id, created_at,
-        user:users!demos_user_id_fkey (*),
+        user:users!demos_user_id_fkey (${PUBLIC_USER_COLUMNS}),
         tags:demo_tags(tag:tag_id(*)),
         component:components!inner (
           id, name, component_slug, user_id, is_public, likes_count,
-          user:users!components_user_id_fkey (*)
+          user:users!components_user_id_fkey (${PUBLIC_USER_COLUMNS})
         )
 `
 

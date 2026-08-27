@@ -28,16 +28,17 @@ import {
   useQueryClient,
 } from "@tanstack/react-query"
 import { useCallback } from "react"
+import { PUBLIC_USER_COLUMNS, type PublicUser } from "@/lib/user-select"
 
 export const componentReadableDbFields = `
   *,
-  user:users!user_id (*)
+  user:users!user_id (${PUBLIC_USER_COLUMNS})
 `
 
 export const demoReadableDbFields = `
   *,
   component:components!component_id (*),
-  user:components!component_id(users!user_id(*))
+  user:components!component_id(users!user_id(${PUBLIC_USER_COLUMNS}))
 `
 
 export async function getComponent(
@@ -75,11 +76,11 @@ export async function getComponent(
 export async function getUserData(
   supabase: SupabaseClient<Database>,
   username: string,
-): Promise<{ data: User | null; error: Error | null }> {
+): Promise<{ data: PublicUser | null; error: Error | null }> {
   try {
     const { data, error } = await supabase
       .from("users")
-      .select("*")
+      .select(PUBLIC_USER_COLUMNS)
       .or(`username.eq.${username},display_username.eq.${username}`)
       .maybeSingle()
 
@@ -91,6 +92,38 @@ export async function getUserData(
     return { data, error: null }
   } catch (error: any) {
     console.error("Error in getUserData:", error)
+    return { data: null, error }
+  }
+}
+
+/**
+ * The FULL user row, including private columns (`email`, `stripe_id`, ...).
+ *
+ * ONLY for pages that immediately gate on ownership/admin and `redirect()`
+ * before rendering anything — the studio. `getUserData` above is the narrowed,
+ * public counterpart and is what every anonymous-visible surface must use.
+ * Passing the result of THIS function into a `"use client"` component that an
+ * unauthorised viewer can reach re-opens the /{username} PII leak.
+ */
+export async function getUserDataFull(
+  supabase: SupabaseClient<Database>,
+  username: string,
+): Promise<{ data: User | null; error: Error | null }> {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .or(`username.eq.${username},display_username.eq.${username}`)
+      .maybeSingle()
+
+    if (error) {
+      console.error("Error fetching full user data:", error)
+      return { data: null, error: new Error(error.message) }
+    }
+
+    return { data, error: null }
+  } catch (error: any) {
+    console.error("Error in getUserDataFull:", error)
     return { data: null, error }
   }
 }
@@ -127,7 +160,23 @@ export const authUsername = async (
     return null
   }
 
-  return { user, isAdmin, isOwnProfile }
+  // Past this gate the caller is proven to be the account owner (or an admin),
+  // so the FULL row — including private columns like `email` — is legitimately
+  // theirs to read. `getUserData` above is deliberately narrowed to
+  // PUBLIC_USER_COLUMNS because it also serves the anonymous `/{username}`
+  // profile page; widening it to serve the studio would re-open that leak.
+  const { data: fullUser } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle()
+
+  if (!fullUser) {
+    console.error("User vanished between lookup and ownership check")
+    return null
+  }
+
+  return { user: fullUser, isAdmin, isOwnProfile }
 }
 
 export async function addTagsToDemo(
@@ -267,12 +316,12 @@ export function useUpdateComponentWithTags(
 export async function getHunterUser(
   supabase: SupabaseClient<Database>,
   hunterUsername: string | null,
-): Promise<User | null> {
+): Promise<PublicUser | null> {
   if (!hunterUsername) return null
 
   const { data, error } = await supabase
     .from("users")
-    .select("*")
+    .select(PUBLIC_USER_COLUMNS)
     .eq("username", hunterUsername)
     .maybeSingle()
 
@@ -303,13 +352,13 @@ export async function getComponentDemos(
     .select(
       `
       *,
-      user:users!user_id (*),
+      user:users!user_id (${PUBLIC_USER_COLUMNS}),
       tags:demo_tags(
         tag:tag_id(*)
       ),
       component:components!component_id (
         *,
-        user:users!user_id (*)
+        user:users!user_id (${PUBLIC_USER_COLUMNS})
       )
     `,
     )
@@ -341,7 +390,7 @@ export async function getComponentWithDemo(
 ) {
   const { data: user, error: userError } = await supabase
     .from("users")
-    .select("*")
+    .select(PUBLIC_USER_COLUMNS)
     .or(`username.eq.${username},display_username.eq.${username}`)
     .maybeSingle()
 
@@ -359,7 +408,7 @@ export async function getComponentWithDemo(
     .select(
       `
       *,
-      user:users!components_user_id_fkey(*),
+      user:users!components_user_id_fkey(${PUBLIC_USER_COLUMNS}),
       mv_component_analytics!component_analytics_component_id_fkey(
         activity_type,
         count
@@ -397,7 +446,7 @@ export async function getComponentWithDemo(
     .select(
       `
       *,
-      demo_user:users!demos_user_id_fkey(*),
+      demo_user:users!demos_user_id_fkey(${PUBLIC_USER_COLUMNS}),
       tags:demo_tags(
         tags:tags(*)
       )
@@ -476,7 +525,7 @@ export async function getComponentWithDemoForOG(
 ) {
   const { data: user, error: userError } = await supabase
     .from("users")
-    .select("*")
+    .select(PUBLIC_USER_COLUMNS)
     .or(`username.eq.${username},display_username.eq.${username}`)
     .maybeSingle()
 
@@ -494,7 +543,7 @@ export async function getComponentWithDemoForOG(
     .select(
       `
       *,
-      user:users!components_user_id_fkey(*),
+      user:users!components_user_id_fkey(${PUBLIC_USER_COLUMNS}),
       mv_component_analytics!component_analytics_component_id_fkey(
         activity_type,
         count
@@ -532,7 +581,7 @@ export async function getComponentWithDemoForOG(
     .select(
       `
       *,
-      demo_user:users!demos_user_id_fkey(*),
+      demo_user:users!demos_user_id_fkey(${PUBLIC_USER_COLUMNS}),
       tags:demo_tags(
         tags:tags(*)
       )

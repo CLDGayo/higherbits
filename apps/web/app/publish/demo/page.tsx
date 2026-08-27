@@ -6,6 +6,7 @@ import { useClerkSupabaseClient } from "@/lib/clerk"
 import PublishComponentForm from "@/components/features/publish/publish-layout"
 import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { LoadingSpinnerPage } from "@/components/ui/loading-spinner"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 interface ComponentData {
   code: string
@@ -42,7 +43,7 @@ function AddDemoContent() {
           .select(
             `
             *,
-            user:users!components_user_id_fkey(*)
+            user:users!components_user_id_fkey(${PUBLIC_USER_COLUMNS})
           `,
           )
           .eq("id", componentIdNum)

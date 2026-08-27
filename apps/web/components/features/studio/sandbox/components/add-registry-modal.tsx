@@ -38,6 +38,7 @@ import {
   ArrowLeft,
   Loader2
 } from "lucide-react"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 interface AddRegistryModalProps {
   isOpen: boolean
@@ -119,7 +120,7 @@ export function AddRegistryModal({
       // Simple fetch for featured components
       const { data, error } = await supabase
         .from("components")
-        .select("*, users!user_id(*)")
+        .select(`*, users!user_id(${PUBLIC_USER_COLUMNS})`)
         .limit(20)
       // For simplicity here, we'll fetch from components or demos.
       // Wait, let's use the same RPC but for a known featured fetch, or just a raw query.

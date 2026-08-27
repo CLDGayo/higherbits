@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache"
 
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import type { DemoWithComponent } from "@/types/global"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 /**
  * The one real, live component featured in the landing page's "Copy the prompt"
@@ -208,10 +209,10 @@ export const getCachedFeaturedExample = unstable_cache(
         `
         id, demo_slug, video_url, bookmarks_count, preview_url,
         pro_preview_image_url, component_id, created_at,
-        user:users!demos_user_id_fkey (*),
+        user:users!demos_user_id_fkey (${PUBLIC_USER_COLUMNS}),
         component:components!inner (
           id, name, component_slug, user_id, is_public, likes_count, code,
-          user:users!components_user_id_fkey (*)
+          user:users!components_user_id_fkey (${PUBLIC_USER_COLUMNS})
         )
       `,
       )

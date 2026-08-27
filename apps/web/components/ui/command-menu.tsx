@@ -53,6 +53,7 @@ import { Icons } from "../icons"
 import { CategoryPreviewImage } from "@/components/features/categories/category-preview-image"
 import { CategoryVideoPreview } from "@/components/features/categories/category-video-preview"
 import { sidebarOpenAtom } from "@/components/features/main-page/main-layout"
+import { PUBLIC_USER_COLUMNS, type PublicUser } from "@/lib/user-select"
 
 const commandSearchQueryAtom = atomWithStorage("commandMenuSearch", "")
 
@@ -186,14 +187,14 @@ export function CommandMenu() {
     },
   })
 
-  const { data: users } = useQuery<UserType[]>({
+  const { data: users } = useQuery<PublicUser[]>({
     queryKey: ["command-menu-users", searchQuery],
     queryFn: async () => {
       if (!searchQuery) return []
 
       const { data: searchResults, error } = await supabase
         .from("users")
-        .select("*")
+        .select(PUBLIC_USER_COLUMNS)
         .ilike("username", `%${searchQuery}%`)
         .limit(5)
 
