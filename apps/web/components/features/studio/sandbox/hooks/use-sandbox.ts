@@ -391,9 +391,13 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       // Fire-and-forget: the dev server runs for the lifetime of the VM, so we
       // don't await the command (it never resolves).
-      sandbox.shells.run("pnpm run install-and-dev", {
-        shellName: "pnpm run install-and-dev",
-      })
+      sandbox.shells
+        .run("pnpm run install-and-dev", {
+          shellName: "pnpm run install-and-dev",
+        })
+        ?.catch?.((err) => {
+          console.warn("Dev server shell encountered an error or exited:", err)
+        })
 
       // Snapshot taken after the .clear() above, so it is empty by construction.
       // Kept for structural parity with initialize()'s own shellsAtStart, so the
