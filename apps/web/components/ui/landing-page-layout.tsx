@@ -139,6 +139,18 @@ export function LandingPageLayout({
         />
       </LandingSection>
 
+      {/* Sits directly above the catalogue: the band explains what a component
+          IS here (a prompt you paste, and source that lands in your repo)
+          before the grid asks the visitor to browse 24 of them.
+
+          No rhythm override. The `md:pb-[122px]` this section used to carry was
+          measured for a copy-prompt -> authors boundary that no longer exists;
+          re-using it here would be a number without a measurement behind it.
+          `landing-smoke.test.tsx` asserts the absence. */}
+      <LandingSection>
+        <CopyPromptSection featured={featured} />
+      </LandingSection>
+
       <LandingSection className="bg-muted/30">
         {/* Same pool the two carousel rows above draw from — the grid is the
             unsliced, non-scrolling view of it. Previously this section had its
@@ -149,17 +161,6 @@ export function LandingPageLayout({
 
       <LandingSection>
         <SocialProofCounter />
-      </LandingSection>
-
-      {/* Bottom override, not the shared 60: the capture draws copy-prompt ->
-          authors at ~182 box-to-box (card-grid bottom edge CSS 3242 -> heading
-          box top ~3424 in 00-full-page/01-desktop-1440.webp), against ~138 at
-          the boundary above it -- the reference has no single rhythm value, so
-          this is a per-boundary correction and NOT a reason to move the shared
-          token, which carries its own Phase 00 measurement (520px pitch around
-          402px of content) and a locked test. 122 + authors' shared 60 = 182. */}
-      <LandingSection innerClassName="md:pb-[122px]">
-        <CopyPromptSection featured={featured} />
       </LandingSection>
 
       <LandingSection>

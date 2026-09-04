@@ -121,28 +121,41 @@ const FEATURED: FeaturedExample = {
 }
 
 /**
- * Every string below is fabricated product photography from 21st.dev's own
- * capture — a mock terminal, a mock GitHub PR, a mock agent run log, and a mock
- * multi-list bookmarks popover. The program's hard rule is that fabrication is
- * never the fallback, so this section must contain none of them.
+ * The band's honesty line, after the 2026-09-04 rebuild.
  *
- * "your lists" / "team-shared" guard decision D-D specifically: multi-list
- * bookmarking DOES NOT EXIST in this product (scalar `bookmarks_count` + a
- * single `bookmarkDemo` toggle), so claiming it would be a fabricated feature.
+ * The three tool cards are now deliberate ILLUSTRATIONS of the paste target —
+ * a staged terminal, a staged pull request, a staged agent log, all against a
+ * fictional `acme/website` repo. That is ordinary product-page mockery and is
+ * no longer forbidden.
+ *
+ * What stays forbidden is any claim about THIS product's own data or features
+ * that is not true:
+ *
+ *  - multi-list / team-shared bookmarking DOES NOT EXIST (scalar
+ *    `bookmarks_count` + the single `bookmarkDemo` toggle), so the reference's
+ *    "Landing v2 / Inspiration / Create list" picker and its "personal or
+ *    team-shared" caption must never appear;
+ *  - the bento's numbers, name, preview and author come from `featured`, so the
+ *    reference's invented "Number Ticker", "25,431 installs this week", "12.4k"
+ *    and "455" must never be hard-coded back in;
+ *  - "Saved to bookmarks" is not this product's copy either. `bookmark-button.tsx:64`
+ *    emits "Added to bookmarks" / "Removed from bookmarks", and the popover
+ *    shows those exact two strings;
+ *  - the reference's own branding ("from 21st") must never ship on this site.
  */
-const FABRICATED_STRINGS = [
-  "Worked for 14s",
-  "Create PR",
-  "$ claude",
-  "Saved to bookmarks",
+const FORBIDDEN_CLAIMS = [
   "Landing v2",
   "Inspiration",
   "Create list",
-  "Number Ticker",
-  "12.4k",
-  "455",
   "team-shared",
   "your lists",
+  "Number Ticker",
+  "installs this week",
+  "25,431",
+  "12.4k",
+  "455",
+  "Saved to bookmarks",
+  "from 21st",
 ]
 
 describe("CopyPromptSection", () => {
@@ -151,7 +164,13 @@ describe("CopyPromptSection", () => {
 
     // A distinctive substring of the REAL component source, present in the
     // server-rendered HTML — not painted later by an effect.
-    expect(html).toContain("export function ShimmerButton")
+    //
+    // Asserted against TAG-STRIPPED text, not raw markup: the code mockup wraps
+    // keywords and string literals in their own colour spans, so "export
+    // function ShimmerButton" is three tokens with markup between them and a
+    // raw `toContain` would fail on correctly-rendered source.
+    const text = html.replace(/<[^>]*>/g, "")
+    expect(text).toContain("export function ShimmerButton")
     expect(html).toContain('href="/realauthor/shimmer-button"')
     expect(html).toContain("Shimmer Button")
   })
@@ -171,20 +190,20 @@ describe("CopyPromptSection", () => {
     expect(html).not.toContain("mocked code content")
   })
 
-  it("renders the three tool cards with real promptOptions labels and descriptions", () => {
+  it("renders all three tool cards with their own name and one-line claim", () => {
     const html = renderToStaticMarkup(<CopyPromptSection featured={FEATURED} />)
 
-    for (const [label, description] of [
-      ["Claude", "Optimized for Claude"],
-      ["Codex", "Optimized for Codex"],
-      ["Lovable", "Optimized for Lovable.dev"],
+    for (const [label, claim] of [
+      ["Claude Code", "Paste it in the terminal — the source lands in your repo."],
+      ["Codex", "Same prompt as a task — Codex ships it with a diff."],
+      ["Lovable", "Paste it in chat — the exact UI appears in your project."],
     ]) {
       expect(html).toContain(label)
-      expect(html).toContain(description)
+      expect(html).toContain(claim)
     }
   })
 
-  it("renders none of the capture's fabricated screenshot or bookmark-list strings", () => {
+  it("claims no feature or figure this product does not have", () => {
     const html = renderToStaticMarkup(<CopyPromptSection featured={FEATURED} />)
     // Scanned against VISIBLE TEXT, not raw markup: the Lovable logo is a real
     // inline SVG whose filter coordinates contain "45.5469", which a raw-markup
@@ -194,8 +213,8 @@ describe("CopyPromptSection", () => {
     // section this assertion still goes red.
     const text = html.replace(/<[^>]*>/g, " ")
 
-    for (const fabricated of FABRICATED_STRINGS) {
-      expect(text).not.toContain(fabricated)
+    for (const claim of FORBIDDEN_CLAIMS) {
+      expect(text).not.toContain(claim)
     }
   })
 
@@ -207,22 +226,31 @@ describe("CopyPromptSection", () => {
     const text = html.replace(/<[^>]*>/g, " ")
 
     expect(text).toContain("Copy the prompt.")
-    expect(text).toContain("Optimized for Claude")
+    expect(text).toContain("Claude Code")
     expect(text).toContain("Real code, ready to ship")
+    expect(text).toContain("Added to bookmarks")
     expect(text).toContain("Bookmark any component with one click")
   })
 
-  it("renders the band without a demo panel when no example qualifies", () => {
+  it("renders the band without its mockups when no example qualifies", () => {
     const html = renderToStaticMarkup(<CopyPromptSection featured={null} />)
 
+    // Heading, tool cards and both bento captions survive; only the real-data
+    // mockup stacks are dropped, because there is no real data to render and
+    // fabricating a stand-in is what this band exists not to do.
     expect(html).toContain("Copy the prompt.")
-    expect(html).toContain("Optimized for Claude")
-    expect(html).not.toContain("export function ShimmerButton")
+    expect(html).toContain("Claude Code")
+    expect(html).toContain("Real code, ready to ship")
+    expect(html).toContain("Save it for later")
+    expect(html.replace(/<[^>]*>/g, "")).not.toContain(
+      "export function ShimmerButton",
+    )
+    expect(html).not.toContain("/realauthor/shimmer-button")
   })
 })
 
 describe("landing mount position (TC8)", () => {
-  it("renders CopyPromptSection after SocialProofCounter and before FaqSection", () => {
+  it("renders CopyPromptSection above the catalogue, after the chip rows", () => {
     const html = renderToStaticMarkup(
       <LandingPageLayout
         mostLoved={[]}
@@ -233,15 +261,21 @@ describe("landing mount position (TC8)", () => {
       />,
     )
 
-    const socialProof = html.indexOf("SOCIAL_PROOF_SENTINEL")
+    const hero = html.indexOf("HERO_SENTINEL")
     const copyPrompt = html.indexOf("Copy the prompt.")
+    const catalogue = html.indexOf("CATALOGUE_SENTINEL")
+    const socialProof = html.indexOf("SOCIAL_PROOF_SENTINEL")
     const faq = html.indexOf("FAQ_SENTINEL")
 
-    expect(socialProof).toBeGreaterThan(-1)
-    expect(copyPrompt).toBeGreaterThan(-1)
-    expect(faq).toBeGreaterThan(-1)
-    expect(socialProof).toBeLessThan(copyPrompt)
-    expect(copyPrompt).toBeLessThan(faq)
+    for (const i of [hero, copyPrompt, catalogue, socialProof, faq]) {
+      expect(i).toBeGreaterThan(-1)
+    }
+    // The band explains what a component is here before the grid asks the
+    // visitor to browse two dozen of them.
+    expect(hero).toBeLessThan(copyPrompt)
+    expect(copyPrompt).toBeLessThan(catalogue)
+    expect(catalogue).toBeLessThan(socialProof)
+    expect(socialProof).toBeLessThan(faq)
   })
 })
 

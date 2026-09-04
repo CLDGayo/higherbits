@@ -394,8 +394,11 @@ describe("Landing Smoke Test", () => {
     // agents CTA button rect -> FAQ divider measures 137 CSS in
     // 09-agents/01-built-by-humans-ready-for-agents.webp (hard edges both ends).
     expect(innerOf(/Ready for agents/i)).toContain("md:pb-[137px]")
-    // copy-prompt -> authors measures ~182 box-to-box; 122 + authors' 60.
-    expect(innerOf(/Copy the prompt/i)).toContain("md:pb-[122px]")
+    // Copy-prompt carried `md:pb-[122px]` while it sat above the authors band.
+    // It now sits above the catalogue, so that measurement describes no boundary
+    // on this page any more and the section is back on the shared rhythm.
+    // Asserted, not assumed: a stale override is a number with no measurement.
+    expect(innerOf(/Copy the prompt/i)).not.toContain("md:pb-[")
     // The shared rhythm is NOT overridden on a section that measured correct.
     expect(innerOf(/Built by real design engineers/i)).not.toContain("md:pb-[")
   })

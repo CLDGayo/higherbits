@@ -85,14 +85,24 @@ export const LEGIBLE_PREVIEW_SLUGS: readonly string[] = [
  * not subject to the blank-thumbnail problem and must not be penalised for
  * being absent from `LEGIBLE_PREVIEW_SLUGS`.
  */
-export function previewLegibilityRank(demo: DemoWithComponent): number {
-  const isShadcn =
+/**
+ * Mirrors `card.tsx:145-147`. Shadcn-authored demos ignore `preview_url` and
+ * render `/thumbnails/{slug}-{theme}.png` instead, at a 2x crop scale. Both the
+ * legibility ranking below and the landing band's own preview tile need this
+ * test, so it lives here once rather than being re-derived at each call site.
+ */
+export function isShadcnAuthored(demo: DemoWithComponent): boolean {
+  return (
     demo.user?.id === "user_shadcn" ||
     demo.user?.username === "shadcn" ||
     demo.component?.user_id === "user_shadcn"
+  )
+}
+
+export function previewLegibilityRank(demo: DemoWithComponent): number {
   // Non-shadcn renders its real `preview_url`; rank it alongside the best
   // measured thumbnails rather than behind them.
-  if (!isShadcn) return 0
+  if (!isShadcnAuthored(demo)) return 0
   const i = LEGIBLE_PREVIEW_SLUGS.indexOf(demo.component?.component_slug ?? "")
   return i === -1 ? Number.MAX_SAFE_INTEGER : i
 }
