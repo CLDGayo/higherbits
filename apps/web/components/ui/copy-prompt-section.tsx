@@ -59,8 +59,19 @@ const CLAY = "#c86a50"
 /** Bottom fade over each mockup stack, so it reads as a crop, not a cut. */
 const CODE_MASK =
   "linear-gradient(to bottom, black 52%, rgba(0,0,0,0.62) 74%, rgba(0,0,0,0.18) 92%, transparent 100%)"
+/**
+ * Fades the bottom of the saved-component mockup. Applied to the TILE, never
+ * to the wrapper: the caption row below it carries the real component link,
+ * and masking that put a focusable `<a>` at ~0.17 alpha (~1.3:1) with its
+ * focus ring faded to match — invisible to a keyboard user.
+ *
+ * Stops are the old wrapper-height ones remapped to tile height (the tile was
+ * 87% of the masked box), so the mockup fades exactly as before: 38/62/82%
+ * become 44/71/94%, and the tile's bottom edge keeps the 0.3 alpha it already
+ * had rather than dropping to the wrapper's terminal 0.1.
+ */
 const SAVE_MASK =
-  "linear-gradient(to bottom, black 38%, rgba(0,0,0,0.72) 62%, rgba(0,0,0,0.38) 82%, rgba(0,0,0,0.1) 100%)"
+  "linear-gradient(to bottom, black 44%, rgba(0,0,0,0.72) 71%, rgba(0,0,0,0.38) 94%, rgba(0,0,0,0.3) 100%)"
 
 /**
  * The reference paints this card with a looping video (`codex-floral-sm.mp4`)
@@ -333,11 +344,11 @@ export function CopyPromptSection({
                   }}
                 />
                 {featured && component && preview ? (
-                  <div
-                    className="relative w-full max-w-[330px]"
-                    style={{ WebkitMaskImage: SAVE_MASK, maskImage: SAVE_MASK }}
-                  >
-                    <div className="relative mb-3 aspect-[4/3]">
+                  <div className="relative w-full max-w-[330px]">
+                    <div
+                      className="relative mb-3 aspect-[4/3]"
+                      style={{ WebkitMaskImage: SAVE_MASK, maskImage: SAVE_MASK }}
+                    >
                       <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-[#0c0c0e] shadow-lg ring-1 ring-white/[0.08]">
                         <img
                           src={preview.url}
