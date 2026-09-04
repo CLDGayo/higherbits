@@ -180,7 +180,7 @@ export function CopyPromptSection({
         whatever tool you live in.
       </p>
 
-      <div className="mt-10 grid gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
+      <div className="mt-10 grid gap-4 md:mt-16 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
         <ClaudeCard />
         <CodexCard />
         <LovableCard />
@@ -542,11 +542,11 @@ function CodexCard() {
             </div>
           </div>
           <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="flex items-center gap-2 text-[12.5px] font-medium text-neutral-500">
+            <span className="flex items-center gap-2 whitespace-nowrap text-[12.5px] font-medium text-neutral-500">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               Ready to review
             </span>
-            <span className="flex h-8 items-center rounded-full bg-neutral-900 px-4 text-[13px] font-medium text-white">
+            <span className="flex h-8 items-center whitespace-nowrap rounded-full bg-neutral-900 px-4 text-[13px] font-medium text-white">
               Create PR
             </span>
           </div>
