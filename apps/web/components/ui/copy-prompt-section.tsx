@@ -579,11 +579,16 @@ function GhlCodeRow({
  * "Custom Javascript/HTML" dialog and nothing else, the way the card it
  * replaced showed only a pull-request card.
  *
- * The code is the real head of `lib/ghl-generator.ts`'s output — Tailwind's CDN
- * script, then `corePlugins: { preflight: false }`, which is the line that makes
- * this a GHL integration rather than a generic "paste some HTML" claim:
- * preflight is disabled so Tailwind's global reset cannot destroy the host
- * funnel's own CSS. Line 5 carries the caret highlight for that reason.
+ * `lib/ghl-generator.ts` sends Gemini a system instruction, not a fixed
+ * template — the real per-component output is LLM-generated and varies, so
+ * this is a representative illustration, not a verbatim reproduction of it.
+ * What IS real: the instruction requires the Tailwind CDN script tag, then
+ * `corePlugins: { preflight: false }` (its own line 63), which is the line
+ * that makes this a GHL integration rather than a generic "paste some HTML"
+ * claim — preflight is disabled so Tailwind's global reset cannot destroy the
+ * host funnel's own CSS. Line 5 carries the caret highlight for that reason.
+ * The `theme.extend.colors.border` lines (7-10) are illustrative styling in
+ * this app's own convention, not text the generator's instruction specifies.
  *
  * Everything else in GHL's screen is deliberately cut — the top chrome, the
  * 12-icon toolbar, the page select, the viewport toggles, the URL row, the

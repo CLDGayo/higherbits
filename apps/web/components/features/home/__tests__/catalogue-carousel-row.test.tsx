@@ -85,4 +85,18 @@ describe("CatalogueCarouselRow", () => {
       'href="/cozy_downloads/iridescent-glass-metaballs/default"',
     )
   })
+
+  it("wires decorative tabindex=-1 onto exactly the duplicated half of an autoScroll marquee", () => {
+    // LOAD-BEARING: this is the fix for the aria-hidden-focus axe violation
+    // (24 nodes across the two marquees on `/`) — dropping `decorative={isDuplicate}`
+    // from the marquee's ComponentCard call would pass typecheck and every other
+    // test while silently reintroducing it, so this asserts the wiring directly.
+    const html = renderToString(
+      <CatalogueCarouselRow items={fixture} autoScroll="ltr" />,
+    )
+    const cards = html.match(/data-testid="card-interactive-wrapper"/g) ?? []
+    const decorated = html.match(/tabindex="-1"/g) ?? []
+    expect(cards.length).toBeGreaterThan(0)
+    expect(decorated).toHaveLength(cards.length / 2)
+  })
 })
