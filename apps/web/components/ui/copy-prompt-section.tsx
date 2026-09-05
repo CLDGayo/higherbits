@@ -265,9 +265,11 @@ export function CopyPromptSection({
                   </div>
 
                   {/* Second card, offset behind the first — the reference's
-                      "same component, other tab" depth cue. Desktop only: the
-                      absolute placement has nowhere to go at `sm`. */}
-                  <div className="z-10 block w-full overflow-hidden rounded-lg border border-white/[0.05] bg-[#0d0e0f] text-left max-md:hidden md:absolute md:right-0 md:top-0 md:w-[64%] md:opacity-60">
+                      "same component, other tab" depth cue. `xl` only: its left
+                      edge sits at 36% of the panel width, so it clears the
+                      172px tab pill only once content exceeds ~478px. At 768
+                      the panel is 342px and the avatar covers "Preview". */}
+                  <div className="z-10 block w-full overflow-hidden rounded-lg border border-white/[0.05] bg-[#0d0e0f] text-left max-xl:hidden xl:absolute xl:right-0 xl:top-0 xl:w-[64%] xl:opacity-60">
                     <div className="flex items-center gap-3 border-b border-white/[0.06] px-4 py-2.5 text-[14px] font-medium text-[#f7f8f8]">
                       {avatar ? (
                         <img
