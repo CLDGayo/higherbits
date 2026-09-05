@@ -53,8 +53,12 @@ import { cn } from "@/lib/utils"
  * section chrome and vertical rhythm.
  */
 
-/** Clay ground of the Claude Code card — Anthropic's brand colour. */
-const CLAY = "#c86a50"
+/**
+ * Clay ground of the Claude Code card. Anthropic's brand clay is #c86a50;
+ * this is that colour darkened 11%, because #c86a50 caps white text at
+ * 3.73:1 — below AA at any opacity, so no text change could fix the card.
+ */
+const CLAY = "#b25e47"
 
 /** Bottom fade over each mockup stack, so it reads as a crop, not a cut. */
 const CODE_MASK =
@@ -470,21 +474,21 @@ export function CopyPromptSection({
 /** Illustration of the Claude Code paste target. Staged transcript. */
 function ClaudeCard() {
   return (
-    <div className="flex min-h-[420px] flex-col rounded-xl bg-[#c86a50] p-5 pb-6 md:min-h-[520px] md:p-8 md:pb-6">
+    <div className="flex min-h-[420px] flex-col rounded-xl bg-[#b25e47] p-5 pb-6 md:min-h-[520px] md:p-8 md:pb-6">
       <div className="relative flex flex-1 items-center">
         {/* Bleeds 32px past the card's right padding and loses its right radius
             there, so the transcript reads as a window cropped by the card edge
             rather than a panel floating inside it. */}
-        <div className="min-h-[176px] w-full overflow-hidden rounded-2xl bg-black/15 p-4 font-mono text-[10.5px] leading-[2.1] text-white/90 ring-1 ring-white/15 md:-mr-8 md:w-[calc(100%+32px)] md:rounded-l-2xl md:rounded-r-none md:p-6 md:text-[12.5px]">
-          <div className="whitespace-nowrap text-white/50">$ claude</div>
-          <div className="mt-2 whitespace-nowrap text-white/50">
+        <div className="min-h-[176px] w-full overflow-hidden rounded-2xl bg-black/30 p-4 font-mono text-[10.5px] leading-[2.1] text-white/90 ring-1 ring-white/15 md:-mr-8 md:w-[calc(100%+32px)] md:rounded-l-2xl md:rounded-r-none md:p-6 md:text-[12.5px]">
+          <div className="whitespace-nowrap text-white/70">$ claude</div>
+          <div className="mt-2 whitespace-nowrap text-white/70">
             ✓ components/ui/animated-hero.tsx
           </div>
           <div className="whitespace-nowrap text-emerald-200">
             ✓ +148 lines — adapted to your theme
           </div>
           <div className="mt-3 flex items-center whitespace-nowrap border-y border-white/15 py-1.5">
-            <span className="mr-2 text-white/60">❯</span>
+            <span className="mr-2 text-white/70">❯</span>
             <span className="text-white/85">[Pasted text #1 +88 lines]</span>
             <span className="ml-px inline-block h-[13px] w-[7px] translate-y-[2px] bg-white/70 motion-safe:animate-pulse" />
           </div>
@@ -493,7 +497,7 @@ function ClaudeCard() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 -right-8 hidden w-3/5 md:block"
           style={{
-            background: `linear-gradient(to left, ${CLAY} 0%, ${CLAY} 10%, rgba(200,106,80,0) 50%)`,
+            background: `linear-gradient(to left, ${CLAY} 0%, ${CLAY} 10%, rgba(178,94,71,0) 50%)`,
           }}
         />
       </div>
@@ -502,7 +506,7 @@ function ClaudeCard() {
           <Icons.claudeMark className="h-7 w-7 shrink-0" />
           Claude Code
         </div>
-        <p className="mt-2 max-w-[34ch] text-[16px] leading-relaxed text-white/75">
+        <p className="mt-2 max-w-[34ch] text-[16px] leading-relaxed text-white">
           Paste it in the terminal — the source lands in your repo.
         </p>
       </div>
