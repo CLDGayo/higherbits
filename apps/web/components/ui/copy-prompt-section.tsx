@@ -23,8 +23,15 @@ import { cn } from "@/lib/utils"
  *
  *  - The three tool cards are ILLUSTRATIONS of the paste target, the way any
  *    product page mocks the tool it integrates with. The terminal transcript,
- *    the pull-request card and the agent run log are staged, and the repo shown
- *    is `acme/website`. They make no claim about this product's own data.
+ *    the "Custom Javascript/HTML" dialog and the agent run log are staged.
+ *    They make no claim about this product's own data, and they name no repo,
+ *    site, slug or account — the only URL any of them renders is the public
+ *    Tailwind CDN that `lib/ghl-generator.ts` really does emit.
+ *  - Each card's ONE-LINE CLAIM must be true of a capability that exists.
+ *    Every one of the three is a shipped `PROMPT_TYPES` entry in
+ *    `lib/prompts.tsx`; Go High Level additionally has `lib/ghl-generator.ts`
+ *    behind it. Do not add a fourth card for a tool this product cannot
+ *    actually emit a prompt for.
  *  - The bento is REAL. Filename, source, preview image, component name, author
  *    avatar and bookmark count all come from `featured` — one live, public,
  *    unpaid component resolved server-side in `app/page.tsx`. Nothing in it is
@@ -78,17 +85,33 @@ const SAVE_MASK =
   "linear-gradient(to bottom, black 44%, rgba(0,0,0,0.72) 71%, rgba(0,0,0,0.38) 94%, rgba(0,0,0,0.3) 100%)"
 
 /**
- * The reference paints this card with a looping video (`codex-floral-sm.mp4`)
- * plus a poster JPEG. Neither asset is ours to serve, and shipping a video
- * behind a static card would cost a download for decoration, so the same
- * cloud-over-indigo wash is built from four radial gradients — no asset, no
- * request, no layout shift.
+ * Ground of the Go High Level card. HighLevel's mark samples #40c020 green /
+ * #f0c000 yellow / #2090f0 blue. Blue is out — it is the indigo this card
+ * replaced, and the row would read unchanged. #40c020 is out on contrast:
+ * white on it is 2.39:1, below AA at any weight — the same trap that forced
+ * Anthropic's #c86a50 down to CLAY above. This is that green taken to
+ * green-800, measured white 7.13:1 and white/85 5.66:1.
  */
-const CODEX_SKY = [
-  "radial-gradient(130% 55% at 50% -8%, #eef2ff 0%, #c3cdf7 26%, rgba(150,168,240,0.45) 48%, rgba(70,80,207,0) 72%)",
-  "radial-gradient(70% 45% at 12% 8%, rgba(255,255,255,0.55), transparent 62%)",
-  "radial-gradient(90% 70% at 78% 108%, #6d5bd0 0%, rgba(109,91,208,0) 60%)",
-  "radial-gradient(80% 70% at 10% 105%, #2e3ab0 0%, rgba(46,58,176,0) 62%)",
+const GHL_GROUND = "#166534"
+
+/** Ground of the mocked code editor, read off GHL's own dialog. */
+const GHL_EDITOR = "#1e2230"
+
+/**
+ * Abstract wash echoing the mark's green/yellow/blue. Every stop terminates in
+ * rgba(22,101,52,0) — the ground's own rgb — so it fades with no hue shift.
+ *
+ * CLIPPED TO THE TOP 62% of the card (LovableCard's containment trick). That
+ * clip is a contrast device, not styling: no gradient box ever overlaps the
+ * footer text, so the footer composites against exactly #166534 and its ratios
+ * are measured values rather than gradient averages. There is deliberately no
+ * bottom scrim for the same reason — a scrim would only raise those ratios,
+ * but it would make them unverifiable by inspection.
+ */
+const GHL_WASH = [
+  "radial-gradient(125% 58% at 50% -12%, rgba(163,230,53,0.30) 0%, rgba(64,192,32,0.16) 34%, rgba(22,101,52,0) 70%)",
+  "radial-gradient(60% 42% at 90% 4%, rgba(240,192,0,0.20) 0%, rgba(22,101,52,0) 62%)",
+  "radial-gradient(66% 48% at 4% 26%, rgba(32,144,240,0.18) 0%, rgba(22,101,52,0) 66%)",
 ].join(", ")
 
 /** Lines of real source shown in the code mockup before the mask crops it. */
@@ -197,7 +220,7 @@ export function CopyPromptSection({
 
       <div className="mt-10 grid gap-4 md:mt-16 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
         <ClaudeCard />
-        <CodexCard />
+        <GoHighLevelCard />
         <LovableCard />
       </div>
 
@@ -516,70 +539,217 @@ function ClaudeCard() {
   )
 }
 
-/** Illustration of the Codex paste target. Staged pull request. */
-function CodexCard() {
+/**
+ * One line of the mocked editor: fixed gutter + a `whitespace-pre` code cell.
+ *
+ * `min-w-0` on the code cell is the whole 375px story. A flex item defaults to
+ * `min-width: auto`, so without it the longest unwrapped mono line sets the
+ * track width — the exact bug recorded above on the bento panels, where they
+ * stayed 501px wide inside a 375px viewport and `overflow-hidden` silently ate
+ * a third of the copy. With `flex-1 min-w-0` the cell contributes 0 to
+ * min-content and the overflow is clipped on purpose, under the fade, instead
+ * of blowing out the grid.
+ *
+ * `active` marks the caret line. white/[0.07] and NOT white/10: at 10% the row
+ * composites to #353845 and the pink `false` token drops to 4.40:1 — a fail.
+ */
+function GhlCodeRow({
+  n,
+  active = false,
+  children,
+}: {
+  n: number
+  active?: boolean
+  children: React.ReactNode
+}) {
   return (
-    <div
-      className="relative flex min-h-[420px] flex-col overflow-hidden rounded-xl p-5 pb-6 md:min-h-[520px] md:p-8 md:pb-6"
-      style={{ backgroundColor: "#4650cf", backgroundImage: CODEX_SKY }}
+    <div className={cn("flex", active && "bg-white/[0.07]")}>
+      <span className="w-7 shrink-0 select-none border-r border-white/10 pr-2 text-right text-[#94a3b8]">
+        {n}
+      </span>
+      <code className="block min-w-0 flex-1 whitespace-pre pl-2.5 text-[#e2e8f0]">
+        {children}
+      </code>
+    </div>
+  )
+}
+
+/**
+ * Illustration of the Go High Level paste target: the builder's
+ * "Custom Javascript/HTML" dialog and nothing else, the way the card it
+ * replaced showed only a pull-request card.
+ *
+ * The code is the real head of `lib/ghl-generator.ts`'s output — Tailwind's CDN
+ * script, then `corePlugins: { preflight: false }`, which is the line that makes
+ * this a GHL integration rather than a generic "paste some HTML" claim:
+ * preflight is disabled so Tailwind's global reset cannot destroy the host
+ * funnel's own CSS. Line 5 carries the caret highlight for that reason.
+ *
+ * Everything else in GHL's screen is deliberately cut — the top chrome, the
+ * 12-icon toolbar, the page select, the viewport toggles, the URL row, the
+ * canvas, the selection outline and the whole right-hand inspector. At 303px of
+ * content the toolbar icons land at ~7px and the inspector would halve the
+ * editor, dropping the code below the width of `cdn.tailwindcss.com`. Cutting
+ * the URL row also removes every fictional site, slug and account from the
+ * card: the only URL it renders is a real public CDN our own generator emits.
+ */
+function GoHighLevelCard() {
+  return (
+    <div className="relative flex min-h-[420px] min-w-0 flex-col overflow-hidden rounded-xl p-5 pb-6 md:min-h-[520px] md:p-8 md:pb-6"
+      style={{ backgroundColor: GHL_GROUND }}
     >
+      {/* Wash, fenced to the top 62% so it can never composite under the footer
+          text. Its own bottom edge fades back into the ground. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[62%] overflow-hidden"
+        style={{ backgroundImage: GHL_WASH }}
+      >
+        <div
+          className="absolute inset-x-0 bottom-0 h-24"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(22,101,52,0), ${GHL_GROUND})`,
+          }}
+        />
+      </div>
+
       <div className="relative flex flex-1 items-center justify-center">
-        <div className="w-full max-w-[360px] overflow-hidden rounded-2xl bg-white shadow-2xl">
-          <div className="px-5 pb-3 pt-4">
-            <div className="text-[14.5px] font-semibold leading-snug text-neutral-900">
-              Add the Animated Hero from HigherBits
-            </div>
-            <div className="mt-1 flex items-center gap-1.5 text-[12px] text-[#767676]">
-              <Icons.gitHub className="h-3.5 w-3.5 shrink-0" />
-              acme/website · main
-            </div>
-          </div>
-          <div className="mx-4 overflow-hidden rounded-xl ring-1 ring-neutral-100">
-            <div className="flex items-center justify-between bg-neutral-50 px-3 py-1.5 font-mono text-[11px] text-neutral-500">
-              <span>animated-hero.tsx</span>
-              <span>
-                <span className="text-[#047857]">+148</span>{" "}
-                <span className="text-[#dc2626]">−12</span>
-              </span>
-            </div>
-            <div className="whitespace-nowrap font-mono text-[11.5px] leading-[1.9]">
-              <div className="bg-emerald-50/80 px-3 text-emerald-700">
-                {"+ export function AnimatedHero() {"}
-              </div>
-              <div className="bg-emerald-50/80 px-3 text-emerald-700">
-                {'+   return <section className="hero">…'}
-              </div>
-              <div className="px-3 text-[#767676]">{"  <main>"}</div>
-              <div className="bg-red-50/80 px-3 text-[#dc2626]">
-                {"−   <OldHero />"}
-              </div>
-              <div className="bg-emerald-50/80 px-3 text-emerald-700">
-                {"+   <AnimatedHero />"}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between px-5 py-3.5">
-            <span className="flex items-center gap-2 whitespace-nowrap text-[12.5px] font-medium text-neutral-500">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Ready to review
+        {/* ILLUSTRATION, not a control. `aria-hidden` because reading a staged
+            snippet aloud is ten line numbers followed by an angle-bracket
+            recital; the accessible content of this card is its footer. Every
+            text node inside still clears 4.5:1 regardless — axe's
+            colour-contrast rule matches on `isVisibleOnScreen`, not on the
+            accessibility tree, so `aria-hidden` is not a contrast exemption. */}
+        <div
+          aria-hidden="true"
+          className="w-full min-w-0 max-w-[360px] overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black/5"
+        >
+          <div className="flex items-center justify-between gap-3 px-4 py-2.5 md:px-5 md:py-3">
+            <span className="truncate text-[13px] font-semibold leading-5 text-neutral-900 md:text-[14px] md:leading-6">
+              Custom Javascript/HTML
             </span>
-            <span className="flex h-8 items-center whitespace-nowrap rounded-full bg-neutral-900 px-4 text-[13px] font-medium text-white">
-              Create PR
+            {/* Inline, so the card adds no import. */}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="h-4 w-4 shrink-0 text-neutral-500"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </div>
+
+          <div
+            className="relative overflow-hidden font-mono text-[10px] leading-[1.62] md:text-[11px] md:leading-[1.9]"
+            style={{ backgroundColor: GHL_EDITOR }}
+          >
+            <div className="py-2.5 md:py-3">
+              <GhlCodeRow n={1}>
+                <span className="text-[#f472b6]">{"<script"}</span>
+                <span className="text-[#7dd3fc]">{" src"}</span>
+                <span className="text-[#94a3b8]">{"="}</span>
+                <span className="text-[#fbbf24]">
+                  {'"https://cdn.tailwindcss.com"'}
+                </span>
+                <span className="text-[#94a3b8]">{">"}</span>
+                <span className="text-[#f472b6]">{"</script>"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={2}>
+                <span className="text-[#f472b6]">{"<script>"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={3}>
+                {"  "}
+                <span className="text-[#f472b6]">tailwind</span>
+                <span className="text-[#7dd3fc]">.config</span>
+                <span className="text-[#94a3b8]">{" = {"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={4}>
+                {"    "}
+                <span className="text-[#7dd3fc]">corePlugins</span>
+                <span className="text-[#94a3b8]">{": {"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={5} active>
+                {"      "}
+                <span className="text-[#7dd3fc]">preflight</span>
+                <span className="text-[#94a3b8]">{": "}</span>
+                <span className="text-[#f472b6]">false</span>
+                <span className="text-[#94a3b8]">,</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={6}>
+                <span className="text-[#94a3b8]">{"    },"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={7}>
+                {"    "}
+                <span className="text-[#7dd3fc]">theme</span>
+                <span className="text-[#94a3b8]">{": {"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={8}>
+                {"      "}
+                <span className="text-[#7dd3fc]">extend</span>
+                <span className="text-[#94a3b8]">{": {"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={9}>
+                {"        "}
+                <span className="text-[#7dd3fc]">colors</span>
+                <span className="text-[#94a3b8]">{": {"}</span>
+              </GhlCodeRow>
+              <GhlCodeRow n={10}>
+                {"          "}
+                <span className="text-[#7dd3fc]">border</span>
+                <span className="text-[#94a3b8]">{": "}</span>
+                <span className="text-[#fbbf24]">{'"hsl(var(--border))"'}</span>
+                <span className="text-[#94a3b8]">,</span>
+              </GhlCodeRow>
+            </div>
+            {/* Intentional right-edge crop, for the two lines that cannot fit.
+                MEASURED, not assumed — an earlier 40px ramp clipped the code at
+                exactly the modal's own edge (code right === editor right), and
+                a hard cut against a white wall reads as a rendering bug rather
+                than as an editor pane. 64px is wide enough that the last glyphs
+                visibly dim into the ground first.
+                Overflow past the cell, measured at 1440 / 375: line 1 (the CDN
+                script, 51 characters against a ~38-character cell) 92px / 73px,
+                line 10 12px / 1px. Lines 2-9 fit at both widths, so the ramp
+                only ever acts on those two — do NOT restate this as "line 1
+                only", which is what it said until the geometry was measured.
+                Zero-alpha terminus of the editor's own rgb, not `transparent`,
+                so the ramp cannot band through grey. */}
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-16"
+              style={{
+                backgroundImage: `linear-gradient(to left, ${GHL_EDITOR} 30%, rgba(30,34,48,0))`,
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2 px-4 py-2.5 md:px-5 md:py-3">
+            <span className="flex h-7 items-center whitespace-nowrap rounded-md px-3 text-[12px] font-medium text-neutral-700 ring-1 ring-neutral-300 md:h-8 md:text-[13px]">
+              Cancel
+            </span>
+            {/* blue-600, not blue-500: white on #3b82f6 is 3.68:1 and fails. */}
+            <span className="flex h-7 items-center whitespace-nowrap rounded-md bg-[#2563eb] px-4 text-[12px] font-medium text-white md:h-8 md:text-[13px]">
+              Save
             </span>
           </div>
         </div>
       </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/45 to-transparent"
-      />
+
       <div className="relative min-h-[88px]">
         <div className="flex h-8 items-center gap-2.5 text-[17px] font-semibold text-white">
-          <Icons.codexLogo className="h-7 w-7 shrink-0" />
-          Codex
+          {/* `goHighLevelLogo` hard-codes alt="GoHighLevel" and takes only a
+              className, so beside the visible "Go High Level" it would announce
+              the name twice. Hidden at the call site rather than by editing the
+              shared icon module. `object-contain` because the raster is 491x465
+              and `h-7 w-7` alone would squash it. */}
+          <span aria-hidden="true" className="flex shrink-0">
+            <Icons.goHighLevelLogo className="h-7 w-7 object-contain" />
+          </span>
+          Go High Level
         </div>
         <p className="mt-2 max-w-[34ch] text-[16px] leading-relaxed text-white/85">
-          Same prompt as a task — Codex ships it with a diff.
+          Paste it in a Custom HTML block — it runs as plain HTML.
         </p>
       </div>
     </div>

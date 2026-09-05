@@ -77,17 +77,26 @@ export function CatalogueCarouselRow({
         }
       >
         <div className="lp-marquee-track gap-16" data-direction={autoScroll}>
-          {track.map((item, index) => (
-            <div
-              key={`${item.id}-${index}`}
-              className={SLIDE_CLASSES}
-              // The second copy is decorative duplication; without this a
-              // screen reader announces every card twice.
-              aria-hidden={index >= copy.length || undefined}
-            >
-              <ComponentCard demo={item} hideUser />
-            </div>
-          ))}
+          {track.map((item, index) => {
+            // The second copy is decorative duplication. `aria-hidden` alone
+            // stops a screen reader announcing every card twice but leaves the
+            // duplicate's link focusable inside a hidden subtree — the WCAG
+            // failure axe reports as `aria-hidden-focus` (24 nodes across the
+            // two marquees on `/`). `decorative` takes that link out of the tab
+            // order while leaving it clickable, which the hover-pause depends
+            // on: see the prop's doc comment in `list-card/card.tsx`.
+            const isDuplicate = index >= copy.length
+
+            return (
+              <div
+                key={`${item.id}-${index}`}
+                className={SLIDE_CLASSES}
+                aria-hidden={isDuplicate || undefined}
+              >
+                <ComponentCard demo={item} hideUser decorative={isDuplicate} />
+              </div>
+            )
+          })}
         </div>
       </div>
     )

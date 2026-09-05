@@ -195,12 +195,38 @@ describe("CopyPromptSection", () => {
 
     for (const [label, claim] of [
       ["Claude Code", "Paste it in the terminal — the source lands in your repo."],
-      ["Codex", "Same prompt as a task — Codex ships it with a diff."],
+      ["Go High Level", "Paste it in a Custom HTML block — it runs as plain HTML."],
       ["Lovable", "Paste it in chat — the exact UI appears in your project."],
     ]) {
       expect(html).toContain(label)
       expect(html).toContain(claim)
     }
+  })
+
+  // Each card names a paste target this product can really emit a prompt for.
+  // Go High Level is the one that carries a second dependency: its mockup shows
+  // the literal head of `lib/ghl-generator.ts`'s output, so if that generator
+  // ever stopped emitting the Tailwind-CDN + `preflight: false` preamble, the
+  // card would be illustrating a thing that no longer happens.
+  it("only shows tool cards backed by a real prompt type, and none for the removed one", async () => {
+    const { PROMPT_TYPES } = await import("@/types/global")
+    const html = renderToStaticMarkup(<CopyPromptSection featured={FEATURED} />)
+
+    expect(PROMPT_TYPES.GOHIGHLEVEL).toBe("gohighlevel")
+    expect(PROMPT_TYPES.CLAUDE).toBe("claude")
+    expect(PROMPT_TYPES.LOVABLE).toBe("lovable")
+
+    // The GHL card's whole recognition payload, and the reason its claim is
+    // "runs as plain HTML" rather than something vaguer.
+    const text = html.replace(/<[^>]*>/g, "")
+    expect(text).toContain("Custom Javascript/HTML")
+    expect(text).toContain("https://cdn.tailwindcss.com")
+    expect(text).toContain("preflight")
+
+    // The card this replaced must not survive anywhere in the band.
+    expect(text).not.toContain("Codex")
+    expect(text).not.toContain("Create PR")
+    expect(text).not.toContain("acme/website")
   })
 
   it("claims no feature or figure this product does not have", () => {

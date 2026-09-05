@@ -139,7 +139,16 @@ export function FaqSection() {
                   data-testid={`${value}-trigger`}
                   className="group flex flex-1 items-center justify-between gap-6 py-[23px] text-left font-medium transition-all hover:underline"
                 >
-                  <span className="font-mono text-[13px] tabular-nums text-muted-foreground/60">
+                  {/* No alpha modifier, deliberately. At 13px this needs
+                      4.5:1, and `/60` measured 2.47:1 light / 3.74:1 dark —
+                      the `color-contrast` nodes axe reports on `/` in both
+                      themes. Only full-opacity `--muted-foreground` clears it
+                      in BOTH (5.38:1 light, 7.98:1 dark); every alpha down to
+                      `/90` still fails light. The number stays visually
+                      subordinate anyway, because `--muted-foreground` is
+                      already the muted token against the question's
+                      `text-foreground`. */}
+                  <span className="font-mono text-[13px] tabular-nums text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="flex-1 text-base">

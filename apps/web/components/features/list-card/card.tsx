@@ -59,6 +59,7 @@ export const ComponentCard = React.memo(function ComponentCard({
   onVote,
   currentUser,
   supabaseClient,
+  decorative,
 }: {
   demo?: DemoWithComponent | (Component & { user: User })
   isLoading?: boolean
@@ -70,6 +71,25 @@ export const ComponentCard = React.memo(function ComponentCard({
   onVote?: (demoId: number) => Promise<void>
   currentUser?: any
   supabaseClient?: any
+  /**
+   * This card is a VISUAL DUPLICATE of one already on the page — the marquee's
+   * second track copy (`catalogue-carousel-row.tsx`). Takes the card's link out
+   * of the tab order without taking it out of the page.
+   *
+   * The duplicate's wrapper is `aria-hidden` so a screen reader announces each
+   * component once, and `aria-hidden` around a focusable element is a real WCAG
+   * failure (axe `aria-hidden-focus` — 24 nodes on `/`): keyboard focus lands on
+   * a link the screen reader will never announce.
+   *
+   * `inert` on the wrapper would also clear the rule and is one attribute
+   * shorter. It is the WRONG fix here: it removes the subtree from hit-testing
+   * too, and the marquee deliberately pauses under the pointer "so a card can
+   * actually be read and clicked" (globals.css). The duplicate copy is what is
+   * on screen for half of every loop, so `inert` would leave half the row
+   * unclickable. Measured: with `inert`, `elementFromPoint` over a duplicate
+   * card stops landing inside it.
+   */
+  decorative?: boolean
 }) {
   const router = useRouter()
   // This render body is executed on the server too ("use client" still SSRs), so
@@ -299,6 +319,10 @@ export const ComponentCard = React.memo(function ComponentCard({
             href={componentUrl}
             className="absolute inset-0 z-10"
             prefetch={true}
+            // The card's ONE focusable element, so this is the whole of what
+            // `decorative` has to neutralise. Measured on `/`: each marquee card
+            // reports exactly one focusable descendant, this link.
+            tabIndex={decorative ? -1 : undefined}
             onClick={(e) => {
               if (e.metaKey || e.ctrlKey) {
                 e.preventDefault()
@@ -547,6 +571,7 @@ export const ComponentCard = React.memo(function ComponentCard({
   if (prevProps.hideUser !== nextProps.hideUser) return false;
   if (prevProps.hideVotes !== nextProps.hideVotes) return false;
   if (prevProps.isLeaderboard !== nextProps.isLeaderboard) return false;
+  if (prevProps.decorative !== nextProps.decorative) return false;
   if (prevProps.currentUser?.id !== nextProps.currentUser?.id) return false;
 
   const prevDemo = prevProps.demo as any;

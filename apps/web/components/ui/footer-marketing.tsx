@@ -141,8 +141,14 @@ export function FooterMarketing({ className }: { className?: string }) {
               otherwise empty below the wordmark — putting it on the copyright
               row wraps to a second line and makes the band 436 CSS tall
               against the capture's measured 416.
+
+              No alpha modifier on the colour. At 11px this needs 4.5:1, and
+              `/70` measured 2.95:1 in light — a `color-contrast` node axe
+              reports on `/`. It passed in dark (4.60:1), which is exactly why
+              it survived: a single-theme check would have called it clean.
+              Full-opacity `--muted-foreground` is 5.38:1 light / 7.98:1 dark.
             */}
-            <p className="text-[11px] leading-[18px] text-muted-foreground/70">
+            <p className="text-[11px] leading-[18px] text-muted-foreground">
               All product names, logos, and brands are property of their
               respective owners. Use of these names, logos, and brands does not
               imply endorsement.

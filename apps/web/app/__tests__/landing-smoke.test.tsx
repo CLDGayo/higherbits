@@ -495,10 +495,13 @@ describe("Landing Smoke Test", () => {
     expect(container.textContent).toContain("From first paste to shipped product")
   })
 
-  // Scoped to the strip's own testid, NOT the whole page. Three of the four
-  // labels ("Claude", "Codex", "GoHighLevel") ALSO render inside
-  // CopyPromptSection's "Paste it into:" row on this same page, so a bare
-  // `container.textContent` check would stay green with this strip deleted.
+  // Scoped to the strip's own testid, NOT the whole page. Some of these labels
+  // ALSO appear on this same page as CopyPromptSection tool-card names — today
+  // "Claude" (inside "Claude Code"), so a bare `container.textContent` check
+  // would stay green with this strip deleted. ("Codex" collided the same way
+  // until 2026-09-05, when that card was replaced by Go High Level; the strip
+  // still lists Codex, which is why the scoping matters and the label set here
+  // is NOT the same set as the cards.)
   // (It used to be all four, via ToolIntegrationsCloud — deleted 2026-08-24 for
   // having no counterpart in the capture.) The previous form of this
   // test asserted `img[src^="/logos/"]` — these marks are inline SVGs from
