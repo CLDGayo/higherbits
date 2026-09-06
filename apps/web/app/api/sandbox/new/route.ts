@@ -14,6 +14,10 @@ import {
 import { codesandboxSdk } from "@/lib/codesandbox-sdk"
 
 export async function POST(req: NextRequest) {
+  // Phase 1 telemetry: request-start timestamp for timing_ms. Declared outside
+  // the try so the outer catch can still compute a duration.
+  const startedAt = Date.now()
+  let telemetrySandboxId: string | undefined
   try {
     let { userId } = await auth()
 
@@ -56,6 +60,12 @@ export async function POST(req: NextRequest) {
         privacy: "public", // Public visibility
       })
     } catch (sdkError) {
+      // Phase 1 telemetry (E1 site 1/3): sandbox creation failed in the SDK.
+      console.error("[sandbox-telemetry] new:", {
+        outcome: "error",
+        sandboxId: telemetrySandboxId,
+        timing_ms: Date.now() - startedAt,
+      })
       console.error("CodeSandbox SDK error:", sdkError)
       return NextResponse.json(
         {
@@ -67,6 +77,7 @@ export async function POST(req: NextRequest) {
     }
 
     const codesandboxId = sandbox.id
+    telemetrySandboxId = codesandboxId
     console.log(`CodeSandbox instance created: ${codesandboxId}`)
 
     // Seed the demo + component files so previews render on a dark backdrop out
@@ -99,6 +110,12 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (dbError) {
+      // Phase 1 telemetry (E1 site 2/3): sandbox created but not persisted.
+      console.error("[sandbox-telemetry] new:", {
+        outcome: "error",
+        sandboxId: telemetrySandboxId,
+        timing_ms: Date.now() - startedAt,
+      })
       console.error("Error storing sandbox:", dbError)
       return NextResponse.json(
         { error: "Failed to save sandbox data" },
@@ -115,6 +132,12 @@ export async function POST(req: NextRequest) {
       shortSandboxId: shortId,
     })
   } catch (error) {
+    // Phase 1 telemetry (E1 site 3/3): unexpected top-level failure.
+    console.error("[sandbox-telemetry] new:", {
+      outcome: "error",
+      sandboxId: telemetrySandboxId,
+      timing_ms: Date.now() - startedAt,
+    })
     console.error("Error creating sandbox:", error)
     return NextResponse.json(
       { error: "Internal Server Error" },
