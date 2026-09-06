@@ -29,8 +29,33 @@ import {
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { toast } from "sonner"
 import { SuccessDialog } from "@/components/features/publish/components/success-dialog"
-import { studioBasePath } from "@/components/features/studio/nav-config"
+import {
+  studioBasePath,
+  studioHardNavigate,
+} from "@/components/features/studio/nav-config"
 import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
+
+/**
+ * Studio section that owns the create flow for each non-sandbox "+ New" option.
+ *
+ * Only `component` is sandbox-backed. The other five each have their own
+ * backing store and their own already-working create surface, and the `?type=`
+ * this page used to append to the sandbox URL was never read: the sandbox route
+ * reads only `mode`, and `createNewSandbox()` takes a user id and nothing else.
+ * So every option produced the same CodeSandbox component editor.
+ *
+ *   theme / gradient / shader -> `studio_artifacts`, created by the section
+ *     page's own `create()` in `artifacts-client.tsx`, reached with ?new=true
+ *   library                   -> `collections`, via CreateLibraryDialog, ?new=true
+ *   template                  -> the `templates` table, via /publish/template
+ *     (a marketplace listing, not a code project - so not listed here)
+ */
+const ARTIFACT_SECTION_BY_TYPE: Record<string, string> = {
+  theme: "themes",
+  gradient: "gradients",
+  shader: "shaders",
+  library: "libraries",
+}
 
 const CREATE_OPTIONS = [
   {
@@ -170,7 +195,37 @@ export function StudioUsernameClient({
     [user.id, selectedType, studioBase, router],
   )
 
+  /**
+   * Send a non-sandbox "+ New" choice to the flow that actually creates it.
+   *
+   * Returns true when it handled the type. False means the type is
+   * sandbox-backed and the caller should keep using the sandbox dialog - today
+   * that is `component` only.
+   *
+   * Studio hops go through `studioHardNavigate`, not `router.push`: a soft
+   * three-segment navigation is swallowed by the root demo-modal interceptor,
+   * which changes the URL and never renders the studio. See nav-config.
+   */
+  const routeNonSandboxCreate = useCallback(
+    (typeId: string): boolean => {
+      if (typeId === "template") {
+        // Its own Postgres table and its own listing form. Two segments, so the
+        // interceptor does not apply and the router is fine here.
+        router.push("/publish/template")
+        return true
+      }
+
+      const section = ARTIFACT_SECTION_BY_TYPE[typeId]
+      if (!section) return false
+
+      studioHardNavigate(`${studioBase}/${section}?new=true`)
+      return true
+    },
+    [router, studioBase],
+  )
+
   const handleSelectOption = (typeId: string) => {
+    if (routeNonSandboxCreate(typeId)) return
     setSelectedType(typeId)
     setShowCreateDialog(true)
   }
@@ -304,14 +359,17 @@ export function StudioUsernameClient({
     }
   }
 
-  // Show create dialog on ?new=true
+  // Show create dialog on ?new=true. The type carried in the URL gets the same
+  // routing as a dropdown click - otherwise ?new=true&type=theme still lands in
+  // the sandbox, which is the bug this page had by another entry point.
   useEffect(() => {
     if (searchParams.get("new") === "true") {
       const typeParam = searchParams.get("type") || "component"
+      if (routeNonSandboxCreate(typeParam)) return
       setSelectedType(typeParam)
       setShowCreateDialog(true)
     }
-  }, [searchParams])
+  }, [searchParams, routeNonSandboxCreate])
 
   // Auto-create sandbox if beta=true is in the URL
   useEffect(() => {
@@ -323,9 +381,18 @@ export function StudioUsernameClient({
       (isOwnProfile || isAdmin)
     ) {
       hasProcessedBeta.current = true
+      // Same guard as the dropdown: only sandbox-backed types may auto-create a
+      // sandbox. A non-sandbox type here is a redirect, not a sandbox.
+      if (routeNonSandboxCreate(typeParam || "component")) return
       handleCreateNewSandbox(typeParam || undefined)
     }
-  }, [searchParams, handleCreateNewSandbox, isOwnProfile, isAdmin])
+  }, [
+    searchParams,
+    handleCreateNewSandbox,
+    isOwnProfile,
+    isAdmin,
+    routeNonSandboxCreate,
+  ])
 
   useEffect(() => {
     const publishSuccess = searchParams.get("publishSuccess")

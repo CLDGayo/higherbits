@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
 import {
@@ -80,6 +81,9 @@ export function ArtifactsClient({
   const [artifacts, setArtifacts] = useState<ArtifactRow[]>(initialArtifacts)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const hasAutoCreated = useRef(false)
 
   const editing = artifacts.find((artifact) => artifact.id === editingId) ?? null
 
@@ -139,6 +143,33 @@ export function ArtifactsClient({
       setIsCreating(false)
     }
   }
+
+  /**
+   * `?new=true` creates one artifact of this kind and opens its editor.
+   *
+   * This is the entry point the Components page's "+ New > New theme /
+   * gradient / shader" links to. It calls the same `create()` the toolbar
+   * button calls rather than growing a second create path, so uniqueness,
+   * the default payload and the editor hand-off stay in one place.
+   *
+   * The param is stripped once consumed, via the history API rather than
+   * `router.replace`: a soft three-segment navigation inside /studio is
+   * swallowed by the root demo-modal interceptor (see nav-config). Without the
+   * strip, a refresh would create a second artifact.
+   */
+  useEffect(() => {
+    if (hasAutoCreated.current) return
+    if (searchParams.get("new") !== "true") return
+    if (!canEdit) return
+
+    hasAutoCreated.current = true
+    window.history.replaceState(null, "", pathname)
+    void create()
+    // `create` is redefined every render, so it cannot be a dependency without
+    // re-firing. The ref guard is what makes this run once - the same pattern
+    // the Components page uses for its own ?beta=true handler.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, canEdit, pathname])
 
   const remove = async (id: string) => {
     try {

@@ -1,7 +1,8 @@
 "use client"
 
 import { Library, Plus } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useMemo, useState } from "react"
 
 import { StudioLayout } from "@/components/features/studio/studio-layout"
 import { StudioEmptyState } from "@/components/features/studio/ui/studio-empty-state"
@@ -42,6 +43,22 @@ export function LibrariesClient({
   const [members, setMembers] = useState(membersByLibrary)
 
   const namespace = libraryNamespace(user)
+  const searchParams = useSearchParams()
+
+  /**
+   * `?new=true` opens the create dialog straight away - the entry point the
+   * Components page's "+ New > New library" links to. A library is a
+   * `collections` row, not a sandbox, so that option must never reach
+   * `createNewSandbox`.
+   *
+   * Opening a dialog creates nothing on its own, so unlike the artifact
+   * sections there is no duplicate-row hazard in leaving the param on the URL.
+   */
+  useEffect(() => {
+    if (searchParams.get("new") === "true" && isOwnProfile) {
+      setCreateOpen(true)
+    }
+  }, [searchParams, isOwnProfile])
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase()
