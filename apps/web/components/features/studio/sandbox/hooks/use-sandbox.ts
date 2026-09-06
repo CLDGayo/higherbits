@@ -95,6 +95,36 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       checkShells()
 
+      // A4 (Phase 02): a RESUME bootup wakes a hibernated VM whose dev-server
+      // shell is not running, so the passive wait below pays a full poll-bailout
+      // cycle (~10s) before anything starts it. Kick the dev shell proactively.
+      //
+      // Purely additive, and deliberately placed AFTER the shellsAtStart
+      // snapshot and the checkShells() call above so a shell started here
+      // registers as "a dev shell appeared" rather than as pre-existing state.
+      // The getShells() precheck skips the start when a dev shell already
+      // exists; any failure at any point falls through silently to the
+      // unmodified A1-A7 wait/poll/bail-out chain below.
+      if (startData.bootup_type === "RESUME") {
+        try {
+          const existingShells = await connectedSandbox.shells.getShells()
+          const hasExistingDevShell = existingShells?.some(
+            (shell) => shell.name === "pnpm run install-and-dev",
+          )
+          if (!hasExistingDevShell) {
+            connectedSandbox.shells
+              .run("pnpm run install-and-dev", {
+                shellName: "pnpm run install-and-dev",
+              })
+              ?.catch?.((err: unknown) => {
+                console.warn("Proactive dev-shell start failed:", err)
+              })
+          }
+        } catch (err) {
+          console.warn("Proactive dev-shell start skipped (precheck failed):", err)
+        }
+      }
+
       // prevents a late-resolving port-wait from double-triggering
       // restartDevServer() after the poll-triggered path already started it
       let restartTriggered = false

@@ -170,6 +170,132 @@ describe("useSandbox — A1 poll-bailout race and restart guard", () => {
   })
 })
 
+/**
+ * A4 (Phase 02) — proactive dev-shell start on a RESUME bootup.
+ *
+ * The branch is additive: it fires only when startData.bootup_type === "RESUME",
+ * is gated by a getShells() precheck, and any failure inside it must fall
+ * through silently to the unmodified A1-A7 wait/poll/bail-out chain.
+ */
+describe("useSandbox — A4 proactive dev-shell start on RESUME", () => {
+  const sandboxResponse = (bootupType: string) => ({
+    startData: { bootup_type: bootupType },
+    sandbox: {
+      codesandbox_id: "csb_1",
+      name: "Untitled",
+      id: "sbx_1",
+      component_id: null,
+    },
+    previewToken: null,
+  })
+
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.clearAllMocks()
+    getSandboxInfoMock.mockResolvedValue({ sandbox: null })
+    vi.spyOn(console, "warn").mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+  })
+
+  // C1
+  it("should fire the proactive-start call when initialize() receives a RESUME bootup payload", async () => {
+    connectToSandboxMock.mockResolvedValueOnce(sandboxResponse("RESUME"))
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = makeSession(first.promise, second.promise)
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+
+    expect(session.shells.getShells).toHaveBeenCalled()
+    expect(session.shells.run).toHaveBeenCalledTimes(1)
+    expect(session.shells.run).toHaveBeenCalledWith("pnpm run install-and-dev", {
+      shellName: "pnpm run install-and-dev",
+    })
+  })
+
+  // C2
+  it("should not fire the proactive-start call when initialize() receives a RUNNING bootup payload", async () => {
+    connectToSandboxMock.mockResolvedValueOnce(sandboxResponse("RUNNING"))
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = makeSession(first.promise, second.promise)
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+
+    expect(session.shells.run).not.toHaveBeenCalled()
+  })
+
+  // C3 — the proactive path throws; the A1-A7 poll-bailout chain must still run
+  // exactly as it does in the A1 cases above (one restart, and only one).
+  it("should fall through to the unmodified A1-A7 chain when the proactive-start call fails/rejects", async () => {
+    connectToSandboxMock.mockResolvedValueOnce(sandboxResponse("RESUME"))
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = makeSession(first.promise, second.promise)
+    // Only the proactive call throws; the later restartDevServer call is normal.
+    let runCalls = 0
+    session.shells.run = vi.fn(() => {
+      if (++runCalls === 1) throw new Error("proactive start failed (simulated)")
+      return undefined
+    })
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    const { result } = renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+    expect(session.shells.run).toHaveBeenCalledTimes(1)
+
+    // Before the 2nd poll cycle: the bail-out has not fired yet.
+    await flush(6_000)
+    expect(session.shells.run).toHaveBeenCalledTimes(1)
+
+    // After the 2nd cycle (~10s) plus restartDevServer's 1.5s port-release wait:
+    // the unmodified A1-A7 chain restarts the dev server exactly as before.
+    await flush(20_000)
+    expect(session.shells.run).toHaveBeenCalledTimes(2)
+    expect(session.shells.run).toHaveBeenLastCalledWith(
+      "pnpm run install-and-dev",
+      { shellName: "pnpm run install-and-dev" },
+    )
+
+    // Well past the original 120s port timeout — still exactly one restart.
+    await flush(150_000)
+    expect(session.shells.run).toHaveBeenCalledTimes(2)
+    // And A7's own restart bail-out still resolves to "unavailable" here, since
+    // no shell ever registers in this session — i.e. the whole A1-A7 chain runs
+    // exactly as it does without the proactive branch.
+    expect(result.current.sandboxUnavailable).toBe(true)
+  })
+
+  // C5 — the precheck must actually GATE the .run() call. Asserting only that
+  // run was not called would also pass if the precheck never ran at all, so the
+  // positive getShells() assertion is required alongside it.
+  it('should skip the proactive-start call when getShells() precheck finds an existing "pnpm run install-and-dev" shell', async () => {
+    connectToSandboxMock.mockResolvedValueOnce(sandboxResponse("RESUME"))
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = makeA7Session(
+      first.promise,
+      second.promise,
+      () => ({ id: "shell_existing" }),
+    )
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+
+    expect(session.shells.getShells).toHaveBeenCalled()
+    expect(session.shells.run).not.toHaveBeenCalled()
+  })
+})
+
 describe("useSandbox — A3 unmount cancellation", () => {
   beforeEach(() => {
     vi.useFakeTimers()
