@@ -105,9 +105,32 @@ function writeQuotaEligibilityCache(result, { cachePath = getQuotaEligibilityCac
   }
 }
 
+// Setting the base URL explicitly to Anthropic's own endpoint routes exactly
+// where the default would, so it is not an override. Treating it as one left
+// the quota lookup permanently disabled in environments that export the
+// canonical value.
+const CANONICAL_ANTHROPIC_BASE_URLS = new Set([
+  'https://api.anthropic.com'
+]);
+
+function normalizeBaseUrl(value) {
+  return String(value || '').trim().replace(/\/+$/, '');
+}
+
+function isAnthropicBaseUrlOverride(value) {
+  const normalized = normalizeBaseUrl(value);
+  return normalized !== '' && !CANONICAL_ANTHROPIC_BASE_URLS.has(normalized);
+}
+
 function hasAnthropicRuntimeOverride(envObj = process.env) {
-  return ['ANTHROPIC_BASE_URL', 'ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_API_KEY']
+  // A token or API key means non-subscription auth, so the OAuth usage numbers
+  // would not describe this session. Always disqualifying, regardless of value.
+  const hasCredentialOverride = ['ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_API_KEY']
     .some((key) => typeof envObj?.[key] === 'string' && envObj[key].trim() !== '');
+  if (hasCredentialOverride) return true;
+
+  // A base URL disqualifies only when it points somewhere other than Anthropic.
+  return isAnthropicBaseUrlOverride(envObj?.ANTHROPIC_BASE_URL);
 }
 
 function readClaudeCredentials({
@@ -273,6 +296,7 @@ module.exports = {
   writeUsageCache,
   writeQuotaEligibilityCache,
   hasAnthropicRuntimeOverride,
+  isAnthropicBaseUrlOverride,
   readClaudeCredentials,
   hasSupportedClaudeSubscription,
   resolveQuotaDisplayEligibility,

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&family=Quicksand:wght@300..700&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&family=Quicksand:wght@300..700&family=Instrument+Serif:ital@0;1&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -21,6 +21,12 @@ body {
     --font-urbanist: 'Urbanist', sans-serif;
     --font-fira-code: 'Fira Code', monospace;
     --font-cozy: 'Quicksand', sans-serif;
+    --font-accent: 'Instrument Serif', serif;
+    --ease-entrance: cubic-bezier(0.2,0.6,0.2,1);
+    --ease-lift: cubic-bezier(0.23,1,0.32,1);
+    --ease-morph: cubic-bezier(0.22,1,0.36,1);
+    --ease-glow: cubic-bezier(0.33,1,0.68,1);
+    --ease-slide: cubic-bezier(0,0,0.2,1);
   }
 }
 
@@ -30,6 +36,12 @@ body {
     --font-urbanist: 'Urbanist', sans-serif;
     --font-fira-code: 'Fira Code', monospace;
     --font-cozy: 'Quicksand', sans-serif;
+    --font-accent: 'Instrument Serif', serif;
+    --ease-entrance: cubic-bezier(0.2,0.6,0.2,1);
+    --ease-lift: cubic-bezier(0.23,1,0.32,1);
+    --ease-morph: cubic-bezier(0.22,1,0.36,1);
+    --ease-glow: cubic-bezier(0.33,1,0.68,1);
+    --ease-slide: cubic-bezier(0,0,0.2,1);
   }
 }
 
@@ -246,6 +258,12 @@ iframe {
     --popover-foreground: 25 25% 20%;
     --primary: 255 55% 72%;
     --primary-foreground: 258 40% 16%;
+    /*
+     * Primary, dark enough to be read as text on the light surfaces (§8.3).
+     * Measured 5.64:1 on #ede9f6, against AA's 4.5:1 for body text; --primary
+     * itself measures 2.30:1 and cannot be changed, being a button surface.
+     */
+    --primary-emphasis: 255 55% 52%;
     --primary-gradient-start: 255 55% 78%;
     --primary-gradient-end: 262 50% 68%;
     --mono-gradient-start: 25 25% 20%;
@@ -254,7 +272,26 @@ iframe {
     --secondary-foreground: 20 45% 24%;
     --muted: 258 28% 90%;
     --kbd: 258 28% 90%;
-    --muted-foreground: 25 12% 42%;
+    /*
+     * 42% -> 37% for WCAG AA (Phase 11, §8.3).
+     *
+     * This one token accounted for 48 of the 65 contrast failures in the axe
+     * audit, and it was missing by a hair: 4.22-4.47:1 against the light
+     * surfaces muted text actually sits on, where AA wants 4.5:1 for body
+     * text.
+     *
+     * The value is set against `--muted` (258 28% 90%), the darkest surface
+     * this token is painted on, not against the page background - checked with
+     * `scripts/wcag-contrast.mjs`. That distinction matters: 39% clears every
+     * background axe happened to sample, but lands on exactly 4.50:1 over
+     * `--muted`, i.e. passing with no margin at all. 37% measures 4.86:1
+     * there, so rounding, a future surface a shade darker, or an antialiasing
+     * difference cannot silently reopen this.
+     *
+     * The dark theme's --muted-foreground needs no change - it already
+     * measures 7.15:1 on #282334.
+     */
+    --muted-foreground: 25 12% 37%;
     --accent: 210 70% 86%;
     --accent-foreground: 212 45% 26%;
     --destructive: 0 72% 62%;
@@ -349,6 +386,8 @@ iframe {
     --popover-foreground: 40 30% 92%;
     --primary: 255 58% 76%;
     --primary-foreground: 258 35% 14%;
+    /* On dark, the brand tint is already legible as text: 6.43:1 on #282334. */
+    --primary-emphasis: 255 58% 76%;
     --primary-gradient-start: 255 58% 76%;
     --primary-gradient-end: 262 52% 68%;
     --mono-gradient-start: 40 30% 96%;
@@ -415,7 +454,7 @@ iframe {
       inset -5px -5px 10px hsl(260 40% 3% / 0.55);
     --clay-pressed: inset -3px -3px 6px hsl(255 40% 82% / 0.1),
       inset 3px 3px 6px hsl(260 40% 3% / 0.55);
-    --sidebar-background: 260 22% 15%;
+    --sidebar-background: 0 0% 0%;
     --sidebar-foreground: 40 24% 88%;
     --sidebar-primary: 255 58% 76%;
     --sidebar-primary-foreground: 258 35% 14%;
@@ -722,4 +761,234 @@ iframe {
 
 .animate-slide-up-fade {
   animation: slide-up-fade 0.4s ease-out;
+}
+
+/* ---------------------------------------------------------------------------
+   Landing motion foundation (Phase 00, landing-behaviors-program).
+   Keyframes verbatim from landing-behaviors-measured_REF_21-08-26.md §B.
+   Top-level / unlayered on purpose: matches the `appear` / `slide-up-fade`
+   precedent above, and keeps the reduced-motion kill-switch below outranking
+   any future layered `lp-*` rule (unlayered CSS beats layered CSS).
+   --------------------------------------------------------------------------- */
+
+@property --lp-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes lp-hero-in {
+  0% {
+    filter: blur(14px);
+    transform: translateY(14px);
+  }
+
+  100% {
+    filter: blur(0px);
+    transform: none;
+  }
+}
+
+@keyframes lp-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lp-glow-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(40svh);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes lp-glow-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-49%, -51%) scale(1.06);
+    opacity: 0.82;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lp-faq-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lp-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lp-ring-spin {
+  100% {
+    --lp-angle: 360deg;
+  }
+}
+
+/* Catalogue marquee (landing rows 1 and 2).
+
+   The track holds the slide list TWICE, so translating it by exactly -50%
+   advances by one full copy and lands on a pixel-identical frame — that is
+   what makes the loop seamless. The 50% is therefore load-bearing and tied to
+   the duplication in catalogue-carousel-row.tsx; changing one without the
+   other produces a visible jump on every cycle. */
+@keyframes lp-marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes lp-marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Landing entrance cascade (Phase 01, landing-behaviors-program).
+   Normal-state rules for the Phase 00 keyframes above. Every value is
+   byte-exact from landing-behaviors-measured_REF_21-08-26.md §C and must NOT
+   be "tidied" — the gate in app/__tests__/entrance-cascade.test.tsx matches
+   this declaration text exactly, which is what makes its mutation proof
+   discriminating.
+
+   The glow is TWO nested elements, not one: `lp-glow-enter` and
+   `lp-glow-pulse` animate incompatible `transform` value shapes, so on a
+   single element the pulse (delay 0s) would win `transform` for the whole
+   timeline and the entrance would never render.
+   --------------------------------------------------------------------------- */
+
+.lp-marquee {
+  /* Clips the second copy of the track. */
+  overflow: hidden;
+}
+
+.lp-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: lp-marquee-rtl var(--lp-marquee-duration, 90s) linear 0s infinite;
+}
+
+.lp-marquee-track[data-direction="ltr"] {
+  animation-name: lp-marquee-ltr;
+}
+
+/* Pause under the pointer so a card can actually be read and clicked. */
+.lp-marquee:hover .lp-marquee-track,
+.lp-marquee:focus-within .lp-marquee-track {
+  animation-play-state: paused;
+}
+
+.lp-hero-in {
+  animation: lp-hero-in 1s var(--ease-entrance) 0s both;
+}
+
+.lp-fade-in {
+  animation: lp-fade-in 0.9s var(--ease-entrance) 0s both;
+}
+
+/* Declared AFTER `.lp-fade-in` on purpose: same specificity, so the later rule
+   wins the `animation-delay` tie against the shorthand's embedded `0s`. A
+   single shared class cannot carry two different delays at once. */
+.lp-delay-550 {
+  animation-delay: 0.55s;
+}
+
+.lp-delay-800 {
+  animation-delay: 0.8s;
+}
+
+/* Selector name deliberately DIVERGES from the `lp-glow-enter` keyframe name:
+   keyframe names and rule selectors are independent namespaces, and reusing
+   the keyframe name as the normal-state selector would plant a fragile
+   "second occurrence = normal-state rule" invariant for later phases. The
+   reduced-motion block below is renamed to match. */
+.lp-glow-in {
+  animation: lp-glow-enter 1.6s var(--ease-glow) 1.05s both;
+}
+
+.lp-glow-pulse {
+  animation: lp-glow-pulse 10s ease-in-out 0s infinite;
+}
+
+/* Reduced-motion kill-switch for every keyframe declared above (_REF_ §K).
+   NEW, separate block — deliberately not merged into the pre-existing
+   `.clay-interactive` / `.rounded-pill` block, which has zero `lp-` overlap.
+   Every later phase in this program appends its own `lp-` reduced-motion
+   rules HERE rather than opening a third block. */
+@media (prefers-reduced-motion: reduce) {
+  .lp-hero-in,
+  .lp-fade-in {
+    animation: none;
+  }
+
+  .lp-glow-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .lp-glow-pulse {
+    animation: none;
+    /* The centring translate lives in the lp-glow-pulse keyframe, so killing
+       the animation also kills the centring. Restate it or the glow jumps
+       by half its own size under reduced motion. */
+    transform: translate(-50%, -50%);
+  }
+
+  .lp-faq-in,
+  .lp-faq[open] .lp-faq-a {
+    animation: none;
+  }
+
+  .lp-spin,
+  .lp-ring-spin {
+    animation: none;
+  }
+
+  /* Stopping the animation must also reset the transform: the rtl track's
+     resting frame is translateX(0), but the ltr track's is translateX(-50%),
+     so without this the ltr row would freeze one full copy to the left and
+     render as an empty gap. */
+  .lp-marquee-track {
+    animation: none;
+    transform: translateX(0);
+  }
 }

@@ -1,3 +1,4 @@
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { Spinner } from "@/components/icons/spinner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,12 +18,21 @@ import {
   Loader2,
   Video,
   XIcon,
+  RotateCw,
 } from "lucide-react"
 import { useParams, usePathname, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { editSandbox } from "../api"
 import { SandboxStatus } from "../hooks/use-sandbox"
+import { usePreviewState, PREVIEW_DEVICES } from "../hooks/use-preview-state"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface SandboxHeaderProps {
   sandboxId: string | null | undefined
@@ -74,6 +84,7 @@ export function SandboxHeader({
   const params = useParams()
   const pathname = usePathname()
   const router = useRouter()
+  const previewState = usePreviewState()
 
   // Update local state when prop changes
   useEffect(() => {
@@ -131,7 +142,7 @@ export function SandboxHeader({
     } else if (customBackUrl) {
       router.push(customBackUrl)
     } else {
-      router.push(`/studio/${params.username}`)
+      studioHardNavigate(`/studio/${params.username}/components`)
     }
   }
 
@@ -280,32 +291,50 @@ export function SandboxHeader({
         </div>
 
         <div className="ml-auto flex items-center gap-4">
-          {showBetaBadge && (
-            <div className="flex flex-row rounded-md overflow-hidden border border-border shadow-sm max-w-[400px]">
-              <div className="flex items-center gap-1.5 bg-primary/10 px-2.5 py-2">
-                <a
-                  href="https://www.loom.com/share/790ed2081db5476f84355e06dec878c4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline transition-colors"
-                >
-                  <Video className="h-4 w-4" aria-hidden="true" />
-                  Watch Tutorial
-                </a>
-              </div>
-              <div className="flex items-center justify-between gap-1.5 px-2.5 py-1.5 bg-card">
-                <a
-                  href="https://discord.gg/Qx4rFunHfm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 hover:underline transition-colors"
-                >
-                  <BugIcon className="h-4 w-4" aria-hidden="true" />
-                  Report Issue
-                </a>
-              </div>
-            </div>
-          )}
+
+          {/* Preview Dimensions Control */}
+          <div className="flex items-center gap-3 bg-zinc-950/50 rounded-full border border-white/5 pl-2 pr-3 py-1 text-sm mr-2 shadow-inner">
+            <span className="text-muted-foreground font-medium pl-2 pr-1">Dimensions:</span>
+            <Select 
+              value={previewState.selectedDevice} 
+              onValueChange={previewState.handleDeviceChange}
+            >
+              <SelectTrigger className="w-[180px] h-7 bg-zinc-900 border-white/10 hover:border-white/20 hover:bg-zinc-800 transition-colors rounded-full text-xs">
+                <SelectValue placeholder="Select device" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {PREVIEW_DEVICES.map((device) => (
+                  <SelectItem key={device.name} value={device.name} className="text-xs">
+                    {device.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {(previewState.previewWidth !== "100%" || previewState.previewHeight !== "100%") && (
+              <>
+                <div className="flex items-center gap-2 px-1 text-xs text-muted-foreground font-mono">
+                  <span>{previewState.previewWidth}</span>
+                  <span className="text-zinc-600">×</span>
+                  <span>{previewState.previewHeight}</span>
+                </div>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button 
+                        onClick={previewState.handleRotate}
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-full hover:bg-white/10"
+                      >
+                        <RotateCw className={`w-3.5 h-3.5 transition-transform duration-300 ${previewState.isRotated ? "-rotate-90" : "rotate-0"}`} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Rotate Device</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </>
+            )}
+          </div>
 
           {customBackLabel && (
             <Button

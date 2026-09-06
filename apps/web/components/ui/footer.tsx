@@ -84,7 +84,16 @@ export function Footer({ className, isOpenSource = true }: FooterProps) {
             </Link>
           </nav>
         </div>
-        <div className="text-center md:text-left text-[10px] text-muted-foreground/60 border-t border-border/40 pt-4 mt-2">
+        {/*
+          Full `text-muted-foreground`, not `/60` (Phase 11, §8.3). The token is
+          already the app's low-emphasis colour; fading it a further 40% took
+          this line to 2.36:1 in light and 3.51:1 in dark, against AA's 4.5:1 -
+          and it appears on every page, so it was 14 of the 65 contrast
+          failures and the only dark-mode ones. At full strength it measures
+          4.77:1 light and 7.15:1 dark. The 10px size already carries the
+          de-emphasis this needed.
+        */}
+        <div className="text-center md:text-left text-[10px] text-muted-foreground border-t border-border/40 pt-4 mt-2">
           All product names, logos, and brands are property of their respective owners. Use of these names, logos, and brands does not imply endorsement.
         </div>
       </div>

@@ -18,6 +18,10 @@ export type SandboxStatus = "draft" | "edit" | "published" | undefined
 const MAX_SHELL_CHECK_FAILURES = 5
 const MAX_RECONNECT_ATTEMPTS = 5
 
+// Matches the ambient checkShells() interval below. Two cycles with no dev
+// shell registered is the "dev server is definitely not running" signal.
+const DEV_SHELL_POLL_INTERVAL_MS = 1000 * 5
+
 export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const sandboxRef = useRef<SandboxSession | null>(null)
   const [sandboxConnectionHash, setSandboxConnectionHash] = useState<
@@ -39,13 +43,20 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const previewTokenRef = useRef<string | null>(null)
   const isStartingDevServerRef = useRef(false)
 
-  const initialize = async (isReconnecting = false) => {
+  const initialize = async (
+    isReconnecting = false,
+    isCancelled: () => boolean = () => false,
+  ) => {
     if (!isReconnecting) {
       setIsSandboxLoading(true)
     }
     try {
       if (!isReconnecting) {
         getSandboxInfo(sandboxId).then((info) => {
+          // Fire-and-forget: nothing awaits this, so it can settle long after
+          // the effect cleanup ran. It needs its own cancellation guard — the
+          // post-await checks below never run for this chain.
+          if (isCancelled()) return
           if (info?.sandbox) {
             setServerSandbox((prev) => prev || info.sandbox)
           }
@@ -53,6 +64,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       }
 
       const response = await connectToSandbox(sandboxId)
+      if (isCancelled()) return
 
       if (!response) {
         // Implement failed logic; redirect to studio page
@@ -68,6 +80,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       console.log("startData", startData)
       const connectedSandbox = await connectToCodeSandboxSDK(startData)
+      if (isCancelled()) return
 
       console.log("connectedSandbox", connectedSandbox)
 
@@ -76,17 +89,77 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       const hash = Math.random().toString(36).substring(2, 15)
       setSandboxConnectionHash(hash)
 
+      // Snapshot taken before the first shell read so "a dev shell appeared"
+      // is detected as a change, not as leftover state from an earlier connect.
+      const shellsAtStart = new Set(subscribedShells.current)
+
       checkShells()
 
+      // prevents a late-resolving port-wait from double-triggering
+      // restartDevServer() after the poll-triggered path already started it
+      let restartTriggered = false
+
+      // Reads the ALREADY-SHARED subscribedShells ref, which every checkShells()
+      // call populates (the direct call above and the ambient 5s interval).
+      // No new poll is introduced — only a new local reader of existing state.
+      const hasDevShell = () =>
+        Array.from(subscribedShells.current).some((id) => !shellsAtStart.has(id))
+
+      let bailoutTimer: ReturnType<typeof setTimeout> | undefined
+      const clearBailout = () => {
+        if (bailoutTimer !== undefined) clearTimeout(bailoutTimer)
+        bailoutTimer = undefined
+      }
+
+      // Resolves only if no dev-server shell has registered after two poll
+      // cycles (~10s). Without it, a hibernated VM whose dev shell is not
+      // running pays the full 120s port timeout before recovery even begins.
+      const pollBailoutPromise = new Promise<void>((resolve) => {
+        bailoutTimer = setTimeout(() => {
+          if (hasDevShell()) return
+          bailoutTimer = setTimeout(() => {
+            if (hasDevShell()) return
+            resolve()
+          }, DEV_SHELL_POLL_INTERVAL_MS)
+        }, DEV_SHELL_POLL_INTERVAL_MS)
+      })
+
       // Vite may start on 5174 or 5175 if 5173 is occupied by a zombie process.
-      // Wait for whichever port opens first with a short initial timeout.
-      // If the native CodeSandbox dev server is healthy, this will resolve quickly.
-      try {
-        const portInfo = await Promise.any(
-          [5173, 5174, 5175].map((port) =>
-            connectedSandbox.ports.waitForPort(port, { timeoutMs: 120_000 })
-          )
+      // Wait for whichever port opens first. No await is introduced before this
+      // race starts, so the healthy fast-port-open path is unchanged in timing.
+      const portWait = Promise.any(
+        [5173, 5174, 5175].map((port) =>
+          connectedSandbox.ports.waitForPort(port, { timeoutMs: 120_000 })
         )
+      )
+
+      let raceOutcome:
+        | { kind: "port"; portInfo: Awaited<typeof portWait> }
+        | { kind: "poll-bailout" }
+      try {
+        raceOutcome = await Promise.race([
+          portWait.then((portInfo) => ({ kind: "port" as const, portInfo })),
+          pollBailoutPromise.then(() => ({ kind: "poll-bailout" as const })),
+        ])
+      } catch (err) {
+        // All three ports exhausted the full 120s and the local poll-bailout
+        // never fired. Same recovery path, guarded against a double trigger.
+        clearBailout()
+        if (restartTriggered || isCancelled()) return
+        restartTriggered = true
+        console.warn(
+          "Native dev server did not open ports 5173-5175 within 120s. Auto-recovering...",
+        )
+        await restartDevServer(connectedSandbox)
+        return
+      }
+
+      if (raceOutcome.kind === "port") {
+        // Port won the race: neutralize the orphaned poll-bailout timers so
+        // they can never restart an already-healthy dev server after the fact.
+        clearBailout()
+        if (isCancelled()) return
+        const { portInfo } = raceOutcome
         const newPreviewURL = previewTokenRef.current
           ? portInfo.getSignedPreviewUrl(previewTokenRef.current)
           : portInfo.getPreviewUrl()
@@ -94,18 +167,31 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         shellCheckFailuresRef.current = 0
         reconnectAttemptsRef.current = 0
         setSandboxUnavailable(false)
-      } catch (err) {
-        console.warn("Native dev server did not respond on ports 5173-5175 within 25s. Auto-recovering...")
-        // If the native dev server is dead or wedged, we trigger a manual restart.
+      } else {
+        // Poll-bailout won: the still-pending port wait cannot be cancelled, so
+        // neutralize it explicitly. Its eventual resolution (a port opening on
+        // the about-to-be-killed shell) or rejection must not set previewURL or
+        // trigger a second restart — restartDevServer() owns previewURL now.
+        portWait
+          .then(() => {
+            if (restartTriggered) return
+          })
+          .catch(() => {})
+        if (restartTriggered || isCancelled()) return
+        restartTriggered = true
+        console.warn(
+          "No dev-server shell registered within ~10s of connecting. Restarting the dev server early instead of waiting out the 120s port timeout...",
+        )
         await restartDevServer(connectedSandbox)
       }
     } catch (error) {
       console.error("Failed to initialize sandbox in hook:", error)
+      if (isCancelled()) return
       sandboxRef.current = null
       setSandboxConnectionHash(null)
       setPreviewURL(null)
     } finally {
-      if (!isReconnecting) {
+      if (!isReconnecting && !isCancelled()) {
         setIsSandboxLoading(false)
       }
     }
@@ -123,10 +209,13 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     // Diagnostic log to see ALL shells in the VM
     console.log("ALL VM SHELLS:", shells?.map(s => `${s.name} (${s.status})`))
 
+    // "STARTING" is not a member of the SDK's shell status union, so that
+    // comparison could never be true. It was redundant anyway: allRunningOnly
+    // below immediately narrows to "RUNNING". Dropping it changes nothing.
     const allRunningShells = shells?.filter(
       (shell) =>
-        shell.name === "pnpm run install-and-dev" && 
-        (shell.status === "RUNNING" || shell.status === "STARTING"),
+        shell.name === "pnpm run install-and-dev" &&
+        shell.status === "RUNNING",
     )
 
     const allRunningOnly = allRunningShells?.filter(s => s.status === "RUNNING")
@@ -197,7 +286,11 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
   useEffect(() => {
     console.log("INITIALIZING sandbox", sandboxId)
-    initialize()
+    let cancelled = false
+    initialize(false, () => cancelled)
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const reconnectSandbox = async () => {
@@ -264,9 +357,26 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const restartDevServer = async (targetSandbox?: SandboxSession) => {
     const sandbox = targetSandbox || sandboxRef.current;
     if (!sandbox || isRestartingDevServer) return
+    // Defense-in-depth (A7 step 18a-a): unpark the ambient checkShells() poller
+    // for the duration of the restart, mirroring retryConnection()'s own reset.
+    // restartDevServer() is often reached precisely because things were already
+    // failing, so an elevated counter is likely here. The bail-out's actual
+    // correctness guarantee comes from the direct checkShells() calls below,
+    // not from this reset.
+    shellCheckFailuresRef.current = 0
     setIsRestartingDevServer(true)
     setSandboxUnavailable(false)
     setPreviewURL(null)
+
+    // Declared before the try so the finally block below has a reachable handle.
+    // The bail-out chain nests a second setTimeout inside the first, so the
+    // handle is reassigned at each mark — a handle captured once would go stale.
+    let restartBailoutTimer: ReturnType<typeof setTimeout> | undefined
+    const clearRestartBailout = () => {
+      if (restartBailoutTimer !== undefined) clearTimeout(restartBailoutTimer)
+      restartBailoutTimer = undefined
+    }
+
     try {
       console.log("Attempting to forcefully restart the dev server...")
       const shells = await sandbox.shells.getShells()
@@ -281,18 +391,88 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
       // Fire-and-forget: the dev server runs for the lifetime of the VM, so we
       // don't await the command (it never resolves).
-      sandbox.shells.run("pnpm run install-and-dev", {
-        shellName: "pnpm run install-and-dev",
-      })
+      sandbox.shells
+        .run("pnpm run install-and-dev", {
+          shellName: "pnpm run install-and-dev",
+        })
+        ?.catch?.((err) => {
+          console.warn("Dev server shell encountered an error or exited:", err)
+        })
+
+      // Snapshot taken after the .clear() above, so it is empty by construction.
+      // Kept for structural parity with initialize()'s own shellsAtStart, so the
+      // same hasDevShell() shape is reused verbatim on both wait paths.
+      const shellsAtStart = new Set(subscribedShells.current)
 
       checkShells()
 
+      const hasDevShell = () =>
+        Array.from(subscribedShells.current).some((id) => !shellsAtStart.has(id))
+
+      // Resolves only if NO shell has registered in the VM within ~10s of the
+      // restart command being issued. This is not a shorter clock than the 120s
+      // port wait — it bails on evidence that no process exists to bind a port
+      // at all. If a shell IS running (even mid dependency-install), this never
+      // resolves and the full 120s budget below remains available.
+      //
+      // Each mark calls checkShells() DIRECTLY rather than passively reading
+      // subscribedShells.current: within this 10s window the ambient 5s poller
+      // is the only other writer of that ref, and it may be parked
+      // (shellCheckFailuresRef >= MAX_SHELL_CHECK_FAILURES) or simply out of
+      // phase — either way a passive read alone would bail out false-positive
+      // on a legitimately recovering VM.
+      // Timing trap (A7): DEV_SHELL_POLL_INTERVAL_MS is SHARED with the ambient
+      // checkShells() poller, whose setInterval ticks are anchored to mount
+      // (…30s/35s/40s) regardless of when it is unparked. These restart-local
+      // marks land offset from those ticks (invocation + the 1500ms port-release
+      // wait + two intervals), and in the poller-parked case in
+      // __tests__/use-sandbox.test.ts only the second mark is positioned to
+      // observe the recovered dev shell — the ambient ticks straddle and miss it.
+      // Changing this constant or the port-release wait independently can
+      // realign the marks with the ambient ticks and silently collapse that
+      // test's discrimination window, with no code regression to signal it.
+      const restartPollBailoutPromise = new Promise<void>((resolve) => {
+        restartBailoutTimer = setTimeout(async () => {
+          await checkShells().catch(() => {})
+          if (hasDevShell()) return
+          restartBailoutTimer = setTimeout(async () => {
+            await checkShells().catch(() => {})
+            if (hasDevShell()) return
+            resolve()
+          }, DEV_SHELL_POLL_INTERVAL_MS)
+        }, DEV_SHELL_POLL_INTERVAL_MS)
+      })
+
       // Vite may start on 5174 or 5175 if 5173 is occupied by a zombie process.
-      const portInfo = await Promise.any(
+      // No await is introduced before this race starts, so a shell that
+      // registers and binds a port quickly is unaffected in timing.
+      const portWait = Promise.any(
         [5173, 5174, 5175].map((port) =>
           sandbox.ports.waitForPort(port, { timeoutMs: 120_000 })
         )
       )
+
+      const raceOutcome = await Promise.race([
+        portWait.then((portInfo) => ({ kind: "port" as const, portInfo })),
+        restartPollBailoutPromise.then(() => ({ kind: "poll-bailout" as const })),
+      ])
+
+      if (raceOutcome.kind === "poll-bailout") {
+        // Bail-out won: the still-pending port wait cannot be cancelled, so
+        // neutralize it explicitly. Its eventual resolution or rejection must
+        // never set previewURL after the failure branch already fired.
+        portWait.then(() => {}).catch(() => {})
+        console.error(
+          "Failed to recover dev server: no shell registered in the VM within ~10s of restarting it, so no process exists to bind ports 5173-5175. Bailing out instead of waiting out the full 120s port timeout.",
+        )
+        setSandboxUnavailable(true)
+        return
+      }
+
+      // Port won: neutralize the orphaned bail-out timer so it can never fire
+      // the failure branch after a legitimate recovery.
+      clearRestartBailout()
+      const { portInfo } = raceOutcome
       const newPreviewURL = previewTokenRef.current
         ? portInfo.getSignedPreviewUrl(previewTokenRef.current)
         : portInfo.getPreviewUrl()
@@ -302,9 +482,12 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       setSandboxUnavailable(false)
       console.log("Successfully recovered dev server on port", portInfo.port)
     } catch (error) {
+      // All three ports exhausted their full 120s budget (shells ran, but no
+      // port ever opened) — distinct from the bail-out branch above.
       console.error("Failed to recover dev server:", error)
       setSandboxUnavailable(true)
     } finally {
+      clearRestartBailout()
       setIsRestartingDevServer(false)
     }
   }
@@ -321,10 +504,16 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     }
   }, [serverSandbox?.component_id, isSandboxLoading])
 
+  // Lets the loading skeleton distinguish "connecting" from the much slower
+  // "starting dev server" phase instead of showing a bare skeleton throughout.
+  const connectionPhase: "connecting" | "starting-dev-server" =
+    isRestartingDevServer ? "starting-dev-server" : "connecting"
+
   return {
     sandboxRef,
     sandboxId,
     previewURL,
+    connectionPhase,
     isSandboxLoading,
     sandboxConnectionHash,
     reconnectSandbox,

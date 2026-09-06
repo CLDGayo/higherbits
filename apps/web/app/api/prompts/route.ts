@@ -4,7 +4,7 @@ import {
   resolveRegistryDependenciesV2,
   transformToFlatDependencyTree,
 } from "@/lib/registry"
-import { PromptType } from "@/types/global"
+import { PromptType, PROMPT_TYPES } from "@/types/global"
 import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@supabase/supabase-js"
 import { NextRequest, NextResponse } from "next/server"
@@ -14,16 +14,25 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 )
 
-async function fetchCode(url: string) {
-  if (!url) {
+async function fetchCode(urlOrCode: string) {
+  if (!urlOrCode) {
     return ""
   }
-  const response = await fetch(url)
-  if (!response.ok) {
-    console.error(`Failed to fetch code from ${url}:`, response.statusText)
-    throw new Error(`Failed to fetch code: ${response.statusText}`)
+  if (!urlOrCode.startsWith("http://") && !urlOrCode.startsWith("https://")) {
+    return urlOrCode
   }
-  return response.text()
+  try {
+    const response = await fetch(urlOrCode)
+    if (!response.ok) {
+      console.error(`Failed to fetch code from ${urlOrCode}:`, response.statusText)
+      throw new Error(`Failed to fetch code: ${response.statusText}`)
+    }
+    return response.text()
+  } catch (error) {
+    console.error(`Error fetching or parsing URL ${urlOrCode}:`, error)
+    // If it still failed, it might be raw code that somehow contains http/https
+    return urlOrCode
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -227,10 +236,26 @@ export async function POST(request: NextRequest) {
       }),
     }
 
-    let prompt = getComponentInstallPrompt(promptParams)
-    console.log("Generated prompt content:", prompt.substring(0, 500) + "...")
+    let prompt = ""
 
-    console.log("Base prompt generated")
+    if (prompt_type === PROMPT_TYPES.GOHIGHLEVEL) {
+      if (demo.ghl_html_content) {
+        prompt = demo.ghl_html_content
+        console.log("Returned pre-generated HTML for GHL template.")
+      } else {
+        return NextResponse.json(
+          { error: "GoHighLevel template is still generating or not available. Please wait a moment or try again later." },
+          { status: 400 },
+        )
+      }
+    } else {
+      // Fallback to standard prompt generation for all AI types
+      if (!prompt) {
+        prompt = getComponentInstallPrompt(promptParams)
+        console.log("Generated prompt content:", prompt.substring(0, 500) + "...")
+        console.log("Base prompt generated")
+      }
+    }
 
     return NextResponse.json({
       prompt,

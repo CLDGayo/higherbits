@@ -393,6 +393,7 @@ model demos {
   bookmarks_count                   Int?                     @default(0)
   bundle_html_url                   String?
   bundle_hash                       String?
+  ghl_html_content                  String?
   demo_bookmarks                    demo_bookmarks[]
   demo_hunt_scores                  demo_hunt_scores[]
   demo_hunt_votes                   demo_hunt_votes[]
@@ -657,6 +658,7 @@ model users {
   referral_payments                            referral_payments[]
   sandboxes                                    sandboxes[]
   templates                                    templates[]
+  studio_artifacts                             studio_artifacts[]
   usages                                       usages?
   users_to_plans                               users_to_plans?
 
@@ -718,4 +720,29 @@ enum user_role {
   backend_developer
   product_manager
   entrepreneur
+}
+
+/// Phase 09 substrate for user-authored creative artifacts: themes, ascii art,
+/// gradients and shaders. One table discriminated by `kind`.
+///
+/// Applied to the live database 2026-08-14. Verified by re-introspection: the
+/// only difference between `prisma db pull` before and after was this model.
+/// The partial index on (kind, is_public) WHERE status = 'published' exists in
+/// Postgres but is absent here because Prisma does not model partial indexes.
+model studio_artifacts {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String
+  kind        String
+  name        String
+  slug        String
+  payload     Json     @default("{}")
+  preview_url String?
+  is_public   Boolean  @default(false)
+  status      String   @default("draft")
+  created_at  DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  updated_at  DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  users       users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, kind, slug], map: "studio_artifacts_user_kind_slug_key")
+  @@index([user_id, kind], map: "studio_artifacts_user_kind_idx")
 }

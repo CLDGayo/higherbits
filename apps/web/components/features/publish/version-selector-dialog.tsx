@@ -1,5 +1,6 @@
 "use client"
 
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { useRouter } from "next/navigation"
 import {
   Dialog,
@@ -56,7 +57,9 @@ export function VersionSelectorDialog({
       await onCreateSandbox(selectedType)
     } else {
       if (username) {
-        router.push(`/studio/${username}?beta=true&type=${selectedType}`)
+        studioHardNavigate(
+          `/studio/${username}/components?beta=true&type=${selectedType}`,
+        )
       } else {
         router.push(`/studio?beta=true&type=${selectedType}`)
       }

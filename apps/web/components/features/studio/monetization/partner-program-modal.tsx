@@ -12,7 +12,7 @@ import {
 import { ExternalLink, Check, AlertCircle } from "lucide-react"
 import { useAtom } from "jotai"
 import { userStateAtom } from "@/lib/store/user-store"
-import { partnerModalOpenAtom } from "@/app/studio/[username]/analytics/page.client"
+import { partnerModalOpenAtom } from "@/lib/store/studio-store"
 import { useQuery } from "@tanstack/react-query"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 
@@ -97,7 +97,7 @@ export function PartnerProgramModal() {
             {!isPartner && (
               <Button
                 onClick={() => {
-                  window.open("https://cal.com/serafimcloud/HigherBits.dev", "_blank")
+                  window.open("https://cal.com/CLDGayo/HigherBits.dev", "_blank")
                 }}
                 className="gap-2"
                 disabled={!hasEnoughComponents}

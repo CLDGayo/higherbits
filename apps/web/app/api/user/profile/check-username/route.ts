@@ -30,6 +30,16 @@ export async function POST(req: Request) {
       )
     }
 
+    // Validate before interpolating into the PostgREST .or() filter — an
+    // unescaped double-quote otherwise injects extra filter predicates,
+    // turning this into a boolean oracle over the users table.
+    if (!/^[a-zA-Z0-9_-]+$/.test(display_username)) {
+      return NextResponse.json(
+        { error: "Invalid username format" },
+        { status: 400 },
+      )
+    }
+
     // Check if display_username is unique across both username and display_username fields
     const { data: existingUsers, error: queryError } = await supabaseAdmin
       .from("users")

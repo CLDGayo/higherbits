@@ -9,7 +9,12 @@ import { AppProviders } from "./providers"
 import SessionRecorder from "./SessionRecorder"
 
 import "./globals.css"
-import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
+import {
+  SITE_NAME,
+  SITE_SLOGAN,
+  SITE_DESCRIPTION,
+  BASE_KEYWORDS,
+} from "@/lib/constants"
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -20,11 +25,11 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+    SITE_DESCRIPTION,
   openGraph: {
     title: `${SITE_NAME} - ${SITE_SLOGAN}`,
     description:
-      "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+      SITE_DESCRIPTION,
   },
   keywords: BASE_KEYWORDS,
 }
@@ -37,49 +42,17 @@ export const viewport = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode
+  // Next 15's generated LayoutProps types parallel-route slots as required
+  // React.ReactNode; marking `modal` optional made the layout fail to satisfy
+  // that constraint. The slot is always supplied by the router.
+  modal: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("font-sans [scrollbar-gutter:stable]")}>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Suppress React DevTools and Clerk dev warnings
-              const originalWarn = console.warn;
-              const originalLog = console.log;
-              const originalInfo = console.info;
-
-              function suppressMessages(originalFn) {
-                return function(...args) {
-                  if (typeof args[0] === 'string' && (
-                    args[0].includes('Clerk has been loaded with development keys') ||
-                    args[0].includes('Download the React DevTools')
-                  )) {
-                    return;
-                  }
-                  originalFn.apply(console, args);
-                };
-              }
-
-              console.warn = suppressMessages(originalWarn);
-              console.log = suppressMessages(originalLog);
-              console.info = suppressMessages(originalInfo);
-
-              // Fix Radix UI handleScroll Node contains error when interacting with iframes
-              if (typeof Node !== 'undefined' && Node.prototype && Node.prototype.contains) {
-                const originalContains = Node.prototype.contains;
-                Node.prototype.contains = function(node) {
-                  if (node && !(node instanceof Node)) {
-                    return false;
-                  }
-                  return originalContains.call(this, node);
-                };
-              }
-            `,
-          }}
-        />
         <div className="h-full">
           <ThemeProvider
             attribute="class"
@@ -91,12 +64,13 @@ export default function RootLayout({
               <AppProviders>
                 <SessionRecorder />
                 {children}
+                {modal}
               </AppProviders>
             </TooltipProvider>
             <Toaster />
           </ThemeProvider>
         </div>
-        <GoogleAnalytics gaId="G-X7C2K3V7GX" />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? "G-Z0NZTJ4B1B"} />
       </body>
     </html>
   )

@@ -168,7 +168,8 @@ export function extractNPMDependencies(code: string): Record<string, string> {
       },
     })
   } catch (error) {
-    console.error("Error parsing dependencies:", error)
+    // Silently fail parsing on invalid syntax (e.g. while user is typing)
+    // to prevent Next.js error overlay from popping up in dev mode.
   }
 
   return dependencies
@@ -218,7 +219,7 @@ export function extractAmbigiousRegistryDependencies(code: string) {
 
     parseAndExtractImports(code)
   } catch (error) {
-    console.error("Error finding registry dependencies:", error)
+    // Silently fail on invalid syntax
   }
 
   return registryDeps
@@ -315,7 +316,7 @@ export function removeComponentImports(
 
     return { modifiedCode: modifiedCode.trim(), removedImports }
   } catch (error) {
-    console.error("Error parsing demo code:", error)
+    // Silently fail on invalid syntax
     return { modifiedCode: demoCode, removedImports: [] }
   }
 }

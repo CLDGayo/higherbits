@@ -1,5 +1,6 @@
 "use client"
 
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { Footer } from "@/components/ui/footer"
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link"
@@ -170,9 +171,9 @@ export default function StudioPage() {
 
     if (usernameFromClerk) {
       setUsername(usernameFromClerk)
-      const targetUrl = `/studio/${usernameFromClerk}${searchString}`
+      const targetUrl = `/studio/${usernameFromClerk}/components${searchString}`
       setStudioUrl(targetUrl)
-      router.replace(targetUrl)
+      studioHardNavigate(targetUrl, { replace: true })
       return
     }
 
@@ -182,9 +183,9 @@ export default function StudioPage() {
       .then((data) => {
         if (cancelled || !data?.username) return
         setUsername(data.username)
-        const targetUrl = `/studio/${data.username}${searchString}`
+        const targetUrl = `/studio/${data.username}/components${searchString}`
         setStudioUrl(targetUrl)
-        router.replace(targetUrl)
+        studioHardNavigate(targetUrl, { replace: true })
       })
       .catch(() => {
         // fail-soft: leave the "set username" fallback button in place
@@ -200,7 +201,7 @@ export default function StudioPage() {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === "Enter" && username) {
         setIsEnterPressed(true)
-        router.push(studioUrl)
+        studioHardNavigate(studioUrl)
       }
     }
 

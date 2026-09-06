@@ -447,7 +447,7 @@ const DemoComponents = {
   ...{
     ${demoComponentNames.map((name) => `"${name}": ${name}`).join(",\n")}
   },
-  ...DefaultDemoExport,
+  ...(typeof DefaultDemoExport === 'function' ? { DefaultDemo: DefaultDemoExport } : DefaultDemoExport),
 };
 
 export default function App() {
@@ -528,7 +528,7 @@ const DemoComponents = {
   ...{
     ${demoComponentNames.map((name) => `"${name}": ${name}`).join(",\n")}
   },
-  ...DefaultDemoExport,
+  ...(typeof DefaultDemoExport === 'function' ? { DefaultDemo: DefaultDemoExport } : DefaultDemoExport),
 };
 
 
@@ -593,7 +593,7 @@ export default function App() {
                 </Select>
               </div>
             )}
-            <div className="flex w-full justify-center relative">
+            <div className="flex w-full max-w-md justify-center relative">
               {CurrentComponent ? <CurrentComponent /> : <div>Component not found</div>}
             </div>
           </div>

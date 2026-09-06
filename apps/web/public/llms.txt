@@ -1,0 +1,26 @@
+# HigherBits.dev
+
+> HigherBits.dev is a marketplace of production-ready shadcn/ui components,
+> templates, and UI blocks for developers, agencies, and technical virtual
+> assistants.
+
+Components are copy-paste React and Tailwind CSS, built on shadcn/ui and Radix UI
+primitives. Creators publish and monetise components; buyers install them by
+pasting source into their own projects, with no runtime dependency on
+HigherBits.dev. Each component states its own licence on its detail page; the
+default is MIT.
+
+## Catalogue
+- [All components](https://higherbits.dev/?tab=home)
+- [Templates](https://higherbits.dev/?tab=templates)
+- [Browse by tag](https://higherbits.dev/s/3d)
+- [Sitemap (every component URL)](https://higherbits.dev/sitemap.xml)
+
+## About
+- [Our Story](https://higherbits.dev/our-story)
+- [Terms](https://higherbits.dev/terms)
+- [Privacy](https://higherbits.dev/privacy)
+- [Refunds](https://higherbits.dev/refunds)
+
+## Contact
+- support@higherbits.dev

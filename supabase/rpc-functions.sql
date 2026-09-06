@@ -560,6 +560,42 @@ $$;
 
 -- ============ templates ============
 
+-- =====================================================================
+-- APPLIED TO THE LIVE DATABASE 2026-08-15
+-- =====================================================================
+-- Written 2026-08-12, applied 2026-08-15 to project ewktoowpuemgbaaxxbdq via
+-- `prisma db execute`. The `p_include_private` branch is gated on ownership,
+-- matching the sibling get_collections_v1 (line ~555 above).
+--
+-- Why it mattered: this function is SECURITY DEFINER, so it runs as the owner
+-- and bypasses RLS on public.templates entirely. The WHERE clause below is the
+-- only access control there is. The old predicate was
+--   (COALESCE(p_include_private, false) OR t.is_public = true)
+-- so ANY caller passing p_include_private = true received every user's private
+-- templates.
+--
+-- Verified after applying, by reading pg_get_functiondef back out of the
+-- database: the ownership predicate is present and the old one is gone. Under
+-- realistic claim shapes the public path is unchanged -- {"role":"anon"} and a
+-- signed-in {"sub":...} both return the same row count as before.
+--
+-- Measured at apply time: the templates table held ZERO private rows, so the
+-- defect had never actually exposed anything. It was one private template away
+-- from doing so.
+--
+-- NOT proven: that an actual private row is hidden from a non-owner AND still
+-- visible to its owner. That test needs a transient INSERT and was not run, so
+-- over-tightening is untested. Low risk -- the studio reads a user's own
+-- templates through Prisma server-side (see lib/api/server/templates.ts:16),
+-- not through this function, and the only runtime caller passes
+-- p_include_private: false.
+--
+-- Pre-existing, NOT introduced here: requesting_user_id() does
+-- current_setting('request.jwt.claims', true)::json, which throws on an empty
+-- string. The unchanged, long-deployed get_collections_v1 throws identically
+-- under the same condition, so this is a property of requesting_user_id()
+-- rather than of this change. Real PostgREST traffic always sets valid claims.
+-- =====================================================================
 CREATE OR REPLACE FUNCTION public.get_templates_v3(
   p_offset integer DEFAULT 0,
   p_limit integer DEFAULT 50,
@@ -602,7 +638,13 @@ AS $$
     COALESCE(t.likes_count, 0) AS likes_count
   FROM public.templates t
   JOIN public.users u ON u.id = t.user_id
-  WHERE (COALESCE(p_include_private, false) OR t.is_public = true)
+  WHERE (
+      t.is_public = true
+      OR (
+        COALESCE(p_include_private, false)
+        AND t.user_id = public.requesting_user_id()
+      )
+    )
     AND (
       p_tag_slug IS NULL
       OR EXISTS (

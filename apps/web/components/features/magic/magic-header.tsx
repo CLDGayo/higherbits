@@ -54,6 +54,7 @@ export function MagicHeader({ isScrolled }: MagicHeaderProps) {
         >
           <a
             href="https://github.com/21st-dev/magic-mcp"
+            aria-label="View 21st-dev/magic-mcp on GitHub"
             target="_blank"
             rel="noopener noreferrer"
           >

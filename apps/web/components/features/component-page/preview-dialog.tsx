@@ -100,6 +100,17 @@ export function ComponentPreviewDialog({
     }
   }, [accessState])
 
+  // Listen for READY message from iframe for instant loading
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "READY") {
+        setIsLoading(false)
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [])
+
   // Add effect to sync preview theme with system theme
   useEffect(() => {
     if (resolvedTheme) {

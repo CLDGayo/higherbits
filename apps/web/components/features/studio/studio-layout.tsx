@@ -3,7 +3,6 @@
 import { VersionSelectorDialog } from "@/components/features/publish/version-selector-dialog"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { User } from "@/types/global"
-import { useSearchParams } from "next/navigation"
 import { Dispatch, ReactNode, SetStateAction } from "react"
 import { StudioHeader } from "./ui/studio-header"
 import { StudioSidebar } from "./ui/studio-sidebar"
@@ -27,7 +26,6 @@ export function StudioLayout({
   setShowCreateDialog,
   selectedType = "component",
 }: StudioLayoutProps) {
-  const searchParams = useSearchParams()
   const username = user?.display_username || user?.username || undefined
 
   return (

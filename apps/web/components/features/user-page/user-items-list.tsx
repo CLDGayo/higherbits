@@ -133,6 +133,8 @@ function EmptyComponentsState({ isOwnProfile }: { isOwnProfile: boolean }) {
   )
 }
 
+import { useUser } from "@clerk/nextjs"
+
 export function UserItemsList({
   className,
   skeletonCount = 12,
@@ -142,6 +144,8 @@ export function UserItemsList({
 }: UserItemsListProps) {
   const [searchQuery, setSearchQuery] = useAtom(userPageSearchAtom)
   const router = useRouter()
+  const { user } = useUser()
+  const supabaseClient = useClerkSupabaseClient()
 
   React.useEffect(() => {
     return () => {
@@ -298,6 +302,8 @@ export function UserItemsList({
             key={`${component.id}-${component.updated_at}`}
             demo={component}
             hideUser={tab === "components"}
+            currentUser={user}
+            supabaseClient={supabaseClient}
           />
         ))
       )}

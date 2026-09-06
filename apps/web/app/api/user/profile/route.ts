@@ -14,12 +14,28 @@ const supabaseAdmin = createClient(
 
 export async function GET(req: Request) {
   try {
+    // Require authentication: this endpoint exposes a full users row.
+    const session = await auth()
+    const requesterId = session?.userId
+    if (!requesterId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const { searchParams } = new URL(req.url)
     const username = searchParams.get("username")
 
     if (!username) {
       return NextResponse.json(
         { error: "Username parameter is required" },
+        { status: 400 },
+      )
+    }
+
+    // Validate before interpolating into the PostgREST .or() filter — an
+    // unvalidated value lets an attacker inject extra filter predicates.
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+      return NextResponse.json(
+        { error: "Invalid username format" },
         { status: 400 },
       )
     }
@@ -40,6 +56,29 @@ export async function GET(req: Request) {
 
     if (!data) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
+
+    // Only the profile owner (or an admin) may read sensitive columns.
+    // Everyone else gets a public subset — no email/paypal/stripe/is_admin.
+    if (data.id !== requesterId) {
+      const { data: requester } = await supabaseAdmin
+        .from("users")
+        .select("is_admin")
+        .eq("id", requesterId)
+        .single()
+
+      if (!requester?.is_admin) {
+        const {
+          email,
+          paypal_email,
+          stripe_id,
+          is_admin,
+          ref,
+          role,
+          ...publicData
+        } = data as Record<string, any>
+        return NextResponse.json(publicData)
+      }
     }
 
     return NextResponse.json(data)

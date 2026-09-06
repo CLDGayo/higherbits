@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import {
   ContextMenu,
   ContextMenuContent,
@@ -24,6 +25,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { bookmarkDemo } from "@/lib/queries"
 import { cn, shouldHideLeaderboardRankings } from "@/lib/utils"
@@ -37,6 +39,7 @@ import { ComponentCardSkeleton } from "../../ui/skeletons"
 import { UserAvatar } from "../../ui/user-avatar"
 import ComponentPreviewImage from "./card-image"
 import { ComponentVideoPreview } from "./card-video"
+import { getPreviewCropScale } from "./preview-crop"
 
 // Extended type to include leaderboard fields
 type LeaderboardDemoWithComponent = DemoWithComponent & {
@@ -45,7 +48,7 @@ type LeaderboardDemoWithComponent = DemoWithComponent & {
   has_voted?: boolean
 }
 
-export function ComponentCard({
+export const ComponentCard = React.memo(function ComponentCard({
   demo,
   isLoading,
   hideUser,
@@ -54,6 +57,9 @@ export function ComponentCard({
   hideVotes,
   isLeaderboard,
   onVote,
+  currentUser,
+  supabaseClient,
+  decorative,
 }: {
   demo?: DemoWithComponent | (Component & { user: User })
   isLoading?: boolean
@@ -63,22 +69,47 @@ export function ComponentCard({
   hideVotes?: boolean
   isLeaderboard?: boolean
   onVote?: (demoId: number) => Promise<void>
+  currentUser?: any
+  supabaseClient?: any
+  /**
+   * This card is a VISUAL DUPLICATE of one already on the page — the marquee's
+   * second track copy (`catalogue-carousel-row.tsx`). Takes the card's link out
+   * of the tab order without taking it out of the page.
+   *
+   * The duplicate's wrapper is `aria-hidden` so a screen reader announces each
+   * component once, and `aria-hidden` around a focusable element is a real WCAG
+   * failure (axe `aria-hidden-focus` — 24 nodes on `/`): keyboard focus lands on
+   * a link the screen reader will never announce.
+   *
+   * `inert` on the wrapper would also clear the rule and is one attribute
+   * shorter. It is the WRONG fix here: it removes the subtree from hit-testing
+   * too, and the marquee deliberately pauses under the pointer "so a card can
+   * actually be read and clicked" (globals.css). The duplicate copy is what is
+   * on screen for half of every loop, so `inert` would leave half the row
+   * unclickable. Measured: with `inert`, `elementFromPoint` over a duplicate
+   * card stops landing inside it.
+   */
+  decorative?: boolean
 }) {
   const router = useRouter()
+  // This render body is executed on the server too ("use client" still SSRs), so
+  // matchMedia must never be read directly here. useMediaQuery returns false on the
+  // server and on the first client render, keeping SSR safe and hydration-stable.
+  // Must stay above the early returns below — moving it down breaks rules of hooks.
+  const isTouch = useMediaQuery("(pointer: coarse)")
 
   if (isLoading || !demo) {
     return <ComponentCardSkeleton />
   }
 
-  const { user } = useUser()
-  const supabase = useClerkSupabaseClient()
+  const user = currentUser
+  const supabase = supabaseClient
   const userData = "component" in demo ? demo.component?.user : demo.user
   const username = userData?.username || userData?.display_username
   const isDemo = "demo_slug" in demo
   const componentSlug = isDemo
     ? demo.component?.component_slug
     : demo.component_slug
-  const isTouch = window.matchMedia("(pointer: coarse)").matches
 
   if (!userData || !username || !componentSlug) {
     console.warn("Missing required data:", {
@@ -120,12 +151,27 @@ export function ComponentCard({
       return "0"
     }
     if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}k`
+      return `${Math.floor(num / 1000)}k`
     }
     return num.toString()
   }
 
-  const previewUrl = demo.preview_url || "/placeholder.svg"
+  const isShadcn = isDemo 
+    ? demo.user?.id === "user_shadcn" || demo.user?.username === "shadcn" || demo.component?.user_id === "user_shadcn"
+    : demo.user?.id === "user_shadcn" || demo.user?.username === "shadcn" || demo.user_id === "user_shadcn"
+
+  const previewUrl = isShadcn
+    ? `/thumbnails/${componentSlug}-dark.png`
+    : ("preview_url" in demo && demo.preview_url) 
+      ? demo.preview_url 
+      : ("pro_preview_image_url" in demo && demo.pro_preview_image_url)
+        ? demo.pro_preview_image_url
+        : "/placeholder.svg"
+
+  const lightPreviewUrl = isShadcn
+    ? `/thumbnails/${componentSlug}-light.png`
+    : undefined
+  const previewCropScale = getPreviewCropScale(isShadcn)
 
   const componentName = isDemo ? demo.component?.name || "" : demo.name || ""
 
@@ -248,41 +294,71 @@ export function ComponentCard({
 
   // Hide rankings on weekdays
   const hideRankings = shouldHideLeaderboardRankings()
+  const [isHovered, setIsHovered] = React.useState(false)
 
   return (
     <ContextMenu>
       <ContextMenuTrigger
-        className="block p-[1px] select-none"
+        className="group/cardroot block p-[1px] select-none"
         disabled={isTouch}
       >
         <div
-          className="block select-none cursor-pointer"
-          onClick={(e) => {
-            if (e.metaKey || e.ctrlKey) {
-              e.preventDefault()
-              if (onCtrlClick) {
-                onCtrlClick(componentUrl)
-              } else {
-                window.open(componentUrl, "_blank")
-                toast.success(`${componentName} was opened in a new tab`)
-              }
-            } else if (onClick) {
-              e.preventDefault()
-              onClick()
-            } else {
-              router.push(componentUrl)
-            }
+          className="group/card block select-none cursor-pointer relative"
+          data-testid="card-interactive-wrapper"
+          // DEC-5 (AC10): the video FETCH path is pointer-only. On a coarse
+          // pointer a tap fires a synthetic mouseenter, which would pull a
+          // video per card (~51 on the catalogue) — the exact regression C3
+          // exists to prevent. The CSS lift stays ungated by design.
+          onMouseEnter={() => {
+            if (isTouch) return
+            setIsHovered(true)
           }}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="relative aspect-[4/3] mb-3 group">
+          <Link
+            href={componentUrl}
+            className="absolute inset-0 z-10"
+            prefetch={true}
+            // The card's ONE focusable element, so this is the whole of what
+            // `decorative` has to neutralise. Measured on `/`: each marquee card
+            // reports exactly one focusable descendant, this link.
+            tabIndex={decorative ? -1 : undefined}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey) {
+                e.preventDefault()
+                if (onCtrlClick) {
+                  onCtrlClick(componentUrl)
+                } else {
+                  window.open(componentUrl, "_blank")
+                  toast.success(`${componentName} was opened in a new tab`)
+                }
+              } else if (onClick) {
+                e.preventDefault()
+                onClick()
+              }
+            }}
+          >
+            <span className="sr-only">View {componentName}</span>
+          </Link>
+          {/* Parallax layer 1 (Phase 05, AC1): rests 18px low, rises to 0 on
+              any of the four triggers. Same 300ms / --ease-lift as the meta
+              layer below — the separation comes from the DISTANCE difference
+              (18 vs 30), never from a delay. `transform` is compositor-only,
+              so neither layer changes the card's layout height. */}
+          <div
+            data-testid="card-body-layer"
+            className="relative aspect-[4/3] mb-3 group translate-y-[18px] transition-transform duration-300 [transition-timing-function:var(--ease-lift)] group-hover/card:translate-y-0 group-focus-within/card:translate-y-0 group-has-[[data-state=open]]/card:translate-y-0 group-data-[state=open]/cardroot:translate-y-0 motion-reduce:translate-y-0 motion-reduce:transition-none"
+          >
             <div className="absolute inset-0">
               <div className="relative w-full h-full rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                 <div className="absolute inset-0">
                   <ComponentPreviewImage
                     src={previewUrl}
+                    lightSrc={lightPreviewUrl}
                     alt={componentName}
                     fallbackSrc="/placeholder.svg"
                     className="rounded-lg"
+                    scale={previewCropScale}
                   />
                 </div>
                 <div className="absolute inset-0 rounded-lg" />
@@ -290,6 +366,7 @@ export function ComponentCard({
                   <ComponentVideoPreview
                     component={demo as DemoWithComponent}
                     demo={demo as DemoWithComponent}
+                    isHovered={isHovered}
                   />
                 )}
               </div>
@@ -394,9 +471,14 @@ export function ComponentCard({
                 </div>
               )}
           </div>
-          <div className="flex space-x-3 items-center">
+          {/* Parallax layer 2 (Phase 05, AC1): rests 30px low. Identical
+              duration and easing to the body layer — only the distance differs. */}
+          <div
+            data-testid="card-meta-layer"
+            className="flex space-x-3 items-center translate-y-[30px] transition-transform duration-300 [transition-timing-function:var(--ease-lift)] group-hover/card:translate-y-0 group-focus-within/card:translate-y-0 group-has-[[data-state=open]]/card:translate-y-0 group-data-[state=open]/cardroot:translate-y-0 motion-reduce:translate-y-0 motion-reduce:transition-none"
+          >
             {!hideUser && (
-              <div onClick={(e) => e.stopPropagation()}>
+              <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
                 <UserAvatar
                   src={
                     demo.user.display_image_url ||
@@ -483,4 +565,24 @@ export function ComponentCard({
       </ContextMenuContent>
     </ContextMenu>
   )
-}
+}, (prevProps, nextProps) => {
+  // Custom equality check for React.memo
+  if (prevProps.isLoading !== nextProps.isLoading) return false;
+  if (prevProps.hideUser !== nextProps.hideUser) return false;
+  if (prevProps.hideVotes !== nextProps.hideVotes) return false;
+  if (prevProps.isLeaderboard !== nextProps.isLeaderboard) return false;
+  if (prevProps.decorative !== nextProps.decorative) return false;
+  if (prevProps.currentUser?.id !== nextProps.currentUser?.id) return false;
+
+  const prevDemo = prevProps.demo as any;
+  const nextDemo = nextProps.demo as any;
+  if (!prevDemo || !nextDemo) return prevDemo === nextDemo;
+  if (prevDemo.id !== nextDemo.id) return false;
+  if (prevDemo.updated_at !== nextDemo.updated_at) return false;
+  if (prevDemo.bookmarks_count !== nextDemo.bookmarks_count) return false;
+  if (prevDemo.view_count !== nextDemo.view_count) return false;
+  if (prevDemo.votes_count !== nextDemo.votes_count) return false;
+  if (prevDemo.has_voted !== nextDemo.has_voted) return false;
+  
+  return true;
+})

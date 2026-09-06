@@ -103,6 +103,7 @@ export function HeroSection() {
               </Link>
               <Link
                 href="https://github.com/CLDGayo/higherbits"
+                aria-label="View CLDGayo/higherbits on GitHub"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1.5 text-sm text-foreground/90 hover:text-foreground transition-colors"

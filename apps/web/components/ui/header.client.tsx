@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useEffect, useState, Suspense } from "react"
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
+import React, { useEffect, useLayoutEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -44,6 +45,7 @@ import {
   SOURCE_DETAIL,
 } from "@/lib/attribution-tracking"
 import { Logo } from "./logo"
+import { LandingAuthModals } from "@/components/auth/landing-auth-modals"
 
 interface UserProfile {
   id: string
@@ -99,10 +101,12 @@ export const searchQueryAtom = atom("")
 function HeaderContent({
   text,
   variant = "default",
+  transparentAtTop = false,
   shouldRender,
 }: {
   text?: string
   variant?: "default" | "publish"
+  transparentAtTop?: boolean
   shouldRender: boolean
 }) {
   if (!shouldRender) return null
@@ -120,6 +124,49 @@ function HeaderContent({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Phase 02 — header scroll state. Only active when `transparentAtTop` is set
+  // (the `/` landing branch); every other route keeps its always-opaque header.
+  //
+  // `window.scrollY` is read ONLY inside this effect, never in the render body:
+  // this is a "use client" component that STILL server-renders, and an
+  // unguarded browser-global read here would throw during SSR and take down the
+  // whole route shell, not just the header.
+  //
+  // useLayoutEffect (not useEffect) is deliberate: it runs synchronously before
+  // paint, so a reader who reloads mid-page never sees a one-frame flash of the
+  // transparent header over content. React's SSR hooks dispatcher treats
+  // useLayoutEffect as a no-op, so this emits no server warning.
+  const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false)
+  const scrollRafRef = React.useRef<number | null>(null)
+  useLayoutEffect(() => {
+    if (!transparentAtTop) return
+
+    const readScrollPosition = () => {
+      scrollRafRef.current = null
+      // Threshold measured on the reference at exactly 10px (0/1/2/4/8
+      // unchanged, 10 changed). Do not round this to a "nicer" number.
+      setScrolledPastThreshold(window.scrollY > 10)
+    }
+
+    // Initialise from the real scroll position on mount (mid-page reload).
+    readScrollPosition()
+
+    const handleScroll = () => {
+      // Coalesce to at most one scrollY read + setState per paint frame.
+      if (scrollRafRef.current !== null) return
+      scrollRafRef.current = window.requestAnimationFrame(readScrollPosition)
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current)
+        scrollRafRef.current = null
+      }
+    }
+  }, [transparentAtTop])
   const { user: clerkUser } = useUser()
   const [userState, setUserState] = useAtom(userStateAtom)
   const client = useClerkSupabaseClient()
@@ -216,7 +263,7 @@ function HeaderContent({
     const typeParam = typeof type === "string" ? `&type=${type}` : ""
 
     if (username) {
-      router.push(`/studio/${username}?new=true${typeParam}`)
+      studioHardNavigate(`/studio/${username}/components?new=true${typeParam}`)
     } else {
       router.push(`/studio?new=true${typeParam}`)
     }
@@ -228,7 +275,17 @@ function HeaderContent({
         className={cn(
           "texture-cushion flex !fixed top-0 left-0 right-0 h-14 z-50 items-center px-4 md:px-8 py-3 text-foreground",
           {
-            "border-b border-border/40 bg-background/95 backdrop-blur-sm": variant !== "publish",
+            "border-b": variant !== "publish",
+            // Default (every non-landing route): unchanged, always opaque.
+            "border-border/40 bg-background/95 backdrop-blur-sm":
+              variant !== "publish" && !transparentAtTop,
+            // Landing route only: 300ms on exactly these three properties.
+            "transition-[background-color,border-color,backdrop-filter] duration-300":
+              variant !== "publish" && transparentAtTop,
+            "bg-transparent border-transparent":
+              variant !== "publish" && transparentAtTop && !scrolledPastThreshold,
+            "bg-background/70 backdrop-blur-md border-border/50":
+              variant !== "publish" && transparentAtTop && scrolledPastThreshold,
           },
         )}
       >
@@ -452,11 +509,13 @@ function HeaderContent({
                         className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
                         onSelect={() => {
                           if (userState.profile?.display_username) {
-                            router.push(
-                              `/studio/${userState.profile.display_username}`,
+                            studioHardNavigate(
+                              `/studio/${userState.profile.display_username}/components`,
                             )
                           } else if (userState.profile?.username) {
-                            router.push(`/studio/${userState.profile.username}`)
+                            studioHardNavigate(
+                              `/studio/${userState.profile.username}/components`,
+                            )
                           } else {
                             router.push("/studio")
                           }
@@ -502,7 +561,7 @@ function HeaderContent({
                       <DropdownMenuItem
                         className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
                         onSelect={() =>
-                          window.open("https://x.com/serafimcloud", "_blank")
+                          window.open("https://x.com/CLDGayo", "_blank")
                         }
                       >
                         <span>Twitter</span>
@@ -605,6 +664,39 @@ function HeaderContent({
               </SignedIn>
 
               <SignedOut>
+                  {/* Nav parity with the 21st.dev capture's signed-out header.
+                      Only routes proven to exist ship here. A fourth link was
+                      deliberately omitted because no public route or tab value
+                      exists for it anywhere in the app. */}
+                  <nav className="hidden md:flex items-center gap-1 mr-2">
+                    <Link
+                      href="/?tab=home"
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                      )}
+                    >
+                      Components
+                    </Link>
+                    <Link
+                      href="/templates"
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                      )}
+                    >
+                      Templates
+                    </Link>
+                    <Link
+                      href="/pricing"
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "sm" }),
+                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                      )}
+                    >
+                      Pricing
+                    </Link>
+                  </nav>
                   <a
                     href="/support"
                     onClick={() =>
@@ -639,9 +731,7 @@ function HeaderContent({
                 >
                   <Icons.search className="h-6 w-6" />
                 </Button>
-                <SignInButton>
-                  <Button size={isMobile ? "sm" : "default"}>Sign up</Button>
-                </SignInButton>
+                <LandingAuthModals />
               </SignedOut>
             </>
           ) : (
@@ -675,9 +765,11 @@ function HeaderContent({
 function HeaderWithParams({
   text,
   variant = "default",
+  transparentAtTop = false,
 }: {
   text?: string
   variant?: "default" | "publish"
+  transparentAtTop?: boolean
 }) {
   const searchParams = useSearchParams()
   const step = searchParams.get("step")
@@ -685,20 +777,36 @@ function HeaderWithParams({
   const shouldRender = !(variant === "publish" && step)
 
   return (
-    <HeaderContent text={text} variant={variant} shouldRender={shouldRender} />
+    <HeaderContent
+      text={text}
+      variant={variant}
+      transparentAtTop={transparentAtTop}
+      shouldRender={shouldRender}
+    />
   )
 }
 
 export function Header({
   text,
   variant = "default",
+  transparentAtTop = false,
 }: {
   text?: string
   variant?: "default" | "publish"
+  /**
+   * Landing-only. When true the header starts fully transparent and resolves
+   * into a blurred, bordered bar past a 10px scroll threshold. Defaults to
+   * false so every existing call site is unaffected.
+   */
+  transparentAtTop?: boolean
 }) {
   return (
     <Suspense fallback={null}>
-      <HeaderWithParams text={text} variant={variant} />
+      <HeaderWithParams
+        text={text}
+        variant={variant}
+        transparentAtTop={transparentAtTop}
+      />
     </Suspense>
   )
 }

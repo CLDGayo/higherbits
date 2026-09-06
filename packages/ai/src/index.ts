@@ -4,7 +4,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 
 const server = new Server(
   {
-    name: "higherbits-ai",
+    name: "@higherbits-dev/cli",
     version: "1.0.0",
   },
   {

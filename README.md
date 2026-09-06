@@ -13,8 +13,8 @@ Inspired by the amazing [shadcn/ui](https://ui.shadcn.com/), we're here to make 
 We're building more than just a component registry – we're building a community of developers who love creating beautiful UIs. Here's how you can get involved:
 
 - **Join our [Discord](https://discord.gg/Qx4rFunHfm)** – Get help, share your work, and chat with other developers
-- **Follow us on [X/Twitter](https://x.com/serafimcloud)** – Stay updated with the latest features and components
-- **Star us on [GitHub](https://github.com/serafimcloud/21st)** – Support the project and follow our progress
+- **Follow us on [X/Twitter](https://x.com/CLDGayo)** – Stay updated with the latest features and components
+- **Star us on [GitHub](https://github.com/CLDGayo/21st)** – Support the project and follow our progress
 - **Share your components** – Help others by contributing your UI components
 - **Give feedback** – Your input shapes the future of 21st.dev
 
@@ -44,7 +44,7 @@ When you publish a component, it follows this journey:
 2. **Posted State** (`posted`) - Component has passed review and is available on your profile and via direct link
 3. **Featured State** (`featured`) - Component is featured on the homepage and in public listings
 
-I ([Serafim](https://x.com/serafimcloud)) personally review each component to ensure it meets our quality standards before featuring it.
+I ([CLDGayo](https://x.com/CLDGayo)) personally review each component to ensure it meets our quality standards before featuring it.
 
 ### Quality Guidelines
 
@@ -197,7 +197,7 @@ Before diving in, make sure you have:
 
 ## 👥 Team
 
-The project was developed by [@serafimcloud](https://x.com/serafimcloud), with significant contributions from [@daniel_dhawan](https://x.com/daniel_dhawan) and [@garrrikkotua](https://x.com/garrrikkotua).
+The project was developed by [@CLDGayo](https://x.com/CLDGayo), with significant contributions from [@daniel_dhawan](https://x.com/daniel_dhawan) and [@garrrikkotua](https://x.com/garrrikkotua).
 
 ---
 
@@ -236,7 +236,7 @@ When you publish a component, it follows this journey:
 2. **Posted State** (`posted`) - Component has passed review and is available on your profile and via direct link
 3. **Featured State** (`featured`) - Component is featured on the homepage and in public listings
 
-I ([Serafim](https://x.com/serafimcloud)) personally review each component to ensure it meets our quality standards before featuring it. This helps maintain a high-quality collection of components that truly benefit the community.
+I ([CLDGayo](https://x.com/CLDGayo)) personally review each component to ensure it meets our quality standards before featuring it. This helps maintain a high-quality collection of components that truly benefit the community.
 
 ### Quality Standards
 

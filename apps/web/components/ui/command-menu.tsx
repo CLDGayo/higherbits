@@ -691,7 +691,7 @@ export function CommandMenu() {
                       <ResponsiveCommandItem
                         value="social-twitter"
                         onSelect={() => {
-                          window.open("https://x.com/serafimcloud", "_blank")
+                          window.open("https://x.com/CLDGayo", "_blank")
                           setSearchQuery("")
                           setValue("")
                           setOpen(false)

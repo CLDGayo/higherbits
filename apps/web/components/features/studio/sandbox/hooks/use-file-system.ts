@@ -1,6 +1,7 @@
 import { SandboxSession, ReaddirEntry } from "@codesandbox/sdk"
 import { useState, useEffect, useRef, RefObject } from "react"
 import { toast } from "sonner"
+import { DEFAULT_COMPONENT_TSX, DEFAULT_DEMO_TSX, DEFAULT_DEFAULT_TSX, DEFAULT_INDEX_CSS } from "@/lib/sandbox-templates"
 
 const ROOT_PATH = "/project/sandbox"
 
@@ -33,7 +34,7 @@ const ADVANCED_VIEW_HIDDEN_FILES = [
 
 export interface FileEntry {
   path: string
-  type: "file" | "dir"
+  type: "file" | "dir" | "section"
   name: string
   isSymlink: boolean
   children?: FileEntry[]
@@ -253,34 +254,79 @@ export const useFileSystem = ({
           }
           const allFiles = flattenEntries(rootEntries)
           
-          const componentFiles = allFiles.filter(f => f.path.startsWith('/project/sandbox/src/components/ui/') && f.type === 'file' && !f.isFromRegistry)
-          const indexCssFile = allFiles.find(f => f.name === 'index.css' && f.path === '/project/sandbox/src/index.css')
-          const demoFiles = allFiles.filter(f => f.path.startsWith('/project/sandbox/src/') && (f.name === 'demo.tsx' || f.name === 'default.tsx'))
+          const componentFiles = allFiles.filter(f => f.path.startsWith('/src/components/ui/') && f.type === 'file')
+          const indexCssFile = allFiles.find(f => f.name === 'index.css' && (f.path === '/src/index.css' || f.path === '/project/sandbox/src/index.css'))
+          const demoFiles = allFiles
+            .filter(f => (f.path.startsWith('/src/') || f.path.startsWith('/project/sandbox/src/')) && (f.name === 'demo.tsx' || f.name === 'default.tsx'))
+            .sort((a, b) => {
+              if (a.name === 'default.tsx') return -1;
+              if (b.name === 'default.tsx') return 1;
+              return a.name.localeCompare(b.name);
+            })
           
+          const finalComponentFiles = componentFiles.length > 0 ? componentFiles : [
+            {
+              name: "component.tsx",
+              type: "file",
+              path: "/src/components/ui/component.tsx",
+              isSymlink: false
+            } as FileEntry
+          ]
+          
+          const finalIndexCssFile = indexCssFile || {
+            name: "index.css",
+            type: "file",
+            path: "/src/index.css",
+            isSymlink: false
+          } as FileEntry
+          
+          const finalDemoFiles = demoFiles.length > 0 ? demoFiles : [
+            {
+              name: "demo.tsx",
+              type: "file",
+              path: "/src/demo.tsx",
+              isSymlink: false
+            } as FileEntry
+          ]
+
           const virtualEntries: FileEntry[] = [
             {
               name: "Component",
-              type: "dir",
+              type: "section",
               path: "/project/sandbox/src/components/ui",
               isSymlink: false,
               children: [
-                ...componentFiles,
-                ...(indexCssFile ? [indexCssFile] : []),
+                ...finalComponentFiles,
+                finalIndexCssFile,
                 { name: "Add dependency", type: "file", path: "ACTION_ADD_DEPENDENCY", isSymlink: false }
               ]
             },
             {
               name: "Demos",
-              type: "dir",
+              type: "section",
               path: "/project/sandbox/src",
               isSymlink: false,
               children: [
-                ...demoFiles
+                ...finalDemoFiles
               ]
             }
           ]
           
           setFiles(virtualEntries)
+
+          // Auto-heal the preview: if the sandbox lost these files, write them back
+          if (sandboxRef.current) {
+            const fs = sandboxRef.current.fs
+            if (componentFiles.length === 0) {
+              fs.writeTextFile("/project/sandbox/src/components/ui/component.tsx", DEFAULT_COMPONENT_TSX).catch(console.error)
+            }
+            if (demoFiles.length === 0) {
+              fs.writeTextFile("/project/sandbox/src/demo.tsx", DEFAULT_DEMO_TSX).catch(console.error)
+            }
+            if (!indexCssFile) {
+              fs.writeTextFile("/project/sandbox/src/index.css", DEFAULT_INDEX_CSS).catch(console.error)
+            }
+          }
         }
       }
     } catch (error: any) {
@@ -310,6 +356,17 @@ export const useFileSystem = ({
       return content
     } catch (error) {
       console.error(`Failed to load file content for ${filePath}:`, error)
+      
+      if (filePath.endsWith("component.tsx")) {
+        return DEFAULT_COMPONENT_TSX
+      }
+      if (filePath.endsWith("demo.tsx")) {
+        return DEFAULT_DEMO_TSX
+      }
+      if (filePath.endsWith("index.css")) {
+        return DEFAULT_INDEX_CSS
+      }
+      
       toast.error(`Failed to load file`)
       throw error
     } finally {
@@ -735,8 +792,42 @@ export const useFileSystem = ({
 
   const getContentOfBundleIndexHTML = async (sandbox: SandboxSession) => {
     const indexPath = normalizePath("dist/index.html")
-    const content = await sandbox.fs.readTextFile(indexPath)
-    return content
+    let htmlContent = await sandbox.fs.readTextFile(indexPath)
+    
+    if (!htmlContent) return undefined;
+
+    try {
+      // Read assets to inline them (GHL support)
+      const assetsPath = normalizePath("dist/assets")
+      const assets = await sandbox.fs.readdir(assetsPath)
+      
+      let jsContent = ""
+      let cssContent = ""
+      
+      for (const asset of assets) {
+        if (asset.name && asset.name.endsWith(".js")) {
+          jsContent += await sandbox.fs.readTextFile(normalizePath(`dist/assets/${asset.name}`)) + "\n"
+        } else if (asset.name && asset.name.endsWith(".css")) {
+          cssContent += await sandbox.fs.readTextFile(normalizePath(`dist/assets/${asset.name}`)) + "\n"
+        }
+      }
+
+      // Remove the original script and link tags
+      htmlContent = htmlContent.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      htmlContent = htmlContent.replace(/<link\b[^>]*stylesheet[^>]*>/gi, "")
+
+      // Inject the inline styles and scripts before the closing head and body tags
+      if (cssContent) {
+        htmlContent = htmlContent.replace("</head>", `<style>${cssContent}</style></head>`)
+      }
+      if (jsContent) {
+        htmlContent = htmlContent.replace("</body>", `<script type="module">${jsContent}</script></body>`)
+      }
+    } catch (error) {
+      console.warn("Could not inline assets into bundle HTML:", error)
+    }
+
+    return htmlContent
   }
 
   const getContentOfComponentRegistryJSON = async (
@@ -873,6 +964,46 @@ export const useFileSystem = ({
     await loadRootDirectory()
   }
 
+  const createNewDemo = async (): Promise<{ created: boolean; defaultPath?: string; newDemoPath?: string }> => {
+    const result = await sbWrapper(async (sandbox) => {
+      const demoPath = normalizePath("src/demo.tsx")
+
+      // Read current demo.tsx content
+      let currentContent: string
+      try {
+        currentContent = await sandbox.fs.readTextFile(demoPath)
+      } catch {
+        // demo.tsx doesn't exist, nothing to do
+        return { created: false }
+      }
+
+      // Compare against default template (normalize whitespace for robust comparison)
+      const normalize = (s: string) => s.replace(/\s+/g, " ").trim()
+      if (normalize(currentContent) === normalize(DEFAULT_DEMO_TSX)) {
+        // Demo is unmodified — do nothing
+        return { created: false }
+      }
+
+      // Demo has been modified — rename demo.tsx → default.tsx
+      const defaultPath = normalizePath("src/default.tsx")
+
+      // Convert the current demo content from object-export to default-export format
+      // so it matches the default.tsx pattern used by the registry
+      await sandbox.fs.writeTextFile(defaultPath, currentContent)
+
+      // Create a fresh demo.tsx with default template
+      await sandbox.fs.writeTextFile(demoPath, DEFAULT_DEMO_TSX)
+
+      return { created: true, defaultPath: "/src/default.tsx", newDemoPath: "/src/demo.tsx" }
+    })
+
+    if (result) {
+      await loadRootDirectory()
+      return result
+    }
+    return { created: false }
+  }
+
   const addFrom21Registry = async (jsonUrl: string, demoCode?: string): Promise<string | undefined> => {
     return await sbWrapper(async (sandbox) => {
       let expectedPath: string | undefined;
@@ -922,71 +1053,9 @@ export const useFileSystem = ({
          throw error;
       }
 
-      // Ensure demo.tsx is updated so the preview doesn't break
-      if (demoCode && demoCode !== "N/A") {
-        try {
-          // Extract component slug from the jsonUrl (e.g., http://.../r/shadcn/tooltip)
-          const urlParts = jsonUrl.split('/')
-          const componentSlug = urlParts[urlParts.length - 1]
-          
-          if (componentSlug) {
-            // Write a wrapper component to render the primitive
-            const demoPath = `/src/components/ui/${componentSlug}-demo.tsx`
-            await sandbox.fs.writeTextFile(normalizePath(demoPath), demoCode)
-            console.log(`Successfully injected demo code for ${componentSlug} at ${demoPath}`)
-            
-            // Try to find the exported component name from the demo code
-            const exportMatch = demoCode.match(/export default function ([a-zA-Z0-9_]+)/) || demoCode.match(/export function ([a-zA-Z0-9_]+)/)
-            const demoExportName = exportMatch ? exportMatch[1] : null
-
-            let newDemoTsx = ""
-            if (demoExportName) {
-              const isDefaultExport = demoCode.includes(`export default function ${demoExportName}`) || demoCode.includes(`export default ${demoExportName}`)
-              const importStatement = isDefaultExport 
-                ? `import ${demoExportName} from "./components/ui/${componentSlug}-demo";`
-                : `import { ${demoExportName} } from "./components/ui/${componentSlug}-demo";`
-              
-              newDemoTsx = `${importStatement}\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <${demoExportName} />\n  </div>\n);\n\nexport default { Demo };\n`
-            } else {
-              // fallback if we couldn't parse the name but it's likely a default export
-              newDemoTsx = `import Component from "./components/ui/${componentSlug}-demo";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <Component />\n  </div>\n);\n\nexport default { Demo };\n`
-            }
-            
-            await sandbox.fs.writeTextFile(normalizePath("src/demo.tsx"), newDemoTsx)
-            console.log(`Updated src/demo.tsx to render ${demoExportName || "Component"}`)
-          }
-        } catch (error) {
-          console.error("Failed to write demo code:", error)
-        }
-      } else if (expectedPath) {
-        // If there's no demo code, we should still update demo.tsx to point to the newly installed component
-        // This prevents "export named Component not found" errors when component.tsx is overwritten
-        try {
-           const compContent = await sandbox.fs.readTextFile(normalizePath(expectedPath));
-           // Try to find default export or named export
-           const defaultExportMatch = compContent.match(/export default function ([a-zA-Z0-9_]+)/) || compContent.match(/export default ([a-zA-Z0-9_]+)/);
-           const namedExportMatch = compContent.match(/export function ([a-zA-Z0-9_]+)/) || compContent.match(/export const ([a-zA-Z0-9_]+)/);
-           
-           const compFileName = expectedPath.split('/').pop()?.replace('.tsx', '');
-           
-           let newDemoTsx = "";
-           if (defaultExportMatch) {
-              const name = defaultExportMatch[1];
-              newDemoTsx = `import ${name} from "./components/ui/${compFileName}";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <${name} />\n  </div>\n);\n\nexport default { Demo };\n`;
-           } else if (namedExportMatch) {
-              const name = namedExportMatch[1];
-              newDemoTsx = `import { ${name} } from "./components/ui/${compFileName}";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <${name} />\n  </div>\n);\n\nexport default { Demo };\n`;
-           } else {
-              // Generic fallback
-              newDemoTsx = `import { Component } from "./components/ui/${compFileName}";\n\nconst Demo = () => (\n  <div className="flex items-center justify-center min-h-screen p-4">\n    <Component />\n  </div>\n);\n\nexport default { Demo };\n`;
-           }
-           
-           await sandbox.fs.writeTextFile(normalizePath("src/demo.tsx"), newDemoTsx);
-           console.log(`Updated src/demo.tsx fallback for ${compFileName}`);
-        } catch(e) {
-           console.error("Failed to update fallback demo.tsx:", e);
-        }
-      }
+      // Don't overwrite demo.tsx — dependencies are building blocks that the
+      // user imports into their component.tsx. Overwriting demo.tsx breaks the
+      // preview by pointing it at a dependency instead of the user's component.
       
       // Reload the file tree to reflect new files
       await loadRootDirectory()
@@ -1018,5 +1087,6 @@ export const useFileSystem = ({
     // getContentOfComponentRegistryJSON, // Keep these private
     // getContentOfDemoRegistryJSON,
     addFrom21Registry,
+    createNewDemo,
   }
 }

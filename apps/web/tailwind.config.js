@@ -38,6 +38,7 @@ module.exports = {
         cozy: ["var(--font-cozy)", "Quicksand", "sans-serif"],
         mono: ["var(--font-fira-code)", "Fira Code", "monospace"],
         arial: ["Arial", "sans-serif"],
+        accent: ["var(--font-accent)", "Instrument Serif", "serif"],
       },
       zIndex: {
         9999: "9999",
@@ -59,6 +60,12 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary) / <alpha-value>)",
           foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
+          // Brand colour at a lightness that is legible AS TEXT (§8.3).
+          // `primary` itself is a surface - buttons paint it behind
+          // `primary-foreground` - so it cannot be darkened to meet AA for
+          // text without breaking every button. Use this for primary-coloured
+          // words and links; keep using `primary` for fills.
+          emphasis: "hsl(var(--primary-emphasis) / <alpha-value>)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary) / <alpha-value>)",

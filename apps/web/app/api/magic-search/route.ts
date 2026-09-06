@@ -54,8 +54,10 @@ export async function POST(request: NextRequest) {
       match_threshold = 0.33,
       limit = 3,
       userMessage = "",
-      skipUsageRecording = false,
     } = body
+    // Usage recording (and thus quota/billing) must not be waivable by the
+    // caller. Ignore any client-supplied skipUsageRecording.
+    const skipUsageRecording = false
 
     if (!search) {
       return NextResponse.json(
