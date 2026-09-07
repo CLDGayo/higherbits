@@ -11,6 +11,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@clerk/nextjs", () => ({
   SignInButton: () => <button data-testid="signin-btn">Sign In</button>,
+  SignUpButton: () => <button data-testid="signup-btn">Sign Up</button>,
   SignedIn: ({ children }: any) => <div data-testid="signed-in">{children}</div>,
   SignedOut: ({ children }: any) => <div data-testid="signed-out">{children}</div>,
   useClerk: () => ({ signOut: vi.fn() }),

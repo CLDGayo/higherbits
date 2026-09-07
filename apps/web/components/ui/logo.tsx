@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { BrandAssetsMenu, useBrandAssetsMenu } from "./brand-assets-menu"
 import { createPortal } from "react-dom"
@@ -92,6 +93,38 @@ export function Logo({
     }
   }, [animationData])
 
+  const router = useRouter()
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // ⌘ + Click or Ctrl + Click opens the brand assets menu
+    if (e.metaKey || e.ctrlKey) {
+      toggleMenu(e)
+      return
+    }
+
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname
+      const currentSearch = window.location.search
+      const params = new URLSearchParams(currentSearch)
+
+      if (currentPath === "/") {
+        if (!params.has("tab")) {
+          // On bare marketing landing page
+          if (window.scrollY > 50) {
+            e.preventDefault()
+            window.scrollTo({ top: 0, behavior: "smooth" })
+          } else {
+            e.preventDefault()
+            router.push("/?tab=home")
+          }
+        } else {
+          // On /?tab=..., clicking logo navigates to bare / and scrolls to top
+          window.scrollTo({ top: 0, behavior: "smooth" })
+        }
+      }
+    }
+  }
+
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
     setIsVisible(true)
@@ -170,7 +203,7 @@ export function Logo({
           `${position === "fixed" ? position : ""} h-7 flex items-center ${position === "fixed" ? "left-4 top-3" : ""} rounded-full group cursor-pointer`,
           className,
         )}
-        onClick={toggleMenu}
+        onClick={handleLogoClick}
         onContextMenu={handleContextMenu}
         title="Right-click for brand assets menu"
       >

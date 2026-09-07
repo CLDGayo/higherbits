@@ -1,6 +1,6 @@
 import React from "react"
 import Link from "next/link"
-import { SignUpButton } from "@clerk/nextjs"
+import { SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs"
 
 import { AccentWord } from "./accent-word"
 import { Button } from "./button"
@@ -97,11 +97,18 @@ export function AgentsCtaBand({ className }: { className?: string }) {
         <Button asChild size="lg" variant="default" className="h-11 px-[26px]">
           <Link href="/?tab=home">Browse components</Link>
         </Button>
-        <SignUpButton mode="modal">
-          <Button size="lg" variant="outline" className="h-11 px-[26px]">
-            Join for free
+        <SignedOut>
+          <SignUpButton mode="modal">
+            <Button size="lg" variant="outline" className="h-11 px-[26px]">
+              Join for free
+            </Button>
+          </SignUpButton>
+        </SignedOut>
+        <SignedIn>
+          <Button asChild size="lg" variant="outline" className="h-11 px-[26px]">
+            <Link href="/studio">Open Studio</Link>
           </Button>
-        </SignUpButton>
+        </SignedIn>
       </div>
     </div>
   )
