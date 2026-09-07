@@ -89,7 +89,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
 
     const defaultHeaders: Record<string, string> = {}
     if (process.env.OPENAI_BASE_URL?.includes("openrouter.ai")) {
-      defaultHeaders["HTTP-Referer"] = "http://localhost:3000"
+      defaultHeaders["HTTP-Referer"] = process.env.NEXT_PUBLIC_APP_URL || "https://higherbits.dev"
       defaultHeaders["X-Title"] = "HigherBits"
     }
 
