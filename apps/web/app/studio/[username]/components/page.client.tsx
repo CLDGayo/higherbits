@@ -33,6 +33,7 @@ import {
   studioBasePath,
   studioHardNavigate,
 } from "@/components/features/studio/nav-config"
+import { resolveStatus } from "@/components/features/studio/ui/component-status"
 import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
 
 /**
@@ -182,7 +183,9 @@ export function StudioUsernameClient({
         const typeToUse = overrideType || selectedType || "component"
         const { sandboxId } = await createNewSandbox(user.id)
         setShowCreateDialog(false)
-        router.push(`${studioBase}/sandbox/${sandboxId}?type=${typeToUse}`)
+        studioHardNavigate(
+          `${studioBase}/sandbox/${sandboxId}?type=${typeToUse}`,
+        )
       } catch (error) {
         console.error("Failed to create sandbox:", error)
         toast.error(
@@ -192,7 +195,7 @@ export function StudioUsernameClient({
         setIsCreating(false)
       }
     },
-    [user.id, selectedType, studioBase, router],
+    [user.id, selectedType, studioBase],
   )
 
   /**
@@ -230,8 +233,12 @@ export function StudioUsernameClient({
     setShowCreateDialog(true)
   }
 
-  const handleOpenSandbox = (shortSandboxId: string) => {
-    router.push(`${studioBase}/sandbox/${shortSandboxId}`)
+  const handleOpenSandbox = (
+    shortSandboxId: string,
+    isEdit: boolean = false,
+  ) => {
+    const url = `${studioBase}/sandbox/${shortSandboxId}${isEdit ? "?mode=edit" : ""}`
+    studioHardNavigate(url)
   }
 
   // Row click for anything that is not a draft. Rendered from local state rather
@@ -244,7 +251,13 @@ export function StudioUsernameClient({
   // sandbox editor - the only existing place a creator can change a component.
   // Retargeting it is a Phase 07 concern.
   const handleEditDetails = (demo: ExtendedDemoWithComponent) => {
-    handleOpenSandbox(demo.component?.sandbox_id || String(demo.id))
+    const isDraft = resolveStatus(demo) === "draft"
+    const target = isDraft ? String(demo.id) : demo.component?.sandbox_id
+    if (!target) {
+      toast.error("This component does not have an associated sandbox.")
+      return
+    }
+    handleOpenSandbox(target, !isDraft)
   }
 
   // Libraries the bulk "Move to" menu offers. Fetched here rather than in the
@@ -409,9 +422,11 @@ export function StudioUsernameClient({
       newSearchParams.delete("componentSlug")
       newSearchParams.delete("username")
       newSearchParams.delete("demoSlug")
-      router.replace(`${pathname}?${newSearchParams.toString()}`)
+      const cleanSearch = newSearchParams.toString()
+      const cleanUrl = cleanSearch ? `${pathname}?${cleanSearch}` : pathname
+      window.history.replaceState(null, "", cleanUrl)
     }
-  }, [searchParams, router, pathname])
+  }, [searchParams, pathname])
 
   const handleGoToComponentDialog = useCallback(() => {
     if (successDialogData) {

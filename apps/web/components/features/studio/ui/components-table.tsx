@@ -97,7 +97,7 @@ interface DemosTableProps {
   demos: ExtendedDemoWithComponent[]
   /** Hover "Edit Details" action. */
   onEdit?: (demo: ExtendedDemoWithComponent) => void
-  onOpenSandbox?: (shortSandboxId: string) => void
+  onOpenSandbox?: (shortSandboxId: string, isEdit?: boolean) => void
   /** Row click for anything that is not a draft. Drafts open the sandbox. */
   onPreview?: (demo: ExtendedDemoWithComponent) => void
   onUpdateVisibility?: (
@@ -298,7 +298,7 @@ function ComponentCell({
   canEdit,
 }: {
   demo: ExtendedDemoWithComponent
-  onOpenSandbox?: (shortSandboxId: string) => void
+  onOpenSandbox?: (shortSandboxId: string, isEdit?: boolean) => void
   canEdit?: boolean
 }) {
   const router = useRouter()
@@ -324,10 +324,17 @@ function ComponentCell({
   // to the public page. Visitors keep the public page - they have nothing to edit.
   // Same target resolution as openRow: drafts have no component, so their own id
   // is the sandbox id.
-  const editTarget = demo.component?.sandbox_id || String(demo.id)
+  const editTarget = isDraft
+    ? String(demo.id)
+    : demo.component?.sandbox_id || null
   const showEdit = Boolean(canEdit && onOpenSandbox && editTarget)
-  const handleLeadingAction = () =>
-    showEdit ? onOpenSandbox!(editTarget) : openPublicPage()
+  const handleLeadingAction = () => {
+    if (showEdit && editTarget) {
+      onOpenSandbox!(editTarget, !isDraft)
+    } else {
+      openPublicPage()
+    }
+  }
 
   return (
     <div className="flex items-center gap-3 pl-1">
@@ -464,7 +471,12 @@ export function DemosTable({
       return
     }
 
-    onOpenSandbox?.(demo.component?.sandbox_id || String(demo.id))
+    const editTarget = isDraft
+      ? String(demo.id)
+      : demo.component?.sandbox_id || null
+    if (editTarget) {
+      onOpenSandbox?.(editTarget, !isDraft)
+    }
   }
 
   const columns: ColumnDef<ExtendedDemoWithComponent>[] = [

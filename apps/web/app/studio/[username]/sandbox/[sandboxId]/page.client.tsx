@@ -557,8 +557,8 @@ function PublishClientPageContent({
       currentStageIndex > 0 ? stages[currentStageIndex - 1] : undefined
     if (previousStage) {
       setActiveStage(previousStage)
-    } else if (isEditMode) {
-      router.back()
+    } else {
+      studioHardNavigate(`/studio/${username}/components`)
     }
   }
 
@@ -607,7 +607,7 @@ function PublishClientPageContent({
         customNextIcon={activeStage === "Publish" ? undefined : <ArrowRight size={16} />}
         customNextLabel={activeStage === "Publish" ? "Send to review" : "Next"}
         isNextLoading={activeStage === "Publish" && isSubmitting}
-        customBackLabel={currentStageIndex > 0 ? "Back" : (isEditMode ? "Back to component" : undefined)}
+        customBackLabel={currentStageIndex > 0 ? "Back" : "Back to components"}
         customBackAction={handleBackStage}
       />
 
@@ -624,7 +624,12 @@ function PublishClientPageContent({
         >
           <div className="flex flex-col shrink-0 border-b border-border pt-2 px-2">
             <div className="flex items-center justify-between mb-2 px-1">
-              <button onClick={handleBackStage} className="text-muted-foreground hover:text-foreground transition-colors">
+              <button
+                onClick={() => studioHardNavigate(`/studio/${username}/components`)}
+                className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                title="Back to components"
+                aria-label="Back to components"
+              >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <span className="text-sm font-medium text-zinc-300">{activeStage}</span>

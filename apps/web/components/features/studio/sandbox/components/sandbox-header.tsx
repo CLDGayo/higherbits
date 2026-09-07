@@ -1,4 +1,5 @@
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
+import Link from "next/link"
 import { Spinner } from "@/components/icons/spinner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -142,7 +143,8 @@ export function SandboxHeader({
     } else if (customBackUrl) {
       router.push(customBackUrl)
     } else {
-      studioHardNavigate(`/studio/${params.username}/components`)
+      const usernameToUse = username || (params?.username as string)
+      studioHardNavigate(`/studio/${usernameToUse}/components`)
     }
   }
 
@@ -202,21 +204,33 @@ export function SandboxHeader({
     <header className="flex flex-col px-4 py-2 border-b">
       <div className="flex items-center">
         <div className="flex items-center gap-2">
-          <div onClick={handleBackToStudio} className="cursor-pointer">
+          <Link href="/" className="cursor-pointer flex items-center" title="Home">
             <Logo position="flex" className="w-6 h-6" hasLink={false} />
-          </div>
+          </Link>
 
           <div className="text-muted-foreground">/</div>
 
           {username && (
             <div className="flex items-center gap-1">
-              <UserAvatar
-                alt=" "
-                src={user?.imageUrl}
-                size={24}
-                className="mr-1"
-              />
-              <span className="text-sm font-medium">{username}</span>
+              <Link
+                href={`/studio/${username}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  studioHardNavigate(`/studio/${username}`)
+                }}
+                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                title="Overview"
+              >
+                <UserAvatar
+                  alt=" "
+                  src={user?.imageUrl}
+                  size={24}
+                  className="mr-1"
+                />
+                <span className="text-sm font-medium text-foreground hover:underline">
+                  {username}
+                </span>
+              </Link>
               <div className="text-muted-foreground mx-1">/</div>
             </div>
           )}

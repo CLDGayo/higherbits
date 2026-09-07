@@ -194,14 +194,15 @@ export const ComponentCard = React.memo(function ComponentCard({
       })
 
       if (!response.ok) {
-        throw new Error("Failed to generate prompt")
+        const errorData = await response.json().catch(() => null)
+        throw new Error(errorData?.error || "Failed to generate prompt")
       }
 
       const { prompt } = await response.json()
       navigator.clipboard.writeText(prompt)
       toast.success("Prompt copied to clipboard")
-    } catch (error) {
-      toast.error("Error generating prompt")
+    } catch (error: any) {
+      toast.error(error?.message || "Error generating prompt")
     }
   }
 

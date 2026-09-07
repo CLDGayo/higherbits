@@ -21,7 +21,7 @@ export interface ResolvedComponent {
  * @param visitedSlugs Set of already visited component slugs to prevent circular dependencies
  */
 export async function resolveRegistryDependenciesV2(
-  registryDependenciesSlugs: string[],
+  registryDependenciesSlugs: string[] = [],
   options: {
     shouldFetchR2Assets?: boolean
     maxDepth?: number
@@ -37,7 +37,7 @@ export async function resolveRegistryDependenciesV2(
     visitedSlugs = new Set<string>(),
   } = options
 
-  for (const fullSlug of registryDependenciesSlugs) {
+  for (const fullSlug of registryDependenciesSlugs || []) {
     if (result[fullSlug]) continue
 
     if (visitedSlugs.has(fullSlug)) {

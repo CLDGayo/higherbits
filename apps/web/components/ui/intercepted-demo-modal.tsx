@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType } from "@/types/global"
 import { useState, useEffect } from "react"
-import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon } from "lucide-react"
+import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
@@ -54,7 +54,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
   const { user } = useUser()
   const supabase = useClerkSupabaseClient()
   const { capture } = useSupabaseAnalytics()
-  const [selectedPromptType] = useAtom(selectedPromptTypeAtom)
+  const [selectedPromptType, setSelectedPromptType] = useAtom(selectedPromptTypeAtom)
 
   const accessState = useComponentAccess(demo.component, hasPurchased)
 
@@ -83,7 +83,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
 
   const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
 
-  const handlePromptAction = async (e: React.MouseEvent, promptTypeOverride?: string) => {
+  const handlePromptAction = async (e?: React.MouseEvent, promptTypeOverride?: string) => {
     e?.stopPropagation()
     if (accessState !== "UNLOCKED") {
       setShowUnlockDialog(true)
@@ -91,7 +91,18 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
 
     const typeToUse = promptTypeOverride || selectedPromptType
+    if (promptTypeOverride) {
+      setSelectedPromptType(promptTypeOverride as PromptType)
+    }
+
+    const isGhl = typeToUse === PROMPT_TYPES.GOHIGHLEVEL
     setIsPromptLoading(true)
+
+    const toastId = toast.loading(
+      isGhl
+        ? "Preparing GoHighLevel code... Please wait"
+        : "Preparing prompt for clipboard...",
+    )
 
     try {
       const response = await fetch("/api/prompts", {
@@ -103,10 +114,18 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         }),
       })
 
-      if (!response.ok) throw new Error("Failed to generate prompt")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null)
+        throw new Error(errorData?.error || "Failed to generate prompt")
+      }
       const { prompt } = await response.json()
       await navigator.clipboard.writeText(prompt)
-      toast.success("Prompt copied to clipboard")
+      toast.success(
+        isGhl
+          ? "GoHighLevel code copied to clipboard!"
+          : "Prompt copied to clipboard!",
+        { id: toastId },
+      )
       
       if (capture) {
         capture(demo.component.id, AnalyticsActivityType.COMPONENT_PROMPT_COPY, user?.id)
@@ -118,7 +137,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         action: "copy",
       })
     } catch (error: any) {
-      toast.error(error.message || "Failed to copy prompt")
+      toast.error(error.message || "Failed to copy prompt", { id: toastId })
     } finally {
       setIsPromptLoading(false)
     }
@@ -277,20 +296,44 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                 <div className="w-[1px] h-4 bg-zinc-700 dark:bg-zinc-300 mx-1" />
 
                 <DropdownMenu>
-                  <div className="flex items-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors overflow-hidden">
+                  <div className={cn(
+                    "flex items-center rounded-full bg-blue-600 text-white transition-all overflow-hidden shadow-md",
+                    isPromptLoading ? "bg-blue-600/90 cursor-wait ring-2 ring-blue-400/50" : "hover:bg-blue-700"
+                  )}>
                     <Button 
                       variant="ghost" 
                       size="sm" 
                       onClick={(e) => handlePromptAction(e)} 
                       disabled={isPromptLoading} 
-                      className="h-8 px-3 rounded-none rounded-l-full hover:bg-blue-700 hover:text-white"
+                      className={cn(
+                        "h-8 px-3 rounded-none rounded-l-full hover:bg-blue-700 hover:text-white transition-all gap-1.5",
+                        isPromptLoading && "opacity-90 cursor-wait"
+                      )}
                     >
-                      {isPromptLoading ? <Spinner size={14} /> : <Copy size={14} className="mr-1.5" />}
-                      <span className="text-xs font-medium">Copy prompt</span>
+                      {isPromptLoading ? (
+                        <>
+                          <Loader2 className="h-3.5 w-3.5 animate-spin text-white shrink-0" />
+                          <span className="text-xs font-medium">
+                            {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Generating GHL..." : "Generating..."}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={14} className="shrink-0" />
+                          <span className="text-xs font-medium">
+                            {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Copy for GHL" : "Copy prompt"}
+                          </span>
+                        </>
+                      )}
                     </Button>
                     <div className="w-[1px] h-full bg-blue-800/50" />
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 px-2 rounded-none rounded-r-full hover:bg-blue-700 hover:text-white">
+                    <DropdownMenuTrigger asChild disabled={isPromptLoading}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        disabled={isPromptLoading}
+                        className="h-8 px-2 rounded-none rounded-r-full hover:bg-blue-700 hover:text-white transition-all disabled:opacity-50"
+                      >
                         <ChevronUp size={14} />
                       </Button>
                     </DropdownMenuTrigger>
