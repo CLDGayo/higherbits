@@ -33,7 +33,8 @@ PM2_APP_NAME="higherbits.dev" # verified live pm2 app; `pm2 id higherbits` retur
 if [[ "${1:-}" == "--deploy" ]]; then
     echo ""
     echo "🔍 Validating the production build locally..."
-    corepack pnpm --filter web build
+    NEXT_DIST_DIR=.next-validate corepack pnpm --filter web build
+    rm -rf apps/web/.next-validate
 fi
 
 echo ""
@@ -46,7 +47,7 @@ echo ""
 rsync -avz --delete \
     --exclude='.git' \
     --exclude='node_modules' \
-    --exclude='.next' \
+    --exclude='.next*' \
     --exclude='.pnpm-store' \
     --exclude='.turbo' \
     --exclude='test-results*' \
