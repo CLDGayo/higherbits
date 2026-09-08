@@ -341,14 +341,10 @@ export const ComponentCard = React.memo(function ComponentCard({
           >
             <span className="sr-only">View {componentName}</span>
           </Link>
-          {/* Parallax layer 1 (Phase 05, AC1): rests 18px low, rises to 0 on
-              any of the four triggers. Same 300ms / --ease-lift as the meta
-              layer below — the separation comes from the DISTANCE difference
-              (18 vs 30), never from a delay. `transform` is compositor-only,
-              so neither layer changes the card's layout height. */}
+          {/* Card body layer */}
           <div
             data-testid="card-body-layer"
-            className="relative aspect-[4/3] mb-3 group translate-y-[18px] transition-transform duration-300 [transition-timing-function:var(--ease-lift)] group-hover/card:translate-y-0 group-focus-within/card:translate-y-0 group-has-[[data-state=open]]/card:translate-y-0 group-data-[state=open]/cardroot:translate-y-0 motion-reduce:translate-y-0 motion-reduce:transition-none"
+            className="relative aspect-[4/3] mb-3 group"
           >
             <div className="absolute inset-0">
               <div className="relative w-full h-full rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
@@ -472,11 +468,10 @@ export const ComponentCard = React.memo(function ComponentCard({
                 </div>
               )}
           </div>
-          {/* Parallax layer 2 (Phase 05, AC1): rests 30px low. Identical
-              duration and easing to the body layer — only the distance differs. */}
+          {/* Card metadata (creator avatar, component name, stats) */}
           <div
             data-testid="card-meta-layer"
-            className="flex space-x-3 items-center translate-y-[30px] transition-transform duration-300 [transition-timing-function:var(--ease-lift)] group-hover/card:translate-y-0 group-focus-within/card:translate-y-0 group-has-[[data-state=open]]/card:translate-y-0 group-data-[state=open]/cardroot:translate-y-0 motion-reduce:translate-y-0 motion-reduce:transition-none"
+            className="flex space-x-3 items-center"
           >
             {!hideUser && (
               <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
