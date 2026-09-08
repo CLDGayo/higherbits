@@ -76,7 +76,7 @@ export function Footer({ className, isOpenSource = true }: FooterProps) {
               Contact
             </Link>
             <Link
-              href="https://discord.gg/Qx4rFunHfm"
+              href="https://discord.gg/UVXcBGPhh"
               target="_blank"
               className="text-sm text-muted-foreground hover:underline underline-offset-4"
             >

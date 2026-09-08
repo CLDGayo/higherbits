@@ -6,7 +6,7 @@
 
 [![Website](https://img.shields.io/badge/Website-higherbits.dev-6366f1?style=for-the-badge&logo=globe)](https://higherbits.dev)
 [![GitHub Stars](https://img.shields.io/github/stars/CLDGayo/higherbits?style=for-the-badge&logo=github&color=f59e0b)](https://github.com/CLDGayo/higherbits)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/Qx4rFunHfm)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/UVXcBGPhh)
 [![X/Twitter](https://img.shields.io/badge/X%2FTwitter-@CLDGayo-black?logo=x&logoColor=white&style=for-the-badge)](https://x.com/CLDGayo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](./LICENSE)
 
@@ -197,7 +197,7 @@ Creators can share their UI components, themes, templates, and shaders directly 
 
 - 🌐 **Platform**: [higherbits.dev](https://higherbits.dev)
 - 📖 **Our Story**: [higherbits.dev/our-story](https://higherbits.dev/our-story)
-- 💬 **Discord**: [Join our Discord Community](https://discord.gg/Qx4rFunHfm)
+- 💬 **Discord**: [Join our Discord Community](https://discord.gg/UVXcBGPhh)
 - 🐦 **X (Twitter)**: [@CLDGayo](https://x.com/CLDGayo)
 - 🐙 **GitHub**: [github.com/CLDGayo/higherbits](https://github.com/CLDGayo/higherbits)
 

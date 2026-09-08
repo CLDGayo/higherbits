@@ -116,7 +116,7 @@ function ShortcutsList() {
       <DropdownMenuSeparator />
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-      <ExternalLink href="https://discord.gg/Qx4rFunHfm" icon={LifeBuoy}>
+      <ExternalLink href="https://discord.gg/UVXcBGPhh" icon={LifeBuoy}>
         Community Support
       </ExternalLink>
 

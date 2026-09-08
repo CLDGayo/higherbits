@@ -709,7 +709,7 @@ export function CommandMenu() {
                       <ResponsiveCommandItem
                         value="social-discord"
                         onSelect={() => {
-                          window.open("https://discord.gg/Qx4rFunHfm", "_blank")
+                          window.open("https://discord.gg/UVXcBGPhh", "_blank")
                           setSearchQuery("")
                           setValue("")
                           setOpen(false)

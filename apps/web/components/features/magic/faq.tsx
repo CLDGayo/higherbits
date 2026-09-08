@@ -67,7 +67,7 @@ const DEFAULT_FAQS = [
         If you need assistance, you can contact us via email at support@higherbits.dev
         or join our{" "}
         <Link
-          href="https://discord.gg/Qx4rFunHfm"
+          href="https://discord.gg/UVXcBGPhh"
           target="_blank"
           className="underline underline-offset-4"
         >

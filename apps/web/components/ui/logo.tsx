@@ -7,9 +7,8 @@ import { cn } from "@/lib/utils"
 import { BrandAssetsMenu, useBrandAssetsMenu } from "./brand-assets-menu"
 import { createPortal } from "react-dom"
 import dynamic from "next/dynamic"
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
 import { useTheme } from "next-themes"
-import { Hexagon } from "lucide-react"
+import { HigherBitsIcon } from "@/components/icons/higherbits-logo"
 
 // Animation cache to prevent multiple fetches of the same file
 const animationCache = new Map<string, any>()
@@ -134,22 +133,19 @@ export function Logo({
 
   const renderLogo = () => (
     <div
-      className="flex items-center gap-2 h-full"
+      className="flex items-center gap-2.5 h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Hexagon
+      <HigherBitsIcon
         className={cn(
-          "shrink-0 text-[#B19AEF]",
-          shouldShowWordmark ? "h-7 w-7" : "h-full w-auto",
+          "shrink-0 transition-transform duration-200 group-hover:scale-105",
+          shouldShowWordmark ? "h-6 w-6" : "h-full w-auto",
         )}
       />
       {shouldShowWordmark && (
-        <span className="text-xl">
-          <span className="font-bold text-foreground">Higher</span>
-          <span className="font-bold text-[#B19AEF]">
-            Bits
-          </span>
+        <span className="text-[17px] font-semibold tracking-tight text-foreground flex items-center">
+          HigherBits<span className="text-muted-foreground/70 font-normal">.dev</span>
         </span>
       )}
     </div>

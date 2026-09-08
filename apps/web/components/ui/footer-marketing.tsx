@@ -1,6 +1,6 @@
 import React from "react"
 import Link from "next/link"
-import { Hexagon } from "lucide-react"
+import { HigherBitsIcon } from "@/components/icons/higherbits-logo"
 import { SignInButton } from "@clerk/nextjs"
 
 import { SITE_NAME } from "@/lib/constants"
@@ -100,7 +100,7 @@ const COLUMNS: {
   {
     heading: "Connect",
     links: [
-      { label: "Discord", href: "https://discord.gg/Qx4rFunHfm", external: true },
+      { label: "Discord", href: "https://discord.gg/UVXcBGPhh", external: true },
       {
         label: "GitHub",
         href: "https://github.com/CLDGayo/higherbits",
@@ -130,7 +130,7 @@ export function FooterMarketing({ className }: { className?: string }) {
           {/* Capture col 1: a 14px mark and the wordmark on one 20px line. */}
           <div className="col-span-2 flex flex-col gap-5 md:col-span-1">
             <div className="flex items-center gap-2">
-              <Hexagon className="h-[14px] w-[14px] shrink-0 text-[#B19AEF]" />
+              <HigherBitsIcon className="h-4 w-4 shrink-0 text-foreground" />
               <span className="text-[13px] font-medium leading-5 text-muted-foreground">
                 {SITE_NAME}
               </span>

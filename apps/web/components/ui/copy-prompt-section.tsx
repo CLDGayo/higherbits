@@ -1,6 +1,7 @@
 import React from "react"
 import Link from "next/link"
-import { ArrowUp, Bookmark, BookmarkCheck, Hexagon, MousePointer2 } from "lucide-react"
+import { ArrowUp, Bookmark, BookmarkCheck, MousePointer2 } from "lucide-react"
+import { HigherBitsIcon } from "@/components/icons/higherbits-logo"
 
 import { AccentWord } from "@/components/ui/accent-word"
 import { Icons } from "@/components/icons"
@@ -267,7 +268,7 @@ export function CopyPromptSection({
                     style={{ boxShadow: "rgba(0, 0, 0, 0.7) 0px 12px 48px" }}
                   >
                     <div className="flex items-center gap-2.5 border-b border-white/[0.06] px-4 py-2.5 text-[13px] font-medium text-[#f7f8f8]">
-                      <Hexagon
+                      <HigherBitsIcon
                         aria-hidden="true"
                         className="h-4 w-4 shrink-0 text-[#B19AEF]"
                       />

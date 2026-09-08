@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { motion } from "motion/react"
+import { HigherBitsIcon, HigherBitsLogoHorizontal } from "@/components/icons/higherbits-logo"
 
 interface AssetCardProps {
   title: string
@@ -14,31 +15,17 @@ interface AssetCardProps {
   index?: number
 }
 
-// HigherBits brand mark — hexagon wordmark, matching logo.tsx's renderLogo() pattern.
+// HigherBits authentic brand mark — 3D geometric cube mark
 const HigherBitsLogoSVG = ({
   color = "currentColor",
-  width = 124,
-  height = 24,
+  size = 40,
 }: {
   color?: string
-  width?: number
-  height?: number
+  size?: number
 }) => (
-  <svg
-    width={width}
-    height={height}
-    viewBox="0 0 84 84"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M42 6 L72 24 V60 L42 78 L12 60 V24 Z"
-      fill="none"
-      stroke={color}
-      strokeWidth="6"
-      strokeLinejoin="round"
-    />
-  </svg>
+  <HigherBitsIcon
+    style={{ color, width: size, height: size }}
+  />
 )
 
 const AssetCard = ({
@@ -84,9 +71,8 @@ const AssetCard = ({
         )}
       >
         <HigherBitsLogoSVG
-          color={logoColor === "white" ? "#ffffff" : "#147070"}
-          width={40}
-          height={40}
+          color={logoColor === "white" ? "#ffffff" : "#09090b"}
+          size={40}
         />
       </div>
       <div className="flex justify-stretch">

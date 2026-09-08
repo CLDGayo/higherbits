@@ -572,7 +572,7 @@ function HeaderContent({
                       <DropdownMenuItem
                         className="text-sm px-3 py-2 cursor-pointer flex justify-between items-center"
                         onSelect={() =>
-                          window.open("https://discord.gg/Qx4rFunHfm", "_blank")
+                          window.open("https://discord.gg/UVXcBGPhh", "_blank")
                         }
                       >
                         <span>Discord</span>

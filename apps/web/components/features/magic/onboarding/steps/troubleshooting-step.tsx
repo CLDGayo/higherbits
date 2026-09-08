@@ -49,7 +49,7 @@ export function TroubleshootingStep({
       }
       if (e.key.toLowerCase() === "c") {
         e.preventDefault()
-        window.open("https://discord.gg/Qx4rFunHfm", "_blank")
+        window.open("https://discord.gg/UVXcBGPhh", "_blank")
       }
     }
 
@@ -251,7 +251,7 @@ export function TroubleshootingStep({
           </Button>
           <Button
             onClick={() =>
-              window.open("https://discord.gg/Qx4rFunHfm", "_blank")
+              window.open("https://discord.gg/UVXcBGPhh", "_blank")
             }
             variant="outline"
             className="pr-1.5"

@@ -295,7 +295,7 @@ export default async function Page() {
                 Have ideas for how we should evolve the contests? Share your
                 thoughts in our{" "}
                 <a
-                  href="https://discord.gg/Qx4rFunHfm"
+                  href="https://discord.gg/UVXcBGPhh"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary-emphasis underline underline-offset-4"
@@ -365,7 +365,7 @@ export default async function Page() {
               <p className="text-base leading-7">
                 Got questions or want instant feedback?{" "}
                 <a
-                  href="https://discord.gg/Qx4rFunHfm"
+                  href="https://discord.gg/UVXcBGPhh"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary-emphasis underline underline-offset-4"
