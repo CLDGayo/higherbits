@@ -2,7 +2,11 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-const isProtectedRoute = createRouteMatcher(["/publish(.*)", "/settings(.*)"])
+const isProtectedRoute = createRouteMatcher([
+  "/publish(.*)",
+  "/settings(.*)",
+  "/admin(.*)",
+])
 
 export default clerkMiddleware(async (auth, request) => {
   if (process.env.MAINTENANCE_MODE === "true") {
@@ -24,6 +28,10 @@ export default clerkMiddleware(async (auth, request) => {
       const { userId } = await auth()
       const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1"
       const identifier = userId || ip
+
+      const isAiOrPromptRoute = pathname.startsWith("/api/prompts")
+      const limit = isAiOrPromptRoute ? 15 : 120
+      const endpoint = isAiOrPromptRoute ? "ai_prompts" : "global_api"
       
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,8 +40,8 @@ export default clerkMiddleware(async (auth, request) => {
       
       const { data: isAllowed, error } = await supabase.rpc("check_rate_limit", {
         p_user_id: identifier,
-        p_endpoint: "global_api",
-        p_limit: 120, // Generous default limit: 120 req / minute
+        p_endpoint: endpoint,
+        p_limit: limit,
         p_window_seconds: 60,
       })
 
@@ -58,7 +66,7 @@ export default clerkMiddleware(async (auth, request) => {
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.redirect(
-        new URL(process.env.AUTH_URL_SIGN_IN!, request.url),
+        new URL(process.env.AUTH_URL_SIGN_IN || "/sign-in", request.url),
       )
     }
   }
