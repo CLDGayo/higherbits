@@ -1,6 +1,18 @@
 "use client"
 
-import { ShaderRuntime } from "./shader-runtime"
+import dynamic from "next/dynamic"
+
+const ShaderRuntime = dynamic(
+  () => import("./shader-runtime").then((m) => m.ShaderRuntime),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full w-full items-center justify-center bg-muted">
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    ),
+  },
+)
 import {
   SHADER_DEFAULT_PAYLOAD,
   registerPreviewRenderer,

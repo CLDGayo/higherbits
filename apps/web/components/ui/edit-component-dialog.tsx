@@ -33,7 +33,19 @@ import { ExternalLink, LoaderCircle } from "lucide-react"
 import { EditCodeFileCard } from "../features/publish/components/edit-code-file-card"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
-import { CodeEditorDialog } from "./code-editor-dialog"
+import dynamic from "next/dynamic"
+
+const CodeEditorDialog = dynamic(
+  () => import("./code-editor-dialog").then((mod) => mod.CodeEditorDialog),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full min-h-[300px] items-center justify-center">
+        <LoaderCircle className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    ),
+  },
+)
 import { addVersionToUrl } from "@/lib/utils/url"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { atom, useAtom } from "jotai"

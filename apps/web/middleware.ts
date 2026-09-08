@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
+import { checkRateLimit } from "@/lib/rate-limit"
 
 const isProtectedRoute = createRouteMatcher([
   "/publish(.*)",
@@ -36,26 +36,31 @@ export default clerkMiddleware(async (auth, request) => {
       const limit = isAiOrPromptRoute ? 15 : 120
       const endpoint = isAiOrPromptRoute ? "ai_prompts" : "global_api"
       
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      const { success, limit: maxLimit, remaining, reset } = checkRateLimit(
+        identifier,
+        endpoint,
+        limit,
+        60,
       )
-      
-      const { data: isAllowed, error } = await supabase.rpc("check_rate_limit", {
-        p_user_id: identifier,
-        p_endpoint: endpoint,
-        p_limit: limit,
-        p_window_seconds: 60,
-      })
 
-      if (error) {
-        console.error("Middleware rate limit error:", error)
-      } else if (isAllowed === false) {
+      if (!success) {
         return NextResponse.json(
           { error: "Too many requests. Please try again later." },
-          { status: 429 }
+          {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": maxLimit.toString(),
+              "X-RateLimit-Remaining": "0",
+              "X-RateLimit-Reset": reset.toString(),
+              "Retry-After": "60",
+            },
+          },
         )
       }
+
+      requestHeaders.set("X-RateLimit-Limit", maxLimit.toString())
+      requestHeaders.set("X-RateLimit-Remaining", remaining.toString())
+      requestHeaders.set("X-RateLimit-Reset", reset.toString())
     }
 
     return NextResponse.next({
