@@ -259,10 +259,10 @@ export const CodeGuidelinesAlert = () => {
                   environment; if it doesn't, contact{" "}
                   <Link
                     className="font-semibold"
-                    href="https://x.com/serafimcloud"
+                    href="https://x.com/CLDGayo"
                     target="_blank"
                   >
-                    @serafimcloud
+                    @CLDGayo
                   </Link>{" "}
                   on X
                 </li>

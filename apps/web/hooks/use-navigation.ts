@@ -61,20 +61,8 @@ export function useNavigation(
     }
 
     if (pathname === "/" && !urlTab) {
-      if (useResponsiveDefaults) {
-        const defaultTab = "home"
-        setCurrentSection("home")
-        setSelectedMainTab(defaultTab as MainTabType | "home")
-
-        if (syncWithUrl) {
-          const params = new URLSearchParams(searchParams.toString())
-          params.set("tab", defaultTab)
-          router.push(`?${params.toString()}`, { scroll: false })
-        }
-      } else {
-        setCurrentSection("home")
-        setSelectedMainTab("home")
-      }
+      setCurrentSection("home")
+      setSelectedMainTab("home")
       return
     }
 

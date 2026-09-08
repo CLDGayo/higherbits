@@ -33,10 +33,11 @@ export const trackPageProperties = (properties: Record<string, any>) => {
     return
   }
 
-  amplitude.track("", { ...properties })
+  amplitude.track(AMPLITUDE_EVENTS.VIEW_COMPONENT, { ...properties })
 }
 
 export const AMPLITUDE_EVENTS = {
+  VIEW_COMPONENT: "component_viewed",
   COPY_INSTALL_COMMAND: "component_install_command_copied",
   COPY_CODE: "component_code_copied",
   COPY_DEPENDENCY: "component_dependency_copied",

@@ -3,11 +3,30 @@ import { Metadata } from "next"
 
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
-import { HeroSection } from "@/components/ui/hero-section"
+import { FooterMarketing } from "@/components/ui/footer-marketing"
+import { LandingPageLayout } from "@/components/ui/landing-page-layout"
 import { NewsletterDialog } from "@/components/ui/newsletter-dialog"
 import { HomePageClient } from "./page.client"
-import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
+import { JsonLd } from "@/components/seo/json-ld"
+import { faqPageJsonLd } from "@/lib/seo/faq"
+import { supabaseWithAdminAccess } from "@/lib/supabase"
+import {
+  getCatalogueChipPool,
+  getLandingCatalogueRows,
+} from "@/lib/landing-catalogue-rows"
+import { getCachedFeaturedExample } from "@/lib/landing-featured-example"
+import { getCachedLandingAuthors } from "@/lib/landing-authors"
+import { unstable_cache } from "next/cache"
+import {
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  SITE_DESCRIPTION,
+  BASE_KEYWORDS,
+} from "@/lib/constants"
 export const dynamic = "force-dynamic"
+
+
 
 export const generateMetadata = async ({
   searchParams,
@@ -19,12 +38,12 @@ export const generateMetadata = async ({
   // `/templates` now 308-redirects here (Phase 04 decision B2). A redirect body is
   // never served, so the retired route's SEO metadata is re-hosted on this branch.
   if (tab === "templates") {
-    const templatesTitle = `shadcn/ui Templates Collection | ${SITE_NAME} - ${SITE_SLOGAN}`
+    const templatesTitle = `shadcn/ui Templates Collection | ${SITE_NAME}`
     const templatesDescription =
       "Collection of crafted website templates built with shadcn/ui components, Framer Motion animations and Tailwind CSS by design engineers."
 
     return {
-      title: templatesTitle,
+      title: { absolute: templatesTitle },
       description: templatesDescription,
       openGraph: {
         title: templatesTitle,
@@ -44,33 +63,15 @@ export const generateMetadata = async ({
     }
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: `${SITE_NAME} - ${SITE_SLOGAN}`,
-    description:
-      "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
-    url: process.env.NEXT_PUBLIC_APP_URL,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${process.env.NEXT_PUBLIC_APP_URL}/q/{search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
-    keywords: BASE_KEYWORDS,
-  }
-
   return {
-    title: `${SITE_NAME} – ${SITE_SLOGAN}`,
+    title: { absolute: SITE_TITLE },
     description:
-      "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+      SITE_DESCRIPTION,
     keywords: [...BASE_KEYWORDS],
     openGraph: {
-      title: `${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: SITE_TITLE,
       description:
-        "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+        SITE_DESCRIPTION,
       images: [
         {
           url: `${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`,
@@ -81,16 +82,53 @@ export const generateMetadata = async ({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: SITE_TITLE,
       description:
-        "Ship polished UIs faster with ready-to-use React Tailwind components inspired by shadcn/ui.",
+        SITE_DESCRIPTION,
       images: [`${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`],
-    },
-    other: {
-      "script:ld+json": JSON.stringify(jsonLd),
     },
   }
 }
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || SITE_URL
+
+/**
+ * WebSite + SoftwareApplication + FAQPage.
+ *
+ * These used to be handed to `metadata.other["script:ld+json"]`, which renders a
+ * `<meta name="script:ld+json">` and nothing else - so the site shipped zero
+ * `<script type="application/ld+json">` tags and no parser ever read them.
+ */
+const homeJsonLd = () => [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: siteUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/q/{search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+    keywords: BASE_KEYWORDS,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: SITE_NAME,
+    url: siteUrl,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Web",
+    description: SITE_DESCRIPTION,
+    offers: { "@type": "Offer", priceCurrency: "USD", price: "0" },
+    publisher: { "@type": "Organization", name: "Higher Bits Labs Inc." },
+  },
+  faqPageJsonLd(),
+]
 
 export default async function HomePage({
   searchParams,
@@ -101,16 +139,43 @@ export default async function HomePage({
 
   // The marketing landing page owns the bare root URL; tabs opt into the browser.
   if (!tab) {
+    const { mostLoved, newest } = await getLandingCatalogueRows()
+    const cataloguePool = await getCatalogueChipPool()
+    const featured = await getCachedFeaturedExample()
+    const authors = await getCachedLandingAuthors()
+
     return (
-      <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
-        <div className="flex-1 flex flex-col gap-6 min-w-0">
-          <div className="flex flex-col min-w-0">
-            <HeroSection />
+      <>
+        {/* The landing branch shipped without a Header, so `/` had no nav, no
+            Log in / Sign up, and no way to reach <LandingAuthModals> — which is
+            mounted inside the header. LandingPageLayout's pt-24 was reserving
+            space for a header that never rendered. */}
+        <Header variant="default" transparentAtTop />
+        <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
+          {homeJsonLd().map((data) => (
+            <JsonLd key={String(data["@type"])} data={data} />
+          ))}
+          <div className="flex-1 flex flex-col gap-6 min-w-0">
+            <div className="flex flex-col min-w-0">
+              <LandingPageLayout
+                mostLoved={mostLoved}
+                cataloguePool={cataloguePool}
+                newest={newest}
+                featured={featured}
+                authors={authors}
+              />
+            </div>
+            <NewsletterDialog />
           </div>
-          <NewsletterDialog />
+          {/*
+            Phase 08 (D-1): the landing branch renders the new 4-column
+            marketing footer. The tab branch below deliberately keeps the
+            shared <Footer />, which stays byte-for-byte untouched along with
+            its 13 other route consumers.
+          */}
+          <FooterMarketing />
         </div>
-        <Footer />
-      </div>
+      </>
     )
   }
 

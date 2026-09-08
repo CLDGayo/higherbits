@@ -1,5 +1,5 @@
 import { PurchaseComponentError } from "@/app/api/components/purchase/route"
-import { makeSlugFromName } from "@/components/features/publish/hooks/use-is-check-slug-available"
+import { makeSlugFromName } from "@/lib/utils"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { categories } from "@/lib/navigation"
 import { transformDemoResult } from "@/lib/utils/transformData"

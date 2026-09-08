@@ -4,8 +4,9 @@ import ShortUUID from "short-uuid"
 // Define the extended type here
 export interface ExtendedDemoWithComponent extends DemoWithComponent {
   is_private?: boolean
-  submission_status?: string
-  moderators_feedback?: string
+  /** Null when the component has no `submissions` row. Never defaulted. */
+  submission_status?: string | null
+  moderators_feedback?: string | null
 }
 
 const shortUUID = ShortUUID()
@@ -47,7 +48,12 @@ export const transformDemoResult = (result: any): ExtendedDemoWithComponent => {
     embedding_oai: result.embedding_oai || null,
     bundle_url: result.bundle_url || null,
     is_private: result.is_private || false,
-    submission_status: result.submission_status || "featured",
+    // Preserved as-is, including null. `get_user_profile_demo_list_v2` LEFT
+    // JOINs submissions, so a component that was never submitted arrives NULL.
+    // This used to default to "featured", which showed owners a green Featured
+    // pill for unsubmitted work. Consumers decide how to render the absence —
+    // see components/features/studio/ui/component-status.ts.
+    submission_status: result.submission_status ?? null,
     moderators_feedback: result.moderators_feedback || null,
   }
   // @ts-ignore TODO: fix this

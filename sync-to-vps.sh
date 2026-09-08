@@ -25,7 +25,7 @@ fi
 : "${VPS_USER:?VPS_USER not set in .env.deploy}"
 : "${VPS_HOST:?VPS_HOST not set in .env.deploy}"
 : "${VPS_DEST:?VPS_DEST not set in .env.deploy}"
-: "${PM2_APP_NAME:=higherbits}" # default pm2 app name if not set
+PM2_APP_NAME="higherbits.dev" # verified live pm2 app; `pm2 id higherbits` returns [] so the old default half-deployed
 : "${VPS_NODE_OPTIONS:=--max-old-space-size=3072}"
 : "${VPS_BUILD_WORKERS:=1}"
 : "${VPS_BUILD_DIST_DIR:=.next-release}"
@@ -33,7 +33,8 @@ fi
 if [[ "${1:-}" == "--deploy" ]]; then
     echo ""
     echo "🔍 Validating the production build locally..."
-    corepack pnpm --filter web build
+    NEXT_DIST_DIR=.next-validate corepack pnpm --filter web build
+    rm -rf apps/web/.next-validate
 fi
 
 echo ""
@@ -46,11 +47,12 @@ echo ""
 rsync -avz --delete \
     --exclude='.git' \
     --exclude='node_modules' \
-    --exclude='.next' \
+    --exclude='.next*' \
     --exclude='.pnpm-store' \
     --exclude='.turbo' \
-    --exclude='test-results' \
+    --exclude='test-results*' \
     --exclude='playwright-report' \
+    --exclude='.auth' \
     --exclude='dist' \
     --exclude='.env.local' \
     --exclude='.env.deploy' \
@@ -78,7 +80,7 @@ if [[ "${1:-}" == "--deploy" ]]; then
             echo \"🔨 Building project...\"
             rm -rf \"apps/web/$VPS_BUILD_DIST_DIR\"
             # Run Next directly so the VPS-only validation override reaches Next instead of
-            # being filtered by Turborepo's task environment.
+            # being filtered by the Turborepo task environment.
             NODE_OPTIONS=\"$VPS_NODE_OPTIONS\" CIRCLE_NODE_TOTAL=\"$VPS_BUILD_WORKERS\" NEXT_DIST_DIR=\"$VPS_BUILD_DIST_DIR\" SKIP_BUILD_VALIDATION=true pnpm --filter web build
             test -f \"apps/web/$VPS_BUILD_DIST_DIR/BUILD_ID\"
             

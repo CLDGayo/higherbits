@@ -1,6 +1,7 @@
 import ErrorPage from "@/components/ui/error-page"
 import { hasUserComponentAccess } from "@/lib/api/server/components"
-import { BASE_KEYWORDS, SITE_NAME, SITE_SLOGAN } from "@/lib/constants"
+import { BASE_KEYWORDS, SITE_TITLE } from "@/lib/constants"
+import { JsonLd } from "@/components/seo/json-ld"
 import { extractDemoComponentNames } from "@/lib/parsers"
 import {
   getComponent,
@@ -36,28 +37,11 @@ export const generateMetadata = async (props: {
 
   const ogImageUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${user.display_username || user.username}/${component.component_slug}/opengraph-image`
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareSourceCode",
-    name: component.name,
-    description: component.description,
-    programmingLanguage: {
-      "@type": "ComputerLanguage",
-      name: "React",
-    },
-    author: {
-      "@type": "Person",
-      name: user.display_name || user.name || user.username,
-    },
-    dateCreated: component.created_at,
-    license: component.license,
-  }
-
   return {
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     ),
-    title: `${component.name} | ${SITE_NAME} - ${SITE_SLOGAN}`,
+    title: `${component.name}`,
     description:
       component.description ||
       `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`,
@@ -69,7 +53,7 @@ export const generateMetadata = async (props: {
       `${user.display_username || user.username} components`,
     ],
     openGraph: {
-      title: `${component.name} | ${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: `${component.name} | ${SITE_TITLE}`,
       description:
         component.description ||
         `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`,
@@ -84,26 +68,47 @@ export const generateMetadata = async (props: {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${component.name} | ${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: `${component.name} | ${SITE_TITLE}`,
       description:
         component.description ||
         `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`,
       images: [ogImageUrl],
     },
-    other: {
-      "script:ld+json": JSON.stringify(structuredData),
-    },
   }
 }
+
+/**
+ * `SoftwareSourceCode` for one component.
+ *
+ * Previously handed to `metadata.other["script:ld+json"]`, which renders a
+ * `<meta>` tag and nothing a structured-data parser reads.
+ */
+const componentJsonLd = (component: any, user: any) => ({
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  name: component.name,
+  description: component.description,
+  programmingLanguage: { "@type": "ComputerLanguage", name: "React" },
+  author: {
+    "@type": "Person",
+    name: user.display_name || user.name || user.username,
+  },
+  dateCreated: component.created_at,
+  license: component.license,
+})
 
 const fetchFileTextContent = async (url: string | null | undefined) => {
   if (!url) {
     console.error("Empty URL provided to fetchFileTextContent")
     return { data: null, error: new Error("Empty URL provided") }
   }
+  const isUrl = url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")
+  if (!isUrl) {
+    return { data: url, error: null }
+  }
   const filename = url.split("/").slice(-1)[0]
   try {
-    const response = await fetch(url)
+    const response = await fetch(url, { next: { revalidate: 3600 } })
     if (!response.ok) {
       console.error(`Error response in fetching file ${filename}`, response)
       throw new Error(
@@ -132,7 +137,13 @@ export default async function ComponentPageServer(props: {
     redirect("/")
   }
 
-  const { userId } = await auth()
+  let userId: string | null = null
+  try {
+    const authResult = await auth()
+    userId = authResult.userId
+  } catch (e) {
+    console.warn("Clerk auth() failed (likely due to parallel route interception):", e)
+  }
   const demo_slug = params.demo_slug || "default"
 
   try {
@@ -264,6 +275,28 @@ export default async function ComponentPageServer(props: {
 
     return (
       <div className="w-full px-4">
+        <JsonLd data={componentJsonLd(component, component.user)} />
+        {/* Server-rendered so crawlers that do not execute JS still get the
+            component's identity: <ComponentPage> is a client component whose
+            SSR pass paints only a loading skeleton. Also supplies the page's
+            single <h1>, which the route otherwise lacks. */}
+        <header className="sr-only">
+          <h1>{component.name}</h1>
+          {component.description && <p>{component.description}</p>}
+          <p>
+            By{" "}
+            {component.user.display_name ||
+              component.user.name ||
+              component.user.username}
+          </p>
+          {!!component.tags?.length && (
+            <ul>
+              {component.tags.map((tag: { slug: string; name: string }) => (
+                <li key={tag.slug}>{tag.name}</li>
+              ))}
+            </ul>
+          )}
+        </header>
         <ComponentPage
           component={component}
           demo={demo}

@@ -32,6 +32,7 @@ export default defineConfig({
     outDir: '${path.relative(tempDir, outDir)}',
     sourcemap: false,
     minify: true,
+    target: 'esnext',
   },
 });
       `,
@@ -49,6 +50,10 @@ export default defineConfig({
     return true
   } catch (error) {
     console.warn("vite: Bundling error:", error)
+    if (error && typeof error === 'object') {
+       console.warn("vite: Bundling error message:", (error as any).message)
+       console.warn("vite: Bundling error stack:", (error as any).stack)
+    }
     return false
   }
 }

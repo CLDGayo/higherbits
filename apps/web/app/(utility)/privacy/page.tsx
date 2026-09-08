@@ -5,7 +5,9 @@ export const metadata: Metadata = {
   description: "Privacy policy for HigherBits.dev",
 }
 
-export default function PrivacyPolicy() {
+import { JSX } from "react"
+
+export default function PrivacyPolicy(): JSX.Element {
   return (
     <div className="container max-w-3xl py-6 md:py-10">
       <div className="prose dark:prose-invert max-w-none">

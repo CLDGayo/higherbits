@@ -1,5 +1,10 @@
 "use server"
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import {
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import path from "path"
 import dotenv from "dotenv"
@@ -25,6 +30,70 @@ const r2Client = new S3Client({
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
   },
 })
+
+/**
+ * Deletes every object under `prefix`. Used to clean up an artifact's objects
+ * when the artifact row goes away (P11-D1).
+ *
+ * Returns the number of objects deleted, so a caller can log something more
+ * useful than "done".
+ *
+ * **The trailing-slash guard is not decoration.** `Prefix: ""` matches every
+ * object in the bucket, and a prefix missing its slash matches sibling keys by
+ * string prefix - `ascii/u/artifact1` would also match `ascii/u/artifact10/…`.
+ * This function issues bulk deletes, so a prefix bug here empties a production
+ * bucket. It refuses rather than trusting its caller.
+ */
+export const deleteR2Prefix = async ({
+  prefix,
+  bucketName,
+}: {
+  prefix: string
+  bucketName: string
+}): Promise<number> => {
+  if (!prefix || !prefix.endsWith("/") || prefix.startsWith("/")) {
+    throw new Error(
+      `Refusing to delete R2 prefix ${JSON.stringify(prefix)}: must be non-empty and end with "/"`,
+    )
+  }
+
+  let deleted = 0
+  let continuationToken: string | undefined
+
+  do {
+    const listed = await r2Client.send(
+      new ListObjectsV2Command({
+        Bucket: bucketName,
+        Prefix: prefix,
+        ContinuationToken: continuationToken,
+      }),
+    )
+
+    const objects = (listed.Contents ?? [])
+      .map((object) => object.Key)
+      .filter((key): key is string => Boolean(key))
+      // Belt and braces: the API should only ever return keys under Prefix,
+      // but a bulk delete is not the place to assume that.
+      .filter((key) => key.startsWith(prefix))
+      .map((Key) => ({ Key }))
+
+    if (objects.length > 0) {
+      await r2Client.send(
+        new DeleteObjectsCommand({
+          Bucket: bucketName,
+          Delete: { Objects: objects, Quiet: true },
+        }),
+      )
+      deleted += objects.length
+    }
+
+    continuationToken = listed.IsTruncated
+      ? listed.NextContinuationToken
+      : undefined
+  } while (continuationToken)
+
+  return deleted
+}
 
 export const uploadToR2 = async ({
   file,

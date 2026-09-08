@@ -601,3 +601,6 @@ No `README.md` inside `process/context/`. Canonical entrypoints: root `process/c
 ## Context Update Protocol
 
 When durable project knowledge changes: (1) update the smallest relevant context file, (2) update this file if routing/ownership/naming/groups changed, (3) update the owning `all-{group}.md`, (4) run `vc-audit-context`.
+
+## Browser Verification Rule (Mandatory)
+**MANDATORY RULE:** When any session is starting, ALWAYS view the browser the user is using to know what problems they are facing. Always use the `chrome-devtools` MCP server to view the browser (e.g. `list_pages`, `take_screenshot`). This is mandatory. If you cannot find the browser, or if the browser with chrome dev tools and internet enabled is closed, ALWAYS ask the user: "Do you want a dev browser with chrome dev tools and internet enabled?" This prevents hallucinations caused by relying purely on screenshots, allowing the agent to confirm the state directly.

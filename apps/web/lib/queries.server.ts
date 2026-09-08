@@ -68,24 +68,38 @@ export async function resolveRegistryDependencyTree({
       global_css_extension,
     } = dep
 
-    const response = await fetch(r2Link!)
-    if (!response.ok) {
-      console.error(
-        `Error downloading file for ${username}/${component_slug}:`,
-        response.statusText,
-        r2Link,
-      )
-      return {
-        error: new Error(
-          `Error downloading file for ${username}/${component_slug}: ${response.statusText}`,
-        ),
-        npmDependencies: npmDependencies,
-        fileWithRegistry: null,
-        styles: null,
+    let code = ""
+    const isUrl = r2Link && (r2Link.startsWith("http://") || r2Link.startsWith("https://") || r2Link.startsWith("/"))
+    if (isUrl) {
+      try {
+        const response = await fetch(r2Link)
+        if (!response.ok) {
+          console.error(
+            `Error downloading file for ${username}/${component_slug}:`,
+            response.statusText,
+            r2Link,
+          )
+          return {
+            error: new Error(
+              `Error downloading file for ${username}/${component_slug}: ${response.statusText}`,
+            ),
+            npmDependencies: npmDependencies,
+            fileWithRegistry: null,
+            styles: null,
+          }
+        }
+        code = await response.text()
+      } catch (err) {
+        return {
+          error: new Error(`Failed to fetch file for ${username}/${component_slug}: ${err}`),
+          npmDependencies: npmDependencies,
+          fileWithRegistry: null,
+          styles: null,
+        }
       }
+    } else {
+      code = r2Link!
     }
-
-    const code = await response.text()
     if (!code) {
       console.error(
         `Error loading dependency ${username}/${component_slug}: No code returned`,

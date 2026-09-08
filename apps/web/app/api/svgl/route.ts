@@ -8,6 +8,25 @@ export async function GET(request: Request) {
   const svgUrl = searchParams.get("svg")
 
   if (svgUrl) {
+    // Only proxy SVGs from svgl's own asset hosts. Fetching an arbitrary
+    // attacker-supplied URL here is a server-side request forgery vector.
+    let parsed: URL
+    try {
+      parsed = new URL(svgUrl)
+    } catch {
+      return NextResponse.json({ error: "Invalid svg URL" }, { status: 400 })
+    }
+    const allowedSvgHosts = ["svgl.app", "raw.githubusercontent.com"]
+    const hostAllowed = allowedSvgHosts.some(
+      (h) => parsed.hostname === h || parsed.hostname.endsWith(`.${h}`),
+    )
+    if (parsed.protocol !== "https:" || !hostAllowed) {
+      return NextResponse.json(
+        { error: "svg URL host not allowed" },
+        { status: 400 },
+      )
+    }
+
     try {
       const response = await fetch(svgUrl)
       const svgText = await response.text()

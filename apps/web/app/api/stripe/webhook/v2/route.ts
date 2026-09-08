@@ -410,9 +410,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     )
   }
 
-  console.log("body", body)
-  console.log("-----")
-  console.log("event", event)
+  // Do not log the raw body / full event — they carry payment metadata and
+  // billing identifiers. Log only the non-sensitive event type.
+  console.log("Stripe v2 webhook received:", event.type)
 
   const eventObject = event.data.object
   let userId

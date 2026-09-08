@@ -1,10 +1,11 @@
 import { hasUserPurchasedDemo } from "@/lib/api/server/demos"
 import { getComponentInstallPrompt } from "@/lib/prompts"
+import { generateGhlTemplate, cleanGhlHtml } from "@/lib/ghl-generator"
 import {
   resolveRegistryDependenciesV2,
   transformToFlatDependencyTree,
 } from "@/lib/registry"
-import { PromptType } from "@/types/global"
+import { PromptType, PROMPT_TYPES } from "@/types/global"
 import { auth } from "@clerk/nextjs/server"
 import { createClient } from "@supabase/supabase-js"
 import { NextRequest, NextResponse } from "next/server"
@@ -14,16 +15,25 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 )
 
-async function fetchCode(url: string) {
-  if (!url) {
+async function fetchCode(urlOrCode: string) {
+  if (!urlOrCode) {
     return ""
   }
-  const response = await fetch(url)
-  if (!response.ok) {
-    console.error(`Failed to fetch code from ${url}:`, response.statusText)
-    throw new Error(`Failed to fetch code: ${response.statusText}`)
+  if (!urlOrCode.startsWith("http://") && !urlOrCode.startsWith("https://")) {
+    return urlOrCode
   }
-  return response.text()
+  try {
+    const response = await fetch(urlOrCode)
+    if (!response.ok) {
+      console.error(`Failed to fetch code from ${urlOrCode}:`, response.statusText)
+      throw new Error(`Failed to fetch code: ${response.statusText}`)
+    }
+    return response.text()
+  } catch (error) {
+    console.error(`Error fetching or parsing URL ${urlOrCode}:`, error)
+    // If it still failed, it might be raw code that somehow contains http/https
+    return urlOrCode
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -51,7 +61,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { prompt_type, demo_id, rule_id, additional_context } = body
+    const { prompt_type, demo_id, rule_id, additional_context, force_regenerate } = body
     const { userId } = await auth()
 
     const hasPurchased = await hasUserPurchasedDemo(userId, demo_id)
@@ -117,6 +127,54 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Fast path for GoHighLevel: bypass expensive dependency resolution and file downloads
+    if (prompt_type === PROMPT_TYPES.GOHIGHLEVEL) {
+      const isCorrupted =
+        demo.ghl_html_content &&
+        (demo.ghl_html_content.trim().startsWith("```") ||
+          demo.ghl_html_content.includes("border border-border rounded-xl p-6 shadow-sm") ||
+          demo.ghl_html_content.includes(".ghl-component-wrapper button,") ||
+          !demo.ghl_html_content.includes(":where(.ghl-component-wrapper)") ||
+          !demo.ghl_html_content.includes("fonts.googleapis.com/css2?family=Inter") ||
+          demo.ghl_html_content.includes("-right-[50vw]") ||
+          demo.ghl_html_content.includes("w-[100vw]") ||
+          (!demo.ghl_html_content.includes("</html>") && !demo.ghl_html_content.includes("</div>")))
+
+      if (demo.ghl_html_content && !force_regenerate && !isCorrupted) {
+        console.log("Fast path: returned pre-generated HTML for GHL template.")
+        return NextResponse.json({
+          prompt: cleanGhlHtml(demo.ghl_html_content),
+          debug: {
+            ruleApplied: false,
+            contextApplied: false,
+            cached: true,
+          },
+        })
+      }
+
+      try {
+        console.log(
+          `Generating GHL template on-demand for demo: ${demo.id} (force: ${!!force_regenerate}, corrupted: ${!!isCorrupted})`
+        )
+        const prompt = await generateGhlTemplate(demo.id, true)
+        return NextResponse.json({
+          prompt,
+          debug: {
+            ruleApplied: false,
+            contextApplied: false,
+            cached: false,
+          },
+        })
+      } catch (err: any) {
+        const errorMessage =
+          err?.message || "Failed to generate GoHighLevel template."
+        return NextResponse.json(
+          { error: errorMessage },
+          { status: 500 },
+        )
+      }
+    }
+
     const [demoCode, componentCode, tailwindConfig, globalCss, indexCss] =
       await Promise.all([
         fetchCode(demo.demo_code),
@@ -128,12 +186,12 @@ export async function POST(request: NextRequest) {
 
     const resolvedComponentRegistryDependencies =
       await resolveRegistryDependenciesV2(
-        demo?.component?.direct_registry_dependencies,
+        demo?.component?.direct_registry_dependencies || [],
       )
 
     const resolvedDemoRegistryDependenciesK =
       await resolveRegistryDependenciesV2(
-        demo?.demo_direct_registry_dependencies,
+        demo?.demo_direct_registry_dependencies || [],
       )
 
     console.log(
@@ -227,9 +285,8 @@ export async function POST(request: NextRequest) {
       }),
     }
 
-    let prompt = getComponentInstallPrompt(promptParams)
+    const prompt = getComponentInstallPrompt(promptParams)
     console.log("Generated prompt content:", prompt.substring(0, 500) + "...")
-
     console.log("Base prompt generated")
 
     return NextResponse.json({

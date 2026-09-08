@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, Suspense } from "react"
+import { useEffect, useState, Suspense } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 
 import { ClerkProvider } from "@clerk/nextjs"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -22,8 +23,19 @@ function AppProvidersContent({
 }: {
   children: React.ReactNode
 }) {
-  const [open, setOpen] = useAtom(sidebarOpenAtom)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [persistentOpen, setPersistentOpen] = useAtom(sidebarOpenAtom)
   const shouldShowSidebar = useSidebarVisibility()
+
+  // On the bare marketing landing page, start with the sidebar collapsed,
+  // but allow the user to toggle it open via SidebarTrigger.
+  const isLandingPage = pathname === "/" && !searchParams?.has("tab")
+  const [landingSidebarOpen, setLandingSidebarOpen] = useState(false)
+
+  const open = isLandingPage ? landingSidebarOpen : persistentOpen
+  const setOpen = isLandingPage ? setLandingSidebarOpen : setPersistentOpen
+  const showSidebar = shouldShowSidebar || isLandingPage
 
   useEffect(() => {
     initAmplitude()
@@ -31,7 +43,7 @@ function AppProvidersContent({
 
   return (
     <SidebarProvider defaultOpen={open} open={open} onOpenChange={setOpen}>
-      {shouldShowSidebar && <MainSidebar />}
+      {showSidebar && <MainSidebar />}
       <MainLayout>
         <CommandMenu />
         {children}

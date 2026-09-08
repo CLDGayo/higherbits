@@ -67,6 +67,8 @@ export const formSchema = z.object({
   slug_available: z.boolean().optional(),
   tailwind_config: z.string().optional(),
   globals_css: z.string().optional(),
+  library_id: z.string().optional(),
+  submit_for_featuring: z.boolean().default(true),
 })
 
 export type FormData = z.infer<typeof formSchema>

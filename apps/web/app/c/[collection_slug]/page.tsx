@@ -9,7 +9,8 @@ import { SortOption, User } from "@/types/global"
 import { cookies } from "next/headers"
 import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { unstable_cache } from "next/cache"
-import { SITE_NAME, SITE_SLOGAN, BASE_KEYWORDS } from "@/lib/constants"
+import { SITE_TITLE, BASE_KEYWORDS } from "@/lib/constants"
+import { JsonLd } from "@/components/seo/json-ld"
 
 interface CollectionPageProps {
   params: Promise<{
@@ -56,6 +57,26 @@ async function getCollectionInfo(collectionSlug: string) {
   return getCachedCollectionInfo(collectionSlug)
 }
 
+const collectionJsonLd = (
+  info: {
+    name: string
+    description?: string | null
+    user_data: { name: string | null }
+  },
+  slug: string,
+) => ({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${info.name} | ${SITE_TITLE}`,
+  description:
+    info.description || `A collection of React components by ${info.user_data.name}`,
+  url: `${process.env.NEXT_PUBLIC_APP_URL}/c/${slug}`,
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: `${info.name} React components collection`,
+  },
+})
+
 export default async function CollectionPage(props: CollectionPageProps) {
   const params = await props.params
   if (!validateRouteParams(params)) {
@@ -88,6 +109,7 @@ export default async function CollectionPage(props: CollectionPageProps) {
 
     return (
       <div className="min-h-screen flex flex-col">
+        <JsonLd data={collectionJsonLd(collectionInfo, collectionSlug)} />
         <Header />
         <div className="flex-1">
           <CollectionPageContent
@@ -114,35 +136,18 @@ export async function generateMetadata(
       redirect("/")
     }
 
-    const jsonLd = {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: `${collectionInfo.name} | ${SITE_NAME} - ${SITE_SLOGAN}`,
-      description:
-        collectionInfo.description ||
-        `A collection of React components by ${collectionInfo.user_data.name}`,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/c/${params.collection_slug}`,
-      mainEntity: {
-        "@type": "ItemList",
-        itemListElement: `${collectionInfo.name} React components collection`,
-      },
-    }
-
     return {
-      title: `${collectionInfo.name} | ${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: `${collectionInfo.name}`,
       description:
         collectionInfo.description ||
         `A collection of React components by ${collectionInfo.user_data.name}`,
       openGraph: {
-        title: `${collectionInfo.name} | ${SITE_NAME} - ${SITE_SLOGAN}`,
+        title: `${collectionInfo.name} | ${SITE_TITLE}`,
         description:
           collectionInfo.description ||
           `A collection of React components by ${collectionInfo.user_data.name}`,
       },
       keywords: [...BASE_KEYWORDS, collectionInfo.name],
-      other: {
-        "script:ld+json": JSON.stringify(jsonLd),
-      },
     }
   } catch (error) {
     redirect("/")

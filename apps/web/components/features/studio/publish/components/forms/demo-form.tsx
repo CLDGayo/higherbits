@@ -12,6 +12,14 @@ import { useTheme } from "next-themes"
 import { useAvailableTags } from "@/lib/queries"
 import MultipleSelector, { Option } from "@/components/ui/multiselect"
 import { makeSlugFromName } from "../../hooks/use-is-check-slug-available"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 export const DemoDetailsForm = ({
   form,
@@ -33,6 +41,43 @@ export const DemoDetailsForm = ({
   const previewImageId = useId()
   const previewVideoId = useId()
   const demoNameId = useId()
+
+  const [isPickModalOpen, setIsPickModalOpen] = React.useState(false)
+  const pickVideoRef = React.useRef<HTMLVideoElement>(null)
+
+  const handleExtractFrame = (videoUrl: string, time: number = 0) => {
+    const video = document.createElement("video")
+    video.src = videoUrl
+    video.muted = true
+    video.playsInline = true
+    video.crossOrigin = "anonymous"
+    
+    video.onloadeddata = () => {
+      video.currentTime = time
+    }
+    
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas")
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      const ctx = canvas.getContext("2d")
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], "cover.jpg", { type: "image/jpeg" })
+            form.setValue(`demos.${demoIndex}.preview_image_file`, file, { shouldValidate: true })
+            const reader = new FileReader()
+            reader.onload = (e) => {
+              const dataUrl = e.target?.result as string
+              form.setValue(`demos.${demoIndex}.preview_image_data_url`, dataUrl, { shouldValidate: true })
+            }
+            reader.readAsDataURL(file)
+          }
+        }, "image/jpeg")
+      }
+    }
+  }
 
   React.useEffect(() => {
     if (
@@ -116,8 +161,26 @@ export const DemoDetailsForm = ({
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <>
+      <div className="flex flex-col gap-4 w-full">
       <div className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor={demoNameId}>
+            Demo Name <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id={demoNameId}
+            value={form.watch(`demos.${demoIndex}.name`) || ""}
+            onChange={(e) => handleDemoNameChange(e.target.value)}
+            placeholder="e.g. Default variant"
+          />
+          {form.formState.errors.demos?.[demoIndex]?.name && (
+            <p className="text-xs text-destructive mt-1">
+              {form.formState.errors.demos[demoIndex]?.name?.message}
+            </p>
+          )}
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor={tagsId}>
             Tags <span className="text-destructive">*</span>
@@ -243,7 +306,7 @@ export const DemoDetailsForm = ({
                       input.click()
                     }}
                   >
-                    Change cover
+                    Replace
                   </Button>
                   <div className="h-px bg-border w-full" />
                   <span className="text-sm text-muted-foreground self-center">
@@ -343,11 +406,36 @@ export const DemoDetailsForm = ({
               </div>
               <div className="flex flex-col items-start">
                 <div className="flex flex-col gap-2">
-                  <Button variant="outline" onClick={openFileDialog}>
+                  <Button variant="outline" onClick={(e) => {
+                    e.preventDefault();
+                    openFileDialog();
+                  }}>
                     Change video
                   </Button>
-                  <Button variant="outline" onClick={removeVideo}>
+                  <Button variant="outline" onClick={(e) => {
+                    e.preventDefault();
+                    removeVideo();
+                  }}>
                     Remove video
+                  </Button>
+                  <div className="h-px bg-border w-full my-1" />
+                  <Button
+                    variant="outline"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (previewVideoDataUrl) handleExtractFrame(previewVideoDataUrl, 0)
+                    }}
+                  >
+                    First
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setIsPickModalOpen(true)
+                    }}
+                  >
+                    Pick
                   </Button>
                 </div>
               </div>
@@ -444,7 +532,42 @@ export const DemoDetailsForm = ({
             </div>
           </CollapsibleContent>
         </Collapsible> */}
+        </div>
       </div>
-    </div>
+      <Dialog open={isPickModalOpen} onOpenChange={setIsPickModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Pick a frame</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-4">
+            <video
+              ref={pickVideoRef}
+              src={previewVideoDataUrl || ""}
+              className="w-full rounded-md border shadow-sm"
+              controls
+              crossOrigin="anonymous"
+            />
+            <p className="text-sm text-muted-foreground text-center">
+              Scrub the video to the frame you want to use as a cover, then click Confirm.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsPickModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (pickVideoRef.current && previewVideoDataUrl) {
+                  handleExtractFrame(previewVideoDataUrl, pickVideoRef.current.currentTime)
+                  setIsPickModalOpen(false)
+                }
+              }}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

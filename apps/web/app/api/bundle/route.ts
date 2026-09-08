@@ -1,12 +1,7 @@
 import { hasUserPurchasedDemo } from "@/lib/api/server/demos"
-import {
-  resolveRegistryDependenciesV2,
-  transformToFlatDependencyTree,
-} from "@/lib/registry"
-import { defaultGlobalCss, defaultTailwindConfig } from "@/lib/sandpack"
+import { prepareBundle, fetchBundle } from "@/lib/bundler"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { auth } from "@clerk/nextjs/server"
-import crypto from "crypto"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
@@ -51,49 +46,19 @@ export async function POST(request: Request) {
       )
     }
 
-    const resolvedComponentRegistryDependencies =
-      await resolveRegistryDependenciesV2(
-        demo?.component?.direct_registry_dependencies as string[],
-      )
-
-    const resolvedDemoRegistryDependencies =
-      await resolveRegistryDependenciesV2(
-        demo?.demo_direct_registry_dependencies as string[],
-      )
-
-    const resolvedDependencies = transformToFlatDependencyTree({
-      ...resolvedComponentRegistryDependencies,
-      ...resolvedDemoRegistryDependencies,
+    const prepared = await prepareBundle({
+      files,
+      dependencies,
+      componentDirectRegistryDependencies: demo?.component?.direct_registry_dependencies as string[] | undefined,
+      demoDirectRegistryDependencies: demo?.demo_direct_registry_dependencies as string[] | undefined,
+      customTailwindConfig,
+      customGlobalCss,
     })
 
-    Object.keys(resolvedDependencies).forEach((key) => {
-      Object.entries(resolvedDependencies[key]!.dependencies).forEach(
-        ([key, value]) => {
-          dependencies[key] = value
-        },
-      )
-    })
+    console.log("files", prepared.files)
+    console.log("dependencies", prepared.dependencies)
 
-    for (const key in resolvedDependencies) {
-      const filePath = `/components/ui/${resolvedDependencies[key]!.componentSlug}.tsx`
-      files[filePath] = resolvedDependencies[key]!.code
-    }
-
-    console.log("files", files)
-    console.log("dependencies", dependencies)
-
-    // Generate a unique hash for this bundle
-    const contentHash = crypto
-      .createHash("md5")
-      .update(
-        JSON.stringify({
-          files,
-          dependencies,
-          customTailwindConfig,
-          customGlobalCss,
-        }),
-      )
-      .digest("hex")
+    const contentHash = prepared.hash
 
     const { userId } = await auth()
     const isPurchased = await hasUserPurchasedDemo(userId, demoId)
@@ -114,35 +79,24 @@ export async function POST(request: Request) {
     }
 
     // Call backend bundle serverless function
-    const bundleResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/bundle`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          files,
-          id: demoId,
-          dependencies,
-          baseTailwindConfig: baseTailwindConfig || defaultTailwindConfig,
-          baseGlobalCss: baseGlobalCss || defaultGlobalCss,
-          customTailwindConfig,
-          customGlobalCss,
-        }),
-      },
-    )
+    const bundleResult = await fetchBundle({
+      id: demoId,
+      prepared,
+      baseTailwindConfig,
+      baseGlobalCss,
+      customTailwindConfig,
+      customGlobalCss,
+    })
 
-    if (!bundleResponse.ok) {
-      const errorText = await bundleResponse.text()
-      console.error("Error from bundle service:", errorText)
+    if (bundleResult.error) {
+      console.error("Error from bundle service:", bundleResult.details)
       return NextResponse.json(
-        { error: "Failed to generate bundle", details: errorText },
+        { error: bundleResult.error, details: bundleResult.details },
         { status: 500 },
       )
     }
 
-    const bundleData = await bundleResponse.json()
+    const bundleData = { html: bundleResult.html }
 
     // Update the demo with the new bundle URL and hash
     if (demoId) {

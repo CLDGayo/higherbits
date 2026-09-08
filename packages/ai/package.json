@@ -1,10 +1,10 @@
 {
-  "name": "@higherbits/ai",
+  "name": "@higherbits-dev/cli",
   "version": "1.0.0",
   "description": "HigherBits AI MCP Server",
   "main": "dist/index.js",
   "bin": {
-    "higherbits-ai": "./dist/index.js"
+    "higherbits-dev-cli": "./dist/index.js"
   },
   "exports": {
     ".": "./dist/index.js"

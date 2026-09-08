@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { auth, clerkClient } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess as supabaseAdmin } from "@/lib/supabase"
+import { generateGhlTemplate } from "@/lib/ghl-generator"
+import { visibilityWriteFor } from "@/lib/submission-visibility"
 
 export async function GET(request: Request) {
   try {
@@ -68,6 +70,22 @@ export async function PATCH(request: Request) {
     }
 
 
+    // Read the status BEFORE overwriting it. Visibility must follow a
+    // transition, not the mere fact that this route ran -- see
+    // lib/submission-visibility.ts for why.
+    const { data: priorRows, error: priorError } = await supabaseAdmin
+      .from("submissions")
+      .select("status")
+      .eq("component_id", componentId)
+      .limit(1)
+
+    if (priorError) {
+      console.error("Error reading prior submission status:", priorError)
+      return NextResponse.json({ error: priorError.message }, { status: 500 })
+    }
+
+    const priorStatus = priorRows?.[0]?.status ?? null
+
     const { error } = await supabaseAdmin
       .from("submissions")
       .update({ status, moderators_feedback })
@@ -78,16 +96,39 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // Also update the is_public status of the component based on the new status
-    const isPublic = status === "posted" || status === "featured";
-    const { error: componentError } = await supabaseAdmin
-      .from("components")
-      .update({ is_public: isPublic })
-      .eq("id", componentId);
+    // null means "leave is_public alone" -- which is what lets an owner's
+    // private setting survive an admin patch that did not change the status.
+    const visibilityWrite = visibilityWriteFor(priorStatus, status)
 
-    if (componentError) {
-      console.error("Error updating component is_public:", componentError)
-      return NextResponse.json({ error: componentError.message }, { status: 500 })
+    if (visibilityWrite !== null) {
+      const { error: componentError } = await supabaseAdmin
+        .from("components")
+        .update({ is_public: visibilityWrite })
+        .eq("id", componentId);
+
+      if (componentError) {
+        console.error("Error updating component is_public:", componentError)
+        return NextResponse.json({ error: componentError.message }, { status: 500 })
+      }
+    }
+
+    // Trigger AI generation for GoHighLevel template in the background
+    if (status === "posted" || status === "featured") {
+      // Find the demo ID for this component
+      const { data: demo } = await supabaseAdmin
+        .from("demos")
+        .select("id")
+        .eq("component_id", componentId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (demo) {
+        // Run asynchronously, do not await
+        generateGhlTemplate(demo.id).catch((err) => {
+          console.error("Background GHL generation failed:", err)
+        })
+      }
     }
 
 

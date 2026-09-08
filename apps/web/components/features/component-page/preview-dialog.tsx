@@ -53,6 +53,7 @@ import {
   MoreVertical,
   Share2,
   Sun,
+  Loader2,
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
@@ -99,6 +100,17 @@ export function ComponentPreviewDialog({
       setShowUnlockDialog(false)
     }
   }, [accessState])
+
+  // Listen for READY message from iframe for instant loading
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "READY") {
+        setIsLoading(false)
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [])
 
   // Add effect to sync preview theme with system theme
   useEffect(() => {
@@ -210,7 +222,8 @@ export function ComponentPreviewDialog({
       })
 
       if (!response.ok) {
-        throw new Error("Failed to generate prompt")
+        const errorData = await response.json().catch(() => null)
+        throw new Error(errorData?.error || "Failed to generate prompt")
       }
 
       const { prompt } = await response.json()
@@ -363,13 +376,17 @@ export function ComponentPreviewDialog({
                   </>
                 ) : isPromptLoading ? (
                   <>
-                    <Spinner size={16} />
-                    <span>Generating...</span>
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                    <span>
+                      {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Generating GHL..." : "Generating..."}
+                    </span>
                   </>
                 ) : (
                   <>
-                    <Copy size={16} />
-                    <span>Copy prompt</span>
+                    <Copy size={16} className="shrink-0" />
+                    <span>
+                      {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Copy for GHL" : "Copy prompt"}
+                    </span>
                   </>
                 )}
               </div>

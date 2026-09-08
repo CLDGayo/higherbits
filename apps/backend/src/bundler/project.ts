@@ -36,6 +36,13 @@ async function createPackageJson(
   tempDir: string,
   dependencies?: Record<string, string>,
 ) {
+  const cleanedDependencies = Object.fromEntries(
+    Object.entries(dependencies || {}).map(([key, value]) => [
+      key.replace(/@latest$/, ""),
+      value
+    ])
+  )
+
   const packageJson = {
     name: "temp-bundle",
     private: true,
@@ -46,7 +53,7 @@ async function createPackageJson(
       "next-themes": "^0.4.4",
       "@types/react": "^19.0.0",
       "@types/react-dom": "^19.0.0",
-      ...(dependencies || {}),
+      ...cleanedDependencies,
     },
   }
 

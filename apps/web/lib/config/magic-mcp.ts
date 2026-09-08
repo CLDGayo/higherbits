@@ -7,8 +7,8 @@ interface McpCommandConfig {
 }
 
 const PACKAGE_NAMES = {
-  CLI: "higherbits-ai@latest",
-  MAGIC_MCP: "@higherbits/ai@latest",
+  CLI: "@higherbits-dev/cli@latest",
+  MAGIC_MCP: "@higherbits-dev/cli@latest",
 } as const
 
 export const getMcpConfig = (apiKey: string): McpCommandConfig => ({
@@ -40,7 +40,7 @@ export const getMcpConfigJson = (
 
   const config = {
     mcpServers: {
-      "@21st-dev/magic": platformCmd,
+      "@higherbits-dev/cli": platformCmd,
     },
   }
   return JSON.stringify(config, null, 2)

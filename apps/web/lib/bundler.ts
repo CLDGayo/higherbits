@@ -110,6 +110,8 @@ export async function fetchBundle(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        // Server-only shared secret; the backend /bundle route requires it.
+        "x-bundler-secret": process.env.BUNDLER_SECRET ?? "",
       },
       body: JSON.stringify({
         files: req.prepared.files,

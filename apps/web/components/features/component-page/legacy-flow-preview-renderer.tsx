@@ -95,6 +95,8 @@ export function LegacyFlowPreviewRenderer({
     ],
   )
 
+  const precompiledUrl = demo.bundle_html_url || component.bundle_html_url
+
   const { bundle, error: bundleError } = useBundleDemo({
     files: bundleFiles,
     dependencies: allDependencies,
@@ -103,21 +105,22 @@ export function LegacyFlowPreviewRenderer({
     demoId: demo.id,
     tailwindConfig,
     globalCss,
+    shouldBundle: !precompiledUrl,
   })
 
   const demoBundleHash = demo?.bundle_hash
 
   const urls = useMemo(() => {
-    if ((code === "" || demoCode === "") && demo.bundle_html_url) {
+    if (precompiledUrl) {
       return {
-        html: demo.bundle_html_url,
+        html: precompiledUrl,
       }
     }
     if (bundle?.html) {
       return bundle
     }
     return null
-  }, [bundle?.html, demo.bundle_html_url, code, demoCode])
+  }, [bundle?.html, precompiledUrl])
 
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined
@@ -180,7 +183,7 @@ export function LegacyFlowPreviewRenderer({
         </SandpackProviderUnstyled>
       </>
     )
-  } else if (urls?.html && demoBundleHash !== "0") {
+  } else if (urls?.html && (demoBundleHash !== "0" || precompiledUrl)) {
     displayContent = (
       <>
         {contentLoading && <LoadingOverlay text={getCurrentLoadingMessage()} />}
@@ -200,23 +203,20 @@ export function LegacyFlowPreviewRenderer({
     const isPreviewUnavailableNonError = !!(
       bundle?.html &&
       demoBundleHash === "0" &&
-      !bundleError
+      !bundleError &&
+      !precompiledUrl
     )
 
     if (isPreviewUnavailableNonError) {
       message = "Preview is not available for this specific demo version."
       if (contentLoading) setContentLoading(false)
-    } else if (
-      (bundle === null || bundle?.html === null) &&
-      !bundleError &&
-      contentLoading
-    ) {
+    } else if (!urls?.html && !bundleError && contentLoading) {
       message = getCurrentLoadingMessage()
     } else if (
       !bundleError &&
-      !bundle?.html &&
+      !urls?.html &&
       !contentLoading &&
-      demoBundleHash !== "0"
+      (demoBundleHash !== "0" || precompiledUrl)
     ) {
       message = "Preview content is unavailable."
     } else {
@@ -226,7 +226,7 @@ export function LegacyFlowPreviewRenderer({
     if (
       contentLoading &&
       !shouldShowErrorState &&
-      !(bundle?.html && demoBundleHash !== "0")
+      !(urls?.html && (demoBundleHash !== "0" || precompiledUrl))
     ) {
       displayContent = <LoadingDisplay message={getCurrentLoadingMessage()} />
     } else {

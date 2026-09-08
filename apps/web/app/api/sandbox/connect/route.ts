@@ -9,6 +9,10 @@ import {
 import ShortUUID from "short-uuid"
 
 export async function POST(request: NextRequest) {
+  // Phase 1 telemetry: request-start timestamp for timing_ms. Declared outside
+  // the try so the outer catch can still compute a duration.
+  const startedAt = Date.now()
+  let telemetrySandboxId: string | undefined
   try {
     const { userId } = await auth()
     if (!userId) {
@@ -17,9 +21,29 @@ export async function POST(request: NextRequest) {
 
     const { isAdmin } = await checkIsAdmin(userId)
 
-    const { shortSandboxId } = await request.json()
+    let shortSandboxId: string | undefined
+    try {
+      ;({ shortSandboxId } = await request.json())
+    } catch {
+      // A malformed/absent JSON body used to throw past this handler's own
+      // error convention and surface as an unhandled 500. It is a client error.
+      return NextResponse.json(
+        { error: "Invalid request body" },
+        { status: 400 },
+      )
+    }
+
+    // Typed narrowing for the destructured body value. Behaviour matches the
+    // pre-existing missing-id check below (same status, same message).
+    if (!shortSandboxId) {
+      return NextResponse.json(
+        { error: "Sandbox ID is required" },
+        { status: 400 },
+      )
+    }
 
     const sandboxId = ShortUUID().toUUID(shortSandboxId)
+    telemetrySandboxId = sandboxId
 
     if (!sandboxId) {
       return NextResponse.json(
@@ -60,6 +84,15 @@ export async function POST(request: NextRequest) {
       },
     )
 
+    // Phase 1 telemetry (A1/A2): cold-resume signal, read from the already
+    // fetched SDK response. Named allowlist fields only — never the whole
+    // startData object, never any credential or header value.
+    console.log("[sandbox-telemetry] connect bootup:", {
+      bootup_type: startData.bootup_type,
+      sandboxId,
+      timing_ms: Date.now() - startedAt,
+    })
+
     // Private sandboxes gate their preview URL behind a "do you trust this URL"
     // interstitial, which leaves the studio preview iframe blank. Mint a preview
     // token so the browser can build a signed URL that skips the gate.
@@ -82,6 +115,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, startData, sandbox, previewToken })
   } catch (error) {
+    // Phase 1 telemetry (A1/A2): genuine sandbox-lifecycle failure. Named
+    // allowlist fields only — the raw error is logged separately below by the
+    // pre-existing convention and is never merged into the telemetry payload.
+    console.error("[sandbox-telemetry] connect:", {
+      outcome: "error",
+      sandboxId: telemetrySandboxId,
+      timing_ms: Date.now() - startedAt,
+    })
     console.error("Error connecting to sandbox:", error)
     return NextResponse.json(
       { error: "Internal Server Error" },

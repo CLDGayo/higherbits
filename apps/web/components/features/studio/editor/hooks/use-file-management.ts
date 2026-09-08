@@ -111,7 +111,7 @@ export default function App() {
             </div>
           )}
           
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full max-w-md">
             <CurrentComponent />
           </div>
         </div>

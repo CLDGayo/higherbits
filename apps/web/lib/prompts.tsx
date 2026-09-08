@@ -175,22 +175,57 @@ export const getComponentInstallPrompt = ({
   let prompt = ""
 
   if (promptType === PROMPT_TYPES.GOHIGHLEVEL) {
-    let output = ""
+    prompt =
+      "Convert the following React component and its demo into a production-ready GoHighLevel HTML snippet.\n\n" +
+      endent`
+        CRITICAL INSTRUCTIONS:
+        1. Output a single, consolidated HTML block containing the component and the trigger from the demo.
+        2. WRAPPER CONTAINER: GHL users expect the component to be a self-contained widget exactly like the preview. DO NOT let small components (like tabs or separators) stretch elongated across the whole page. If the component is a small block, use \`w-fit mx-auto\` or a fixed \`max-w-md\`. 
+        3. KEEP the component's internal styling (like \`px-4\`, \`py-2\`, \`gap-4\`, etc.) fully intact.
+        4. Include \`<script src="https://cdn.tailwindcss.com"></script>\` at the top.
+        5. CRITICAL: You MUST disable Tailwind's global preflight to prevent it from destroying the host GHL site's CSS: \`<script>tailwind.config = { corePlugins: { preflight: false }, theme: { /* variables */ } }</script>\`.
+        6. SCOPED PREFLIGHT & CARD: Because global preflight is disabled, components like \`<hr>\` or \`<a>\` will look broken unless you provide a scoped reset. Wrap your ENTIRE component in this exact container to make it an intact card widget: \`<div class="ghl-component-wrapper bg-background text-left text-base font-sans text-foreground antialiased w-fit mx-auto border border-border rounded-xl p-6 shadow-sm">\`. Then, inject this exact \`<style>\` block to reset styles locally:
+        \`\`\`css
+        .ghl-component-wrapper *, .ghl-component-wrapper *::before, .ghl-component-wrapper *::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: hsl(var(--border, 214.3 31.8% 91.4%)); }
+        .ghl-component-wrapper hr { height: 0; color: inherit; border-top-width: 1px; margin: 0; }
+        .ghl-component-wrapper a { color: inherit; text-decoration: inherit; }
+        .ghl-component-wrapper button, .ghl-component-wrapper [role="button"] { cursor: pointer; background: transparent; padding: 0; }
+        .ghl-component-wrapper h1, .ghl-component-wrapper h2, .ghl-component-wrapper h3, .ghl-component-wrapper h4, .ghl-component-wrapper h5, .ghl-component-wrapper h6, .ghl-component-wrapper p { margin: 0; font-size: inherit; font-weight: inherit; }
+        .ghl-component-wrapper ul, .ghl-component-wrapper ol { list-style: none; margin: 0; padding: 0; }
+        .ghl-component-wrapper svg { display: block; }
+        \`\`\`
+        7. Include a \`<style>\` block defining Shadcn default CSS variables (like \`--background\`, \`--primary\`) so the colors actually work. Add an HTML comment above the wrapper explaining: \`<!-- To use Dark Mode, add the 'dark' class to the ghl-component-wrapper div below -->\`.
+        8. Convert all React hooks/state into vanilla JavaScript. Use relative DOM traversal (e.g., \`onclick="this.nextElementSibling..."\` or \`this.closest(...)\`) instead of \`getElementById\` to avoid script conflicts if the user duplicates the element in the GHL builder.
+      ` +
+      "\n\n"
+
     if (promptRule) {
       if (promptRule.tech_stack && promptRule.tech_stack.length > 0) {
-        output += `<!-- Tech Stack: ${promptRule.tech_stack.map(t => `${t.name}${t.version ? ` ${t.version}` : ""}`).join(", ")} -->\n`
+        prompt += `Tech Stack: ${promptRule.tech_stack.map(t => `${t.name}${t.version ? ` ${t.version}` : ""}`).join(", ")}\n`
       }
       if (promptRule.additional_context) {
-        output += `<!-- Prompt Rule Context: ${promptRule.additional_context} -->\n`
+        prompt += `Prompt Rule Context: ${promptRule.additional_context}\n`
       }
     }
     if (userAdditionalContext) {
-      output += `<!-- User Context: ${userAdditionalContext} -->\n`
+      prompt += `User Context: ${userAdditionalContext}\n`
     }
-    
-    output += `\n<!-- ${componentFileName} -->\n${code}\n\n<!-- ${componentDemoFileName} -->\n${demoCode}`
-    
-    return output.trim()
+
+    prompt +=
+      "\n" +
+      endent`
+        Component Code (${componentFileName}):
+        \`\`\`tsx
+        ${code}
+        \`\`\`
+
+        Demo Usage (${componentDemoFileName}):
+        \`\`\`tsx
+        ${demoCode}
+        \`\`\`
+      `
+
+    return prompt.trim()
   }
 
   if (promptType === PROMPT_TYPES.MAGIC_PATTERNS) {
@@ -397,8 +432,15 @@ export const getComponentInstallPrompt = ({
   }
 
   if (
-    promptType === PROMPT_TYPES.EXTENDED ||
-    promptType === PROMPT_TYPES.BOLT
+    [
+      PROMPT_TYPES.EXTENDED,
+      PROMPT_TYPES.BOLT,
+      PROMPT_TYPES.CLAUDE,
+      PROMPT_TYPES.CODEX,
+      PROMPT_TYPES.ANTIGRAVITY,
+      PROMPT_TYPES.V0,
+      PROMPT_TYPES.LOVABLE,
+    ].includes(promptType as any)
   ) {
     prompt +=
       endent`
@@ -506,8 +548,15 @@ export const getComponentInstallPrompt = ({
   }
 
   if (
-    promptType === PROMPT_TYPES.EXTENDED ||
-    promptType === PROMPT_TYPES.BOLT
+    [
+      PROMPT_TYPES.EXTENDED,
+      PROMPT_TYPES.BOLT,
+      PROMPT_TYPES.CLAUDE,
+      PROMPT_TYPES.CODEX,
+      PROMPT_TYPES.ANTIGRAVITY,
+      PROMPT_TYPES.V0,
+      PROMPT_TYPES.LOVABLE,
+    ].includes(promptType as any)
   ) {
     prompt +=
       "\n" +

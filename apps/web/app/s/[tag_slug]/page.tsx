@@ -9,7 +9,8 @@ import { SortOption } from "@/types/global"
 import { cookies } from "next/headers"
 import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { unstable_cache } from "next/cache"
-import { BASE_KEYWORDS, SITE_NAME, SITE_SLOGAN } from "@/lib/constants"
+import { BASE_KEYWORDS, SITE_TITLE } from "@/lib/constants"
+import { JsonLd } from "@/components/seo/json-ld"
 
 interface TagPageProps {
   params: Promise<{
@@ -42,6 +43,29 @@ async function getTagInfo(tagSlug: string) {
   return getCachedTagInfo(tagSlug)
 }
 
+/**
+ * `mainEntity` is deliberately absent.
+ *
+ * It used to carry an ItemList whose `itemListElement` was a bare string, which
+ * is invalid - the property takes an array of ListItem. That went unnoticed
+ * because the markup was inert: it was emitted through `metadata.other`, which
+ * only ever produces a `<meta>` tag, never a script.
+ *
+ * It is not repaired in place, because a CollectionPage's ItemList must describe
+ * items the reader can actually see, and this route still fetches its component
+ * list after hydration - so any list here would document content missing from
+ * the HTML. That is the same policy problem `lib/seo/faq.ts` exists to make
+ * impossible. Add the ItemList when the visible list is server-rendered, built
+ * from that same data rather than a second source.
+ */
+const tagJsonLd = (tagName: string, tagSlug: string) => ({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${tagName} Components | ${SITE_TITLE}`,
+  description: `Ready-to-use ${tagName.toLowerCase()} React components inspired by shadcn/ui.`,
+  url: `${process.env.NEXT_PUBLIC_APP_URL}/s/${tagSlug}`,
+})
+
 export default async function TagPage(props: TagPageProps) {
   const params = await props.params
   if (!validateRouteParams(params)) {
@@ -68,6 +92,7 @@ export default async function TagPage(props: TagPageProps) {
 
     return (
       <div className="min-h-screen flex flex-col">
+        <JsonLd data={tagJsonLd(tagInfo.name, tagSlug)} />
         <Header />
         <div className="flex-1">
           <TagPageContent
@@ -93,23 +118,11 @@ export async function generateMetadata(props: TagPageProps): Promise<Metadata> {
       redirect("/")
     }
 
-    const jsonLd = {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: `${tagInfo.name} Components | ${SITE_NAME} - ${SITE_SLOGAN}`,
-      description: `Ready-to-use ${tagInfo.name.toLowerCase()} React components inspired by shadcn/ui.`,
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/s/${params.tag_slug}`,
-      mainEntity: {
-        "@type": "ItemList",
-        itemListElement: `${tagInfo.name} React components`,
-      },
-    }
-
     return {
-      title: `${tagInfo.name} Components | ${SITE_NAME} - ${SITE_SLOGAN}`,
+      title: `${tagInfo.name} Components`,
       description: `Discover and share ${tagInfo.name.toLowerCase()} components. Ready-to-use React Tailwind components inspired by shadcn/ui.`,
       openGraph: {
-          title: `${tagInfo.name} Components | ${SITE_NAME} - ${SITE_SLOGAN}`,
+          title: `${tagInfo.name} Components | ${SITE_TITLE}`,
         description: `Ready-to-use ${tagInfo.name.toLowerCase()} React Tailwind components inspired by shadcn/ui.`,
       },
       keywords: [
@@ -118,9 +131,6 @@ export async function generateMetadata(props: TagPageProps): Promise<Metadata> {
         `${tagInfo.name.toLowerCase()}`,
         ...BASE_KEYWORDS,
       ],
-      other: {  
-        "script:ld+json": JSON.stringify(jsonLd),
-      },
     }
   } catch (error) {
     redirect("/")

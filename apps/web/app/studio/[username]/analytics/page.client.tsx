@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { userStateAtom } from "@/lib/store/user-store"
 import { useQuery } from "@tanstack/react-query"
-import { atom, useAtom } from "jotai"
+import { useAtom } from "jotai"
 import { CreditCard } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
@@ -15,9 +15,7 @@ import {
 } from "@/components/features/studio/analytics/creator-stats-chart"
 import { PartnerProgramModal } from "@/components/features/studio/monetization/partner-program-modal"
 import { useClerkSupabaseClient } from "@/lib/clerk"
-
-// Create an atom for the partner modal state
-export const partnerModalOpenAtom = atom(false)
+import { partnerModalOpenAtom } from "@/lib/store/studio-store"
 
 interface AuthorStats {
   published_components: number

@@ -229,6 +229,25 @@ export function PublicDashboardClient() {
   // never filteredData.length (which is only the current page's row count).
   const creatorsCount = data?.pagination?.total ?? 0
 
+  /**
+   * Whether the figures above are actually known (Phase 11, §8.2).
+   *
+   * Every total here is a `reduce` over `filteredData`, which is
+   * `data?.data.filter(...) || []` — so a failed request produces an empty
+   * array and every tile renders a confident `0` or `$0.00`. That is §8.2's
+   * "no `0` standing in for unknown", and on this page it is worse than
+   * cosmetic: the tiles are financial. Measured before this fix, with the
+   * backing RPC missing, the page stated "Total Paid Out $0.00 all time" and
+   * "Creators 0" with no error anywhere on screen, and rendered byte-identical
+   * output whether the API genuinely failed or was forced to 500.
+   *
+   * A dash is not a nicer zero: it is the difference between "we know it is
+   * none" and "we could not find out".
+   */
+  const statsUnknown = isError || isLoading
+  const stat = (value: string | number) => (statsUnknown ? "—" : value)
+  const money = (value: number) => (statsUnknown ? "—" : `$${value.toFixed(2)}`)
+
   const usageChart = buildUsageChart(filteredData)
   const earningsChart = buildEarningsChart(filteredData)
 
@@ -255,7 +274,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Total Usage</div>
           </div>
-          <div className="mt-2 font-cozy text-2xl font-bold">{totalUsage}</div>
+          <div className="mt-2 font-cozy text-2xl font-bold">{stat(totalUsage)}</div>
           <div className="mt-1 text-xs">all time</div>
         </ClayCard>
         <ClayCard className="bg-accent-blue text-accent-blue-foreground p-5">
@@ -266,7 +285,7 @@ export function PublicDashboardClient() {
             <div className="text-sm font-medium">Potential Earnings</div>
           </div>
           <div className="mt-2 font-cozy text-2xl font-bold">
-            ${totalPotentialEarnings.toFixed(2)}
+            {money(totalPotentialEarnings)}
           </div>
           <div className="mt-1 text-xs">all time</div>
         </ClayCard>
@@ -277,7 +296,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Components</div>
           </div>
-          <div className="mt-2 font-cozy text-2xl font-bold">{totalComponents}</div>
+          <div className="mt-2 font-cozy text-2xl font-bold">{stat(totalComponents)}</div>
           <div className="mt-1 text-xs">published</div>
         </ClayCard>
         <ClayCard className="bg-accent-lavender text-accent-lavender-foreground p-5">
@@ -287,7 +306,7 @@ export function PublicDashboardClient() {
             </div>
             <div className="text-sm font-medium">Creators</div>
           </div>
-          <div className="mt-2 font-cozy text-2xl font-bold">{creatorsCount}</div>
+          <div className="mt-2 font-cozy text-2xl font-bold">{stat(creatorsCount)}</div>
           <div className="mt-1 text-xs">across all pages</div>
         </ClayCard>
         <ClayCard className="bg-accent-cream text-accent-cream-foreground p-5">
@@ -298,7 +317,7 @@ export function PublicDashboardClient() {
             <div className="text-sm font-medium">Total Paid Out</div>
           </div>
           <div className="mt-2 font-cozy text-2xl font-bold">
-            ${totalPaidOut.toFixed(2)}
+            {money(totalPaidOut)}
           </div>
           <div className="mt-1 text-xs">all time</div>
         </ClayCard>
@@ -515,13 +534,21 @@ export function PublicDashboardClient() {
                 ))
               )}
             </TableBody>
+            {/*
+              Same unknown-vs-zero rule as the tiles above (§8.2). This footer
+              is the second place the totals surface, and it repeated the
+              defect: on a failed request it read "Total 0 0 $0.00" under an
+              error row that said the data could not be loaded.
+            */}
             <TableFooter className="bg-muted/50 font-medium">
               <TableRow>
                 <TableCell>Total</TableCell>
-                <TableCell className="text-right">{totalComponents}</TableCell>
-                <TableCell className="text-right">{totalUsage}</TableCell>
                 <TableCell className="text-right">
-                  ${totalPotentialEarnings.toFixed(2)}
+                  {stat(totalComponents)}
+                </TableCell>
+                <TableCell className="text-right">{stat(totalUsage)}</TableCell>
+                <TableCell className="text-right">
+                  {money(totalPotentialEarnings)}
                 </TableCell>
               </TableRow>
             </TableFooter>

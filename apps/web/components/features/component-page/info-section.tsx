@@ -38,6 +38,7 @@ import { getLicenseBySlug } from "@/lib/licenses"
 import { formatDate } from "@/lib/utils"
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { useHunterUser } from "@/lib/queries"
+import { useUser } from "@clerk/nextjs"
 
 export const ComponentPageInfo = ({
   component,
@@ -53,6 +54,7 @@ export const ComponentPageInfo = ({
     return null
   }
 
+  const { user: currentUser } = useUser()
   const supabase = useClerkSupabaseClient()
   const [copiedLibDependencies, setCopiedLibDependencies] = useState(false)
   const [copiedDependency, setCopiedDependency] = useState<string | null>(null)
@@ -590,6 +592,8 @@ export const ComponentPageInfo = ({
                       <ComponentCard
                         key={`${component.id}-${component.updated_at}`}
                         demo={component}
+                        currentUser={currentUser}
+                        supabaseClient={supabase}
                       />
                     ))}
                   </div>

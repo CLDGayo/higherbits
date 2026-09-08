@@ -69,6 +69,17 @@ export function PreviewRenderer({
   const [contentError, setContentError] = useState(false)
   const [showLongLoadMessage, setShowLongLoadMessage] = useState(false)
 
+  // Listen for READY message from iframe for instant loading
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "READY") {
+        setContentLoading(false)
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [])
+
   const bundleFiles = useMemo(
     () => ({
       ...registryDependencies,

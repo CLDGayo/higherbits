@@ -1,7 +1,7 @@
 import OpenAI from "openai"
 import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
-import { makeSlugFromName } from "@/components/features/publish/hooks/use-is-check-slug-available"
+import { makeSlugFromName } from "@/lib/utils"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { defaultTailwindConfig, defaultGlobalCss } from "@/lib/defaults"
 

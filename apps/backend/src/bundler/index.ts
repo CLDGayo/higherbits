@@ -47,11 +47,23 @@ export const bundleReact = async ({
             </ThemeProvider>
           </StrictMode>
         );
+
+        // Notify parent window that the component is ready to be displayed
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            window.parent.postMessage({ type: "READY" }, "*");
+          }, 0);
+        });
       `,
     }
 
+    const jsxContent = Object.entries(allFiles)
+      .filter(([key]) => /\.(tsx|jsx|ts|js)$/.test(key))
+      .map(([_, content]) => content)
+      .join("\n\n");
+
     const bundledCss = await compileCSS({
-      jsx: allFiles["main.tsx"],
+      jsx: jsxContent,
       baseTailwindConfig,
       baseGlobalCss,
       customTailwindConfig,

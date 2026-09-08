@@ -1,6 +1,6 @@
 "use client"
 
-import { ComponentPreviewDialog } from "@/components/features/component-page/preview-dialog"
+
 import { LeaderboardCardSkeleton } from "@/components/ui/skeletons"
 import { useToast } from "@/hooks/use-toast"
 import { shouldHideLeaderboardRankings } from "@/lib/utils"
@@ -199,38 +199,16 @@ export function LeaderboardList({
   }
 
   const handleDemoClick = (submission: any) => {
-    // TODO: Temporary disable previews
-    router.push(
-      `/${submission.user_data.username}/${submission.component_data.component_slug}/${submission.demo_slug}`,
-    )
-    return
-
-    if (!submission.bundle_url || typeof submission.bundle_url !== "object") {
-      if (
-        submission.user_data?.username &&
-        submission.component_data?.component_slug &&
-        submission.demo_slug
-      ) {
-        router.push(
-          `/${submission.user_data.username}/${submission.component_data.component_slug}/${submission.demo_slug}`,
-        )
-        return
-      }
+    if (
+      submission.user_data?.username &&
+      submission.component_data?.component_slug &&
+      submission.demo_slug
+    ) {
+      router.push(
+        `/${submission.user_data.username}/${submission.component_data.component_slug}/${submission.demo_slug}`,
+      )
     }
-
-    const preparedDemo = prepareDemo(submission)
-    setSelectedDemo(preparedDemo)
-    setIsPreviewDialogOpen(true)
-  }
-
-  const handleCloseDialog = () => {
-    setIsPreviewDialogOpen(false)
-    setTimeout(() => {
-      setSelectedDemo(null)
-    }, 300)
-  }
-
-  // If we've got to this point, we should always show the list
+  }  // If we've got to this point, we should always show the list
   return (
     <div className="space-y-2">
       {hideRankings && (
@@ -254,14 +232,6 @@ export function LeaderboardList({
           isHistorical={isHistorical}
         />
       ))}
-
-      {selectedDemo && (
-        <ComponentPreviewDialog
-          demo={selectedDemo}
-          isOpen={isPreviewDialogOpen}
-          onClose={handleCloseDialog}
-        />
-      )}
     </div>
   )
 }

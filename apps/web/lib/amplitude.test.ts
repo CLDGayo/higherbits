@@ -77,3 +77,30 @@ describe("Amplitude initialization", () => {
     )
   })
 })
+
+describe("trackPageProperties", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.stubEnv("NEXT_PUBLIC_AMPLITUDE_API_KEY", "placeholder-key")
+    vi.stubEnv("NODE_ENV", "production")
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  // Amplitude's HTTP v2 API rejects an empty event_type with
+  // 400 "Invalid field values on some events". This shipped as track("")
+  // and silently dropped every component page view until 2026-08-30.
+  it("sends a non-empty event name", async () => {
+    const { trackPageProperties, AMPLITUDE_EVENTS } = await loadAmplitude()
+
+    trackPageProperties({ componentId: "abc" })
+
+    expect(mocks.track).toHaveBeenCalledOnce()
+    const [eventName, props] = mocks.track.mock.calls[0]!
+    expect(eventName).toBeTruthy()
+    expect(eventName).toBe(AMPLITUDE_EVENTS.VIEW_COMPONENT)
+    expect(props).toMatchObject({ componentId: "abc" })
+  })
+})

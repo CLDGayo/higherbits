@@ -50,7 +50,7 @@ export function ApiDocs() {
     },
     "component_user_data": {
       "name": "serafim",
-      "username": "serafimcloud", 
+      "username": "CLDGayo", 
       "image_url": "https://img.clerk.com/..."
     },
     "usage_count": 1621
