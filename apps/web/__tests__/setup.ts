@@ -16,7 +16,7 @@ vi.mock("@/lib/supabase", () => {
             if (field === "user_id") {
               return {
                 eq: vi.fn((field2, value2) => {
-                  if (typeof value2 === "string" && value2.includes("nonexistent")) {
+                  if (typeof value2 === "string" && (value2.includes("nonexistent") || value2.includes("invalid"))) {
                      return { single: vi.fn().mockResolvedValue({ data: null, error: { message: "Not found" } }) }
                   }
                   return { single: vi.fn().mockResolvedValue({
@@ -45,6 +45,15 @@ if (!global.fetch) {
 }
 
 vi.spyOn(global, "fetch").mockImplementation(async (url) => {
+  const urlStr = String(url)
+  if (urlStr.includes("invalid") || urlStr.includes("nonexistent")) {
+    return {
+      ok: false,
+      status: 404,
+      json: async () => ({}),
+      text: async () => "",
+    } as any
+  }
   return {
     ok: true,
     json: async () => ({ stargazers_count: 0 }),

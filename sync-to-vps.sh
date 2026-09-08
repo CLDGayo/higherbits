@@ -5,6 +5,7 @@
 # Usage:
 #   ./sync-to-vps.sh              # Sync source only
 #   ./sync-to-vps.sh --deploy     # Sync + install + build + restart on VPS
+#   ./sync-to-vps.sh --rollback   # Swap .next with .next.previous & restart PM2
 # ─────────────────────────────────────────────────────────────────────────────
 
 set -euo pipefail
@@ -29,6 +30,30 @@ PM2_APP_NAME="higherbits.dev" # verified live pm2 app; `pm2 id higherbits` retur
 : "${VPS_NODE_OPTIONS:=--max-old-space-size=3072}"
 : "${VPS_BUILD_WORKERS:=1}"
 : "${VPS_BUILD_DIST_DIR:=.next-release}"
+
+if [[ "${1:-}" == "--rollback" ]]; then
+    echo ""
+    echo "🚨 Triggering rollback to previous build on VPS..."
+    ssh "$VPS_USER@$VPS_HOST" "
+        set -e
+        su - higherbits -c '
+            set -e
+            cd \"$VPS_DEST\"
+            if [ ! -d apps/web/.next.previous ]; then
+                echo \"❌ No .next.previous directory found on VPS to rollback to!\" >&2
+                exit 1
+            fi
+            echo \"🔄 Swapping .next with .next.previous...\"
+            rm -rf apps/web/.next.failed
+            mv apps/web/.next apps/web/.next.failed
+            mv apps/web/.next.previous apps/web/.next
+            echo \"🔄 Restarting PM2 service...\"
+            pm2 restart $PM2_APP_NAME --update-env
+            echo \"✅ Rollback successfully completed! Application restored to previous build.\"
+        '
+    "
+    exit 0
+fi
 
 if [[ "${1:-}" == "--deploy" ]]; then
     echo ""
@@ -92,7 +117,6 @@ if [[ "${1:-}" == "--deploy" ]]; then
             fi
             mv \"apps/web/$VPS_BUILD_DIST_DIR\" apps/web/.next
             pm2 restart $PM2_APP_NAME --update-env || PORT=3005 pm2 start pnpm --name \"$PM2_APP_NAME\" -- --filter web start --port 3005
-            rm -rf apps/web/.next.previous
             
             echo \"✅ Deployment complete!\"
         '

@@ -1,4 +1,5 @@
 import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin"
+import { withSentryConfig } from "@sentry/nextjs"
 
 const skipBuildValidation = process.env.SKIP_BUILD_VALIDATION === "true"
 
@@ -132,4 +133,15 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN
+
+export default sentryDsn
+  ? withSentryConfig(nextConfig, {
+      silent: true,
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      widenClientFileUpload: true,
+      hideSourceMaps: true,
+      disableLogger: true,
+    })
+  : nextConfig

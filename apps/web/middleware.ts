@@ -22,9 +22,12 @@ export default clerkMiddleware(async (auth, request) => {
 
     // Global Rate Limiting for API routes
     const pathname = request.nextUrl.pathname
-    const isWebhookOrCron = pathname.includes("/webhook") || pathname.includes("cron")
+    const isExemptFromRateLimit =
+      pathname.includes("/webhook") ||
+      pathname.includes("cron") ||
+      pathname === "/api/health"
     
-    if (!isWebhookOrCron) {
+    if (!isExemptFromRateLimit) {
       const { userId } = await auth()
       const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1"
       const identifier = userId || ip
