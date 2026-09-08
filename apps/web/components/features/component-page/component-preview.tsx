@@ -52,6 +52,7 @@ import { useAuth, useUser } from "@clerk/nextjs"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
+import { ErrorBoundary } from "@/components/ui/error-boundary"
 import { ComponentAccessState } from "@/hooks/use-component-access"
 import styles from "./component-preview.module.css"
 import { LegacyFlowPreviewRenderer } from "./legacy-flow-preview-renderer"
@@ -255,29 +256,35 @@ export function ComponentPagePreview({
         },
       }}
     >
-      {isNewFlowOfPiblishing ? (
-        <NewFlowPreviewRender demo={demo} />
-      ) : (
-        <LegacyFlowPreviewRenderer
-          component={component}
-          code={code}
-          demoCode={demoCode}
-          dependencies={dependencies}
-          demoDependencies={demoDependencies}
-          demoComponentNames={demoComponentNames}
-          registryDependencies={registryDependencies}
-          npmDependenciesOfRegistryDependencies={
-            npmDependenciesOfRegistryDependencies
-          }
-          tailwindConfig={tailwindConfig}
-          globalCss={globalCss}
-          demo={demo}
-          providerProps={providerProps}
-          css={css}
-          shellCode={shellCode}
-          allDependencies={allDependencies}
-        />
-      )}
+      <ErrorBoundary
+        className="flex-1 min-h-[300px]"
+        title="Preview failed to render"
+        description="An error occurred while compiling or mounting this component preview. The source code and installation commands remain fully accessible below."
+      >
+        {isNewFlowOfPiblishing ? (
+          <NewFlowPreviewRender demo={demo} />
+        ) : (
+          <LegacyFlowPreviewRenderer
+            component={component}
+            code={code}
+            demoCode={demoCode}
+            dependencies={dependencies}
+            demoDependencies={demoDependencies}
+            demoComponentNames={demoComponentNames}
+            registryDependencies={registryDependencies}
+            npmDependenciesOfRegistryDependencies={
+              npmDependenciesOfRegistryDependencies
+            }
+            tailwindConfig={tailwindConfig}
+            globalCss={globalCss}
+            demo={demo}
+            providerProps={providerProps}
+            css={css}
+            shellCode={shellCode}
+            allDependencies={allDependencies}
+          />
+        )}
+      </ErrorBoundary>
 
       <AnimatePresence mode="popLayout">
         {!isFullScreen && (
