@@ -224,20 +224,21 @@ export default async function Image({
                 {totalUsages.toLocaleString()} usages
               </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <div
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <img
+                src="https://higherbits.dev/logos/higherbits/higherbits-icon-black.svg"
+                alt="HigherBits"
                 style={{
-                  width: "24px",
-                  height: "24px",
-                  borderRadius: "50%",
-                  background: "hsl(240 10% 3.9%)",
+                  width: "36px",
+                  height: "36px",
                 }}
               />
               <div
                 style={{
                   fontSize: "32px",
                   color: "hsl(240 10% 3.9%)",
-                  fontWeight: "500",
+                  fontWeight: "600",
+                  letterSpacing: "-0.02em",
                 }}
               >
                 HigherBits.dev

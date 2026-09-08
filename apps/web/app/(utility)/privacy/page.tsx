@@ -56,15 +56,37 @@ export default function PrivacyPolicy(): JSX.Element {
           <li>Maintaining and optimizing our platform</li>
         </ul>
 
-        <h2>4. Your Rights</h2>
+        <h2>4. Analytics, Error Monitoring & Cookies</h2>
+        <p>
+          We use essential cookies and local storage items strictly necessary for session management and user authentication (via Clerk).
+        </p>
+        <p>
+          To maintain platform performance and diagnose application issues, we utilize privacy-conscious monitoring and telemetry services:
+        </p>
+        <ul>
+          <li><strong>Amplitude:</strong> Measures aggregated feature usage, pageviews, and component interactions without capturing sensitive personal data.</li>
+          <li><strong>Sentry:</strong> Tracks runtime exceptions, application crashes, and system errors to improve software stability. Sentry records technical error stack traces and device environments.</li>
+        </ul>
+
+        <h2>5. Third-Party Service Providers</h2>
+        <p>
+          We partner with trusted third-party services to deliver core functionality. These providers process information strictly on our behalf:
+        </p>
+        <ul>
+          <li><strong>Clerk:</strong> Manages secure user authentication, identity verification, and profile sessions.</li>
+          <li><strong>Stripe:</strong> Processes payment transactions, subscription billing, and invoices securely (PCI-DSS compliant). We do not store full payment card numbers on our servers.</li>
+          <li><strong>Supabase:</strong> Provides encrypted relational database storage and cloud infrastructure.</li>
+        </ul>
+
+        <h2>6. Your Rights</h2>
         <p>You have the right to:</p>
         <ul>
           <li>Unsubscribe from our newsletter at any time</li>
           <li>Request information about your data we store</li>
-          <li>Request deletion of your email from our database</li>
+          <li>Request deletion of your email and user account from our database</li>
         </ul>
 
-        <h2>5. Contact Information</h2>
+        <h2>7. Contact Information</h2>
         <p>
           For any privacy-related questions or concerns, please contact:
           <br />

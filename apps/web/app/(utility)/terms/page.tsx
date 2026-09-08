@@ -102,7 +102,54 @@ export default function TermsOfService() {
 
             <section className="group">
               <h2 className="text-2xl font-semibold tracking-tight mb-6 text-foreground group-hover:text-primary">
-                4. Enforcement
+                4. DMCA & Copyright Infringement Policy
+              </h2>
+              <p className="text-muted-foreground mb-4 leading-7">
+                HigherBits.dev respects the intellectual property rights of others and complies with the Digital Millennium Copyright Act (DMCA, 17 U.S.C. § 512). As an open platform and component registry, we respond expeditiously to legitimate notices of alleged copyright infringement.
+              </p>
+              <h3 className="text-lg font-medium mb-3 text-foreground">
+                Filing a Takedown Notice
+              </h3>
+              <p className="text-muted-foreground mb-3 leading-7">
+                If you are a copyright owner or authorized agent and believe content hosted on HigherBits.dev infringes your copyright, send a written Notice of Claimed Infringement to our designated agent at <span className="font-semibold text-foreground">support@higherbits.dev</span> with the subject line <span className="font-semibold text-foreground">"DMCA Takedown Notice"</span> containing:
+              </p>
+              <ul className="list-none space-y-2 text-muted-foreground pl-6 mb-4">
+                <li className="flex items-start">
+                  <span className="mr-3 text-primary">•</span>
+                  <span className="leading-7">A physical or electronic signature of a person authorized to act on behalf of the copyright owner.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-3 text-primary">•</span>
+                  <span className="leading-7">Identification of the copyrighted work claimed to have been infringed, or a representative list of works.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-3 text-primary">•</span>
+                  <span className="leading-7">Identification of the material claimed to be infringing, including the exact URL(s) on HigherBits.dev.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-3 text-primary">•</span>
+                  <span className="leading-7">Your contact information: full name, address, telephone number, and email address.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-3 text-primary">•</span>
+                  <span className="leading-7">A statement that you have a good faith belief that use of the material is not authorized by the copyright owner, its agent, or the law.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-3 text-primary">•</span>
+                  <span className="leading-7">A statement under penalty of perjury that the information in the notification is accurate and you are authorized to act on behalf of the owner.</span>
+                </li>
+              </ul>
+              <h3 className="text-lg font-medium mb-3 text-foreground">
+                Counter-Notification & Repeat Infringers
+              </h3>
+              <p className="text-muted-foreground leading-7">
+                If your content was removed and you believe this was due to mistake or misidentification, you may submit a counter-notification to the same email address meeting statutory DMCA requirements. In accordance with Section 512(i) of the DMCA, HigherBits.dev maintains a policy that provides for the termination in appropriate circumstances of user accounts who are repeat infringers.
+              </p>
+            </section>
+
+            <section className="group">
+              <h2 className="text-2xl font-semibold tracking-tight mb-6 text-foreground group-hover:text-primary">
+                5. Enforcement
               </h2>
               <p className="text-muted-foreground mb-4 leading-7">
                 We reserve the right to:
@@ -133,7 +180,7 @@ export default function TermsOfService() {
 
             <section className="group">
               <h2 className="text-2xl font-semibold tracking-tight mb-6 text-foreground group-hover:text-primary">
-                5. Changes to Terms
+                6. Changes to Terms
               </h2>
               <p className="text-muted-foreground leading-7">
                 We reserve the right to modify these Terms at any time. Changes
@@ -145,7 +192,7 @@ export default function TermsOfService() {
 
             <section className="group">
               <h2 className="text-2xl font-semibold tracking-tight mb-6 text-foreground group-hover:text-primary">
-                6. Contact Information
+                7. Contact Information
               </h2>
               <p className="text-muted-foreground leading-7">
                 For any questions regarding these Terms, please contact:
