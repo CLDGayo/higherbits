@@ -48,7 +48,7 @@ export function MaintenancePage() {
           </div>
           
           <Link
-            href="https://discord.gg/UVXcBGPhh"
+            href="https://discord.gg/vWqmFjPMU4"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"

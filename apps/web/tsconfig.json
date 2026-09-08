@@ -20,12 +20,13 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    ".next-prod/types/**/*.ts",
     ".next/types/**/*.ts",
     "css/combinedCSS.js",
     "global.d.ts",
     "next-env.d.ts",
     "video-converter/**/*.js",
-    ".next-prod/types/**/*.ts"
+    ".next-validate/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

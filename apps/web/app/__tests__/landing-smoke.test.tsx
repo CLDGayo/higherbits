@@ -605,7 +605,7 @@ describe("Landing Smoke Test", () => {
       "/privacy",
       "/terms",
       "/refunds",
-      "https://discord.gg/UVXcBGPhh",
+      "https://discord.gg/vWqmFjPMU4",
       "https://github.com/CLDGayo/higherbits",
     ]) {
       expect(hrefs).toContain(href)

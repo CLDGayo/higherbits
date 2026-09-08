@@ -670,7 +670,7 @@ export function ConsoleClient({
             <div className="flex items-center justify-between pb-3 border-b mb-4">
               <h3 className="font-medium">Troubleshooting Guide</h3>
               <Link
-                href="https://discord.gg/UVXcBGPhh"
+                href="https://discord.gg/vWqmFjPMU4"
                 target="_blank"
                 className="text-muted-foreground hover:text-primary text-sm"
               >

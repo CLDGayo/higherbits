@@ -20,7 +20,7 @@ export function BundlesClient({ user }: { user: User }) {
         <AlertDescription className="text-muted-foreground">
           To add new bundles, please contact us on{" "}
           <a
-            href="https://discord.gg/UVXcBGPhh"
+            href="https://discord.gg/vWqmFjPMU4"
             target="_blank"
             className="underline"
           >

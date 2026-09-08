@@ -100,7 +100,7 @@ const COLUMNS: {
   {
     heading: "Connect",
     links: [
-      { label: "Discord", href: "https://discord.gg/UVXcBGPhh", external: true },
+      { label: "Discord", href: "https://discord.gg/vWqmFjPMU4", external: true },
       {
         label: "GitHub",
         href: "https://github.com/CLDGayo/higherbits",
