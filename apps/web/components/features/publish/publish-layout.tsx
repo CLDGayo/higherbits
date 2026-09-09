@@ -63,6 +63,7 @@ import { SuccessDialog } from "./components/success-dialog"
 import { useIsAdmin } from "./hooks/use-is-admin"
 import { generateDemoSlug } from "./hooks/use-is-check-slug-available"
 import { useR2Upload } from "./hooks/use-r2-upload"
+import { sourceKey } from "@/lib/r2-paths"
 export interface ParsedCodeData {
   dependencies: Record<string, string>
   demoDependencies: Record<string, string>
@@ -549,7 +550,7 @@ export default function PublishComponentForm({
                   type: "text/plain",
                   textContent: demo.demo_code,
                 },
-                fileKey: `${baseFolder}/${demo.demo_slug}/code.demo.tsx`,
+                fileKey: sourceKey(`${baseFolder}/${demo.demo_slug}/code.demo.tsx`),
                 bucketName: "components-code",
               }),
               demo?.preview_image_file &&
@@ -621,7 +622,7 @@ export default function PublishComponentForm({
               type: "text/plain",
               textContent: data.code,
             },
-            fileKey: `${baseFolder}/code.tsx`,
+            fileKey: sourceKey(`${baseFolder}/code.tsx`),
             bucketName: "components-code",
           }),
           customTailwindConfig
@@ -631,7 +632,7 @@ export default function PublishComponentForm({
                   type: "text/plain",
                   textContent: customTailwindConfig,
                 },
-                fileKey: `${baseFolder}/tailwind.config.js`,
+                fileKey: sourceKey(`${baseFolder}/tailwind.config.js`),
                 bucketName: "components-code",
               })
             : Promise.resolve(null),
@@ -642,7 +643,7 @@ export default function PublishComponentForm({
                   type: "text/plain",
                   textContent: customGlobalCss,
                 },
-                fileKey: `${baseFolder}/globals.css`,
+                fileKey: sourceKey(`${baseFolder}/globals.css`),
                 bucketName: "components-code",
               })
             : Promise.resolve(null),
@@ -750,7 +751,7 @@ export default function PublishComponentForm({
                   type: "text/plain",
                   textContent: demo.demo_code,
                 },
-                fileKey: `${demoFolder}/code.demo.tsx`,
+                fileKey: sourceKey(`${demoFolder}/code.demo.tsx`),
                 bucketName: "components-code",
               }),
               demo.preview_image_file &&

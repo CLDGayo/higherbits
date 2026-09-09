@@ -4,7 +4,6 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import PublishComponentForm from "@/components/features/publish/publish-layout"
-import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { LoadingSpinnerPage } from "@/components/ui/loading-spinner"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
@@ -61,19 +60,34 @@ function AddDemoContent() {
           return
         }
 
-        const [codeResult, tailwindConfigResult, globalCssResult] =
-          await Promise.all([
-            fetchFileTextContent(component.code),
-            component.tailwind_config_extension
-              ? fetchFileTextContent(component.tailwind_config_extension)
-              : Promise.resolve({ data: null, error: null }),
-            component.global_css_extension
-              ? fetchFileTextContent(component.global_css_extension)
-              : Promise.resolve({ data: null, error: null }),
-          ])
+        // Source is fetched through the entitlement-gated route rather than
+        // straight from the CDN: a browser cannot sign a private R2 read.
+        const sourceResponse = await fetch("/api/component-source", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ componentId: componentIdNum }),
+        })
 
-        if (codeResult.error) {
-          console.error("Failed to fetch component code:", codeResult.error)
+        if (!sourceResponse.ok) {
+          console.error(
+            "Failed to fetch component code:",
+            sourceResponse.status,
+          )
+          setError(
+            sourceResponse.status === 403
+              ? "You do not have access to this component's code"
+              : "Failed to fetch component code",
+          )
+          return
+        }
+
+        const source = await sourceResponse.json()
+        const codeResult = { data: source.code, error: null }
+        const tailwindConfigResult = { data: source.tailwindConfig, error: null }
+        const globalCssResult = { data: source.globalCss, error: null }
+
+        if (!codeResult.data) {
+          console.error("Component code was empty")
           setError("Failed to fetch component code")
           return
         }

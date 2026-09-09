@@ -44,4 +44,27 @@ describe("r2-read URL mapping", () => {
     expect(isPrivateSourceKey("alice/my-card/preview.png")).toBe(false)
     expect(isPrivateSourceKey("bundled/123.html")).toBe(false)
   })
+
+  it("round-trips: a key the publish flow writes is one the reader signs", async () => {
+    const { isPrivateSourceKey, cdnUrlToKey } = await load()
+    const { sourceKey } = await import("../r2-paths")
+
+    // exactly the shapes the four publish flows produce
+    for (const raw of [
+      "alice/my-card/code.tsx",
+      "alice/my-card/hero/code.demo.tsx",
+      "alice/my-card/tailwind.config.js",
+      "alice/my-card/globals.css",
+      "user_2abc/my-card/code.1757000000000.tsx",
+    ]) {
+      const key = sourceKey(raw)
+      expect(isPrivateSourceKey(key)).toBe(true)
+      expect(cdnUrlToKey(`${CDN}/${key}`)).toBe(key)
+    }
+  })
+
+  it("sourceKey does not double-prefix", async () => {
+    const { sourceKey } = await import("../r2-paths")
+    expect(sourceKey(sourceKey("a/b/code.tsx"))).toBe("src/a/b/code.tsx")
+  })
 })

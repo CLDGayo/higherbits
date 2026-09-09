@@ -4,6 +4,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { makeSlugFromName } from "@/lib/utils"
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
+import { sourceKey } from "@/lib/r2-paths"
 
 export async function POST(request: Request) {
   try {
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
           type: "text/plain",
           textContent: data.code,
         },
-        fileKey: `${baseFolder}/code.tsx`,
+        fileKey: sourceKey(`${baseFolder}/code.tsx`),
         bucketName: "components-code",
       }),
       data.tailwind_config
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
               type: "text/plain",
               textContent: data.tailwind_config,
             },
-            fileKey: `${baseFolder}/tailwind.config.js`,
+            fileKey: sourceKey(`${baseFolder}/tailwind.config.js`),
             bucketName: "components-code",
           })
         : Promise.resolve(null),
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
               type: "text/plain",
               textContent: data.globals_css,
             },
-            fileKey: `${baseFolder}/globals.css`,
+            fileKey: sourceKey(`${baseFolder}/globals.css`),
             bucketName: "components-code",
           })
         : Promise.resolve(null),
@@ -108,7 +109,7 @@ export async function POST(request: Request) {
             type: "text/plain",
             textContent: demo.demo_code,
           },
-          fileKey: `${demoFolder}/code.demo.tsx`,
+          fileKey: sourceKey(`${demoFolder}/code.demo.tsx`),
           bucketName: "components-code",
         }),
         demo.preview_image_data_url

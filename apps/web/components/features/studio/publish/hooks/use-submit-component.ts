@@ -9,6 +9,7 @@ import { Tables } from "@/types/supabase"
 import { useState } from "react"
 import { toast } from "sonner"
 import { FormData } from "../config/utils"
+import { sourceKey } from "@/lib/r2-paths"
 
 type ParsedCodeData = {
   componentCode: string
@@ -468,7 +469,7 @@ export const useSubmitComponent = () => {
           type: "text/plain",
           textContent: componentCode,
         },
-        fileKey: `${baseFolder}/code.${Date.now()}.tsx`,
+        fileKey: sourceKey(`${baseFolder}/code.${Date.now()}.tsx`),
         bucketName: "components-code",
       }),
       uploadToR2({
@@ -477,7 +478,7 @@ export const useSubmitComponent = () => {
           type: "text/plain",
           textContent: demoCode,
         },
-        fileKey: `${baseFolder}/${demo.demo_slug}/code.demo.${Date.now()}.tsx`,
+        fileKey: sourceKey(`${baseFolder}/${demo.demo_slug}/code.demo.${Date.now()}.tsx`),
         bucketName: "components-code",
       }),
       demo.preview_image_file &&

@@ -44,7 +44,6 @@ import { useClerkSupabaseClient } from "@/lib/clerk"
 import { cn } from "@/lib/utils"
 import { getComponentInstallPrompt } from "@/lib/prompts"
 import { resolveRegistryDependencyTree } from "@/lib/queries.server"
-import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { useUserProfile } from "@/components/hooks/use-user-profile"
 
 import { Component, DemoWithComponent, User as UserType } from "@/types/global"
@@ -271,17 +270,24 @@ export function CommandMenu() {
 
     setIsGenerating(true)
     try {
+      // Source comes from the entitlement-gated route rather than the CDN: a
+      // browser cannot sign a private R2 read.
+      const sourcePromise = fetch("/api/component-source", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ demoId: selectedComponent.id }),
+      }).then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`component-source failed (${res.status})`)
+        }
+        return res.json()
+      })
+
       const componentAndDemoCodePromises = [
-        fetchFileTextContent(selectedComponent.component.code),
-        fetchFileTextContent(selectedComponent.demo_code),
-        selectedComponent.component.tailwind_config_extension
-          ? fetchFileTextContent(
-              selectedComponent.component.tailwind_config_extension,
-            )
-          : Promise.resolve({ data: null, error: null }),
-        selectedComponent.component.compiled_css
-          ? fetchFileTextContent(selectedComponent.component.compiled_css)
-          : Promise.resolve({ data: null, error: null }),
+        sourcePromise.then((s) => ({ data: s.code, error: null })),
+        sourcePromise.then((s) => ({ data: s.demoCode, error: null })),
+        sourcePromise.then((s) => ({ data: s.tailwindConfig, error: null })),
+        sourcePromise.then((s) => ({ data: s.compiledCss, error: null })),
       ]
 
       const [

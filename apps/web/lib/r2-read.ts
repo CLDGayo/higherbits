@@ -14,7 +14,8 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
  * is asked to sign and makes no authorization decision of its own.
  */
 
-export const SOURCE_PREFIX = "src/"
+import { SOURCE_PREFIX } from "./r2-paths"
+export { SOURCE_PREFIX }
 const SOURCE_BUCKET = "components-code"
 
 const cdnBase = () => (process.env.NEXT_PUBLIC_CDN_URL ?? "").replace(/\/+$/, "")

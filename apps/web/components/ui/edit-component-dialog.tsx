@@ -54,6 +54,7 @@ import { useRouter } from "next/navigation"
 import ShortUUID from "short-uuid"
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { useUser } from "@clerk/nextjs"
+import { sourceKey } from "@/lib/r2-paths"
 
 // Helper function to safely fetch file content
 const safeFetchFile = async (url: string): Promise<string> => {
@@ -482,7 +483,7 @@ export function EditComponentDialog({
           type: "text/plain",
           textContent: newCode,
         },
-        fileKey: `${baseFolder}/code.${timestamp}.tsx`,
+        fileKey: sourceKey(`${baseFolder}/code.${timestamp}.tsx`),
         bucketName: "components-code",
       })
 
@@ -536,7 +537,7 @@ export function EditComponentDialog({
           type: "text/plain",
           textContent: newCode,
         },
-        fileKey: `${baseFolder}/${demo.demo_slug}/code.demo.${timestamp}.tsx`,
+        fileKey: sourceKey(`${baseFolder}/${demo.demo_slug}/code.demo.${timestamp}.tsx`),
         bucketName: "components-code",
       })
 
@@ -593,7 +594,7 @@ export function EditComponentDialog({
               textContent:
                 activeStyleTab === "tailwind" ? newCode : tailwindConfig || "",
             },
-            fileKey: `${baseFolder}/tailwind.config.${timestamp}.js`,
+            fileKey: sourceKey(`${baseFolder}/tailwind.config.${timestamp}.js`),
             bucketName: "components-code",
           }),
           uploadToR2({
@@ -603,7 +604,7 @@ export function EditComponentDialog({
               textContent:
                 activeStyleTab === "globals" ? newCode : globalCss || "",
             },
-            fileKey: `${baseFolder}/globals.${timestamp}.css`,
+            fileKey: sourceKey(`${baseFolder}/globals.${timestamp}.css`),
             bucketName: "components-code",
           }),
         ])
