@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js"
 import { NextRequest, NextResponse } from "next/server"
 import { SearchResponseMCP } from "@/types/global"
 import { hasUserComponentAccess } from "@/lib/api/server/components"
+import { fetchComponentSource } from "@/lib/r2-read"
 import { resolveRegistryDependencyTree } from "@/lib/queries.server"
 import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { PromptRule } from "@/types/prompt-rules"
@@ -149,10 +150,10 @@ export async function POST(request: NextRequest) {
       )
 
       const { data: demoCode } = hasAccess
-        ? await fetchFileTextContent(d.demo_code)
+        ? await fetchComponentSource(d.demo_code)
         : { data: null }
       const { data: componentCode } = hasAccess
-        ? await fetchFileTextContent(d.component!.code as string)
+        ? await fetchComponentSource(d.component!.code as string)
         : { data: null }
 
       const { data: registryDependencies } =

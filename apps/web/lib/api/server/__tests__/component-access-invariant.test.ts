@@ -23,7 +23,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const isComponentPaid = vi.fn()
-const getPurchasesWithBundles = vi.fn(async () => [])
+const getPurchasesWithBundles = vi.fn(async (_userId: string) => [] as unknown[])
 const planFindUnique = vi.fn(async () => null)
 const bundlesFindMany = vi.fn(async () => [])
 

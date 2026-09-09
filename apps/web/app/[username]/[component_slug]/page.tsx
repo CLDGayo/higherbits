@@ -1,5 +1,6 @@
 import ErrorPage from "@/components/ui/error-page"
 import { hasUserComponentAccess } from "@/lib/api/server/components"
+import { cdnUrlToKey, fetchComponentSource, isPrivateSourceKey } from "@/lib/r2-read"
 import { BASE_KEYWORDS, SITE_TITLE } from "@/lib/constants"
 import { JsonLd } from "@/components/seo/json-ld"
 import { extractDemoComponentNames } from "@/lib/parsers"
@@ -106,6 +107,13 @@ const fetchFileTextContent = async (url: string | null | undefined) => {
   if (!isUrl) {
     return { data: url, error: null }
   }
+  // Objects under the private source prefix need a credentialed read; legacy
+  // public objects keep the cached plain fetch so nothing regresses.
+  const key = cdnUrlToKey(url)
+  if (key && isPrivateSourceKey(key)) {
+    return fetchComponentSource(url)
+  }
+
   const filename = url.split("/").slice(-1)[0]
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } })
