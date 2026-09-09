@@ -500,16 +500,24 @@ Cozy Downloads/
   `process/features/supabase-interconnect/active/supabase-interconnect_25-07-26/phase-05-billing_REPORT_29-07-26.md`
   for full detail, and its `## EVL Fix Cycle 1` section for the defect writeup.
 
-  **Honest repo-wide `tsc` situation (as of 29-07-26):** a full, unscoped `corepack pnpm --filter web
-  exec tsc --noEmit` currently reports **~1165 errors**, effectively all foreign to any in-flight
-  program — attributable to the user's own uncommitted `package.json`/`pnpm-lock.yaml` state
-  (duplicate React types producing `TS2786` "cannot be used as a JSX component" errors) plus a stale
-  `.next` build cache referencing a deleted route. This makes the repo-wide `tsc` gate **non-functional
-  as a regression detector** until that uncommitted state is resolved or committed — every phase in
-  this program has had to fall back to a **scoped** delta check (grep the touched-file paths out of
-  the full run and compare against a pre-recorded per-file baseline) rather than an "exit 0" check.
-  Do not trust a bare "tsc passes/fails" claim from any agent without confirming which mode (scoped
-  delta vs. true repo-wide zero-errors) it used.
+  **Honest repo-wide `tsc` situation (as of 29-07-26, STALE — see correction below):** a full,
+  unscoped `corepack pnpm --filter web exec tsc --noEmit` currently reports **~1165 errors**,
+  effectively all foreign to any in-flight program — attributable to the user's own uncommitted
+  `package.json`/`pnpm-lock.yaml` state (duplicate React types producing `TS2786` "cannot be used as
+  a JSX component" errors) plus a stale `.next` build cache referencing a deleted route. This makes
+  the repo-wide `tsc` gate **non-functional as a regression detector** until that uncommitted state
+  is resolved or committed — every phase in this program has had to fall back to a **scoped** delta
+  check (grep the touched-file paths out of the full run and compare against a pre-recorded per-file
+  baseline) rather than an "exit 0" check. Do not trust a bare "tsc passes/fails" claim from any agent
+  without confirming which mode (scoped delta vs. true repo-wide zero-errors) it used.
+
+  **CORRECTION (2026-09-10):** the ~1165-error state above is stale. Re-measured this session —
+  `corepack pnpm --filter web exec tsc --noEmit` exits **0 with 0 errors** repo-wide, confirmed with
+  a positive control (a deliberately injected type error produced exactly 1 `error TS` match, then
+  reverted). The uncommitted `package.json`/`pnpm-lock.yaml` state and stale `.next` cache that
+  caused the 29-07-26 spike are no longer present. The repo-wide `tsc --noEmit` gate is a valid,
+  functional "exit 0" regression detector again — the scoped-delta fallback above is no longer
+  required, though it remains a reasonable pattern if the full run ever goes non-functional again.
 
 - **`supabase-interconnect` program — ALL 6 PHASES CODE-COMPLETE AND EVL-CONFIRMED; Phase 1 + Phase
   2 are now ALSO LIVE-APPLIED AND LIVE-VERIFIED (29-07-26); program stays in `active/` pending 2

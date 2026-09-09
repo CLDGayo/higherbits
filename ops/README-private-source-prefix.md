@@ -89,28 +89,57 @@ the object exists):
     curl -s -o /dev/null -w '%{http_code}\n' "$CDN/src/probe-nonexistent"   # 404
     curl -s -o /dev/null -w '%{http_code}\n' "$CDN/probe-nonexistent"       # 404 (control)
 
-## Also unresolved: the page hands out more than `code`
+## CLOSED (2026-09-10): the page used to hand out more than `code`
 
-`apps/web/app/[username]/[component_slug]/page.tsx` blanks only `component.code`
-and `demo.demo_code` for non-purchasers, then passes `component={component}` —
-**the whole DB row** (line 309). Every other column ships in the flight payload,
-including `registry_url`. These props are passed unconditionally:
+**Status: fixed, commit `50a46f2b` on `main` (local, not pushed).** Until this commit,
+`apps/web/app/[username]/[component_slug]/page.tsx` blanked only `component.code`
+and `demo.demo_code` for non-purchasers, then passed `component={component}` —
+**the whole DB row** — with `tailwindConfig`, `globalCss`, `registryDependencies`,
+and `registry_url` passed unconditionally regardless of purchase status.
 
-    tailwindConfig={tailwindConfigResult?.data}      # table above calls this paid source
-    globalCss={globalCssResult?.data}                # table above calls this paid source
-    registryDependencies={registryDependenciesFiles} # dependency source code
+These three props are now gated on `hasPurchased`, and `registry_url` is blanked
+inside the same `if (!hasPurchased)` block that already blanks `code`/`demo_code`:
 
-Because the server reads these with credentials and hands the content to the
-client, **no CDN rule can close this path.** It must be gated in the page.
+    registryDependencies={hasPurchased ? registryDependenciesFiles : {}}
+    tailwindConfig={hasPurchased ? (tailwindConfigResult?.data as string) : ""}
+    globalCss={hasPurchased ? (globalCssResult?.data as string) : ""}
+    // registry_url is blanked in the same mutation block as component.code
+
+A regression test (`apps/web/lib/api/server/__tests__/b2-prop-gating.test.ts`, 5
+cases) pins both directions: gated props empty for a non-purchaser, AND fully
+populated for a FREE component accessed anonymously (the B5-class guard — this
+fix must never re-deny free components). Typecheck and the full suite (80
+files / 560 tests) stay green.
+
+**`index_css_url` (`tailwind4IndexCss` prop) and `compiledCss` remain
+deliberately ungated** — compiled/derived CSS, absent from the paid-source
+table above, and gating them risked degrading the paid-component preview,
+which cannot be visually re-verified in this environment (zero paid
+components in production — see below). This is a locked non-goal, not an
+oversight.
+
+**The `@modal` route needed no change.** Verified by reading the full file:
+it only ever passes `demo`, `componentDemos`, and `hasPurchased` to
+`<InterceptedDemoModal>` — it never fetches or passes `tailwindConfig`,
+`globalCss`, `registryDependencies`, `registry_url`, or the `component` row
+at all. There was nothing to gate there.
+
+**What this does NOT prove:** there are still zero paid components in
+production, so this fix has unit-test proof only — not an end-to-end
+confirmation against a real paid row. See "Current exposure scope" above.
+Because the server reads these fields with credentials and hands the content
+to the client, this path could never be closed by a CDN rule regardless — it
+had to be gated in the page, which is now done.
 
 ## What would actually close B2
 
-In order. Steps 1-2 are code and can land now; 3-5 are operator work.
+Step 1 is code and is now done. Steps 2-5 are still open (3-5 are operator work).
 
-1. Gate `tailwindConfig`, `globalCss`, `registryDependencies` and
-   `index_css_url` on `hasPurchased` in the component detail page and in the
-   `@modal` route, the same way `code`/`demoCode` already are. Blank
-   `registry_url` on the row before passing it.
+1. ✅ **DONE (2026-09-10, commit `50a46f2b`).** Gate `tailwindConfig`,
+   `globalCss`, `registryDependencies` on `hasPurchased` in the component
+   detail page. Blank `registry_url` on the row before passing it. The
+   `@modal` route needed no change (verified no-op — nothing to gate there).
+   `index_css_url` remains intentionally ungated (see above).
 2. Stop writing full source into the public `registry.*.json`, or write it under
    `src/` and serve the CLI exclusively from
    `GET /api/r/{owner}/{slug}` — which already gates correctly on
