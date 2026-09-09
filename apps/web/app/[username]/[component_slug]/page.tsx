@@ -175,6 +175,7 @@ export default async function ComponentPageServer(props: {
 
     if (!hasPurchased) {
       component.code = ""
+      component.registry_url = ""
       demo.demo_code = ""
       componentDemos?.forEach((demo) => {
         demo.demo_code = ""
@@ -315,12 +316,12 @@ export default async function ComponentPageServer(props: {
           dependencies={dependencies}
           demoDependencies={demoDependencies}
           demoComponentNames={demoComponentNames}
-          registryDependencies={registryDependenciesFiles}
+          registryDependencies={hasPurchased ? registryDependenciesFiles : {}}
           npmDependenciesOfRegistryDependencies={
             registryDependenciesData.npmDependencies
           }
-          tailwindConfig={tailwindConfigResult?.data as string}
-          globalCss={globalCssResult?.data as string}
+          tailwindConfig={hasPurchased ? (tailwindConfigResult?.data as string) : ""}
+          globalCss={hasPurchased ? (globalCssResult?.data as string) : ""}
           compiledCss={compiledCssResult?.data as string}
           submission={data.submission ?? undefined}
           hasPurchased={hasPurchased}
