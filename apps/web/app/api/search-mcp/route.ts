@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js"
 import { NextRequest, NextResponse } from "next/server"
 import { SearchResponseMCP } from "@/types/global"
+import { hasUserComponentAccess } from "@/lib/api/server/components"
 import { resolveRegistryDependencyTree } from "@/lib/queries.server"
 import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { PromptRule } from "@/types/prompt-rules"
@@ -140,10 +141,19 @@ export async function POST(request: NextRequest) {
         : demoRaw.component
       const d = { ...demoRaw, component }
 
-      const { data: demoCode } = await fetchFileTextContent(d.demo_code)
-      const { data: componentCode } = await fetchFileTextContent(
-        d.component!.code as string,
+      // Paid source is only fetched for callers entitled to it. Without this the
+      // route hands out purchasable component code to any valid API key.
+      const hasAccess = await hasUserComponentAccess(
+        userId,
+        d.component_id,
       )
+
+      const { data: demoCode } = hasAccess
+        ? await fetchFileTextContent(d.demo_code)
+        : { data: null }
+      const { data: componentCode } = hasAccess
+        ? await fetchFileTextContent(d.component!.code as string)
+        : { data: null }
 
       const { data: registryDependencies } =
         await resolveRegistryDependencyTree({
@@ -161,6 +171,7 @@ export async function POST(request: NextRequest) {
         componentName: d.component!.name,
         componentCode: componentCode ?? "",
         registryDependencies: registryDependencies || undefined,
+        locked: !hasAccess,
       }
     })
 

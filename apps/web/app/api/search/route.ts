@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js"
 import { NextRequest, NextResponse } from "next/server"
 import { SearchResponse } from "@/types/global"
+import { hasUserComponentAccess } from "@/lib/api/server/components"
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -104,9 +105,47 @@ export async function POST(request: NextRequest) {
     const end = start + per_page
     const results = transformedResults.slice(start, end)
 
+    // `code` is a public CDN URL to the component source — handing it out is
+    // equivalent to handing out the source, so it is stripped for callers not
+    // entitled to that component. Only the paginated slice is resolved.
+    const { data: requesterRow } = await supabase
+      .from("api_keys")
+      .select("user_id")
+      .eq("key", apiKey)
+      .single()
+    const requesterId = requesterRow?.user_id ?? null
+
+    const { data: demoRows } = await supabase
+      .from("demos")
+      .select("id, component_id")
+      .in(
+        "id",
+        results.map((r) => r.demo_id).filter((v) => v != null),
+      )
+
+    const componentIdByDemo = new Map(
+      (demoRows ?? []).map((row) => [row.id, row.component_id]),
+    )
+    const accessByComponent = new Map<number, boolean>()
+    for (const componentId of new Set(componentIdByDemo.values())) {
+      if (componentId == null) continue
+      accessByComponent.set(
+        componentId,
+        await hasUserComponentAccess(requesterId, componentId),
+      )
+    }
+
+    const gatedResults = results.map((r) => {
+      const componentId = componentIdByDemo.get(r.demo_id)
+      if (componentId != null && accessByComponent.get(componentId)) {
+        return r
+      }
+      return { ...r, component_data: { ...r.component_data, code: "" } }
+    })
+
     // Return filtered results with metadata
     return NextResponse.json<SearchResponse>({
-      results,
+      results: gatedResults,
       metadata: {
         plan: keyCheck.plan,
         requests_remaining: keyCheck.requests_remaining,

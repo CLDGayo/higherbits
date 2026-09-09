@@ -144,19 +144,16 @@ async function handleCompileCss(req: Request, headers: Record<string, string>) {
 
 async function handleBundle(req: Request, headers: Record<string, string>) {
   try {
-    // TEMPORARILY BYPASS BUNDLER SECRET
-    /*
+    // Fails closed: an unset BUNDLER_SECRET rejects every request rather than
+    // opening the build service to the internet. Both this process and apps/web
+    // (lib/bundler.ts) must have BUNDLER_SECRET set to the same value.
     const expectedSecret = process.env.BUNDLER_SECRET
     if (
       !expectedSecret ||
       req.headers.get("x-bundler-secret") !== expectedSecret
     ) {
-      return Response.json(
-        { error: "Unauthorized" },
-        { status: 401, headers },
-      )
+      return Response.json({ error: "Unauthorized" }, { status: 401, headers })
     }
-    */
 
     const {
       files,

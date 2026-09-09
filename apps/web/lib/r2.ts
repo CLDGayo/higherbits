@@ -6,6 +6,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import { auth } from "@clerk/nextjs/server"
 import path from "path"
 import dotenv from "dotenv"
 import { processUploadBuffer } from "./upload-security"
@@ -44,6 +45,19 @@ const r2Client = new S3Client({
  * This function issues bulk deletes, so a prefix bug here empties a production
  * bucket. It refuses rather than trusting its caller.
  */
+/**
+ * "use server" makes every export in this file a browser-callable RPC, so each
+ * one must establish identity itself — an unauthenticated caller could
+ * otherwise mint arbitrary R2 write URLs or delete arbitrary prefixes.
+ */
+const requireUser = async () => {
+  const { userId } = await auth()
+  if (!userId) {
+    throw new Error("Unauthorized")
+  }
+  return userId
+}
+
 export const deleteR2Prefix = async ({
   prefix,
   bucketName,
@@ -51,6 +65,8 @@ export const deleteR2Prefix = async ({
   prefix: string
   bucketName: string
 }): Promise<number> => {
+  await requireUser()
+
   if (!prefix || !prefix.endsWith("/") || prefix.startsWith("/")) {
     throw new Error(
       `Refusing to delete R2 prefix ${JSON.stringify(prefix)}: must be non-empty and end with "/"`,
@@ -111,6 +127,8 @@ export const uploadToR2 = async ({
   bucketName: string
   contentType?: string
 }): Promise<string> => {
+  await requireUser()
+
   try {
     if (!file.textContent && !file.encodedContent) {
       throw new Error("textContent or encodedContent must be provided")
@@ -154,6 +172,8 @@ export const generatePresignedUrl = async ({
   contentType?: string
   expiresIn?: number
 }): Promise<string> => {
+  await requireUser()
+
   try {
     const command = new PutObjectCommand({
       Bucket: bucketName,

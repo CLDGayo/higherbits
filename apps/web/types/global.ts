@@ -144,6 +144,9 @@ export interface SearchResponseMCP {
       filesWithRegistry: Record<string, { code: string; registry: string }>
       npmDependencies: Record<string, string>
     }
+    /** True when the caller is not entitled to this component's source, in
+     *  which case demoCode and componentCode are returned empty. */
+    locked?: boolean
   }[]
 }
 

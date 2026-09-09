@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js"
 import { NextRequest, NextResponse } from "next/server"
 import { SearchResponseMCP } from "@/types/global"
+import { hasUserComponentAccess } from "@/lib/api/server/components"
 import { resolveRegistryDependencyTree } from "@/lib/queries.server"
 import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
@@ -120,16 +121,35 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const { data: userData, error: userError } = await supabase
+      .from("api_keys")
+      .select("user_id")
+      .eq("key", apiKey)
+      .single()
+
+    // Resolved before the loop so entitlement can gate the source below; the
+    // usage-recording block further down reuses the same lookup.
+    const requesterId = userData?.user_id ?? null
+
     const promises = demos?.map(async (demoRaw) => {
       const component = Array.isArray(demoRaw.component)
         ? demoRaw.component[0]
         : demoRaw.component
       const d = { ...demoRaw, component }
 
-      const { data: demoCode } = await fetchFileTextContent(d.demo_code)
-      const { data: componentCode } = await fetchFileTextContent(
-        d.component!.code as string,
+      // Paid source is only fetched for callers entitled to it. Without this the
+      // route hands out purchasable component code to any valid API key.
+      const hasAccess = await hasUserComponentAccess(
+        requesterId,
+        d.component_id,
       )
+
+      const { data: demoCode } = hasAccess
+        ? await fetchFileTextContent(d.demo_code)
+        : { data: null }
+      const { data: componentCode } = hasAccess
+        ? await fetchFileTextContent(d.component!.code as string)
+        : { data: null }
 
       const { data: registryDependencies } =
         await resolveRegistryDependencyTree({
@@ -152,6 +172,7 @@ export async function POST(request: NextRequest) {
         componentName: d.component!.name,
         componentCode: componentCode ?? "",
         registryDependencies: registryDependencies || undefined,
+        locked: !hasAccess,
         similarity: searchResult?.usage_data?.total_usages
           ? searchResult.usage_data.total_usages / 1000
           : undefined, // Normalize usage as similarity
@@ -164,12 +185,6 @@ export async function POST(request: NextRequest) {
       const similarityB = b.similarity || 0
       return similarityB - similarityA
     })
-
-    const { data: userData, error: userError } = await supabase
-      .from("api_keys")
-      .select("user_id")
-      .eq("key", apiKey)
-      .single()
 
     const response = {
       results: sortedResults,

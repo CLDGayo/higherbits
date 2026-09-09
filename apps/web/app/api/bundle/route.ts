@@ -63,14 +63,25 @@ export async function POST(request: Request) {
     const { userId } = await auth()
     const isPurchased = await hasUserPurchasedDemo(userId, demoId)
 
-    // If we have a cached bundle with the same hash, return it
-    // Force cache if not purchased
+    // hasUserPurchasedDemo is a READ predicate — hasUserComponentAccess returns
+    // true for an ANONYMOUS caller on a free component, which is correct for
+    // viewing but must never authorize the rebuild-and-persist path below. That
+    // path overwrites bundle_html_url, the preview every visitor sees, so it is
+    // restricted to the component's owner.
+    const demoComponent = Array.isArray(demo?.component)
+      ? demo?.component[0]
+      : demo?.component
+    const isOwner = Boolean(userId) && demoComponent?.user_id === userId
+
+    // If we have a cached bundle with the same hash, return it.
+    // Force cache if not purchased, or if the caller does not own the component.
     if (
       (!demoError &&
         demo &&
         demo.bundle_hash === contentHash &&
         demo.bundle_html_url) ||
-      !isPurchased
+      !isPurchased ||
+      !isOwner
     ) {
       return NextResponse.json({
         html: demo.bundle_html_url,
