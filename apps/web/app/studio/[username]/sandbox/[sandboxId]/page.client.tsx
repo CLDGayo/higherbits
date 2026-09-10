@@ -805,6 +805,7 @@ function PublishClientPageContent({
               onTogglePreview={handleTogglePreview}
               isFullscreen={isFullscreen}
               onFullscreenChange={setIsFullscreen}
+              connectionPhase={connectionPhase}
             />
           )}
         </div>

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export type SandboxConnectionPhase = "connecting" | "starting-dev-server"
 
-const PHASE_COPY: Record<SandboxConnectionPhase, string> = {
+export const PHASE_COPY: Record<SandboxConnectionPhase, string> = {
   connecting: "Connecting to sandbox\u2026",
   "starting-dev-server":
     "Starting dev server \u2014 this can take a moment on a hibernated draft\u2026",

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/resizable"
 import { useTheme } from "next-themes"
 import { usePreviewState } from "../hooks/use-preview-state"
+import { PHASE_COPY, type SandboxConnectionPhase } from "./sandbox-skeleton"
 
 interface PreviewPaneProps {
   previewURL: string | null
@@ -33,6 +34,9 @@ interface PreviewPaneProps {
   onTogglePreview?: () => void
   isFullscreen?: boolean
   onFullscreenChange?: (isFullscreen: boolean) => void
+  // Optional so callers without hook state (Suspense/route-level fallbacks) keep
+  // rendering the original copy unchanged.
+  connectionPhase?: SandboxConnectionPhase
 }
 
 export function PreviewPane({
@@ -51,6 +55,7 @@ export function PreviewPane({
   onTogglePreview,
   isFullscreen = false,
   onFullscreenChange,
+  connectionPhase,
 }: PreviewPaneProps) {
   const {
     selectedDevice,
@@ -186,7 +191,7 @@ export function PreviewPane({
               </div>
             ) : !previewURL ? (
               <div className="flex-1 flex flex-col gap-3 items-center justify-center text-muted-foreground">
-                <p>Waiting for dev server...</p>
+                <p>{connectionPhase ? PHASE_COPY[connectionPhase] : "Waiting for dev server..."}</p>
               </div>
             ) : (
               <div 
