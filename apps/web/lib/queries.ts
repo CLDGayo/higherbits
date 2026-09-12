@@ -382,6 +382,78 @@ export async function getComponentDemos(
   return { data: transformedData, error: null }
 }
 
+const DEMO_SELECT_WITH_RELATIONS = `
+      *,
+      demo_user:users!demos_user_id_fkey(${PUBLIC_USER_COLUMNS}),
+      tags:demo_tags(
+        tags:tags(*)
+      )
+    `
+
+/**
+ * Shared formatting for a successful demo lookup. Used by both
+ * `getComponentWithDemo` and `getComponentWithDemoForOG`, for both the primary
+ * lookup and the deterministic first-demo fallback.
+ */
+function formatDemoWithComponent(
+  component: any,
+  demo: any,
+  submission: any,
+) {
+  const formattedDemo = {
+    ...(demo as any),
+    user: demo.demo_user,
+    tags: demo.tags ? demo.tags.map((tag: any) => tag.tags) : [],
+    component: {
+      ...component,
+      user: component.user,
+    },
+  } as unknown as Demo & { user: User } & { tags: Tag[] } & {
+    component: Component & { user: User }
+  }
+
+  delete (formattedDemo as any).demo_user
+
+  const formattedComponent = {
+    ...component,
+    tags: component.tags ? component.tags.map((tag: any) => tag.tags) : [],
+  } as unknown as Component & { user: User } & { tags: Tag[] }
+
+  return {
+    data: {
+      component: formattedComponent,
+      demo: formattedDemo,
+      submission,
+    },
+    error: null as Error | null,
+    shouldRedirectToDefault: undefined as true | undefined,
+  }
+}
+
+/**
+ * Deterministic fallback used only when a lookup for the literal demo_slug
+ * "default" finds nothing: returns the component's first demo by `id ASC`.
+ * Returns null when the component genuinely has no demos.
+ */
+async function fetchFirstDemoForComponent(
+  supabase: SupabaseClient<Database>,
+  componentId: any,
+) {
+  const { data, error } = await supabase
+    .from("demos")
+    .select(DEMO_SELECT_WITH_RELATIONS)
+    .eq("component_id", componentId)
+    .order("id", { ascending: true })
+    .limit(1)
+    .maybeSingle()
+
+  if (error || !data) {
+    return null
+  }
+
+  return data
+}
+
 export async function getComponentWithDemo(
   supabase: SupabaseClient<Database>,
   username: string,
@@ -458,6 +530,13 @@ export async function getComponentWithDemo(
 
   if (demoError) {
     if (demo_slug === "default") {
+      const fallbackDemo = await fetchFirstDemoForComponent(
+        supabase,
+        component.id,
+      )
+      if (fallbackDemo) {
+        return formatDemoWithComponent(component, fallbackDemo, submission)
+      }
       return { data: null, error: new Error(demoError.message) }
     }
     return { data: null, error: null, shouldRedirectToDefault: true }
@@ -465,38 +544,19 @@ export async function getComponentWithDemo(
 
   if (!demo) {
     if (demo_slug === "default") {
+      const fallbackDemo = await fetchFirstDemoForComponent(
+        supabase,
+        component.id,
+      )
+      if (fallbackDemo) {
+        return formatDemoWithComponent(component, fallbackDemo, submission)
+      }
       return { data: null, error: new Error("Demo not found") }
     }
     return { data: null, error: null, shouldRedirectToDefault: true }
   }
 
-  const formattedDemo = {
-    ...(demo as any),
-    user: demo.demo_user,
-    tags: demo.tags ? demo.tags.map((tag: any) => tag.tags) : [],
-    component: {
-      ...component,
-      user: component.user,
-    },
-  } as unknown as Demo & { user: User } & { tags: Tag[] } & {
-    component: Component & { user: User }
-  }
-
-  delete (formattedDemo as any).demo_user
-
-  const formattedComponent = {
-    ...component,
-    tags: component.tags ? component.tags.map((tag: any) => tag.tags) : [],
-  } as unknown as Component & { user: User } & { tags: Tag[] }
-
-  return {
-    data: {
-      component: formattedComponent,
-      demo: formattedDemo,
-      submission,
-    },
-    error: null,
-  }
+  return formatDemoWithComponent(component, demo, submission)
 }
 
 export async function getUserDemos(
@@ -593,6 +653,13 @@ export async function getComponentWithDemoForOG(
 
   if (demoError) {
     if (demo_slug === "default") {
+      const fallbackDemo = await fetchFirstDemoForComponent(
+        supabase,
+        component.id,
+      )
+      if (fallbackDemo) {
+        return formatDemoWithComponent(component, fallbackDemo, submission)
+      }
       return { data: null, error: new Error(demoError.message) }
     }
     return { data: null, error: null, shouldRedirectToDefault: true }
@@ -600,38 +667,19 @@ export async function getComponentWithDemoForOG(
 
   if (!demo) {
     if (demo_slug === "default") {
+      const fallbackDemo = await fetchFirstDemoForComponent(
+        supabase,
+        component.id,
+      )
+      if (fallbackDemo) {
+        return formatDemoWithComponent(component, fallbackDemo, submission)
+      }
       return { data: null, error: new Error("Demo not found") }
     }
     return { data: null, error: null, shouldRedirectToDefault: true }
   }
 
-  const formattedDemo = {
-    ...(demo as any),
-    user: demo.demo_user,
-    tags: demo.tags ? demo.tags.map((tag: any) => tag.tags) : [],
-    component: {
-      ...component,
-      user: component.user,
-    },
-  } as unknown as Demo & { user: User } & { tags: Tag[] } & {
-    component: Component & { user: User }
-  }
-
-  delete (formattedDemo as any).demo_user
-
-  const formattedComponent = {
-    ...component,
-    tags: component.tags ? component.tags.map((tag: any) => tag.tags) : [],
-  } as unknown as Component & { user: User } & { tags: Tag[] }
-
-  return {
-    data: {
-      component: formattedComponent,
-      demo: formattedDemo,
-      submission,
-    },
-    error: null,
-  }
+  return formatDemoWithComponent(component, demo, submission)
 }
 
 export async function getUserLikedComponents(
