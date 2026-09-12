@@ -30,8 +30,8 @@ export default function RootError({
             Something went wrong
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            An unexpected error occurred while loading this page. This issue has
-            been logged, and your session and data remain safe.
+            An unexpected error occurred while loading this page. Your session and
+            data remain safe. If you contact support, quote the reference ID below.
           </p>
         </div>
 

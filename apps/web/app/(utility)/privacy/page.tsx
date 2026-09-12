@@ -56,7 +56,7 @@ export default function PrivacyPolicy(): JSX.Element {
           <li>Maintaining and optimizing our platform</li>
         </ul>
 
-        <h2>4. Analytics, Error Monitoring & Cookies</h2>
+        <h2>4. Analytics & Cookies</h2>
         <p>
           We use essential cookies and local storage items strictly necessary for session management and user authentication (via Clerk).
         </p>
@@ -65,7 +65,6 @@ export default function PrivacyPolicy(): JSX.Element {
         </p>
         <ul>
           <li><strong>Amplitude:</strong> Measures aggregated feature usage, pageviews, and component interactions without capturing sensitive personal data.</li>
-          <li><strong>Sentry:</strong> Tracks runtime exceptions, application crashes, and system errors to improve software stability. Sentry records technical error stack traces and device environments.</li>
         </ul>
 
         <h2>5. Third-Party Service Providers</h2>
