@@ -63,6 +63,24 @@ describe("GET /api/cron/gen-usage-embeddings", () => {
     expect(mockInvoke).not.toHaveBeenCalled()
   })
 
+  it("fails closed when CRON_SECRET is unset, even for the literal 'Bearer undefined' header", async () => {
+    delete process.env.CRON_SECRET
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+
+    for (const auth of ["Bearer undefined", "Bearer ", "Bearer anything"]) {
+      const res = await GET(makeRequest({ auth }))
+      expect(res.status).toBe(401)
+    }
+    // No paid edge-function spend and no DB work on a rejected request.
+    expect(mockRpc).not.toHaveBeenCalled()
+    expect(mockInvoke).not.toHaveBeenCalled()
+
+    // The diagnostic log must never carry the received header value.
+    const logged = errorSpy.mock.calls.flat().map(String).join(" ")
+    expect(logged).not.toContain("Bearer")
+    errorSpy.mockRestore()
+  })
+
   it("calls the RPC then functions.invoke once per missing item with the correct body shape", async () => {
     mockRpc.mockResolvedValueOnce({
       data: [

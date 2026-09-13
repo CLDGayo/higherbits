@@ -19,7 +19,17 @@ function resolveBatchCap(): number {
 export async function GET(req: NextRequest): Promise<NextResponse> {
   // Validate the request has the correct authorization header
   const authHeader = req.headers.get("Authorization")
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Fails closed: an unset CRON_SECRET rejects every request rather than
+  // accepting the literal string "Bearer undefined" that the old template-
+  // literal comparison would otherwise match.
+  const expectedCronSecret = process.env.CRON_SECRET
+  if (!expectedCronSecret || authHeader !== `Bearer ${expectedCronSecret}`) {
+    if (!expectedCronSecret) {
+      console.error(
+        "[gen-usage-embeddings] CRON_SECRET is not set — rejecting all requests. " +
+          "Embedding cron will not run until CRON_SECRET is configured on the host.",
+      )
+    }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
