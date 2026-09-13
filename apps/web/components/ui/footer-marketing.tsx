@@ -3,6 +3,8 @@ import Link from "next/link"
 import { HigherBitsIcon } from "@/components/icons/higherbits-logo"
 import { SignInButton } from "@clerk/nextjs"
 
+import { CookiePreferencesButton } from "@/components/ui/cookie-preferences-button"
+
 import { SITE_NAME } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 
@@ -184,6 +186,18 @@ export function FooterMarketing({ className }: { className?: string }) {
                       Sign in
                     </button>
                   </SignInButton>
+                ) : null}
+                {/*
+                  The consent choice must be reopenable from the most-visited
+                  route — `/privacy` promises exactly this control, and the
+                  landing page renders THIS footer, not the shared one. A real
+                  <button>, not a Link: it has no destination. Same column as
+                  Privacy/Terms so it reads as one more legal link.
+                */}
+                {column.heading === "Company" ? (
+                  <CookiePreferencesButton
+                    className={cn(LINK_CLASS, "text-left")}
+                  />
                 ) : null}
               </nav>
             </div>
