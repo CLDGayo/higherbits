@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { redirect } from "next/navigation"
+import { notFound, redirect, unstable_rethrow } from "next/navigation"
 
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
@@ -18,26 +18,27 @@ interface TagPageProps {
   }>
 }
 
-const getCachedTagInfo = unstable_cache(
-  async (tagSlug: string) => {
-    const { data, error } = await supabaseWithAdminAccess
-      .from("tags")
-      .select("*")
-      .eq("slug", tagSlug)
-      .single()
+const getCachedTagInfo = (tagSlug: string) =>
+  unstable_cache(
+    async () => {
+      const { data, error } = await supabaseWithAdminAccess
+        .from("tags")
+        .select("*")
+        .eq("slug", tagSlug)
+        .maybeSingle()
 
-    if (error) {
-      throw error
-    }
+      if (error) {
+        throw error
+      }
 
-    return data
-  },
-  ["tag-info"],
-  {
-    revalidate: 30, // Cache for 30 seconds
-    tags: ["tag-info"],
-  },
-)
+      return data
+    },
+    ["tag-info", tagSlug],
+    {
+      revalidate: 30, // Cache for 30 seconds
+      tags: ["tag-info", `tag-info-${tagSlug}`],
+    },
+  )()
 
 async function getTagInfo(tagSlug: string) {
   return getCachedTagInfo(tagSlug)
@@ -69,7 +70,7 @@ const tagJsonLd = (tagName: string, tagSlug: string) => ({
 export default async function TagPage(props: TagPageProps) {
   const params = await props.params
   if (!validateRouteParams(params)) {
-    redirect("/")
+    notFound()
   }
 
   const cookieStore = await cookies()
@@ -78,7 +79,7 @@ export default async function TagPage(props: TagPageProps) {
   try {
     const tagInfo = await getTagInfo(tagSlug)
     if (!tagInfo) {
-      redirect("/")
+      notFound()
     }
 
     const savedSortBy = cookieStore.get("saved_sort_by")?.value as
@@ -105,6 +106,7 @@ export default async function TagPage(props: TagPageProps) {
       </div>
     )
   } catch (error) {
+    unstable_rethrow(error)
     console.error("Error in tag page:", error)
     redirect("/")
   }
@@ -115,7 +117,7 @@ export async function generateMetadata(props: TagPageProps): Promise<Metadata> {
   try {
     const tagInfo = await getTagInfo(params.tag_slug)
     if (!tagInfo) {
-      redirect("/")
+      notFound()
     }
 
     return {
@@ -133,6 +135,7 @@ export async function generateMetadata(props: TagPageProps): Promise<Metadata> {
       ],
     }
   } catch (error) {
+    unstable_rethrow(error)
     redirect("/")
   }
 }
