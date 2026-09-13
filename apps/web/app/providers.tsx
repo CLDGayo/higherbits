@@ -13,6 +13,7 @@ import { MainLayout } from "@/components/features/main-page/main-layout"
 import { useSidebarVisibility } from "@/hooks/use-sidebar-visibility"
 
 import { initAmplitude } from "@/lib/amplitude"
+import { subscribe } from "@/lib/consent"
 import { useAtom } from "jotai"
 import { sidebarOpenAtom } from "@/components/features/main-page/main-layout"
 
@@ -38,7 +39,16 @@ function AppProvidersContent({
   const showSidebar = shouldShowSidebar || isLandingPage
 
   useEffect(() => {
+    // Attempt on mount (covers a returning visitor who already accepted), then
+    // again whenever the choice becomes "accepted" — the normal path, since the
+    // consent banner only appears after this effect has already run once.
+    // `initAmplitude` is internally idempotent, so repeat calls are safe.
     initAmplitude()
+    return subscribe((value) => {
+      if (value === "accepted") {
+        initAmplitude()
+      }
+    })
   }, [])
 
   return (

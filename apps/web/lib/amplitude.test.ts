@@ -8,6 +8,8 @@ const mocks = vi.hoisted(() => ({
   setUserId: vi.fn(),
   sessionReplayPlugin: vi.fn(() => ({ name: "session-replay" })),
   track: vi.fn(),
+  setOptOut: vi.fn(),
+  getConsent: vi.fn(() => "accepted" as string | null),
 }))
 
 vi.mock("@amplitude/analytics-browser", () => ({
@@ -18,11 +20,16 @@ vi.mock("@amplitude/analytics-browser", () => ({
   identify: mocks.identify,
   init: mocks.init,
   setUserId: mocks.setUserId,
+  setOptOut: mocks.setOptOut,
   track: mocks.track,
 }))
 
 vi.mock("@amplitude/plugin-session-replay-browser", () => ({
   sessionReplayPlugin: mocks.sessionReplayPlugin,
+}))
+
+vi.mock("@/lib/consent", () => ({
+  getConsent: mocks.getConsent,
 }))
 
 async function loadAmplitude() {
@@ -33,6 +40,7 @@ async function loadAmplitude() {
 describe("Amplitude initialization", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.getConsent.mockReturnValue("accepted")
     vi.stubEnv("NEXT_PUBLIC_AMPLITUDE_API_KEY", "placeholder-key")
   })
 
@@ -81,6 +89,7 @@ describe("Amplitude initialization", () => {
 describe("trackPageProperties", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.getConsent.mockReturnValue("accepted")
     vi.stubEnv("NEXT_PUBLIC_AMPLITUDE_API_KEY", "placeholder-key")
     vi.stubEnv("NODE_ENV", "production")
   })
@@ -102,5 +111,91 @@ describe("trackPageProperties", () => {
     expect(eventName).toBeTruthy()
     expect(eventName).toBe(AMPLITUDE_EVENTS.VIEW_COMPONENT)
     expect(props).toMatchObject({ componentId: "abc" })
+  })
+})
+
+describe("Amplitude consent gating", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.stubEnv("NEXT_PUBLIC_AMPLITUDE_API_KEY", "placeholder-key")
+    vi.stubEnv("NODE_ENV", "production")
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it("does not init or track when no consent choice has been made, even in production with a key", async () => {
+    mocks.getConsent.mockReturnValue(null)
+    const { initAmplitude, trackEvent, trackPageProperties, AMPLITUDE_EVENTS } =
+      await loadAmplitude()
+
+    initAmplitude()
+    trackEvent(AMPLITUDE_EVENTS.COPY_CODE)
+    trackPageProperties({ componentId: "abc" })
+
+    expect(mocks.init).not.toHaveBeenCalled()
+    expect(mocks.add).not.toHaveBeenCalled()
+    expect(mocks.track).not.toHaveBeenCalled()
+  })
+
+  it("does not init or track when consent is rejected", async () => {
+    mocks.getConsent.mockReturnValue("rejected")
+    const { initAmplitude, trackEvent, identifyUser, AMPLITUDE_EVENTS } =
+      await loadAmplitude()
+
+    initAmplitude()
+    trackEvent(AMPLITUDE_EVENTS.COPY_CODE)
+    identifyUser("user_1")
+
+    expect(mocks.init).not.toHaveBeenCalled()
+    expect(mocks.track).not.toHaveBeenCalled()
+    expect(mocks.setUserId).not.toHaveBeenCalled()
+  })
+
+  it("inits when consent is accepted alongside production and an API key", async () => {
+    mocks.getConsent.mockReturnValue("accepted")
+    const { initAmplitude } = await loadAmplitude()
+
+    initAmplitude()
+
+    expect(mocks.init).toHaveBeenCalledOnce()
+  })
+
+  it("drops pre-consent calls rather than queueing them for a later accept", async () => {
+    mocks.getConsent.mockReturnValue(null)
+    const { trackEvent, initAmplitude, AMPLITUDE_EVENTS } = await loadAmplitude()
+
+    trackEvent(AMPLITUDE_EVENTS.COPY_CODE)
+    expect(mocks.track).not.toHaveBeenCalled()
+
+    mocks.getConsent.mockReturnValue("accepted")
+    initAmplitude()
+
+    // The pre-consent call must never be replayed after acceptance.
+    expect(mocks.track).not.toHaveBeenCalled()
+
+    trackEvent(AMPLITUDE_EVENTS.COPY_CODE)
+    expect(mocks.track).toHaveBeenCalledOnce()
+  })
+
+  it("calls amplitude.init only once even if initAmplitude runs twice", async () => {
+    mocks.getConsent.mockReturnValue("accepted")
+    const { initAmplitude } = await loadAmplitude()
+
+    initAmplitude()
+    initAmplitude()
+
+    expect(mocks.init).toHaveBeenCalledOnce()
+    expect(mocks.add).toHaveBeenCalledOnce()
+  })
+
+  it("revokeAmplitude opts out regardless of the current consent value", async () => {
+    mocks.getConsent.mockReturnValue(null)
+    const { revokeAmplitude } = await loadAmplitude()
+
+    revokeAmplitude()
+
+    expect(mocks.setOptOut).toHaveBeenCalledWith(true)
   })
 })

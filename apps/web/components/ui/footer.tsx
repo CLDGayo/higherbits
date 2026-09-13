@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { setConsent } from "@/lib/consent"
 
 interface FooterProps {
   className?: string
@@ -75,6 +76,13 @@ export function Footer({ className, isOpenSource = true }: FooterProps) {
             >
               Contact
             </Link>
+            <button
+              type="button"
+              onClick={() => setConsent(null)}
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+            >
+              Cookie preferences
+            </button>
             <Link
               href="https://discord.gg/vWqmFjPMU4"
               target="_blank"

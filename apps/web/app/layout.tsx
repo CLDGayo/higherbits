@@ -1,4 +1,3 @@
-import { GoogleAnalytics } from "@next/third-parties/google"
 import { Metadata } from "next"
 
 import { Toaster } from "@/components/ui/sonner"
@@ -7,6 +6,8 @@ import { ThemeProvider } from "next-themes"
 import { cn } from "@/lib/utils"
 import { AppProviders } from "./providers"
 import SessionRecorder from "./SessionRecorder"
+import { ConsentBanner } from "@/components/analytics/consent-banner"
+import { GoogleAnalyticsGate } from "@/components/analytics/google-analytics-gate"
 
 import "./globals.css"
 import {
@@ -65,12 +66,15 @@ export default function RootLayout({
                 <SessionRecorder />
                 {children}
                 {modal}
+                <ConsentBanner />
               </AppProviders>
             </TooltipProvider>
             <Toaster />
           </ThemeProvider>
         </div>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? "G-Z0NZTJ4B1B"} />
+        {/* Google Analytics only mounts after an explicit Accept, and only when
+            a measurement id is configured — there is no fallback id. */}
+        <GoogleAnalyticsGate />
       </body>
     </html>
   )

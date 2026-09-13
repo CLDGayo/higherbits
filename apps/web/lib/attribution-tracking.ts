@@ -3,7 +3,13 @@
  *
  * This utility provides functions to track user attribution data
  * for subscription conversions using localStorage.
+ *
+ * These writes are analytics, not functional state, so they are gated behind the
+ * same single visitor consent choice as the vendor SDKs. Pre-consent calls are
+ * dropped, never queued.
  */
+
+import { getConsent } from "@/lib/consent"
 
 // Attribution sources
 export const ATTRIBUTION_SOURCE = {
@@ -45,6 +51,7 @@ export function trackAttribution(
 ): void {
   try {
     if (typeof window === "undefined") return
+    if (getConsent() !== "accepted") return
 
     localStorage.setItem("attribution_source", source)
     localStorage.setItem("attribution_detail", detail)

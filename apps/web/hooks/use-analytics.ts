@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js"
 import { useCallback, useEffect, useState } from "react"
 import { AnalyticsActivityType } from "@/types/global"
+import { getConsent, subscribe } from "@/lib/consent"
+
+const ANON_ID_KEY = "21st_anon_id"
 // Type guard for runtime checking
 function isValidActivityType(type: string): type is AnalyticsActivityType {
   return Object.values(AnalyticsActivityType).includes(
@@ -44,16 +47,34 @@ const generateAnonId = () => {
 export function useSupabaseAnalytics() {
   const [anonId, setAnonId] = useState<string | null>(null)
 
-  // Initialize or retrieve the anonymous ID
+  // Initialize or retrieve the anonymous ID — only once the visitor has
+  // accepted analytics. Pre-consent there is no identifier at all, for
+  // logged-in and anonymous visitors alike.
   useEffect(() => {
     if (typeof window === "undefined") return
 
-    let storedAnonId = localStorage.getItem("21st_anon_id")
-    if (!storedAnonId) {
-      storedAnonId = generateAnonId()
-      localStorage.setItem("21st_anon_id", storedAnonId)
+    const applyConsent = (value: string | null) => {
+      if (value !== "accepted") {
+        // Revoke path: drop the identifier we may have created earlier.
+        try {
+          localStorage.removeItem(ANON_ID_KEY)
+        } catch {
+          // Storage unavailable — nothing to remove.
+        }
+        setAnonId(null)
+        return
+      }
+
+      let storedAnonId = localStorage.getItem(ANON_ID_KEY)
+      if (!storedAnonId) {
+        storedAnonId = generateAnonId()
+        localStorage.setItem(ANON_ID_KEY, storedAnonId)
+      }
+      setAnonId(storedAnonId)
     }
-    setAnonId(storedAnonId)
+
+    applyConsent(getConsent())
+    return subscribe(applyConsent)
   }, [])
 
   const capture = useCallback(
@@ -62,6 +83,11 @@ export function useSupabaseAnalytics() {
       activity_type: AnalyticsActivityType,
       user_id?: string,
     ) => {
+      // No Supabase read or insert may happen before the visitor accepts.
+      if (getConsent() !== "accepted") {
+        return
+      }
+
       // Skip analytics in development mode
       if (process.env.NODE_ENV === "development") {
         return
