@@ -145,4 +145,71 @@ describe("useSupabaseAnalytics consent gating", () => {
 
     expect(localStorage.getItem("21st_anon_id")).toBeNull()
   })
+  describe.each([
+    ["no choice yet", null],
+    ["rejected", "rejected"],
+  ])("capture() with consent %s", (_label, consent) => {
+    it.each([
+      ["an anonymous caller", undefined],
+      ["a logged-in caller", "user_123"],
+    ])("makes no Supabase select and no insert for %s", async (_who, userId) => {
+      // Seed an anon id so the anonymous path would have an identifier if the
+      // guard were missing — only the consent check can stop the request.
+      localStorage.setItem("21st_anon_id", "seeded_anon")
+      mocks.getConsent.mockReturnValue(consent)
+      const useSupabaseAnalytics = await loadHook()
+
+      const { result } = renderHook(() => useSupabaseAnalytics())
+      await act(async () => {
+        await result.current.capture(
+          1,
+          AnalyticsActivityType.COMPONENT_VIEW,
+          userId,
+        )
+      })
+
+      expect(mocks.createClient).not.toHaveBeenCalled()
+      expect(mocks.from).not.toHaveBeenCalled()
+      expect(mocks.select).not.toHaveBeenCalled()
+      expect(mocks.insert).not.toHaveBeenCalled()
+    })
+  })
+
+  it("capture() attempts the select and insert for a logged-in caller once accepted", async () => {
+    mocks.getConsent.mockReturnValue("accepted")
+    const useSupabaseAnalytics = await loadHook()
+
+    const { result } = renderHook(() => useSupabaseAnalytics())
+    await act(async () => {
+      await result.current.capture(
+        1,
+        AnalyticsActivityType.COMPONENT_VIEW,
+        "user_123",
+      )
+    })
+
+    expect(mocks.select).toHaveBeenCalledWith("id")
+    expect(mocks.insert).toHaveBeenCalledOnce()
+    expect(mocks.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: "user_123" }),
+    )
+  })
+
+  it("capture() stops once consent flips from accepted to rejected", async () => {
+    mocks.getConsent.mockReturnValue("accepted")
+    const useSupabaseAnalytics = await loadHook()
+
+    const { result } = renderHook(() => useSupabaseAnalytics())
+    mocks.getConsent.mockReturnValue("rejected")
+    await act(async () => {
+      await result.current.capture(
+        1,
+        AnalyticsActivityType.COMPONENT_VIEW,
+        "user_123",
+      )
+    })
+
+    expect(mocks.select).not.toHaveBeenCalled()
+    expect(mocks.insert).not.toHaveBeenCalled()
+  })
 })

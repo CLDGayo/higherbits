@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   subscribe: vi.fn((_cb: (value: string | null) => void) => () => {}),
   revokeAmplitude: vi.fn(),
   revokePostHog: vi.fn(),
+  clearAttributionData: vi.fn(),
 }))
 
 vi.mock("@/lib/consent", () => ({
@@ -19,6 +20,9 @@ vi.mock("@/lib/consent", () => ({
 
 vi.mock("@/lib/amplitude", () => ({ revokeAmplitude: mocks.revokeAmplitude }))
 vi.mock("@/lib/posthog", () => ({ revokePostHog: mocks.revokePostHog }))
+vi.mock("@/lib/attribution-tracking", () => ({
+  clearAttributionData: mocks.clearAttributionData,
+}))
 
 async function renderBanner() {
   vi.resetModules()
@@ -91,6 +95,7 @@ describe("ConsentBanner", () => {
     expect(mocks.setConsent).toHaveBeenCalledWith("accepted")
     expect(mocks.revokeAmplitude).not.toHaveBeenCalled()
     expect(mocks.revokePostHog).not.toHaveBeenCalled()
+    expect(mocks.clearAttributionData).not.toHaveBeenCalled()
   })
 
   it("records a rejection and defensively opts both SDKs out when Reject is clicked", async () => {
@@ -102,6 +107,15 @@ describe("ConsentBanner", () => {
     expect(mocks.setConsent).toHaveBeenCalledWith("rejected")
     expect(mocks.revokeAmplitude).toHaveBeenCalledOnce()
     expect(mocks.revokePostHog).toHaveBeenCalledOnce()
+  })
+
+  it("clears stored attribution data when Reject is clicked", async () => {
+    mocks.getConsent.mockReturnValue(null)
+
+    const { getByRole } = await renderBanner()
+    fireEvent.click(getByRole("button", { name: /reject/i }))
+
+    expect(mocks.clearAttributionData).toHaveBeenCalledOnce()
   })
 
   it("pins the banner to the bottom of the viewport above dialogs and below toasts", async () => {

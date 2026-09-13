@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { getConsent, setConsent, subscribe, type ConsentValue } from "@/lib/consent"
 import { revokeAmplitude } from "@/lib/amplitude"
 import { revokePostHog } from "@/lib/posthog"
+import { clearAttributionData } from "@/lib/attribution-tracking"
 
 /**
  * Asks every visitor for an explicit analytics choice before anything tracks.
@@ -41,6 +42,8 @@ export function ConsentBanner() {
     // it now rather than waiting for a reload.
     revokeAmplitude()
     revokePostHog()
+    // Attribution written while consent was granted must not outlive a reject.
+    clearAttributionData()
   }
 
   return (
