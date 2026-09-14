@@ -4,10 +4,14 @@
 
 Please report security issues privately. Do not open a public issue.
 
-- Contact: `[OPERATOR: fill in disclosure email + response-time SLA]`
+Use GitHub's private vulnerability reporting: go to this repository's
+**Security** tab and choose "Report a vulnerability", or open the form
+directly at
+<https://github.com/CLDGayo/higherbits/security/advisories/new>.
 
-Include a description, reproduction steps, and impact assessment. We will
-acknowledge your report and coordinate a fix and disclosure timeline with you.
+Include a description, reproduction steps, and impact assessment. We aim to
+acknowledge reports within a few days and will coordinate a fix and
+disclosure timeline with you.
 
 ## Supported Versions
 
