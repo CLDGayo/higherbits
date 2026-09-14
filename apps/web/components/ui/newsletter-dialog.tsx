@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
@@ -19,6 +19,7 @@ import { useIsMobile } from "@/hooks/use-media-query"
 import { Mail } from "lucide-react"
 import { toast } from "sonner"
 
+import { getConsent, subscribe, type ConsentValue } from "@/lib/consent"
 import { addToNewsletter } from "@/lib/resend"
 
 export function NewsletterDialog() {
@@ -27,21 +28,56 @@ export function NewsletterDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const isMobile = useIsMobile()
 
-  useEffect(() => {
-    const hasSubscribed = localStorage.getItem("hasSubscribedToNewsletter")
-    const hasDeclined = localStorage.getItem("hasDeclinedNewsletter")
+  // The dialog is modal: while open it hides the rest of the page from assistive
+  // tech. It therefore waits until the visitor has answered the consent banner,
+  // then follows its existing 40-second trigger. Consent is read in the effect
+  // only (never during server render), so there is no hydration mismatch.
+  const consentRef = useRef<ConsentValue>(null)
+  const timerElapsedRef = useRef(false)
+  const hasSubscribedRef = useRef(false)
+  const hasDeclinedRef = useRef(false)
 
-    const timer = setTimeout(() => {
-      if (!hasSubscribed && !hasDeclined) {
+  useEffect(() => {
+    hasSubscribedRef.current = Boolean(
+      localStorage.getItem("hasSubscribedToNewsletter"),
+    )
+    hasDeclinedRef.current = Boolean(
+      localStorage.getItem("hasDeclinedNewsletter"),
+    )
+
+    const maybeOpen = () => {
+      if (
+        timerElapsedRef.current &&
+        consentRef.current !== null &&
+        !hasSubscribedRef.current &&
+        !hasDeclinedRef.current
+      ) {
         setIsOpen(true)
       }
+    }
+
+    consentRef.current = getConsent()
+    maybeOpen()
+
+    const timer = setTimeout(() => {
+      timerElapsedRef.current = true
+      maybeOpen()
     }, 40000)
 
-    return () => clearTimeout(timer)
+    const unsubscribe = subscribe((value) => {
+      consentRef.current = value
+      maybeOpen()
+    })
+
+    return () => {
+      clearTimeout(timer)
+      unsubscribe()
+    }
   }, [])
 
   const handleClose = () => {
     localStorage.setItem("hasDeclinedNewsletter", "true")
+    hasDeclinedRef.current = true
     setIsOpen(false)
   }
 
@@ -67,6 +103,7 @@ export function NewsletterDialog() {
       if (success) {
         toast.success("Thanks! We'll be in touch!")
         localStorage.setItem("hasSubscribedToNewsletter", "true")
+        hasSubscribedRef.current = true
         setIsOpen(false)
       } else {
         throw error
