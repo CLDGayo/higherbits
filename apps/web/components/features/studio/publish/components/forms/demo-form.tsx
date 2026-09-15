@@ -66,11 +66,17 @@ export const DemoDetailsForm = ({
         canvas.toBlob((blob) => {
           if (blob) {
             const file = new File([blob], "cover.jpg", { type: "image/jpeg" })
-            form.setValue(`demos.${demoIndex}.preview_image_file`, file, { shouldValidate: true })
+            form.setValue(`demos.${demoIndex}.preview_image_file`, file, {
+              shouldDirty: true,
+              shouldValidate: true,
+            })
             const reader = new FileReader()
             reader.onload = (e) => {
               const dataUrl = e.target?.result as string
-              form.setValue(`demos.${demoIndex}.preview_image_data_url`, dataUrl, { shouldValidate: true })
+              form.setValue(`demos.${demoIndex}.preview_image_data_url`, dataUrl, {
+                shouldDirty: true,
+                shouldValidate: true,
+              })
             }
             reader.readAsDataURL(file)
           }
@@ -109,7 +115,16 @@ export const DemoDetailsForm = ({
     getVideoInputProps,
     removeVideo,
     openFileDialog,
-  } = useVideoDropzone({ form, demoIndex })
+  } = useVideoDropzone({
+    form,
+    demoIndex,
+    onVideoUploaded: (videoUrl) => {
+      const currentCover = form.getValues(`demos.${demoIndex}.preview_image_data_url`)
+      if (!currentCover) {
+        handleExtractFrame(videoUrl, 0)
+      }
+    },
+  })
 
   const handleFileChange = (event: { target: { files: File[] } }) => {
     const file = event.target.files[0]
@@ -124,10 +139,16 @@ export const DemoDetailsForm = ({
       reader.onload = (e) => {
         const dataUrl = e.target?.result as string
 
-        form.setValue(`demos.${demoIndex}.preview_image_data_url`, dataUrl)
+        form.setValue(`demos.${demoIndex}.preview_image_data_url`, dataUrl, {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
       }
 
-      form.setValue(`demos.${demoIndex}.preview_image_file`, file)
+      form.setValue(`demos.${demoIndex}.preview_image_file`, file, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
 
       reader.readAsDataURL(file)
     }

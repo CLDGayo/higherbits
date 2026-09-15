@@ -6,27 +6,34 @@ import { ChevronLeft, User, CreditCard, Wallet, BookText, ArrowUpRight } from "l
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 
 export function SettingsSidebar() {
   const pathname = usePathname()
+  const { isAdmin } = useIsAdmin()
 
-  const items = [
+  const allItems = [
     {
       href: "/settings/profile",
       title: "Profile",
       icon: <User className="h-3.5 w-3.5" />,
+      adminOnly: false,
     },
     {
       href: "/settings/billing",
       title: "Billing",
       icon: <CreditCard className="h-3.5 w-3.5" />,
+      adminOnly: true,
     },
     {
       href: "/settings/rules",
       title: "Prompt Rules",
       icon: <BookText className="h-3.5 w-3.5" />,
+      adminOnly: true,
     },
   ]
+
+  const items = allItems.filter((item) => !item.adminOnly || isAdmin)
 
   return (
     <nav className="grid items-start gap-2 pt-2">

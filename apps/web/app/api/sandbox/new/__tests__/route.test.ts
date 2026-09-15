@@ -22,6 +22,7 @@ vi.mock("@/lib/codesandbox-sdk", () => ({
     },
   },
   DEFAULT_HIBERNATION_TIMEOUT: 300,
+  DEFAULT_VM_TIER: "nano",
 }))
 
 vi.mock("@/lib/sandbox-templates", () => ({
@@ -68,7 +69,10 @@ function makeRequest() {
 function okSandbox() {
   return {
     id: "csb-new-1",
-    fs: { writeTextFile: vi.fn(async () => undefined) },
+    fs: {
+      writeTextFile: vi.fn(async () => undefined),
+      mkdir: vi.fn(async () => undefined),
+    },
   }
 }
 

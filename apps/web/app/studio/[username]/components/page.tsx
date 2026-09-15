@@ -7,6 +7,7 @@ import {
 import { auth, clerkClient } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import ShortUUID from "short-uuid"
+import { authUsernameOrRedirect } from "@/lib/user"
 import { StudioUsernameClient } from "./page.client"
 
 // Get user data by username
@@ -101,53 +102,19 @@ export default async function StudioUsernamePage({
 }: {
   params: Promise<{ username: string }>
 }) {
-  // Verify user is authenticated
-  const { userId } = await auth()
-  if (!userId) {
-    redirect("/sign-in")
-  }
+  const { user, isAdmin, isOwnProfile } = await authUsernameOrRedirect(
+    (await params).username,
+    "/studio",
+  )
 
-  // Get the resolved params
-  const resolvedParams = await params
-
-  // Get the target user from the URL
-  const user = await getUser(resolvedParams.username)
-  if (!user) {
-    redirect("/studio")
-  }
-
-  // Fetch demos and sandboxes
-  const demos = await getUserDemos(user.id)
-  const sandboxes = await getUserSandboxes(user.id)
+  // Fetch demos and sandboxes concurrently
+  const [demos, sandboxes] = await Promise.all([
+    getUserDemos(user.id),
+    getUserSandboxes(user.id),
+  ])
 
   // Combine demos and sandboxes into a single list
   const combinedItems = [...demos, ...sandboxes]
-
-  // Verify logged in user has access to this user's components
-  // Admin can access any user's components, users can only access their own
-  let isClerkAdmin = false
-  try {
-    const client = await clerkClient()
-    const clerkUser = await client.users.getUser(userId)
-    isClerkAdmin =
-      clerkUser.publicMetadata?.role === "admin" ||
-      clerkUser.publicMetadata?.is_admin === true
-  } catch (err) {
-    console.error("Error fetching Clerk user in page:", err)
-  }
-
-  const { data: currentUser } = await supabaseWithAdminAccess
-    .from("users")
-    .select("is_admin")
-    .eq("id", userId)
-    .maybeSingle()
-
-  const isAdmin = isClerkAdmin || (currentUser?.is_admin ?? false)
-  const isOwnProfile = userId === user.id
-
-  if (!isAdmin && !isOwnProfile) {
-    redirect("/studio")
-  }
 
   // Pass everything to the client component
   return (

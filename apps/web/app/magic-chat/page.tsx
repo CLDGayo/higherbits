@@ -40,6 +40,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function MagicChatPage() {
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import { checkIsAdmin } from "@/lib/admin"
+
+export default async function MagicChatPage() {
+  const { userId } = await auth()
+
+  if (!userId) {
+    redirect("/")
+  }
+
+  const { isAdmin } = await checkIsAdmin(userId)
+  if (!isAdmin) {
+    redirect("/")
+  }
+
   return <MagicChatPageClient />
 }

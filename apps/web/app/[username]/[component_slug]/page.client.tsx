@@ -84,7 +84,7 @@ import { toast } from "sonner"
 export const isShowCodeAtom = atom(true)
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
   "selectedPromptType",
-  PROMPT_TYPES.EXTENDED,
+  PROMPT_TYPES.GOHIGHLEVEL,
 )
 export const isFullScreenAtom = atom(false)
 const addNoCacheParam = (url: string | null | undefined) => {

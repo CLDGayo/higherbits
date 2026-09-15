@@ -7,7 +7,11 @@ import endent from "endent"
  * Strips markdown code blocks, surrounding prose, and accidental document wrappers (<!DOCTYPE>, <html>, <body>).
  */
 export function cleanGhlHtml(raw: string): string {
-  let text = raw.trim()
+  let text = (raw || "").trim()
+
+  if (!text || (!text.includes("<div") && !text.includes("<button") && !text.includes("<section") && !text.includes("<style") && !text.includes("<script"))) {
+    return ""
+  }
 
   // 1. Extract content from markdown code blocks if present
   const codeBlockMatch = text.match(/```(?:html|xml)?\s*([\s\S]*?)\s*```/i)
@@ -82,22 +86,26 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
   console.log(`Starting GHL template generation for demo ${demoId} (forceRegenerate: ${forceRegenerate})`)
   
   try {
+    const relmioToken = process.env.RELMIO_AUTH_TOKEN
     const apiKey = process.env.OPENAI_API_KEY
-    if (!apiKey || apiKey === "sk-placeholder") {
-      throw new Error("OPENAI_API_KEY is not configured in .env.local. Please add your OpenAI API key.")
+    if (!relmioToken && (!apiKey || apiKey === "sk-placeholder")) {
+      throw new Error("Neither RELMIO_AUTH_TOKEN nor OPENAI_API_KEY is configured in .env.local. Please configure at least one provider.")
     }
 
-    const defaultHeaders: Record<string, string> = {}
-    if (process.env.OPENAI_BASE_URL?.includes("openrouter.ai")) {
-      defaultHeaders["HTTP-Referer"] = process.env.NEXT_PUBLIC_APP_URL || "https://higherbits.dev"
-      defaultHeaders["X-Title"] = "HigherBits"
-    }
+    let openai: OpenAI | null = null
+    if (apiKey && apiKey !== "sk-placeholder") {
+      const defaultHeaders: Record<string, string> = {}
+      if (process.env.OPENAI_BASE_URL?.includes("openrouter.ai")) {
+        defaultHeaders["HTTP-Referer"] = process.env.NEXT_PUBLIC_APP_URL || "https://higherbits.dev"
+        defaultHeaders["X-Title"] = "HigherBits"
+      }
 
-    const openai = new OpenAI({
-      apiKey,
-      baseURL: process.env.OPENAI_BASE_URL || undefined,
-      defaultHeaders: Object.keys(defaultHeaders).length ? defaultHeaders : undefined,
-    })
+      openai = new OpenAI({
+        apiKey,
+        baseURL: process.env.OPENAI_BASE_URL || undefined,
+        defaultHeaders: Object.keys(defaultHeaders).length ? defaultHeaders : undefined,
+      })
+    }
 
     // 1. Fetch demo data
     const { data: demo, error } = await supabaseWithAdminAccess
@@ -148,112 +156,16 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       - DO NOT wrap the output in Markdown code blocks (NO \`\`\`html and NO \`\`\`).
       - DO NOT include <!DOCTYPE html>, <html>, <head>, or <body> tags. This is an embedded snippet for an existing page.
 
-      2. FONTS, TAILWIND CONFIG & CDN:
-      Place this EXACT font & script block at the very top of your snippet:
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-      <script>
-        window.tailwind = window.tailwind || {};
-        window.tailwind.config = {
-          corePlugins: { preflight: false },
-          theme: {
-            extend: {
-              fontFamily: {
-                sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-              },
-              colors: {
-                border: "hsl(var(--border, 214.3 31.8% 91.4%))",
-                input: "hsl(var(--input, 214.3 31.8% 91.4%))",
-                ring: "hsl(var(--ring, 222.2 84% 4.9%))",
-                background: "hsl(var(--background, 0 0% 100%))",
-                foreground: "hsl(var(--foreground, 222.2 84% 4.9%))",
-                primary: {
-                  DEFAULT: "hsl(var(--primary, 222.2 47.4% 11.2%))",
-                  foreground: "hsl(var(--primary-foreground, 210 40% 98%))",
-                },
-                secondary: {
-                  DEFAULT: "hsl(var(--secondary, 210 40% 96.1%))",
-                  foreground: "hsl(var(--secondary-foreground, 222.2 47.4% 11.2%))",
-                },
-                destructive: {
-                  DEFAULT: "hsl(var(--destructive, 0 84.2% 60.2%))",
-                  foreground: "hsl(var(--destructive-foreground, 210 40% 98%))",
-                },
-                muted: {
-                  DEFAULT: "hsl(var(--muted, 210 40% 96.1%))",
-                  foreground: "hsl(var(--muted-foreground, 215.4 16.3% 46.9%))",
-                },
-                accent: {
-                  DEFAULT: "hsl(var(--accent, 210 40% 96.1%))",
-                  foreground: "hsl(var(--accent-foreground, 222.2 47.4% 11.2%))",
-                },
-                popover: {
-                  DEFAULT: "hsl(var(--popover, 0 0% 100%))",
-                  foreground: "hsl(var(--popover-foreground, 222.2 84% 4.9%))",
-                },
-                card: {
-                  DEFAULT: "hsl(var(--card, 0 0% 100%))",
-                  foreground: "hsl(var(--card-foreground, 222.2 84% 4.9%))",
-                },
-              },
-              borderRadius: {
-                lg: "var(--radius, 0.5rem)",
-                md: "calc(var(--radius, 0.5rem) - 2px)",
-                sm: "calc(var(--radius, 0.5rem) - 4px)",
-              },
-            }
-          }
-        };
-      </script>
-      <script src="https://cdn.tailwindcss.com"></script>
+      2. FONTS & SCRIPTS:
+      - Include font preconnect & Inter stylesheet:
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+      - Include Tailwind CDN: <script src="https://cdn.tailwindcss.com"></script>
 
-      3. SCOPED STYLES & ZERO-SPECIFICITY RESET:
-      Directly below the scripts, include this exact style block:
+      3. SCOPED STYLES & ZERO-SPECIFICITY RESETS:
+      Include a <style> block with CSS variables, keyframe animations, and reset:
       <style>
-        :root {
-          --background: 0 0% 100%;
-          --foreground: 222.2 84% 4.9%;
-          --card: 0 0% 100%;
-          --card-foreground: 222.2 84% 4.9%;
-          --popover: 0 0% 100%;
-          --popover-foreground: 222.2 84% 4.9%;
-          --primary: 222.2 47.4% 11.2%;
-          --primary-foreground: 210 40% 98%;
-          --secondary: 210 40% 96.1%;
-          --secondary-foreground: 222.2 47.4% 11.2%;
-          --muted: 210 40% 96.1%;
-          --muted-foreground: 215.4 16.3% 46.9%;
-          --accent: 210 40% 96.1%;
-          --accent-foreground: 222.2 47.4% 11.2%;
-          --destructive: 0 84.2% 60.2%;
-          --destructive-foreground: 210 40% 98%;
-          --border: 214.3 31.8% 91.4%;
-          --input: 214.3 31.8% 91.4%;
-          --ring: 222.2 84% 4.9%;
-          --radius: 0.5rem;
-        }
-        .dark {
-          --background: 222.2 84% 4.9%;
-          --foreground: 210 40% 98%;
-          --card: 222.2 84% 4.9%;
-          --card-foreground: 210 40% 98%;
-          --popover: 222.2 84% 4.9%;
-          --popover-foreground: 210 40% 98%;
-          --primary: 210 40% 98%;
-          --primary-foreground: 222.2 47.4% 11.2%;
-          --secondary: 217.2 32.6% 17.5%;
-          --secondary-foreground: 210 40% 98%;
-          --muted: 217.2 32.6% 17.5%;
-          --muted-foreground: 215 20.2% 65.1%;
-          --accent: 217.2 32.6% 17.5%;
-          --accent-foreground: 210 40% 98%;
-          --destructive: 0 62.8% 30.6%;
-          --destructive-foreground: 210 40% 98%;
-          --border: 217.2 32.6% 17.5%;
-          --input: 217.2 32.6% 17.5%;
-          --ring: 212.7 26.8% 83.9%;
-        }
         .ghl-component-wrapper,
         .ghl-component-wrapper * {
           font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
@@ -267,35 +179,12 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
         :where(.ghl-component-wrapper) :where(*, *::before, *::after) {
           box-sizing: border-box;
         }
-        :where(.ghl-component-wrapper) :where(a) {
-          color: inherit;
-          text-decoration: inherit;
-        }
         :where(.ghl-component-wrapper) :where(button, [role="button"]) {
           cursor: pointer;
           background-color: transparent;
-          background-image: none;
-          border-style: solid;
           border-width: 0;
           padding: 0;
           color: inherit;
-        }
-        :where(.ghl-component-wrapper) :where(h1, h2, h3, h4, h5, h6, p) {
-          margin: 0;
-        }
-        :where(.ghl-component-wrapper) :where(ul, ol) {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-        :where(.ghl-component-wrapper) :where(img, video) {
-          max-width: 100%;
-          height: auto;
-          display: block;
-        }
-        :where(.ghl-component-wrapper) :where(svg) {
-          display: inline-block;
-          vertical-align: middle;
         }
       </style>
 
@@ -303,18 +192,15 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       Wrap the entire component markup inside:
       <div class="ghl-component-wrapper w-full">
       - NEVER add artificial borders, rounded corners, padding, or shadow to this outer wrapper.
-      - NEVER use w-fit on the outer wrapper for sections, heroes, navbars, footers, or full grids. Keep it w-full.
       - Preserve the component's internal styling, background colors (e.g. dark bg-[#030712] or light bg-white), text colors, padding, and layout completely intact.
-      - SECTION BACKGROUND UNIFORMITY: Ensure the hero/section background matches the visual preview (e.g., if the preview has a uniform white background, keep it solid white).
-      - NO SPLIT-SCREEN VIEWPORT BLOCKS: Do NOT include awkward, off-center viewport-bleed background blocks (such as elements with w-[100vw], -right-[50vw], or -left-[50vw] that cut abruptly through text or the hero section). If such elements exist in the React source with -z-10 or -z-20 (meaning they were hidden behind the container's background in the original preview), OMIT them entirely so the background remains clean and uniform.
-      - For intentional subtle glows or radial blur gradients (e.g. blur-3xl rounded-full) that sit behind content, position them cleanly without overflowing the section or cutting across text.
+      - NO SPLIT-SCREEN VIEWPORT BLOCKS: Do NOT include awkward, off-center viewport-bleed background blocks (e.g. w-[100vw], -right-[50vw], -left-[50vw]).
 
       5. ICONS & SVGS:
       - Convert all React SVG icon components (Lucide icons, custom SVG components) into inline <svg> elements.
       - Keep their width, height, viewBox, stroke, fill, and className attributes intact.
 
       6. INTERACTIVITY & JAVASCRIPT:
-      - Convert React interactive state (tabs, dropdowns, accordions, mobile navigation menu toggle) into clean Vanilla JavaScript inside a <script> block at the bottom.
+      - Convert React interactive state and animations (spotlights, mouse tracking, ripples, magnetic cursor pull, tabs, dropdowns, accordions, mobile navigation menu toggle) into clean Vanilla JavaScript inside a <script> block at the bottom.
       - For tabs, accordions, or hidden menus, toggle the \`hidden\` class or style display property dynamically on click.
 
       7. COMPLETION GUARANTEE:
@@ -335,20 +221,78 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       \`\`\`
     `
 
-    // 3. Call OpenAI API (ChatGPT / OpenRouter)
-    const model = process.env.OPENAI_MODEL || "minimax/minimax-m3:free"
-    console.log(`Calling OpenAI API (${model}) to generate GHL template for demo ${demoId}...`)
-    const completion = await openai.chat.completions.create({
-      model,
-      messages: [
-        { role: "system", content: systemInstruction },
-        { role: "user", content: userMessage },
-      ],
-      max_tokens: 8192,
-      temperature: 0.1,
-    })
-    
-    const rawOutput = completion.choices[0]?.message?.content || ""
+    let rawOutput = ""
+
+    // Option A: Use local ChatGPT subscription via Relmio Codex Chat Adapter if configured
+    if (relmioToken) {
+      const relmioEndpoint = process.env.RELMIO_CHAT_ENDPOINT || "http://127.0.0.1:14501/chat"
+      console.log(`Calling Relmio Codex Chat Adapter (${relmioEndpoint}) using ChatGPT subscription for demo ${demoId}...`)
+      try {
+        const relmioRes = await fetch(relmioEndpoint, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${relmioToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            input: `${systemInstruction}\n\n${userMessage}`,
+          }),
+        })
+
+        if (!relmioRes.ok) {
+          const errorText = await relmioRes.text().catch(() => "")
+          throw new Error(`Relmio request failed (${relmioRes.status}): ${errorText}`)
+        }
+
+        const relmioData = await relmioRes.json()
+        rawOutput = relmioData.output || ""
+      } catch (relmioErr) {
+        if (openai) {
+          console.warn("Relmio call failed; falling back to OpenAI/OpenRouter...", relmioErr)
+        } else {
+          throw relmioErr
+        }
+      }
+    }
+
+    // Option B: OpenAI / OpenRouter API
+    if (!rawOutput && openai) {
+      let model = process.env.OPENAI_MODEL || "minimax/minimax-m3"
+      if (model === "minimax/minimax-m3:free") {
+        model = "minimax/minimax-m3"
+      }
+      console.log(`Calling OpenAI API (${model}) to generate GHL template for demo ${demoId}...`)
+      
+      const extraBody: Record<string, any> = {}
+      if (model.includes("minimax") || model.includes("deepseek") || model.includes("r1")) {
+        // Limit reasoning effort so tokens are dedicated to actual HTML generation
+        extraBody.reasoning = { effort: "minimal" }
+      }
+
+      const completion = await openai.chat.completions.create({
+        model,
+        messages: [
+          { role: "system", content: systemInstruction },
+          { role: "user", content: userMessage },
+        ],
+        max_tokens: 16384,
+        temperature: 0.1,
+        // @ts-ignore
+        extra_body: Object.keys(extraBody).length ? extraBody : undefined,
+      })
+
+      rawOutput = completion.choices[0]?.message?.content || ""
+
+      // If content was empty/null but model put code inside reasoning, extract code from reasoning
+      if (!rawOutput) {
+        const reasoningText = (completion.choices[0]?.message as any)?.reasoning || ""
+        const codeBlockMatch = reasoningText.match(/```(?:html|xml)?\s*([\s\S]*?)\s*```/i)
+        if (codeBlockMatch && codeBlockMatch[1]) {
+          rawOutput = codeBlockMatch[1]
+        }
+      }
+    }
+
     const ghlHtml = cleanGhlHtml(rawOutput)
 
     if (!ghlHtml) {

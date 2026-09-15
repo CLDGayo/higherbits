@@ -139,7 +139,7 @@ export function StudioHeader({ user }: StudioHeaderProps) {
                   } else if (user?.username) {
                     router.push(`/${user.username}`)
                   } else {
-                    router.push("/settings/profile")
+                    window.location.href = "/settings/profile"
                   }
                 }}
               >
@@ -168,7 +168,9 @@ export function StudioHeader({ user }: StudioHeaderProps) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
-                onSelect={() => router.push("/settings/profile")}
+                onSelect={() => {
+                  window.location.href = "/settings/profile"
+                }}
               >
                 Settings
                 <Icons.settings className="h-4 w-4" />

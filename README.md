@@ -142,7 +142,7 @@ NEXT_PUBLIC_R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
 # OpenRouter / OpenAI (for GHL prompt generation)
 OPENAI_API_KEY=sk-or-v1-...
 OPENAI_BASE_URL=https://openrouter.ai/api/v1
-OPENAI_MODEL=minimax/minimax-m3:free
+OPENAI_MODEL=minimax/minimax-m3
 
 # Application URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000

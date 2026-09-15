@@ -3,7 +3,7 @@
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { LoadingDialog } from "@/components/ui/loading-dialog"
 import { useEffect, useState, Suspense } from "react"
-import { useParams, useRouter, usePathname } from "next/navigation"
+import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation"
 import {
   ResizableHandle,
   ResizablePanelGroup,
@@ -39,7 +39,7 @@ import { SandboxSkeleton } from "@/components/features/studio/sandbox/components
 import { SandboxHeader } from "@/components/features/studio/sandbox/components/sandbox-header"
 import { ComponentForm } from "@/components/features/studio/publish/components/forms/component-form"
 import { FormData, formSchema, collectFormErrors } from "@/components/features/studio/publish/config/utils"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch, type Control } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useUser } from "@clerk/nextjs"
 import { useIsFetching } from "@tanstack/react-query"
@@ -58,14 +58,125 @@ import { useComponentData } from "@/components/features/studio/publish/hooks/use
 
 type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 
+interface StudioDemoPreviewCardProps {
+  control: Control<FormData>
+  user: any
+}
+
+function StudioDemoPreviewCard({ control, user }: StudioDemoPreviewCardProps) {
+  const demos = useWatch({ control, name: "demos" })
+  const name = useWatch({ control, name: "name" })
+  const description = useWatch({ control, name: "description" })
+  const componentSlug = useWatch({ control, name: "component_slug" })
+  const previewImageDataUrl = useWatch({
+    control,
+    name: "demos.0.preview_image_data_url",
+  })
+  const previewVideoDataUrl = useWatch({
+    control,
+    name: "demos.0.preview_video_data_url",
+  })
+  const demoName = useWatch({
+    control,
+    name: "demos.0.name",
+  })
+  const demoSlug = useWatch({
+    control,
+    name: "demos.0.demo_slug",
+  })
+
+  const [previewMode, setPreviewMode] = useState<"image" | "video">("image")
+
+  const previewUrl =
+    previewImageDataUrl ||
+    demos?.[0]?.preview_image_data_url ||
+    (demos?.[0] as any)?.preview_url ||
+    ""
+  const videoUrl =
+    previewVideoDataUrl ||
+    demos?.[0]?.preview_video_data_url ||
+    (demos?.[0] as any)?.video_url ||
+    ""
+
+  const hasVideo = !!videoUrl
+  const isVideoMode = hasVideo && (previewMode === "video" || !previewUrl)
+
+  return (
+    <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-950/50 p-8 relative">
+      {hasVideo && (
+        <div className="mb-4 flex items-center gap-1.5 bg-background/80 backdrop-blur border rounded-full p-1 text-xs shadow-sm z-20">
+          <button
+            type="button"
+            onClick={() => setPreviewMode("image")}
+            className={cn(
+              "px-3 py-1 rounded-full font-medium transition-colors",
+              !isVideoMode
+                ? "bg-primary text-primary-foreground shadow"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Image Card
+          </button>
+          <button
+            type="button"
+            onClick={() => setPreviewMode("video")}
+            className={cn(
+              "px-3 py-1 rounded-full font-medium transition-colors",
+              isVideoMode
+                ? "bg-primary text-primary-foreground shadow"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            Video Preview
+          </button>
+        </div>
+      )}
+
+      <div className="w-full max-w-[500px]">
+        <ComponentCard
+          // @ts-ignore - Mocking demo object to render preview card
+          demo={{
+            id: 0,
+            component_id: 0,
+            name: demoName || demos?.[0]?.name || name || "Component Name",
+            demo_slug: demoSlug || demos?.[0]?.demo_slug || "default",
+            preview_url: previewUrl,
+            video_url: videoUrl,
+            component: {
+              id: 0,
+              name: name || "Component Name",
+              description: description || "",
+              component_slug: componentSlug || "component-slug",
+              user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
+            },
+            user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
+          } as any}
+          hideVotes={true}
+          hideUser={false}
+          forceHover={isVideoMode}
+          onClick={() => {}}
+        />
+      </div>
+
+      {hasVideo && !isVideoMode && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          Hover over the card to preview the video
+        </p>
+      )}
+    </div>
+  )
+}
+
 function PublishClientPageContent({
-  isEditMode,
+  isEditMode: propEditMode,
 }: {
-  isEditMode: boolean
-}) {
+  isEditMode?: boolean
+} = {}) {
   const params = useParams()
   const router = useRouter()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const isEditMode = propEditMode ?? (searchParams.get("mode") === "edit")
   const sandboxId = params.sandboxId as string
   const username = params.username as string
   const [selectedEntry, setSelectedEntry] = useState<FileEntry | null>(null)
@@ -105,6 +216,7 @@ function PublishClientPageContent({
     restartDevServer,
     isRestartingDevServer,
     sandboxUnavailable,
+    sandboxError,
     connectionPhase,
     missingDependencyInfo,
     clearMissingDependencyInfo,
@@ -133,6 +245,8 @@ function PublishClientPageContent({
     files,
     isTreeLoading,
     isFileLoading,
+    isSaving,
+    flushSave,
     advancedView,
     toggleAdvancedView,
     loadRootDirectory,
@@ -204,8 +318,10 @@ function PublishClientPageContent({
     form,
   ])
 
-  const handleSubmit = (event?: React.FormEvent) => {
+  const handleSubmit = async (event?: React.FormEvent) => {
     event?.preventDefault()
+
+    await flushSave()
 
     if (!isClerkUserLoaded) {
       toast.info("User data is loading, please wait...")
@@ -214,7 +330,10 @@ function PublishClientPageContent({
 
     let finalPublishUser = null
     if (user?.id) {
-      finalPublishUser = { id: user.id, username: user.username || undefined }
+      finalPublishUser = {
+        id: user.id,
+        username: form.getValues("publish_as_username") || user.username || username || undefined,
+      }
     }
 
     if (!finalPublishUser) {
@@ -489,12 +608,25 @@ function PublishClientPageContent({
     }
   }
 
+  const handleSelectEntry = async (entry: FileEntry | null) => {
+    if (selectedEntry?.path !== entry?.path) {
+      await flushSave()
+      setSelectedEntry(entry)
+    }
+  }
+
   const handleReset = () => {
     window.location.reload()
   }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+        e.preventDefault()
+        flushSave()
+        return
+      }
+
       if (!sandboxRef.current) {
         if (e.key === "Escape") {
           router.back()
@@ -505,9 +637,10 @@ function PublishClientPageContent({
     }
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [router, sandboxRef])
+  }, [router, sandboxRef, flushSave])
 
-  const handleRefreshPreview = () => {
+  const handleRefreshPreview = async () => {
+    await flushSave()
     setIframeKey((prev) => prev + 1)
   }
 
@@ -535,7 +668,9 @@ function PublishClientPageContent({
   // a published component's slug matches its own row and would always report "taken".
   const isCheckingSlug = useIsFetching({ queryKey: ["slugCheck"] }) > 0
 
-  const handleNextStage = () => {
+  const handleNextStage = async () => {
+    await flushSave()
+
     if (activeStage === "Component" && isCheckingSlug) {
       toast.error("Wait for the slug check to finish")
       return
@@ -552,7 +687,9 @@ function PublishClientPageContent({
     }
   }
 
-  const handleBackStage = () => {
+  const handleBackStage = async () => {
+    await flushSave()
+
     const previousStage =
       currentStageIndex > 0 ? stages[currentStageIndex - 1] : undefined
     if (previousStage) {
@@ -566,36 +703,10 @@ function PublishClientPageContent({
     return <SandboxSkeleton phase={connectionPhase} />
   }
 
-  if (!sandboxRef.current) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <XCircle className="h-6 w-6 text-muted-foreground" />
-          <p className="text-base">Failed to initialize sandbox</p>
-          <div className="flex gap-3">
-            <Button
-              onClick={() => studioHardNavigate(`/studio/${username}/components`)}
-              variant="outline"
-            >
-              Go Back
-              <kbd className="pointer-events-none hidden md:inline-flex h-5 select-none items-center rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100">
-                ESC
-              </kbd>
-            </Button>
-            <Button onClick={handleReset}>
-              Try Again
-              <kbd className="pointer-events-none hidden md:inline-flex h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100">
-                <Icons.enter className="h-2.5 w-2.5" />
-              </kbd>
-            </Button>
-          </div>
-        </div>
-      </div>
-    )
-  }
+
 
   return (
-    <div className="h-[calc(100vh-56px)] w-full flex flex-col">
+    <div className="h-screen w-full flex flex-col">
       <LoadingDialog isOpen={isLoadingDialogOpen} message={publishProgress} />
 
       <SandboxHeader
@@ -657,7 +768,7 @@ function PublishClientPageContent({
             {activeStage === "Files" && (
               <FileExplorer
                 entries={files}
-                onSelect={setSelectedEntry}
+                onSelect={handleSelectEntry}
                 selectedPath={selectedEntry?.path || null}
                 onDelete={handleDeleteEntry}
                 onCreateFile={handleCreateFile}
@@ -669,6 +780,7 @@ function PublishClientPageContent({
                 onToggleAdvancedView={toggleAdvancedView}
                 onAddFrom21Registry={handleAddFrom21Registry}
                 onNewDemo={handleNewDemo}
+                sandboxUnavailable={sandboxUnavailable || !sandboxRef.current}
               />
             )}
             
@@ -755,6 +867,7 @@ function PublishClientPageContent({
                   form={form}
                   onSubmit={handleSubmit}
                   isSubmitting={isSubmitting}
+                  username={username}
                 />
               </Form>
             )}
@@ -764,31 +877,7 @@ function PublishClientPageContent({
         {/* Editor and Preview Area */}
         <div className="flex-1 h-full min-w-0">
           {activeStage === "Demos" ? (
-            <div className="h-full w-full flex items-center justify-center bg-zinc-950/50 p-8">
-              <div className="w-full max-w-[500px]">
-                <ComponentCard
-                  // @ts-ignore - Mocking demo object to render preview card
-                  demo={{
-                    id: 0,
-                    component_id: 0,
-                    name: form.watch("demos")?.[0]?.name || form.watch("name") || "Component Name",
-                    demo_slug: form.watch("demos")?.[0]?.demo_slug || "default",
-                    preview_url: form.watch("demos")?.[0]?.preview_image_data_url || (form.watch("demos")?.[0] as any)?.preview_url || "",
-                    video_url: form.watch("demos")?.[0]?.preview_video_data_url || (form.watch("demos")?.[0] as any)?.video_url || "",
-                    component: {
-                      id: 0,
-                      name: form.watch("name") || "Component Name",
-                      description: form.watch("description") || "",
-                      component_slug: form.watch("component_slug") || "component-slug",
-                      user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
-                    },
-                    user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
-                  } as any}
-                  hideVotes={true}
-                  hideUser={false}
-                />
-              </div>
-            </div>
+            <StudioDemoPreviewCard control={form.control} user={user} />
           ) : (
             <PreviewPane
               connectedShellId={connectedShellId}
@@ -797,10 +886,13 @@ function PublishClientPageContent({
               code={code}
               onCodeChange={handleCodeChange}
               isFileLoading={isFileLoading}
+              isSaving={isSaving}
+              onSave={flushSave}
               showPreview={showPreview}
               iframeKey={iframeKey}
               onRefresh={handleRefreshPreview}
-              sandboxUnavailable={sandboxUnavailable}
+              sandboxUnavailable={sandboxUnavailable || !sandboxRef.current}
+              sandboxError={sandboxError}
               onReconnect={retryConnection}
               onTogglePreview={handleTogglePreview}
               isFullscreen={isFullscreen}
@@ -817,8 +909,8 @@ function PublishClientPageContent({
 export default function PageClient({
   isEditMode,
 }: {
-  isEditMode: boolean
-}) {
+  isEditMode?: boolean
+} = {}) {
   return (
     <Suspense fallback={<SandboxSkeleton />}>
       <PublishClientPageContent isEditMode={isEditMode} />

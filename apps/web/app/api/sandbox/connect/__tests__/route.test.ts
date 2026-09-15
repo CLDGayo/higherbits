@@ -27,14 +27,23 @@ vi.mock("@/lib/admin", () => ({
   checkIsAdmin: vi.fn(async () => ({ isAdmin: false })),
 }))
 
-vi.mock("@/lib/codesandbox-sdk", () => ({
-  codesandboxSdk: {
+const { defaultSdk, FAKE_VM_TIER } = vi.hoisted(() => {
+  const defaultSdk = {
     sandbox: {
       start: vi.fn(),
       previewTokens: { create: vi.fn() },
     },
-  },
-  DEFAULT_HIBERNATION_TIMEOUT: 300,
+  }
+  // Sentinel stand-in for VMTier.Pico. Identity-compared in the options-object
+  // assertion below, so the test fails if the route stops forwarding the tier.
+  const FAKE_VM_TIER = { name: "Pico", cpuCores: 1, memoryGiB: 2 }
+  return { defaultSdk, FAKE_VM_TIER }
+})
+
+vi.mock("@/lib/codesandbox-sdk", () => ({
+  codesandboxSdk: defaultSdk,
+  DEFAULT_HIBERNATION_TIMEOUT: 60,
+  DEFAULT_VM_TIER: FAKE_VM_TIER,
 }))
 
 import { POST } from "../route"
@@ -208,5 +217,68 @@ describe("POST /api/sandbox/connect — Phase 1 telemetry", () => {
     await POST(makeRequest({ shortSandboxId: SHORT_ID }))
 
     expectNoSecrets({ mock: { calls: telemetryCalls(errorSpy) } })
+  })
+
+  it("returns 402 with WORKSPACE_FROZEN when CodeSandbox returns workspace frozen error", async () => {
+    sdk.sandbox.start.mockRejectedValue(
+      new Error("Failed to start sandbox: Your workspace has been frozen. Please upgrade or increase your spending limit to continue."),
+    )
+
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    expect(response.status).toBe(402)
+    const body = await response.json()
+    expect(body.code).toBe("WORKSPACE_FROZEN")
+    expect(body.error).toContain("frozen")
+  })
+
+  it("returns 429 with RATE_LIMITED when CodeSandbox returns rate limit error", async () => {
+    sdk.sandbox.start.mockRejectedValue(
+      new Error("Rate limit exceeded. Too many requests."),
+    )
+
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    expect(response.status).toBe(429)
+    const body = await response.json()
+    expect(body.code).toBe("RATE_LIMITED")
+    expect(body.error).toContain("rate limit")
+  })
+})
+
+describe("POST /api/sandbox/connect — credit-burn guards", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.spyOn(console, "log").mockImplementation(() => {})
+    vi.spyOn(console, "error").mockImplementation(() => {})
+    singleMock.mockResolvedValue({
+      data: { codesandbox_id: "csb-1", name: "n", id: "i", component_id: "c" },
+      error: null,
+    })
+    sdk.sandbox.start.mockResolvedValue({ bootup_type: "RESUME", id: "csb-1" })
+    sdk.sandbox.previewTokens.create.mockResolvedValue({ token: "t" })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it("passes vmTier, the lowered hibernation timeout, and disabled automatic wakeup to sandbox.start()", async () => {
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    expect(response.status).toBe(200)
+
+    expect(sdk.sandbox.start).toHaveBeenCalledTimes(1)
+    const [csbId, opts] = sdk.sandbox.start.mock.calls[0] as [
+      string,
+      Record<string, unknown>,
+    ]
+    expect(csbId).toBe("csb-1")
+    expect(opts.vmTier).toBe(FAKE_VM_TIER)
+    expect(opts.hibernationTimeoutSeconds).toBe(60)
+    // Must be the explicit object, never omitted: the SDK's own default for
+    // http is TRUE, which silently re-wakes (and re-bills) a hibernated VM on
+    // any stray HTTP touch. Omission is the exact regression this asserts on.
+    expect(opts.automaticWakeupConfig).toEqual({
+      http: false,
+      websocket: false,
+    })
   })
 })

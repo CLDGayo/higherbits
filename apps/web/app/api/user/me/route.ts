@@ -2,6 +2,8 @@ import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
+import { syncClerkUserToSupabase } from "@/lib/user"
+
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -25,14 +27,23 @@ export async function GET() {
   }
 
   try {
-    const { data, error } = await supabaseAdmin
+    let { data, error } = await supabaseAdmin
       .from("users")
       .select("username, display_username")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
-    if (error) {
-      console.error("Error fetching user in /api/user/me:", error)
+    if (!data) {
+      const synced = await syncClerkUserToSupabase(userId)
+      if (synced) {
+        data = {
+          username: synced.username,
+          display_username: synced.display_username,
+        }
+      }
+    }
+
+    if (!data) {
       return NextResponse.json({ username: null })
     }
 

@@ -523,3 +523,116 @@ describe("useSandbox — A7 bounded restartDevServer port wait", () => {
     expect(result.current.sandboxUnavailable).toBe(false)
   })
 })
+
+describe("useSandbox — Hibernation prevention & setup-aware resilience", () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.clearAllMocks()
+    getSandboxInfoMock.mockResolvedValue({ sandbox: null })
+    connectToSandboxMock.mockResolvedValue({
+      startData: {},
+      sandbox: {
+        codesandbox_id: "csb_1",
+        name: "Untitled",
+        id: "sbx_1",
+        component_id: null,
+      },
+      previewToken: null,
+    })
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it("should enable keepActiveWhileConnected upon connection", async () => {
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = {
+      ...makeSession(first.promise, second.promise),
+      keepActiveWhileConnected: vi.fn(),
+    }
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+
+    expect(session.keepActiveWhileConnected).toHaveBeenCalledWith(true)
+  })
+
+  it("should run unstarted dev task when setup is finished", async () => {
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = {
+      ...makeSession(first.promise, second.promise),
+      setup: {
+        getProgress: vi.fn(async () => ({ state: "FINISHED" })),
+        waitForFinish: vi.fn(async () => ({})),
+      },
+      tasks: {
+        getTasks: vi.fn(async () => [
+          {
+            id: "dev",
+            name: "dev",
+            command: "pnpm run install-and-dev",
+            shellId: null,
+            ports: [],
+          },
+        ]),
+        runTask: vi.fn(async () => ({})),
+      },
+    }
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+
+    expect(session.tasks.runTask).toHaveBeenCalledWith("dev")
+  })
+
+  it("should not bail out at 10s while setup is in progress and wait for setup finish", async () => {
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const setupFinish = deferred<unknown>()
+    const session = {
+      ...makeSession(first.promise, second.promise),
+      setup: {
+        getProgress: vi.fn(async () => ({ state: "IN_PROGRESS" })),
+        waitForFinish: vi.fn(() => setupFinish.promise),
+      },
+    }
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+
+    renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    await flush(0)
+
+    // At 12s, normal bailout would have fired restartDevServer (which calls shells.run).
+    // Because setup is IN_PROGRESS, bailout is delayed.
+    await flush(12_000)
+    expect(session.setup.waitForFinish).toHaveBeenCalled()
+    expect(session.shells.run).not.toHaveBeenCalled()
+
+    // Now setup finishes
+    setupFinish.resolve({ state: "FINISHED" })
+    await flush(1_000)
+
+    // And Vite opens its port
+    first.resolve(makePortInfo("https://preview.example/ready"))
+    await flush(0)
+
+    expect(session.shells.run).not.toHaveBeenCalled()
+  })
+
+  it("captures sandboxError and marks sandboxUnavailable when connectToSandbox fails", async () => {
+    connectToSandboxMock.mockRejectedValue(
+      new Error("Your CodeSandbox workspace has been frozen. Please upgrade or increase your spending limit to continue."),
+    )
+
+    const { result } = renderHook(() => useSandbox({ sandboxId: "sbx_frozen" }))
+    await flush(0)
+
+    expect(result.current.sandboxUnavailable).toBe(true)
+    expect(result.current.sandboxError).toContain("CodeSandbox workspace has been frozen")
+  })
+})
+

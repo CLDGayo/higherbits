@@ -20,6 +20,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -168,8 +169,37 @@ function HeaderContent({
     }
   }, [transparentAtTop])
   const { user: clerkUser } = useUser()
+  const { isAdmin: isHookAdmin } = useIsAdmin()
   const [userState, setUserState] = useAtom(userStateAtom)
+  const isAdmin = Boolean(clerkUser && isHookAdmin)
   const client = useClerkSupabaseClient()
+
+  // Reset or invalidate global userState when user logs out or switches accounts
+  useEffect(() => {
+    if (!userId) {
+      setUserState({
+        subscription: null,
+        isSubscriptionLoading: false,
+        profile: null,
+        isProfileLoading: false,
+        clerkUser: null,
+        lastFetched: null,
+        balance: null,
+        isBalanceLoading: false,
+      })
+    } else if (userState.profile && userState.profile.id !== userId) {
+      setUserState((prev) => ({
+        ...prev,
+        subscription: null,
+        isSubscriptionLoading: false,
+        profile: null,
+        isProfileLoading: true,
+        clerkUser: clerkUser || null,
+        balance: null,
+        isBalanceLoading: false,
+      }))
+    }
+  }, [userId, clerkUser, userState.profile?.id, setUserState])
 
   // Fetch combined user state using React Query
   const { data: userData, isLoading: isUserDataLoading } =
@@ -499,7 +529,7 @@ function HeaderContent({
                           } else if (clerkUser?.username) {
                             router.push(`/${clerkUser.username}`)
                           } else {
-                            router.push("/settings/profile")
+                            window.location.href = "/settings/profile"
                           }
                         }}
                       >
@@ -526,20 +556,24 @@ function HeaderContent({
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
-                        onSelect={() => router.push("/settings/profile")}
+                        onSelect={() =>
+                          (window.location.href = "/settings/profile")
+                        }
                       >
                         Settings
                         <Icons.settings className="h-4 w-4" />
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
-                        onSelect={() =>
-                          (window.location.href = "/settings/billing")
-                        }
-                      >
-                        Billing
-                        <Icons.creditCard className="h-4 w-4" />
-                      </DropdownMenuItem>
+                      {isAdmin && (
+                        <DropdownMenuItem
+                          className="text-sm px-3 py-2 cursor-pointer flex items-center justify-between"
+                          onSelect={() =>
+                            (window.location.href = "/settings/billing")
+                          }
+                        >
+                          Billing
+                          <Icons.creditCard className="h-4 w-4" />
+                        </DropdownMenuItem>
+                      )}
                     </div>
 
                     <div className="border-t border-border p-1">
@@ -687,37 +721,41 @@ function HeaderContent({
                     >
                       Templates
                     </Link>
-                    <Link
-                      href="/pricing"
+                    {isAdmin && (
+                      <Link
+                        href="/pricing"
+                        className={cn(
+                          buttonVariants({ variant: "ghost", size: "sm" }),
+                          "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                        )}
+                      >
+                        Pricing
+                      </Link>
+                    )}
+                  </nav>
+                  {isAdmin && (
+                    <a
+                      href="/support"
+                      onClick={() =>
+                        trackAttribution(
+                          ATTRIBUTION_SOURCE.HEADER,
+                          SOURCE_DETAIL.HEADER_GET_PRO_LINK,
+                        )
+                      }
                       className={cn(
                         buttonVariants({ variant: "ghost", size: "sm" }),
-                        "font-regular text-muted-foreground hover:text-foreground hover:bg-transparent",
+                        "hidden md:flex gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
                       )}
                     >
-                      Pricing
-                    </Link>
-                  </nav>
-                  <a
-                    href="/support"
-                    onClick={() =>
-                      trackAttribution(
-                        ATTRIBUTION_SOURCE.HEADER,
-                        SOURCE_DETAIL.HEADER_GET_PRO_LINK,
-                      )
-                    }
-                    className={cn(
-                      buttonVariants({ variant: "ghost", size: "sm" }),
-                      "hidden md:flex gap-1.5 relative cursor-pointer space-x-2 font-regular ease-out duration-200 outline-0 focus-visible:outline-4 focus-visible:outline-offset-1 hover:bg-transparent"
-                    )}
-                  >
-                      <TextShimmer
-                        className="font-medium [--base-color:hsl(var(--primary-gradient-start))] [--base-gradient-color:hsl(var(--primary-gradient-end))] dark:[--base-color:hsl(var(--primary-gradient-start))] dark:[--base-gradient-color:hsl(var(--primary-gradient-end))]"
-                        duration={1.2}
-                        spread={2}
-                      >
-                        Support Us!
-                      </TextShimmer>
-                  </a>
+                        <TextShimmer
+                          className="font-medium [--base-color:hsl(var(--primary-gradient-start))] [--base-gradient-color:hsl(var(--primary-gradient-end))] dark:[--base-color:hsl(var(--primary-gradient-start))] dark:[--base-gradient-color:hsl(var(--primary-gradient-end))]"
+                          duration={1.2}
+                          spread={2}
+                        >
+                          Support Us!
+                        </TextShimmer>
+                    </a>
+                  )}
                 <Button
                   variant="ghost"
                   size="icon"

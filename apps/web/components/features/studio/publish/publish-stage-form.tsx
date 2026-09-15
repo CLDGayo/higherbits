@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react"
 import { UseFormReturn } from "react-hook-form"
 import { useUser } from "@clerk/nextjs"
+import { useParams } from "next/navigation"
+import { useAtom } from "jotai"
+import { userStateAtom } from "@/lib/store/user-store"
 import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -34,17 +37,36 @@ export function PublishStageForm({
   form,
   onSubmit,
   isSubmitting,
+  username: propUsername,
 }: {
   form: UseFormReturn<FormData>
   onSubmit: () => void
   isSubmitting: boolean
+  username?: string
 }) {
   const { user } = useUser()
+  const params = useParams<{ username?: string }>()
+  const [userState] = useAtom(userStateAtom)
   const [libraries, setLibraries] = useState<LibrarySummary[]>([])
   const [isCreateLibraryOpen, setIsCreateLibraryOpen] = useState(false)
-  const username = user?.username || ""
 
-  const { isAdmin } = usePublishAs({ username: form.watch("publish_as_username") || username })
+  const username =
+    propUsername ||
+    (params?.username as string) ||
+    userState.profile?.username ||
+    user?.username ||
+    ""
+  const personalValue = username || "personal"
+
+  const { isAdmin } = usePublishAs({
+    username: form.watch("publish_as_username") || username,
+  })
+
+  useEffect(() => {
+    if (!form.getValues("publish_as_username") && username) {
+      form.setValue("publish_as_username", username)
+    }
+  }, [form, username])
 
   useEffect(() => {
     listLibrariesAction()
@@ -72,10 +94,10 @@ export function PublishStageForm({
             <FormItem>
               <FormLabel>Publish As</FormLabel>
               <Select
-                value={field.value || username}
+                value={field.value || personalValue}
                 onValueChange={(val) => {
                   if (val === "personal") {
-                    field.onChange(username)
+                    field.onChange(username || "personal")
                   } else {
                     field.onChange(val)
                   }
@@ -87,10 +109,10 @@ export function PublishStageForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value={username}>
+                  <SelectItem value={personalValue}>
                     <div className="flex items-center gap-2">
                       <span className="font-medium">Personal</span>
-                      <span className="text-muted-foreground">@{username}</span>
+                      <span className="text-muted-foreground">@{username || "personal"}</span>
                     </div>
                   </SelectItem>
                   {isAdmin && (
@@ -99,7 +121,7 @@ export function PublishStageForm({
                       <div className="p-2">
                         <Input
                           placeholder="Admin: target username"
-                          value={field.value !== username ? field.value : ""}
+                          value={field.value && field.value !== username && field.value !== "personal" ? field.value : ""}
                           onChange={(e) => field.onChange(e.target.value)}
                           className="h-8"
                           onClick={(e) => e.stopPropagation()}
@@ -225,7 +247,7 @@ export function PublishStageForm({
       <CreateLibraryDialog
         open={isCreateLibraryOpen}
         onOpenChange={setIsCreateLibraryOpen}
-        namespace={username}
+        namespace={username || null}
         onCreated={(library) => {
           setLibraries((prev) => [...prev, library])
           form.setValue("library_id", library.id)

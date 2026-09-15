@@ -3,10 +3,10 @@ import React from "react"
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { render, fireEvent, screen } from "@testing-library/react"
 
-// next/navigation — pathname "/" with no ?tab makes the "home" nav item active.
+const mockPush = vi.fn()
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
+  useRouter: () => ({ push: mockPush, replace: vi.fn(), prefetch: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
 }))
 
@@ -27,12 +27,14 @@ vi.mock("jotai", () => ({
   useAtom: () => [undefined, vi.fn()],
   atom: (v: unknown) => v,
 }))
+const mockUser: { current: any } = { current: null }
+const mockAdmin: { current: boolean } = { current: false }
 vi.mock("@clerk/nextjs", () => ({
-  useUser: () => ({ user: null }),
+  useUser: () => ({ user: mockUser.current }),
   useSession: () => ({ session: null }),
 }))
 vi.mock("@/components/features/publish/hooks/use-is-admin", () => ({
-  useIsAdmin: () => ({ isAdmin: false, isLoading: false }),
+  useIsAdmin: () => ({ isAdmin: mockAdmin.current, isLoading: false }),
 }))
 // Live-query hook stand-in. Mutable so a test can supply real counts (Phase 04 D3).
 const tagCounts: { current: Record<string, number> } = { current: {} }
@@ -55,6 +57,8 @@ function renderSidebar() {
 describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
   beforeEach(() => {
     tagCounts.current = {}
+    mockUser.current = null
+    mockAdmin.current = false
   })
 
   it("applies the lavender active-pill token on the active nav item (A1)", () => {
@@ -69,7 +73,19 @@ describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
     )
   })
 
-  it("renders the Go-Premium card with the Support Us! CTA link (A3)", () => {
+  it("does not render the Go-Premium card with Support Us! CTA for non-admin users", () => {
+    const { container } = renderSidebar()
+
+    const supportLink = container.querySelector('a[href="/support"]')
+    expect(supportLink).toBeNull()
+    expect(container.textContent).not.toContain("Support Us!")
+    expect(container.querySelector(".bg-accent-pink")).toBeNull()
+  })
+
+  it("renders the Go-Premium card with the Support Us! CTA link for admin users (A3)", () => {
+    mockUser.current = { id: "user_admin" }
+    mockAdmin.current = true
+
     const { container } = renderSidebar()
 
     const supportLink = container.querySelector('a[href="/support"]')
@@ -95,40 +111,105 @@ describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
 })
 
 // Phase 04 (supabase-interconnect) Step D3 / SPEC AC4.
-describe("MainSidebar — sidebar counts come from the live-query hook", () => {
+describe("MainSidebar — two-level components drill-down and live-query counts", () => {
   beforeEach(() => {
     tagCounts.current = {}
   })
 
-  it("renders a non-zero live count as the item badge, and NOT the hardcoded demosCount", () => {
-    // "hero" is the tag slug behind lib/navigation.ts's { title: "Heroes",
-    // href: "/s/hero", demosCount: 73 }. Feeding a different live value proves
-    // the rendered badge is sourced from useCategoryTagCounts(), not demosCount.
+  it("does not render the redundant Explore accordion on the main view", () => {
     tagCounts.current = { hero: 42 }
 
     const { container } = renderSidebar()
 
-    // Explore group renders only because a non-zero live count exists.
-    expect(container.textContent).toContain("Explore")
+    expect(container.textContent).not.toContain("Explore")
+  })
 
-    // Expand the category that owns /s/hero so its items render.
-    fireEvent.click(screen.getByText("Marketing Blocks"))
+  it("switches to components drill-down view when clicking Components", () => {
+    const { container } = renderSidebar()
+
+    expect(screen.queryByText("Marketing Blocks")).toBeNull()
+    expect(screen.queryByText("UI Components")).toBeNull()
+
+    fireEvent.click(screen.getByText("Components"))
+
+    expect(screen.getByText("Marketing Blocks")).not.toBeNull()
+    expect(screen.getByText("UI Components")).not.toBeNull()
+    expect(screen.getByPlaceholderText("Search components")).not.toBeNull()
+  })
+
+  it("renders a non-zero live count as the item badge in the components view", () => {
+    tagCounts.current = { hero: 42 }
+
+    const { container } = renderSidebar()
+
+    fireEvent.click(screen.getByText("Components"))
 
     const heroLink = container.querySelector('a[href="/s/hero"]')
     expect(heroLink).not.toBeNull()
     expect(heroLink?.textContent).toContain("42")
     // The hardcoded navigation.ts value must never surface.
     expect(heroLink?.textContent).not.toContain("73")
-
-    // Zero-count siblings are filtered out entirely for non-admin users.
-    expect(container.querySelector('a[href="/s/background"]')).toBeNull()
   })
 
-  it("hides the Explore group entirely when the live query returns no counts", () => {
-    tagCounts.current = {}
+  it("navigates directly to category page when clicked", () => {
+    tagCounts.current = { hero: 42 }
+    const originalLocation = window.location
+    let locationHref = ""
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: {
+        ...originalLocation,
+        get href() {
+          return locationHref
+        },
+        set href(val: string) {
+          locationHref = val
+        },
+      },
+    })
 
     const { container } = renderSidebar()
+    fireEvent.click(screen.getByText("Components"))
 
-    expect(container.textContent).not.toContain("Explore")
+    const heroLink = container.querySelector('a[href="/s/hero"]')
+    expect(heroLink).not.toBeNull()
+
+    fireEvent.click(heroLink!)
+    expect(window.location.href).toBe("/s/hero")
+
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: originalLocation,
+    })
+  })
+
+  it("returns to main view when clicking the back button in components view", () => {
+    renderSidebar()
+
+    fireEvent.click(screen.getByText("Components"))
+    expect(screen.getByText("Marketing Blocks")).not.toBeNull()
+
+    fireEvent.click(screen.getByRole("button", { name: /components/i }))
+    expect(screen.queryByText("Marketing Blocks")).toBeNull()
+    expect(screen.getByText("Home")).not.toBeNull()
+  })
+
+  it("hides AI UI Builder, Bundles, Premium Stores, Contest, and Support Us for non-admin users", () => {
+    const { container } = renderSidebar()
+
+    expect(screen.queryByText("AI UI Builder")).toBeNull()
+    expect(screen.queryByText("Bundles")).toBeNull()
+    expect(screen.queryByText("Premium Stores")).toBeNull()
+    expect(screen.queryByText("Contest")).toBeNull()
+    expect(screen.queryByText("Overview")).toBeNull()
+    expect(screen.queryByText("Leaderboard")).toBeNull()
+    expect(screen.queryByText("Support Us!")).toBeNull()
+  })
+
+  it("renders Collections even when no user is logged in", () => {
+    mockUser.current = null
+    renderSidebar()
+
+    expect(screen.getByText("Collections")).not.toBeNull()
   })
 })

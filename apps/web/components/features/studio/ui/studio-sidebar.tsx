@@ -180,10 +180,10 @@ export function StudioSidebar({ user }: StudioSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Settings">
-              <Link href="/settings/profile" className="flex items-center gap-2">
+              <a href="/settings/profile" className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 <span>Settings</span>
-              </Link>
+              </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
 

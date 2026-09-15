@@ -1,8 +1,7 @@
 import { getStudioOverviewData } from "@/components/features/studio/overview/overview-data"
 import { getUserDataFull } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
-import { auth } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
+import { authUsernameOrRedirect } from "@/lib/user"
 import { StudioOverviewClient } from "./page.client"
 
 const getUser = async (username: string) => {
@@ -35,31 +34,10 @@ export default async function StudioOverviewPage({
 }: {
   params: Promise<{ username: string }>
 }) {
-  const { userId } = await auth()
-  if (!userId) {
-    redirect("/sign-in")
-  }
-
-  const resolvedParams = await params
-  const user = await getUser(resolvedParams.username)
-  if (!user) {
-    redirect("/studio")
-  }
-
-  // Ownership check mirrors the components route. `layout.tsx` already runs
-  // authUsernameOrRedirect, so this is defence in depth rather than the only gate.
-  const { data: currentUser } = await supabaseWithAdminAccess
-    .from("users")
-    .select("is_admin")
-    .eq("id", userId)
-    .maybeSingle()
-
-  const isAdmin = currentUser?.is_admin ?? false
-  const isOwnProfile = userId === user.id
-
-  if (!isAdmin && !isOwnProfile) {
-    redirect("/studio")
-  }
+  const { user } = await authUsernameOrRedirect(
+    (await params).username,
+    "/studio",
+  )
 
   // Analytics are fetched here, after the ownership check above. The RPC is
   // SECURITY DEFINER with no internal authorisation - it trusts whatever

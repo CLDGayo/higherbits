@@ -63,6 +63,31 @@ export const generateMetadata = async ({
     }
   }
 
+  if (tab === "libraries") {
+    const librariesTitle = `UI Component Libraries & Registries | ${SITE_NAME}`
+    const librariesDescription =
+      "Explore 130+ production-ready component libraries, UI kits, and registries for React, Tailwind CSS, and shadcn/ui."
+
+    return {
+      title: { absolute: librariesTitle },
+      description: librariesDescription,
+      openGraph: {
+        title: librariesTitle,
+        description: librariesDescription,
+        type: "website",
+      },
+      keywords: [
+        ...BASE_KEYWORDS,
+        "component libraries",
+        "shadcn directory",
+        "react libraries",
+        "ui kits",
+        "shadcn registries",
+        "tailwind libraries",
+      ],
+    }
+  }
+
   return {
     title: { absolute: SITE_TITLE },
     description:
@@ -185,7 +210,7 @@ export default async function HomePage({
       <div className="min-h-screen flex flex-col bg-background min-w-0 overflow-x-hidden">
         <div className="flex-1 flex flex-col gap-6 pt-24 min-w-0">
           <div className="relative min-w-0 px-4 md:px-8">
-            <HomePageClient />
+            <HomePageClient initialTab={tab as any} />
             <NewsletterDialog />
           </div>
         </div>

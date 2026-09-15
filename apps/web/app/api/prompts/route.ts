@@ -130,15 +130,13 @@ export async function POST(request: NextRequest) {
     // Fast path for GoHighLevel: bypass expensive dependency resolution and file downloads
     if (prompt_type === PROMPT_TYPES.GOHIGHLEVEL) {
       const isCorrupted =
-        demo.ghl_html_content &&
-        (demo.ghl_html_content.trim().startsWith("```") ||
-          demo.ghl_html_content.includes("border border-border rounded-xl p-6 shadow-sm") ||
-          demo.ghl_html_content.includes(".ghl-component-wrapper button,") ||
-          !demo.ghl_html_content.includes(":where(.ghl-component-wrapper)") ||
-          !demo.ghl_html_content.includes("fonts.googleapis.com/css2?family=Inter") ||
-          demo.ghl_html_content.includes("-right-[50vw]") ||
-          demo.ghl_html_content.includes("w-[100vw]") ||
-          (!demo.ghl_html_content.includes("</html>") && !demo.ghl_html_content.includes("</div>")))
+        !demo.ghl_html_content ||
+        demo.ghl_html_content.trim().length < 500 ||
+        demo.ghl_html_content.trim().startsWith("```") ||
+        demo.ghl_html_content.includes("border border-border rounded-xl p-6 shadow-sm") ||
+        demo.ghl_html_content.includes("-right-[50vw]") ||
+        demo.ghl_html_content.includes("w-[100vw]") ||
+        (!demo.ghl_html_content.includes("</div>") && !demo.ghl_html_content.includes("</html>"))
 
       if (demo.ghl_html_content && !force_regenerate && !isCorrupted) {
         console.log("Fast path: returned pre-generated HTML for GHL template.")

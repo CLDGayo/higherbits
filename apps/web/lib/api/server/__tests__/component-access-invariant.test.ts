@@ -26,6 +26,7 @@ const isComponentPaid = vi.fn()
 const getPurchasesWithBundles = vi.fn(async (_userId: string) => [] as unknown[])
 const planFindUnique = vi.fn(async () => null)
 const bundlesFindMany = vi.fn(async () => [])
+const componentFindUnique = vi.fn(async () => null)
 
 vi.mock("server-only", () => ({}))
 vi.mock("../bundle_purchases", () => ({
@@ -34,9 +35,13 @@ vi.mock("../bundle_purchases", () => ({
 }))
 vi.mock("../../../prisma", () => ({
   default: {
+    components: { findUnique: () => componentFindUnique() },
     users_to_plans: { findUnique: () => planFindUnique() },
     bundles: { findMany: () => bundlesFindMany() },
   },
+}))
+vi.mock("@/lib/admin", () => ({
+  checkIsAdmin: vi.fn(async () => ({ isAdmin: false, error: null })),
 }))
 
 const load = async () => (await import("../components")).hasUserComponentAccess
@@ -44,6 +49,7 @@ const load = async () => (await import("../components")).hasUserComponentAccess
 describe("hasUserComponentAccess — load-bearing invariants", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    componentFindUnique.mockResolvedValue(null as never)
     planFindUnique.mockResolvedValue(null as never)
     bundlesFindMany.mockResolvedValue([] as never)
     getPurchasesWithBundles.mockResolvedValue([] as never)

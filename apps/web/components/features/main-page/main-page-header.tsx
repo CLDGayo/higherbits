@@ -30,6 +30,7 @@ const tabLabels = {
   pro: "Premium Stores",
   collections: "Collections",
   bundles: "Bundles",
+  libraries: "Libraries",
 } as const
 
 interface ComponentsHeaderProps {
@@ -42,6 +43,7 @@ interface ComponentsHeaderProps {
     | "templates"
     | "collections"
     | "bundles"
+    | "libraries"
   onTabChange: (
     tab:
       | "home"
@@ -51,7 +53,8 @@ interface ComponentsHeaderProps {
       | "pro"
       | "templates"
       | "collections"
-      | "bundles",
+      | "bundles"
+      | "libraries",
   ) => void
 }
 

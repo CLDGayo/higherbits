@@ -10,6 +10,7 @@ export type AppSection =
   | "collections"
   | "magic"
   | "bundles"
+  | "libraries"
 
 export type MainTabType = Exclude<AppSection, "magic">
 
@@ -32,3 +33,14 @@ export const getMainPageUrlWithTab = (
   }
   return `/?${params.toString()}`
 }
+
+// Libraries Directory state
+export type LibraryScope = "higherbits" | "shadcn"
+export type LibrarySort = "views" | "components" | "updated" | "newest" | "name"
+export type LibraryViewMode = "grid" | "list"
+
+export const librariesSearchAtom = atom<string>("")
+export const librariesCategoryAtom = atom<string>("all")
+export const librariesScopeAtom = atom<LibraryScope>("higherbits")
+export const librariesSortAtom = atom<LibrarySort>("views")
+export const librariesViewModeAtom = atom<LibraryViewMode>("grid")

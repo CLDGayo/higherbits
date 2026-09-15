@@ -25,11 +25,14 @@ interface PreviewPaneProps {
   code?: string
   onCodeChange?: (value: string) => void
   isFileLoading?: boolean
+  isSaving?: boolean
+  onSave?: () => void
   connectedShellId?: string
   showPreview: boolean
   iframeKey: number
   onRefresh?: () => void
   sandboxUnavailable?: boolean
+  sandboxError?: string | null
   onReconnect?: () => void
   onTogglePreview?: () => void
   isFullscreen?: boolean
@@ -46,11 +49,14 @@ export function PreviewPane({
   code = "",
   onCodeChange = () => {},
   isFileLoading = false,
+  isSaving = false,
+  onSave,
   connectedShellId = "",
   showPreview,
   iframeKey,
   onRefresh,
   sandboxUnavailable = false,
+  sandboxError = null,
   onReconnect,
   onTogglePreview,
   isFullscreen = false,
@@ -154,6 +160,8 @@ export function PreviewPane({
             code={code}
             onCodeChange={onCodeChange}
             isLoading={isFileLoading}
+            isSaving={isSaving}
+            onSave={onSave}
             showPreview={showPreview}
             onTogglePreview={onTogglePreview}
           />
@@ -177,8 +185,16 @@ export function PreviewPane({
         >
           <div className="flex flex-col h-full">
             {sandboxUnavailable ? (
-              <div className="flex-1 flex flex-col gap-3 items-center justify-center text-muted-foreground text-center px-6">
-                <p>Sandbox unavailable — the dev server stopped responding.</p>
+              <div className="flex-1 flex flex-col gap-3 items-center justify-center text-muted-foreground text-center px-6 max-w-md mx-auto">
+                <p>
+                  Sandbox unavailable —{" "}
+                  {sandboxError || "the dev server stopped responding."}
+                </p>
+                {sandboxError && /frozen|spending limit/i.test(sandboxError) && (
+                  <p className="text-xs text-amber-500/90 bg-amber-500/10 border border-amber-500/20 rounded-md p-2.5 text-left">
+                    <strong>Action Required:</strong> Your CodeSandbox workspace has been frozen due to spending limits or credit exhaustion. Please unfreeze or upgrade the workspace in your CodeSandbox dashboard to run sandboxes.
+                  </p>
+                )}
                 {onReconnect && (
                   <button
                     type="button"

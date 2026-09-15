@@ -13,24 +13,49 @@ import { processUploadBuffer } from "./upload-security"
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env") })
 
-if (
-  !process.env.R2_ACCESS_KEY_ID ||
-  !process.env.R2_SECRET_ACCESS_KEY ||
-  !process.env.NEXT_PUBLIC_R2_ENDPOINT
-) {
-  throw new Error(
-    "R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and NEXT_PUBLIC_R2_ENDPOINT must be set",
-  )
+let _r2ClientInstance: S3Client | null = null
+
+function getR2Client(): S3Client {
+  if (!_r2ClientInstance) {
+    if (
+      !process.env.R2_ACCESS_KEY_ID ||
+      !process.env.R2_SECRET_ACCESS_KEY ||
+      !process.env.NEXT_PUBLIC_R2_ENDPOINT
+    ) {
+      throw new Error(
+        "R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and NEXT_PUBLIC_R2_ENDPOINT must be set",
+      )
+    }
+
+    _r2ClientInstance = new S3Client({
+      region: "auto",
+      endpoint: process.env.NEXT_PUBLIC_R2_ENDPOINT,
+      credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID || "",
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
+      },
+    })
+  }
+  return _r2ClientInstance
 }
 
-const r2Client = new S3Client({
-  region: "auto",
-  endpoint: process.env.NEXT_PUBLIC_R2_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
-  },
-})
+async function sendWithTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  operationName: string,
+): Promise<T> {
+  let timer: NodeJS.Timeout
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error(`Timeout after ${timeoutMs}ms: ${operationName}`))
+    }, timeoutMs)
+  })
+  try {
+    return await Promise.race([promise, timeoutPromise])
+  } finally {
+    clearTimeout(timer!)
+  }
+}
 
 /**
  * Deletes every object under `prefix`. Used to clean up an artifact's objects
@@ -77,12 +102,17 @@ export const deleteR2Prefix = async ({
   let continuationToken: string | undefined
 
   do {
-    const listed = await r2Client.send(
-      new ListObjectsV2Command({
-        Bucket: bucketName,
-        Prefix: prefix,
-        ContinuationToken: continuationToken,
-      }),
+    const client = getR2Client()
+    const listed = await sendWithTimeout(
+      client.send(
+        new ListObjectsV2Command({
+          Bucket: bucketName,
+          Prefix: prefix,
+          ContinuationToken: continuationToken,
+        }),
+      ),
+      15000,
+      `ListObjectsV2(${prefix})`,
     )
 
     const objects = (listed.Contents ?? [])
@@ -94,11 +124,15 @@ export const deleteR2Prefix = async ({
       .map((Key) => ({ Key }))
 
     if (objects.length > 0) {
-      await r2Client.send(
-        new DeleteObjectsCommand({
-          Bucket: bucketName,
-          Delete: { Objects: objects, Quiet: true },
-        }),
+      await sendWithTimeout(
+        client.send(
+          new DeleteObjectsCommand({
+            Bucket: bucketName,
+            Delete: { Objects: objects, Quiet: true },
+          }),
+        ),
+        15000,
+        `DeleteObjects(${objects.length})`,
       )
       deleted += objects.length
     }
@@ -127,6 +161,7 @@ export const uploadToR2 = async ({
   bucketName: string
   contentType?: string
 }): Promise<string> => {
+  console.log(`[R2] uploadToR2 starting for fileKey="${fileKey}", bucket="${bucketName}"`)
   await requireUser()
 
   try {
@@ -152,11 +187,14 @@ export const uploadToR2 = async ({
       ContentType: verifiedContentType,
     })
 
-    await r2Client.send(command)
+    const client = getR2Client()
+    await sendWithTimeout(client.send(command), 20000, `uploadToR2(${fileKey})`)
 
-    return `${process.env.NEXT_PUBLIC_CDN_URL}/${fileKey}`
+    const resultUrl = `${process.env.NEXT_PUBLIC_CDN_URL}/${fileKey}`
+    console.log(`[R2] uploadToR2 succeeded: ${resultUrl}`)
+    return resultUrl
   } catch (error) {
-    console.error("Error uploading to R2:", error)
+    console.error(`[R2] Error uploading to R2 (${fileKey}):`, error)
     throw error
   }
 }
@@ -181,7 +219,8 @@ export const generatePresignedUrl = async ({
       ContentType: contentType,
     })
 
-    const presignedUrl = await getSignedUrl(r2Client, command, { expiresIn })
+    const client = getR2Client()
+    const presignedUrl = await getSignedUrl(client, command, { expiresIn })
     return presignedUrl
   } catch (error) {
     console.error("Error generating presigned URL:", error)

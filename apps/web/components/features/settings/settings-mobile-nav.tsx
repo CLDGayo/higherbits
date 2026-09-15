@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Icons } from "@/components/icons"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 
 const settingsLinks = [
   {
@@ -22,6 +23,7 @@ const settingsLinks = [
   {
     title: "Billing",
     href: "/settings/billing",
+    adminOnly: true,
   },
   {
     title: "Payouts moved to Studio",
@@ -31,8 +33,10 @@ const settingsLinks = [
 
 export function SettingsMobileNav() {
   const pathname = usePathname()
+  const { isAdmin } = useIsAdmin()
+  const visibleLinks = settingsLinks.filter((link) => !link.adminOnly || isAdmin)
   const currentTitle =
-    settingsLinks.find((link) => pathname?.startsWith(link.href))?.title ||
+    visibleLinks.find((link) => pathname?.startsWith(link.href))?.title ||
     "Profile"
 
   return (
@@ -60,7 +64,7 @@ export function SettingsMobileNav() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-[200px]">
-              {settingsLinks.map((link) => (
+              {visibleLinks.map((link) => (
                 <DropdownMenuItem
                   key={link.href}
                   className={pathname?.startsWith(link.href) ? "bg-accent" : ""}

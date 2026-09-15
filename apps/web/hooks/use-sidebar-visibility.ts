@@ -12,6 +12,8 @@ export function useSidebarVisibility() {
     pathname.startsWith("/s/") ||
     pathname.startsWith("/q/") ||
     pathname.startsWith("/c/") ||
+    pathname.startsWith("/community/libraries") ||
+    pathname.startsWith("/libraries") ||
     pathname.startsWith("/magic/get-started") ||
     pathname.startsWith("/magic/console") ||
     pathname.startsWith("/contest")

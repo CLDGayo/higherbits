@@ -93,6 +93,8 @@ interface EditorPaneProps {
   code: string
   onCodeChange: (value: string) => void
   isLoading: boolean
+  isSaving?: boolean
+  onSave?: () => void
   showPreview?: boolean
   onTogglePreview?: () => void
 }
@@ -102,25 +104,36 @@ function EditorPaneOriginal({
   code,
   onCodeChange,
   isLoading,
+  isSaving: propIsSaving,
+  onSave,
   showPreview,
   onTogglePreview,
 }: EditorPaneProps) {
   const { resolvedTheme } = useTheme()
-  const [isSaving, setIsSaving] = useState(false)
+  const [localIsSaving, setLocalIsSaving] = useState(false)
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [showDemosBanner, setShowDemosBanner] = useState(true)
+
+  const isSaving = propIsSaving !== undefined ? propIsSaving : localIsSaving
+
+  const onSaveRef = useRef(onSave)
+  useEffect(() => {
+    onSaveRef.current = onSave
+  }, [onSave])
 
   const isDemoFile = selectedFile?.name === "demo.tsx" || selectedFile?.name === "default.tsx" || selectedFile?.path.includes("/demos/") || false
 
   const handleCodeChange = (value: string) => {
     onCodeChange(value)
-    setIsSaving(true)
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current)
+    if (propIsSaving === undefined) {
+      setLocalIsSaving(true)
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+      saveTimeoutRef.current = setTimeout(() => {
+        setLocalIsSaving(false)
+      }, 1000)
     }
-    saveTimeoutRef.current = setTimeout(() => {
-      setIsSaving(false)
-    }, 1000)
   }
 
   useEffect(() => {
@@ -132,6 +145,11 @@ function EditorPaneOriginal({
   }, [])
 
   const handleEditorMount = (editor: any, monaco: Monaco) => {
+    // Add Cmd+S / Ctrl+S keybinding
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      onSaveRef.current?.()
+    })
+
     const compilerOpts =
       monaco.languages.typescript.typescriptDefaults.getCompilerOptions()
 

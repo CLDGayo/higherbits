@@ -10,10 +10,21 @@ export const hasUserPurchasedDemo = async (
     where: {
       id: demoId,
     },
+    include: {
+      components: {
+        select: {
+          user_id: true,
+        },
+      },
+    },
   })
 
   if (!demo) {
     return false
+  }
+
+  if (userId && (demo.user_id === userId || demo.components?.user_id === userId)) {
+    return true
   }
 
   const hasPurchasedComponent = await hasUserComponentAccess(

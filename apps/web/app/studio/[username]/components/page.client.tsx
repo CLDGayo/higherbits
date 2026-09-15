@@ -237,6 +237,7 @@ export function StudioUsernameClient({
     shortSandboxId: string,
     isEdit: boolean = false,
   ) => {
+    toast.loading("Loading component editor...", { id: "open-sandbox" })
     const url = `${studioBase}/sandbox/${shortSandboxId}${isEdit ? "?mode=edit" : ""}`
     studioHardNavigate(url)
   }
@@ -532,6 +533,7 @@ export function StudioUsernameClient({
           // the previous component's preview.
           key={String(previewDemo.id)}
           demo={previewDemo as any}
+          hasPurchased={isOwnProfile || isAdmin}
           onClose={() => setPreviewDemo(null)}
         />
       )}

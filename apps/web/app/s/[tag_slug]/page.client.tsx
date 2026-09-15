@@ -5,7 +5,7 @@ import { ComponentsList } from "@/components/ui/items-list"
 import { sortByAtom } from "@/components/features/main-page/main-page-header"
 import { SortOption } from "@/types/global"
 import { TagComponentsHeader } from "@/components/features/tag-page/tag-page-header"
-import { useLayoutEffect } from "react"
+import { useEffect } from "react"
 import { motion } from "motion/react"
 
 export function TagPageContent({
@@ -19,9 +19,9 @@ export function TagPageContent({
 }) {
   const [sortBy, setSortBy] = useAtom(sortByAtom)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (sortBy === undefined) setSortBy(initialSortBy)
-  }, [])
+  }, [sortBy, initialSortBy, setSortBy])
 
   return (
     <div className="container mx-auto my-20 px-[var(--container-x-padding)] max-w-[3680px] [--container-x-padding:20px] min-720:[--container-x-padding:24px] min-1280:[--container-x-padding:32px] min-1536:[--container-x-padding:80px]">

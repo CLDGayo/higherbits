@@ -26,6 +26,10 @@ export function ComponentVideoPreview({
   const id = component.id.toString()
   const videoUrl = isDemo ? component.video_url : null
 
+  useEffect(() => {
+    setIsVideoLoaded(false)
+  }, [videoUrl])
+
   const toggleVideoIcon = useCallback(
     (hide: boolean) => {
       const videoIcon = document.querySelector(

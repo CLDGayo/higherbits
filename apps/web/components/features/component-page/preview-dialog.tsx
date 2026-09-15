@@ -64,7 +64,7 @@ import { PayWall } from "./pay-wall"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
   "previewDialogSelectedPromptType",
-  PROMPT_TYPES.EXTENDED,
+  PROMPT_TYPES.GOHIGHLEVEL,
 )
 
 export function PreviewSkeleton() {
@@ -385,7 +385,23 @@ export function ComponentPreviewDialog({
                   <>
                     <Copy size={16} className="shrink-0" />
                     <span>
-                      {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Copy for GHL" : "Copy prompt"}
+                      {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL
+                        ? "Copy for GHL"
+                        : selectedPromptType === PROMPT_TYPES.ANTIGRAVITY
+                        ? "Copy for Antigravity"
+                        : selectedPromptType === PROMPT_TYPES.BOLT
+                        ? "Copy for Bolt"
+                        : selectedPromptType === PROMPT_TYPES.LOVABLE
+                        ? "Copy for Lovable"
+                        : selectedPromptType === PROMPT_TYPES.V0
+                        ? "Copy for v0"
+                        : selectedPromptType === PROMPT_TYPES.CLAUDE
+                        ? "Copy for Claude"
+                        : selectedPromptType === PROMPT_TYPES.CODEX
+                        ? "Copy for Codex"
+                        : selectedPromptType === PROMPT_TYPES.REPLIT
+                        ? "Copy for Replit"
+                        : "Copy prompt"}
                     </span>
                   </>
                 )}

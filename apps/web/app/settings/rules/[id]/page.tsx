@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { redirect, notFound } from "next/navigation"
 import { auth } from "@clerk/nextjs/server"
+import { checkIsAdmin } from "@/lib/admin"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
@@ -26,6 +27,11 @@ export default async function EditPromptRulePage(props: PageProps) {
 
   if (!userId) {
     redirect("/sign-in")
+  }
+
+  const { isAdmin } = await checkIsAdmin(userId)
+  if (!isAdmin) {
+    redirect("/settings/profile")
   }
 
   const promptRuleId = parseInt(params.id)

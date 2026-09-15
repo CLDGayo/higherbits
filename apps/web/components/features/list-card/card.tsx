@@ -60,6 +60,7 @@ export const ComponentCard = React.memo(function ComponentCard({
   currentUser,
   supabaseClient,
   decorative,
+  forceHover,
 }: {
   demo?: DemoWithComponent | (Component & { user: User })
   isLoading?: boolean
@@ -90,6 +91,7 @@ export const ComponentCard = React.memo(function ComponentCard({
    * card stops landing inside it.
    */
   decorative?: boolean
+  forceHover?: boolean
 }) {
   const router = useRouter()
   // This render body is executed on the server too ("use client" still SSRs), so
@@ -296,6 +298,7 @@ export const ComponentCard = React.memo(function ComponentCard({
   // Hide rankings on weekdays
   const hideRankings = shouldHideLeaderboardRankings()
   const [isHovered, setIsHovered] = React.useState(false)
+  const effectiveIsHovered = forceHover !== undefined ? forceHover : isHovered
 
   return (
     <ContextMenu>
@@ -363,7 +366,7 @@ export const ComponentCard = React.memo(function ComponentCard({
                   <ComponentVideoPreview
                     component={demo as DemoWithComponent}
                     demo={demo as DemoWithComponent}
-                    isHovered={isHovered}
+                    isHovered={effectiveIsHovered}
                   />
                 )}
               </div>
@@ -562,23 +565,29 @@ export const ComponentCard = React.memo(function ComponentCard({
     </ContextMenu>
   )
 }, (prevProps, nextProps) => {
-  // Custom equality check for React.memo
   if (prevProps.isLoading !== nextProps.isLoading) return false;
   if (prevProps.hideUser !== nextProps.hideUser) return false;
   if (prevProps.hideVotes !== nextProps.hideVotes) return false;
   if (prevProps.isLeaderboard !== nextProps.isLeaderboard) return false;
   if (prevProps.decorative !== nextProps.decorative) return false;
+  if (prevProps.forceHover !== nextProps.forceHover) return false;
   if (prevProps.currentUser?.id !== nextProps.currentUser?.id) return false;
 
   const prevDemo = prevProps.demo as any;
   const nextDemo = nextProps.demo as any;
   if (!prevDemo || !nextDemo) return prevDemo === nextDemo;
   if (prevDemo.id !== nextDemo.id) return false;
+  if (prevDemo.preview_url !== nextDemo.preview_url) return false;
+  if (prevDemo.video_url !== nextDemo.video_url) return false;
+  if (prevDemo.name !== nextDemo.name) return false;
+  if (prevDemo.demo_slug !== nextDemo.demo_slug) return false;
   if (prevDemo.updated_at !== nextDemo.updated_at) return false;
   if (prevDemo.bookmarks_count !== nextDemo.bookmarks_count) return false;
   if (prevDemo.view_count !== nextDemo.view_count) return false;
   if (prevDemo.votes_count !== nextDemo.votes_count) return false;
   if (prevDemo.has_voted !== nextDemo.has_voted) return false;
+  if (prevDemo.component?.name !== nextDemo.component?.name) return false;
+  if (prevDemo.component?.component_slug !== nextDemo.component?.component_slug) return false;
   
   return true;
 })

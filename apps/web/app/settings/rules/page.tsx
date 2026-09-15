@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { auth } from "@clerk/nextjs/server"
+import { checkIsAdmin } from "@/lib/admin"
 
 import { Button } from "@/components/ui/button"
 import { PromptRulesList } from "@/components/features/prompt-rules/prompt-rules-list"
@@ -18,6 +19,11 @@ export default async function PromptRulesPage() {
 
   if (!userId) {
     redirect("/sign-in")
+  }
+
+  const { isAdmin } = await checkIsAdmin(userId)
+  if (!isAdmin) {
+    redirect("/settings/profile")
   }
 
   const promptRules = await getPromptRules(supabaseWithAdminAccess, userId)

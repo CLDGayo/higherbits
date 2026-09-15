@@ -29,6 +29,85 @@ class ClerkAdminCheckTimeout extends Error {
   }
 }
 
+export async function syncClerkUserToSupabase(userId: string) {
+  try {
+    const client = await clerkClient()
+    const clerkUser = await client.users.getUser(userId)
+    if (!clerkUser) return null
+
+    let username =
+      clerkUser.username ||
+      clerkUser.externalAccounts?.[0]?.username
+
+    if (!username && clerkUser.emailAddresses?.[0]?.emailAddress) {
+      const emailPrefix = clerkUser.emailAddresses[0].emailAddress.split("@")[0]
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000)
+      username = `${emailPrefix}${randomSuffix}`
+    }
+
+    if (!username) {
+      username = clerkUser.id
+    }
+
+    const name =
+      `${clerkUser.firstName ?? ""} ${clerkUser.lastName ?? ""}`.trim() ||
+      clerkUser.username ||
+      "User"
+    const email = clerkUser.emailAddresses?.[0]?.emailAddress ?? ""
+    const image_url = clerkUser.imageUrl
+
+    const { data: existingUser } = await supabaseWithAdminAccess
+      .from("users")
+      .select("id, username, display_username")
+      .eq("id", userId)
+      .maybeSingle()
+
+    // If a different user already holds this username, append suffix to avoid unique constraint error
+    const { data: usernameConflict } = await supabaseWithAdminAccess
+      .from("users")
+      .select("id")
+      .eq("username", username)
+      .maybeSingle()
+
+    let resolvedUsername = existingUser?.username || username
+    if (usernameConflict && usernameConflict.id !== userId) {
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000)
+      resolvedUsername = `${username}_${randomSuffix}`
+    }
+
+    const userData: any = {
+      id: userId,
+      username: resolvedUsername,
+      image_url,
+      email,
+      name,
+      ...(existingUser
+        ? {}
+        : {
+            display_name: name,
+            display_username: resolvedUsername,
+            display_image_url: image_url,
+          }),
+    }
+
+    const { data: upsertedUser, error } = await supabaseWithAdminAccess
+      .from("users")
+      .upsert(userData, { onConflict: "id" })
+      .select("*")
+      .single()
+
+    if (error) {
+      console.error("Error in syncClerkUserToSupabase:", error)
+      return null
+    }
+
+    return upsertedUser
+  } catch (error) {
+    console.error("Failed to sync Clerk user to Supabase:", error)
+    return null
+  }
+}
+
 export const authUsernameOrRedirect = async (
   username: string,
   redirectTo: string,
@@ -79,9 +158,28 @@ export const authUsernameOrRedirect = async (
     }
   }
 
-  const result = await authUsernameCached(userId, username)
+  let result = await authUsernameCached(userId, username)
 
-  // 2. If result is null, they aren't the owner or a Supabase admin
+  // 2. If result is null, check if user exists in Supabase or needs to be synced from Clerk
+  if (result === null) {
+    const syncedUser = await syncClerkUserToSupabase(userId)
+    if (syncedUser) {
+      if (
+        syncedUser.username === username ||
+        syncedUser.display_username === username
+      ) {
+        result = {
+          user: syncedUser,
+          isAdmin: isClerkAdmin,
+          isOwnProfile: true,
+        }
+      } else {
+        result = await authUsername(supabaseWithAdminAccess, userId, username)
+      }
+    }
+  }
+
+  // 3. If still null, they aren't the owner or a Supabase admin
   if (result === null) {
     if (isClerkAdmin) {
       // If they are a Clerk admin, we still need to return the user object.
@@ -102,7 +200,7 @@ export const authUsernameOrRedirect = async (
     redirect(redirectTo)
   }
 
-  // 3. If they are a Clerk admin, ensure isAdmin is true in the result
+  // 4. If they are a Clerk admin, ensure isAdmin is true in the result
   if (isClerkAdmin) {
     result.isAdmin = true
   }

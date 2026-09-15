@@ -13,6 +13,7 @@ export type NavigationItem = {
   demoId?: number
   demosCount?: number
   externalLink?: boolean
+  icon?: any
 }
 
 export type NavigationCategory = {
@@ -26,10 +27,11 @@ export function useFilteredNavigation() {
   const magicOnboardingCompleted = useAtomValue(magicOnboardingCompletedAtom)
   const { userId } = useAuth()
 
-  // Deep clone the categories to avoid mutating the original
-  const categories = JSON.parse(
-    JSON.stringify(originalCategories),
-  ) as NavigationCategory[]
+  // Clone the categories to avoid mutating the original while preserving icons
+  const categories: NavigationCategory[] = originalCategories.map((cat) => ({
+    ...cat,
+    items: cat.items.map((item) => ({ ...item })),
+  }))
 
   // Find HigherBits AI category
   const magicCategory = categories.find(

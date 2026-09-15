@@ -19,12 +19,15 @@ import { FilterChips } from "@/components/features/main-page/filter-chips"
 import { sidebarOpenAtom } from "@/components/features/main-page/main-layout"
 import { ComponentsHeader } from "@/components/features/main-page/main-page-header"
 import { ProList } from "@/components/features/pro/pro-list"
+import { LibrariesList } from "@/components/features/libraries/libraries-list"
 import { TemplatesContainer } from "@/components/features/templates/templates-list"
 import { ComponentsList } from "@/components/ui/items-list"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useNavigation } from "@/hooks/use-navigation"
 import type { AppSection } from "@/lib/atoms"
 import { SortOption } from "@/types/global"
+import { useUser } from "@clerk/nextjs"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 
 const MainContent = React.memo(function MainContent({
   activeTab,
@@ -71,6 +74,8 @@ const MainContent = React.memo(function MainContent({
         )
       case "bundles":
         return <BundlesLayout />
+      case "libraries":
+        return <LibrariesList />
       case "authors":
         return <DesignEngineersList />
       case "pro":
@@ -122,20 +127,25 @@ const MainContent = React.memo(function MainContent({
   )
 })
 
-export function HomePageClient() {
+export function HomePageClient({
+  initialTab,
+}: {
+  initialTab?: Exclude<AppSection, "magic"> | "home"
+} = {}) {
   const [sidebarOpen] = useAtom(sidebarOpenAtom)
   const [magicBannerVisible] = useAtom(magicBannerVisibleAtom)
   const [shouldShowBanner, setShouldShowBanner] = useState(false)
   const [prevSidebarState, setPrevSidebarState] = useState(sidebarOpen)
   const isMobile = useIsMobile()
+  const { user: clerkUser } = useUser()
+  const { isAdmin: isHookAdmin } = useIsAdmin()
+  const isAdmin = Boolean(clerkUser && isHookAdmin)
 
-  const { activeTab, sortBy, navigateToTab } = useNavigation()
+  const { activeTab, sortBy, navigateToTab } = useNavigation({ initialTab })
 
   useEffect(() => {
     setPrevSidebarState(sidebarOpen)
   }, [sidebarOpen])
-
-  const router = require("next/navigation").useRouter()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -160,12 +170,12 @@ export function HomePageClient() {
     <main
       className={cn(
         "flex flex-1 flex-col min-w-0",
-        magicBannerVisible && shouldShowBanner && "mt-3 md:mt-4",
+        isAdmin && magicBannerVisible && shouldShowBanner && "mt-3 md:mt-4",
       )}
     >
       <div className="w-full mx-auto max-w-full" style={{ viewTransitionName: "main-content" } as React.CSSProperties}>
         <AnimatePresence>
-          {magicBannerVisible && shouldShowBanner && <MagicBanner />}
+          {isAdmin && magicBannerVisible && shouldShowBanner && <MagicBanner />}
         </AnimatePresence>
         <MainContent
           activeTab={activeTab}

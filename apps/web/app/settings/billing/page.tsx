@@ -1,4 +1,6 @@
 import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import { checkIsAdmin } from "@/lib/admin"
 import { BillingSettingsClient } from "@/app/settings/billing/page.client"
 import { PLAN_LIMITS, PlanType } from "@/lib/config/subscription-plans"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
@@ -149,6 +151,15 @@ export default async function BillingSettingsPage({
 }) {
   const resolvedSearchParams = await searchParams
   const { userId } = await auth()
+
+  if (!userId) {
+    redirect("/sign-in")
+  }
+
+  const { isAdmin } = await checkIsAdmin(userId)
+  if (!isAdmin) {
+    redirect("/settings/profile")
+  }
 
   const subscription = await getCurrentPlan(userId)
 

@@ -17,6 +17,7 @@ export interface UseNavigationOptions {
   syncWithUrl?: boolean
   onTabChange?: (tab: MainTabType | "home") => void
   useResponsiveDefaults?: boolean
+  initialTab?: MainTabType | "home"
 }
 
 export interface NavigationResult {
@@ -35,6 +36,7 @@ export function useNavigation(
     syncWithUrl = true,
     onTabChange,
     useResponsiveDefaults = true,
+    initialTab,
   } = options
 
   const router = useRouter()
@@ -51,6 +53,12 @@ export function useNavigation(
   useEffect(() => {
     if (pathname.startsWith("/magic")) {
       setCurrentSection("magic")
+      return
+    }
+
+    if (initialTab && selectedMainTab !== initialTab) {
+      setCurrentSection("home")
+      setSelectedMainTab(initialTab)
       return
     }
 
@@ -117,8 +125,13 @@ export function useNavigation(
     }
   }
 
+  const effectiveTab =
+    pathname === "/" && urlTab
+      ? (urlTab as MainTabType | "home")
+      : (initialTab || selectedMainTab)
+
   return {
-    activeTab: selectedMainTab,
+    activeTab: effectiveTab,
     currentSection,
     navigateToTab,
     isDesktop,

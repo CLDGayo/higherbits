@@ -23,11 +23,11 @@ import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { useSupabaseAnalytics } from "@/hooks/use-analytics"
-import { promptOptions } from "@/lib/prompts"
+import { promptOptions, PromptOptionBase } from "@/lib/prompts"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
   "previewDialogSelectedPromptType",
-  PROMPT_TYPES.EXTENDED,
+  PROMPT_TYPES.GOHIGHLEVEL,
 )
 
 // `view_count` is a synthetic field on DemoWithComponent (derived from
@@ -56,7 +56,16 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
   const { capture } = useSupabaseAnalytics()
   const [selectedPromptType, setSelectedPromptType] = useAtom(selectedPromptTypeAtom)
 
-  const accessState = useComponentAccess(demo.component, hasPurchased)
+  const isOwner = Boolean(
+    user?.id && (demo.user_id === user.id || demo.component?.user_id === user.id),
+  )
+  const accessState = useComponentAccess(demo.component, hasPurchased || isOwner)
+
+  useEffect(() => {
+    if (accessState === "UNLOCKED") {
+      setShowUnlockDialog(false)
+    }
+  }, [accessState])
 
   useEffect(() => {
     if (resolvedTheme) {
@@ -98,10 +107,13 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     const isGhl = typeToUse === PROMPT_TYPES.GOHIGHLEVEL
     setIsPromptLoading(true)
 
+    const targetOption = promptOptions.find((o): o is PromptOptionBase => o.type === "option" && o.id === typeToUse)
+    const optionLabel = targetOption?.label || "prompt"
+
     const toastId = toast.loading(
       isGhl
         ? "Preparing GoHighLevel code... Please wait"
-        : "Preparing prompt for clipboard...",
+        : `Preparing prompt for ${optionLabel}...`,
     )
 
     try {
@@ -123,7 +135,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
       toast.success(
         isGhl
           ? "GoHighLevel code copied to clipboard!"
-          : "Prompt copied to clipboard!",
+          : `${optionLabel} prompt copied to clipboard!`,
         { id: toastId },
       )
       
@@ -143,6 +155,29 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
   }
 
+  const getPromptButtonLabel = () => {
+    switch (selectedPromptType) {
+      case PROMPT_TYPES.GOHIGHLEVEL:
+        return "Copy for GHL"
+      case PROMPT_TYPES.ANTIGRAVITY:
+        return "Copy for Antigravity"
+      case PROMPT_TYPES.BOLT:
+        return "Copy for Bolt"
+      case PROMPT_TYPES.LOVABLE:
+        return "Copy for Lovable"
+      case PROMPT_TYPES.V0:
+        return "Copy for v0"
+      case PROMPT_TYPES.CLAUDE:
+        return "Copy for Claude"
+      case PROMPT_TYPES.CODEX:
+        return "Copy for Codex"
+      case PROMPT_TYPES.REPLIT:
+        return "Copy for Replit"
+      default:
+        return "Copy prompt"
+    }
+  }
+
   const handleCopyFile = async (e: React.MouseEvent, url: string, name: string) => {
     e.stopPropagation()
     if (accessState !== "UNLOCKED") {
@@ -151,13 +186,64 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
     
     try {
-      const response = await fetch(url)
-      if (!response.ok) throw new Error("Failed to fetch code")
-      const text = await response.text()
+      let text = url
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        const response = await fetch(url)
+        if (!response.ok) throw new Error("Failed to fetch code")
+        text = await response.text()
+      }
       await navigator.clipboard.writeText(text)
       toast.success(`Copied ${name}`)
     } catch (err) {
       toast.error(`Failed to copy ${name}`)
+    }
+  }
+
+  const handleCopyAllFiles = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (accessState !== "UNLOCKED") {
+      setShowUnlockDialog(true)
+      return
+    }
+
+    const toastId = toast.loading("Copying all files...")
+    try {
+      const files: { name: string; contentOrUrl?: string | null }[] = []
+      if (demo.component.code) {
+        files.push({
+          name: `${demo.component.component_slug || "component"}.tsx`,
+          contentOrUrl: demo.component.code,
+        })
+      }
+      if (demo.demo_code) {
+        files.push({
+          name: `${demo.name && demo.name !== "Default" ? demo.name : "demo"}.tsx`,
+          contentOrUrl: demo.demo_code,
+        })
+      }
+
+      if (files.length === 0) {
+        toast.error("No files available to copy", { id: toastId })
+        return
+      }
+
+      const fetchedFiles = await Promise.all(
+        files.map(async (file) => {
+          let text = file.contentOrUrl || ""
+          if (text.startsWith("http://") || text.startsWith("https://")) {
+            const res = await fetch(text)
+            if (!res.ok) throw new Error(`Failed to fetch ${file.name}`)
+            text = await res.text()
+          }
+          return `// ${file.name}\n${text}`
+        })
+      )
+
+      await navigator.clipboard.writeText(fetchedFiles.join("\n\n"))
+      toast.success(`Copied all files (${files.length} files) to clipboard!`, { id: toastId })
+    } catch (err: any) {
+      console.error("Failed to copy all files:", err)
+      toast.error("Failed to copy all files", { id: toastId })
     }
   }
 
@@ -321,7 +407,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                         <>
                           <Copy size={14} className="shrink-0" />
                           <span className="text-xs font-medium">
-                            {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Copy for GHL" : "Copy prompt"}
+                            {getPromptButtonLabel()}
                           </span>
                         </>
                       )}
@@ -341,7 +427,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
 
                   <DropdownMenuContent side="top" align="center" className="w-56 mb-2 bg-background/95 backdrop-blur-xl border-border/50 rounded-xl">
                     <DropdownMenuGroup>
-                      <DropdownMenuItem onClick={(e) => handlePromptAction(e as any)} className="cursor-pointer">
+                      <DropdownMenuItem onClick={(e) => handlePromptAction(e as any, PROMPT_TYPES.EXTENDED)} className="cursor-pointer">
                         <Copy className="mr-2 h-4 w-4" />
                         <span>Copy prompt</span>
                       </DropdownMenuItem>
@@ -357,10 +443,12 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                           <span className="truncate">{demo.name || "demo.tsx"}</span>
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem onClick={(e) => handlePromptAction(e as any)} className="cursor-pointer">
+                      <DropdownMenuItem onClick={handleCopyAllFiles} className="cursor-pointer">
                         <Code2 className="mr-2 h-4 w-4 opacity-70" />
                         <span>Copy all files</span>
-                        <span className="ml-auto text-xs opacity-50">2 files</span>
+                        <span className="ml-auto text-xs opacity-50">
+                          {(demo.component.code ? 1 : 0) + (demo.demo_code ? 1 : 0)} files
+                        </span>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={(e) => handleCopyCLI(e as any)} className="cursor-pointer">
                         <Terminal className="mr-2 h-4 w-4 opacity-70" />

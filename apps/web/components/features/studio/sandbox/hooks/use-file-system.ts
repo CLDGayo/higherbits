@@ -1,7 +1,27 @@
 import { SandboxSession, ReaddirEntry } from "@codesandbox/sdk"
-import { useState, useEffect, useRef, RefObject } from "react"
+import { useState, useEffect, useRef, useCallback, RefObject } from "react"
 import { toast } from "sonner"
-import { DEFAULT_COMPONENT_TSX, DEFAULT_DEMO_TSX, DEFAULT_DEFAULT_TSX, DEFAULT_INDEX_CSS } from "@/lib/sandbox-templates"
+import {
+  DEFAULT_COMPONENT_TSX,
+  DEFAULT_DEMO_TSX,
+  DEFAULT_DEFAULT_TSX,
+  DEFAULT_INDEX_CSS,
+  DEFAULT_PACKAGE_JSON,
+  DEFAULT_VITE_CONFIG_TS,
+  DEFAULT_INDEX_HTML,
+  DEFAULT_TSCONFIG_JSON,
+  DEFAULT_TASKS_JSON,
+  DEFAULT_MAIN_TSX,
+  DEFAULT_APP_TSX,
+  DEFAULT_UTILS_TS,
+  DEFAULT_VITE_ENV_D_TS,
+  DEFAULT_TSCONFIG_NODE_JSON,
+  DEFAULT_COMPONENTS_JSON,
+  DEFAULT_SCRIPTS_GENERATE_REGISTRY_CJS,
+  DEFAULT_SCRIPTS_COMPONENT_UTILS_CJS,
+  DEFAULT_SCRIPTS_PACKAGE_UTILS_CJS,
+  DEFAULT_SCRIPTS_REGISTRY_BUILDER_CJS,
+} from "@/lib/sandbox-templates"
 
 const ROOT_PATH = "/project/sandbox"
 
@@ -145,53 +165,44 @@ export const useFileSystem = ({
   const [isFileLoading, setIsFileLoading] = useState(false)
   const [advancedView, setAdvancedView] = useState(false)
   const [registryComponents, setRegistryComponents] = useState<string[]>([])
+  const [isSaving, setIsSaving] = useState(false)
+  const pendingSaveRef = useRef<{ filePath: string; value: string } | null>(null)
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
 
-  const sbWrapper = async <T>(
-    operation: (sandbox: SandboxSession) => Promise<T>,
-  ): Promise<T | undefined> => {
-    if (!sandboxRef.current) {
-      setTimeout(() => {
-        sbWrapper(operation)
-      }, 400)
-      return
-    }
-
-    try {
-      try {
-        await sandboxRef.current.fs.readdir("/project/sandbox")
-        console.log("SUCCESSFULLY READ /project/sandbox")
-      } catch (e1: any) {
-        console.log("FAILED /project/sandbox", e1)
-        try {
-          await sandboxRef.current.fs.readdir("/workspace")
-          console.log("SUCCESSFULLY READ /workspace")
-        } catch (e2: any) {
-          console.log("FAILED /workspace", e2)
-          try {
-            await sandboxRef.current.fs.readdir("/")
-            console.log("SUCCESSFULLY READ /")
-          } catch (e3: any) {
-            console.log("FAILED /", e3)
-            // Log to backend
-            fetch("/api/sandbox/error-log", {
-              method: "POST",
-              body: JSON.stringify({ message: "All paths failed", e1: String(e1), e2: String(e2), e3: String(e3) }),
-            })
-            throw new Error("All root paths failed")
-          }
+  const sbWrapper = useCallback(
+    async <T>(
+      operation: (sandbox: SandboxSession) => Promise<T>,
+    ): Promise<T | undefined> => {
+      if (!sandboxRef.current) {
+        for (let i = 0; i < 5; i++) {
+          await new Promise((r) => setTimeout(r, 200))
+          if (sandboxRef.current) break
+        }
+        if (!sandboxRef.current) {
+          console.warn("sbWrapper: sandboxRef.current is not ready")
+          return undefined
         }
       }
 
-      // We don't throw from basic operation anymore so the loop continues
-    } catch (error: any) {
-      console.error("Failed to read root directory:", error)
-      await reconnectSandbox()
-      return
-    }
-
-    return await operation(sandboxRef.current)
-  }
+      try {
+        return await operation(sandboxRef.current)
+      } catch (error: any) {
+        console.error("sbWrapper operation failed:", error)
+        const errMsg = error?.message || String(error)
+        if (
+          errMsg.includes("connection") ||
+          errMsg.includes("closed") ||
+          errMsg.includes("Pitcher") ||
+          errMsg.includes("disconnect") ||
+          errMsg.includes("Network")
+        ) {
+          await reconnectSandbox()
+        }
+        throw error
+      }
+    },
+    [sandboxRef, reconnectSandbox],
+  )
 
   const loadRootDirectory = async () => {
     setIsTreeLoading(true)
@@ -326,6 +337,35 @@ export const useFileSystem = ({
             if (!indexCssFile) {
               fs.writeTextFile("/project/sandbox/src/index.css", DEFAULT_INDEX_CSS).catch(console.error)
             }
+            // Auto-heal core template config if missing (e.g. corrupted/interrupted sandbox)
+            fs.stat("/project/sandbox/package.json").catch(() => {
+              console.warn("Self-healing missing sandbox template configuration...")
+              fs.writeTextFile("/project/sandbox/package.json", DEFAULT_PACKAGE_JSON).catch(console.error)
+              fs.writeTextFile("/project/sandbox/vite.config.ts", DEFAULT_VITE_CONFIG_TS).catch(console.error)
+              fs.writeTextFile("/project/sandbox/index.html", DEFAULT_INDEX_HTML).catch(console.error)
+              fs.writeTextFile("/project/sandbox/tsconfig.json", DEFAULT_TSCONFIG_JSON).catch(console.error)
+              fs.writeTextFile("/project/sandbox/tsconfig.node.json", DEFAULT_TSCONFIG_NODE_JSON).catch(console.error)
+              fs.writeTextFile("/project/sandbox/.codesandbox/tasks.json", DEFAULT_TASKS_JSON).catch(console.error)
+            })
+            // Auto-heal runner infrastructure files if missing
+            fs.stat("/project/sandbox/src/main.tsx").catch(() => {
+              fs.writeTextFile("/project/sandbox/src/main.tsx", DEFAULT_MAIN_TSX).catch(console.error)
+            })
+            fs.stat("/project/sandbox/src/app.tsx").catch(() => {
+              fs.writeTextFile("/project/sandbox/src/app.tsx", DEFAULT_APP_TSX).catch(console.error)
+            })
+            fs.stat("/project/sandbox/src/lib/utils.ts").catch(() => {
+              fs.mkdir("/project/sandbox/src/lib").catch(() => {})
+              fs.writeTextFile("/project/sandbox/src/lib/utils.ts", DEFAULT_UTILS_TS).catch(console.error)
+            })
+            fs.stat("/project/sandbox/src/vite-env.d.ts").catch(() => {
+              fs.writeTextFile("/project/sandbox/src/vite-env.d.ts", DEFAULT_VITE_ENV_D_TS).catch(console.error)
+            })
+            fs.stat("/project/sandbox/tsconfig.node.json").catch(() => {
+              fs.writeTextFile("/project/sandbox/tsconfig.node.json", DEFAULT_TSCONFIG_NODE_JSON).catch(console.error)
+            })
+            // Auto-heal publish and registry generation scripts
+            ensurePublishScripts(sandboxRef.current).catch(console.error)
           }
         }
       }
@@ -374,20 +414,75 @@ export const useFileSystem = ({
     }
   }
 
-  const saveFileContent = (filePath: string, value: string) => {
+  const performSave = useCallback(async () => {
+    if (!pendingSaveRef.current) {
+      setIsSaving(false)
+      return
+    }
+
+    const { filePath, value } = pendingSaveRef.current
+    pendingSaveRef.current = null
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+      debounceRef.current = null
+    }
+
+    try {
+      await sbWrapper(async (sandbox) => {
+        await sandbox.fs.writeTextFile(normalizePath(filePath), value)
+      })
+    } catch (error) {
+      console.warn("Save failed on first attempt, retrying once...", error)
+      try {
+        await new Promise((r) => setTimeout(r, 300))
+        await sbWrapper(async (sandbox) => {
+          await sandbox.fs.writeTextFile(normalizePath(filePath), value)
+        })
+      } catch (retryError) {
+        console.error("Failed to save file after retry:", retryError)
+        toast.error(`Failed to save ${filePath.split("/").pop()}`)
+      }
+    } finally {
+      if (!pendingSaveRef.current) {
+        setIsSaving(false)
+      }
+    }
+  }, [sbWrapper])
+
+  const saveFileContent = useCallback((filePath: string, value: string) => {
+    pendingSaveRef.current = { filePath, value }
+    setIsSaving(true)
+
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
     debounceRef.current = setTimeout(async () => {
-      try {
-        await sbWrapper((sandbox) =>
-          sandbox.fs.writeTextFile(normalizePath(filePath), value),
-        )
-      } catch (error) {
-        console.error("Failed to save file:", error)
-        toast.error(`Failed to save ${filePath.split("/").pop()}`)
-      }
+      await performSave()
     }, 800)
-  }
+  }, [performSave])
+
+  const flushSave = useCallback(async (): Promise<void> => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+      debounceRef.current = null
+    }
+    if (pendingSaveRef.current) {
+      await performSave()
+    }
+  }, [performSave])
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current)
+      }
+      if (pendingSaveRef.current && sandboxRef.current) {
+        const { filePath, value } = pendingSaveRef.current
+        sandboxRef.current.fs
+          .writeTextFile(normalizePath(filePath), value)
+          .catch(console.error)
+      }
+    }
+  }, [sandboxRef])
 
   const createFile = async (filePath: string) => {
     try {
@@ -492,6 +587,57 @@ export const useFileSystem = ({
     setAdvancedView((prev) => !prev)
   }
 
+  async function ensurePublishScripts(sandbox: SandboxSession) {
+    try {
+      const fs = sandbox.fs
+      try {
+        await fs.stat(normalizePath("components.json"))
+      } catch {
+        console.warn("Self-healing missing components.json...")
+        await fs
+          .writeTextFile(
+            normalizePath("components.json"),
+            DEFAULT_COMPONENTS_JSON,
+          )
+          .catch(console.error)
+      }
+      try {
+        await fs.stat(normalizePath("scripts/generate-registry.cjs"))
+      } catch {
+        console.warn("Self-healing missing registry generation scripts...")
+        await fs.mkdir(normalizePath("scripts/lib")).catch(() => {})
+        await Promise.all([
+          fs
+            .writeTextFile(
+              normalizePath("scripts/generate-registry.cjs"),
+              DEFAULT_SCRIPTS_GENERATE_REGISTRY_CJS,
+            )
+            .catch(console.error),
+          fs
+            .writeTextFile(
+              normalizePath("scripts/lib/component-utils.cjs"),
+              DEFAULT_SCRIPTS_COMPONENT_UTILS_CJS,
+            )
+            .catch(console.error),
+          fs
+            .writeTextFile(
+              normalizePath("scripts/lib/package-utils.cjs"),
+              DEFAULT_SCRIPTS_PACKAGE_UTILS_CJS,
+            )
+            .catch(console.error),
+          fs
+            .writeTextFile(
+              normalizePath("scripts/lib/registry-builder.cjs"),
+              DEFAULT_SCRIPTS_REGISTRY_BUILDER_CJS,
+            )
+            .catch(console.error),
+        ])
+      }
+    } catch (err) {
+      console.warn("Failed to ensure publish scripts in sandbox:", err)
+    }
+  }
+
   // Helper function to run a task, wait for specific output, and execute a callback
   const _runTaskAndWaitForOutput = async <T>(
     taskName: string,
@@ -563,13 +709,48 @@ export const useFileSystem = ({
         if (connectedShell) {
           clearInterval(interval)
 
+          let isDone = false
           let outputTimeout: NodeJS.Timeout | null = null
           const disposeShellAndClearTimeout = () => {
+            isDone = true
             if (outputTimeout) clearTimeout(outputTimeout)
             connectedShell?.dispose()
           }
 
+          // Listen for shell status and non-zero exit codes to fail fast
+          connectedShell.onShellUpdated?.(() => {
+            if (isDone) return
+            if (
+              connectedShell.exitCode !== undefined &&
+              connectedShell.exitCode !== 0
+            ) {
+              console.error(
+                `${taskName} shell exited with error code ${connectedShell.exitCode}`,
+              )
+              disposeShellAndClearTimeout()
+              reject(
+                new Error(
+                  `${taskName} failed with exit code ${connectedShell.exitCode}`,
+                ),
+              )
+            } else if (
+              connectedShell.status === "ERROR" ||
+              connectedShell.status === "KILLED"
+            ) {
+              console.error(
+                `${taskName} shell ended with status ${connectedShell.status}`,
+              )
+              disposeShellAndClearTimeout()
+              reject(
+                new Error(
+                  `${taskName} shell ended with status ${connectedShell.status}`,
+                ),
+              )
+            }
+          })
+
           connectedShell.onOutput(async (data) => {
+            if (isDone) return
             console.log(`${taskName} Output:`, data)
             // Iterate through the completion map keys and values to find a match
             for (const [completionString, completionCallback] of Object.entries(
@@ -581,7 +762,7 @@ export const useFileSystem = ({
                   completionString,
                 )
               ) {
-                // listening for finsih word and not echo (to prevent return from first stateng)
+                // listening for finish word and not echo (to prevent return from first statement)
                 //  eg: npm run build && echo "FINISH"
                 if (data.includes(completionString) && !data.includes("echo")) {
                   console.log(
@@ -600,21 +781,38 @@ export const useFileSystem = ({
                       `Callback for '${completionString}' finished successfully.`,
                     )
                     // Resolve with the result if the callback returned one
-                    // Dispose and clear timeout before resolving
                     disposeShellAndClearTimeout()
-                    resolve(result as T | undefined) // Cast needed as void callbacks don't return T
+                    resolve(result as T | undefined)
                     return // Stop processing further output and callbacks for this task
                   } catch (error) {
                     console.error(
                       `Error during callback for '${completionString}':`,
                       error,
                     )
-                    // Dispose and clear timeout before rejecting
                     disposeShellAndClearTimeout()
                     reject(error)
                     return // Stop processing further output
                   }
                 }
+              }
+            }
+
+            // Fast-fail on known fatal errors if not handled in completionMap
+            const fatalPatterns = [
+              "Cannot find module",
+              "command not found",
+              "ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL",
+              "ELIFECYCLE",
+            ]
+            for (const pattern of fatalPatterns) {
+              if (data.includes(pattern) && !completionMap[pattern]) {
+                console.error(
+                  `${taskName} encountered fatal error pattern '${pattern}':`,
+                  data,
+                )
+                disposeShellAndClearTimeout()
+                reject(new Error(`${taskName} failed: ${data.trim()}`))
+                return
               }
             }
           })
@@ -631,7 +829,7 @@ export const useFileSystem = ({
             reject(
               new Error(`${taskName}: Timeout waiting for specified output`),
             )
-          }, 300000) // Increased timeout to 300 seconds
+          }, 60000) // 60-second timeout instead of 300 seconds
 
           // Wrap resolve/reject to clear timeout
           const originalResolve = resolve
@@ -766,6 +964,10 @@ export const useFileSystem = ({
       }
     | undefined
   > => {
+    if (sandboxRef.current) {
+      await ensurePublishScripts(sandboxRef.current)
+    }
+
     return _runTaskAndWaitForOutput<
       | {
           componentRegistryJSON: string
@@ -786,6 +988,12 @@ export const useFileSystem = ({
       },
       "error during generate:registry": (shell, sandbox) => {
         throw new Error("Failed to generate registry")
+      },
+      "Error generating registry": (shell, sandbox) => {
+        throw new Error("Failed to generate registry: script error")
+      },
+      "Command failed": (shell, sandbox) => {
+        throw new Error("Failed to generate registry: command failed")
       },
     })
   }
@@ -1068,6 +1276,8 @@ export const useFileSystem = ({
     files,
     isTreeLoading,
     isFileLoading,
+    isSaving,
+    flushSave,
     advancedView,
     toggleAdvancedView,
     loadRootDirectory,

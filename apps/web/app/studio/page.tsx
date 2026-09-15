@@ -162,33 +162,35 @@ export default function StudioPage() {
   // Resolve username: Clerk first, then fall back to the Supabase `users` table
   // via /api/user/me (email/Google signups often have no Clerk username but do
   // have a DB username). Studio access itself validates against the DB, so the
-  // enable state must match that source, not Clerk alone.
+  // Resolve username: query /api/user/me first to get the authoritative Supabase
+  // username (and trigger JIT sync if needed), falling back to Clerk username.
   useEffect(() => {
     if (!isLoaded || !user) return
 
     const searchString = typeof window !== "undefined" ? window.location.search : ""
-    const usernameFromClerk = user.username ?? ""
-
-    if (usernameFromClerk) {
-      setUsername(usernameFromClerk)
-      const targetUrl = `/studio/${usernameFromClerk}/components${searchString}`
-      setStudioUrl(targetUrl)
-      studioHardNavigate(targetUrl, { replace: true })
-      return
-    }
 
     let cancelled = false
     fetch("/api/user/me")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (cancelled || !data?.username) return
-        setUsername(data.username)
-        const targetUrl = `/studio/${data.username}/components${searchString}`
-        setStudioUrl(targetUrl)
-        studioHardNavigate(targetUrl, { replace: true })
+        if (cancelled) return
+        const resolvedUsername = data?.username || user.username || ""
+        if (resolvedUsername) {
+          setUsername(resolvedUsername)
+          const targetUrl = `/studio/${resolvedUsername}/components${searchString}`
+          setStudioUrl(targetUrl)
+          studioHardNavigate(targetUrl, { replace: true })
+        }
       })
       .catch(() => {
-        // fail-soft: leave the "set username" fallback button in place
+        if (cancelled) return
+        const usernameFromClerk = user.username ?? ""
+        if (usernameFromClerk) {
+          setUsername(usernameFromClerk)
+          const targetUrl = `/studio/${usernameFromClerk}/components${searchString}`
+          setStudioUrl(targetUrl)
+          studioHardNavigate(targetUrl, { replace: true })
+        }
       })
 
     return () => {

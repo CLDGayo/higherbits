@@ -1,5 +1,6 @@
 import "server-only"
 import prisma from "../../prisma"
+import { checkIsAdmin } from "../../admin"
 import { getPurchasesWithBundles, isComponentPaid } from "./bundle_purchases"
 
 export const hasUserComponentAccess = async (
@@ -13,6 +14,20 @@ export const hasUserComponentAccess = async (
 
   if (!userId) {
     return false
+  }
+
+  // Author of the component always has full access
+  const component = await prisma.components?.findUnique({
+    where: { id: componentId },
+    select: { user_id: true },
+  })
+  if (component?.user_id === userId) {
+    return true
+  }
+
+  const { isAdmin } = await checkIsAdmin(userId)
+  if (isAdmin) {
+    return true
   }
 
   const userPlan = await prisma.users_to_plans.findUnique({ where: { user_id: userId } })

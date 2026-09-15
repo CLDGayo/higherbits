@@ -39,6 +39,7 @@ interface FileTreeProps {
   onCreateDirectory: (dirPath: string) => void
   onRename?: (oldPath: string, newName: string) => Promise<string>
   onNewDemo?: () => void
+  sandboxUnavailable?: boolean
 }
 
 // Reusable input form for file/directory creation and renaming
@@ -699,6 +700,7 @@ export function FileTree({
   onCreateDirectory,
   onRename,
   onNewDemo,
+  sandboxUnavailable = false,
 }: FileTreeProps) {
   const [expandedDirs, setExpandedDirs] = useState<Record<string, boolean>>({})
 
@@ -748,8 +750,10 @@ export function FileTree({
   return (
     <div className="select-none">
       {entries.length === 0 && !isLoading ? (
-        <div className="px-2 text-muted-foreground py-4 text-sm">
-          No files found
+        <div className="px-3 text-muted-foreground py-4 text-xs">
+          {sandboxUnavailable
+            ? "Sandbox connection failed. Files unavailable."
+            : "No files found"}
         </div>
       ) : (
         <FileList

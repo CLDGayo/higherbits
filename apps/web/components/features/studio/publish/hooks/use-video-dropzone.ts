@@ -34,9 +34,11 @@ async function convertVideoToMP4(file: File): Promise<File> {
 export function useVideoDropzone({
   form,
   demoIndex,
+  onVideoUploaded,
 }: {
   form: UseFormReturn<FormData>
   demoIndex: number
+  onVideoUploaded?: (videoUrl: string) => void
 }) {
   const [isProcessingVideo, setIsProcessingVideo] = useState(false)
   const previewVideoDataUrl = form.watch(
@@ -58,22 +60,47 @@ export function useVideoDropzone({
         previewUrl,
       })
 
-      form.setValue(`demos.${demoIndex}.preview_video_data_url`, previewUrl)
-      form.setValue(`demos.${demoIndex}.preview_video_file`, file)
-
-      const processedFile = await convertVideoToMP4(file)
-      console.log("🎥 After processing video:", {
-        processedFile,
-        size: processedFile.size,
-        type: processedFile.type,
+      form.setValue(`demos.${demoIndex}.preview_video_data_url`, previewUrl, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+      form.setValue(`demos.${demoIndex}.preview_video_file`, file, {
+        shouldDirty: true,
+        shouldValidate: true,
       })
 
-      form.setValue(`demos.${demoIndex}.preview_video_file`, processedFile)
+      if (file.type === "video/mp4") {
+        console.log("🎥 Video is already MP4, skipping conversion")
+      } else {
+        try {
+          const processedFile = await convertVideoToMP4(file)
+          console.log("🎥 After processing video:", {
+            processedFile,
+            size: processedFile.size,
+            type: processedFile.type,
+          })
+
+          form.setValue(`demos.${demoIndex}.preview_video_file`, processedFile, {
+            shouldDirty: true,
+            shouldValidate: true,
+          })
+        } catch (convertErr) {
+          console.warn("Video conversion service unavailable, keeping original video file:", convertErr)
+        }
+      }
+
+      onVideoUploaded?.(previewUrl)
     } catch (error) {
       console.error("Error processing video:", error)
       alert("Error processing video. Please try again.")
-      form.setValue(`demos.${demoIndex}.preview_video_data_url`, undefined)
-      form.setValue(`demos.${demoIndex}.preview_video_file`, undefined)
+      form.setValue(`demos.${demoIndex}.preview_video_data_url`, undefined, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+      form.setValue(`demos.${demoIndex}.preview_video_file`, undefined, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
     } finally {
       setIsProcessingVideo(false)
     }
@@ -84,8 +111,14 @@ export function useVideoDropzone({
     if (videoUrl) {
       URL.revokeObjectURL(videoUrl)
     }
-    form.setValue(`demos.${demoIndex}.preview_video_data_url`, undefined)
-    form.setValue(`demos.${demoIndex}.preview_video_file`, undefined)
+    form.setValue(`demos.${demoIndex}.preview_video_data_url`, undefined, {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+    form.setValue(`demos.${demoIndex}.preview_video_file`, undefined, {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
   }
 
   const {

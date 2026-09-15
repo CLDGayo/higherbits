@@ -22,6 +22,27 @@ const MAX_RECONNECT_ATTEMPTS = 5
 // shell registered is the "dev server is definitely not running" signal.
 const DEV_SHELL_POLL_INTERVAL_MS = 1000 * 5
 
+// Credit-burn guard. The 5s checkShells() poll is itself CodeSandbox "activity",
+// so an unattended tab resets the VM's hibernation clock forever and keeps
+// billing. After this long with no real interaction (pointerdown / keydown /
+// becoming visible), the poll tick no-ops.
+//
+// There is deliberately NO resume() function to go looking for: the next real
+// interaction updates lastInteractionRef and the very next 5s tick resumes
+// polling on its own.
+const IDLE_POLL_CUTOFF_MS = 1000 * 60 * 5
+
+// How often a genuinely active tab tells the server it is still alive, via
+// POST /api/sandbox/touch. This is what makes sandboxes.updated_at a real
+// last-ACTIVITY signal rather than a last-CONNECT signal, so the server-side
+// reaper can tell an abandoned VM from one in use. 5 min sits 6x inside the
+// reaper's 30-minute grace window, so a single dropped touch is still safe.
+//
+// Load-bearing: this fires ONLY on ticks that are not visibility/idle-skipped.
+// Firing it unconditionally would make an abandoned background tab look active
+// forever and silently defeat the reaper.
+const ACTIVITY_TOUCH_INTERVAL_MS = 1000 * 60 * 5
+
 export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const sandboxRef = useRef<SandboxSession | null>(null)
   const [sandboxConnectionHash, setSandboxConnectionHash] = useState<
@@ -37,11 +58,16 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     latestVersion: string
   } | null>(null)
   const [sandboxUnavailable, setSandboxUnavailable] = useState(false)
+  const [sandboxError, setSandboxError] = useState<string | null>(null)
   const [isRestartingDevServer, setIsRestartingDevServer] = useState(false)
   const shellCheckFailuresRef = useRef(0)
   const reconnectAttemptsRef = useRef(0)
   const previewTokenRef = useRef<string | null>(null)
   const isStartingDevServerRef = useRef(false)
+  // Mount counts as an interaction — the user just navigated here.
+  const lastInteractionRef = useRef(Date.now())
+  // 0 = never written, so the first non-skipped tick always sends one touch.
+  const lastTouchWriteRef = useRef(0)
 
   const initialize = async (
     isReconnecting = false,
@@ -85,6 +111,11 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       console.log("connectedSandbox", connectedSandbox)
 
       sandboxRef.current = connectedSandbox
+      try {
+        connectedSandbox.keepActiveWhileConnected?.(true)
+      } catch (err) {
+        console.warn("Failed to set keepActiveWhileConnected:", err)
+      }
 
       const hash = Math.random().toString(36).substring(2, 15)
       setSandboxConnectionHash(hash)
@@ -125,6 +156,32 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         }
       }
 
+      // If the sandbox provides task management and the 'dev' task is present but not running,
+      // trigger it proactively once setup completes.
+      if (connectedSandbox.tasks?.getTasks) {
+        try {
+          const tasks = await connectedSandbox.tasks.getTasks()
+          const devTask = tasks?.find(
+            (t) =>
+              t.id === "dev" ||
+              t.name === "dev" ||
+              t.command.includes("install-and-dev"),
+          )
+          if (devTask && !devTask.shellId) {
+            const progress = await connectedSandbox.setup?.getProgress?.().catch(() => null)
+            if (!progress || progress.state === "FINISHED") {
+              connectedSandbox.tasks
+                .runTask(devTask.id)
+                ?.catch?.((err: unknown) => {
+                  console.warn("Proactive dev task start failed:", err)
+                })
+            }
+          }
+        } catch (err) {
+          console.warn("Proactive dev task check skipped:", err)
+        }
+      }
+
       // prevents a late-resolving port-wait from double-triggering
       // restartDevServer() after the poll-triggered path already started it
       let restartTriggered = false
@@ -147,8 +204,29 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       const pollBailoutPromise = new Promise<void>((resolve) => {
         bailoutTimer = setTimeout(() => {
           if (hasDevShell()) return
-          bailoutTimer = setTimeout(() => {
+          bailoutTimer = setTimeout(async () => {
             if (hasDevShell()) return
+            // If the VM is still running its initial setup tasks (e.g. pnpm install),
+            // wait for setup to finish before concluding that no dev server is starting.
+            if (connectedSandbox.setup?.getProgress) {
+              try {
+                const progress = await connectedSandbox.setup.getProgress()
+                if (progress?.state === "IN_PROGRESS") {
+                  console.log(
+                    "VM setup is in progress; awaiting completion before dev shell bailout...",
+                  )
+                  await connectedSandbox.setup.waitForFinish()
+                  if (hasDevShell()) return
+                  bailoutTimer = setTimeout(() => {
+                    if (hasDevShell()) return
+                    resolve()
+                  }, DEV_SHELL_POLL_INTERVAL_MS)
+                  return
+                }
+              } catch (err) {
+                console.warn("Error awaiting setup finish in poll bailout:", err)
+              }
+            }
             resolve()
           }, DEV_SHELL_POLL_INTERVAL_MS)
         }, DEV_SHELL_POLL_INTERVAL_MS)
@@ -217,11 +295,15 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     } catch (error) {
       console.error("Failed to initialize sandbox in hook:", error)
       if (isCancelled()) return
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to connect to sandbox"
       sandboxRef.current = null
       setSandboxConnectionHash(null)
       setPreviewURL(null)
+      setSandboxUnavailable(true)
+      setSandboxError(errorMessage)
     } finally {
-      if (!isReconnecting && !isCancelled()) {
+      if (!isReconnecting) {
         setIsSandboxLoading(false)
       }
     }
@@ -289,10 +371,9 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
   // Subscribe to shells to read output & remount iframe when new shell is created
   useEffect(() => {
-    const interval = setInterval(async () => {
-      // Parked after too many consecutive failures — stop hitting a dead VM
-      // (the source of the postMessage/WebSocket storm). A manual retry resets
-      // the counter and resumes polling.
+    // One guarded checkShells() run, sharing the failure accounting with the
+    // ambient poll so an out-of-band (tab-focus) run cannot bypass the park.
+    const runCheckShells = async () => {
       if (shellCheckFailuresRef.current >= MAX_SHELL_CHECK_FAILURES) {
         return
       }
@@ -309,17 +390,107 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
           setSandboxUnavailable(true)
         }
       }
-    }, 1000 * 5)
+    }
 
-    return () => clearInterval(interval)
+    const markInteraction = () => {
+      lastInteractionRef.current = Date.now()
+    }
+
+    // Deliberately NOT mousemove — passive cursor drift over the tab would
+    // reset the idle clock and re-open the exact credit burn this closes.
+    document.addEventListener("pointerdown", markInteraction)
+    document.addEventListener("keydown", markInteraction)
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") return
+      // Becoming visible counts as interaction, and we restore the pre-existing
+      // "shells reconnect promptly on focus" behaviour that a plain skip would
+      // otherwise delay by up to one 5s tick.
+      markInteraction()
+      void runCheckShells()
+    }
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+
+    const interval = setInterval(async () => {
+      // Parked after too many consecutive failures — stop hitting a dead VM
+      // (the source of the postMessage/WebSocket storm). A manual retry resets
+      // the counter and resumes polling.
+      if (shellCheckFailuresRef.current >= MAX_SHELL_CHECK_FAILURES) {
+        return
+      }
+
+      // Credit-burn gate. Skip the BODY, never clear the interval, so resume is
+      // instant with nothing to re-register. Skipping here — before the
+      // try/catch — also means an idle tick never counts toward
+      // MAX_SHELL_CHECK_FAILURES: an idle skip is not a checkShells() failure.
+      if (document.visibilityState === "hidden") {
+        return
+      }
+      if (Date.now() - lastInteractionRef.current > IDLE_POLL_CUTOFF_MS) {
+        return
+      }
+
+      // Reached only on a visible, non-idle tick — i.e. a real user is present.
+      // Fire-and-forget: a failed touch is not fatal, the next tick retries.
+      const now = Date.now()
+      if (now - lastTouchWriteRef.current >= ACTIVITY_TOUCH_INTERVAL_MS) {
+        lastTouchWriteRef.current = now
+        void fetch("/api/sandbox/touch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ shortSandboxId: sandboxId }),
+        }).catch(() => {})
+      }
+
+      await runCheckShells()
+    }, DEV_SHELL_POLL_INTERVAL_MS)
+
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener("pointerdown", markInteraction)
+      document.removeEventListener("keydown", markInteraction)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+    }
   }, [])
 
   useEffect(() => {
     console.log("INITIALIZING sandbox", sandboxId)
     let cancelled = false
     initialize(false, () => cancelled)
+
+    // Explicit hibernate-on-leave. CodeSandbox otherwise keeps billing the VM
+    // until its own inactivity timeout elapses; telling it to hibernate the
+    // moment the user leaves is the difference between seconds and minutes of
+    // idle billing per visit. Hibernate is pause-not-destroy — the VM
+    // filesystem survives and connect/route.ts's sandbox.start() resumes it.
+    let hibernateRequested = false
+    const requestHibernate = (transport: "beacon" | "fetch") => {
+      // Both triggers can fire for one departure (pagehide then unmount).
+      // Hibernating twice is harmless but pointless — send exactly one.
+      if (hibernateRequested) return
+      hibernateRequested = true
+      const body = JSON.stringify({ shortSandboxId: sandboxId })
+      if (transport === "beacon") {
+        // A real tab close does not reliably let even keepalive:true finish.
+        navigator.sendBeacon?.("/api/sandbox/hibernate", body)
+        return
+      }
+      void fetch("/api/sandbox/hibernate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // Survives a same-tab navigation that would otherwise cancel it.
+        keepalive: true,
+        body,
+      }).catch(() => {})
+    }
+
+    const handlePageHide = () => requestHibernate("beacon")
+    window.addEventListener("pagehide", handlePageHide)
+
     return () => {
       cancelled = true
+      window.removeEventListener("pagehide", handlePageHide)
+      requestHibernate("fetch")
     }
   }, [])
 
@@ -375,6 +546,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     reconnectAttemptsRef.current = 0
     shellCheckFailuresRef.current = 0
     setSandboxUnavailable(false)
+    setSandboxError(null)
     await initialize(true)
   }
 
@@ -468,6 +640,27 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
           restartBailoutTimer = setTimeout(async () => {
             await checkShells().catch(() => {})
             if (hasDevShell()) return
+            if (sandbox.setup?.getProgress) {
+              try {
+                const progress = await sandbox.setup.getProgress()
+                if (progress?.state === "IN_PROGRESS") {
+                  console.log(
+                    "VM setup is in progress during restart; awaiting completion before bailout...",
+                  )
+                  await sandbox.setup.waitForFinish()
+                  await checkShells().catch(() => {})
+                  if (hasDevShell()) return
+                  restartBailoutTimer = setTimeout(async () => {
+                    await checkShells().catch(() => {})
+                    if (hasDevShell()) return
+                    resolve()
+                  }, DEV_SHELL_POLL_INTERVAL_MS)
+                  return
+                }
+              } catch (err) {
+                console.warn("Error awaiting setup finish in restart bailout:", err)
+              }
+            }
             resolve()
           }, DEV_SHELL_POLL_INTERVAL_MS)
         }, DEV_SHELL_POLL_INTERVAL_MS)
@@ -551,6 +744,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     restartDevServer,
     isRestartingDevServer,
     sandboxUnavailable,
+    sandboxError,
     // dependencies
     missingDependencyInfo,
     clearMissingDependencyInfo,

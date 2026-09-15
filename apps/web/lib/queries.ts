@@ -1200,38 +1200,20 @@ export function getTagDemosCount(tagSlug: string): number {
 
 // Hook to fetch real dynamic category tag counts from database
 export function useCategoryTagCounts() {
-  const supabase = useClerkSupabaseClient()
-
   return useQuery({
     queryKey: ["category-tag-counts"] as const,
     queryFn: async () => {
-      const counts: Record<string, number> = {}
-
       try {
-        const [{ data: demoTagsData }, { data: componentTagsData }] =
-          await Promise.all([
-            supabase.from("demo_tags").select("tags!inner(slug)"),
-            supabase.from("component_tags").select("tags!inner(slug)"),
-          ])
-
-        demoTagsData?.forEach((row: any) => {
-          const slug = row.tags?.slug
-          if (slug) {
-            counts[slug] = (counts[slug] || 0) + 1
-          }
-        })
-
-        componentTagsData?.forEach((row: any) => {
-          const slug = row.tags?.slug
-          if (slug) {
-            counts[slug] = (counts[slug] || 0) + 1
-          }
-        })
+        const res = await fetch("/api/tags/counts")
+        if (!res.ok) {
+          throw new Error(`Failed to fetch tag counts: ${res.statusText}`)
+        }
+        const data = await res.json()
+        return (data.counts || {}) as Record<string, number>
       } catch (error) {
         console.error("Error fetching category tag counts:", error)
+        return {} as Record<string, number>
       }
-
-      return counts
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 30, // 30 minutes

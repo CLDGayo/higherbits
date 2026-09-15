@@ -383,11 +383,11 @@ function filterComponentsBySearch(
 
   return components.filter((component) => {
     if (component.name?.toLowerCase().includes(query)) return true
-    if (component.component.name?.toLowerCase().includes(query)) return true
-    if (component.user.name?.toLowerCase().includes(query)) return true
-    if (component.component.description?.toLowerCase().includes(query))
+    if (component.component?.name?.toLowerCase().includes(query)) return true
+    if (component.user?.name?.toLowerCase().includes(query)) return true
+    if (component.component?.description?.toLowerCase().includes(query))
       return true
-    if (component.tags?.some((tag) => tag.name.toLowerCase().includes(query)))
+    if (component.tags?.some((tag) => tag.name?.toLowerCase().includes(query)))
       return true
     return false
   })

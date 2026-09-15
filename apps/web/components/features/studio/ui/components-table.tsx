@@ -120,6 +120,23 @@ interface DemosTableProps {
   actions?: React.ReactNode
 }
 
+const prefetchedDemoUrls = new Set<string>()
+
+const prefetchDemoBundle = (demo?: ExtendedDemoWithComponent | null) => {
+  if (!demo || typeof window === "undefined") return
+  const url =
+    demo.bundle_html_url ||
+    demo.bundle_url?.html ||
+    demo.component?.bundle_html_url
+  if (!url || prefetchedDemoUrls.has(url)) return
+  prefetchedDemoUrls.add(url)
+  const link = document.createElement("link")
+  link.rel = "prefetch"
+  link.as = "document"
+  link.href = url
+  document.head.appendChild(link)
+}
+
 // Format text with clickable links
 const formatTextWithLinks = (text: string) => {
   if (!text) return null
@@ -849,6 +866,7 @@ export function DemosTable({
                     key={row.id}
                     className="group cursor-pointer hover:bg-muted/50"
                     onClick={() => openRow(row.original)}
+                    onMouseEnter={() => prefetchDemoBundle(row.original)}
                   >
                     {row.getVisibleCells().map((cell, index) => {
                       const isLastColumn =
@@ -898,6 +916,7 @@ export function DemosTable({
                 tabIndex={0}
                 className="group cursor-pointer overflow-hidden rounded-lg border border-border bg-background transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => openRow(demo)}
+                onMouseEnter={() => prefetchDemoBundle(demo)}
                 onKeyDown={(e) => {
                   if (e.target !== e.currentTarget) return
                   if (e.key === "Enter" || e.key === " ") {

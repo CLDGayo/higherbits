@@ -4,6 +4,7 @@ import { hasUserComponentAccess } from "@/lib/api/server/components"
 import { auth } from "@clerk/nextjs/server"
 import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
 import { notFound } from "next/navigation"
+import { RESERVED_TOP_LEVEL_SLUGS } from "@/lib/constants"
 
 export default async function InterceptedDemoComponentPage(props: {
   params: Promise<{
@@ -13,6 +14,10 @@ export default async function InterceptedDemoComponentPage(props: {
   }>
 }) {
   const params = await props.params
+
+  if (RESERVED_TOP_LEVEL_SLUGS.has(params.username)) {
+    return null
+  }
   
   let userId: string | null = null
   try {

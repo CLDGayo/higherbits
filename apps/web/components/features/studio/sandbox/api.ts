@@ -6,6 +6,8 @@ export const connectToSandbox = async (
   previewToken?: string | null
 } | null> => {
   let retries = 3
+  let lastError: unknown = null
+
   while (retries > 0) {
     try {
       const res = await fetch(`/api/sandbox/connect`, {
@@ -16,18 +18,68 @@ export const connectToSandbox = async (
         body: JSON.stringify({ shortSandboxId }),
       })
 
-      if (!res.ok) throw new Error(await res.text())
+      if (!res.ok) {
+        let errorMsg = `Server error ${res.status}`
+        let isNonRetryable =
+          res.status === 400 ||
+          res.status === 401 ||
+          res.status === 402 ||
+          res.status === 403 ||
+          res.status === 404
+
+        try {
+          const body = await res.json()
+          if (body?.error) errorMsg = body.error
+          if (body?.code === "WORKSPACE_FROZEN") {
+            isNonRetryable = true
+          }
+        } catch {
+          // not JSON
+        }
+
+        const err = new Error(errorMsg)
+        if (isNonRetryable) {
+          console.error(
+            `Non-retryable sandbox connection error (${res.status}):`,
+            errorMsg,
+          )
+          throw err
+        }
+        throw err
+      }
+
       return await res.json()
-    } catch (error) {
+    } catch (error: any) {
+      lastError = error
+      const isFrozen =
+        error?.message?.includes?.("frozen") ||
+        error?.message?.includes?.("spending limit")
+      const isNonRetryable =
+        isFrozen ||
+        error?.message?.includes?.("400") ||
+        error?.message?.includes?.("401") ||
+        error?.message?.includes?.("402") ||
+        error?.message?.includes?.("403") ||
+        error?.message?.includes?.("404")
+
+      if (isNonRetryable) {
+        throw error
+      }
+
+      retries--
+      if (retries === 0) {
+        console.error("Failed to load existing sandbox (no retries left):", error)
+        throw error
+      }
       console.error(
         `Failed to load existing sandbox (${retries} retries left):`,
         error,
       )
-      retries--
-      if (retries === 0) return null
       await new Promise((resolve) => setTimeout(resolve, 1000))
     }
   }
+
+  if (lastError) throw lastError
   return null
 }
 

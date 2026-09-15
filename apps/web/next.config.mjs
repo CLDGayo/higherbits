@@ -39,6 +39,8 @@ const nextConfig = {
       // that error overlay rather than the page. Added per the note above:
       // name the legitimate host, do not widen to "**".
       { protocol: "https", hostname: "api.microlink.io" },
+      { protocol: "https", hostname: "ui.shadcn.com" },
+      { protocol: "https", hostname: "**.shadcn.com" },
     ],
   },
   reactStrictMode: true,

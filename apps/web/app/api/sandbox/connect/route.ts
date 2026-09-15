@@ -5,6 +5,7 @@ import { checkIsAdmin } from "@/lib/admin"
 import {
   codesandboxSdk,
   DEFAULT_HIBERNATION_TIMEOUT,
+  DEFAULT_VM_TIER,
 } from "@/lib/codesandbox-sdk"
 import ShortUUID from "short-uuid"
 
@@ -81,6 +82,13 @@ export async function POST(request: NextRequest) {
       sandbox.codesandbox_id,
       {
         hibernationTimeoutSeconds: DEFAULT_HIBERNATION_TIMEOUT,
+        // Smallest tier by default, overridable per-host via CSB_VM_TIER.
+        vmTier: DEFAULT_VM_TIER,
+        // Keep the resumed VM's wakeup config matching what create() set, so a
+        // resumed VM cannot be silently re-woken by a stray HTTP touch after it
+        // hibernates. This route IS the app's deliberate wake path — it runs on
+        // every studio mount/reconnect, so nothing depends on automatic wakeup.
+        automaticWakeupConfig: { http: false, websocket: false },
       },
     )
 
@@ -93,24 +101,15 @@ export async function POST(request: NextRequest) {
       timing_ms: Date.now() - startedAt,
     })
 
-    // Private sandboxes gate their preview URL behind a "do you trust this URL"
-    // interstitial, which leaves the studio preview iframe blank. Mint a preview
-    // token so the browser can build a signed URL that skips the gate.
-    // Best-effort: public sandboxes work without it, so a token failure must not
-    // break the connect flow.
     let previewToken: string | null = null
     try {
       const token = await codesandboxSdk.sandbox.previewTokens.create(
         sandbox.codesandbox_id,
-        // Bound the token lifetime. The token rides in the preview URL, so a
-        // leaked signed URL must not grant preview access indefinitely. A fresh
-        // token is minted on every connect, so 12h comfortably covers any single
-        // editing session while capping the blast radius of a leak.
         new Date(Date.now() + 12 * 60 * 60 * 1000),
       )
       previewToken = token.token
-    } catch (tokenError) {
-      console.warn("Failed to mint preview token:", tokenError)
+    } catch {
+      // preview token creation is optional/best-effort
     }
 
     return NextResponse.json({ success: true, startData, sandbox, previewToken })
@@ -124,6 +123,35 @@ export async function POST(request: NextRequest) {
       timing_ms: Date.now() - startedAt,
     })
     console.error("Error connecting to sandbox:", error)
+
+    const errorMessage =
+      error instanceof Error ? error.message : typeof error === "string" ? error : ""
+    const isFrozen =
+      /workspace.*frozen|spending limit|frozen/i.test(errorMessage)
+    const isRateLimited =
+      /rate limit|too many requests/i.test(errorMessage)
+
+    if (isFrozen) {
+      return NextResponse.json(
+        {
+          error:
+            "Your CodeSandbox workspace has been frozen. Please upgrade or increase your spending limit on CodeSandbox to continue.",
+          code: "WORKSPACE_FROZEN",
+        },
+        { status: 402 },
+      )
+    }
+
+    if (isRateLimited) {
+      return NextResponse.json(
+        {
+          error: "CodeSandbox rate limit reached. Please try again shortly.",
+          code: "RATE_LIMITED",
+        },
+        { status: 429 },
+      )
+    }
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

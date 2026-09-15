@@ -9,6 +9,8 @@ import { memo } from "react"
 import { atomWithStorage } from "jotai/utils"
 import { sidebarOpenAtom } from "../main-page/main-layout"
 import { Logo } from "@/components/ui/logo"
+import { useUser } from "@clerk/nextjs"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
 
 export const magicBannerVisibleAtom = atomWithStorage(
   "magic-banner-visible",
@@ -86,5 +88,13 @@ const MagicBannerContent = memo(function MagicBannerContent() {
 })
 
 export function MagicBanner() {
+  const { user: clerkUser } = useUser()
+  const { isAdmin: isHookAdmin } = useIsAdmin()
+  const isAdmin = Boolean(clerkUser && isHookAdmin)
+
+  if (!isAdmin) {
+    return null
+  }
+
   return <MagicBannerContent />
 }

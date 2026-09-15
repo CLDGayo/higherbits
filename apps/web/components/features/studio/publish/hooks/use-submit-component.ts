@@ -454,6 +454,7 @@ export const useSubmitComponent = () => {
     )
     const hasIndexCss = typeof indexCssContent === "string"
 
+    console.log("[use-submit-component] Starting R2 uploads...")
     const [
       codeUrl,
       demoCodeUrl,
@@ -489,7 +490,7 @@ export const useSubmitComponent = () => {
               name: "preview.png",
               type: demo.preview_image_file.type,
               encodedContent: demo.preview_image_data_url.replace(
-                /^data:image\/(png|jpeg|jpg);base64,/,
+                /^data:[^;]+;base64,/,
                 "",
               ),
             },
@@ -512,7 +513,7 @@ export const useSubmitComponent = () => {
         file: {
           name: "bundle.html",
           type: "text/html",
-          textContent: state.contentOfHtml!,
+          textContent: state.contentOfHtml || "",
         },
         fileKey: `${baseFolder}/${demo.demo_slug}/bundle.${Date.now()}.html`,
         bucketName: "components-code",
@@ -541,6 +542,13 @@ export const useSubmitComponent = () => {
           })
         : Promise.resolve(null),
     ])
+
+    console.log("[use-submit-component] R2 uploads complete:", {
+      codeUrl,
+      demoCodeUrl,
+      bundleHtmlUrl,
+      registryJsonUrl,
+    })
 
     return {
       ...state,
