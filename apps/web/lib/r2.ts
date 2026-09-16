@@ -10,6 +10,7 @@ import { auth } from "@clerk/nextjs/server"
 import path from "path"
 import dotenv from "dotenv"
 import { processUploadBuffer } from "./upload-security"
+import { assertOwnsR2Path } from "./r2-ownership"
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env") })
 
@@ -90,7 +91,8 @@ export const deleteR2Prefix = async ({
   prefix: string
   bucketName: string
 }): Promise<number> => {
-  await requireUser()
+  const userId = await requireUser()
+  await assertOwnsR2Path(userId, prefix, bucketName)
 
   if (!prefix || !prefix.endsWith("/") || prefix.startsWith("/")) {
     throw new Error(
@@ -162,7 +164,8 @@ export const uploadToR2 = async ({
   contentType?: string
 }): Promise<string> => {
   console.log(`[R2] uploadToR2 starting for fileKey="${fileKey}", bucket="${bucketName}"`)
-  await requireUser()
+  const userId = await requireUser()
+  await assertOwnsR2Path(userId, fileKey, bucketName)
 
   try {
     if (!file.textContent && !file.encodedContent) {
@@ -210,7 +213,8 @@ export const generatePresignedUrl = async ({
   contentType?: string
   expiresIn?: number
 }): Promise<string> => {
-  await requireUser()
+  const userId = await requireUser()
+  await assertOwnsR2Path(userId, fileKey, bucketName)
 
   try {
     const command = new PutObjectCommand({
