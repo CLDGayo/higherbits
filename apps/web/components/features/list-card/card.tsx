@@ -107,13 +107,18 @@ export const ComponentCard = React.memo(function ComponentCard({
   const user = currentUser
   const supabase = supabaseClient
   const userData = "component" in demo ? demo.component?.user : demo.user
-  const username = userData?.username || userData?.display_username
+  const username =
+    userData?.username ||
+    userData?.display_username ||
+    (userData as any)?.name ||
+    (userData as any)?.display_name ||
+    "user"
   const isDemo = "demo_slug" in demo
-  const componentSlug = isDemo
-    ? demo.component?.component_slug
-    : demo.component_slug
+  const componentSlug =
+    (isDemo ? demo.component?.component_slug : demo.component_slug) ||
+    "component-slug"
 
-  if (!userData || !username || !componentSlug) {
+  if (!userData) {
     console.warn("Missing required data:", {
       userData,
       username,

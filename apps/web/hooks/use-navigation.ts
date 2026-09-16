@@ -6,9 +6,9 @@ import {
   MainTabType,
   currentSectionAtom,
   selectedMainTabAtom,
+  sortByAtom,
   getMainPageUrlWithTab,
 } from "@/lib/atoms"
-import { sortByAtom } from "@/components/features/main-page/main-page-header"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import type { SortOption } from "@/types/global"
 import { setCookie } from "@/lib/cookies"

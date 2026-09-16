@@ -29,16 +29,18 @@ export async function GET() {
   try {
     let { data, error } = await supabaseAdmin
       .from("users")
-      .select("username, display_username")
+      .select("username, display_username, image_url, display_image_url")
       .eq("id", userId)
       .maybeSingle()
 
-    if (!data) {
+    if (!data || (!data.display_image_url && !data.image_url)) {
       const synced = await syncClerkUserToSupabase(userId)
       if (synced) {
         data = {
           username: synced.username,
           display_username: synced.display_username,
+          image_url: synced.image_url,
+          display_image_url: synced.display_image_url,
         }
       }
     }

@@ -1,4 +1,5 @@
 import { atom } from "jotai"
+import type { SortOption } from "@/types/global"
 
 export type AppSection =
   | "home"
@@ -21,6 +22,8 @@ export const tabChangeHandlerAtom = atom<TabChangeHandler | null>(null)
 export const currentSectionAtom = atom<AppSection>("home")
 
 export const selectedMainTabAtom = atom<MainTabType | "home">("home")
+
+export const sortByAtom = atom<SortOption>("recommended")
 
 export const getMainPageUrlWithTab = (
   tab: MainTabType | "home",

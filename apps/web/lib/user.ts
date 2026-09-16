@@ -58,7 +58,7 @@ export async function syncClerkUserToSupabase(userId: string) {
 
     const { data: existingUser } = await supabaseWithAdminAccess
       .from("users")
-      .select("id, username, display_username")
+      .select("id, username, display_username, display_image_url, display_name, image_url")
       .eq("id", userId)
       .maybeSingle()
 
@@ -81,12 +81,20 @@ export async function syncClerkUserToSupabase(userId: string) {
       image_url,
       email,
       name,
-      ...(existingUser
-        ? {}
-        : {
+      ...(!existingUser
+        ? {
             display_name: name,
             display_username: resolvedUsername,
             display_image_url: image_url,
+          }
+        : {
+            ...(!existingUser.display_image_url && image_url
+              ? { display_image_url: image_url }
+              : {}),
+            ...(!existingUser.display_name && name ? { display_name: name } : {}),
+            ...(!existingUser.display_username && resolvedUsername
+              ? { display_username: resolvedUsername }
+              : {}),
           }),
     }
 
@@ -203,6 +211,22 @@ export const authUsernameOrRedirect = async (
   // 4. If they are a Clerk admin, ensure isAdmin is true in the result
   if (isClerkAdmin) {
     result.isAdmin = true
+  }
+
+  // 5. If user exists in DB but is missing avatar, sync it from Clerk
+  if (
+    result?.user &&
+    (!result.user.display_image_url && !result.user.image_url)
+  ) {
+    const syncedUser = await syncClerkUserToSupabase(userId)
+    if (syncedUser) {
+      result.user = {
+        ...result.user,
+        image_url: syncedUser.image_url || result.user.image_url,
+        display_image_url:
+          syncedUser.display_image_url || result.user.display_image_url,
+      }
+    }
   }
 
   return result

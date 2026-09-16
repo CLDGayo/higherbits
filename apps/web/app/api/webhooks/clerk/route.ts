@@ -85,9 +85,9 @@ export async function POST(req: Request) {
         // For new users, initialize display fields with Clerk data
         const { data: existingUser } = await supabaseAdmin
           .from("users")
-          .select("id")
+          .select("id, display_image_url, display_name, display_username")
           .eq("id", user.id)
-          .single()
+          .maybeSingle()
 
         const userData = {
           id: user.id,
@@ -95,13 +95,20 @@ export async function POST(req: Request) {
           image_url,
           email: user.email_addresses[0]?.email_address ?? null,
           name,
-          // Only set display fields for new users
-          ...(existingUser
-            ? {}
-            : {
+          ...(!existingUser
+            ? {
                 display_name: name,
                 display_username: username,
                 display_image_url: image_url,
+              }
+            : {
+                ...(!existingUser.display_image_url && image_url
+                  ? { display_image_url: image_url }
+                  : {}),
+                ...(!existingUser.display_name && name ? { display_name: name } : {}),
+                ...(!existingUser.display_username && username
+                  ? { display_username: username }
+                  : {}),
               }),
         }
 

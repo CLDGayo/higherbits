@@ -47,7 +47,16 @@ export function UserAvatar({
     .slice(0, 2)
     .toUpperCase()
 
-  const validSrc = src && src !== "/placeholder.svg" ? src : undefined
+  const avatarSrc =
+    src && src !== "/placeholder.svg"
+      ? src
+      : user?.display_image_url ||
+        user?.image_url ||
+        (user as any)?.imageUrl ||
+        undefined
+
+  const validSrc =
+    avatarSrc && avatarSrc !== "/placeholder.svg" ? avatarSrc : undefined
 
   const avatarContent = (
     <Avatar

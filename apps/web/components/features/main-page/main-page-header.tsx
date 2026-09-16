@@ -15,11 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import type { MainTabType } from "@/lib/atoms"
+import { type MainTabType, sortByAtom } from "@/lib/atoms"
 import type { SortOption } from "@/types/global"
 import { SORT_OPTIONS } from "@/types/global"
 
-export const sortByAtom = atom<SortOption>("recommended")
+export { sortByAtom }
 
 const tabLabels = {
   home: "Home",

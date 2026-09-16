@@ -61,9 +61,14 @@ type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 interface StudioDemoPreviewCardProps {
   control: Control<FormData>
   user: any
+  username?: string
 }
 
-function StudioDemoPreviewCard({ control, user }: StudioDemoPreviewCardProps) {
+function StudioDemoPreviewCard({
+  control,
+  user,
+  username,
+}: StudioDemoPreviewCardProps) {
   const demos = useWatch({ control, name: "demos" })
   const name = useWatch({ control, name: "name" })
   const description = useWatch({ control, name: "description" })
@@ -100,6 +105,36 @@ function StudioDemoPreviewCard({ control, user }: StudioDemoPreviewCardProps) {
 
   const hasVideo = !!videoUrl
   const isVideoMode = hasVideo && (previewMode === "video" || !previewUrl)
+
+  const fallbackUsername =
+    username ||
+    user?.username ||
+    user?.display_username ||
+    (user as any)?.firstName ||
+    "user"
+
+  const fallbackDisplayName =
+    user?.display_name ||
+    user?.name ||
+    user?.fullName ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+    fallbackUsername
+
+  const fallbackImageUrl =
+    user?.display_image_url ||
+    user?.image_url ||
+    user?.imageUrl ||
+    ""
+
+  const mockUser = {
+    id: user?.id || "",
+    username: fallbackUsername,
+    display_username: fallbackUsername,
+    name: fallbackDisplayName,
+    display_name: fallbackDisplayName,
+    image_url: fallbackImageUrl,
+    display_image_url: fallbackImageUrl,
+  }
 
   return (
     <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-950/50 p-8 relative">
@@ -140,6 +175,7 @@ function StudioDemoPreviewCard({ control, user }: StudioDemoPreviewCardProps) {
             component_id: 0,
             name: demoName || demos?.[0]?.name || name || "Component Name",
             demo_slug: demoSlug || demos?.[0]?.demo_slug || "default",
+            component_slug: componentSlug || "component-slug",
             preview_url: previewUrl,
             video_url: videoUrl,
             component: {
@@ -147,9 +183,9 @@ function StudioDemoPreviewCard({ control, user }: StudioDemoPreviewCardProps) {
               name: name || "Component Name",
               description: description || "",
               component_slug: componentSlug || "component-slug",
-              user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
+              user: mockUser,
             },
-            user: user || { id: "", username: "user", display_username: "user", image_url: "", display_image_url: "" },
+            user: mockUser,
           } as any}
           hideVotes={true}
           hideUser={false}
@@ -877,7 +913,11 @@ function PublishClientPageContent({
         {/* Editor and Preview Area */}
         <div className="flex-1 h-full min-w-0">
           {activeStage === "Demos" ? (
-            <StudioDemoPreviewCard control={form.control} user={user} />
+            <StudioDemoPreviewCard
+              control={form.control}
+              user={user}
+              username={username}
+            />
           ) : (
             <PreviewPane
               connectedShellId={connectedShellId}
