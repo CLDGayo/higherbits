@@ -43,6 +43,27 @@ const IDLE_POLL_CUTOFF_MS = 1000 * 60 * 5
 // forever and silently defeat the reaper.
 const ACTIVITY_TOUCH_INTERVAL_MS = 1000 * 60 * 5
 
+export const HIBERNATE_DEBOUNCE_MS = 1000
+
+const pendingHibernateTimers = new Map<string, ReturnType<typeof setTimeout>>()
+const activeMountCounts = new Map<string, number>()
+
+export const cancelPendingHibernate = (sandboxId: string) => {
+  const timer = pendingHibernateTimers.get(sandboxId)
+  if (timer !== undefined) {
+    clearTimeout(timer)
+    pendingHibernateTimers.delete(sandboxId)
+  }
+}
+
+export const _resetHibernateStateForTests = () => {
+  for (const timer of pendingHibernateTimers.values()) {
+    clearTimeout(timer)
+  }
+  pendingHibernateTimers.clear()
+  activeMountCounts.clear()
+}
+
 export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const sandboxRef = useRef<SandboxSession | null>(null)
   const [sandboxConnectionHash, setSandboxConnectionHash] = useState<
@@ -454,6 +475,13 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   }, [])
 
   useEffect(() => {
+    if (!sandboxId) return
+
+    // Cancel any pending hibernate timer for this sandbox (e.g. from StrictMode or rapid remount)
+    cancelPendingHibernate(sandboxId)
+    const currentCount = activeMountCounts.get(sandboxId) || 0
+    activeMountCounts.set(sandboxId, currentCount + 1)
+
     console.log("INITIALIZING sandbox", sandboxId)
     let cancelled = false
     initialize(false, () => cancelled)
@@ -465,6 +493,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     // filesystem survives and connect/route.ts's sandbox.start() resumes it.
     let hibernateRequested = false
     const requestHibernate = (transport: "beacon" | "fetch") => {
+      cancelPendingHibernate(sandboxId)
       // Both triggers can fire for one departure (pagehide then unmount).
       // Hibernating twice is harmless but pointless — send exactly one.
       if (hibernateRequested) return
@@ -484,19 +513,45 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       }).catch(() => {})
     }
 
-    const handlePageHide = () => requestHibernate("beacon")
+    const handlePageHide = () => {
+      cancelPendingHibernate(sandboxId)
+      requestHibernate("beacon")
+    }
     window.addEventListener("pagehide", handlePageHide)
 
     return () => {
       cancelled = true
       window.removeEventListener("pagehide", handlePageHide)
-      requestHibernate("fetch")
+
+      const count = (activeMountCounts.get(sandboxId) || 1) - 1
+      if (count <= 0) {
+        activeMountCounts.delete(sandboxId)
+      } else {
+        activeMountCounts.set(sandboxId, count)
+      }
+
+      // If another component instance is still mounted for this sandbox, skip hibernate.
+      if (count > 0) {
+        return
+      }
+
+      // Schedule hibernate after a short debounce so React StrictMode or immediate remounts
+      // do not hibernate the VM while the next mount cycle is initializing.
+      cancelPendingHibernate(sandboxId)
+      const timer = setTimeout(() => {
+        pendingHibernateTimers.delete(sandboxId)
+        if (!activeMountCounts.has(sandboxId)) {
+          requestHibernate("fetch")
+        }
+      }, HIBERNATE_DEBOUNCE_MS)
+      pendingHibernateTimers.set(sandboxId, timer)
     }
-  }, [])
+  }, [sandboxId])
 
   const reconnectSandbox = async () => {
     console.log("RECONNECTING sandbox")
     if (!sandboxId) return
+    cancelPendingHibernate(sandboxId)
 
     // Cap automatic reconnects so a permanently dead VM stops the reconnect
     // storm instead of spinning forever. retryConnection() clears this.
@@ -543,11 +598,12 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   // Manual retry from the "sandbox unavailable" UI: clears the caps and forces
   // a fresh connection attempt.
   const retryConnection = async () => {
+    cancelPendingHibernate(sandboxId)
     reconnectAttemptsRef.current = 0
     shellCheckFailuresRef.current = 0
     setSandboxUnavailable(false)
     setSandboxError(null)
-    await initialize(true)
+    await initialize(false)
   }
 
   // Restart the dev server (vite) shell on the VM. Fixes a wedged HMR / module

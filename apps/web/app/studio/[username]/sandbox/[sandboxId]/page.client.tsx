@@ -816,7 +816,7 @@ function PublishClientPageContent({
                 onToggleAdvancedView={toggleAdvancedView}
                 onAddFrom21Registry={handleAddFrom21Registry}
                 onNewDemo={handleNewDemo}
-                sandboxUnavailable={sandboxUnavailable || !sandboxRef.current}
+                sandboxUnavailable={sandboxUnavailable}
               />
             )}
             
@@ -931,7 +931,7 @@ function PublishClientPageContent({
               showPreview={showPreview}
               iframeKey={iframeKey}
               onRefresh={handleRefreshPreview}
-              sandboxUnavailable={sandboxUnavailable || !sandboxRef.current}
+              sandboxUnavailable={sandboxUnavailable}
               sandboxError={sandboxError}
               onReconnect={retryConnection}
               onTogglePreview={handleTogglePreview}

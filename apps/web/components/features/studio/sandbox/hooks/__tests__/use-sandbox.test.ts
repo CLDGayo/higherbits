@@ -19,7 +19,11 @@ vi.mock("../../utils/dependencies", () => ({
   getLatestPackageVersionFromError: vi.fn(async () => null),
 }))
 
-import { useSandbox } from "../use-sandbox"
+import {
+  useSandbox,
+  HIBERNATE_DEBOUNCE_MS,
+  _resetHibernateStateForTests,
+} from "../use-sandbox"
 
 type Deferred<T> = {
   promise: Promise<T>
@@ -683,6 +687,7 @@ describe("useSandbox — credit-burn poll gating and hibernate-on-leave", () => 
   }
 
   beforeEach(() => {
+    _resetHibernateStateForTests()
     vi.useFakeTimers()
     vi.clearAllMocks()
     visibility = "visible"
@@ -816,11 +821,28 @@ describe("useSandbox — credit-burn poll gating and hibernate-on-leave", () => 
     await act(async () => {
       unmount()
     })
+    await flush(HIBERNATE_DEBOUNCE_MS)
 
     const calls = hibernateCalls()
     expect(calls).toHaveLength(1)
     expect(calls[0]![1]).toMatchObject({ method: "POST", keepalive: true })
     expect(beaconMock).not.toHaveBeenCalled()
+  })
+
+  it("does not fire hibernate fetch if remounted before debounce elapses (StrictMode protection)", async () => {
+    const { unmount } = await mountSettled()
+
+    await act(async () => {
+      unmount()
+    })
+
+    // Remount immediately (simulating StrictMode or rapid navigation)
+    await mountSettled()
+
+    // Even after the debounce window passes, no hibernate fetch should have occurred
+    await flush(HIBERNATE_DEBOUNCE_MS)
+
+    expect(hibernateCalls()).toHaveLength(0)
   })
 
   it("uses sendBeacon (not fetch) on pagehide, exactly once even if unmount follows", async () => {
@@ -839,6 +861,7 @@ describe("useSandbox — credit-burn poll gating and hibernate-on-leave", () => 
     await act(async () => {
       unmount()
     })
+    await flush(HIBERNATE_DEBOUNCE_MS)
     expect(beaconMock).toHaveBeenCalledTimes(1)
     expect(hibernateCalls()).toHaveLength(0)
   })
