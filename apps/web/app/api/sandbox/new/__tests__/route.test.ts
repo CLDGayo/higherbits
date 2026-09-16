@@ -6,6 +6,12 @@ const FAKE_BEARER = "Bearer sk_live_MUSTNOTLEAK"
 
 const rpcMock = vi.fn()
 const insertSingleMock = vi.fn()
+/** Result of the reuse-before-create lookup, and the filters it was built with. */
+const reuseLookup = {
+  result: { data: [] as Array<Record<string, unknown>>, error: null as unknown },
+  filters: {} as Record<string, unknown>,
+  called: 0,
+}
 
 vi.mock("@clerk/nextjs/server", () => ({
   auth: vi.fn(async () => ({ userId: "user_test" })),
@@ -15,21 +21,27 @@ vi.mock("@/lib/admin", () => ({
   checkIsAdmin: vi.fn(async () => ({ isAdmin: false })),
 }))
 
+// Sentinel stand-in for VMTier.Pico. Identity-compared in the credit-burn
+// options assertion below, so the test fails if the route stops forwarding it.
+const { FAKE_VM_TIER } = vi.hoisted(() => ({
+  FAKE_VM_TIER: { name: "Pico", cpuCores: 1, memoryGiB: 2 },
+}))
+
 vi.mock("@/lib/codesandbox-sdk", () => ({
   codesandboxSdk: {
     sandbox: {
       create: vi.fn(),
     },
   },
-  DEFAULT_HIBERNATION_TIMEOUT: 300,
-  DEFAULT_VM_TIER: "nano",
+  DEFAULT_HIBERNATION_TIMEOUT: 60,
+  DEFAULT_VM_TIER: FAKE_VM_TIER,
 }))
 
 vi.mock("@/lib/sandbox-templates", () => ({
   DEFAULT_COMPONENT_TSX: "component",
   DEFAULT_DEMO_TSX: "demo",
   DEFAULT_INDEX_CSS: "css",
-  DEFAULT_HIBERNATION_TIMEOUT: 300,
+  DEFAULT_HIBERNATION_TIMEOUT: 60,
   DEFAULT_TEMPLATE: "react",
   TEMPLATES: { react: "react-template-id" },
 }))
@@ -41,6 +53,33 @@ vi.mock("@/lib/supabase", () => ({
       insert: () => ({
         select: () => ({ single: insertSingleMock }),
       }),
+      // Reuse-before-create lookup. Records the filters it was built with so
+      // the tests can assert the query is scoped correctly, not merely that
+      // some query ran.
+      select: () => {
+        reuseLookup.called++
+        const builder = {
+          eq(field: string, value: unknown) {
+            reuseLookup.filters[field] = value
+            return builder
+          },
+          is(field: string, value: unknown) {
+            reuseLookup.filters[`is:${field}`] = value
+            return builder
+          },
+          gte(field: string, value: unknown) {
+            reuseLookup.filters[`gte:${field}`] = value
+            return builder
+          },
+          order() {
+            return builder
+          },
+          limit() {
+            return Promise.resolve(reuseLookup.result)
+          },
+        }
+        return builder
+      },
     }),
   },
 }))
@@ -87,6 +126,9 @@ describe("POST /api/sandbox/new — Phase 1 telemetry", () => {
     errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
     warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
     rpcMock.mockResolvedValue({ data: true, error: null })
+    reuseLookup.result = { data: [], error: null }
+    reuseLookup.filters = {}
+    reuseLookup.called = 0
     insertSingleMock.mockResolvedValue({
       data: { id: "00000000-0000-0000-0000-000000000001" },
       error: null,
@@ -210,5 +252,166 @@ describe("POST /api/sandbox/new — Phase 1 telemetry", () => {
 
     expect(telemetryCalls(logSpy)).toHaveLength(0)
     expect(telemetryCalls(errorSpy)).toHaveLength(0)
+  })
+})
+
+describe("POST /api/sandbox/new — credit-burn guards", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.spyOn(console, "log").mockImplementation(() => {})
+    vi.spyOn(console, "error").mockImplementation(() => {})
+    vi.spyOn(console, "warn").mockImplementation(() => {})
+    rpcMock.mockResolvedValue({ data: true, error: null })
+    reuseLookup.result = { data: [], error: null }
+    reuseLookup.filters = {}
+    reuseLookup.called = 0
+    insertSingleMock.mockResolvedValue({
+      data: { id: "00000000-0000-0000-0000-000000000001" },
+      error: null,
+    })
+    sdk.sandbox.create.mockResolvedValue(okSandbox())
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it("passes vmTier, the lowered hibernation timeout, and disabled automatic wakeup to sandbox.create()", async () => {
+    const response = await POST(makeRequest())
+    expect(response.status).toBe(200)
+
+    expect(sdk.sandbox.create).toHaveBeenCalledTimes(1)
+    const opts = sdk.sandbox.create.mock.calls[0]![0] as Record<string, unknown>
+    expect(opts.vmTier).toBe(FAKE_VM_TIER)
+    expect(opts.hibernationTimeoutSeconds).toBe(60)
+    // Must be the explicit object, never omitted: the SDK's own default for
+    // http is TRUE, which silently re-wakes (and re-bills) a hibernated VM on
+    // any stray HTTP touch. Omission is the exact regression this asserts on.
+    expect(opts.automaticWakeupConfig).toEqual({ http: false, websocket: false })
+  })
+})
+
+describe("POST /api/sandbox/new — reuse-before-create", () => {
+  const originalWindow = process.env.CSB_SANDBOX_REUSE_WINDOW_SECONDS
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.spyOn(console, "log").mockImplementation(() => {})
+    vi.spyOn(console, "warn").mockImplementation(() => {})
+    vi.spyOn(console, "error").mockImplementation(() => {})
+    delete process.env.CSB_SANDBOX_REUSE_WINDOW_SECONDS
+    rpcMock.mockResolvedValue({ data: true, error: null })
+    insertSingleMock.mockResolvedValue({
+      data: { id: "00000000-0000-0000-0000-000000000001" },
+      error: null,
+    })
+    sdk.sandbox.create.mockResolvedValue(okSandbox())
+    reuseLookup.result = { data: [], error: null }
+    reuseLookup.filters = {}
+    reuseLookup.called = 0
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+    if (originalWindow === undefined)
+      delete process.env.CSB_SANDBOX_REUSE_WINDOW_SECONDS
+    else process.env.CSB_SANDBOX_REUSE_WINDOW_SECONDS = originalWindow
+  })
+
+  // P22-new-reuse
+  it("returns the existing shortSandboxId and creates NO new VM when a recent unbound row exists", async () => {
+    reuseLookup.result = {
+      data: [
+        {
+          id: "00000000-0000-0000-0000-0000000000aa",
+          codesandbox_id: "csb-warm",
+        },
+      ],
+      error: null,
+    }
+
+    const response = await POST(makeRequest())
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.success).toBe(true)
+    expect(body.shortSandboxId).toBe("shortId123")
+    expect(body.reused).toBe(true)
+    // The whole point: no billed VM was created.
+    expect(sdk.sandbox.create).not.toHaveBeenCalled()
+  })
+
+  it("scopes the reuse lookup to the caller's own unbound rows inside the window", async () => {
+    reuseLookup.result = {
+      data: [
+        {
+          id: "00000000-0000-0000-0000-0000000000aa",
+          codesandbox_id: "csb-warm",
+        },
+      ],
+      error: null,
+    }
+
+    await POST(makeRequest())
+
+    expect(reuseLookup.called).toBe(1)
+    expect(reuseLookup.filters.user_id).toBe("user_test")
+    // Never hand back a sandbox already bound to a published component.
+    expect(reuseLookup.filters["is:component_id"]).toBeNull()
+    expect(typeof reuseLookup.filters["gte:updated_at"]).toBe("string")
+  })
+
+  // P23-new-nonregression
+  it("still creates a new VM when no recent row exists", async () => {
+    reuseLookup.result = { data: [], error: null }
+
+    const response = await POST(makeRequest())
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.shortSandboxId).toBe("shortId123")
+    expect(body.reused).toBeUndefined()
+    expect(sdk.sandbox.create).toHaveBeenCalledTimes(1)
+  })
+
+  it("does not reuse a row whose codesandbox_id is missing", async () => {
+    reuseLookup.result = {
+      data: [
+        { id: "00000000-0000-0000-0000-0000000000aa", codesandbox_id: null },
+      ],
+      error: null,
+    }
+
+    await POST(makeRequest())
+
+    expect(sdk.sandbox.create).toHaveBeenCalledTimes(1)
+  })
+
+  it("falls through to create when the reuse lookup errors", async () => {
+    reuseLookup.result = { data: null as never, error: { message: "boom" } }
+
+    const response = await POST(makeRequest())
+
+    expect(response.status).toBe(200)
+    expect(sdk.sandbox.create).toHaveBeenCalledTimes(1)
+  })
+
+  it("skips the lookup entirely when CSB_SANDBOX_REUSE_WINDOW_SECONDS=0", async () => {
+    process.env.CSB_SANDBOX_REUSE_WINDOW_SECONDS = "0"
+
+    await POST(makeRequest())
+
+    expect(reuseLookup.called).toBe(0)
+    expect(sdk.sandbox.create).toHaveBeenCalledTimes(1)
+  })
+
+  it("rejects before the reuse lookup when rate-limited", async () => {
+    rpcMock.mockResolvedValue({ data: false, error: null })
+
+    const response = await POST(makeRequest())
+
+    expect(response.status).toBe(429)
+    expect(reuseLookup.called).toBe(0)
+    expect(sdk.sandbox.create).not.toHaveBeenCalled()
   })
 })

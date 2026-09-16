@@ -38,6 +38,10 @@
  * `components/features/studio/sandbox/hooks/__tests__/use-sandbox.test.ts`,
  * "A4 proactive dev-shell start on RESUME" — which this phase regression-checks
  * rather than extends.
+ *
+ * COST: opt-in only. Runs only with RUN_REAL_SANDBOX_E2E=1 set — it resumes a
+ * real, billed CodeSandbox VM. See the COST GUARD block below for the exact
+ * deliberate-run invocation.
  */
 import {
   expect,
@@ -97,7 +101,33 @@ async function waitForTerminalState(
   return null
 }
 
+/**
+ * COST GUARD — this spec resumes a REAL, BILLED CodeSandbox VM.
+ *
+ * `skipWithoutStudioAuth()` alone is not enough: it only checks that a studio
+ * session exists, so any local run that happens to have studio auth configured
+ * runs the real thing and bills for it. Reopening a draft never calls
+ * `create()`, but it does call `POST /api/sandbox/connect` ->
+ * `codesandboxSdk.sandbox.start()`, which resumes a hibernated VM and restarts
+ * billing. That is a paid operation, not a read.
+ *
+ * To run it deliberately (from `apps/web`, with the e2e server on :3100):
+ *
+ *     pnpm e2e:server            # in another shell
+ *     RUN_REAL_SANDBOX_E2E=1 pnpm exec playwright test --project=studio \
+ *       e2e/studio-sandbox-reconnect.spec.ts
+ *
+ * Both guards must pass: studio auth present AND the opt-in flag set.
+ */
+const REAL_SANDBOX_E2E_REASON =
+  "set RUN_REAL_SANDBOX_E2E=1 to run — resumes a real, billed CodeSandbox VM"
+
+function skipWithoutRealSandboxOptIn() {
+  test.skip(!process.env.RUN_REAL_SANDBOX_E2E, REAL_SANDBOX_E2E_REASON)
+}
+
 test.beforeEach(skipWithoutStudioAuth)
+test.beforeEach(skipWithoutRealSandboxOptIn)
 
 test.describe("sandbox reconnect", () => {
   test.describe.configure({ timeout: MEASURE_TIMEOUT_MS + 120_000 })

@@ -23,6 +23,21 @@ import {
 } from "@/lib/sandbox-templates"
 import { codesandboxSdk, DEFAULT_VM_TIER } from "@/lib/codesandbox-sdk"
 
+/**
+ * How recently a user's unbound sandbox row must have been touched for its VM
+ * to be treated as still warm and handed back instead of creating another.
+ * Defaults to the hibernation timeout, since a VM idle longer than that has
+ * hibernated anyway. Overridable per-host (0 disables reuse entirely).
+ */
+function resolveReuseWindowSeconds(): number {
+  const raw = process.env.CSB_SANDBOX_REUSE_WINDOW_SECONDS
+  if (raw === undefined || raw === "") return DEFAULT_HIBERNATION_TIMEOUT
+  const parsed = Number.parseInt(raw, 10)
+  return Number.isFinite(parsed) && parsed >= 0
+    ? parsed
+    : DEFAULT_HIBERNATION_TIMEOUT
+}
+
 export async function POST(req: NextRequest) {
   // Phase 1 telemetry: request-start timestamp for timing_ms. Declared outside
   // the try so the outer catch can still compute a duration.
@@ -59,6 +74,61 @@ export async function POST(req: NextRequest) {
         { error: "Too many requests. Please try again later." },
         { status: 429 },
       )
+    }
+
+    // Reuse-before-create. This route had no check for an existing warm
+    // sandbox, so a double-click, a retry loop, or an impatient user could
+    // spin up a fresh billed VM every time, up to the 5/minute rate limit,
+    // indefinitely. If this user already has an unbound draft row younger than
+    // the reuse window, its VM is almost certainly still warm — hand that back
+    // instead of paying for another one.
+    //
+    // SCOPE (traced, not assumed): the only caller is createNewSandbox(userId)
+    // in components/features/studio/sandbox/api.ts, reached from the studio's
+    // "+ New component" flow. It passes a user id and nothing else — there is
+    // no component scope to key on. So the scope is per-user, narrowed to rows
+    // not yet bound to a component (component_id IS NULL), which is exactly
+    // the "fresh unsaved draft" this flow creates. A sandbox already bound to
+    // a published component is never handed back.
+    //
+    // Best-effort: any failure here falls through to a normal create.
+    const reuseWindowSeconds = resolveReuseWindowSeconds()
+    if (reuseWindowSeconds > 0) {
+      try {
+        // updated_at is a Postgres `timestamp` (no time zone) holding a UTC
+        // instant, so the comparison value is rendered zoneless to match.
+        const cutoff = new Date(Date.now() - reuseWindowSeconds * 1000)
+          .toISOString()
+          .replace("Z", "")
+
+        const { data: recent, error: recentError } =
+          await supabaseWithAdminAccess
+            .from("sandboxes")
+            .select("id, codesandbox_id")
+            .eq("user_id", userId as string)
+            .is("component_id", null)
+            .gte("updated_at", cutoff)
+            .order("updated_at", { ascending: false })
+            .limit(1)
+
+        const reusable = recentError ? null : (recent ?? [])[0]
+
+        if (reusable?.id && reusable.codesandbox_id) {
+          const reusedShortId = ShortUUID().fromUUID(reusable.id)
+          console.log("[sandbox-telemetry] new:", {
+            outcome: "reused",
+            sandboxId: reusable.codesandbox_id,
+            timing_ms: Date.now() - startedAt,
+          })
+          return NextResponse.json({
+            success: true,
+            shortSandboxId: reusedShortId,
+            reused: true,
+          })
+        }
+      } catch (reuseError) {
+        console.warn("Reuse-before-create lookup failed:", reuseError)
+      }
     }
 
     console.log("Creating CodeSandbox instance...")

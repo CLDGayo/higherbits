@@ -636,3 +636,210 @@ describe("useSandbox — Hibernation prevention & setup-aware resilience", () =>
   })
 })
 
+
+/**
+ * Part 1 credit-burn gates (csb-credit-burn_PLAN_14-09-26, Verification
+ * Evidence Part 1). The poll is what kept VMs billing: a 5s tick is itself
+ * activity, so it resets CodeSandbox's inactivity clock forever. These assert
+ * the tick is skipped while hidden or idle, resumes promptly, and that leaving
+ * fires exactly one hibernate request.
+ */
+describe("useSandbox — credit-burn poll gating and hibernate-on-leave", () => {
+  const POLL_MS = 5_000
+  const IDLE_CUTOFF_MS = 5 * 60_000
+
+  let visibility: DocumentVisibilityState = "visible"
+  let fetchMock: ReturnType<typeof vi.fn>
+  let beaconMock: ReturnType<typeof vi.fn>
+
+  const setVisibility = (state: DocumentVisibilityState) => {
+    visibility = state
+  }
+
+  const fireVisibilityChange = async () => {
+    await act(async () => {
+      document.dispatchEvent(new Event("visibilitychange"))
+      await Promise.resolve()
+    })
+  }
+
+  const hibernateCalls = () =>
+    fetchMock.mock.calls.filter((c) => c[0] === "/api/sandbox/hibernate")
+  const touchCalls = () =>
+    fetchMock.mock.calls.filter((c) => c[0] === "/api/sandbox/touch")
+
+  /** Renders and settles the hook on the healthy fast-port-open path. */
+  const mountSettled = async () => {
+    const first = deferred<unknown>()
+    const second = deferred<unknown>()
+    const session = makeSession(first.promise, second.promise)
+    connectToCodeSandboxSDKMock.mockResolvedValue(session)
+    const rendered = renderHook(() => useSandbox({ sandboxId: "sbx_1" }))
+    first.resolve(makePortInfo("https://preview.example/healthy"))
+    await flush(0)
+    session.shells.getShells.mockClear()
+    fetchMock.mockClear()
+    return { ...rendered, session }
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.clearAllMocks()
+    visibility = "visible"
+    Object.defineProperty(document, "visibilityState", {
+      configurable: true,
+      get: () => visibility,
+    })
+    fetchMock = vi.fn(async () => ({ ok: true }) as unknown as Response)
+    beaconMock = vi.fn(() => true)
+    vi.stubGlobal("fetch", fetchMock)
+    Object.defineProperty(navigator, "sendBeacon", {
+      configurable: true,
+      writable: true,
+      value: beaconMock,
+    })
+    getSandboxInfoMock.mockResolvedValue({ sandbox: null })
+    connectToSandboxMock.mockResolvedValue({
+      startData: {},
+      sandbox: {
+        codesandbox_id: "csb_1",
+        name: "Untitled",
+        id: "sbx_1",
+        component_id: null,
+      },
+      previewToken: null,
+    })
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.useRealTimers()
+  })
+
+  it("does not poll shells (or touch) while the tab is hidden", async () => {
+    const { session } = await mountSettled()
+
+    setVisibility("hidden")
+    await fireVisibilityChange()
+    session.shells.getShells.mockClear()
+    fetchMock.mockClear()
+
+    await flush(POLL_MS * 4)
+
+    expect(session.shells.getShells).not.toHaveBeenCalled()
+    expect(touchCalls()).toHaveLength(0)
+  })
+
+  it("resumes polling immediately when the tab becomes visible again", async () => {
+    const { session } = await mountSettled()
+
+    setVisibility("hidden")
+    await fireVisibilityChange()
+    await flush(POLL_MS * 2)
+    session.shells.getShells.mockClear()
+
+    setVisibility("visible")
+    await fireVisibilityChange()
+
+    // The visibilitychange handler checks shells at once rather than waiting
+    // out a full tick.
+    expect(session.shells.getShells).toHaveBeenCalled()
+
+    session.shells.getShells.mockClear()
+    await flush(POLL_MS)
+    expect(session.shells.getShells).toHaveBeenCalled()
+  })
+
+  it("stops polling once the idle cutoff passes with no interaction, even while visible", async () => {
+    const { session } = await mountSettled()
+
+    await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
+    session.shells.getShells.mockClear()
+
+    await flush(POLL_MS * 3)
+
+    expect(session.shells.getShells).not.toHaveBeenCalled()
+  })
+
+  it("resumes polling on the next tick after a real interaction post-idle", async () => {
+    const { session } = await mountSettled()
+
+    await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
+    session.shells.getShells.mockClear()
+
+    await act(async () => {
+      document.dispatchEvent(new Event("pointerdown"))
+    })
+    await flush(POLL_MS)
+    expect(session.shells.getShells).toHaveBeenCalled()
+
+    // keydown must count too; mousemove deliberately does not.
+    await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
+    session.shells.getShells.mockClear()
+    await act(async () => {
+      document.dispatchEvent(new Event("keydown"))
+    })
+    await flush(POLL_MS)
+    expect(session.shells.getShells).toHaveBeenCalled()
+  })
+
+  it("throttles the activity touch to at most once per interval on live ticks", async () => {
+    const { session } = await mountSettled()
+
+    // First live tick writes a touch...
+    await flush(POLL_MS)
+    expect(touchCalls()).toHaveLength(1)
+    expect(touchCalls()[0]![1]).toMatchObject({ method: "POST" })
+
+    // ...and the next several ticks inside the same interval do not.
+    await flush(POLL_MS * 5)
+    expect(touchCalls()).toHaveLength(1)
+    expect(session.shells.getShells).toHaveBeenCalled()
+  })
+
+  it("clears the poll interval on unmount", async () => {
+    const { session, unmount } = await mountSettled()
+
+    await act(async () => {
+      unmount()
+    })
+    session.shells.getShells.mockClear()
+
+    await flush(POLL_MS * 4)
+
+    expect(session.shells.getShells).not.toHaveBeenCalled()
+  })
+
+  it("fires exactly one keepalive hibernate fetch on unmount", async () => {
+    const { unmount } = await mountSettled()
+
+    await act(async () => {
+      unmount()
+    })
+
+    const calls = hibernateCalls()
+    expect(calls).toHaveLength(1)
+    expect(calls[0]![1]).toMatchObject({ method: "POST", keepalive: true })
+    expect(beaconMock).not.toHaveBeenCalled()
+  })
+
+  it("uses sendBeacon (not fetch) on pagehide, exactly once even if unmount follows", async () => {
+    const { unmount } = await mountSettled()
+
+    await act(async () => {
+      window.dispatchEvent(new Event("pagehide"))
+    })
+
+    expect(beaconMock).toHaveBeenCalledTimes(1)
+    expect(beaconMock.mock.calls[0]![0]).toBe("/api/sandbox/hibernate")
+    expect(hibernateCalls()).toHaveLength(0)
+
+    // The departure already hibernated; the unmount that follows must not
+    // send a second request.
+    await act(async () => {
+      unmount()
+    })
+    expect(beaconMock).toHaveBeenCalledTimes(1)
+    expect(hibernateCalls()).toHaveLength(0)
+  })
+})

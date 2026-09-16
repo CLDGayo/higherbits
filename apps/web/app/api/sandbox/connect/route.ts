@@ -92,6 +92,21 @@ export async function POST(request: NextRequest) {
       },
     )
 
+    // Mark this sandbox as active NOW. Before this write, sandboxes.updated_at
+    // was frozen at creation time, so /api/cron/reap-sandboxes had no real
+    // "is anyone using this?" signal to read. Best-effort: a failed bookkeeping
+    // write must never fail an otherwise successful connect — the worst case is
+    // one stale timestamp, and /api/sandbox/touch refreshes it within 5 minutes
+    // of an active session anyway.
+    const { error: touchError } = await supabaseWithAdminAccess
+      .from("sandboxes")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", sandboxId)
+
+    if (touchError) {
+      console.warn("Failed to record sandbox connect activity:", touchError)
+    }
+
     // Phase 1 telemetry (A1/A2): cold-resume signal, read from the already
     // fetched SDK response. Named allowlist fields only — never the whole
     // startData object, never any credential or header value.

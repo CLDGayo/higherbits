@@ -6,6 +6,10 @@ const FAKE_PITCHER_TOKEN = "pitcher_token_MUSTNOTLEAK"
 const FAKE_PREVIEW_TOKEN = "preview_token_MUSTNOTLEAK"
 
 const singleMock = vi.fn()
+const updateCalls: Array<{
+  payload: Record<string, unknown>
+  filters: Record<string, unknown>
+}> = []
 
 vi.mock("@/lib/supabase", () => ({
   supabaseWithAdminAccess: {
@@ -15,6 +19,20 @@ vi.mock("@/lib/supabase", () => ({
           return { eq, single: singleMock }
         },
       }),
+      update: (payload: Record<string, unknown>) => {
+        const record = { payload, filters: {} as Record<string, unknown> }
+        const builder = {
+          eq(field: string, value: unknown) {
+            record.filters[field] = value
+            return builder
+          },
+          then(resolve: (v: unknown) => unknown) {
+            updateCalls.push(record)
+            return Promise.resolve({ error: null }).then(resolve)
+          },
+        }
+        return builder
+      },
     }),
   },
 }))
@@ -247,6 +265,7 @@ describe("POST /api/sandbox/connect — Phase 1 telemetry", () => {
 describe("POST /api/sandbox/connect — credit-burn guards", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    updateCalls.length = 0
     vi.spyOn(console, "log").mockImplementation(() => {})
     vi.spyOn(console, "error").mockImplementation(() => {})
     singleMock.mockResolvedValue({
@@ -259,6 +278,23 @@ describe("POST /api/sandbox/connect — credit-burn guards", () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+  })
+
+  // P15-updated-at-write. Before this, sandboxes.updated_at was frozen at
+  // creation time and the reaper had no real activity signal to read. Remove
+  // the write from the route and this test must go red.
+  it("writes sandboxes.updated_at on every successful sandbox.start()", async () => {
+    const before = Date.now()
+
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    expect(response.status).toBe(200)
+
+    expect(updateCalls).toHaveLength(1)
+    const call = updateCalls[0]!
+    expect(typeof call.filters.id).toBe("string")
+    const written = Date.parse(String(call.payload.updated_at))
+    expect(Number.isNaN(written)).toBe(false)
+    expect(written).toBeGreaterThanOrEqual(before - 1000)
   })
 
   it("passes vmTier, the lowered hibernation timeout, and disabled automatic wakeup to sandbox.start()", async () => {
