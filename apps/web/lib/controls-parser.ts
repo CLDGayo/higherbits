@@ -1,6 +1,7 @@
 import { parse } from "@babel/parser"
 import traverse from "@babel/traverse"
 import * as t from "@babel/types"
+import { useState, useEffect, useMemo } from "react"
 
 export interface ControlSetting {
   key: string
@@ -380,3 +381,107 @@ export function getDefaultControlValues(
   }
   return values
 }
+
+/**
+ * Resolves code that may be either an inline source string or an HTTP/HTTPS URL (e.g. from Cloudflare R2).
+ */
+export async function resolveCodeContent(
+  codeOrUrl?: string | null,
+): Promise<string> {
+  if (!codeOrUrl) return ""
+  if (codeOrUrl.startsWith("http://") || codeOrUrl.startsWith("https://")) {
+    try {
+      const res = await fetch(codeOrUrl)
+      if (!res.ok) return ""
+      return await res.text()
+    } catch {
+      return ""
+    }
+  }
+  return codeOrUrl
+}
+
+/**
+ * React hook that resolves a code string or fetches it if it is an HTTP/HTTPS URL.
+ */
+export function useResolvedCode(codeOrUrl?: string | null): string {
+  const [resolved, setResolved] = useState<string>(() => {
+    if (
+      !codeOrUrl ||
+      codeOrUrl.startsWith("http://") ||
+      codeOrUrl.startsWith("https://")
+    ) {
+      return ""
+    }
+    return codeOrUrl
+  })
+
+  useEffect(() => {
+    let active = true
+    if (!codeOrUrl) {
+      setResolved("")
+      return
+    }
+    if (codeOrUrl.startsWith("http://") || codeOrUrl.startsWith("https://")) {
+      fetch(codeOrUrl)
+        .then((r) => (r.ok ? r.text() : ""))
+        .then((text) => {
+          if (active) setResolved(text)
+        })
+        .catch(() => {
+          if (active) setResolved("")
+        })
+    } else {
+      setResolved(codeOrUrl)
+    }
+    return () => {
+      active = false
+    }
+  }, [codeOrUrl])
+
+  return resolved
+}
+
+export interface ResolveDemoCodeOptions {
+  bundleUrl?: string | null
+  demoSlug?: string | null
+  demoId?: number | string | null
+}
+
+/**
+ * React hook that resolves demo code from various sources:
+ * 1. Direct demoCode (inline code or remote R2 URL)
+ * 2. Derived demo code URL from bundleUrl or componentCode
+ * 3. Fallback to componentCode directly
+ */
+export function useResolvedDemoCode(
+  demoCode?: string | null,
+  componentCode?: string | null,
+  options?: ResolveDemoCodeOptions,
+): string {
+  const primary = useResolvedCode(demoCode)
+
+  const derivedCandidate = useMemo(() => {
+    if (demoCode) return null
+    // Try deriving from bundleUrl:
+    if (options?.bundleUrl && typeof options.bundleUrl === "string") {
+      const match = options.bundleUrl.match(/\.r2\.dev\/(.+?)\/bundle\.(\d+)\.html/)
+      if (match) {
+        return `https://pub-353b490c6d7c464882ea009a7dd96eb7.r2.dev/src/${match[1]}/code.demo.${match[2]}.tsx`
+      }
+    }
+    // Try deriving from componentCode:
+    if (componentCode && typeof componentCode === "string" && componentCode.includes("/code.")) {
+      const slug = options?.demoSlug || "default"
+      return componentCode.replace(/\/code\.(\d+)\.tsx$/, `/${slug}/code.demo.$1.tsx`)
+    }
+    return null
+  }, [demoCode, componentCode, options?.bundleUrl, options?.demoSlug])
+
+  const candidateResolved = useResolvedCode(derivedCandidate)
+  const fallback = useResolvedCode(componentCode)
+
+  return primary || candidateResolved || fallback
+}
+
+

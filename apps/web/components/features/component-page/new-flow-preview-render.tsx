@@ -7,6 +7,7 @@ import React, { useState, useRef, useMemo, useEffect, useCallback } from "react"
 import {
   extractControlsSettings,
   getDefaultControlValues,
+  useResolvedDemoCode,
 } from "@/lib/controls-parser"
 import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 
@@ -15,9 +16,18 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
   const [isLoading, setIsLoading] = useState(true)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
+  const rawCode = useResolvedDemoCode(
+    demo.demo_code,
+    (demo as any).component?.code,
+    {
+      bundleUrl: (demo as any).bundle_html_url || (demo as any).bundle_url?.html,
+      demoSlug: demo.demo_slug,
+      demoId: demo.id,
+    },
+  )
   const controls = useMemo(() => {
-    return extractControlsSettings(demo.demo_code || "")
-  }, [demo.demo_code])
+    return extractControlsSettings(rawCode)
+  }, [rawCode])
 
   const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
     getDefaultControlValues(controls),
@@ -27,6 +37,15 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
   useEffect(() => {
     setActiveControls(getDefaultControlValues(controls))
   }, [controls])
+
+  const sendThemeToIframe = useCallback(() => {
+    if (iframeRef.current?.contentWindow && resolvedTheme) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "theme-change", theme: resolvedTheme },
+        "*",
+      )
+    }
+  }, [resolvedTheme])
 
   const sendControlsToIframe = useCallback(() => {
     if (
@@ -41,18 +60,23 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
   }, [activeControls])
 
   useEffect(() => {
+    sendThemeToIframe()
+  }, [sendThemeToIframe])
+
+  useEffect(() => {
     sendControlsToIframe()
   }, [sendControlsToIframe])
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === "preview-ready") {
+      if (event.data?.type === "preview-ready" || event.data?.type === "READY") {
+        sendThemeToIframe()
         sendControlsToIframe()
       }
     }
     window.addEventListener("message", handleMessage)
     return () => window.removeEventListener("message", handleMessage)
-  }, [sendControlsToIframe])
+  }, [sendThemeToIframe, sendControlsToIframe])
 
   return (
     <motion.div className="relative flex-grow h-full rounded-lg overflow-hidden">
@@ -69,6 +93,7 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
         className="w-full h-full"
         onLoad={() => {
           setIsLoading(false)
+          sendThemeToIframe()
           sendControlsToIframe()
         }}
         onError={() => setIsLoading(false)}

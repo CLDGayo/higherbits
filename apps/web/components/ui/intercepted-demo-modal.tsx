@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType } from "@/types/global"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -24,6 +24,12 @@ import { atomWithStorage } from "jotai/utils"
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { useSupabaseAnalytics } from "@/hooks/use-analytics"
 import { promptOptions, PromptOptionBase } from "@/lib/prompts"
+import {
+  extractControlsSettings,
+  getDefaultControlValues,
+  useResolvedDemoCode,
+} from "@/lib/controls-parser"
+import { FloatingControlsDrawer } from "@/components/features/controls/floating-controls-drawer"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
   "previewDialogSelectedPromptType",
@@ -50,6 +56,25 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
   const [isPromptLoading, setIsPromptLoading] = useState(false)
   const [showUnlockDialog, setShowUnlockDialog] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
+  const rawCode = useResolvedDemoCode(demo.demo_code, demo.component?.code, {
+    bundleUrl,
+    demoSlug: demo.demo_slug,
+    demoId: demo.id,
+  })
+  const controls = useMemo(() => extractControlsSettings(rawCode), [rawCode])
+  const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
+    getDefaultControlValues(controls),
+  )
+  const [isControlsExpanded, setIsControlsExpanded] = useState(true)
+
+  useEffect(() => {
+    if (controls.length > 0) {
+      setActiveControls(getDefaultControlValues(controls))
+    }
+  }, [controls])
   
   const { user } = useUser()
   const supabase = useClerkSupabaseClient()
@@ -73,15 +98,46 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
   }, [resolvedTheme])
 
+  const sendThemeToIframe = useCallback(() => {
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "theme-change", theme: previewTheme },
+        "*",
+      )
+    }
+  }, [previewTheme])
+
+  const sendControlsToIframe = useCallback(() => {
+    if (
+      iframeRef.current?.contentWindow &&
+      Object.keys(activeControls).length > 0
+    ) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "controls-change", controls: activeControls },
+        "*",
+      )
+    }
+  }, [activeControls])
+
+  useEffect(() => {
+    sendThemeToIframe()
+  }, [sendThemeToIframe])
+
+  useEffect(() => {
+    sendControlsToIframe()
+  }, [sendControlsToIframe])
+
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === "READY") {
+      if (event.data?.type === "READY" || event.data?.type === "preview-ready") {
         setIsLoading(false)
+        sendThemeToIframe()
+        sendControlsToIframe()
       }
     }
     window.addEventListener("message", handleMessage)
     return () => window.removeEventListener("message", handleMessage)
-  }, [])
+  }, [sendThemeToIframe, sendControlsToIframe])
 
   function handleOpenChange(open: boolean) {
     if (!open) {
@@ -89,8 +145,6 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
       else router.back()
     }
   }
-
-  const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
 
   const handlePromptAction = async (e?: React.MouseEvent, promptTypeOverride?: string) => {
     e?.stopPropagation()
@@ -293,11 +347,16 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         <div className="relative w-full h-full flex flex-col group">
           {bundleUrl ? (
             <iframe
+              ref={iframeRef}
               src={`${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
               className={cn("w-full h-full border-0 transition-opacity duration-300", isLoading ? "opacity-0" : "opacity-100")}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              onLoad={() => setIsLoading(false)}
+              onLoad={() => {
+                setIsLoading(false)
+                sendThemeToIframe()
+                sendControlsToIframe()
+              }}
             />
           ) : (
              <div className="w-full h-full flex items-center justify-center bg-muted">
@@ -311,8 +370,32 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             </div>
           )}
 
+          {controls.length > 0 && (
+            <FloatingControlsDrawer
+              controls={controls}
+              values={activeControls}
+              onChange={(key, value) => {
+                setActiveControls((prev) => ({ ...prev, [key]: value }))
+              }}
+              onReset={() => {
+                setActiveControls(getDefaultControlValues(controls))
+              }}
+              isExpanded={isControlsExpanded}
+              onExpandedChange={setIsControlsExpanded}
+            />
+          )}
+
           {/* Top Right Dropdown & Fullscreen */}
-          <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-2">
+          <div
+            className={cn(
+              "absolute top-4 z-20 flex items-center gap-2 transition-all duration-200",
+              controls.length > 0 && isControlsExpanded
+                ? "right-[19.5rem] opacity-90 hover:opacity-100"
+                : controls.length > 0
+                ? "right-28 opacity-0 group-hover:opacity-100"
+                : "right-4 opacity-0 group-hover:opacity-100"
+            )}
+          >
             
             {componentDemos.length > 0 && (
               <DropdownMenu>
@@ -339,14 +422,16 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             )}
 
             <TooltipProvider>
-              {/* The iframe has always accepted a `?theme=` param, but nothing
-                  ever let the viewer change it - `setPreviewTheme` was only
-                  called by the effect mirroring the global theme. This toggles
-                  the preview alone, not the page. */}
+              {/* The iframe accepts a `?theme=` param and a `theme-change` postMessage.
+                  This toggles the preview alone, not the page. */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button onClick={() => setPreviewTheme(previewTheme === "dark" ? "light" : "dark")} className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground p-1.5 rounded-full shadow-lg hover:bg-background/90 transition-colors">
-                    {previewTheme === "dark" ? <Moon size={14} className="opacity-70" /> : <Sun size={14} className="opacity-70" />}
+                  <button
+                    onClick={() => setPreviewTheme(previewTheme === "dark" ? "light" : "dark")}
+                    className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground p-1.5 rounded-full shadow-lg hover:bg-background/90 transition-colors"
+                    aria-label="Toggle preview theme"
+                  >
+                    {previewTheme === "dark" ? <Sun size={14} className="opacity-70" /> : <Moon size={14} className="opacity-70" />}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>{previewTheme === "dark" ? "Light preview" : "Dark preview"}</TooltipContent>

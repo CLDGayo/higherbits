@@ -30,6 +30,28 @@ const getUserDemos = async (userId: string) => {
     return []
   }
 
+  if (demos && demos.length > 0) {
+    const demoIds = demos.map((d: any) => d.id).filter(Boolean)
+    if (demoIds.length > 0) {
+      try {
+        const { data: codeRows } = await supabaseWithAdminAccess
+          .from("demos")
+          .select("id, demo_code")
+          .in("id", demoIds)
+        if (codeRows) {
+          const codeMap = new Map(codeRows.map((r: any) => [r.id, r.demo_code]))
+          demos.forEach((d: any) => {
+            if (!d.demo_code && codeMap.has(d.id)) {
+              d.demo_code = codeMap.get(d.id)
+            }
+          })
+        }
+      } catch (err) {
+        console.error("Error fetching demo_code for studio demos:", err)
+      }
+    }
+  }
+
   return demos ? demos.map(transformDemoResult) : []
 }
 

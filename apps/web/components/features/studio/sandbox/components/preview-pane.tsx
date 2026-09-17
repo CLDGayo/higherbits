@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef, useCallback } from "react"
-import { RefreshCw, PanelRightClose, Maximize, Minimize, Monitor, Smartphone, Tablet } from "lucide-react"
+import { useEffect, useState, useRef, useCallback, useMemo } from "react"
+import { RefreshCw, PanelRightClose, Maximize, Minimize, Monitor, Smartphone, Tablet, Sun, Moon } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { EditorPane } from "./editor-pane"
 import { cn } from "@/lib/utils"
@@ -135,18 +135,39 @@ export function PreviewPane({
     string | null
   >(connectedShellId)
 
-  const { resolvedTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
+  const [previewTheme, setPreviewTheme] = useState<"light" | "dark">(
+    resolvedTheme === "dark" ? "dark" : "light",
+  )
+
+  useEffect(() => {
+    if (resolvedTheme) {
+      setPreviewTheme(resolvedTheme === "dark" ? "dark" : "light")
+    }
+  }, [resolvedTheme])
 
   // Post theme changes to the sandboxed iframe
   const sendThemeToIframe = useCallback(() => {
     const iframe = iframeRef.current
-    if (iframe?.contentWindow && resolvedTheme) {
+    if (iframe?.contentWindow) {
       iframe.contentWindow.postMessage(
-        { type: "theme-change", theme: resolvedTheme },
-        "*"
+        { type: "theme-change", theme: previewTheme },
+        "*",
       )
     }
-  }, [resolvedTheme])
+  }, [previewTheme])
+
+  const toggleTheme = useCallback(() => {
+    const next = previewTheme === "dark" ? "light" : "dark"
+    setPreviewTheme(next)
+    setTheme(next)
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "theme-change", theme: next },
+        "*",
+      )
+    }
+  }, [previewTheme, setTheme])
 
   // Post controls changes to the sandboxed iframe
   const sendControlsToIframe = useCallback(() => {
@@ -154,7 +175,7 @@ export function PreviewPane({
     if (iframe?.contentWindow && activeControls) {
       iframe.contentWindow.postMessage(
         { type: "controls-change", controls: activeControls },
-        "*"
+        "*",
       )
     }
   }, [activeControls])
@@ -169,7 +190,7 @@ export function PreviewPane({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === "preview-ready") {
+      if (event.data?.type === "preview-ready" || event.data?.type === "READY") {
         sendThemeToIframe()
         sendControlsToIframe()
       }
@@ -177,6 +198,18 @@ export function PreviewPane({
     window.addEventListener("message", handleMessage)
     return () => window.removeEventListener("message", handleMessage)
   }, [sendThemeToIframe, sendControlsToIframe])
+
+  const previewURLWithTheme = useMemo(() => {
+    if (!previewURL) return null
+    try {
+      const url = new URL(previewURL)
+      url.searchParams.set("theme", previewTheme)
+      return url.toString()
+    } catch {
+      const separator = previewURL.includes("?") ? "&" : "?"
+      return `${previewURL}${separator}theme=${previewTheme}`
+    }
+  }, [previewURL, previewTheme])
 
   //  takes time to complile need to reload iframe, will be fixed at codesandbox SDK team side
   useEffect(() => {
@@ -292,13 +325,17 @@ export function PreviewPane({
                   <iframe
                     ref={iframeRef}
                     key={`${iframeKey}-${connectedShellId}`}
-                    src={previewURL}
+                    src={previewURLWithTheme || previewURL}
                     className={cn("w-full h-full border-0", isIframePointerEventsNone && "pointer-events-none")}
                     title="Preview"
                     referrerPolicy="no-referrer"
                     onLoad={() => {
                       sendThemeToIframe()
                       sendControlsToIframe()
+                      setTimeout(sendThemeToIframe, 150)
+                      setTimeout(sendControlsToIframe, 150)
+                      setTimeout(sendThemeToIframe, 500)
+                      setTimeout(sendControlsToIframe, 500)
                     }}
                     allow="cross-origin-isolated; accelerometer; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; xr-spatial-tracking"
                     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
@@ -400,9 +437,16 @@ export function PreviewPane({
                   
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="h-7 w-7 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors cursor-pointer text-muted-foreground hover:text-foreground">
-                        <ThemeToggle fillIcon={false} />
-                      </div>
+                      <button
+                        onClick={toggleTheme}
+                        className="h-7 w-7 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                      >
+                        {previewTheme === "dark" ? (
+                          <Sun className="h-3.5 w-3.5" />
+                        ) : (
+                          <Moon className="h-3.5 w-3.5" />
+                        )}
+                      </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={8} className="text-xs">
                       Toggle theme

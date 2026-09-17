@@ -312,6 +312,17 @@ export const DEFAULT_INDEX_HTML = `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
     <script>
+      (function() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var t = params.get("theme");
+          if (t === "dark") {
+            document.documentElement.classList.add("dark");
+          } else if (t === "light") {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (e) {}
+      })();
       // Theme bridge: listen for theme-change messages from the parent studio
       window.addEventListener("message", function(e) {
         if (e.data && e.data.type === "theme-change") {

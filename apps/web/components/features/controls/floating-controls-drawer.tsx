@@ -13,6 +13,8 @@ export interface FloatingControlsDrawerProps {
   onReset: () => void
   className?: string
   defaultExpanded?: boolean
+  isExpanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
 }
 
 export function FloatingControlsDrawer({
@@ -22,8 +24,19 @@ export function FloatingControlsDrawer({
   onReset,
   className,
   defaultExpanded = true,
+  isExpanded: controlledExpanded,
+  onExpandedChange,
 }: FloatingControlsDrawerProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+  const isExpanded =
+    controlledExpanded !== undefined ? controlledExpanded : internalExpanded
+
+  const handleSetExpanded = (next: boolean) => {
+    if (controlledExpanded === undefined) {
+      setInternalExpanded(next)
+    }
+    onExpandedChange?.(next)
+  }
 
   if (controls.length === 0) return null
 
@@ -32,7 +45,7 @@ export function FloatingControlsDrawer({
       {!isExpanded ? (
         <button
           type="button"
-          onClick={() => setIsExpanded(true)}
+          onClick={() => handleSetExpanded(true)}
           className="pointer-events-auto absolute right-4 top-4 z-30 bg-zinc-950/90 hover:bg-zinc-900 border border-white/15 backdrop-blur-md text-xs font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 transition-all"
         >
           <Sliders className="w-3.5 h-3.5 text-zinc-400" />
@@ -45,7 +58,7 @@ export function FloatingControlsDrawer({
             values={values}
             onChange={onChange}
             onReset={onReset}
-            onClose={() => setIsExpanded(false)}
+            onClose={() => handleSetExpanded(false)}
             showCloseButton={true}
             className="h-full max-h-full"
           />
@@ -54,3 +67,4 @@ export function FloatingControlsDrawer({
     </div>
   )
 }
+

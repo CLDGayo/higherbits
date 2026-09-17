@@ -57,10 +57,16 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useMemo, useCallback } from "react"
 import { toast } from "sonner"
 import { AnimatePresence, motion } from "motion/react"
 import { PayWall } from "./pay-wall"
+import {
+  extractControlsSettings,
+  getDefaultControlValues,
+  useResolvedDemoCode,
+} from "@/lib/controls-parser"
+import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
   "previewDialogSelectedPromptType",
@@ -93,6 +99,27 @@ export function ComponentPreviewDialog({
   const [isOpening, setIsOpening] = useState(false)
   const [showUnlockDialog, setShowUnlockDialog] = useState(false)
   const accessState = useComponentAccess(demo.component, hasPurchased)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  const rawCode = useResolvedDemoCode(demo.demo_code, demo.component?.code, {
+    bundleUrl:
+      demo.bundle_html_url ||
+      demo.bundle_url?.html ||
+      demo.component?.bundle_html_url,
+    demoSlug: demo.demo_slug,
+    demoId: demo.id,
+  })
+  const controls = useMemo(() => extractControlsSettings(rawCode), [rawCode])
+  const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
+    getDefaultControlValues(controls),
+  )
+  const [isControlsExpanded, setIsControlsExpanded] = useState(true)
+
+  useEffect(() => {
+    if (controls.length > 0) {
+      setActiveControls(getDefaultControlValues(controls))
+    }
+  }, [controls])
 
   // Close unlock dialog when component becomes unlocked
   useEffect(() => {
@@ -101,23 +128,54 @@ export function ComponentPreviewDialog({
     }
   }, [accessState])
 
-  // Listen for READY message from iframe for instant loading
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === "READY") {
-        setIsLoading(false)
-      }
-    }
-    window.addEventListener("message", handleMessage)
-    return () => window.removeEventListener("message", handleMessage)
-  }, [])
-
   // Add effect to sync preview theme with system theme
   useEffect(() => {
     if (resolvedTheme) {
       setPreviewTheme(resolvedTheme === "dark" ? "dark" : "light")
     }
   }, [resolvedTheme])
+
+  const sendThemeToIframe = useCallback(() => {
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "theme-change", theme: previewTheme },
+        "*",
+      )
+    }
+  }, [previewTheme])
+
+  const sendControlsToIframe = useCallback(() => {
+    if (
+      iframeRef.current?.contentWindow &&
+      Object.keys(activeControls).length > 0
+    ) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "controls-change", controls: activeControls },
+        "*",
+      )
+    }
+  }, [activeControls])
+
+  useEffect(() => {
+    sendThemeToIframe()
+  }, [sendThemeToIframe])
+
+  useEffect(() => {
+    sendControlsToIframe()
+  }, [sendControlsToIframe])
+
+  // Listen for READY message from iframe for instant loading
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "READY" || event.data?.type === "preview-ready") {
+        setIsLoading(false)
+        sendThemeToIframe()
+        sendControlsToIframe()
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [sendThemeToIframe, sendControlsToIframe])
 
   const { user } = useUser()
   const supabase = useClerkSupabaseClient()
@@ -352,7 +410,14 @@ export function ComponentPreviewDialog({
   }
 
   const toggleTheme = () => {
-    setPreviewTheme((current) => (current === "dark" ? "light" : "dark"))
+    const next = previewTheme === "dark" ? "light" : "dark"
+    setPreviewTheme(next)
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "theme-change", theme: next },
+        "*",
+      )
+    }
   }
 
   const renderDesktopActions = () => (
@@ -595,6 +660,7 @@ export function ComponentPreviewDialog({
                 )}
               </AnimatePresence>
               <iframe
+                ref={iframeRef}
                 src={`${bundleUrl}?theme=${previewTheme}${
                   previewTheme === "dark" ? "&dark=true" : ""
                 }`}
@@ -605,8 +671,26 @@ export function ComponentPreviewDialog({
                 }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                onLoad={() => setIsLoading(false)}
+                onLoad={() => {
+                  setIsLoading(false)
+                  sendThemeToIframe()
+                  sendControlsToIframe()
+                }}
               />
+              {controls.length > 0 && (
+                <FloatingControlsDrawer
+                  controls={controls}
+                  values={activeControls}
+                  onChange={(key, value) => {
+                    setActiveControls((prev) => ({ ...prev, [key]: value }))
+                  }}
+                  onReset={() => {
+                    setActiveControls(getDefaultControlValues(controls))
+                  }}
+                  isExpanded={isControlsExpanded}
+                  onExpandedChange={setIsControlsExpanded}
+                />
+              )}
             </>
           )}
         </div>
