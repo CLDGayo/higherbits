@@ -681,6 +681,11 @@ function PublishClientPageContent({
     }
   }, [missingDependencyInfo])
 
+  const loadFileContentRef = useRef(loadFileContent)
+  useEffect(() => {
+    loadFileContentRef.current = loadFileContent
+  }, [loadFileContent])
+
   useEffect(() => {
     if (
       !selectedEntry ||
@@ -690,17 +695,18 @@ function PublishClientPageContent({
       return
     }
 
+    const currentPath = selectedEntry.path
     let isCancelled = false
+
     const loadContent = async () => {
       try {
-        const content = await loadFileContent(selectedEntry.path)
+        const content = await loadFileContentRef.current(currentPath)
         if (!isCancelled) {
           setCode(content)
         }
       } catch (error) {
         if (!isCancelled) {
-          setCode("")
-          setSelectedEntry(null)
+          console.error(`Failed to load file content for ${currentPath}:`, error)
         }
       }
     }
@@ -709,7 +715,7 @@ function PublishClientPageContent({
     return () => {
       isCancelled = true
     }
-  }, [selectedEntry, sandboxConnectionHash, loadFileContent])
+  }, [selectedEntry?.path, sandboxConnectionHash])
 
   const handleCodeChange = (value: string) => {
     setCode(value)

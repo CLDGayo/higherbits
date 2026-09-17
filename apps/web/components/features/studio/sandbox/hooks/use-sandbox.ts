@@ -1,7 +1,7 @@
 import { Tables } from "@/types/supabase"
 import { SandboxSession } from "@codesandbox/sdk"
 import { connectToSandbox as connectToCodeSandboxSDK } from "@codesandbox/sdk/browser"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { connectToSandbox, getSandboxInfo } from "../api"
 import { getLatestPackageVersionFromError } from "../utils/dependencies"
 
@@ -548,7 +548,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     }
   }, [sandboxId])
 
-  const reconnectSandbox = async () => {
+  const reconnectSandbox = useCallback(async () => {
     console.log("RECONNECTING sandbox")
     if (!sandboxId) return
     cancelPendingHibernate(sandboxId)
@@ -593,7 +593,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     const backoffMs = Math.min(1000 * 2 ** reconnectAttemptsRef.current, 15000)
     await new Promise((resolve) => setTimeout(resolve, backoffMs))
     await initialize(true)
-  }
+  }, [sandboxId])
 
   // Manual retry from the "sandbox unavailable" UI: clears the caps and forces
   // a fresh connection attempt.
