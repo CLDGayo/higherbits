@@ -2,7 +2,7 @@
 
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { LoadingDialog } from "@/components/ui/loading-dialog"
-import { useEffect, useState, Suspense } from "react"
+import React, { useEffect, useState, Suspense, Component, type ErrorInfo, type ReactNode } from "react"
 import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation"
 import {
   ResizableHandle,
@@ -57,6 +57,43 @@ import { PublishStageForm } from "@/components/features/studio/publish/publish-s
 import { useComponentData } from "@/components/features/studio/publish/hooks/use-component-data"
 
 type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
+
+class LocalErrorBoundary extends Component<
+  { children: ReactNode },
+  { error: Error | null }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { error: null }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { error }
+  }
+
+  override componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("[studio] LocalErrorBoundary caught in PublishStageForm:", error, info.componentStack)
+  }
+
+  override render() {
+    if (this.state.error) {
+      return (
+        <div className="p-4 m-4 rounded-md border border-destructive/40 bg-destructive/10 text-xs font-mono text-destructive space-y-2">
+          <p className="font-bold text-sm">Failed to render publish form</p>
+          <p>{this.state.error.message}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => this.setState({ error: null })}
+          >
+            Retry
+          </Button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 interface StudioDemoPreviewCardProps {
   control: Control<FormData>
@@ -239,6 +276,7 @@ function PublishClientPageContent({
       // it out made every create-mode submit fail validation before the user
       // ever touched the visibility toggle.
       is_public: true,
+      submit_for_featuring: true,
       demos: [{ name: "Default Demo", demo_slug: "default", preview_image_data_url: "", tags: [] }],
     },
   })
@@ -931,14 +969,16 @@ function PublishClientPageContent({
             )}
 
             {activeStage === "Publish" && (
-              <Form {...form}>
-                <PublishStageForm
-                  form={form}
-                  onSubmit={handleSubmit}
-                  isSubmitting={isSubmitting}
-                  username={username}
-                />
-              </Form>
+              <LocalErrorBoundary>
+                <Form {...form}>
+                  <PublishStageForm
+                    form={form}
+                    onSubmit={handleSubmit}
+                    isSubmitting={isSubmitting}
+                    username={username}
+                  />
+                </Form>
+              </LocalErrorBoundary>
             )}
           </div>
         </div>

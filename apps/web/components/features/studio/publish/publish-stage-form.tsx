@@ -62,6 +62,8 @@ export function PublishStageForm({
     username: form.watch("publish_as_username") || username,
   })
 
+  const safeLibraries = Array.isArray(libraries) ? libraries : []
+
   useEffect(() => {
     if (!form.getValues("publish_as_username") && username) {
       form.setValue("publish_as_username", username)
@@ -173,7 +175,7 @@ export function PublishStageForm({
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="none">No Library</SelectItem>
-                  {(libraries || []).map((lib) => (
+                  {safeLibraries.map((lib) => (
                     <SelectItem key={lib.id} value={lib.id}>
                       {lib.name}
                     </SelectItem>
