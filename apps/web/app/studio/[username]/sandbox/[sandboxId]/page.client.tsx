@@ -55,6 +55,12 @@ import { DemoDetailsForm } from "@/components/features/studio/publish/components
 import { useSubmitComponent } from "@/components/features/studio/publish/hooks/use-submit-component"
 import { PublishStageForm } from "@/components/features/studio/publish/publish-stage-form"
 import { useComponentData } from "@/components/features/studio/publish/hooks/use-component-data"
+import { ControlsPanel } from "@/components/features/controls/controls-panel"
+import { ControlsEmptyState } from "@/components/features/controls/controls-empty-state"
+import {
+  extractControlsSettings,
+  getDefaultControlValues,
+} from "@/lib/controls-parser"
 
 type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 
@@ -344,6 +350,78 @@ function PublishClientPageContent({
     sandboxConnectionHash,
   })
 
+  const [demoCode, setDemoCode] = useState<string>("")
+  const [activeControls, setActiveControls] = useState<Record<string, any>>({})
+
+  const controlSettings = React.useMemo(() => {
+    return extractControlsSettings(demoCode)
+  }, [demoCode])
+
+  useEffect(() => {
+    if (controlSettings.length > 0) {
+      setActiveControls((prev) => {
+        const defaults = getDefaultControlValues(controlSettings)
+        const updated: Record<string, any> = {}
+        for (const c of controlSettings) {
+          updated[c.key] =
+            prev[c.key] !== undefined ? prev[c.key] : c.defaultValue
+        }
+        return updated
+      })
+    } else {
+      setActiveControls({})
+    }
+  }, [controlSettings])
+
+  const handleControlChange = React.useCallback((key: string, value: any) => {
+    setActiveControls((prev) => ({
+      ...prev,
+      [key]: value,
+    }))
+  }, [])
+
+  const handleResetControls = React.useCallback(() => {
+    if (controlSettings.length > 0) {
+      const defaults = getDefaultControlValues(controlSettings)
+      setActiveControls(defaults)
+      toast.info("Controls reset to defaults")
+    }
+  }, [controlSettings])
+
+  // Sync demoCode when demo.tsx is selected in editor
+  useEffect(() => {
+    if (
+      selectedEntry?.name === "demo.tsx" ||
+      selectedEntry?.path.endsWith("demo.tsx")
+    ) {
+      if (code) {
+        setDemoCode(code)
+      }
+    }
+  }, [selectedEntry, code])
+
+  // Fetch initial demo.tsx content if not yet loaded
+  useEffect(() => {
+    let isCancelled = false
+    const fetchDemoCode = async () => {
+      if (demoCode) return
+      try {
+        const content = await loadFileContent("/src/demo.tsx")
+        if (content && !isCancelled) {
+          setDemoCode(content)
+        }
+      } catch {
+        // demo.tsx not yet ready
+      }
+    }
+    if (!isTreeLoading && files.length > 0) {
+      fetchDemoCode()
+    }
+    return () => {
+      isCancelled = true
+    }
+  }, [isTreeLoading, files, demoCode, loadFileContent, activeStage])
+
   const {
     submitComponent,
     isSubmitting,
@@ -629,6 +707,12 @@ function PublishClientPageContent({
 
   const handleCodeChange = (value: string) => {
     setCode(value)
+    if (
+      selectedEntry?.name === "demo.tsx" ||
+      selectedEntry?.path.endsWith("demo.tsx")
+    ) {
+      setDemoCode(value)
+    }
     if (!sandboxRef.current || !selectedEntry || selectedEntry.type !== "file")
       return
     saveFileContent(selectedEntry.path, value)
@@ -963,8 +1047,18 @@ function PublishClientPageContent({
             
             {/* Placeholders for other stages */}
             {activeStage === "Controls" && (
-              <div className="p-4 flex items-center justify-center h-full text-sm text-muted-foreground">
-                Controls UI coming soon
+              <div className="h-full flex flex-col min-h-0">
+                {controlSettings.length > 0 ? (
+                  <ControlsPanel
+                    controls={controlSettings}
+                    values={activeControls}
+                    onChange={handleControlChange}
+                    onReset={handleResetControls}
+                    className="h-full rounded-none border-0 shadow-none bg-transparent"
+                  />
+                ) : (
+                  <ControlsEmptyState />
+                )}
               </div>
             )}
 
@@ -1011,6 +1105,7 @@ function PublishClientPageContent({
               isFullscreen={isFullscreen}
               onFullscreenChange={setIsFullscreen}
               connectionPhase={connectionPhase}
+              activeControls={activeControls}
             />
           )}
         </div>

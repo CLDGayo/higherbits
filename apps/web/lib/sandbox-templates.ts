@@ -391,16 +391,43 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 export const DEFAULT_APP_TSX = `// This is a infrastructure component that renders demos
 // Please do not modify this file
 
+import React, { useState, useEffect } from "react";
 import DemoComponents from "./demo";
 
 function App() {
-  return (
-    <>
-      {Object.entries(DemoComponents).map(([name, Component]) => (
-        <Component key={name} />
-      ))}
-    </>
-  );
+  const [controlProps, setControlProps] = useState({});
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === "controls-change") {
+        setControlProps(event.data.controls || {});
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  if (typeof DemoComponents === "function") {
+    const Demo = DemoComponents as React.ComponentType<any>;
+    return <Demo {...controlProps} />;
+  }
+
+  if (DemoComponents && typeof DemoComponents === "object") {
+    if (typeof (DemoComponents as any).default === "function") {
+      const Demo = (DemoComponents as any).default;
+      return <Demo {...controlProps} />;
+    }
+    return (
+      <>
+        {Object.entries(DemoComponents).map(([name, Component]) => {
+          const Comp = Component as React.ComponentType<any>;
+          return <Comp key={name} {...controlProps} />;
+        })}
+      </>
+    );
+  }
+
+  return null;
 }
 
 export default App;

@@ -40,6 +40,7 @@ interface PreviewPaneProps {
   // Optional so callers without hook state (Suspense/route-level fallbacks) keep
   // rendering the original copy unchanged.
   connectionPhase?: SandboxConnectionPhase
+  activeControls?: Record<string, any>
 }
 
 export function PreviewPane({
@@ -62,6 +63,7 @@ export function PreviewPane({
   isFullscreen = false,
   onFullscreenChange,
   connectionPhase,
+  activeControls,
 }: PreviewPaneProps) {
   const {
     selectedDevice,
@@ -146,9 +148,35 @@ export function PreviewPane({
     }
   }, [resolvedTheme])
 
+  // Post controls changes to the sandboxed iframe
+  const sendControlsToIframe = useCallback(() => {
+    const iframe = iframeRef.current
+    if (iframe?.contentWindow && activeControls) {
+      iframe.contentWindow.postMessage(
+        { type: "controls-change", controls: activeControls },
+        "*"
+      )
+    }
+  }, [activeControls])
+
   useEffect(() => {
     sendThemeToIframe()
   }, [sendThemeToIframe])
+
+  useEffect(() => {
+    sendControlsToIframe()
+  }, [sendControlsToIframe])
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "preview-ready") {
+        sendThemeToIframe()
+        sendControlsToIframe()
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [sendThemeToIframe, sendControlsToIframe])
 
   //  takes time to complile need to reload iframe, will be fixed at codesandbox SDK team side
   useEffect(() => {
@@ -268,7 +296,10 @@ export function PreviewPane({
                     className={cn("w-full h-full border-0", isIframePointerEventsNone && "pointer-events-none")}
                     title="Preview"
                     referrerPolicy="no-referrer"
-                    onLoad={sendThemeToIframe}
+                    onLoad={() => {
+                      sendThemeToIframe()
+                      sendControlsToIframe()
+                    }}
                     allow="cross-origin-isolated; accelerometer; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; xr-spatial-tracking"
                     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
                   />
