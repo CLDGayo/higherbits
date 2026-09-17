@@ -1,5 +1,6 @@
 import { isArtifactKind } from "@/components/features/studio/artifacts/registry"
 import { checkIsAdmin } from "./admin"
+import { SOURCE_PREFIX } from "./r2-paths"
 import { supabaseWithAdminAccess } from "./supabase"
 
 /**
@@ -15,14 +16,29 @@ import { supabaseWithAdminAccess } from "./supabase"
  *   - `{userId}/...`          (edit dialog, publish layout, import route)
  *   - `{username}/...`        (studio submit, incl. admin publish-as)
  *   - `{kind}/{userId}/...`   (studio artifacts: ascii upload, deleteArtifact)
+ *
+ * Any of them may arrive wrapped by `sourceKey()` (`src/…`) - every component
+ * *source* upload wraps its key that way, so the prefix is stripped before the
+ * identity segment is read. Missing that cost the first cut of this check: it
+ * denied every non-admin publish, import and edit, and no test caught it
+ * because they all used hand-written keys no call site produces.
  */
 
 const R2_ALLOWED_BUCKET = "components-code"
 
 /**
- * The identity segments a user may own: their id, plus username and
- * display_username when set. Fails closed - on a lookup error or missing row,
- * only the literal id is accepted.
+ * The identity segments a user may own: their id, plus their username when set.
+ * Fails closed - on a lookup error or missing row, only the literal id is
+ * accepted.
+ *
+ * `display_username` is deliberately NOT an owner segment. It carries no
+ * uniqueness constraint against any column, `id` included, and the only guard
+ * on it (`PATCH /api/user/profile`) compares a new value against other rows'
+ * `username`/`display_username` and never against `id` - so a user can set
+ * theirs to a victim's Clerk id and would then "own" `{victimId}/…`. `username`
+ * is `@unique` in the schema, so it stays. No call site keys an R2 path by
+ * `display_username`; re-admitting it needs a DB constraint against the id
+ * namespace first.
  */
 export async function resolveOwnerSegments(
   userId: string,
@@ -31,7 +47,7 @@ export async function resolveOwnerSegments(
 
   const { data, error } = await supabaseWithAdminAccess
     .from("users")
-    .select("username, display_username")
+    .select("username")
     .eq("id", userId)
     .maybeSingle()
 
@@ -41,10 +57,6 @@ export async function resolveOwnerSegments(
 
   if (data.username) {
     segments.add(data.username)
-  }
-  // display_username has no DB uniqueness constraint (unlike username) — do not add a new call site that keys a path by it without first verifying uniqueness
-  if (data.display_username) {
-    segments.add(data.display_username)
   }
 
   return segments
@@ -71,7 +83,15 @@ export async function assertOwnsR2Path(
     throw new Error("Unauthorized: unexpected bucket")
   }
 
-  const segments = pathValue.split("/")
+  // Source uploads arrive as `sourceKey(key)`. Strip that known prefix once -
+  // sourceKey never double-prefixes - so the identity segment is read from the
+  // same position for every shape. Everything below is unchanged by the strip,
+  // so the kind-first rule still decides kind-shaped paths.
+  const unwrapped = pathValue.startsWith(SOURCE_PREFIX)
+    ? pathValue.slice(SOURCE_PREFIX.length)
+    : pathValue
+
+  const segments = unwrapped.split("/")
   const first = segments[0] ?? ""
   const second = segments[1]
   const ownerSegments = await resolveOwnerSegments(userId)

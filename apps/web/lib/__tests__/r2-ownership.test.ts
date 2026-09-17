@@ -19,6 +19,7 @@ vi.mock("../supabase", () => ({
 }))
 
 import { assertOwnsR2Path, resolveOwnerSegments } from "../r2-ownership"
+import { sourceKey } from "../r2-paths"
 
 const BUCKET = "components-code"
 const DENIED = "Unauthorized: path does not belong to caller"
@@ -40,12 +41,22 @@ const profile = (
 describe("resolveOwnerSegments", () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it("includes id, username and display_username", async () => {
+  it("includes id and username only - never display_username", async () => {
     profile("alice", "Alice B")
     expect([...(await resolveOwnerSegments("u1"))].sort()).toEqual(
-      ["Alice B", "alice", "u1"].sort(),
+      ["alice", "u1"].sort(),
     )
     expect(fromMock).toHaveBeenCalledWith("users")
+  })
+
+  // display_username has no uniqueness constraint against ANY column, `id`
+  // included: PATCH /api/user/profile checks it only against other rows'
+  // username/display_username, so a user can set theirs to a victim's Clerk id.
+  it("excludes a display_username forged to equal a victim's user id", async () => {
+    profile("attacker", "u2")
+    const segments = await resolveOwnerSegments("u1")
+    expect(segments.has("u2")).toBe(false)
+    expect([...segments].sort()).toEqual(["attacker", "u1"].sort())
   })
 
   it("fails closed to only the id on a lookup error", async () => {
@@ -132,6 +143,43 @@ describe("assertOwnsR2Path - DENY (non-owner, non-admin)", () => {
       assertOwnsR2Path("u1", "u1/foo/", "other-bucket"),
     ).rejects.toThrow("Unauthorized: unexpected bucket")
   })
+
+  // Deliberate behaviour flip: display_username used to grant. It cannot, for
+  // the reason given on resolveOwnerSegments above.
+  it("denies a {display_username}/ path", async () => {
+    profile("alice", "Alice B")
+    await expect(assertOwnsR2Path("u1", "Alice B/slug", BUCKET)).rejects.toThrow(
+      DENIED,
+    )
+  })
+
+  it("denies a victim's {userId}/ prefix to an attacker who forged display_username to that id", async () => {
+    profile("attacker", "u2")
+    await expect(assertOwnsR2Path("u1", "u2/foo/", BUCKET)).rejects.toThrow(
+      DENIED,
+    )
+  })
+
+  it("denies another user's src/-prefixed source path", async () => {
+    await expect(
+      assertOwnsR2Path("u1", "src/u2/my-card/code.tsx", BUCKET),
+    ).rejects.toThrow(DENIED)
+    await expect(
+      assertOwnsR2Path("u1", "src/bob/my-card/code.tsx", BUCKET),
+    ).rejects.toThrow(DENIED)
+  })
+
+  // Kind-first ordering must survive the prefix strip. No call site builds this
+  // shape today; the pair documents that stripping cannot reopen trap 3.
+  it("denies a src/-prefixed kind path belonging to another user", async () => {
+    await expect(
+      assertOwnsR2Path("u1", "src/ascii/u2/x.png", BUCKET),
+    ).rejects.toThrow(DENIED)
+  })
+
+  it("denies a bare src/ path with no owner segment", async () => {
+    await expect(assertOwnsR2Path("u1", "src/", BUCKET)).rejects.toThrow(DENIED)
+  })
 })
 
 describe("assertOwnsR2Path - ALLOW", () => {
@@ -153,9 +201,29 @@ describe("assertOwnsR2Path - ALLOW", () => {
     ).resolves.toBe(undefined)
   })
 
-  it("allows the caller's own {display_username}/ path", async () => {
+  // Every real source upload wraps its key in sourceKey() (lib/r2-paths.ts),
+  // so these are the shapes publish/import/edit actually send.
+  it("allows the caller's own src/{userId}/ source key", async () => {
     await expect(
-      assertOwnsR2Path("u1", "Alice B/slug", BUCKET),
+      assertOwnsR2Path("u1", "src/u1/my-card/code.tsx", BUCKET),
+    ).resolves.toBe(undefined)
+  })
+
+  it("allows the caller's own src/{username}/ source key", async () => {
+    await expect(
+      assertOwnsR2Path("u1", sourceKey("alice/my-card/code.1726.tsx"), BUCKET),
+    ).resolves.toBe(undefined)
+  })
+
+  it("allows a doubly-wrapped sourceKey value (one prefix, stripped once)", async () => {
+    const key = sourceKey(sourceKey("alice/my-card/code.tsx"))
+    expect(key).toBe("src/alice/my-card/code.tsx")
+    await expect(assertOwnsR2Path("u1", key, BUCKET)).resolves.toBe(undefined)
+  })
+
+  it("allows the caller's own src/-prefixed kind path", async () => {
+    await expect(
+      assertOwnsR2Path("u1", "src/ascii/u1/x.png", BUCKET),
     ).resolves.toBe(undefined)
   })
 
@@ -181,6 +249,9 @@ describe("assertOwnsR2Path - ALLOW", () => {
     ).resolves.toBe(undefined)
     await expect(
       assertOwnsR2Path("admin1", "u2/foo/", BUCKET),
+    ).resolves.toBe(undefined)
+    await expect(
+      assertOwnsR2Path("admin1", "src/bob/their-card/code.tsx", BUCKET),
     ).resolves.toBe(undefined)
     expect(checkIsAdminMock).toHaveBeenCalledWith("admin1")
     expect(fromMock).not.toHaveBeenCalled()
