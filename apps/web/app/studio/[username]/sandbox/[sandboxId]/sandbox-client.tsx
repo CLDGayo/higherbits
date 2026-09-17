@@ -333,6 +333,7 @@ function PublishClientPageContent({
     toggleAdvancedView,
     loadRootDirectory,
     loadFileContent,
+    readTextFileDirectly,
     saveFileContent,
     createFile,
     deleteEntry,
@@ -405,10 +406,11 @@ function PublishClientPageContent({
 
   // Fetch initial demo.tsx content if not yet loaded
   useEffect(() => {
-    if (hasLoadedInitialDemoRef.current && demoCode && demoCode !== DEFAULT_DEMO_TSX) return
+    if (hasLoadedInitialDemoRef.current) return
 
     const fetchDemoCode = async () => {
       try {
+        hasLoadedInitialDemoRef.current = true
         const flatten = (arr: any[]): any[] =>
           arr.flatMap((f) => [f, ...(f.children ? flatten(f.children) : [])])
         const all = flatten(files)
@@ -416,10 +418,11 @@ function PublishClientPageContent({
           (f) => f.name === "demo.tsx" || f.path?.endsWith("demo.tsx"),
         )
         const demoPath = demoEntry?.path || "/src/demo.tsx"
-        const content = await loadFileContent(demoPath)
-        if (content && content !== DEFAULT_DEMO_TSX) {
-          hasLoadedInitialDemoRef.current = true
+        const content = await readTextFileDirectly(demoPath)
+        if (content) {
           setDemoCode(content)
+        } else {
+          setDemoCode(DEFAULT_DEMO_TSX)
         }
       } catch (err) {
         console.error("[controls-sync] error fetching demo code:", err)
@@ -428,7 +431,7 @@ function PublishClientPageContent({
     if (!isTreeLoading && files.length > 0) {
       fetchDemoCode()
     }
-  }, [isTreeLoading, files.length, loadFileContent, demoCode])
+  }, [isTreeLoading, files, readTextFileDirectly])
 
   const {
     submitComponent,
@@ -653,18 +656,6 @@ function PublishClientPageContent({
         if (firstUiFile) {
           console.debug("Setting selected entry:", firstUiFile.path)
           setSelectedEntry(firstUiFile)
-          // Explicitly load content after setting the entry
-          try {
-            console.debug("Calling loadFileContent for:", firstUiFile.path)
-            const content = await loadFileContent(firstUiFile.path)
-            console.debug("Content loaded successfully.")
-            setCode(content)
-          } catch (error) {
-            // Handle error if initial load fails
-            console.error("Failed to load initial file content:", error)
-            setCode("")
-            setSelectedEntry(null)
-          }
         } else {
           console.debug("No initial UI file found in /src/components/ui")
         }
@@ -672,7 +663,7 @@ function PublishClientPageContent({
     }
 
     findAndSelectFirstUiFile()
-  }, [files, isTreeLoading, selectedEntry, loadFileContent]) // Add loadFileContent to dependencies
+  }, [files, isTreeLoading, selectedEntry])
 
   useEffect(() => {
     if (serverSandbox) {
@@ -692,7 +683,6 @@ function PublishClientPageContent({
 
   useEffect(() => {
     if (
-      !sandboxRef.current ||
       !selectedEntry ||
       selectedEntry.type !== "file"
     ) {
@@ -700,18 +690,26 @@ function PublishClientPageContent({
       return
     }
 
+    let isCancelled = false
     const loadContent = async () => {
       try {
         const content = await loadFileContent(selectedEntry.path)
-        setCode(content)
+        if (!isCancelled) {
+          setCode(content)
+        }
       } catch (error) {
-        setCode("")
-        setSelectedEntry(null)
+        if (!isCancelled) {
+          setCode("")
+          setSelectedEntry(null)
+        }
       }
     }
 
     loadContent()
-  }, [sandboxRef, selectedEntry, isSandboxLoading])
+    return () => {
+      isCancelled = true
+    }
+  }, [selectedEntry, sandboxConnectionHash, loadFileContent])
 
   const handleCodeChange = (value: string) => {
     setCode(value)

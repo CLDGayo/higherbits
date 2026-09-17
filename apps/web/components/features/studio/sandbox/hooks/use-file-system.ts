@@ -402,9 +402,14 @@ export const useFileSystem = ({
   const loadFileContent = useCallback(async (filePath: string): Promise<string> => {
     setIsFileLoading(true)
     try {
-      const content = await sbWrapper((sandbox) =>
-        sandbox.fs.readTextFile(normalizePath(filePath)),
-      )
+      const content = await Promise.race([
+        sbWrapper((sandbox) =>
+          sandbox.fs.readTextFile(normalizePath(filePath)),
+        ),
+        new Promise<undefined>((_, reject) =>
+          setTimeout(() => reject(new Error(`Timeout loading file: ${filePath}`)), 8000),
+        ),
+      ])
       if (content === undefined || content === null) throw new Error("Failed to load file content")
       return content
     } catch (error) {
@@ -424,6 +429,23 @@ export const useFileSystem = ({
       throw error
     } finally {
       setIsFileLoading(false)
+    }
+  }, [sbWrapper])
+
+  const readTextFileDirectly = useCallback(async (filePath: string): Promise<string | null> => {
+    try {
+      const content = await Promise.race([
+        sbWrapper((sandbox) =>
+          sandbox.fs.readTextFile(normalizePath(filePath)),
+        ),
+        new Promise<undefined>((_, reject) =>
+          setTimeout(() => reject(new Error(`Timeout reading file: ${filePath}`)), 8000),
+        ),
+      ])
+      return content ?? null
+    } catch (error) {
+      console.warn(`readTextFileDirectly failed for ${filePath}:`, error)
+      return null
     }
   }, [sbWrapper])
 
@@ -1316,6 +1338,7 @@ export const useFileSystem = ({
     toggleAdvancedView,
     loadRootDirectory,
     loadFileContent,
+    readTextFileDirectly,
     saveFileContent,
     createFile,
     createDirectory,
