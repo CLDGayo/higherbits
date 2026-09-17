@@ -511,15 +511,36 @@ export const useFileSystem = ({
   const deleteEntry = async (entryPath: string) => {
     try {
       await sbWrapper(async (sandbox) => {
+        const normPath = normalizePath(entryPath)
+
+        // Special case for demo files:
+        // If deleting demo.tsx and default.tsx exists, restore default.tsx -> demo.tsx
+        // so App.tsx ("import DemoComponents from './demo'") never breaks
+        if (normPath.endsWith("/src/demo.tsx") || normPath.endsWith("src/demo.tsx")) {
+          const defaultPath = normalizePath("src/default.tsx")
+          let defaultExists = false
+          try {
+            await sandbox.fs.stat(defaultPath)
+            defaultExists = true
+          } catch {}
+
+          if (defaultExists) {
+            const defaultContent = await sandbox.fs.readTextFile(defaultPath)
+            await sandbox.fs.writeTextFile(normPath, defaultContent)
+            await sandbox.fs.remove(defaultPath, false)
+            return
+          }
+        }
+
         let isDir = false
         try {
-          const statResult = await sandbox.fs.stat(normalizePath(entryPath))
+          const statResult = await sandbox.fs.stat(normPath)
           isDir = statResult.type === "directory"
         } catch (statError) {
           console.warn(`Stat failed for ${entryPath} during delete:`, statError)
         }
 
-        return sandbox.fs.remove(normalizePath(entryPath), isDir)
+        return sandbox.fs.remove(normPath, isDir)
       })
       await loadRootDirectory()
     } catch (error) {

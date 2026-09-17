@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { motion } from "motion/react"
 import React from "react"
+import { cn } from "@/lib/utils"
 
 interface FileEntry {
   name: string
@@ -248,6 +249,7 @@ function FileItem({
   selectedPath,
   onDelete,
   onRename,
+  canDelete = false,
 }: {
   entry: FileEntry
   level: number
@@ -255,6 +257,7 @@ function FileItem({
   selectedPath: string | null
   onDelete: (filePath: string) => void
   onRename?: (oldPath: string, newName: string) => Promise<string>
+  canDelete?: boolean
 }) {
   const [isRenaming, setIsRenaming] = useState(false)
   const [newName, setNewName] = useState(entry.name)
@@ -314,11 +317,16 @@ function FileItem({
             <span>{entry.name}</span>
           </button>
 
-          {showActions && !["component.tsx", "index.css", "demo.tsx", "default.tsx", "Add dependency"].includes(entry.name) && (
+          {canDelete && (
             <Button
               size="icon"
               variant="ghost"
-              className="h-5 w-5 mr-1 flex-shrink-0 opacity-60 hover:opacity-100 hover:text-destructive"
+              className={cn(
+                "h-5 w-5 mr-1 flex-shrink-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-opacity",
+                selectedPath === entry.path
+                  ? "opacity-60 hover:opacity-100"
+                  : "opacity-0 group-hover/item:opacity-60 hover:!opacity-100"
+              )}
               onClick={(e) => {
                 e.stopPropagation()
                 onDelete(entry.path)
@@ -383,6 +391,7 @@ function SectionItem({
           onNewDemo={onNewDemo}
           expandedDirs={expandedDirs}
           setExpandedDirs={setExpandedDirs}
+          parentSection={entry.name}
         />
       )}
       {entry.name === "Demos" && onNewDemo && (
@@ -612,6 +621,7 @@ function FileList({
   onNewDemo,
   expandedDirs,
   setExpandedDirs,
+  parentSection,
 }: {
   items: FileEntry[]
   level: number
@@ -624,6 +634,7 @@ function FileList({
   onNewDemo?: () => void
   expandedDirs: Record<string, boolean>
   setExpandedDirs: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+  parentSection?: string
 }) {
   return (
     <ul className="text-sm py-0.5 relative group/tree select-none">
@@ -682,6 +693,11 @@ function FileList({
               selectedPath={selectedPath}
               onDelete={onDelete}
               onRename={onRename}
+              canDelete={
+                parentSection === "Demos"
+                  ? items.length > 1
+                  : !["component.tsx", "index.css", "Add dependency"].includes(entry.name)
+              }
             />
           )}
         </div>

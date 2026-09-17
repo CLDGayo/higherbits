@@ -615,11 +615,43 @@ function PublishClientPageContent({
   const handleDeleteEntry = async (entryPath: string) => {
     try {
       await deleteEntry(entryPath)
-      if (selectedEntry?.path === entryPath) {
-        setSelectedEntry(null)
-        setCode("")
+      if (entryPath.endsWith("demo.tsx")) {
+        // demo.tsx was restored from default.tsx if default.tsx existed
+        try {
+          const content = await loadFileContent("/src/demo.tsx")
+          setSelectedEntry({
+            path: "/src/demo.tsx",
+            name: "demo.tsx",
+            type: "file",
+            isSymlink: false,
+          })
+          setCode(content)
+        } catch {
+          setSelectedEntry(null)
+          setCode("")
+        }
+      } else if (selectedEntry?.path === entryPath) {
+        if (entryPath.endsWith("default.tsx")) {
+          try {
+            const content = await loadFileContent("/src/demo.tsx")
+            setSelectedEntry({
+              path: "/src/demo.tsx",
+              name: "demo.tsx",
+              type: "file",
+              isSymlink: false,
+            })
+            setCode(content)
+          } catch {
+            setSelectedEntry(null)
+            setCode("")
+          }
+        } else {
+          setSelectedEntry(null)
+          setCode("")
+        }
       }
       await loadRootDirectory()
+      toast.success(`Deleted ${entryPath.split("/").pop()}`)
     } catch (error) {
       // Error is handled in the hook
     }
