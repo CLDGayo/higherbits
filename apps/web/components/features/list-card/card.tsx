@@ -106,7 +106,16 @@ export const ComponentCard = React.memo(function ComponentCard({
 
   const user = currentUser
   const supabase = supabaseClient
-  const userData = "component" in demo ? demo.component?.user : demo.user
+  const rawUserData = ("component" in demo ? demo.component?.user : demo.user) || (demo as any).user
+  const userData = rawUserData || {
+    id: "user",
+    username: "user",
+    display_username: "user",
+    name: "User",
+    display_name: "User",
+    image_url: "",
+    display_image_url: "",
+  }
   const username =
     userData?.username ||
     userData?.display_username ||
@@ -117,17 +126,6 @@ export const ComponentCard = React.memo(function ComponentCard({
   const componentSlug =
     (isDemo ? demo.component?.component_slug : demo.component_slug) ||
     "component-slug"
-
-  // Fallback username and componentSlug ensure card renders even when username is null
-  if (!userData) {
-    console.warn("Missing required data:", {
-      userData,
-      username,
-      componentSlug,
-      demo,
-    })
-    return <ComponentCardSkeleton />
-  }
 
   const isDemoWithComponent = isDemo && "component" in demo
 
@@ -486,13 +484,24 @@ export const ComponentCard = React.memo(function ComponentCard({
               <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
                 <UserAvatar
                   src={
-                    demo.user.display_image_url ||
-                    demo.user.image_url ||
+                    (demo as any).user?.display_image_url ||
+                    (demo as any).user?.image_url ||
+                    (demo as any).user?.imageUrl ||
+                    userData?.display_image_url ||
+                    userData?.image_url ||
+                    (userData as any)?.imageUrl ||
                     "/placeholder.svg"
                   }
-                  alt={demo.user.display_name || demo.user.name || ""}
+                  alt={
+                    (demo as any).user?.display_name ||
+                    (demo as any).user?.name ||
+                    (demo as any).user?.fullName ||
+                    userData?.display_name ||
+                    userData?.name ||
+                    ""
+                  }
                   size={32}
-                  user={demo.user}
+                  user={(demo as any).user || userData}
                   isClickable
                 />
               </div>

@@ -56,10 +56,14 @@ export function DesignEngineersList({
 
         // Fallback: Use server action to bypass RLS
         const offset = Number(pageParam) * 10
-        const result = await getActiveAuthorsAction(offset, 10)
-        
-        if (result.data.length > 0) {
-          return result
+        try {
+          const result = await getActiveAuthorsAction(offset, 10)
+          
+          if (result?.data && result.data.length > 0) {
+            return result
+          }
+        } catch (actionErr) {
+          console.warn("getActiveAuthorsAction error:", actionErr)
         }
 
         const fallbackAuthors: DatabaseAuthor[] = [

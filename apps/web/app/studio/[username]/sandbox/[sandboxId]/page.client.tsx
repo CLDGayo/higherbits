@@ -64,7 +64,7 @@ interface StudioDemoPreviewCardProps {
   username?: string
 }
 
-// StudioDemoPreviewCard renders the live preview in Demos stage
+// StudioDemoPreviewCard renders the live preview card in Demos stage
 function StudioDemoPreviewCard({
   control,
   user,
