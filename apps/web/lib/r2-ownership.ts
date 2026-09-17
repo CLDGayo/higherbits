@@ -66,21 +66,28 @@ export async function resolveOwnerSegments(
  * Throws unless `pathValue` belongs to `userId` (or the caller is an admin).
  * Admin status is resolved server-side from the session's userId - never from
  * any client-supplied value.
+ *
+ * Order matters: the bucket allowlist is checked BEFORE the admin bypass, so it
+ * binds admins too. The bypass exists for WHOSE PATH may be written (admin
+ * publish-as), never for WHICH BUCKET. `./r2.ts` holds one account-scoped
+ * credential pair and takes `Bucket` as a per-call argument, so nothing beneath
+ * this module constrains where an unchecked `bucketName` lands - this literal is
+ * the only in-app restriction, and no flow (admin or not) passes any other name.
  */
 export async function assertOwnsR2Path(
   userId: string,
   pathValue: string,
   bucketName: string,
 ): Promise<void> {
+  if (bucketName !== R2_ALLOWED_BUCKET) {
+    throw new Error("Unauthorized: unexpected bucket")
+  }
+
   // checkIsAdmin (./admin) returns an OBJECT. Destructure it: an object is
   // always truthy, so testing the raw return would make every caller an admin.
   const { isAdmin } = await checkIsAdmin(userId)
   if (isAdmin === true) {
     return
-  }
-
-  if (bucketName !== R2_ALLOWED_BUCKET) {
-    throw new Error("Unauthorized: unexpected bucket")
   }
 
   // Source uploads arrive as `sourceKey(key)`. Strip that known prefix once -

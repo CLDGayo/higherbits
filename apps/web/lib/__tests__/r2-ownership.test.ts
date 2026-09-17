@@ -257,3 +257,53 @@ describe("assertOwnsR2Path - ALLOW", () => {
     expect(fromMock).not.toHaveBeenCalled()
   })
 })
+
+/**
+ * AC9: the bucket allowlist binds admins too.
+ *
+ * The admin bypass exists for WHOSE PATH may be written (publish-as), never for
+ * WHICH BUCKET. lib/r2.ts holds one account-scoped credential pair and takes
+ * Bucket as a per-call argument, so nothing below this module constrains where
+ * an unchecked bucketName lands - the allowlist literal is the only in-app
+ * restriction. These rows pin the ordering in BOTH directions: tightening the
+ * bucket must not cost the publish-as bypass.
+ */
+describe("assertOwnsR2Path - bucket allowlist binds admins (AC9)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    profile("alice")
+  })
+
+  // AC9-a: RED before the reorder - the admin early-return ran first, so an
+  // admin session could name ANY bucket.
+  it("denies an admin naming a bucket other than components-code", async () => {
+    admin()
+    await expect(
+      assertOwnsR2Path("admin1", "bob/their-card/code.tsx", "other-bucket"),
+    ).rejects.toThrow("Unauthorized: unexpected bucket")
+  })
+
+  it("denies an admin naming another bucket even for their own path", async () => {
+    admin()
+    await expect(
+      assertOwnsR2Path("admin1", "admin1/foo/", "some-private-bucket"),
+    ).rejects.toThrow("Unauthorized: unexpected bucket")
+  })
+
+  // AC9-b: the publish-as bypass survives the tightening.
+  it("still allows an admin naming another user's path in components-code", async () => {
+    admin()
+    await expect(
+      assertOwnsR2Path("admin1", "bob/their-card/code.tsx", BUCKET),
+    ).resolves.toBe(undefined)
+    expect(checkIsAdminMock).toHaveBeenCalledWith("admin1")
+  })
+
+  // AC9-c: the non-admin direction is unchanged.
+  it("still denies a non-admin naming a bucket other than components-code", async () => {
+    notAdmin()
+    await expect(
+      assertOwnsR2Path("u1", "u1/foo/", "other-bucket"),
+    ).rejects.toThrow("Unauthorized: unexpected bucket")
+  })
+})
