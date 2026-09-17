@@ -43,6 +43,8 @@ export default function Demo(props: Partial<typeof settings>) {
       type: "number",
       defaultValue: 90,
       step: 1,
+      min: 0,
+      max: 500,
     })
 
     expect(keyMap.amplitude).toMatchObject({
@@ -51,6 +53,8 @@ export default function Demo(props: Partial<typeof settings>) {
       type: "number",
       defaultValue: 2.2,
       step: 0.1,
+      min: 0,
+      max: 10,
     })
 
     expect(keyMap.baseOpacity).toMatchObject({
@@ -59,6 +63,28 @@ export default function Demo(props: Partial<typeof settings>) {
       type: "number",
       defaultValue: 0.28,
       step: 0.01,
+      min: 0,
+      max: 1,
+    })
+
+    expect(keyMap.speed).toMatchObject({
+      key: "speed",
+      label: "Speed",
+      type: "number",
+      defaultValue: 500,
+      step: 1,
+      min: 0,
+      max: 1000,
+    })
+
+    expect(keyMap.spacing).toMatchObject({
+      key: "spacing",
+      label: "Spacing",
+      type: "number",
+      defaultValue: 26,
+      step: 1,
+      min: 0,
+      max: 100,
     })
 
     expect(keyMap.interactive).toMatchObject({
