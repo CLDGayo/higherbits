@@ -337,65 +337,53 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     <Dialog open onOpenChange={handleOpenChange}>
       <DialogContent 
         className={cn(
-          "p-0 overflow-hidden bg-background border-border flex items-center justify-center transition-all duration-300",
+          "p-0 overflow-visible bg-transparent border-none shadow-none flex items-center justify-center transition-all duration-300",
           isFullscreen 
             ? "w-screen h-screen max-w-none m-0 rounded-none border-none" 
-            : "w-[85vw] h-[85vh] max-w-6xl min-w-[320px] rounded-xl shadow-2xl"
+            : "w-[88vw] h-[85vh] max-w-6xl min-w-[320px]"
         )}
         hideCloseButton
       >
-        <div className="relative w-full h-full flex flex-col group">
-          {bundleUrl ? (
-            <iframe
-              ref={iframeRef}
-              src={`${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
-              className={cn("w-full h-full border-0 transition-opacity duration-300", isLoading ? "opacity-0" : "opacity-100")}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              onLoad={() => {
-                setIsLoading(false)
-                sendThemeToIframe()
-                sendControlsToIframe()
-              }}
-            />
-          ) : (
-             <div className="w-full h-full flex items-center justify-center bg-muted">
-                <span className="text-muted-foreground">No preview available</span>
-             </div>
-          )}
-
-          {isLoading && bundleUrl && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm z-10 text-primary">
-              <Spinner size={32} />
-            </div>
-          )}
-
-          {controls.length > 0 && (
-            <FloatingControlsDrawer
-              controls={controls}
-              values={activeControls}
-              onChange={(key, value) => {
-                setActiveControls((prev) => ({ ...prev, [key]: value }))
-              }}
-              onReset={() => {
-                setActiveControls(getDefaultControlValues(controls))
-              }}
-              isExpanded={isControlsExpanded}
-              onExpandedChange={setIsControlsExpanded}
-            />
-          )}
-
-          {/* Top Right Dropdown & Fullscreen */}
+        <div className="relative w-full h-full flex items-center justify-start group">
+          {/* Canvas Wrapper */}
           <div
             className={cn(
-              "absolute top-4 z-20 flex items-center gap-2 transition-all duration-200",
-              controls.length > 0 && isControlsExpanded
-                ? "right-[19.5rem] opacity-90 hover:opacity-100"
-                : controls.length > 0
-                ? "right-28 opacity-0 group-hover:opacity-100"
-                : "right-4 opacity-0 group-hover:opacity-100"
+              "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-background shadow-2xl transition-[margin-right] duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
+              controls.length > 0 && isControlsExpanded ? "mr-[264px]" : "mr-0"
             )}
           >
+            {bundleUrl ? (
+              <iframe
+                ref={iframeRef}
+                src={`${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
+                className={cn("w-full h-full border-0 transition-opacity duration-300", isLoading ? "opacity-0" : "opacity-100")}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                onLoad={() => {
+                  setIsLoading(false)
+                  sendThemeToIframe()
+                  sendControlsToIframe()
+                }}
+              />
+            ) : (
+               <div className="w-full h-full flex items-center justify-center bg-muted">
+                  <span className="text-muted-foreground">No preview available</span>
+               </div>
+            )}
+
+            {isLoading && bundleUrl && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm z-10 text-primary">
+                <Spinner size={32} />
+              </div>
+            )}
+
+            {/* Top Right Dropdown & Fullscreen */}
+            <div
+              className={cn(
+                "absolute top-3 z-10 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200",
+                controls.length > 0 && !isControlsExpanded ? "right-14" : "right-3"
+              )}
+            >
             
             {componentDemos.length > 0 && (
               <DropdownMenu>
@@ -574,9 +562,26 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
               </div>
             </TooltipProvider>
           </div>
-
         </div>
-      </DialogContent>
+
+        {/* Docked Controls Drawer */}
+        {controls.length > 0 && (
+          <FloatingControlsDrawer
+            controls={controls}
+            values={activeControls}
+            onChange={(key, value) => {
+              setActiveControls((prev) => ({ ...prev, [key]: value }))
+            }}
+            onReset={() => {
+              setActiveControls(getDefaultControlValues(controls))
+            }}
+            isExpanded={isControlsExpanded}
+            onExpandedChange={setIsControlsExpanded}
+          />
+        )}
+
+      </div>
+    </DialogContent>
 
       {showUnlockDialog && (
         <Dialog open={showUnlockDialog} onOpenChange={setShowUnlockDialog}>

@@ -1,8 +1,10 @@
-import { InterceptedModal } from "@/components/ui/intercepted-modal"
-import ComponentPageServer from "@/app/[username]/[component_slug]/page"
-import { getComponentWithDemo } from "@/lib/queries"
+import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
+import { getComponentWithDemo, getComponentDemos } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { hasUserComponentAccess } from "@/lib/api/server/components"
+import { auth } from "@clerk/nextjs/server"
 import { RESERVED_TOP_LEVEL_SLUGS } from "@/lib/constants"
+import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 
 export default async function InterceptedComponentPage(props: {
   params: Promise<{
@@ -15,6 +17,14 @@ export default async function InterceptedComponentPage(props: {
 
   if (RESERVED_TOP_LEVEL_SLUGS.has(params.username)) {
     return null
+  }
+
+  let userId: string | null = null
+  try {
+    const authResult = await auth()
+    userId = authResult.userId
+  } catch (e) {
+    console.warn("Clerk auth() failed (likely due to parallel route interception):", e)
   }
 
   try {
@@ -37,10 +47,36 @@ export default async function InterceptedComponentPage(props: {
       return null
     }
 
+    const { component, demo } = data
+
+    const [{ data: componentDemos }, hasPurchased] = await Promise.all([
+      getComponentDemos(supabaseWithAdminAccess, component.id),
+      hasUserComponentAccess(userId, component.id),
+    ])
+
+    if (!hasPurchased) {
+      component.code = ""
+      component.registry_url = ""
+    }
+
+    const [demoCodeResult, componentCodeResult] = await Promise.all([
+      fetchFileTextContent(demo.demo_code),
+      hasPurchased && component.code
+        ? fetchFileTextContent(component.code)
+        : Promise.resolve({ data: "", error: null }),
+    ])
+
+    demo.demo_code = demoCodeResult.data || ""
+    if (hasPurchased && componentCodeResult.data) {
+      component.code = componentCodeResult.data
+    }
+
     return (
-      <InterceptedModal>
-        <ComponentPageServer {...props} />
-      </InterceptedModal>
+      <InterceptedDemoModal 
+        demo={demo} 
+        componentDemos={componentDemos || []} 
+        hasPurchased={hasPurchased} 
+      />
     )
   } catch (error) {
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
@@ -50,3 +86,4 @@ export default async function InterceptedComponentPage(props: {
     return null
   }
 }
+

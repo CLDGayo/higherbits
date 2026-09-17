@@ -41,28 +41,34 @@ export function FloatingControlsDrawer({
   if (controls.length === 0) return null
 
   return (
-    <div className={cn("pointer-events-none", className)}>
+    <div
+      className={cn(
+        "absolute z-20 overflow-hidden text-foreground transition-all duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
+        isExpanded
+          ? "right-0 top-0 h-full w-64 bg-background rounded-xl border border-border shadow-xl translate-x-0 flex flex-col"
+          : "right-3 top-3 size-9 rounded-full bg-background/90 backdrop-blur-md shadow-xl border border-border flex items-center justify-center p-0",
+        className,
+      )}
+    >
       {!isExpanded ? (
         <button
           type="button"
           onClick={() => handleSetExpanded(true)}
-          className="pointer-events-auto absolute right-4 top-4 z-30 bg-zinc-950/90 hover:bg-zinc-900 border border-white/15 backdrop-blur-md text-xs font-medium text-zinc-300 hover:text-white px-3 py-1.5 rounded-full shadow-xl flex items-center gap-1.5 transition-all"
+          aria-label="Show controls"
+          className="w-full h-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
-          <Sliders className="w-3.5 h-3.5 text-zinc-400" />
-          <span>Controls</span>
+          <Sliders className="w-4 h-4" />
         </button>
       ) : (
-        <div className="pointer-events-auto absolute right-4 top-4 bottom-4 z-30 w-72 max-w-[calc(100%-2rem)] flex flex-col">
-          <ControlsPanel
-            controls={controls}
-            values={values}
-            onChange={onChange}
-            onReset={onReset}
-            onClose={() => handleSetExpanded(false)}
-            showCloseButton={true}
-            className="h-full max-h-full"
-          />
-        </div>
+        <ControlsPanel
+          controls={controls}
+          values={values}
+          onChange={onChange}
+          onReset={onReset}
+          onClose={() => handleSetExpanded(false)}
+          showCloseButton={true}
+          className="h-full max-h-full border-0 rounded-none bg-transparent"
+        />
       )}
     </div>
   )

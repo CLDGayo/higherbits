@@ -8,7 +8,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-export function FullScreenButton() {
+import { cn } from "@/lib/utils"
+
+export function FullScreenButton({ className }: { className?: string }) {
   const [isFullScreen, setIsFullScreen] = useAtom(isFullScreenAtom)
 
   return (
@@ -16,7 +18,7 @@ export function FullScreenButton() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2 }}
-      className="absolute top-4 right-4 z-50"
+      className={cn("absolute top-4 right-4 z-50", className)}
     >
       <Tooltip>
         <TooltipTrigger asChild>

@@ -637,7 +637,7 @@ export function ComponentPreviewDialog({
         )}
 
         <div
-          className="relative flex-1 flex flex-col overflow-hidden"
+          className="relative flex-1 flex h-full min-h-0 w-full group overflow-hidden"
           style={{
             minHeight: 0,
             width: "100%",
@@ -645,38 +645,45 @@ export function ComponentPreviewDialog({
         >
           {bundleUrl && (
             <>
-              {isLoading && <PreviewSkeleton />}
-              <AnimatePresence>
-                {!isLoading && (
-                  <motion.div
-                    initial={{ left: "-100%" }}
-                    animate={{ left: "200%" }}
-                    transition={{
-                      duration: 0.8,
-                      ease: "easeInOut",
-                    }}
-                    className="absolute inset-y-0 w-[150%] pointer-events-none bg-gradient-to-r from-transparent via-primary/20 to-transparent z-50 skew-x-[-20deg]"
-                  />
+              <div
+                className={cn(
+                  "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-background transition-[margin-right] duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
+                  controls.length > 0 && isControlsExpanded ? "mr-[264px]" : "mr-0"
                 )}
-              </AnimatePresence>
-              <iframe
-                ref={iframeRef}
-                src={`${bundleUrl}?theme=${previewTheme}${
-                  previewTheme === "dark" ? "&dark=true" : ""
-                }`}
-                className={cn("w-full h-full border-0", isLoading && "hidden")}
-                style={{
-                  flex: 1,
-                  minHeight: 0,
-                }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onLoad={() => {
-                  setIsLoading(false)
-                  sendThemeToIframe()
-                  sendControlsToIframe()
-                }}
-              />
+              >
+                {isLoading && <PreviewSkeleton />}
+                <AnimatePresence>
+                  {!isLoading && (
+                    <motion.div
+                      initial={{ left: "-100%" }}
+                      animate={{ left: "200%" }}
+                      transition={{
+                        duration: 0.8,
+                        ease: "easeInOut",
+                      }}
+                      className="absolute inset-y-0 w-[150%] pointer-events-none bg-gradient-to-r from-transparent via-primary/20 to-transparent z-50 skew-x-[-20deg]"
+                    />
+                  )}
+                </AnimatePresence>
+                <iframe
+                  ref={iframeRef}
+                  src={`${bundleUrl}?theme=${previewTheme}${
+                    previewTheme === "dark" ? "&dark=true" : ""
+                  }`}
+                  className={cn("w-full h-full border-0", isLoading && "hidden")}
+                  style={{
+                    flex: 1,
+                    minHeight: 0,
+                  }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  onLoad={() => {
+                    setIsLoading(false)
+                    sendThemeToIframe()
+                    sendControlsToIframe()
+                  }}
+                />
+              </div>
               {controls.length > 0 && (
                 <FloatingControlsDrawer
                   controls={controls}

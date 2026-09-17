@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server"
 import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
 import { notFound } from "next/navigation"
 import { RESERVED_TOP_LEVEL_SLUGS } from "@/lib/constants"
+import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 
 export default async function InterceptedDemoComponentPage(props: {
   params: Promise<{
@@ -57,6 +58,23 @@ export default async function InterceptedDemoComponentPage(props: {
       getComponentDemos(supabaseWithAdminAccess, component.id),
       hasUserComponentAccess(userId, component.id),
     ])
+
+    if (!hasPurchased) {
+      component.code = ""
+      component.registry_url = ""
+    }
+
+    const [demoCodeResult, componentCodeResult] = await Promise.all([
+      fetchFileTextContent(demo.demo_code),
+      hasPurchased && component.code
+        ? fetchFileTextContent(component.code)
+        : Promise.resolve({ data: "", error: null }),
+    ])
+
+    demo.demo_code = demoCodeResult.data || ""
+    if (hasPurchased && componentCodeResult.data) {
+      component.code = componentCodeResult.data
+    }
 
     return (
       <InterceptedDemoModal 

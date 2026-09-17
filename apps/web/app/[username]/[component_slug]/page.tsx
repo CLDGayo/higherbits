@@ -1,6 +1,6 @@
 import ErrorPage from "@/components/ui/error-page"
 import { hasUserComponentAccess } from "@/lib/api/server/components"
-import { cdnUrlToKey, fetchComponentSource, isPrivateSourceKey } from "@/lib/r2-read"
+import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
 import { BASE_KEYWORDS, SITE_TITLE } from "@/lib/constants"
 import { JsonLd } from "@/components/seo/json-ld"
 import { extractDemoComponentNames } from "@/lib/parsers"
@@ -98,41 +98,6 @@ const componentJsonLd = (component: any, user: any) => ({
   license: component.license,
 })
 
-const fetchFileTextContent = async (url: string | null | undefined) => {
-  if (!url) {
-    console.error("Empty URL provided to fetchFileTextContent")
-    return { data: null, error: new Error("Empty URL provided") }
-  }
-  const isUrl = url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")
-  if (!isUrl) {
-    return { data: url, error: null }
-  }
-  // Objects under the private source prefix need a credentialed read; legacy
-  // public objects keep the cached plain fetch so nothing regresses.
-  const key = cdnUrlToKey(url)
-  if (key && isPrivateSourceKey(key)) {
-    return fetchComponentSource(url)
-  }
-
-  const filename = url.split("/").slice(-1)[0]
-  try {
-    const response = await fetch(url, { next: { revalidate: 3600 } })
-    if (!response.ok) {
-      console.error(`Error response in fetching file ${filename}`, response)
-      throw new Error(
-        `Error response in fetching file ${filename}: ${response.statusText}`,
-      )
-    }
-    return { data: await response.text(), error: null }
-  } catch (err) {
-    console.error(`Failed to fetch file ${filename}`, err)
-    return {
-      error: new Error(`Failed to fetch file ${filename}: ${err}`),
-      data: null,
-    }
-  }
-}
-
 export default async function ComponentPageServer(props: {
   params: Promise<{
     username: string
@@ -176,10 +141,6 @@ export default async function ComponentPageServer(props: {
     if (!hasPurchased) {
       component.code = ""
       component.registry_url = ""
-      demo.demo_code = ""
-      componentDemos?.forEach((demo) => {
-        demo.demo_code = ""
-      })
     }
 
     const dependencies = (component.dependencies ?? {}) as Record<
@@ -195,9 +156,7 @@ export default async function ComponentPageServer(props: {
       hasPurchased
         ? fetchFileTextContent(component.code)
         : Promise.resolve({ data: "", error: null }),
-      hasPurchased
-        ? fetchFileTextContent(demo.demo_code)
-        : Promise.resolve({ data: "", error: null }),
+      fetchFileTextContent(demo.demo_code),
       component.tailwind_config_extension
         ? fetchFileTextContent(component.tailwind_config_extension)
         : Promise.resolve({ data: null, error: null }),

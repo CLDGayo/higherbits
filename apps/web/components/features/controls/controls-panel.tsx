@@ -130,14 +130,14 @@ function NumberScrubberRow({ control, value, onChange }: NumberScrubberRowProps)
       aria-label={control.label}
       onKeyDown={handleKeyDown}
       className={cn(
-        "relative flex items-center justify-between w-full h-9 px-3 rounded-md bg-[#121214] border border-white/5 overflow-hidden text-xs select-none cursor-ew-resize group focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-colors",
-        isDragging && "ring-1 ring-white/10",
+        "relative flex items-center justify-between w-full h-8 px-2.5 rounded-lg bg-muted/50 hover:bg-muted/70 border border-border/40 overflow-hidden text-xs select-none cursor-ew-resize group focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors",
+        isDragging && "ring-1 ring-primary/40",
       )}
     >
       {/* Fill Progress Bar (Image 2 style scroll / scrub bar) */}
       <div
         className={cn(
-          "absolute inset-y-0 left-0 bg-[#242427] pointer-events-none",
+          "absolute inset-y-0 left-0 bg-foreground/[0.08] pointer-events-none",
           isDragging
             ? "transition-none"
             : "transition-[width] duration-75 ease-out",
@@ -147,7 +147,7 @@ function NumberScrubberRow({ control, value, onChange }: NumberScrubberRowProps)
 
       {/* Content Overlay */}
       <div className="relative z-10 flex items-center justify-between w-full h-full pointer-events-none">
-        <span className="text-zinc-400 font-medium text-xs truncate mr-2 select-none">
+        <span className="text-muted-foreground font-medium text-xs truncate mr-2 select-none">
           {control.label}
         </span>
 
@@ -161,11 +161,11 @@ function NumberScrubberRow({ control, value, onChange }: NumberScrubberRowProps)
               if (e.key === "Enter") handleInputBlur(e as any)
               if (e.key === "Escape") setIsEditing(false)
             }}
-            className="pointer-events-auto w-16 bg-zinc-800 text-right font-mono text-zinc-100 text-xs px-1 py-0.5 rounded border border-blue-500 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="pointer-events-auto w-16 bg-background text-right font-mono text-foreground text-xs px-1 py-0.5 rounded border border-primary focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             autoFocus
           />
         ) : (
-          <span className="font-mono text-zinc-200 text-xs shrink-0 select-none">
+          <span className="font-mono text-foreground text-xs shrink-0 select-none">
             {currentVal}
           </span>
         )}
@@ -198,13 +198,13 @@ export function ControlsPanel({
   return (
     <div
       className={cn(
-        "flex flex-col bg-zinc-950 text-zinc-100 rounded-lg p-3 font-sans select-none border border-white/10 shadow-2xl",
+        "flex flex-col bg-background text-foreground rounded-xl p-3 font-sans select-none border border-border shadow-xl",
         className,
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between pb-2.5 border-b border-white/5 mb-2.5 shrink-0 px-1">
-        <h3 className="text-sm font-semibold tracking-tight text-zinc-100">
+      <div className="flex items-center justify-between pb-2 border-b border-border/50 mb-2 shrink-0 px-1">
+        <h3 className="text-sm font-semibold tracking-tight text-foreground">
           {title}
         </h3>
         {showCloseButton && onClose && (
@@ -212,7 +212,7 @@ export function ControlsPanel({
             type="button"
             onClick={onClose}
             aria-label="Collapse controls"
-            className="text-zinc-400 hover:text-zinc-200 p-1 rounded hover:bg-white/5 transition-colors"
+            className="text-muted-foreground hover:text-foreground p-1 rounded hover:bg-muted transition-colors"
           >
             <ChevronsRight className="h-4 w-4" />
           </button>
@@ -239,18 +239,18 @@ export function ControlsPanel({
             return (
               <div
                 key={control.key}
-                className="flex items-center justify-between w-full h-9 px-3 rounded-md bg-[#121214] border border-white/5 text-xs select-none"
+                className="flex items-center justify-between w-full h-8 px-2.5 rounded-lg bg-muted/50 border border-border/40 text-xs select-none"
               >
-                <span className="text-zinc-400 font-medium truncate mr-2">
+                <span className="text-muted-foreground font-medium truncate mr-2">
                   {control.label}
                 </span>
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-mono text-zinc-200 uppercase text-xs tracking-wider">
+                  <span className="font-mono text-foreground uppercase text-xs tracking-wider">
                     {val}
                   </span>
                   <label className="relative flex items-center justify-center cursor-pointer shrink-0">
                     <span
-                      className="w-4 h-4 rounded-[3px] border border-white/20 shadow-sm block"
+                      className="w-4 h-4 rounded-[4px] border border-border shadow-sm block"
                       style={{ backgroundColor: val }}
                     />
                     <input
@@ -269,16 +269,16 @@ export function ControlsPanel({
             return (
               <div
                 key={control.key}
-                className="flex items-center justify-between w-full h-9 px-3 rounded-md bg-[#121214] border border-white/5 text-xs"
+                className="flex items-center justify-between w-full h-8 px-2.5 rounded-lg bg-muted/50 border border-border/40 text-xs"
               >
-                <span className="text-zinc-400 font-medium truncate mr-3 shrink-0 select-none">
+                <span className="text-muted-foreground font-medium truncate mr-3 shrink-0 select-none">
                   {control.label}
                 </span>
                 <input
                   type="text"
                   value={val ?? ""}
                   onChange={(e) => onChange(control.key, e.target.value)}
-                  className="bg-transparent text-right text-zinc-200 text-xs focus:outline-none flex-1 truncate min-w-0"
+                  className="bg-transparent text-right text-foreground text-xs focus:outline-none flex-1 truncate min-w-0 font-medium"
                 />
               </div>
             )
@@ -288,9 +288,9 @@ export function ControlsPanel({
             return (
               <div
                 key={control.key}
-                className="flex items-center justify-between w-full h-9 px-3 rounded-md bg-[#121214] border border-white/5 text-xs select-none"
+                className="flex items-center justify-between w-full h-8 px-2.5 rounded-lg bg-muted/50 border border-border/40 text-xs select-none"
               >
-                <span className="text-zinc-400 font-medium truncate mr-2">
+                <span className="text-muted-foreground font-medium truncate mr-2">
                   {control.label}
                 </span>
                 <div className="flex items-center justify-end">
@@ -299,7 +299,7 @@ export function ControlsPanel({
                     onCheckedChange={(checked) =>
                       onChange(control.key, checked)
                     }
-                    className="data-[state=checked]:bg-blue-600 scale-90"
+                    className="data-[state=checked]:bg-primary scale-90"
                   />
                 </div>
               </div>
@@ -311,11 +311,11 @@ export function ControlsPanel({
       </div>
 
       {/* Reset Button */}
-      <div className="pt-2.5 border-t border-white/5 mt-2.5 shrink-0">
+      <div className="pt-2 border-t border-border/50 mt-2 shrink-0">
         <button
           type="button"
           onClick={onReset}
-          className="w-full py-2 px-3 rounded-md border border-white/10 hover:bg-white/5 text-zinc-400 hover:text-zinc-200 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors"
+          className="w-full py-1.5 px-3 rounded-md border border-input bg-background hover:bg-muted text-muted-foreground hover:text-foreground text-xs font-medium flex items-center justify-center gap-1.5 transition-colors shadow-sm"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Reset all</span>
