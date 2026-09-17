@@ -114,6 +114,20 @@ export const ThemeProvider = ({ children, defaultTheme = 'light', enableSystem =
     }
   }, [theme, attribute]);
 
+  // Listen for theme-change messages from parent window (studio preview)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'theme-change') {
+        const newTheme = event.data.theme;
+        if (newTheme === 'dark' || newTheme === 'light') {
+          setTheme(newTheme);
+        }
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   const resolvedTheme = theme === 'system' ? 'light' : theme;
 
   return (

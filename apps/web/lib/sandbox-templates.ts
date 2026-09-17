@@ -311,6 +311,19 @@ export const DEFAULT_INDEX_HTML = `<!doctype html>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+    <script>
+      // Theme bridge: listen for theme-change messages from the parent studio
+      window.addEventListener("message", function(e) {
+        if (e.data && e.data.type === "theme-change") {
+          var root = document.documentElement;
+          if (e.data.theme === "dark") {
+            root.classList.add("dark");
+          } else {
+            root.classList.remove("dark");
+          }
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
@@ -355,6 +368,18 @@ export const DEFAULT_MAIN_TSX = `import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./app";
 import "./index.css";
+
+// Listen for theme-change messages from the parent studio window
+window.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "theme-change") {
+    const root = document.documentElement;
+    if (event.data.theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

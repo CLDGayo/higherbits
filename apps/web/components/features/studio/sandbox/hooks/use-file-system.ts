@@ -364,6 +364,14 @@ export const useFileSystem = ({
             fs.stat("/project/sandbox/tsconfig.node.json").catch(() => {
               fs.writeTextFile("/project/sandbox/tsconfig.node.json", DEFAULT_TSCONFIG_NODE_JSON).catch(console.error)
             })
+            // Auto-patch index.html with theme bridge if missing
+            fs.readTextFile("/project/sandbox/index.html").then((html) => {
+              if (!html.includes("theme-change")) {
+                fs.writeTextFile("/project/sandbox/index.html", DEFAULT_INDEX_HTML).catch(console.error)
+              }
+            }).catch(() => {
+              fs.writeTextFile("/project/sandbox/index.html", DEFAULT_INDEX_HTML).catch(console.error)
+            })
             // Auto-heal publish and registry generation scripts
             ensurePublishScripts(sandboxRef.current).catch(console.error)
           }

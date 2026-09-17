@@ -76,6 +76,7 @@ export function PreviewPane({
   const [isIframePointerEventsNone, setIsIframePointerEventsNone] = useState(false)
   
   const containerRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const isDragging = useRef(false)
   const dragDirection = useRef<'left' | 'right' | null>(null)
   const startX = useRef(0)
@@ -133,6 +134,21 @@ export function PreviewPane({
   >(connectedShellId)
 
   const { resolvedTheme } = useTheme()
+
+  // Post theme changes to the sandboxed iframe
+  const sendThemeToIframe = useCallback(() => {
+    const iframe = iframeRef.current
+    if (iframe?.contentWindow && resolvedTheme) {
+      iframe.contentWindow.postMessage(
+        { type: "theme-change", theme: resolvedTheme },
+        "*"
+      )
+    }
+  }, [resolvedTheme])
+
+  useEffect(() => {
+    sendThemeToIframe()
+  }, [sendThemeToIframe])
 
   //  takes time to complile need to reload iframe, will be fixed at codesandbox SDK team side
   useEffect(() => {
@@ -246,11 +262,13 @@ export function PreviewPane({
                     </>
                   )}
                   <iframe
+                    ref={iframeRef}
                     key={`${iframeKey}-${connectedShellId}`}
                     src={previewURL}
                     className={cn("w-full h-full border-0", isIframePointerEventsNone && "pointer-events-none")}
                     title="Preview"
                     referrerPolicy="no-referrer"
+                    onLoad={sendThemeToIframe}
                     allow="cross-origin-isolated; accelerometer; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; xr-spatial-tracking"
                     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
                   />
