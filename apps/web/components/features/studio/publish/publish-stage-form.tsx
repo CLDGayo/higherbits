@@ -71,9 +71,16 @@ export function PublishStageForm({
   useEffect(() => {
     listLibrariesAction()
       .then((res) => {
-        setLibraries(res)
+        if (Array.isArray(res)) {
+          setLibraries(res)
+        } else {
+          setLibraries([])
+        }
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err)
+        setLibraries([])
+      })
   }, [])
 
   return (
@@ -166,7 +173,7 @@ export function PublishStageForm({
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="none">No Library</SelectItem>
-                  {libraries.map((lib) => (
+                  {(libraries || []).map((lib) => (
                     <SelectItem key={lib.id} value={lib.id}>
                       {lib.name}
                     </SelectItem>
@@ -249,7 +256,7 @@ export function PublishStageForm({
         onOpenChange={setIsCreateLibraryOpen}
         namespace={username || null}
         onCreated={(library) => {
-          setLibraries((prev) => [...prev, library])
+          setLibraries((prev) => [...(prev || []), library])
           form.setValue("library_id", library.id)
           setIsCreateLibraryOpen(false)
         }}

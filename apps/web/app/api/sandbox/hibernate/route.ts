@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { codesandboxSdk } from "@/lib/codesandbox-sdk"
+import {
+  isSandboxConnecting,
+  isSandboxRecentlyConnected,
+  markSandboxHibernating,
+  markSandboxHibernated,
+  HIBERNATE_ACTIVE_GRACE_WINDOW_MS,
+} from "@/lib/sandbox-active-state"
 import ShortUUID from "short-uuid"
 
 /**
@@ -65,9 +72,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (isSandboxConnecting(sandboxId)) {
+      console.log("[sandbox-telemetry] hibernate skipped (connect in progress):", {
+        sandboxId,
+      })
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        reason: "connect_in_progress",
+      })
+    }
+
+    if (isSandboxRecentlyConnected(sandboxId)) {
+      console.log("[sandbox-telemetry] hibernate skipped (recently connected):", {
+        sandboxId,
+      })
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        reason: "recently_connected",
+      })
+    }
+
     const { data: sandbox, error } = await supabaseWithAdminAccess
       .from("sandboxes")
-      .select("codesandbox_id")
+      .select("codesandbox_id, updated_at")
       .eq("id", sandboxId)
       .single()
 
@@ -75,7 +104,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Sandbox not found" }, { status: 404 })
     }
 
-    await codesandboxSdk.sandbox.hibernate(sandbox.codesandbox_id)
+    const lastActive = sandbox.updated_at
+      ? new Date(sandbox.updated_at).getTime()
+      : 0
+    if (Date.now() - lastActive < HIBERNATE_ACTIVE_GRACE_WINDOW_MS) {
+      console.log("[sandbox-telemetry] hibernate skipped (active session in DB):", {
+        sandboxId,
+        lastActiveAgoMs: Date.now() - lastActive,
+      })
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        reason: "active_session_db",
+      })
+    }
+
+    markSandboxHibernating(sandboxId)
+    try {
+      await codesandboxSdk.sandbox.hibernate(sandbox.codesandbox_id)
+    } finally {
+      markSandboxHibernated(sandboxId)
+    }
 
     console.log("[sandbox-telemetry] hibernate:", {
       outcome: "ok",

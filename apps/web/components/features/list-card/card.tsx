@@ -118,6 +118,7 @@ export const ComponentCard = React.memo(function ComponentCard({
     (isDemo ? demo.component?.component_slug : demo.component_slug) ||
     "component-slug"
 
+  // Fallback username and componentSlug ensure card renders even when username is null
   if (!userData) {
     console.warn("Missing required data:", {
       userData,

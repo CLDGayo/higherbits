@@ -26,6 +26,12 @@ vi.mock("@/lib/codesandbox-sdk", () => ({
 
 import { POST } from "../route"
 import { codesandboxSdk } from "@/lib/codesandbox-sdk"
+import {
+  markSandboxConnecting,
+  markSandboxConnected,
+  _resetActiveStateForTests,
+} from "@/lib/sandbox-active-state"
+import ShortUUID from "short-uuid"
 
 const sdk = codesandboxSdk as unknown as {
   sandbox: { hibernate: ReturnType<typeof vi.fn> }
@@ -33,6 +39,7 @@ const sdk = codesandboxSdk as unknown as {
 
 // A real ShortUUID-encodable id so ShortUUID().toUUID() succeeds.
 const SHORT_ID = "mhvXdrZT4jP5T8vBxuvm75"
+const UUID = ShortUUID().toUUID(SHORT_ID)
 
 function makeRequest(body: unknown) {
   return { json: async () => body } as unknown as Parameters<typeof POST>[0]
@@ -40,6 +47,7 @@ function makeRequest(body: unknown) {
 
 describe("POST /api/sandbox/hibernate", () => {
   beforeEach(() => {
+    _resetActiveStateForTests()
     vi.clearAllMocks()
     vi.spyOn(console, "log").mockImplementation(() => {})
     vi.spyOn(console, "error").mockImplementation(() => {})
@@ -99,6 +107,48 @@ describe("POST /api/sandbox/hibernate", () => {
     } as unknown as Parameters<typeof POST>[0])
 
     expect(response.status).toBe(400)
+    expect(sdk.sandbox.hibernate).not.toHaveBeenCalled()
+  })
+
+  it("skips hibernate when a connect operation is actively in progress", async () => {
+    markSandboxConnecting(UUID)
+
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.skipped).toBe(true)
+    expect(body.reason).toBe("connect_in_progress")
+    expect(sdk.sandbox.hibernate).not.toHaveBeenCalled()
+  })
+
+  it("skips hibernate when the sandbox was connected recently (grace window)", async () => {
+    markSandboxConnected(UUID)
+
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.skipped).toBe(true)
+    expect(body.reason).toBe("recently_connected")
+    expect(sdk.sandbox.hibernate).not.toHaveBeenCalled()
+  })
+
+  it("skips hibernate when DB row updated_at is within the grace window", async () => {
+    singleMock.mockResolvedValue({
+      data: {
+        codesandbox_id: "csb-1",
+        updated_at: new Date(Date.now() - 2000).toISOString(),
+      },
+      error: null,
+    })
+
+    const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.skipped).toBe(true)
+    expect(body.reason).toBe("active_session_db")
     expect(sdk.sandbox.hibernate).not.toHaveBeenCalled()
   })
 })

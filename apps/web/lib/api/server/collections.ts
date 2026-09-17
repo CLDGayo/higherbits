@@ -75,7 +75,7 @@ export const listUserLibraries = async (
 const assertOwned = async (collectionId: string, userId: string) => {
   const collection = await prisma.collections.findUnique({
     where: { id: collectionId },
-    select: { id: true, user_id: true },
+    select: { id: true, user_id: true, cover_url: true },
   })
 
   if (!collection) {
@@ -183,7 +183,7 @@ export const addComponentToLibrary = async (
   componentId: number,
   userId: string,
 ) => {
-  await assertOwned(collectionId, userId)
+  const collection = await assertOwned(collectionId, userId)
 
   // The join table's PK is (collection_id, component_id), so adding twice would
   // raise P2002. Adding something already present is not an error worth
@@ -198,6 +198,19 @@ export const addComponentToLibrary = async (
     create: { collection_id: collectionId, component_id: componentId },
     update: {},
   })
+
+  if (!collection.cover_url) {
+    const comp = await prisma.components.findUnique({
+      where: { id: componentId },
+      select: { preview_url: true },
+    })
+    if (comp?.preview_url) {
+      await prisma.collections.update({
+        where: { id: collectionId },
+        data: { cover_url: comp.preview_url, updated_at: new Date() },
+      })
+    }
+  }
 }
 
 /**
@@ -215,7 +228,7 @@ export const moveComponentToLibrary = async (
   componentId: number,
   userId: string,
 ) => {
-  await assertOwned(collectionId, userId)
+  const collection = await assertOwned(collectionId, userId)
 
   await prisma.$transaction([
     prisma.components_to_collections.deleteMany({
@@ -236,6 +249,19 @@ export const moveComponentToLibrary = async (
       update: {},
     }),
   ])
+
+  if (!collection.cover_url) {
+    const comp = await prisma.components.findUnique({
+      where: { id: componentId },
+      select: { preview_url: true },
+    })
+    if (comp?.preview_url) {
+      await prisma.collections.update({
+        where: { id: collectionId },
+        data: { cover_url: comp.preview_url, updated_at: new Date() },
+      })
+    }
+  }
 }
 
 export const removeComponentFromLibrary = async (

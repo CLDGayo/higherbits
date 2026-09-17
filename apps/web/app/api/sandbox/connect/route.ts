@@ -7,6 +7,11 @@ import {
   DEFAULT_HIBERNATION_TIMEOUT,
   DEFAULT_VM_TIER,
 } from "@/lib/codesandbox-sdk"
+import {
+  markSandboxConnecting,
+  markSandboxConnected,
+  waitForPendingHibernate,
+} from "@/lib/sandbox-active-state"
 import ShortUUID from "short-uuid"
 
 export async function POST(request: NextRequest) {
@@ -53,6 +58,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    markSandboxConnecting(sandboxId)
+
     let query = supabaseWithAdminAccess
       .from("sandboxes")
       .select("codesandbox_id, name, id, component_id")
@@ -78,6 +85,11 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       )
     }
+
+    // If a hibernate call is currently processing for this sandbox (e.g. from a prior tab close or reload),
+    // wait for it to complete so we don't race start against hibernate on the same VM.
+    await waitForPendingHibernate(sandboxId)
+
     const startData = await codesandboxSdk.sandbox.start(
       sandbox.codesandbox_id,
       {
@@ -171,5 +183,9 @@ export async function POST(request: NextRequest) {
       { error: "Internal Server Error" },
       { status: 500 },
     )
+  } finally {
+    if (telemetrySandboxId) {
+      markSandboxConnected(telemetrySandboxId)
+    }
   }
 }

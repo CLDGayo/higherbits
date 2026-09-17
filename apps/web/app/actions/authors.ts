@@ -39,6 +39,7 @@ export async function getActiveAuthorsAction(offset: number, limit: number) {
                 .from("component_analytics")
                 .select("*", { count: "exact", head: true })
                 .eq("component_id", demo.component_id)
+                .eq("activity_type", "component_view")
 
               return {
                 ...demo,
@@ -69,29 +70,45 @@ export async function getActiveAuthorsAction(offset: number, limit: number) {
             componentIds = componentsData.map((c: any) => c.id)
           }
 
-          // Fetch views from component_analytics
+          // Fetch views and usages from component_analytics
           if (componentIds.length > 0) {
-            const { count } = await supabaseWithAdminAccess
+            const { count: viewsCount } = await supabaseWithAdminAccess
               .from("component_analytics")
               .select("*", { count: "exact", head: true })
               .in("component_id", componentIds)
+              .eq("activity_type", "component_view")
             
-            totalViews = count || 0
+            totalViews = viewsCount || 0
+
+            const { count: usagesCount } = await supabaseWithAdminAccess
+              .from("component_analytics")
+              .select("*", { count: "exact", head: true })
+              .in("component_id", componentIds)
+              .in("activity_type", [
+                "component_code_copy",
+                "component_prompt_copy",
+                "component_cli_download",
+              ])
+
+            totalUsages = (usagesCount || 0) + totalDownloads
           }
+
+          const fallbackUsername = u.username || u.display_username || "user"
+          const fallbackDisplayName = u.name || u.display_name || fallbackUsername
 
           return {
             id: u.id,
-            username: u.username || u.display_username || "cozy_downloads",
-            name: u.name || u.display_name || "Cozy Downloads",
+            username: fallbackUsername,
+            name: fallbackDisplayName,
             image_url: u.image_url || u.display_image_url || "",
-            display_username: u.display_username || u.username || "cozy_downloads",
-            display_name: u.display_name || u.name || "Cozy Downloads",
+            display_username: fallbackUsername,
+            display_name: fallbackDisplayName,
             display_image_url: u.display_image_url || u.image_url || "",
             bio: u.bio || "Design engineer and creator of high quality UI components.",
             total_downloads: totalDownloads,
-            total_usages: totalUsages || totalDownloads,
+            total_usages: totalUsages,
             total_views: totalViews,
-            total_engagement: totalViews + (totalUsages || totalDownloads),
+            total_engagement: totalViews + totalUsages,
             top_components: topComponents,
             component_count: componentIds.length,
             total_count: count ?? usersData.length,

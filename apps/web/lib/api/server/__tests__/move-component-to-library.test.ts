@@ -8,7 +8,13 @@ const $transaction = vi.fn(async (ops: unknown[]) => ops)
 vi.mock("server-only", () => ({}))
 vi.mock("../../../prisma", () => ({
   default: {
-    collections: { findUnique: (...args: unknown[]) => findUnique(...args) },
+    collections: {
+      findUnique: (...args: unknown[]) => findUnique(...args),
+      update: vi.fn(async () => ({})),
+    },
+    components: {
+      findUnique: vi.fn(async () => null),
+    },
     components_to_collections: {
       deleteMany: (args: unknown) => deleteMany(args),
       upsert: (args: unknown) => upsert(args),

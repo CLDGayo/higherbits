@@ -536,7 +536,18 @@ AS $$
     c.id,
     c.name,
     c.description,
-    c.cover_url,
+    COALESCE(
+      c.cover_url,
+      (
+        SELECT comp.preview_url
+        FROM public.components_to_collections ctc2
+        JOIN public.components comp ON comp.id = ctc2.component_id
+        WHERE ctc2.collection_id = c.id
+          AND comp.preview_url IS NOT NULL
+        ORDER BY ctc2.created_at ASC
+        LIMIT 1
+      )
+    ) AS cover_url,
     c.user_id,
     c.created_at,
     c.updated_at,

@@ -80,7 +80,7 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                   <div className="flex items-center gap-2 text-foreground/60">
                     <Download className="w-4 h-4" />
                     <span className="text-sm font-medium">
-                      {(totalUsages + totalDownloads).toLocaleString()} usages
+                      {(totalUsages || totalDownloads).toLocaleString()} usages
                     </span>
                   </div>
                 </div>
