@@ -351,7 +351,12 @@ export const useFileSystem = ({
             fs.stat("/project/sandbox/src/main.tsx").catch(() => {
               fs.writeTextFile("/project/sandbox/src/main.tsx", DEFAULT_MAIN_TSX).catch(console.error)
             })
-            fs.stat("/project/sandbox/src/app.tsx").catch(() => {
+            // Auto-patch app.tsx with controls bridge if missing
+            fs.readTextFile("/project/sandbox/src/app.tsx").then((appCode) => {
+              if (!appCode.includes("controls-change")) {
+                fs.writeTextFile("/project/sandbox/src/app.tsx", DEFAULT_APP_TSX).catch(console.error)
+              }
+            }).catch(() => {
               fs.writeTextFile("/project/sandbox/src/app.tsx", DEFAULT_APP_TSX).catch(console.error)
             })
             fs.stat("/project/sandbox/src/lib/utils.ts").catch(() => {
@@ -394,7 +399,7 @@ export const useFileSystem = ({
     loadRootDirectory()
   }, [sandboxConnectionHash, advancedView])
 
-  const loadFileContent = async (filePath: string): Promise<string> => {
+  const loadFileContent = useCallback(async (filePath: string): Promise<string> => {
     setIsFileLoading(true)
     try {
       const content = await sbWrapper((sandbox) =>
@@ -420,7 +425,7 @@ export const useFileSystem = ({
     } finally {
       setIsFileLoading(false)
     }
-  }
+  }, [sbWrapper])
 
   const performSave = useCallback(async () => {
     if (!pendingSaveRef.current) {

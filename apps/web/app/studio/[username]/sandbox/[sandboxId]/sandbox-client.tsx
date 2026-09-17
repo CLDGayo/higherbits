@@ -2,7 +2,7 @@
 
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { LoadingDialog } from "@/components/ui/loading-dialog"
-import React, { useEffect, useState, Suspense, Component, type ErrorInfo, type ReactNode } from "react"
+import React, { useEffect, useState, useRef, Suspense, Component, type ErrorInfo, type ReactNode } from "react"
 import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation"
 import {
   ResizableHandle,
@@ -61,6 +61,7 @@ import {
   extractControlsSettings,
   getDefaultControlValues,
 } from "@/lib/controls-parser"
+import { DEFAULT_DEMO_TSX } from "@/lib/sandbox-templates"
 
 type Stage = "Files" | "Component" | "Demos" | "Controls" | "Publish"
 
@@ -400,27 +401,34 @@ function PublishClientPageContent({
     }
   }, [selectedEntry, code])
 
+  const hasLoadedInitialDemoRef = useRef(false)
+
   // Fetch initial demo.tsx content if not yet loaded
   useEffect(() => {
-    let isCancelled = false
+    if (hasLoadedInitialDemoRef.current && demoCode && demoCode !== DEFAULT_DEMO_TSX) return
+
     const fetchDemoCode = async () => {
-      if (demoCode) return
       try {
-        const content = await loadFileContent("/src/demo.tsx")
-        if (content && !isCancelled) {
+        const flatten = (arr: any[]): any[] =>
+          arr.flatMap((f) => [f, ...(f.children ? flatten(f.children) : [])])
+        const all = flatten(files)
+        const demoEntry = all.find(
+          (f) => f.name === "demo.tsx" || f.path?.endsWith("demo.tsx"),
+        )
+        const demoPath = demoEntry?.path || "/src/demo.tsx"
+        const content = await loadFileContent(demoPath)
+        if (content && content !== DEFAULT_DEMO_TSX) {
+          hasLoadedInitialDemoRef.current = true
           setDemoCode(content)
         }
-      } catch {
-        // demo.tsx not yet ready
+      } catch (err) {
+        console.error("[controls-sync] error fetching demo code:", err)
       }
     }
     if (!isTreeLoading && files.length > 0) {
       fetchDemoCode()
     }
-    return () => {
-      isCancelled = true
-    }
-  }, [isTreeLoading, files, demoCode, loadFileContent, activeStage])
+  }, [isTreeLoading, files.length, loadFileContent, demoCode])
 
   const {
     submitComponent,
