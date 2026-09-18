@@ -185,7 +185,34 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         throw new Error(errorData?.error || "Failed to generate prompt")
       }
       const { prompt } = await response.json()
-      await navigator.clipboard.writeText(prompt)
+      
+      let copied = false
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(prompt)
+          copied = true
+        } catch (clipErr) {
+          console.warn("navigator.clipboard.writeText failed, falling back to textarea execCommand:", clipErr)
+        }
+      }
+      if (!copied) {
+        const textarea = document.createElement("textarea")
+        textarea.value = prompt
+        textarea.style.position = "fixed"
+        textarea.style.left = "-9999px"
+        textarea.style.top = "0"
+        textarea.style.opacity = "0"
+        document.body.appendChild(textarea)
+        textarea.focus()
+        textarea.select()
+        try {
+          copied = document.execCommand("copy")
+        } catch (execErr) {
+          console.error("execCommand fallback failed:", execErr)
+        }
+        document.body.removeChild(textarea)
+      }
+
       toast.success(
         isGhl
           ? "GoHighLevel code copied to clipboard!"

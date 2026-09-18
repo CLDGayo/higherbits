@@ -79,6 +79,18 @@ export function cleanGhlHtml(raw: string): string {
   // 7. Strip accidental/awkward split-screen viewport bleed blocks that cut across the hero (e.g. w-[100vw], -right-[50vw], -left-[50vw])
   text = text.replace(/<div[^>]*?(?:w-\[100vw\]|-right-\[50vw\]|-left-\[50vw\])[^>]*?>\s*(?:<\/div>)?/gi, "")
 
+  // 8. Auto-heal missing closing tags if accidentally omitted
+  const openScripts = (text.match(/<script\b/gi) || []).length
+  const closeScripts = (text.match(/<\/script>/gi) || []).length
+  if (openScripts > closeScripts) {
+    text += "\n</script>"
+  }
+  const openDivs = (text.match(/<div\b/gi) || []).length
+  const closeDivs = (text.match(/<\/div>/gi) || []).length
+  if (openDivs > closeDivs) {
+    text += "\n" + "</div>".repeat(openDivs - closeDivs)
+  }
+
   return text.trim()
 }
 
@@ -261,34 +273,91 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       if (model === "minimax/minimax-m3:free") {
         model = "minimax/minimax-m3"
       }
-      console.log(`Calling OpenAI API (${model}) to generate GHL template for demo ${demoId}...`)
-      
-      const extraBody: Record<string, any> = {}
-      if (model.includes("minimax") || model.includes("deepseek") || model.includes("r1")) {
-        // Limit reasoning effort so tokens are dedicated to actual HTML generation
-        extraBody.reasoning = { effort: "minimal" }
+      const configuredMaxTokens = Number(process.env.OPENAI_MAX_TOKENS) || 8192
+
+      const executeCompletion = async (targetModel: string, tokens: number) => {
+        console.log(`Calling OpenAI/OpenRouter API (${targetModel}, max_tokens: ${tokens}) to generate GHL template for demo ${demoId}...`)
+        
+        const extraBody: Record<string, any> = {}
+        if (targetModel.includes("minimax") || targetModel.includes("deepseek") || targetModel.includes("r1")) {
+          // Limit reasoning effort so tokens are dedicated to actual HTML generation
+          extraBody.reasoning = { effort: "minimal" }
+        }
+
+        const completion = await openai.chat.completions.create({
+          model: targetModel,
+          messages: [
+            { role: "system", content: systemInstruction },
+            { role: "user", content: userMessage },
+          ],
+          max_tokens: tokens,
+          temperature: 0.1,
+          // @ts-ignore
+          extra_body: Object.keys(extraBody).length ? extraBody : undefined,
+        })
+
+        const choice = completion.choices[0]
+        if (choice?.finish_reason === "length") {
+          throw new Error(`Model ${targetModel} hit token limit (${tokens} tokens) and output was truncated.`)
+        }
+
+        let output = choice?.message?.content || ""
+
+        // If content was empty/null but model put code inside reasoning, extract code from reasoning
+        if (!output) {
+          const reasoningText = (choice?.message as any)?.reasoning || ""
+          const codeBlockMatch = reasoningText.match(/```(?:html|xml)?\s*([\s\S]*?)\s*```/i)
+          if (codeBlockMatch && codeBlockMatch[1]) {
+            output = codeBlockMatch[1]
+          }
+        }
+        return output
       }
 
-      const completion = await openai.chat.completions.create({
-        model,
-        messages: [
-          { role: "system", content: systemInstruction },
-          { role: "user", content: userMessage },
-        ],
-        max_tokens: 16384,
-        temperature: 0.1,
-        // @ts-ignore
-        extra_body: Object.keys(extraBody).length ? extraBody : undefined,
-      })
+      try {
+        rawOutput = await executeCompletion(model, configuredMaxTokens)
+      } catch (err: any) {
+        const errMsg = String(err?.message || "")
+        console.warn(`OpenAI/OpenRouter call to ${model} failed:`, errMsg)
 
-      rawOutput = completion.choices[0]?.message?.content || ""
+        // 1. If OpenRouter returned 402 with affordable token count, retry with what's affordable
+        const affordMatch = errMsg.match(/can only afford (\d+)/i)
+        if (affordMatch && affordMatch[1]) {
+          const affordable = parseInt(affordMatch[1], 10)
+          const retryTokens = Math.max(1500, Math.min(affordable - 250, configuredMaxTokens))
+          console.log(`OpenRouter 402 credit threshold detected. Retrying ${model} with affordable max_tokens: ${retryTokens}...`)
+          try {
+            rawOutput = await executeCompletion(model, retryTokens)
+          } catch (retryErr: any) {
+            console.warn(`Retry with reduced tokens failed:`, retryErr?.message)
+          }
+        }
 
-      // If content was empty/null but model put code inside reasoning, extract code from reasoning
-      if (!rawOutput) {
-        const reasoningText = (completion.choices[0]?.message as any)?.reasoning || ""
-        const codeBlockMatch = reasoningText.match(/```(?:html|xml)?\s*([\s\S]*?)\s*```/i)
-        if (codeBlockMatch && codeBlockMatch[1]) {
-          rawOutput = codeBlockMatch[1]
+        // 2. If still no output (or output was truncated due to token limit, 402 credits, or 429 rate limit), fallback to verified free OpenRouter models with high token budget
+        if (!rawOutput && (errMsg.includes("402") || errMsg.includes("credits") || errMsg.includes("429") || errMsg.includes("truncated") || err?.status === 402)) {
+          const fallbackCandidates = [
+            process.env.OPENAI_FALLBACK_MODEL,
+            "google/gemma-4-31b-it:free",
+            "deepseek/deepseek-v4-flash-0731:free",
+          ].filter(Boolean) as string[]
+
+          for (const fallbackModel of fallbackCandidates) {
+            console.log(`Attempting fallback to free model (${fallbackModel}, max_tokens: 16384)...`)
+            try {
+              rawOutput = await executeCompletion(fallbackModel, 16384)
+              if (rawOutput) break
+            } catch (fallbackErr: any) {
+              console.warn(`Fallback to ${fallbackModel} failed:`, fallbackErr?.message)
+            }
+          }
+
+          if (!rawOutput) {
+            throw new Error(
+              `OpenRouter generation failed across primary and fallback models (${errMsg}). Please top up credits or try again.`
+            )
+          }
+        } else if (!rawOutput) {
+          throw err
         }
       }
     }

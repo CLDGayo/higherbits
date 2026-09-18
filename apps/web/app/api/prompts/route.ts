@@ -129,6 +129,17 @@ export async function POST(request: NextRequest) {
 
     // Fast path for GoHighLevel: bypass expensive dependency resolution and file downloads
     if (prompt_type === PROMPT_TYPES.GOHIGHLEVEL) {
+      const ghlText = demo.ghl_html_content || ""
+      const openScripts = (ghlText.match(/<script\b/gi) || []).length
+      const closeScripts = (ghlText.match(/<\/script>/gi) || []).length
+      const openDivs = (ghlText.match(/<div\b/gi) || []).length
+      const closeDivs = (ghlText.match(/<\/div>/gi) || []).length
+      const isUnclosed = openScripts > closeScripts || openDivs > closeDivs
+      const isMissingEnd =
+        !ghlText.trim().endsWith("</div>") &&
+        !ghlText.trim().endsWith("</script>") &&
+        !ghlText.trim().endsWith("</html>")
+
       const isCorrupted =
         !demo.ghl_html_content ||
         demo.ghl_html_content.trim().length < 500 ||
@@ -136,7 +147,8 @@ export async function POST(request: NextRequest) {
         demo.ghl_html_content.includes("border border-border rounded-xl p-6 shadow-sm") ||
         demo.ghl_html_content.includes("-right-[50vw]") ||
         demo.ghl_html_content.includes("w-[100vw]") ||
-        (!demo.ghl_html_content.includes("</div>") && !demo.ghl_html_content.includes("</html>"))
+        isUnclosed ||
+        isMissingEnd
 
       if (demo.ghl_html_content && !force_regenerate && !isCorrupted) {
         console.log("Fast path: returned pre-generated HTML for GHL template.")
