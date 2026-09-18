@@ -79,7 +79,15 @@ export function cleanGhlHtml(raw: string): string {
   // 7. Strip accidental/awkward split-screen viewport bleed blocks that cut across the hero (e.g. w-[100vw], -right-[50vw], -left-[50vw])
   text = text.replace(/<div[^>]*?(?:w-\[100vw\]|-right-\[50vw\]|-left-\[50vw\])[^>]*?>\s*(?:<\/div>)?/gi, "")
 
-  // 8. Auto-heal missing closing tags if accidentally omitted
+  // 8. Auto-heal unquoted inline string arguments in event handlers (e.g. new CustomEvent(fluid-trigger-burst) or window.open(https://...))
+  text = text.replace(/new\s+CustomEvent\(\s*([a-zA-Z0-9_-]+)\s*\)/g, "new CustomEvent('$1')")
+  text = text.replace(/window\.open\(\s*(https?:\/\/[^\s,)'"]+)\s*,\s*([_a-zA-Z0-9]+)\s*\)/g, "window.open('$1', '$2')")
+  text = text.replace(/window\.open\(\s*(https?:\/\/[^\s,)'"]+)\s*\)/g, "window.open('$1')")
+
+  // 9. Strip React ref leaks in vanilla script (e.g. updateKeywordsRef.current = ...)
+  text = text.replace(/[a-zA-Z0-9_$]+Ref\.current\s*=\s*([^;]+);/g, "/* ref assignment stripped */")
+
+  // 10. Auto-heal missing closing tags if accidentally omitted
   const openScripts = (text.match(/<script\b/gi) || []).length
   const closeScripts = (text.match(/<\/script>/gi) || []).length
   if (openScripts > closeScripts) {
@@ -212,7 +220,13 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       - Keep their width, height, viewBox, stroke, fill, and className attributes intact.
 
       6. INTERACTIVITY & JAVASCRIPT:
-      - Convert React interactive state and animations (spotlights, mouse tracking, ripples, magnetic cursor pull, tabs, dropdowns, accordions, mobile navigation menu toggle) into clean Vanilla JavaScript inside a <script> block at the bottom.
+      - Convert React interactive state and animations (spotlights, mouse tracking, ripples, magnetic cursor pull, tabs, dropdowns, accordions, mobile navigation menu toggle, WebGL/canvas) into clean Vanilla JavaScript inside a <script> block at the bottom.
+      - PURE VANILLA JAVASCRIPT ONLY:
+        * NEVER output React hooks (\`useRef\`, \`useState\`, \`useEffect\`, \`useCallback\`) or \`.current\` property accesses in the vanilla script.
+        * NEVER leave undeclared variables (like \`isDark\`, \`props\`, \`ref\`). All identifiers must be explicitly declared (\`const\`, \`let\`, \`var\`).
+        * STRICT INLINE ATTRIBUTE QUOTING: In inline HTML handlers (e.g. onclick="..."), all string parameters MUST be wrapped in quotes: onclick="window.dispatchEvent(new CustomEvent('fluid-trigger-burst'))", onclick="window.open('https://example.com', '_blank')". NEVER emit unquoted strings.
+        * BOUNDING CLIENT RECT FOR POINTERS: For canvases, interactive cards, and cursor tracking, always calculate normalized UV coordinates using element.getBoundingClientRect(): (e.clientX - rect.left) / (rect.width || 1) and (e.clientY - rect.top) / (rect.height || 1). NEVER use raw e.clientX / window.innerWidth.
+        * THEME COMPLIANCE: If the component is dark-themed by default (e.g. bg-[#030712]), default the JS configuration to dark mode. GoHighLevel pages typically do NOT have a \`dark\` class on <html> or <body>.
       - For tabs, accordions, or hidden menus, toggle the \`hidden\` class or style display property dynamically on click.
 
       7. COMPLETION GUARANTEE:
