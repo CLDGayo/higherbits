@@ -2,6 +2,16 @@
 
 import { DbLinks } from "@/components/features/admin/db-links"
 import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -66,6 +76,8 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  FolderMinus,
+  FolderPlus,
   Globe,
   InfoIcon,
   Layers,
@@ -111,6 +123,15 @@ interface DemosTableProps {
     componentIds: number[],
     collectionId: string,
   ) => Promise<void>
+  onBulkAddToLibrary?: (
+    componentIds: number[],
+    collectionId: string,
+  ) => Promise<void>
+  onBulkRemoveFromLibrary?: (
+    componentIds: number[],
+    collectionId?: string,
+  ) => Promise<void>
+  onBulkDelete?: (componentIds: number[]) => Promise<void>
   onBulkVisibility?: (componentIds: number[], isPrivate: boolean) => Promise<void>
   /**
    * Trailing toolbar controls, e.g. the "New" menu. It used to sit in the page
@@ -230,9 +251,11 @@ function StatusCell({ demo }: { demo: ExtendedDemoWithComponent }) {
 function RowActionsCell({
   demo,
   onEdit,
+  isRowSelected,
 }: {
   demo: ExtendedDemoWithComponent
   onEdit?: (demo: ExtendedDemoWithComponent) => void
+  isRowSelected?: boolean
 }) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
@@ -280,17 +303,22 @@ function RowActionsCell({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                disabled={isRowSelected || isDeleting}
+                className="h-8 w-8 text-muted-foreground hover:text-foreground disabled:opacity-40"
                 onClick={(e) => {
                   e.stopPropagation()
-                  onEdit(demo)
+                  if (!isRowSelected) {
+                    onEdit(demo)
+                  }
                 }}
               >
                 <Pencil size={16} />
                 <span className="sr-only">Edit Details</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Edit Details</TooltipContent>
+            <TooltipContent>
+              {isRowSelected ? "Deselect to edit" : "Edit Details"}
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )}
@@ -313,10 +341,12 @@ function ComponentCell({
   demo,
   onOpenSandbox,
   canEdit,
+  isRowSelected,
 }: {
   demo: ExtendedDemoWithComponent
   onOpenSandbox?: (shortSandboxId: string, isEdit?: boolean) => void
   canEdit?: boolean
+  isRowSelected?: boolean
 }) {
   const router = useRouter()
 
@@ -346,6 +376,7 @@ function ComponentCell({
     : demo.component?.sandbox_id || null
   const showEdit = Boolean(canEdit && onOpenSandbox && editTarget)
   const handleLeadingAction = () => {
+    if (isRowSelected) return
     if (showEdit && editTarget) {
       onOpenSandbox!(editTarget, !isDraft)
     } else {
@@ -361,19 +392,33 @@ function ComponentCell({
             <Button
               variant="ghost"
               size="icon"
-              disabled={showEdit ? false : !isComponentAvailable}
+              disabled={isRowSelected ? true : (showEdit ? false : !isComponentAvailable)}
               onClick={handleLeadingAction}
             >
               {showEdit ? (
-                <Pencil size={16} className="text-primary" />
+                <Pencil
+                  size={16}
+                  className={cn(
+                    "text-primary",
+                    isRowSelected && "opacity-40",
+                  )}
+                />
               ) : (
-                <ExternalLink size={16} className="text-primary" />
+                <ExternalLink
+                  size={16}
+                  className={cn(
+                    "text-primary",
+                    isRowSelected && "opacity-40",
+                  )}
+                />
               )}
             </Button>
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          {showEdit ? (
+          {isRowSelected ? (
+            <p>Deselect to edit component</p>
+          ) : showEdit ? (
             <p>Edit component</p>
           ) : isComponentAvailable ? (
             <p>Open component page</p>
@@ -420,6 +465,9 @@ export function DemosTable({
   isOwnProfile = false,
   libraries = [],
   onBulkMoveToLibrary,
+  onBulkAddToLibrary,
+  onBulkRemoveFromLibrary,
+  onBulkDelete,
   onBulkVisibility,
   actions,
 }: DemosTableProps) {
@@ -439,8 +487,14 @@ export function DemosTable({
   ])
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const canBulkEdit = Boolean(
-    isOwnProfile && (onBulkVisibility || onBulkMoveToLibrary),
+    isOwnProfile &&
+      (onBulkVisibility ||
+        onBulkMoveToLibrary ||
+        onBulkAddToLibrary ||
+        onBulkRemoveFromLibrary ||
+        onBulkDelete),
   )
 
   const safeData = useMemo(
@@ -535,6 +589,7 @@ export function DemosTable({
           demo={row.original}
           onOpenSandbox={onOpenSandbox}
           canEdit={isOwnProfile}
+          isRowSelected={row.getIsSelected()}
         />
       ),
       size: 300,
@@ -648,7 +703,13 @@ export function DemosTable({
     columns.push({
       header: "Actions",
       id: "actions",
-      cell: ({ row }) => <RowActionsCell demo={row.original} onEdit={onEdit} />,
+      cell: ({ row }) => (
+        <RowActionsCell
+          demo={row.original}
+          onEdit={onEdit}
+          isRowSelected={row.getIsSelected()}
+        />
+      ),
       size: 100,
     })
   }
@@ -1083,12 +1144,97 @@ export function DemosTable({
               {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
             </span>
 
+            {onBulkDelete && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  disabled={isBulkRunning}
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  <Trash2 size={14} className="mr-1.5" />
+                  Delete
+                </Button>
+
+                <AlertDialog
+                  open={isDeleteDialogOpen}
+                  onOpenChange={setIsDeleteDialogOpen}
+                >
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Delete {selectedCount}{" "}
+                        {selectedCount === 1 ? "component" : "components"}?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will permanently delete the selected{" "}
+                        {selectedCount === 1 ? "component" : "components"}.
+                        This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel disabled={isBulkRunning}>
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        disabled={isBulkRunning}
+                        onClick={() =>
+                          runBulk(async () => {
+                            await onBulkDelete(selectedComponentIds)
+                            setIsDeleteDialogOpen(false)
+                          })
+                        }
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            )}
+
+            {onBulkVisibility && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
+                    <Globe size={14} className="mr-1.5" />
+                    Visibility
+                    <ChevronDown size={14} className="ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      runBulk(() =>
+                        onBulkVisibility(selectedComponentIds, false),
+                      )
+                    }
+                  >
+                    <Globe size={14} className="mr-2 text-green-500" />
+                    Public
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      runBulk(() =>
+                        onBulkVisibility(selectedComponentIds, true),
+                      )
+                    }
+                  >
+                    <Lock size={14} className="mr-2" />
+                    Private
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
             {onBulkMoveToLibrary && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" disabled={isBulkRunning}>
                     <Library size={14} className="mr-1.5" />
-                    Move to
+                    Move to library
                     <ChevronDown size={14} className="ml-1" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -1123,35 +1269,90 @@ export function DemosTable({
               </DropdownMenu>
             )}
 
-            {onBulkVisibility && (
+            {onBulkAddToLibrary && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" disabled={isBulkRunning}>
-                    Visibility
+                    <FolderPlus size={14} className="mr-1.5" />
+                    Add to library
                     <ChevronDown size={14} className="ml-1" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center">
+                  <DropdownMenuLabel>
+                    Add {selectedCount}{" "}
+                    {selectedCount === 1 ? "component" : "components"} to
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {libraries.length === 0 ? (
+                    <DropdownMenuItem disabled>
+                      No libraries yet
+                    </DropdownMenuItem>
+                  ) : (
+                    libraries.map((library) => (
+                      <DropdownMenuItem
+                        key={library.id}
+                        onSelect={() =>
+                          runBulk(() =>
+                            onBulkAddToLibrary(
+                              selectedComponentIds,
+                              library.id,
+                            ),
+                          )
+                        }
+                      >
+                        {library.name}
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {onBulkRemoveFromLibrary && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
+                    <FolderMinus size={14} className="mr-1.5" />
+                    Remove from library
+                    <ChevronDown size={14} className="ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuLabel>
+                    Remove {selectedCount}{" "}
+                    {selectedCount === 1 ? "component" : "components"} from
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onSelect={() =>
                       runBulk(() =>
-                        onBulkVisibility(selectedComponentIds, false),
+                        onBulkRemoveFromLibrary(selectedComponentIds),
                       )
                     }
                   >
-                    <Globe size={14} className="mr-2 text-green-500" />
-                    Public
+                    All libraries
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() =>
-                      runBulk(() =>
-                        onBulkVisibility(selectedComponentIds, true),
-                      )
-                    }
-                  >
-                    <Lock size={14} className="mr-2" />
-                    Private
-                  </DropdownMenuItem>
+                  {libraries.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      {libraries.map((library) => (
+                        <DropdownMenuItem
+                          key={library.id}
+                          onSelect={() =>
+                            runBulk(() =>
+                              onBulkRemoveFromLibrary(
+                                selectedComponentIds,
+                                library.id,
+                              ),
+                            )
+                          }
+                        >
+                          {library.name}
+                        </DropdownMenuItem>
+                      ))}
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             )}

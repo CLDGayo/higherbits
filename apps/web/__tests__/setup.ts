@@ -2,6 +2,7 @@ import { vi } from "vitest"
 
 vi.mock("@/lib/supabase", () => {
   return {
+    checkIsAdmin: vi.fn().mockResolvedValue({ isAdmin: false, error: null }),
     supabaseWithAdminAccess: {
       from: vi.fn((table) => {
         return {

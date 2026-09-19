@@ -1,5 +1,6 @@
 import "server-only"
 import prisma from "../../prisma"
+import { checkIsAdmin } from "../../admin"
 import { isUniqueConstraintError } from "../../utils/prisma-errors"
 
 /**
@@ -71,7 +72,7 @@ export const listUserLibraries = async (
   }))
 }
 
-/** Throws unless the collection exists and belongs to `userId`. */
+/** Throws unless the collection exists and belongs to `userId` or caller is admin. */
 const assertOwned = async (collectionId: string, userId: string) => {
   const collection = await prisma.collections.findUnique({
     where: { id: collectionId },
@@ -82,7 +83,9 @@ const assertOwned = async (collectionId: string, userId: string) => {
     throw new Error("Library not found")
   }
 
-  if (collection.user_id !== userId) {
+  const { isAdmin } = await checkIsAdmin(userId)
+
+  if (collection.user_id !== userId && !isAdmin) {
     throw new Error("Unauthorized to modify this library")
   }
 
@@ -235,7 +238,7 @@ export const moveComponentToLibrary = async (
       where: {
         component_id: componentId,
         collection_id: { not: collectionId },
-        collections: { user_id: userId },
+        collections: { user_id: collection.user_id },
       },
     }),
     prisma.components_to_collections.upsert({
@@ -273,6 +276,35 @@ export const removeComponentFromLibrary = async (
 
   await prisma.components_to_collections.deleteMany({
     where: { collection_id: collectionId, component_id: componentId },
+  })
+}
+
+export const removeComponentFromAllLibraries = async (
+  componentId: number,
+  userId: string,
+  targetUserId?: string,
+) => {
+  const { isAdmin } = await checkIsAdmin(userId)
+  const component = await prisma.components.findUnique({
+    where: { id: componentId },
+    select: { user_id: true },
+  })
+
+  if (!component) {
+    throw new Error("Component not found")
+  }
+
+  if (component.user_id !== userId && !isAdmin) {
+    throw new Error("Unauthorized to remove component from libraries")
+  }
+
+  const ownerId = targetUserId || component.user_id
+
+  await prisma.components_to_collections.deleteMany({
+    where: {
+      component_id: componentId,
+      collections: { user_id: ownerId },
+    },
   })
 }
 

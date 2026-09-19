@@ -115,8 +115,10 @@ export const deleteComponent = async (componentId: number, userId: string) => {
     throw new Error("Component not found");
   }
 
+  const { isAdmin } = await checkIsAdmin(userId)
+
   // Only allow owner or admin to delete
-  if (component.user_id !== userId) {
+  if (component.user_id !== userId && !isAdmin) {
     throw new Error("Unauthorized to delete this component");
   }
 

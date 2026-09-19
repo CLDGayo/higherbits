@@ -14,9 +14,13 @@ import {
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { createNewSandbox } from "@/components/features/studio/sandbox/api"
 import {
+  addComponentToLibraryAction,
   listLibrariesAction,
   moveComponentToLibraryAction,
+  removeComponentFromAllLibrariesAction,
+  removeComponentFromLibraryAction,
 } from "@/lib/api/collections"
+import { deleteComponentAction } from "@/lib/api/components"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ExtendedDemoWithComponent } from "@/lib/utils/transformData"
 import {
@@ -268,12 +272,12 @@ export function StudioUsernameClient({
 
   useEffect(() => {
     if (!isOwnProfile && !isAdmin) return
-    listLibrariesAction()
+    listLibrariesAction(user.id)
       .then((rows) =>
         setLibraries(rows.map((row: any) => ({ id: row.id, name: row.name }))),
       )
       .catch((error) => console.error("Failed to load libraries:", error))
-  }, [isOwnProfile, isAdmin])
+  }, [isOwnProfile, isAdmin, user.id])
 
   // Sequential rather than Promise.all: these are per-row writes against the
   // same table, and a partial failure should report how far it got instead of
@@ -338,6 +342,68 @@ export function StudioUsernameClient({
       "the library"
     toast.success(
       `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} moved to ${libraryName}`,
+    )
+  }
+
+  const handleBulkAddToLibrary = async (
+    componentIds: number[],
+    collectionId: string,
+  ) => {
+    await runOverComponents(componentIds, async (componentId) => {
+      await addComponentToLibraryAction({ collectionId, componentId })
+    })
+
+    const libraryName =
+      libraries.find((library) => library.id === collectionId)?.name ||
+      "the library"
+    toast.success(
+      `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} added to ${libraryName}`,
+    )
+  }
+
+  const handleBulkRemoveFromLibrary = async (
+    componentIds: number[],
+    collectionId?: string,
+  ) => {
+    await runOverComponents(componentIds, async (componentId) => {
+      if (collectionId) {
+        await removeComponentFromLibraryAction({ collectionId, componentId })
+      } else {
+        await removeComponentFromAllLibrariesAction({
+          componentId,
+          targetUserId: user.id,
+        })
+      }
+    })
+
+    if (collectionId) {
+      const libraryName =
+        libraries.find((library) => library.id === collectionId)?.name ||
+        "the library"
+      toast.success(
+        `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} removed from ${libraryName}`,
+      )
+    } else {
+      toast.success(
+        `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} removed from all libraries`,
+      )
+    }
+  }
+
+  const handleBulkDelete = async (componentIds: number[]) => {
+    await runOverComponents(componentIds, async (componentId) => {
+      await deleteComponentAction({ componentId })
+    })
+
+    setLocalDemos((prevDemos) =>
+      prevDemos.filter(
+        (demo) =>
+          !demo?.component?.id || !componentIds.includes(demo.component.id),
+      ),
+    )
+
+    toast.success(
+      `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} deleted`,
     )
   }
 
@@ -503,6 +569,15 @@ export function StudioUsernameClient({
           libraries={libraries}
           onBulkMoveToLibrary={
             isOwnProfile || isAdmin ? handleBulkMoveToLibrary : undefined
+          }
+          onBulkAddToLibrary={
+            isOwnProfile || isAdmin ? handleBulkAddToLibrary : undefined
+          }
+          onBulkRemoveFromLibrary={
+            isOwnProfile || isAdmin ? handleBulkRemoveFromLibrary : undefined
+          }
+          onBulkDelete={
+            isOwnProfile || isAdmin ? handleBulkDelete : undefined
           }
           // Restored 2026-08-15. This was withheld after the 2026-08-13 write
           // that made an unselected component public, on the reasoning that no

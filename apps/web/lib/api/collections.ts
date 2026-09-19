@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server"
 import { z } from "zod"
 
 import { isValidSlug } from "@/lib/utils/library-identity"
+import { checkIsAdmin } from "../admin"
 import {
   DuplicateSlugError,
   addComponentToLibrary,
@@ -12,6 +13,7 @@ import {
   listUserLibraries,
   moveComponentToLibrary,
   removeComponentFromLibrary,
+  removeComponentFromAllLibraries,
   setLibraryPublished,
   updateLibrary,
 } from "./server/collections"
@@ -76,9 +78,11 @@ export const createLibraryAction = async (
   }
 }
 
-export const listLibrariesAction = async () => {
+export const listLibrariesAction = async (targetUserId?: string) => {
   const userId = await requireUserId()
-  return listUserLibraries(userId)
+  const { isAdmin } = await checkIsAdmin(userId)
+  const effectiveUserId = isAdmin && targetUserId ? targetUserId : userId
+  return listUserLibraries(effectiveUserId)
 }
 
 const updateLibrarySchema = z.object({
@@ -141,6 +145,21 @@ export const removeComponentFromLibraryAction = async (
   const userId = await requireUserId()
   const { collectionId, componentId } = libraryComponentSchema.parse(input)
   await removeComponentFromLibrary(collectionId, componentId, userId)
+  return { success: true }
+}
+
+const removeComponentFromAllLibrariesSchema = z.object({
+  componentId: z.number().int().positive(),
+  targetUserId: z.string().optional(),
+})
+
+export const removeComponentFromAllLibrariesAction = async (
+  input: z.infer<typeof removeComponentFromAllLibrariesSchema>,
+) => {
+  const userId = await requireUserId()
+  const { componentId, targetUserId } =
+    removeComponentFromAllLibrariesSchema.parse(input)
+  await removeComponentFromAllLibraries(componentId, userId, targetUserId)
   return { success: true }
 }
 
