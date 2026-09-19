@@ -21,7 +21,12 @@ export const deleteSandboxAction = async (
   }
 
   const { sandboxId } = deleteSandboxSchema.parse(input)
-  const fullUuid = shortUUID.toUUID(sandboxId)
+  let fullUuid: string
+  try {
+    fullUuid = sandboxId.includes("-") ? sandboxId : shortUUID.toUUID(sandboxId)
+  } catch {
+    fullUuid = sandboxId
+  }
 
   const sandbox = await prisma.sandboxes.findUnique({
     where: { id: fullUuid },

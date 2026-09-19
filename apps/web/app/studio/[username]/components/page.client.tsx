@@ -402,10 +402,11 @@ export function StudioUsernameClient({
     const failed: string[] = []
     for (const item of items) {
       try {
-        if (item.sandboxId) {
-          await deleteSandboxAction({ sandboxId: item.sandboxId })
-        } else if (item.componentId) {
+        if (item.componentId) {
           await deleteComponentAction({ componentId: item.componentId })
+        } else if (item.sandboxId || item.isDraft) {
+          const sId = item.sandboxId || item.id
+          await deleteSandboxAction({ sandboxId: String(sId) })
         }
       } catch (error) {
         console.error(`Bulk delete failed for item ${item.id}:`, error)
@@ -413,17 +414,24 @@ export function StudioUsernameClient({
       }
     }
 
-    const deletedIds = items
-      .filter((item) => !failed.includes(String(item.id)))
-      .map((item) => String(item.id))
+    const deletedItems = items.filter(
+      (item) => !failed.includes(String(item.id)),
+    )
+    const deletedComponentIds = deletedItems
+      .map((i) => i.componentId)
+      .filter((id): id is number => typeof id === "number")
+    const deletedRowIds = deletedItems.map((i) => String(i.id))
 
     setLocalDemos((prevDemos) =>
-      prevDemos.filter(
-        (demo) =>
-          !deletedIds.includes(String(demo.id)) &&
-          (!demo.component?.id ||
-            !items.some((i) => i.componentId === demo.component?.id)),
-      ),
+      prevDemos.filter((demo) => {
+        if (deletedRowIds.includes(String(demo.id))) return false
+        if (
+          demo.component?.id &&
+          deletedComponentIds.includes(demo.component.id)
+        )
+          return false
+        return true
+      }),
     )
 
     if (failed.length) {
@@ -433,7 +441,7 @@ export function StudioUsernameClient({
     }
 
     toast.success(
-      `${items.length} ${items.length === 1 ? "item" : "items"} deleted`,
+      `${deletedItems.length} ${deletedItems.length === 1 ? "item" : "items"} deleted`,
     )
   }
 

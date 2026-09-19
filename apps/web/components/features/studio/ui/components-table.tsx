@@ -780,9 +780,7 @@ export function DemosTable({
         return {
           id: String(demo.id),
           componentId,
-          sandboxId: isDraft
-            ? String(demo.id)
-            : demo.component?.sandbox_id || undefined,
+          sandboxId: isDraft ? String(demo.id) : undefined,
           isDraft,
         }
       }),
