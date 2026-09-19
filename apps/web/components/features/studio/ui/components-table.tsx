@@ -131,7 +131,14 @@ interface DemosTableProps {
     componentIds: number[],
     collectionId?: string,
   ) => Promise<void>
-  onBulkDelete?: (componentIds: number[]) => Promise<void>
+  onBulkDelete?: (
+    items: {
+      id: string
+      componentId?: number
+      sandboxId?: string
+      isDraft?: boolean
+    }[],
+  ) => Promise<void>
   onBulkVisibility?: (componentIds: number[], isPrivate: boolean) => Promise<void>
   /**
    * Trailing toolbar controls, e.g. the "New" menu. It used to sit in the page
@@ -551,8 +558,6 @@ export function DemosTable({
   }
 
   const columns: ColumnDef<ExtendedDemoWithComponent>[] = [
-    // Bulk actions act on components, so drafts with no component row yet are
-    // not selectable. enableRowSelection below enforces the same rule.
     ...(canBulkEdit
       ? ([
           {
@@ -754,7 +759,7 @@ export function DemosTable({
     // Keyed by demo id rather than row index, so a selection survives sorting,
     // paging and tab filtering instead of silently sliding onto another row.
     getRowId: (row) => String(row.id),
-    enableRowSelection: (row) => Boolean(componentIdOf(row.original)),
+    enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
@@ -764,10 +769,34 @@ export function DemosTable({
   })
 
   const selectedRows = table.getSelectedRowModel().rows
-  const selectedComponentIds = selectedRows
-    .map((row) => componentIdOf(row.original))
-    .filter((id): id is number => typeof id === "number")
-  const selectedCount = selectedComponentIds.length
+  const selectedCount = selectedRows.length
+
+  const selectedItems = useMemo(
+    () =>
+      selectedRows.map((row) => {
+        const demo = row.original
+        const componentId = componentIdOf(demo)
+        const isDraft = resolveStatus(demo) === "draft"
+        return {
+          id: String(demo.id),
+          componentId,
+          sandboxId: isDraft
+            ? String(demo.id)
+            : demo.component?.sandbox_id || undefined,
+          isDraft,
+        }
+      }),
+    [selectedRows],
+  )
+
+  const selectedComponentIds = useMemo(
+    () =>
+      selectedItems
+        .map((item) => item.componentId)
+        .filter((id): id is number => typeof id === "number"),
+    [selectedItems],
+  )
+
   const [isBulkRunning, setIsBulkRunning] = useState(false)
 
   const runBulk = async (action: () => Promise<void>) => {
@@ -786,6 +815,198 @@ export function DemosTable({
       setIsBulkRunning(false)
     }
   }
+
+  const renderBulkButtons = () => (
+    <>
+      {onBulkDelete && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          disabled={isBulkRunning}
+          onClick={() => setIsDeleteDialogOpen(true)}
+        >
+          <Trash2 size={14} className="mr-1.5" />
+          Delete
+        </Button>
+      )}
+
+      {onBulkVisibility && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isBulkRunning}>
+              <Globe size={14} className="mr-1.5" />
+              Visibility
+              <ChevronDown size={14} className="ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <DropdownMenuItem
+              onSelect={() => {
+                if (selectedComponentIds.length === 0) {
+                  toast.info("Drafts remain private until submitted and approved.")
+                  return
+                }
+                runBulk(() => onBulkVisibility(selectedComponentIds, false))
+              }}
+            >
+              <Globe size={14} className="mr-2 text-green-500" />
+              Public
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => {
+                if (selectedComponentIds.length === 0) {
+                  toast.info("Drafts remain private until submitted and approved.")
+                  return
+                }
+                runBulk(() => onBulkVisibility(selectedComponentIds, true))
+              }}
+            >
+              <Lock size={14} className="mr-2" />
+              Private
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+
+      {onBulkMoveToLibrary && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isBulkRunning}>
+              <Library size={14} className="mr-1.5" />
+              Move to library
+              <ChevronDown size={14} className="ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <DropdownMenuLabel>
+              Move {selectedCount} {selectedCount === 1 ? "item" : "items"} to
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {libraries.length === 0 ? (
+              <DropdownMenuItem disabled>No libraries yet</DropdownMenuItem>
+            ) : (
+              libraries.map((library) => (
+                <DropdownMenuItem
+                  key={library.id}
+                  onSelect={() => {
+                    if (selectedComponentIds.length === 0) {
+                      toast.info("Drafts must be published before adding to libraries.")
+                      return
+                    }
+                    runBulk(() =>
+                      onBulkMoveToLibrary(
+                        selectedComponentIds,
+                        library.id,
+                      ),
+                    )
+                  }}
+                >
+                  {library.name}
+                </DropdownMenuItem>
+              ))
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+
+      {onBulkAddToLibrary && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isBulkRunning}>
+              <FolderPlus size={14} className="mr-1.5" />
+              Add to library
+              <ChevronDown size={14} className="ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <DropdownMenuLabel>
+              Add {selectedCount} {selectedCount === 1 ? "item" : "items"} to
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {libraries.length === 0 ? (
+              <DropdownMenuItem disabled>No libraries yet</DropdownMenuItem>
+            ) : (
+              libraries.map((library) => (
+                <DropdownMenuItem
+                  key={library.id}
+                  onSelect={() => {
+                    if (selectedComponentIds.length === 0) {
+                      toast.info("Drafts must be published before adding to libraries.")
+                      return
+                    }
+                    runBulk(() =>
+                      onBulkAddToLibrary(
+                        selectedComponentIds,
+                        library.id,
+                      ),
+                    )
+                  }}
+                >
+                  {library.name}
+                </DropdownMenuItem>
+              ))
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+
+      {onBulkRemoveFromLibrary && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isBulkRunning}>
+              <FolderMinus size={14} className="mr-1.5" />
+              Remove from library
+              <ChevronDown size={14} className="ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            <DropdownMenuLabel>
+              Remove {selectedCount} {selectedCount === 1 ? "item" : "items"} from
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={() => {
+                if (selectedComponentIds.length === 0) {
+                  toast.info("Drafts are not part of any library.")
+                  return
+                }
+                runBulk(() =>
+                  onBulkRemoveFromLibrary(selectedComponentIds),
+                )
+              }}
+            >
+              All libraries
+            </DropdownMenuItem>
+            {libraries.length > 0 && (
+              <>
+                <DropdownMenuSeparator />
+                {libraries.map((library) => (
+                  <DropdownMenuItem
+                    key={library.id}
+                    onSelect={() => {
+                      if (selectedComponentIds.length === 0) {
+                        toast.info("Drafts are not part of any library.")
+                        return
+                      }
+                      runBulk(() =>
+                        onBulkRemoveFromLibrary(
+                          selectedComponentIds,
+                          library.id,
+                        ),
+                      )
+                    }}
+                  >
+                    {library.name}
+                  </DropdownMenuItem>
+                ))}
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </>
+  )
 
   const pageCount = table.getPageCount()
   const currentPage = table.getState().pagination.pageIndex + 1
@@ -842,6 +1063,28 @@ export function DemosTable({
         onViewChange={setView}
         actions={actions}
       />
+
+      {canBulkEdit && selectedCount > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2.5 text-sm animate-in fade-in-50 duration-200">
+          <div className="flex items-center gap-3">
+            <span className="font-semibold text-foreground">
+              {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+              onClick={() => setRowSelection({})}
+              disabled={isBulkRunning}
+            >
+              Clear selection
+            </Button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {renderBulkButtons()}
+          </div>
+        </div>
+      )}
 
       {rows.length === 0 ? (
         <StudioEmptyState
@@ -1139,228 +1382,15 @@ export function DemosTable({
 
       {canBulkEdit && selectedCount > 0 && (
         <div className="sticky bottom-4 z-40 mt-4 flex justify-center">
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 shadow-lg">
-            <span className="px-1 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-background/95 backdrop-blur px-3 py-2 shadow-xl animate-in fade-in-50 duration-200">
+            <span className="px-1 text-sm font-medium text-muted-foreground">
               {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
             </span>
-
-            {onBulkDelete && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                  disabled={isBulkRunning}
-                  onClick={() => setIsDeleteDialogOpen(true)}
-                >
-                  <Trash2 size={14} className="mr-1.5" />
-                  Delete
-                </Button>
-
-                <AlertDialog
-                  open={isDeleteDialogOpen}
-                  onOpenChange={setIsDeleteDialogOpen}
-                >
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Delete {selectedCount}{" "}
-                        {selectedCount === 1 ? "component" : "components"}?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will permanently delete the selected{" "}
-                        {selectedCount === 1 ? "component" : "components"}.
-                        This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel disabled={isBulkRunning}>
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        disabled={isBulkRunning}
-                        onClick={() =>
-                          runBulk(async () => {
-                            await onBulkDelete(selectedComponentIds)
-                            setIsDeleteDialogOpen(false)
-                          })
-                        }
-                      >
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </>
-            )}
-
-            {onBulkVisibility && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
-                    <Globe size={14} className="mr-1.5" />
-                    Visibility
-                    <ChevronDown size={14} className="ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center">
-                  <DropdownMenuItem
-                    onSelect={() =>
-                      runBulk(() =>
-                        onBulkVisibility(selectedComponentIds, false),
-                      )
-                    }
-                  >
-                    <Globe size={14} className="mr-2 text-green-500" />
-                    Public
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() =>
-                      runBulk(() =>
-                        onBulkVisibility(selectedComponentIds, true),
-                      )
-                    }
-                  >
-                    <Lock size={14} className="mr-2" />
-                    Private
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {onBulkMoveToLibrary && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
-                    <Library size={14} className="mr-1.5" />
-                    Move to library
-                    <ChevronDown size={14} className="ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center">
-                  <DropdownMenuLabel>
-                    Move {selectedCount}{" "}
-                    {selectedCount === 1 ? "component" : "components"} to
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {libraries.length === 0 ? (
-                    <DropdownMenuItem disabled>
-                      No libraries yet
-                    </DropdownMenuItem>
-                  ) : (
-                    libraries.map((library) => (
-                      <DropdownMenuItem
-                        key={library.id}
-                        onSelect={() =>
-                          runBulk(() =>
-                            onBulkMoveToLibrary(
-                              selectedComponentIds,
-                              library.id,
-                            ),
-                          )
-                        }
-                      >
-                        {library.name}
-                      </DropdownMenuItem>
-                    ))
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {onBulkAddToLibrary && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
-                    <FolderPlus size={14} className="mr-1.5" />
-                    Add to library
-                    <ChevronDown size={14} className="ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center">
-                  <DropdownMenuLabel>
-                    Add {selectedCount}{" "}
-                    {selectedCount === 1 ? "component" : "components"} to
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {libraries.length === 0 ? (
-                    <DropdownMenuItem disabled>
-                      No libraries yet
-                    </DropdownMenuItem>
-                  ) : (
-                    libraries.map((library) => (
-                      <DropdownMenuItem
-                        key={library.id}
-                        onSelect={() =>
-                          runBulk(() =>
-                            onBulkAddToLibrary(
-                              selectedComponentIds,
-                              library.id,
-                            ),
-                          )
-                        }
-                      >
-                        {library.name}
-                      </DropdownMenuItem>
-                    ))
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {onBulkRemoveFromLibrary && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" disabled={isBulkRunning}>
-                    <FolderMinus size={14} className="mr-1.5" />
-                    Remove from library
-                    <ChevronDown size={14} className="ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center">
-                  <DropdownMenuLabel>
-                    Remove {selectedCount}{" "}
-                    {selectedCount === 1 ? "component" : "components"} from
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onSelect={() =>
-                      runBulk(() =>
-                        onBulkRemoveFromLibrary(selectedComponentIds),
-                      )
-                    }
-                  >
-                    All libraries
-                  </DropdownMenuItem>
-                  {libraries.length > 0 && (
-                    <>
-                      <DropdownMenuSeparator />
-                      {libraries.map((library) => (
-                        <DropdownMenuItem
-                          key={library.id}
-                          onSelect={() =>
-                            runBulk(() =>
-                              onBulkRemoveFromLibrary(
-                                selectedComponentIds,
-                                library.id,
-                              ),
-                            )
-                          }
-                        >
-                          {library.name}
-                        </DropdownMenuItem>
-                      ))}
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
+            {renderBulkButtons()}
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
               onClick={() => setRowSelection({})}
               disabled={isBulkRunning}
               aria-label="Clear selection"
@@ -1369,6 +1399,44 @@ export function DemosTable({
             </Button>
           </div>
         </div>
+      )}
+
+      {onBulkDelete && (
+        <AlertDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Delete {selectedCount}{" "}
+                {selectedCount === 1 ? "item" : "items"}?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete the selected{" "}
+                {selectedCount === 1 ? "item" : "items"}. This action cannot be
+                undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isBulkRunning}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isBulkRunning}
+                onClick={() =>
+                  runBulk(async () => {
+                    await onBulkDelete(selectedItems)
+                    setIsDeleteDialogOpen(false)
+                  })
+                }
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </div>
   )

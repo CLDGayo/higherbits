@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { z } from "zod"
 import prisma from "../prisma"
+import { checkIsAdmin } from "../admin"
 import ShortUUID from "short-uuid"
 
 const shortUUID = ShortUUID()
@@ -30,7 +31,9 @@ export const deleteSandboxAction = async (
     throw new Error("Sandbox not found")
   }
 
-  if (sandbox.user_id !== userId) {
+  const { isAdmin } = await checkIsAdmin(userId)
+
+  if (sandbox.user_id !== userId && !isAdmin) {
     throw new Error("Unauthorized to delete this sandbox")
   }
 

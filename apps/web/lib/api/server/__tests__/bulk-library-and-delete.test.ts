@@ -11,12 +11,12 @@ vi.mock("server-only", () => ({}))
 vi.mock("../../../prisma", () => ({
   default: {
     collections: {
-      findUnique: (...args: unknown[]) => findUniqueCollection(...args),
+      findUnique: (args: unknown) => findUniqueCollection(args),
       update: vi.fn(async () => ({})),
     },
     components: {
-      findUnique: (...args: unknown[]) => findUniqueComponent(...args),
-      delete: (...args: unknown[]) => deleteComponentPrisma(...args),
+      findUnique: (args: unknown) => findUniqueComponent(args),
+      delete: (args: unknown) => deleteComponentPrisma(args),
     },
     components_to_collections: {
       deleteMany: (args: unknown) => deleteMany(args),

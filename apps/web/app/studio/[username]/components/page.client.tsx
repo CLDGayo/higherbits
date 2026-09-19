@@ -21,6 +21,7 @@ import {
   removeComponentFromLibraryAction,
 } from "@/lib/api/collections"
 import { deleteComponentAction } from "@/lib/api/components"
+import { deleteSandboxAction } from "@/lib/api/sandboxes"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ExtendedDemoWithComponent } from "@/lib/utils/transformData"
 import {
@@ -390,20 +391,49 @@ export function StudioUsernameClient({
     }
   }
 
-  const handleBulkDelete = async (componentIds: number[]) => {
-    await runOverComponents(componentIds, async (componentId) => {
-      await deleteComponentAction({ componentId })
-    })
+  const handleBulkDelete = async (
+    items: {
+      id: string
+      componentId?: number
+      sandboxId?: string
+      isDraft?: boolean
+    }[],
+  ) => {
+    const failed: string[] = []
+    for (const item of items) {
+      try {
+        if (item.sandboxId) {
+          await deleteSandboxAction({ sandboxId: item.sandboxId })
+        } else if (item.componentId) {
+          await deleteComponentAction({ componentId: item.componentId })
+        }
+      } catch (error) {
+        console.error(`Bulk delete failed for item ${item.id}:`, error)
+        failed.push(String(item.id))
+      }
+    }
+
+    const deletedIds = items
+      .filter((item) => !failed.includes(String(item.id)))
+      .map((item) => String(item.id))
 
     setLocalDemos((prevDemos) =>
       prevDemos.filter(
         (demo) =>
-          !demo?.component?.id || !componentIds.includes(demo.component.id),
+          !deletedIds.includes(String(demo.id)) &&
+          (!demo.component?.id ||
+            !items.some((i) => i.componentId === demo.component?.id)),
       ),
     )
 
+    if (failed.length) {
+      throw new Error(
+        `${failed.length} of ${items.length} could not be deleted`,
+      )
+    }
+
     toast.success(
-      `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} deleted`,
+      `${items.length} ${items.length === 1 ? "item" : "items"} deleted`,
     )
   }
 
