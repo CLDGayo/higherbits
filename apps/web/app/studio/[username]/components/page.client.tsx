@@ -5,12 +5,6 @@ import { StudioLayout } from "@/components/features/studio/studio-layout"
 import { DemosTable } from "@/components/features/studio/ui/components-table"
 import { StudioSectionHeader } from "@/components/features/studio/ui/studio-section-header"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { createNewSandbox } from "@/components/features/studio/sandbox/api"
 import {
@@ -24,13 +18,7 @@ import { deleteComponentAction } from "@/lib/api/components"
 import { deleteSandboxAction } from "@/lib/api/sandboxes"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { ExtendedDemoWithComponent } from "@/lib/utils/transformData"
-import {
-  Plus,
-  ChevronDown,
-  LayoutGrid,
-  Palette,
-  LayoutTemplate,
-} from "lucide-react"
+import { Plus } from "lucide-react"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { toast } from "sonner"
 import { SuccessDialog } from "@/components/features/publish/components/success-dialog"
@@ -62,85 +50,6 @@ const ARTIFACT_SECTION_BY_TYPE: Record<string, string> = {
   shader: "shaders",
   library: "libraries",
 }
-
-const CREATE_OPTIONS = [
-  {
-    id: "component",
-    label: "New component",
-    Icon: LayoutGrid,
-    isSvg: false,
-  },
-  {
-    id: "theme",
-    label: "New theme",
-    Icon: Palette,
-    isSvg: false,
-  },
-  {
-    id: "template",
-    label: "New template",
-    Icon: LayoutTemplate,
-    isSvg: false,
-  },
-  {
-    id: "gradient",
-    label: "New gradient",
-    isSvg: true,
-    renderSvg: () => (
-      <svg
-        className="h-4 w-4 shrink-0 text-muted-foreground"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <rect x="3" y="4" width="3" height="16" rx="1.5" />
-        <rect x="8.5" y="4" width="3" height="16" rx="1.5" />
-        <rect x="14" y="4" width="3" height="16" rx="1.5" />
-        <rect x="19.5" y="4" width="3" height="16" rx="1.5" />
-      </svg>
-    ),
-  },
-  {
-    id: "shader",
-    label: "New shader",
-    isSvg: true,
-    renderSvg: () => (
-      <svg
-        className="h-4 w-4 shrink-0 text-muted-foreground"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="4" />
-        <path d="M7 10c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0" />
-        <path d="M7 14c1.5 1.5 3.5 1.5 5 0s3.5-1.5 5 0" />
-      </svg>
-    ),
-  },
-  {
-    id: "library",
-    label: "New library",
-    isSvg: true,
-    renderSvg: () => (
-      <svg
-        className="h-4 w-4 shrink-0 text-muted-foreground"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" />
-        <path d="M12 22V12" />
-        <path d="M21 7l-9 5-9-5" />
-        <path d="M3 7l9 5 9-5" />
-      </svg>
-    ),
-  },
-]
 
 interface StudioUsernameClientProps {
   user: User
@@ -232,9 +141,8 @@ export function StudioUsernameClient({
     [router, studioBase],
   )
 
-  const handleSelectOption = (typeId: string) => {
-    if (routeNonSandboxCreate(typeId)) return
-    setSelectedType(typeId)
+  const handleCreateComponent = () => {
+    setSelectedType("component")
     setShowCreateDialog(true)
   }
 
@@ -570,31 +478,14 @@ export function StudioUsernameClient({
              menu that stayed dark in the light theme. */
           actions={
             isOwnProfile || isAdmin ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button disabled={isCreating} className="gap-1.5">
-                    <Plus size={16} />
-                    New
-                    <ChevronDown size={14} className="opacity-70" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  {CREATE_OPTIONS.map((option) => (
-                    <DropdownMenuItem
-                      key={option.id}
-                      onClick={() => handleSelectOption(option.id)}
-                      className="gap-2.5"
-                    >
-                      {option.isSvg && option.renderSvg ? (
-                        option.renderSvg()
-                      ) : option.Icon ? (
-                        <option.Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      ) : null}
-                      <span>{option.label}</span>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button
+                disabled={isCreating}
+                onClick={handleCreateComponent}
+                className="gap-1.5"
+              >
+                <Plus size={16} />
+                New Component
+              </Button>
             ) : null
           }
           onOpenSandbox={handleOpenSandbox}

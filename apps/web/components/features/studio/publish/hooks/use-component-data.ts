@@ -71,6 +71,7 @@ export const useComponentData = (componentId: number | null | undefined) => {
           license: componentData.license,
           website_url: componentData.website_url || "",
           is_public: componentData.is_public,
+          submit_for_featuring: true,
           publish_as_username: undefined, // Will be set by main component
           code: "", // Will be populated by sandbox
           unknown_dependencies: [],

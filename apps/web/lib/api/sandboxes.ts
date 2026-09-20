@@ -42,6 +42,12 @@ export const deleteSandboxAction = async (
     throw new Error("Unauthorized to delete this sandbox")
   }
 
+  // Disassociate from any components referencing this sandbox_id to avoid foreign key constraint failure
+  await prisma.components.updateMany({
+    where: { sandbox_id: fullUuid },
+    data: { sandbox_id: null },
+  })
+
   await prisma.sandboxes.delete({
     where: { id: fullUuid },
   })

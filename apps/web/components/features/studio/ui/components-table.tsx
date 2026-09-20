@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -225,7 +226,7 @@ function StatusCell({ demo }: { demo: ExtendedDemoWithComponent }) {
         {statusLabel(status)}
       </Badge>
 
-      {!!feedback && status !== "featured" && (
+      {!!feedback && (
         <TooltipProvider delayDuration={100}>
           <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
             <TooltipTrigger asChild>
@@ -266,6 +267,8 @@ function RowActionsCell({
 }) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = useState("")
 
   const componentId = componentIdOf(demo)
   const isSandboxOnly = resolveStatus(demo) === "draft" && !componentId
@@ -273,14 +276,8 @@ function RowActionsCell({
 
   if (!componentId && !sandboxId) return null
 
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (
-      !confirm(
-        `Are you sure you want to delete this ${isSandboxOnly ? "draft" : "component"}? This action cannot be undone.`,
-      )
-    )
-      return
+  const handleConfirmDelete = async () => {
+    if (deleteConfirmText !== "DELETE") return
 
     setIsDeleting(true)
     try {
@@ -292,6 +289,8 @@ function RowActionsCell({
         await deleteComponentAction({ componentId })
         toast.success("Component deleted successfully")
       }
+      setIsDeleteDialogOpen(false)
+      setDeleteConfirmText("")
       router.refresh()
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to delete")
@@ -300,47 +299,110 @@ function RowActionsCell({
   }
 
   return (
-    // Revealed on hover, but also on keyboard focus - a hover-only control is
-    // unreachable without a pointer.
-    <div className="flex justify-end gap-1 pr-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-      {onEdit && (
-        <TooltipProvider delayDuration={200}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                disabled={isRowSelected || isDeleting}
-                className="h-8 w-8 text-muted-foreground hover:text-foreground disabled:opacity-40"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!isRowSelected) {
-                    onEdit(demo)
-                  }
-                }}
-              >
-                <Pencil size={16} />
-                <span className="sr-only">Edit Details</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {isRowSelected ? "Deselect to edit" : "Edit Details"}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+    <>
+      {/* Revealed on hover, but also on keyboard focus */}
+      <div className="flex justify-end gap-1 pr-2 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+        {onEdit && (
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={isRowSelected || isDeleting}
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground disabled:opacity-40"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (!isRowSelected) {
+                      onEdit(demo)
+                    }
+                  }}
+                >
+                  <Pencil size={16} />
+                  <span className="sr-only">Edit Details</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isRowSelected ? "Deselect to edit" : "Edit Details"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
 
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-        onClick={handleDelete}
-        disabled={isDeleting}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+          onClick={(e) => {
+            e.stopPropagation()
+            setDeleteConfirmText("")
+            setIsDeleteDialogOpen(true)
+          }}
+          disabled={isDeleting}
+        >
+          <Trash2 size={16} />
+          <span className="sr-only">Delete</span>
+        </Button>
+      </div>
+
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          setIsDeleteDialogOpen(open)
+          if (!open) setDeleteConfirmText("")
+        }}
       >
-        <Trash2 size={16} />
-        <span className="sr-only">Delete</span>
-      </Button>
-    </div>
+        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Delete {isSandboxOnly ? "draft" : "component"}?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2 text-sm text-muted-foreground">
+              <span className="block font-medium text-destructive">
+                Warning: This action cannot be undone.
+              </span>
+              <span className="block">
+                This will permanently delete this {isSandboxOnly ? "draft" : "component"}
+                {!isSandboxOnly && " along with its demos, submissions, and code"}.
+              </span>
+              <span className="block pt-1 text-xs">
+                To confirm deletion, please type{" "}
+                <strong className="text-foreground font-semibold">DELETE</strong>{" "}
+                below:
+              </span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-2" onClick={(e) => e.stopPropagation()}>
+            <Input
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="Type DELETE to confirm"
+              disabled={isDeleting}
+              autoFocus
+              className="text-sm font-mono"
+            />
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              disabled={isDeleting}
+              onClick={() => {
+                setIsDeleteDialogOpen(false)
+                setDeleteConfirmText("")
+              }}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <Button
+              variant="destructive"
+              disabled={deleteConfirmText !== "DELETE" || isDeleting}
+              onClick={handleConfirmDelete}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
 
@@ -495,8 +557,9 @@ export function DemosTable({
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [bulkDeleteConfirmText, setBulkDeleteConfirmText] = useState("")
   const canBulkEdit = Boolean(
-    isOwnProfile &&
+    (isOwnProfile || isAdmin) &&
       (onBulkVisibility ||
         onBulkMoveToLibrary ||
         onBulkAddToLibrary ||
@@ -617,26 +680,24 @@ export function DemosTable({
         const status = resolveStatus(demo)
         const isPrivate = Boolean(demo.is_private)
         const isDraft = status === "draft"
-        const isFeatured = status === "featured"
 
         const handleToggleVisibility = async (newIsPrivate: boolean) => {
           const componentId = componentIdOf(demo)
           if (!onUpdateVisibility || !componentId) return
           if (isDraft && !newIsPrivate) return
-          if (!isFeatured) return
 
           await onUpdateVisibility(componentId, newIsPrivate)
         }
 
+        const canToggle = Boolean(
+          (isOwnProfile || isAdmin) && onUpdateVisibility && !isDraft,
+        )
+
         return (
           <VisibilityToggle
             isPrivate={isDraft ? true : isPrivate}
-            onToggle={
-              onUpdateVisibility && !isDraft && isFeatured
-                ? handleToggleVisibility
-                : undefined
-            }
-            readonly={!isOwnProfile || !onUpdateVisibility || !isFeatured}
+            onToggle={canToggle ? handleToggleVisibility : undefined}
+            readonly={!canToggle}
           />
         )
       },
@@ -702,9 +763,8 @@ export function DemosTable({
     },
   ]
 
-  // Actions and Admin are both admin-only. Owners edit through the pencil in the
-  // Component column, which is why losing "Edit Details" here costs them nothing.
-  if (isAdmin) {
+  // Actions column for owners and admins (edit details and delete)
+  if (isAdmin || isOwnProfile) {
     columns.push({
       header: "Actions",
       id: "actions",
@@ -1402,7 +1462,10 @@ export function DemosTable({
       {onBulkDelete && (
         <AlertDialog
           open={isDeleteDialogOpen}
-          onOpenChange={setIsDeleteDialogOpen}
+          onOpenChange={(open) => {
+            setIsDeleteDialogOpen(open)
+            if (!open) setBulkDeleteConfirmText("")
+          }}
         >
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -1410,28 +1473,54 @@ export function DemosTable({
                 Delete {selectedCount}{" "}
                 {selectedCount === 1 ? "item" : "items"}?
               </AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete the selected{" "}
-                {selectedCount === 1 ? "item" : "items"}. This action cannot be
-                undone.
+              <AlertDialogDescription className="space-y-2 text-sm text-muted-foreground">
+                <span className="block font-medium text-destructive">
+                  Warning: This action cannot be undone.
+                </span>
+                <span className="block">
+                  This will permanently delete the selected{" "}
+                  {selectedCount === 1 ? "item" : "items"} and all associated data.
+                </span>
+                <span className="block pt-1 text-xs">
+                  To confirm deletion, please type{" "}
+                  <strong className="text-foreground font-semibold">DELETE</strong>{" "}
+                  below:
+                </span>
               </AlertDialogDescription>
             </AlertDialogHeader>
+            <div className="py-2">
+              <Input
+                value={bulkDeleteConfirmText}
+                onChange={(e) => setBulkDeleteConfirmText(e.target.value)}
+                placeholder="Type DELETE to confirm"
+                disabled={isBulkRunning}
+                autoFocus
+                className="text-sm font-mono"
+              />
+            </div>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isBulkRunning}>
+              <AlertDialogCancel
+                disabled={isBulkRunning}
+                onClick={() => {
+                  setIsDeleteDialogOpen(false)
+                  setBulkDeleteConfirmText("")
+                }}
+              >
                 Cancel
               </AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                disabled={isBulkRunning}
+              <Button
+                variant="destructive"
+                disabled={bulkDeleteConfirmText !== "DELETE" || isBulkRunning}
                 onClick={() =>
                   runBulk(async () => {
                     await onBulkDelete(selectedItems)
                     setIsDeleteDialogOpen(false)
+                    setBulkDeleteConfirmText("")
                   })
                 }
               >
-                Delete
-              </AlertDialogAction>
+                {isBulkRunning ? "Deleting..." : "Delete"}
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

@@ -70,11 +70,17 @@ export function VisibilityToggle({
       <div className="flex items-center">
         <div
           className={cn(
-            "bg-muted text-muted-foreground rounded-md px-2 py-1 flex items-center gap-1.5 text-xs",
-            !isPrivate && "text-green-500",
+            "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[2px] text-xs font-normal select-none",
+            isPrivate
+              ? "border-border bg-muted text-muted-foreground"
+              : "border-emerald-500/25 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
           )}
         >
-          {isPrivate ? <Lock size={12} /> : <Globe size={12} />}
+          {isPrivate ? (
+            <Lock size={12} className="min-w-3 min-h-3" />
+          ) : (
+            <Globe size={12} className="min-w-3 min-h-3" />
+          )}
           <span>{isPrivate ? "Private" : "Public"}</span>
         </div>
       </div>
@@ -82,11 +88,8 @@ export function VisibilityToggle({
   }
 
   const currentValue = isPrivate ? "private" : "public"
-  const currentOption = visibilityOptions.find(
-    (option) => option.value === currentValue,
-  )
 
-  // Editable dropdown with search
+  // Editable dropdown
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -96,14 +99,14 @@ export function VisibilityToggle({
           role="combobox"
           aria-expanded={open}
           disabled={disabled || isUpdating}
-          className="bg-card text-card-foreground border-border rounded-md w-[100px] h-7 focus:ring-0 text-xs px-2 justify-between shadow-none"
+          className={cn(
+            "inline-flex items-center justify-between gap-1.5 rounded-full border h-6 px-2.5 text-xs font-normal shadow-none transition-colors",
+            isPrivate
+              ? "border-border bg-muted/60 hover:bg-muted text-muted-foreground"
+              : "border-emerald-500/25 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:text-emerald-300",
+          )}
         >
-          <div
-            className={cn(
-              "flex items-center gap-2",
-              !isPrivate && "text-green-500",
-            )}
-          >
+          <div className="flex items-center gap-1.5">
             {isPrivate ? (
               <Lock size={12} className="min-w-3 min-h-3" />
             ) : (
@@ -112,23 +115,22 @@ export function VisibilityToggle({
             <span>{isPrivate ? "Private" : "Public"}</span>
           </div>
           <ChevronDownIcon
-            size={14}
-            className="text-muted-foreground/80 shrink-0"
+            size={12}
+            className="opacity-60 shrink-0 ml-0.5"
             aria-hidden="true"
           />
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="bg-popover text-popover-foreground border-border w-[160px] p-0"
+        className="bg-popover text-popover-foreground border-border w-[130px] p-1 shadow-md"
         align="start"
       >
         <Command className="text-xs">
-          <CommandInput placeholder="Search..." className="text-xs h-7 py-1" />
           <CommandList>
-            <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>
               {visibilityOptions.map((option) => {
                 const Icon = option.icon
+                const isSelected = currentValue === option.value
                 return (
                   <CommandItem
                     key={option.value}
@@ -138,16 +140,18 @@ export function VisibilityToggle({
                       setOpen(false)
                     }}
                     className={cn(
-                      "cursor-pointer text-xs py-1",
-                      option.value === "public" && "text-green-500",
+                      "cursor-pointer text-xs py-1.5 px-2 flex items-center justify-between rounded-sm",
+                      option.value === "public"
+                        ? "text-emerald-700 dark:text-emerald-300"
+                        : "text-muted-foreground",
                     )}
                   >
                     <div className="flex items-center gap-1.5">
                       <Icon size={12} className="min-w-3 min-h-3" />
                       <span>{option.label}</span>
                     </div>
-                    {currentValue === option.value && (
-                      <CheckIcon size={14} className="ml-auto" />
+                    {isSelected && (
+                      <CheckIcon size={14} className="ml-auto opacity-80" />
                     )}
                   </CommandItem>
                 )
