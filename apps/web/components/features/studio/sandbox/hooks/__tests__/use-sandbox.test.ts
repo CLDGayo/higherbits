@@ -71,6 +71,9 @@ const makeSession = (first: Promise<unknown>, second: Promise<unknown>) => {
       run: vi.fn(),
     },
     fs: { stat: vi.fn(async () => ({})) },
+    keepActiveWhileConnected: vi.fn(),
+    disconnect: vi.fn(),
+    dispose: vi.fn(),
   }
 }
 
@@ -755,8 +758,8 @@ describe("useSandbox — credit-burn poll gating and hibernate-on-leave", () => 
     expect(session.shells.getShells).toHaveBeenCalled()
   })
 
-  it("stops polling once the idle cutoff passes with no interaction, even while visible", async () => {
-    const { session } = await mountSettled()
+  it("stops polling and hibernates VM once the idle cutoff passes with no interaction, even while visible", async () => {
+    const { session, result } = await mountSettled()
 
     await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
     session.shells.getShells.mockClear()
@@ -764,27 +767,75 @@ describe("useSandbox — credit-burn poll gating and hibernate-on-leave", () => 
     await flush(POLL_MS * 3)
 
     expect(session.shells.getShells).not.toHaveBeenCalled()
+    expect(session.keepActiveWhileConnected).toHaveBeenCalledWith(false)
+    expect(session.disconnect).toHaveBeenCalled()
+    expect(hibernateCalls()).toHaveLength(1)
+    expect(hibernateCalls()[0]![1]).toMatchObject({
+      method: "POST",
+      body: JSON.stringify({ shortSandboxId: "sbx_1", reason: "idle" }),
+    })
+    expect(result.current.isIdle).toBe(true)
+  })
+
+  it("hibernates VM if hidden in background past the idle cutoff", async () => {
+    const { session, result } = await mountSettled()
+
+    setVisibility("hidden")
+    await fireVisibilityChange()
+    fetchMock.mockClear()
+
+    // Pass the idle cutoff while hidden
+    await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
+
+    expect(session.keepActiveWhileConnected).toHaveBeenCalledWith(false)
+    expect(session.disconnect).toHaveBeenCalled()
+    expect(hibernateCalls()).toHaveLength(1)
+    expect(hibernateCalls()[0]![1]).toMatchObject({
+      method: "POST",
+      body: JSON.stringify({ shortSandboxId: "sbx_1", reason: "idle" }),
+    })
+    expect(result.current.isIdle).toBe(true)
   })
 
   it("resumes polling on the next tick after a real interaction post-idle", async () => {
-    const { session } = await mountSettled()
+    const { session, result } = await mountSettled()
 
     await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
     session.shells.getShells.mockClear()
+    expect(result.current.isIdle).toBe(true)
 
     await act(async () => {
       document.dispatchEvent(new Event("pointerdown"))
     })
     await flush(POLL_MS)
     expect(session.shells.getShells).toHaveBeenCalled()
+    expect(result.current.isIdle).toBe(false)
 
     // keydown must count too; mousemove deliberately does not.
     await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
     session.shells.getShells.mockClear()
+    expect(result.current.isIdle).toBe(true)
+
     await act(async () => {
       document.dispatchEvent(new Event("keydown"))
     })
     await flush(POLL_MS)
+    expect(session.shells.getShells).toHaveBeenCalled()
+    expect(result.current.isIdle).toBe(false)
+  })
+
+  it("unpauses and resumes when resumeSandbox is invoked directly", async () => {
+    const { session, result } = await mountSettled()
+
+    await flush(IDLE_CUTOFF_MS + POLL_MS * 2)
+    expect(result.current.isIdle).toBe(true)
+    session.shells.getShells.mockClear()
+
+    act(() => {
+      void result.current.resumeSandbox()
+    })
+    await flush(POLL_MS)
+    expect(result.current.isIdle).toBe(false)
     expect(session.shells.getShells).toHaveBeenCalled()
   })
 

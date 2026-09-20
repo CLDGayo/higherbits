@@ -81,6 +81,8 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
   const [sandboxUnavailable, setSandboxUnavailable] = useState(false)
   const [sandboxError, setSandboxError] = useState<string | null>(null)
   const [isRestartingDevServer, setIsRestartingDevServer] = useState(false)
+  const [isIdle, setIsIdle] = useState(false)
+  const isIdleRef = useRef(false)
   const shellCheckFailuresRef = useRef(0)
   const reconnectAttemptsRef = useRef(0)
   const previewTokenRef = useRef<string | null>(null)
@@ -390,6 +392,39 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     })
   }
 
+  const resumeSandbox = useCallback(async () => {
+    if (!sandboxId) return
+    console.log("RESUMING sandbox from idle")
+    cancelPendingHibernate(sandboxId)
+    isIdleRef.current = false
+    setIsIdle(false)
+    lastInteractionRef.current = Date.now()
+    reconnectAttemptsRef.current = 0
+    shellCheckFailuresRef.current = 0
+    setSandboxUnavailable(false)
+    setSandboxError(null)
+
+    if (sandboxRef.current) {
+      try {
+        // @ts-ignore
+        if (typeof sandboxRef.current.dispose === "function") {
+          // @ts-ignore
+          sandboxRef.current.dispose()
+        }
+      } catch (e) {
+        console.warn("Error disposing sandbox session on resume:", e)
+      }
+      sandboxRef.current = null
+    }
+
+    await initialize(true)
+  }, [sandboxId])
+
+  const resumeSandboxRef = useRef(resumeSandbox)
+  useEffect(() => {
+    resumeSandboxRef.current = resumeSandbox
+  }, [resumeSandbox])
+
   // Subscribe to shells to read output & remount iframe when new shell is created
   useEffect(() => {
     // One guarded checkShells() run, sharing the failure accounting with the
@@ -414,7 +449,11 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     }
 
     const markInteraction = () => {
+      const wasIdle = isIdleRef.current
       lastInteractionRef.current = Date.now()
+      if (wasIdle) {
+        void resumeSandboxRef.current()
+      }
     }
 
     // Deliberately NOT mousemove — passive cursor drift over the tab would
@@ -424,6 +463,9 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") return
+      if (isIdleRef.current) {
+        return
+      }
       // Becoming visible counts as interaction, and we restore the pre-existing
       // "shells reconnect promptly on focus" behaviour that a plain skip would
       // otherwise delay by up to one 5s tick.
@@ -440,14 +482,48 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
         return
       }
 
-      // Credit-burn gate. Skip the BODY, never clear the interval, so resume is
-      // instant with nothing to re-register. Skipping here — before the
-      // try/catch — also means an idle tick never counts toward
-      // MAX_SHELL_CHECK_FAILURES: an idle skip is not a checkShells() failure.
-      if (document.visibilityState === "hidden") {
+      if (isIdleRef.current) {
         return
       }
+
+      // Credit-burn gate. Evaluate idle cutoff BEFORE visibilityState check so
+      // unattended background tabs also hibernate after 5 minutes.
       if (Date.now() - lastInteractionRef.current > IDLE_POLL_CUTOFF_MS) {
+        isIdleRef.current = true
+        setIsIdle(true)
+
+        // Stop the SDK's internal 30s keep-alive ping loop immediately
+        try {
+          sandboxRef.current?.keepActiveWhileConnected?.(false)
+        } catch (err) {
+          console.warn("Failed to set keepActiveWhileConnected(false):", err)
+        }
+
+        // Disconnect pitcher client so open WebSockets close
+        try {
+          // @ts-ignore
+          if (typeof sandboxRef.current?.disconnect === "function") {
+            // @ts-ignore
+            sandboxRef.current.disconnect()
+          }
+        } catch (err) {
+          console.warn("Failed to disconnect sandbox on idle:", err)
+        }
+
+        // Trigger server-side VM hibernation immediately
+        void fetch("/api/sandbox/hibernate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ shortSandboxId: sandboxId, reason: "idle" }),
+        }).catch((err) => {
+          console.error("Failed to hibernate idle sandbox:", err)
+        })
+
+        return
+      }
+
+      // Skip body for hidden tabs that have not yet hit the idle cutoff
+      if (document.visibilityState === "hidden") {
         return
       }
 
@@ -472,7 +548,7 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       document.removeEventListener("keydown", markInteraction)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
-  }, [])
+  }, [sandboxId])
 
   useEffect(() => {
     if (!sandboxId) return
@@ -795,6 +871,8 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
     connectionPhase,
     isSandboxLoading,
     sandboxConnectionHash,
+    isIdle,
+    resumeSandbox,
     reconnectSandbox,
     retryConnection,
     restartDevServer,

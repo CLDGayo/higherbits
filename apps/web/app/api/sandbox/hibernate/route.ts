@@ -41,8 +41,9 @@ import ShortUUID from "short-uuid"
 export async function POST(request: NextRequest) {
   try {
     let shortSandboxId: string | undefined
+    let reason: string | undefined
     try {
-      ;({ shortSandboxId } = await request.json())
+      ;({ shortSandboxId, reason } = await request.json())
     } catch {
       return NextResponse.json(
         { error: "Invalid request body" },
@@ -83,7 +84,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    if (isSandboxRecentlyConnected(sandboxId)) {
+    const isIdle = reason === "idle"
+
+    if (!isIdle && isSandboxRecentlyConnected(sandboxId)) {
       console.log("[sandbox-telemetry] hibernate skipped (recently connected):", {
         sandboxId,
       })
@@ -107,7 +110,7 @@ export async function POST(request: NextRequest) {
     const lastActive = sandbox.updated_at
       ? new Date(sandbox.updated_at).getTime()
       : 0
-    if (Date.now() - lastActive < HIBERNATE_ACTIVE_GRACE_WINDOW_MS) {
+    if (!isIdle && Date.now() - lastActive < HIBERNATE_ACTIVE_GRACE_WINDOW_MS) {
       console.log("[sandbox-telemetry] hibernate skipped (active session in DB):", {
         sandboxId,
         lastActiveAgoMs: Date.now() - lastActive,
@@ -129,6 +132,7 @@ export async function POST(request: NextRequest) {
     console.log("[sandbox-telemetry] hibernate:", {
       outcome: "ok",
       sandboxId,
+      reason: reason ?? "leave",
     })
 
     return NextResponse.json({ success: true })

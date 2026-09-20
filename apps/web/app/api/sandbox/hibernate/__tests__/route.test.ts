@@ -151,4 +151,25 @@ describe("POST /api/sandbox/hibernate", () => {
     expect(body.reason).toBe("active_session_db")
     expect(sdk.sandbox.hibernate).not.toHaveBeenCalled()
   })
+
+  it("bypasses grace window and hibernates when reason is idle", async () => {
+    markSandboxConnected(UUID)
+    singleMock.mockResolvedValue({
+      data: {
+        codesandbox_id: "csb-1",
+        updated_at: new Date(Date.now() - 2000).toISOString(),
+      },
+      error: null,
+    })
+
+    const response = await POST(
+      makeRequest({ shortSandboxId: SHORT_ID, reason: "idle" }),
+    )
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.success).toBe(true)
+    expect(sdk.sandbox.hibernate).toHaveBeenCalledTimes(1)
+    expect(sdk.sandbox.hibernate).toHaveBeenCalledWith("csb-1")
+  })
 })
