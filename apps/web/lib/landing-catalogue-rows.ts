@@ -42,10 +42,45 @@ const ROW_SELECT = `
         user:users!demos_user_id_fkey (${PUBLIC_USER_COLUMNS}),
         tags:demo_tags(tag:tag_id(*)),
         component:components!inner (
-          id, name, component_slug, user_id, is_public, likes_count,
+          id, name, component_slug, user_id, is_public, likes_count, registry,
           user:users!components_user_id_fkey (${PUBLIC_USER_COLUMNS})
         )
 `
+
+/**
+ * Identifies primitive shadcn components that should be omitted from the
+ * landing page showcase so only custom components published by real people
+ * are featured.
+ */
+export function isPrimitiveShadcnDemo(demo: any): boolean {
+  const compRegistry = demo?.component?.registry
+  const compUser = demo?.component?.user?.username?.toLowerCase()
+  const demoUser = demo?.user?.username?.toLowerCase()
+  const compUserId = demo?.component?.user_id
+  const demoUserId = demo?.user?.id
+
+  return (
+    compRegistry === "shadcn" ||
+    compUser === "shadcn" ||
+    demoUser === "shadcn" ||
+    compUserId === "user_shadcn" ||
+    demoUserId === "user_shadcn"
+  )
+}
+
+/**
+ * Fisher-Yates random shuffle to randomize component presentation for prospective customers.
+ */
+export function shuffleArray<T>(items: T[]): T[] {
+  const result = [...items]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = result[i]!
+    result[i] = result[j]!
+    result[j] = temp
+  }
+  return result
+}
 
 /**
  * Row 1's ordering, run in JavaScript because PostgREST cannot order outer rows
@@ -92,6 +127,7 @@ export const getMostLovedRow = unstable_cache(
       `,
       )
       .eq("components.is_public", true)
+      .not("components.registry", "eq", "shadcn")
       .not("preview_url", "is", null)
 
     if (error) {
@@ -99,7 +135,11 @@ export const getMostLovedRow = unstable_cache(
       return []
     }
 
-    return sortByLikesDesc(flattenTags(data as any[])).slice(0, LANDING_ROW_SIZE)
+    const filtered = flattenTags(data as any[]).filter(
+      (demo) => !isPrimitiveShadcnDemo(demo),
+    )
+
+    return sortByLikesDesc(filtered).slice(0, LANDING_ROW_SIZE)
   },
   ["landing-row-most-loved"],
   { revalidate: 300, tags: ["landing-row-most-loved"] },
@@ -121,6 +161,7 @@ export const getNewestRow = unstable_cache(
       `,
       )
       .eq("components.is_public", true)
+      .not("components.registry", "eq", "shadcn")
       .not("preview_url", "is", null)
       .not("id", "in", buildExclusionList(excludeIds))
       .order("created_at", { ascending: false })
@@ -131,7 +172,11 @@ export const getNewestRow = unstable_cache(
       return []
     }
 
-    return flattenTags(data as any[])
+    const filtered = flattenTags(data as any[]).filter(
+      (demo) => !isPrimitiveShadcnDemo(demo),
+    )
+
+    return filtered
   },
   ["landing-row-newest"],
   { revalidate: 300, tags: ["landing-row-newest"] },
@@ -176,6 +221,7 @@ export const getCatalogueChipPool = unstable_cache(
       .from("demos")
       .select(`${ROW_SELECT}`)
       .eq("components.is_public", true)
+      .not("components.registry", "eq", "shadcn")
       .not("preview_url", "is", null)
 
     if (error) {
@@ -183,7 +229,11 @@ export const getCatalogueChipPool = unstable_cache(
       return []
     }
 
-    return sortByLikesDesc(flattenTags(data as any[]))
+    const filtered = flattenTags(data as any[]).filter(
+      (demo) => !isPrimitiveShadcnDemo(demo),
+    )
+
+    return sortByLikesDesc(filtered)
   },
   ["landing-catalogue-chip-pool"],
   { revalidate: 300, tags: ["landing-catalogue-chip-pool"] },

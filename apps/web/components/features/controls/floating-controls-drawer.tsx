@@ -43,9 +43,9 @@ export function FloatingControlsDrawer({
   return (
     <div
       className={cn(
-        "absolute z-20 overflow-hidden text-foreground transition-all duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
+        "absolute z-30 overflow-hidden text-foreground transition-all duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
         isExpanded
-          ? "right-0 top-0 h-full w-64 bg-background rounded-xl border border-border shadow-xl translate-x-0 flex flex-col"
+          ? "right-3 top-3 bottom-3 w-72 max-w-[calc(100%-1.5rem)] flex flex-col rounded-xl border border-border/60 bg-background/90 backdrop-blur-xl shadow-2xl"
           : "right-3 top-3 size-9 rounded-full bg-background/90 backdrop-blur-md shadow-xl border border-border flex items-center justify-center p-0",
         className,
       )}
@@ -67,7 +67,7 @@ export function FloatingControlsDrawer({
           onReset={onReset}
           onClose={() => handleSetExpanded(false)}
           showCloseButton={true}
-          className="h-full max-h-full border-0 rounded-none bg-transparent"
+          className="h-full max-h-full border-0 rounded-none bg-transparent shadow-none"
         />
       )}
     </div>

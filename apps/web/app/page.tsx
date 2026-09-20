@@ -13,6 +13,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import {
   getCatalogueChipPool,
   getLandingCatalogueRows,
+  shuffleArray,
 } from "@/lib/landing-catalogue-rows"
 import { getCachedFeaturedExample } from "@/lib/landing-featured-example"
 import { getCachedLandingAuthors } from "@/lib/landing-authors"
@@ -165,7 +166,8 @@ export default async function HomePage({
   // The marketing landing page owns the bare root URL; tabs opt into the browser.
   if (!tab) {
     const { mostLoved, newest } = await getLandingCatalogueRows()
-    const cataloguePool = await getCatalogueChipPool()
+    const rawCataloguePool = await getCatalogueChipPool()
+    const cataloguePool = shuffleArray(rawCataloguePool)
     const featured = await getCachedFeaturedExample()
     const authors = await getCachedLandingAuthors()
 

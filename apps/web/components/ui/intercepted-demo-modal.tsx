@@ -28,6 +28,8 @@ import {
   extractControlsSettings,
   getDefaultControlValues,
   useResolvedDemoCode,
+  activeDemoControlsAtom,
+  applyControlsToCode,
 } from "@/lib/controls-parser"
 import { FloatingControlsDrawer } from "@/components/features/controls/floating-controls-drawer"
 
@@ -70,6 +72,11 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
   )
   const [isControlsExpanded, setIsControlsExpanded] = useState(true)
 
+  const [, setGlobalControls] = useAtom(activeDemoControlsAtom)
+  useEffect(() => {
+    setGlobalControls(activeControls)
+  }, [activeControls, setGlobalControls])
+
   useEffect(() => {
     if (controls.length > 0) {
       setActiveControls(getDefaultControlValues(controls))
@@ -102,6 +109,17 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     if (iframeRef.current?.contentWindow) {
       iframeRef.current.contentWindow.postMessage(
         { type: "theme-change", theme: previewTheme },
+        "*",
+      )
+    }
+  }, [previewTheme])
+
+  const toggleTheme = useCallback(() => {
+    const next = previewTheme === "dark" ? "light" : "dark"
+    setPreviewTheme(next)
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        { type: "theme-change", theme: next },
         "*",
       )
     }
@@ -177,6 +195,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         body: JSON.stringify({
           prompt_type: typeToUse,
           demo_id: demo.id,
+          controls: activeControls,
         }),
       })
 
@@ -273,7 +292,8 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         if (!response.ok) throw new Error("Failed to fetch code")
         text = await response.text()
       }
-      await navigator.clipboard.writeText(text)
+      const finalCode = applyControlsToCode(text, activeControls)
+      await navigator.clipboard.writeText(finalCode)
       toast.success(`Copied ${name}`)
     } catch (err) {
       toast.error(`Failed to copy ${name}`)
@@ -316,7 +336,8 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             if (!res.ok) throw new Error(`Failed to fetch ${file.name}`)
             text = await res.text()
           }
-          return `// ${file.name}\n${text}`
+          const finalContent = applyControlsToCode(text, activeControls)
+          return `// ${file.name}\n${finalContent}`
         })
       )
 
@@ -373,12 +394,10 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
       >
         <div className="relative w-full h-full flex items-center justify-start group">
           {/* Canvas Wrapper */}
-          <div
-            className={cn(
-              "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-background shadow-2xl transition-[margin-right] duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
-              controls.length > 0 && isControlsExpanded ? "mr-[264px]" : "mr-0"
-            )}
-          >
+          <div className={cn(
+            "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 shadow-2xl transition-colors duration-300",
+            previewTheme === "dark" ? "bg-zinc-950" : "bg-background"
+          )}>
             {bundleUrl ? (
               <iframe
                 ref={iframeRef}
@@ -407,8 +426,12 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             {/* Top Right Dropdown & Fullscreen */}
             <div
               className={cn(
-                "absolute top-3 z-10 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200",
-                controls.length > 0 && !isControlsExpanded ? "right-14" : "right-3"
+                "absolute top-3 z-20 flex items-center gap-2 transition-all duration-300",
+                controls.length > 0 && isControlsExpanded
+                  ? "right-[304px] opacity-90 hover:opacity-100"
+                  : controls.length > 0
+                  ? "right-14 opacity-0 group-hover:opacity-100"
+                  : "right-3 opacity-0 group-hover:opacity-100"
               )}
             >
             
@@ -442,7 +465,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => setPreviewTheme(previewTheme === "dark" ? "light" : "dark")}
+                    onClick={toggleTheme}
                     className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground p-1.5 rounded-full shadow-lg hover:bg-background/90 transition-colors"
                     aria-label="Toggle preview theme"
                   >

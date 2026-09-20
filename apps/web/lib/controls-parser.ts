@@ -1,7 +1,12 @@
+"use client"
+
 import { parse } from "@babel/parser"
 import traverse from "@babel/traverse"
 import * as t from "@babel/types"
 import { useState, useEffect, useMemo } from "react"
+import { atom } from "jotai"
+
+export const activeDemoControlsAtom = atom<Record<string, any>>({})
 
 export interface ControlSetting {
   key: string
@@ -483,5 +488,9 @@ export function useResolvedDemoCode(
 
   return primary || candidateResolved || fallback
 }
+
+export { applyControlsToCode, applyControlsToGhlHtml } from "./controls-transform"
+
+
 
 

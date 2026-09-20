@@ -11,7 +11,8 @@
     "generate-embeddings": "pnpm --filter web generate-embeddings",
     "assets:generate": "node ops/gemini-asset-gen.mjs",
     "assets:chroma-key": "node ops/gemini-asset-chroma-key.mjs",
-    "graph": "node ops/serve-obsidian-graph.mjs"
+    "graph": "node ops/serve-obsidian-graph.mjs",
+    "dev:browser": "./scripts/dev-browser.sh"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.4",

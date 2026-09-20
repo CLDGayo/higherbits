@@ -144,9 +144,14 @@ export function Logo({
         )}
       />
       {shouldShowWordmark && (
-        <span className="text-[17px] font-semibold tracking-tight text-foreground flex items-center">
-          HigherBits<span className="text-muted-foreground/70 font-normal">.dev</span>
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[17px] font-semibold tracking-tight text-foreground flex items-center">
+            HigherBits<span className="text-muted-foreground/70 font-normal">.dev</span>
+          </span>
+          <span className="inline-flex items-center text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full border border-border/80 bg-muted/70 text-muted-foreground font-mono leading-none select-none">
+            Beta
+          </span>
+        </div>
       )}
     </div>
   )

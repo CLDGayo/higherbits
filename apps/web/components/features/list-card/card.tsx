@@ -37,6 +37,7 @@ import { useRouter } from "next/navigation"
 import { UpvoteIcon } from "../../icons/upvote-icon"
 import { ComponentCardSkeleton } from "../../ui/skeletons"
 import { UserAvatar } from "../../ui/user-avatar"
+import { NavigationProgressBar } from "../../ui/navigation-progress"
 import ComponentPreviewImage from "./card-image"
 import { ComponentVideoPreview } from "./card-video"
 import { getPreviewCropScale } from "./preview-crop"
@@ -347,6 +348,7 @@ export const ComponentCard = React.memo(function ComponentCard({
             }}
           >
             <span className="sr-only">View {componentName}</span>
+            <NavigationProgressBar />
           </Link>
           {/* Card body layer */}
           <div

@@ -1,6 +1,7 @@
 import { hasUserPurchasedDemo } from "@/lib/api/server/demos"
 import { getComponentInstallPrompt } from "@/lib/prompts"
 import { generateGhlTemplate, cleanGhlHtml } from "@/lib/ghl-generator"
+import { applyControlsToCode, applyControlsToGhlHtml } from "@/lib/controls-transform"
 import {
   resolveRegistryDependenciesV2,
   transformToFlatDependencyTree,
@@ -61,10 +62,16 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { prompt_type, demo_id, rule_id, additional_context, force_regenerate } = body
-    const { userId } = await auth()
+    const { prompt_type, demo_id, rule_id, additional_context, force_regenerate, controls } = body
+    let userId: string | null = null
+    try {
+      const authData = await auth()
+      userId = authData?.userId || null
+    } catch {
+      userId = null
+    }
 
-    const hasPurchased = await hasUserPurchasedDemo(userId, demo_id)
+    const hasPurchased = isInternalRequest || (await hasUserPurchasedDemo(userId, demo_id))
     if (!hasPurchased) {
       return NextResponse.json(
         { error: "Component not purchased" },
@@ -77,6 +84,8 @@ export async function POST(request: NextRequest) {
       demo_id,
       rule_id,
       additional_context,
+      hasControls: !!controls,
+      controlsKeys: controls ? Object.keys(controls) : [],
     })
 
     if (!prompt_type || !demo_id) {
@@ -151,13 +160,16 @@ export async function POST(request: NextRequest) {
         isMissingEnd
 
       if (demo.ghl_html_content && !force_regenerate && !isCorrupted) {
-        console.log("Fast path: returned pre-generated HTML for GHL template.")
+        console.log("Fast path: returned pre-generated HTML for GHL template with dynamic controls applied.")
+        const cleaned = cleanGhlHtml(demo.ghl_html_content)
+        const finalHtml = controls ? applyControlsToGhlHtml(cleaned, controls) : cleaned
         return NextResponse.json({
-          prompt: cleanGhlHtml(demo.ghl_html_content),
+          prompt: finalHtml,
           debug: {
             ruleApplied: false,
             contextApplied: false,
             cached: true,
+            controlsApplied: !!controls,
           },
         })
       }
@@ -166,13 +178,15 @@ export async function POST(request: NextRequest) {
         console.log(
           `Generating GHL template on-demand for demo: ${demo.id} (force: ${!!force_regenerate}, corrupted: ${!!isCorrupted})`
         )
-        const prompt = await generateGhlTemplate(demo.id, true)
+        const generated = await generateGhlTemplate(demo.id, true)
+        const finalHtml = controls ? applyControlsToGhlHtml(generated, controls) : generated
         return NextResponse.json({
-          prompt,
+          prompt: finalHtml,
           debug: {
             ruleApplied: false,
             contextApplied: false,
             cached: false,
+            controlsApplied: !!controls,
           },
         })
       } catch (err: any) {
@@ -264,13 +278,28 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Apply dynamic preview controls to demoCode and componentCode if provided
+    const transformedDemoCode = controls ? applyControlsToCode(demoCode, controls) : demoCode
+    const transformedComponentCode = controls ? applyControlsToCode(componentCode, controls) : componentCode
+
+    let effectiveAdditionalContext = additional_context || ""
+    if (controls && Object.keys(controls).length > 0) {
+      const controlsSummary = Object.entries(controls)
+        .map(([k, v]) => `- \`${k}\`: ${typeof v === "object" ? JSON.stringify(v) : v}`)
+        .join("\n")
+      const dynamicContext = `### Configured Preview Controls (User Settings):\n${controlsSummary}\nEnsure the component and demo usage are configured with these exact values as default props / settings.`
+      effectiveAdditionalContext = effectiveAdditionalContext
+        ? `${effectiveAdditionalContext}\n\n${dynamicContext}`
+        : dynamicContext
+    }
+
     // Generate base prompt
     const promptParams = {
       promptType: prompt_type as PromptType,
       codeFileName: (demo.component.component_slug || "component") + ".tsx",
       demoCodeFileName: demo.file_name || "demo.tsx",
-      code: componentCode,
-      demoCode: demoCode,
+      code: transformedComponentCode,
+      demoCode: transformedDemoCode,
       npmDependencies: demo.component.dependencies || {},
       npmDependenciesOfRegistryDependencies:
         npmDependenciesOfRegistryDependencies,
@@ -280,7 +309,7 @@ export async function POST(request: NextRequest) {
       // TODO: aggregate global css from all dependencies
       globalCss: globalCss,
       indexCss: indexCss,
-      userAdditionalContext: additional_context,
+      userAdditionalContext: effectiveAdditionalContext,
       ...(ruleData && {
         promptRule: {
           id: rule_id,
@@ -303,7 +332,8 @@ export async function POST(request: NextRequest) {
       prompt,
       debug: {
         ruleApplied: !!ruleData,
-        contextApplied: !!(additional_context || ruleData?.additional_context),
+        contextApplied: !!(effectiveAdditionalContext || ruleData?.additional_context),
+        controlsApplied: !!controls,
       },
     })
   } catch (error) {

@@ -54,7 +54,9 @@ import {
   Share2,
   Sun,
   Loader2,
+  ChevronDown,
 } from "lucide-react"
+import { promptOptions, type PromptOptionBase } from "@/lib/prompts"
 import { useTheme } from "next-themes"
 import Link from "next/link"
 import { useEffect, useState, useRef, useMemo, useCallback } from "react"
@@ -65,6 +67,7 @@ import {
   extractControlsSettings,
   getDefaultControlValues,
   useResolvedDemoCode,
+  activeDemoControlsAtom,
 } from "@/lib/controls-parser"
 import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 
@@ -114,6 +117,11 @@ export function ComponentPreviewDialog({
     getDefaultControlValues(controls),
   )
   const [isControlsExpanded, setIsControlsExpanded] = useState(true)
+
+  const [, setGlobalControls] = useAtom(activeDemoControlsAtom)
+  useEffect(() => {
+    setGlobalControls(activeControls)
+  }, [activeControls, setGlobalControls])
 
   useEffect(() => {
     if (controls.length > 0) {
@@ -258,10 +266,15 @@ export function ComponentPreviewDialog({
     return null
   }
 
-  const handlePromptAction = async () => {
+  const handlePromptAction = async (overridePromptType?: PromptType) => {
     if (accessState !== "UNLOCKED") {
       setShowUnlockDialog(true)
       return
+    }
+
+    const typeToUse = overridePromptType || selectedPromptType
+    if (overridePromptType && overridePromptType !== selectedPromptType) {
+      setSelectedPromptType(overridePromptType)
     }
 
     // Set loading state before API call
@@ -274,8 +287,9 @@ export function ComponentPreviewDialog({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt_type: selectedPromptType,
+          prompt_type: typeToUse,
           demo_id: demo.id,
+          controls: activeControls,
         }),
       })
 
@@ -381,7 +395,7 @@ export function ComponentPreviewDialog({
         trackEvent(AMPLITUDE_EVENTS.COPY_AI_PROMPT, {
           componentId: demo.component.id,
           componentName: demo.component.name,
-          promptType: selectedPromptType as PromptType,
+          promptType: typeToUse as PromptType,
           action: "copy",
         })
       } catch (error) {
@@ -420,14 +434,22 @@ export function ComponentPreviewDialog({
     }
   }
 
+  const promptTypeOptions = useMemo(
+    () =>
+      promptOptions.filter(
+        (option): option is PromptOptionBase => option.type === "option",
+      ),
+    [],
+  )
+
   const renderDesktopActions = () => (
     <>
-      <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg">
+      <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg bg-background/85 backdrop-blur-md border border-border/50">
         <Button
-          onClick={handlePromptAction}
+          onClick={() => handlePromptAction()}
           variant="ghost"
           className={cn(
-            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70",
+            "rounded-r-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70",
           )}
           disabled={isPromptLoading}
         >
@@ -484,6 +506,35 @@ export function ComponentPreviewDialog({
             </TooltipContent>
           </Tooltip>
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild disabled={isPromptLoading || accessState !== "UNLOCKED"}>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isPromptLoading || accessState !== "UNLOCKED"}
+              className="h-full px-2 rounded-l-none hover:bg-muted/50 transition-all disabled:opacity-50"
+            >
+              <ChevronDown size={14} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-xl border-border/50 rounded-xl z-50">
+            {promptTypeOptions.map((option) => (
+              <DropdownMenuItem
+                key={option.id}
+                onClick={() => handlePromptAction(option.id as PromptType)}
+                className="cursor-pointer flex items-center justify-between"
+              >
+                <div className="flex items-center gap-2 truncate">
+                  {option.icon}
+                  <span className="truncate">{option.label}</span>
+                </div>
+                {selectedPromptType === option.id && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 ml-2" />
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Tooltip>
@@ -645,12 +696,10 @@ export function ComponentPreviewDialog({
         >
           {bundleUrl && (
             <>
-              <div
-                className={cn(
-                  "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-background transition-[margin-right] duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
-                  controls.length > 0 && isControlsExpanded ? "mr-[264px]" : "mr-0"
-                )}
-              >
+              <div className={cn(
+                "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 transition-colors duration-300",
+                previewTheme === "dark" ? "bg-zinc-950" : "bg-background"
+              )}>
                 {isLoading && <PreviewSkeleton />}
                 <AnimatePresence>
                   {!isLoading && (
@@ -769,14 +818,14 @@ export function ComponentPreviewDialog({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {accessState !== "UNLOCKED" ? (
-                    <DropdownMenuItem onClick={handlePromptAction}>
+                    <DropdownMenuItem onClick={() => handlePromptAction()}>
                       <div className="flex items-center gap-2">
                         <Lock size={16} />
                         <span>Unlock</span>
                       </div>
                     </DropdownMenuItem>
                   ) : (
-                    <DropdownMenuItem onClick={handlePromptAction}>
+                    <DropdownMenuItem onClick={() => handlePromptAction()}>
                       "Copy prompt"
                     </DropdownMenuItem>
                   )}

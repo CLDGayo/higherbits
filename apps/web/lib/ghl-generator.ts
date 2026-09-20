@@ -60,6 +60,20 @@ export function cleanGhlHtml(raw: string): string {
   }`
   )
 
+  // 4b. Inject Shadcn semantic fallback utilities into style block so unmapped tokens never break layout
+  if (!text.includes(".ghl-component-wrapper .bg-primary") && text.includes("</style>")) {
+    const shadcnFallbacks = `
+    /* Shadcn Semantic Fallbacks for GoHighLevel */
+    :where(.ghl-component-wrapper) .bg-primary { background-color: #f4f4f5 !important; color: #09090b !important; }
+    :where(.ghl-component-wrapper) .text-primary-foreground { color: #09090b !important; }
+    :where(.ghl-component-wrapper) .bg-secondary { background-color: rgba(24, 24, 27, 0.8) !important; color: #e4e4e7 !important; }
+    :where(.ghl-component-wrapper) .text-secondary-foreground { color: #f4f4f5 !important; }
+    :where(.ghl-component-wrapper) .border-border { border-color: rgba(63, 63, 70, 0.6) !important; }
+    :where(.ghl-component-wrapper) .text-muted-foreground { color: #a1a1aa !important; }
+    `
+    text = text.replace("</style>", `${shadcnFallbacks}\n  </style>`)
+  }
+
   // 5. Ensure .ghl-component-wrapper has isolation: isolate to protect stacking context
   if (text.includes(".ghl-component-wrapper {") && !text.includes("isolation: isolate;")) {
     text = text.replace(".ghl-component-wrapper {", ".ghl-component-wrapper {\n    isolation: isolate;")
@@ -86,6 +100,12 @@ export function cleanGhlHtml(raw: string): string {
 
   // 9. Strip React ref leaks in vanilla script (e.g. updateKeywordsRef.current = ...)
   text = text.replace(/[a-zA-Z0-9_$]+Ref\.current\s*=\s*([^;]+);/g, "/* ref assignment stripped */")
+
+  // 9b. Auto-heal any corrupted pressure FBO declarations
+  text = text.replace(
+    /let\s+pressure\s*=\s*[\d.]+\s*,\s*simRes\.height\s*,/g,
+    "let pressure = createDoubleFBO(simRes.width, simRes.height,",
+  )
 
   // 10. Auto-heal missing closing tags if accidentally omitted
   const openScripts = (text.match(/<script\b/gi) || []).length
@@ -219,7 +239,30 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       - Convert all React SVG icon components (Lucide icons, custom SVG components) into inline <svg> elements.
       - Keep their width, height, viewBox, stroke, fill, and className attributes intact.
 
-      6. INTERACTIVITY & JAVASCRIPT:
+      6. SHADCN & SEMANTIC DESIGN TOKEN TRANSLATION:
+      React components frequently rely on Shadcn UI / Tailwind CSS semantic design tokens. Since standard GoHighLevel pages lack Shadcn root CSS variables, you MUST translate these semantic tokens into exact, high-fidelity Tailwind utility classes:
+      - Primary Button / CTA (\`bg-primary text-primary-foreground\`):
+        * On dark themes (e.g. \`bg-[#030712]\`, \`bg-zinc-950\`, \`bg-black\`): Translate to an ultra-clean, high-contrast off-white pill: \`bg-[#f4f4f5] text-zinc-900 font-semibold shadow-lg hover:bg-white\`.
+        * On light themes: Translate to \`bg-zinc-900 text-white font-semibold shadow-sm hover:bg-zinc-800\`.
+        * STRICT PROHIBITION: NEVER substitute generic Bootstrap/Tailwind \`bg-blue-600\` or \`bg-indigo-600\` unless that specific color was explicitly written in the source React component!
+      - Secondary / Outline Button (\`bg-secondary text-secondary-foreground border border-border\`):
+        * On dark themes: Translate to \`bg-[#18181b]/80 border border-zinc-700/60 text-zinc-200 font-medium backdrop-blur-sm hover:bg-zinc-800/80\`.
+        * On light themes: Translate to \`bg-zinc-100 border border-zinc-200 text-zinc-800 font-medium hover:bg-zinc-200\`.
+      - Muted text (\`text-muted-foreground\`): Translate to \`text-zinc-400\` (dark) or \`text-zinc-500\` (light).
+      - Maintain rounded pill geometry (\`rounded-full\`) and comfortable spacing (\`px-6 py-2.5\`) so buttons remain sleek and refined.
+
+      7. CANVAS, SHADERS & FLUID DYNAMICS (NEGATIVE SPACE & FIDELITY):
+      When converting WebGL fluid dynamics, generative canvas shaders, or particle systems:
+      - PRESERVE PRISTINE NEGATIVE SPACE:
+        * Simulations must breathe against a deep, clean background void (e.g. \`#030712\` or \`#000000\`).
+        * Calibrate dissipation rates (\`DENSITY_DISSIPATION\`, \`VELOCITY_DISSIPATION\` around 0.98 to 0.992) so color ribbons and vortex swirls linger luxuriously for 4–7 seconds before dissolving completely into the dark void.
+        * FORBIDDEN: NEVER set dissipation to near 1.0 (e.g. 0.999+) or inject continuous high-frequency \`Math.random()\` splat intervals that turn the canvas into an opaque rainbow soup/fog.
+      - BUFFER & FBO SIZING ORDER:
+        * ALWAYS call \`resizeCanvas()\` and establish true canvas pixel dimensions BEFORE allocating WebGL Framebuffers (FBOs) or Double-FBOs. Querying canvas width/height before resizing leads to default 300x150 buffers, destroying visual clarity.
+      - TONE MAPPING & VELVETY BLEND:
+        * For fluid simulations, apply Reinhard tone mapping (\`color / (color + 1.0)\`) or soft luminance clamps in the display shader so luminous emerald, cyan, and violet ribbons blend like silk without blowing out into harsh clipped white or muddy neon blobs.
+
+      8. INTERACTIVITY & JAVASCRIPT:
       - Convert React interactive state and animations (spotlights, mouse tracking, ripples, magnetic cursor pull, tabs, dropdowns, accordions, mobile navigation menu toggle, WebGL/canvas) into clean Vanilla JavaScript inside a <script> block at the bottom.
       - PURE VANILLA JAVASCRIPT ONLY:
         * NEVER output React hooks (\`useRef\`, \`useState\`, \`useEffect\`, \`useCallback\`) or \`.current\` property accesses in the vanilla script.
@@ -229,7 +272,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
         * THEME COMPLIANCE: If the component is dark-themed by default (e.g. bg-[#030712]), default the JS configuration to dark mode. GoHighLevel pages typically do NOT have a \`dark\` class on <html> or <body>.
       - For tabs, accordions, or hidden menus, toggle the \`hidden\` class or style display property dynamically on click.
 
-      7. COMPLETION GUARANTEE:
+      9. COMPLETION GUARANTEE:
       - You MUST generate the ENTIRE component completely from top to bottom. Never cut off or truncate. Every tag opened must be closed.
     `
 

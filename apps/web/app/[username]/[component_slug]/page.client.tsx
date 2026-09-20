@@ -69,6 +69,7 @@ import { useComponentAccess } from "@/hooks/use-component-access"
 import { cn } from "@/lib/utils"
 import { addVersionToUrl } from "@/lib/utils/url"
 import { atomWithStorage } from "jotai/utils"
+import { activeDemoControlsAtom } from "@/lib/controls-parser"
 import {
   Check,
   ChevronDown,
@@ -361,6 +362,7 @@ export default function ComponentPage({
 }: ComponentPageProps) {
   const [component, setComponent] = useState(initialComponent)
   const demo = initialDemo ?? null
+  const [activeControls] = useAtom(activeDemoControlsAtom)
   const { user } = useUser()
   const supabase = useClerkSupabaseClient()
   const { theme } = useTheme()
@@ -575,6 +577,7 @@ export default function ComponentPage({
           demo_id: demo.id,
           rule_id: ruleId,
           additional_context: context,
+          controls: activeControls,
         }),
       })
 

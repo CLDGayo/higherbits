@@ -3,10 +3,12 @@ import { useTheme } from "next-themes"
 import { FullScreenButton } from "../../ui/full-screen-button"
 import { LoadingSpinner } from "../../ui/loading-spinner"
 import React, { useState, useRef, useMemo, useEffect, useCallback } from "react"
+import { useAtom } from "jotai"
 import {
   extractControlsSettings,
   getDefaultControlValues,
   useResolvedDemoCode,
+  activeDemoControlsAtom,
 } from "@/lib/controls-parser"
 import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 import { cn } from "@/lib/utils"
@@ -33,6 +35,11 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
   const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
     getDefaultControlValues(controls),
   )
+
+  const [, setGlobalControls] = useAtom(activeDemoControlsAtom)
+  useEffect(() => {
+    setGlobalControls(activeControls)
+  }, [activeControls, setGlobalControls])
 
   // Reset or update active controls when demo changes
   useEffect(() => {
@@ -81,16 +88,19 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
 
   return (
     <div className="relative flex h-full min-h-0 w-full group">
-      <div
-        className={cn(
-          "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 bg-background transition-[margin-right] duration-300 ease-[cubic-bezier(.32,.72,0,1)]",
-          controls.length > 0 && isControlsExpanded ? "mr-[264px]" : "mr-0"
-        )}
-      >
+      <div className={cn(
+        "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 transition-colors duration-300",
+        resolvedTheme === "dark" ? "bg-zinc-950" : "bg-background"
+      )}>
         <FullScreenButton
-          className={
-            controls.length > 0 && !isControlsExpanded ? "right-14" : "right-4"
-          }
+          className={cn(
+            "transition-all duration-300",
+            controls.length > 0 && isControlsExpanded
+              ? "right-[304px]"
+              : controls.length > 0
+              ? "right-14"
+              : "right-4",
+          )}
         />
         {isLoading && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center h-full gap-3 bg-background/80">
