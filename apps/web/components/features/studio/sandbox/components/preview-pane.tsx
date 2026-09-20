@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react"
-import { RefreshCw, PanelRightClose, Maximize, Minimize, Monitor, Smartphone, Tablet, Sun, Moon } from "lucide-react"
+import { RefreshCw, PanelRightClose, Maximize, Minimize, Monitor, Smartphone, Tablet, Sun, Moon, Play } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { Button } from "@/components/ui/button"
 import { EditorPane } from "./editor-pane"
 import { cn } from "@/lib/utils"
 import {
@@ -34,6 +35,8 @@ interface PreviewPaneProps {
   sandboxUnavailable?: boolean
   sandboxError?: string | null
   onReconnect?: () => void
+  isIdle?: boolean
+  onResume?: () => void
   onTogglePreview?: () => void
   isFullscreen?: boolean
   onFullscreenChange?: (isFullscreen: boolean) => void
@@ -59,6 +62,8 @@ export function PreviewPane({
   sandboxUnavailable = false,
   sandboxError = null,
   onReconnect,
+  isIdle = false,
+  onResume,
   onTogglePreview,
   isFullscreen = false,
   onFullscreenChange,
@@ -261,7 +266,30 @@ export function PreviewPane({
           }}
         >
           <div className="flex flex-col h-full">
-            {sandboxUnavailable ? (
+            {isIdle ? (
+              <div className="flex-1 flex flex-col gap-4 items-center justify-center text-muted-foreground text-center px-6 max-w-md mx-auto animate-in fade-in duration-300">
+                <div className="h-12 w-12 rounded-full bg-muted/60 border border-border flex items-center justify-center text-foreground">
+                  <Moon className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="font-semibold text-foreground text-base">Sandbox paused</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    The virtual machine was paused after 5 minutes of inactivity to save credits. All your files and changes are saved.
+                  </p>
+                </div>
+                {onResume && (
+                  <Button
+                    type="button"
+                    onClick={onResume}
+                    className="gap-2 text-xs"
+                    size="sm"
+                  >
+                    <Play className="h-3.5 w-3.5 fill-current" />
+                    Resume Sandbox
+                  </Button>
+                )}
+              </div>
+            ) : sandboxUnavailable ? (
               <div className="flex-1 flex flex-col gap-3 items-center justify-center text-muted-foreground text-center px-6 max-w-md mx-auto">
                 <p>
                   Sandbox unavailable —{" "}
@@ -289,17 +317,18 @@ export function PreviewPane({
             ) : (
               <div 
                 className={cn(
-                  "flex-1 relative flex justify-center bg-zinc-950 min-h-0",
+                  "flex-1 relative flex justify-center bg-muted/20 dark:bg-zinc-950 min-h-0",
                   typeof previewHeight === "number" ? "overflow-auto items-start py-8" : "overflow-hidden"
                 )}
                 ref={containerRef}
               >
                 <div 
                   className={cn(
-                    "bg-background transition-all duration-300 relative shrink-0 flex flex-col",
+                    "transition-all duration-300 relative shrink-0 flex flex-col",
+                    previewTheme === "dark" ? "bg-zinc-950" : "bg-background",
                     (typeof previewWidth === "number" || typeof previewHeight === "number") ? "shadow-2xl" : "",
-                    typeof previewWidth === "number" ? "border-x border-white/10" : "",
-                    typeof previewHeight === "number" ? "ring-1 ring-white/10 rounded-md overflow-hidden" : "h-full"
+                    typeof previewWidth === "number" ? "border-x border-border" : "",
+                    typeof previewHeight === "number" ? "ring-1 ring-border rounded-md overflow-hidden" : "h-full"
                   )}
                   style={{ 
                     width: typeof previewWidth === "number" ? `${previewWidth}px` : previewWidth,
@@ -346,13 +375,13 @@ export function PreviewPane({
             
             {/* Preview Bottom Bar */}
             <TooltipProvider>
-              <div className="h-[34px] min-h-[34px] border-t border-border flex items-center px-4 justify-between bg-zinc-950 text-[13px] text-muted-foreground font-medium shrink-0">
+              <div className="h-[34px] min-h-[34px] border-t border-border flex items-center px-4 justify-between bg-muted/40 text-[13px] text-muted-foreground font-medium shrink-0">
                 <div className="flex items-center">
                   <span className="text-muted-foreground/80">Preview</span>
                 </div>
                 <div className="flex items-center gap-1.5 ml-auto border-r border-border pr-2 mr-2">
                   {typeof previewWidth === "number" && (
-                    <div className="bg-zinc-900 rounded-md px-2 py-0.5 text-xs text-muted-foreground border border-white/5 mr-1 font-mono">
+                    <div className="bg-muted rounded-md px-2 py-0.5 text-xs text-foreground border border-border mr-1 font-mono">
                       {previewWidth}px
                     </div>
                   )}
@@ -367,8 +396,8 @@ export function PreviewPane({
                           setIsRotated(false)
                         }}
                         className={cn(
-                          "p-1.5 rounded-md hover:bg-zinc-800 transition-colors text-muted-foreground hover:text-foreground",
-                          previewWidth === "100%" && "bg-zinc-800 text-foreground"
+                          "p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                          previewWidth === "100%" && "bg-muted text-foreground"
                         )}
                       >
                         <Monitor className="h-4 w-4" />
@@ -387,8 +416,8 @@ export function PreviewPane({
                           setIsRotated(false)
                         }}
                         className={cn(
-                          "p-1.5 rounded-md hover:bg-zinc-800 transition-colors text-muted-foreground hover:text-foreground",
-                          previewWidth === 517 && "bg-zinc-800 text-foreground"
+                          "p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                          previewWidth === 517 && "bg-muted text-foreground"
                         )}
                       >
                         <Tablet className="h-4 w-4" />
@@ -407,8 +436,8 @@ export function PreviewPane({
                           setIsRotated(false)
                         }}
                         className={cn(
-                          "p-1.5 rounded-md hover:bg-zinc-800 transition-colors text-muted-foreground hover:text-foreground",
-                          previewWidth === 375 && "bg-zinc-800 text-foreground"
+                          "p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground",
+                          previewWidth === 375 && "bg-muted text-foreground"
                         )}
                       >
                         <Smartphone className="h-4 w-4" />
@@ -424,7 +453,7 @@ export function PreviewPane({
                       <TooltipTrigger asChild>
                         <button
                           onClick={() => onFullscreenChange(!isFullscreen)}
-                          className="h-7 w-7 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                          className="h-7 w-7 flex items-center justify-center hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                         >
                           {isFullscreen ? <Minimize className="h-3.5 w-3.5" /> : <Maximize className="h-3.5 w-3.5" />}
                         </button>
@@ -439,7 +468,7 @@ export function PreviewPane({
                     <TooltipTrigger asChild>
                       <button
                         onClick={toggleTheme}
-                        className="h-7 w-7 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                        className="h-7 w-7 flex items-center justify-center hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                       >
                         {previewTheme === "dark" ? (
                           <Sun className="h-3.5 w-3.5" />
@@ -457,7 +486,7 @@ export function PreviewPane({
                     <TooltipTrigger asChild>
                       <button
                         onClick={onRefresh}
-                        className="h-7 w-7 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                        className="h-7 w-7 flex items-center justify-center hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                       >
                         <RefreshCw className="h-3.5 w-3.5" />
                       </button>
@@ -472,7 +501,7 @@ export function PreviewPane({
                       <TooltipTrigger asChild>
                         <button
                           onClick={onTogglePreview}
-                          className="h-7 w-7 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors text-muted-foreground hover:text-foreground border border-transparent"
+                          className="h-7 w-7 flex items-center justify-center hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground border border-transparent"
                         >
                           <PanelRightClose className="h-3.5 w-3.5" />
                         </button>

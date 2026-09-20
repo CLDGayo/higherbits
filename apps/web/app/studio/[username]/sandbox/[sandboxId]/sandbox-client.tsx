@@ -182,7 +182,7 @@ function StudioDemoPreviewCard({
   }
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center bg-zinc-950/50 p-8 relative">
+    <div className="h-full w-full flex flex-col items-center justify-center bg-muted/30 dark:bg-zinc-950/50 p-8 relative">
       {hasVideo && (
         <div className="mb-4 flex items-center gap-1.5 bg-background/80 backdrop-blur border rounded-full p-1 text-xs shadow-sm z-20">
           <button
@@ -293,6 +293,8 @@ function PublishClientPageContent({
     previewURL,
     isSandboxLoading,
     sandboxConnectionHash,
+    isIdle,
+    resumeSandbox,
     reconnectSandbox,
     retryConnection,
     restartDevServer,
@@ -928,7 +930,7 @@ function PublishClientPageContent({
       <div className="flex flex-1 min-h-0 w-full relative">
         {/* Fixed Width Sidebar */}
         <div 
-          className="h-full w-[320px] flex-shrink-0 flex flex-col bg-zinc-950 border-r border-border transition-all duration-300"
+          className="h-full w-[320px] flex-shrink-0 flex flex-col bg-background border-r border-border transition-all duration-300"
           style={{
             maxWidth: isFullscreen ? "0px" : "320px",
             minWidth: isFullscreen ? "0px" : "320px",
@@ -946,7 +948,7 @@ function PublishClientPageContent({
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-sm font-medium text-zinc-300">{activeStage}</span>
+              <span className="text-sm font-medium text-foreground">{activeStage}</span>
               <div className="w-4" /> {/* Spacer for centering */}
             </div>
             <div className="flex items-center gap-3 overflow-x-auto no-scrollbar">
@@ -957,8 +959,8 @@ function PublishClientPageContent({
                   className={cn(
                     "text-[13px] font-medium pb-1.5 whitespace-nowrap border-b-2 transition-colors",
                     activeStage === stage 
-                      ? "text-foreground border-foreground" 
-                      : "text-muted-foreground border-transparent hover:text-foreground/80"
+                      ? "text-foreground border-foreground font-semibold" 
+                      : "text-muted-foreground border-transparent hover:text-foreground"
                   )}
                 >
                   {stage}
@@ -1113,6 +1115,8 @@ function PublishClientPageContent({
               sandboxUnavailable={sandboxUnavailable}
               sandboxError={sandboxError}
               onReconnect={retryConnection}
+              isIdle={isIdle}
+              onResume={resumeSandbox}
               onTogglePreview={handleTogglePreview}
               isFullscreen={isFullscreen}
               onFullscreenChange={setIsFullscreen}

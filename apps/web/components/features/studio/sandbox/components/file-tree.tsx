@@ -293,7 +293,7 @@ function FileItem({
     >
       {isRenaming ? (
         <div className="flex items-center px-2 py-1">
-          <FileIcon className="h-4 w-4 mr-0.5 text-gray-500 flex-shrink-0" />
+          <FileIcon className="h-4 w-4 mr-0.5 text-muted-foreground flex-shrink-0" />
           <div className="flex-1">
             <SimpleInlineInput
               value={newName}
@@ -307,13 +307,13 @@ function FileItem({
         <div className="flex items-center justify-between">
           <button
             className={`flex items-center flex-1 text-left px-2 py-1 hover:bg-muted rounded truncate select-none ${
-              selectedPath === entry.path ? "bg-accent" : ""
+              selectedPath === entry.path ? "bg-accent text-accent-foreground font-medium" : "text-foreground"
             } ${entry.name === "Add dependency" ? "text-muted-foreground" : ""}`}
             onClick={() => onSelect(entry)}
             onDoubleClick={startRename}
             title={entry.path}
           >
-            <FileIcon className="h-4 w-4 mr-[6px] text-gray-500 flex-shrink-0" />
+            <FileIcon className="h-4 w-4 mr-[6px] text-muted-foreground flex-shrink-0" />
             <span>{entry.name}</span>
           </button>
 
@@ -373,7 +373,7 @@ function SectionItem({
   return (
     <li className="py-1">
       <div 
-        className="text-xs text-muted-foreground px-2 py-1 select-none flex items-center h-[28px]"
+        className="text-xs font-semibold text-muted-foreground/90 uppercase tracking-wider px-2 py-1 select-none flex items-center h-[28px]"
         style={indentStyle}
       >
         {entry.name}
@@ -505,8 +505,8 @@ function DirectoryItem({
     >
       <details className="group select-none" open={isExpanded}>
         <summary
-          className={`flex items-center justify-between px-2 py-1 cursor-pointer hover:bg-muted rounded list-none select-none ${
-            selectedPath === entry.path ? "bg-accent" : ""
+          className={`flex items-center justify-between px-2 py-1 cursor-pointer hover:bg-muted rounded list-none select-none text-foreground ${
+            selectedPath === entry.path ? "bg-accent text-accent-foreground font-medium" : ""
           } relative z-10`}
           onClick={toggleExpanded}
           style={indentStyle}

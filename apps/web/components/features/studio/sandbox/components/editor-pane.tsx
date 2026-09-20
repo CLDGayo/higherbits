@@ -273,7 +273,7 @@ function EditorPaneOriginal({
         }
       />
       {isDemoFile && showDemosBanner && (
-        <div className="flex items-center justify-between px-3 py-2 bg-zinc-900/80 border-t border-border/50 text-xs text-muted-foreground shrink-0 z-20">
+        <div className="flex items-center justify-between px-3 py-2 bg-muted/80 border-t border-border text-xs text-muted-foreground shrink-0 z-20">
           <div className="flex items-center gap-2">
             <Info className="w-4 h-4 text-muted-foreground" />
             <span>Each file in demos is its own demo. Only the default export is rendered in the preview.</span>
@@ -283,7 +283,7 @@ function EditorPaneOriginal({
           </button>
         </div>
       )}
-      <div className="h-[34px] min-h-[34px] border-t border-border flex items-center px-4 justify-between bg-zinc-950 text-[13px] text-muted-foreground font-medium z-10 shrink-0">
+      <div className="h-[34px] min-h-[34px] border-t border-border flex items-center px-4 justify-between bg-muted/40 text-[13px] text-muted-foreground font-medium z-10 shrink-0">
         <div className="flex items-center gap-1.5 opacity-80 truncate">
           <Globe className="w-3.5 h-3.5 text-blue-500 shrink-0" />
           <span className="truncate">
@@ -306,7 +306,7 @@ function EditorPaneOriginal({
           {!showPreview && onTogglePreview && (
             <button
               onClick={onTogglePreview}
-              className="h-7 w-7 ml-2 flex items-center justify-center hover:bg-zinc-800 rounded-md transition-colors text-muted-foreground hover:text-foreground border border-transparent"
+              className="h-7 w-7 ml-2 flex items-center justify-center hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground border border-transparent"
               title="Show Preview"
             >
               <PanelRightOpen className="h-3.5 w-3.5" />

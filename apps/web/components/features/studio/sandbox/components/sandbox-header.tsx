@@ -307,13 +307,13 @@ export function SandboxHeader({
         <div className="ml-auto flex items-center gap-4">
 
           {/* Preview Dimensions Control */}
-          <div className="flex items-center gap-3 bg-zinc-950/50 rounded-full border border-white/5 pl-2 pr-3 py-1 text-sm mr-2 shadow-inner">
+          <div className="flex items-center gap-3 bg-muted/50 rounded-full border border-border pl-2 pr-3 py-1 text-sm mr-2 shadow-inner">
             <span className="text-muted-foreground font-medium pl-2 pr-1">Dimensions:</span>
             <Select 
               value={previewState.selectedDevice} 
               onValueChange={previewState.handleDeviceChange}
             >
-              <SelectTrigger className="w-[180px] h-7 bg-zinc-900 border-white/10 hover:border-white/20 hover:bg-zinc-800 transition-colors rounded-full text-xs">
+              <SelectTrigger className="w-[180px] h-7 bg-background border-border hover:bg-muted/80 text-foreground transition-colors rounded-full text-xs">
                 <SelectValue placeholder="Select device" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
@@ -329,7 +329,7 @@ export function SandboxHeader({
               <>
                 <div className="flex items-center gap-2 px-1 text-xs text-muted-foreground font-mono">
                   <span>{previewState.previewWidth}</span>
-                  <span className="text-zinc-600">×</span>
+                  <span className="text-muted-foreground/60 font-sans">×</span>
                   <span>{previewState.previewHeight}</span>
                 </div>
                 
@@ -338,7 +338,7 @@ export function SandboxHeader({
                     <TooltipTrigger asChild>
                       <button 
                         onClick={previewState.handleRotate}
-                        className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-full hover:bg-white/10"
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-full hover:bg-muted"
                       >
                         <RotateCw className={`w-3.5 h-3.5 transition-transform duration-300 ${previewState.isRotated ? "-rotate-90" : "rotate-0"}`} />
                       </button>

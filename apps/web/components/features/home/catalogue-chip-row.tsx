@@ -162,7 +162,7 @@ export function CatalogueChipRow({
       <div className="mx-auto mb-[74px] flex w-full max-w-6xl flex-wrap items-center gap-x-3 gap-y-2 px-8">
         <span className="text-base">
           <span className="font-semibold text-foreground">{items.length}</span>{" "}
-          <span className="text-muted-foreground">components:</span>
+          <span className="text-foreground/80 dark:text-muted-foreground font-medium">components:</span>
         </span>
 
         {chips.map((chip) => {
@@ -176,10 +176,10 @@ export function CatalogueChipRow({
               className={cn(
                 // 15px/py-1 gives a 30px pill, the height measured on the
                 // reference's active "Animated heroes" chip.
-                "rounded-lg px-3 py-1 text-[15px] transition-colors",
+                "rounded-lg px-3 py-1 text-[15px] font-medium transition-colors",
                 isActive
-                  ? "bg-foreground/10 text-foreground"
-                  : "text-muted-foreground hover:text-foreground",
+                  ? "bg-foreground/15 text-foreground font-semibold shadow-sm"
+                  : "text-foreground/75 dark:text-muted-foreground hover:text-foreground hover:bg-foreground/5",
               )}
             >
               {chip.label}

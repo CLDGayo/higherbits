@@ -95,7 +95,7 @@ export function LandingPageLayout({
       */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] -z-10 overflow-hidden">
         <div className="absolute inset-0 lp-glow-in">
-          <div className="absolute top-[72svh] left-1/2 h-[62svh] w-[128%] max-w-none rounded-[50%] bg-[radial-gradient(ellipse_at_center,hsl(255_65%_25%)_0%,hsl(255_60%_18%/0.55)_45%,transparent_72%)] blur-3xl lp-glow-pulse" />
+          <div className="absolute top-[72svh] left-1/2 h-[62svh] w-[128%] max-w-none rounded-[50%] bg-[radial-gradient(ellipse_at_center,hsl(258_70%_88%/0.65)_0%,hsl(255_60%_92%/0.35)_45%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_center,hsl(255_65%_25%)_0%,hsl(255_60%_18%/0.55)_45%,transparent_72%)] blur-3xl lp-glow-pulse" />
         </div>
       </div>
 
