@@ -10,6 +10,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { FormData } from "../config/utils"
 import { sourceKey } from "@/lib/r2-paths"
+import { deleteDraftFromStorage } from "@/lib/indexeddb-drafts"
 
 type ParsedCodeData = {
   componentCode: string
@@ -33,6 +34,7 @@ type StepContext = {
   supabase: ReturnType<typeof useClerkSupabaseClient>
   form: FormData
   publishAsUser: { id: string; username?: string }
+  isAdmin?: boolean
   sandboxId: string
   updateComponentNameAndImport: (newSlug: string) => Promise<void>
   optimizeComponentAndDemo: (componentSlug: string) => Promise<void>
@@ -162,6 +164,169 @@ export async function _stepManageSandboxLinkAndSubmission(
   }
 
   return state
+}
+
+// Hoisted to module scope for testing visibility and submission gating
+export async function _stepUpsertComponent(
+  context: StepContext,
+  state: SubmissionProcessState,
+): Promise<SubmissionProcessState> {
+  if (!state.parsedCodeData || !state.fileUploadResult) {
+    throw new Error("Missing required data for component creation/update")
+  }
+
+  const { componentIdToUse } = state
+  const {
+    codeUrl,
+    previewImageR2Url,
+    videoR2Url,
+    registryJsonUrl,
+    indexCssUrl,
+  } = state.fileUploadResult
+  const { parsedCodeData } = state
+
+  context.setPublishProgress(
+    componentIdToUse
+      ? "Updating component entry..."
+      : "Creating component entry...",
+  )
+
+  // For in-review submissions or new components submitted for featuring:
+  // non-admins must have is_public forced to false.
+  let isUnderReview = Boolean(context.form.submit_for_featuring)
+  if (!isUnderReview && componentIdToUse) {
+    const { data: sub } = await context.supabase
+      .from("submissions")
+      .select("status")
+      .eq("component_id", componentIdToUse)
+      .maybeSingle()
+    if (sub?.status === "on_review") {
+      isUnderReview = true
+    }
+  }
+
+  const effectiveIsPublic = context.isAdmin
+    ? Boolean(context.form.is_public)
+    : isUnderReview
+      ? false
+      : Boolean(context.form.is_public)
+
+  const componentData: Omit<
+    Tables<"components">,
+    | "id"
+    | "created_at"
+    | "updated_at"
+    | "embedding"
+    | "embedding_oai"
+    | "fts"
+    | "bookmarks_count"
+    | "compiled_css"
+    | "demo_code"
+    | "demo_direct_registry_dependencies"
+    | "downloads_count"
+    | "likes_count"
+    | "views_count"
+    | "bundle_hash"
+    | "bundle_html_url"
+    | "version"
+    | "hunter_username"
+    | "payment_url"
+    | "pro_preview_image_url"
+  > = {
+    name: context.form.name,
+    component_names: parsedCodeData.componentNames,
+    component_slug: context.form.component_slug,
+    code: codeUrl || "",
+    tailwind_config_extension: null,
+    global_css_extension: null,
+    description: context.form.description ?? null,
+    user_id: context.publishAsUser.id,
+    dependencies: parsedCodeData.dependencies || {},
+    demo_dependencies: parsedCodeData.demoDependencies || {},
+    direct_registry_dependencies: (() => {
+      const initialDeps = context.form.direct_registry_dependencies || []
+      let registryDeps: string[] = []
+      try {
+        if (state.componentRegistryJSON) {
+          const parsed = JSON.parse(state.componentRegistryJSON) as {
+            registryDependencies?: string[]
+          }
+          if (Array.isArray(parsed.registryDependencies)) {
+            registryDeps = parsed.registryDependencies.map((d) =>
+              d.replace("https://higherbits.dev/r/", ""),
+            )
+          }
+        }
+      } catch (err) {
+        console.error("Failed to parse registryDependencies", err)
+      }
+      return Array.from(new Set([...initialDeps, ...registryDeps]))
+    })(),
+    preview_url: previewImageR2Url || "",
+    video_url: videoR2Url || "",
+    registry: context.form.registry,
+    license: context.form.license,
+    website_url: context.form.website_url || null,
+    is_public: effectiveIsPublic,
+    sandbox_id: context.sandboxId,
+    registry_url: registryJsonUrl,
+    index_css_url: indexCssUrl || null,
+  }
+
+  let finalComponent: Tables<"components"> | null = null
+  let updatedComponentId = componentIdToUse
+
+  if (componentIdToUse) {
+    const { data: updatedComponent, error: updateComponentError } =
+      await context.supabase
+        .from("components")
+        .update(componentData)
+        .eq("id", componentIdToUse)
+        .select()
+
+    if (updateComponentError) {
+      console.error("Error updating component:", updateComponentError)
+      throw updateComponentError
+    }
+
+    finalComponent = (
+      updatedComponent && updatedComponent.length > 0
+        ? updatedComponent[0]
+        : null
+    ) as Tables<"components"> | null
+
+    if (!finalComponent) {
+      console.error("Update component failed: No data returned.")
+      throw new Error("Failed to update component, no data returned.")
+    }
+  } else {
+    const { data: insertedComponent, error: insertComponentError } =
+      await context.supabase
+        .from("components")
+        .insert(componentData)
+        .select()
+        .maybeSingle()
+
+    if (insertComponentError) {
+      console.error("Error inserting component:", insertComponentError)
+      throw insertComponentError
+    }
+
+    finalComponent = insertedComponent as Tables<"components"> | null
+
+    if (!finalComponent) {
+      console.error("Insert component failed: No data returned.")
+      throw new Error("Failed to insert component, no data returned.")
+    }
+
+    updatedComponentId = finalComponent.id
+  }
+
+  return {
+    ...state,
+    componentIdToUse: updatedComponentId,
+    finalComponent,
+  }
 }
 
 export const useSubmitComponent = () => {
@@ -564,148 +729,6 @@ export const useSubmitComponent = () => {
     }
   }
 
-  async function _stepUpsertComponent(
-    context: StepContext,
-    state: SubmissionProcessState,
-  ): Promise<SubmissionProcessState> {
-    if (!state.parsedCodeData || !state.fileUploadResult) {
-      throw new Error("Missing required data for component creation/update")
-    }
-
-    const { componentIdToUse } = state
-    const {
-      codeUrl,
-      previewImageR2Url,
-      videoR2Url,
-      registryJsonUrl,
-      indexCssUrl,
-    } = state.fileUploadResult
-    const { parsedCodeData } = state
-
-    context.setPublishProgress(
-      componentIdToUse
-        ? "Updating component entry..."
-        : "Creating component entry...",
-    )
-
-    const componentData: Omit<
-      Tables<"components">,
-      | "id"
-      | "created_at"
-      | "updated_at"
-      | "embedding"
-      | "embedding_oai"
-      | "fts"
-      | "bookmarks_count"
-      | "compiled_css"
-      | "demo_code"
-      | "demo_direct_registry_dependencies"
-      | "downloads_count"
-      | "likes_count"
-      | "views_count"
-      | "bundle_hash"
-      | "bundle_html_url"
-      | "version"
-      | "hunter_username"
-      | "payment_url"
-      | "pro_preview_image_url"
-    > = {
-      name: context.form.name,
-      component_names: parsedCodeData.componentNames,
-      component_slug: context.form.component_slug,
-      code: codeUrl || "",
-      tailwind_config_extension: null,
-      global_css_extension: null,
-      description: context.form.description ?? null,
-      user_id: context.publishAsUser.id,
-      dependencies: parsedCodeData.dependencies || {},
-      demo_dependencies: parsedCodeData.demoDependencies || {},
-      direct_registry_dependencies: (() => {
-        const initialDeps = context.form.direct_registry_dependencies || []
-        let registryDeps: string[] = []
-        try {
-          if (state.componentRegistryJSON) {
-            const parsed = JSON.parse(state.componentRegistryJSON) as {
-              registryDependencies?: string[]
-            }
-            if (Array.isArray(parsed.registryDependencies)) {
-              registryDeps = parsed.registryDependencies.map((d) =>
-                d.replace("https://higherbits.dev/r/", ""),
-              )
-            }
-          }
-        } catch (err) {
-          console.error("Failed to parse registryDependencies", err)
-        }
-        return Array.from(new Set([...initialDeps, ...registryDeps]))
-      })(),
-      preview_url: previewImageR2Url || "",
-      video_url: videoR2Url || "",
-      registry: context.form.registry,
-      license: context.form.license,
-      website_url: context.form.website_url || null,
-      is_public: context.form.is_public,
-      sandbox_id: context.sandboxId,
-      registry_url: registryJsonUrl,
-      index_css_url: indexCssUrl || null,
-    }
-
-    let finalComponent: Tables<"components"> | null = null
-    let updatedComponentId = componentIdToUse
-
-    if (componentIdToUse) {
-      const { data: updatedComponent, error: updateComponentError } =
-        await context.supabase
-          .from("components")
-          .update(componentData)
-          .eq("id", componentIdToUse)
-          .select()
-
-      if (updateComponentError) {
-        console.error("Error updating component:", updateComponentError)
-        throw updateComponentError
-      }
-
-      finalComponent = (
-        updatedComponent && updatedComponent.length > 0
-          ? updatedComponent[0]
-          : null
-      ) as Tables<"components"> | null
-
-      if (!finalComponent) {
-        console.error("Update component failed: No data returned.")
-        throw new Error("Failed to update component, no data returned.")
-      }
-    } else {
-      const { data: insertedComponent, error: insertComponentError } =
-        await context.supabase
-          .from("components")
-          .insert(componentData)
-          .select()
-          .maybeSingle()
-
-      if (insertComponentError) {
-        console.error("Error inserting component:", insertComponentError)
-        throw insertComponentError
-      }
-
-      finalComponent = insertedComponent as Tables<"components"> | null
-
-      if (!finalComponent) {
-        console.error("Insert component failed: No data returned.")
-        throw new Error("Failed to insert component, no data returned.")
-      }
-
-      updatedComponentId = finalComponent.id
-    }
-
-    return {
-      ...state,
-      componentIdToUse: updatedComponentId,
-      finalComponent,
-    }
-  }
-
   async function _stepUpsertDemo(
     context: StepContext,
     state: SubmissionProcessState,
@@ -836,6 +859,7 @@ export const useSubmitComponent = () => {
   const submitComponent = async ({
     data,
     publishAsUser,
+    isAdmin = false,
     updateComponentNameAndImport,
     optimizeComponentAndDemo,
     generateRegistry,
@@ -845,6 +869,7 @@ export const useSubmitComponent = () => {
   }: {
     data: FormData
     publishAsUser: { id: string; username?: string }
+    isAdmin?: boolean
     updateComponentNameAndImport: (newSlug: string) => Promise<void>
     optimizeComponentAndDemo?: (componentSlug: string) => Promise<void>
     generateRegistry: (slug?: string) => Promise<
@@ -867,6 +892,7 @@ export const useSubmitComponent = () => {
       supabase: client,
       form: data,
       publishAsUser,
+      isAdmin,
       sandboxId,
       updateComponentNameAndImport,
       optimizeComponentAndDemo: optimizeComponentAndDemo || (async () => {}),
@@ -945,6 +971,11 @@ export const useSubmitComponent = () => {
 
       // Final success handling
       setPublishProgress("Done!")
+      if (sandboxId) {
+        deleteDraftFromStorage(`studio_publish_draft_${sandboxId}`).catch((e) =>
+          console.warn("Failed to delete draft on publish success:", e),
+        )
+      }
       setIsSuccessDialogOpen(true)
     } catch (error) {
       console.error("Error submitting component:", error)

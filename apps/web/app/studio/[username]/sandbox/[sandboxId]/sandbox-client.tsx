@@ -53,8 +53,11 @@ import {
 } from "@/components/ui/accordion"
 import { DemoDetailsForm } from "@/components/features/studio/publish/components/forms/demo-form"
 import { useSubmitComponent } from "@/components/features/studio/publish/hooks/use-submit-component"
+import { useComponentDraft } from "@/components/features/studio/publish/hooks/use-component-draft"
 import { PublishStageForm } from "@/components/features/studio/publish/publish-stage-form"
 import { useComponentData } from "@/components/features/studio/publish/hooks/use-component-data"
+import { useIsAdmin } from "@/components/features/publish/hooks/use-is-admin"
+import { editSandbox } from "@/components/features/studio/sandbox/api"
 import { ControlsPanel } from "@/components/features/controls/controls-panel"
 import { ControlsEmptyState } from "@/components/features/controls/controls-empty-state"
 import {
@@ -269,6 +272,7 @@ function PublishClientPageContent({
   const [activeStage, setActiveStage] = useState<Stage>("Files")
   const { user } = useUser()
   const { isLoaded: isClerkUserLoaded } = useUser()
+  const { isAdmin } = useIsAdmin()
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -279,13 +283,18 @@ function PublishClientPageContent({
       description: "",
       license: "",
       website_url: "",
-      // `is_public` is z.boolean() with no .default() in formSchema, so leaving
-      // it out made every create-mode submit fail validation before the user
-      // ever touched the visibility toggle.
-      is_public: true,
+      // In-review submissions default to private; only admins can publish directly as public.
+      is_public: false,
       submit_for_featuring: true,
       demos: [{ name: "Default Demo", demo_slug: "default", preview_image_data_url: "", tags: [] }],
     },
+  })
+
+  const draftKey = sandboxId ? `studio_publish_draft_${sandboxId}` : null
+  const { clearDraft } = useComponentDraft({
+    form,
+    draftKey,
+    enabled: !!sandboxId,
   })
 
   const {
@@ -324,6 +333,29 @@ function PublishClientPageContent({
       })
     }
   }, [componentFormData, form])
+
+  const watchedName = form.watch("name")
+  const lastSavedSandboxNameRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!sandboxId || !watchedName || watchedName.trim() === "") return
+    if (watchedName === lastSavedSandboxNameRef.current) return
+    if (serverSandbox?.name && watchedName === serverSandbox.name) {
+      lastSavedSandboxNameRef.current = watchedName
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        await editSandbox(sandboxId, { name: watchedName.trim() })
+        lastSavedSandboxNameRef.current = watchedName.trim()
+      } catch (err) {
+        console.warn("[sandbox] Failed to sync sandbox name:", err)
+      }
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [sandboxId, watchedName, serverSandbox?.name])
 
   const {
     files,
@@ -457,6 +489,7 @@ function PublishClientPageContent({
   useEffect(() => {
     if (!isSuccessDialogOpen) return
 
+    clearDraft()
     const usernameToUse = user?.username || username
     const componentSlugValue = form.getValues("component_slug")
     setIsSuccessDialogOpen(false)
@@ -525,6 +558,7 @@ function PublishClientPageContent({
         submitComponent({
           data,
           publishAsUser: finalPublishUser,
+          isAdmin,
           generateRegistry,
           bundleDemo,
           updateComponentNameAndImport,
@@ -916,9 +950,12 @@ function PublishClientPageContent({
 
       <SandboxHeader
         sandboxId={sandboxId}
-        sandboxName={serverSandbox?.name}
+        sandboxName={watchedName || serverSandbox?.name || "Untitled"}
         username={username}
         status={serverSandbox?.component_id ? "edit" : "draft"}
+        onNameChange={(newName) => {
+          form.setValue("name", newName, { shouldDirty: true })
+        }}
         customNextAction={handleNextStage}
         customNextIcon={activeStage === "Publish" ? undefined : <ArrowRight size={16} />}
         customNextLabel={activeStage === "Publish" ? "Send to review" : "Next"}

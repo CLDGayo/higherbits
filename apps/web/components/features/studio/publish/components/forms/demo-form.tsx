@@ -10,16 +10,25 @@ import UploadIcon from "@/components/icons/upload"
 import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
 import { useAvailableTags } from "@/lib/queries"
-import MultipleSelector, { Option } from "@/components/ui/multiselect"
+import MultipleSelector, { Option, MultipleSelectorRef } from "@/components/ui/multiselect"
 import { makeSlugFromName } from "../../hooks/use-is-check-slug-available"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
+import { useQueryClient } from "@tanstack/react-query"
+import { useClerkSupabaseClient } from "@/lib/clerk"
+import { ensureTagsExist } from "@/lib/queries"
+import { parseBatchTags } from "../../utils/batch-tags"
+import type { Tag } from "@/types/global"
 
 export const DemoDetailsForm = ({
   form,
@@ -44,6 +53,89 @@ export const DemoDetailsForm = ({
 
   const [isPickModalOpen, setIsPickModalOpen] = React.useState(false)
   const pickVideoRef = React.useRef<HTMLVideoElement>(null)
+
+  const supabase = useClerkSupabaseClient()
+  const queryClient = useQueryClient()
+  const multipleSelectorRef = React.useRef<MultipleSelectorRef>(null)
+
+  const [isBatchTagsDialogOpen, setIsBatchTagsDialogOpen] = React.useState(false)
+  const [pendingBatchTags, setPendingBatchTags] = React.useState<string[]>([])
+  const [isAddingTags, setIsAddingTags] = React.useState(false)
+  const [isManualBatchModalOpen, setIsManualBatchModalOpen] = React.useState(false)
+  const [manualBatchInput, setManualBatchInput] = React.useState("")
+
+  const handleOpenBatchTags = React.useCallback(
+    (text: string) => {
+      const parsed = parseBatchTags(text)
+      if (parsed.length === 0) return
+
+      const currentTags = form.getValues(`demos.${demoIndex}.tags`) || []
+      const existingSlugs = new Set(currentTags.map((t) => t.slug))
+      const existingNames = new Set(
+        currentTags.map((t) => t.name.toLowerCase()),
+      )
+
+      const newCandidates = parsed.filter((tag) => {
+        const slug = makeSlugFromName(tag)
+        return !existingSlugs.has(slug) && !existingNames.has(tag.toLowerCase())
+      })
+
+      if (newCandidates.length === 0) {
+        toast.info("All of the specified tags are already added.")
+        return
+      }
+
+      setPendingBatchTags(newCandidates)
+      setIsBatchTagsDialogOpen(true)
+    },
+    [demoIndex, form],
+  )
+
+  const handleConfirmBatchTags = React.useCallback(async () => {
+    if (pendingBatchTags.length === 0) return
+
+    setIsAddingTags(true)
+    try {
+      const resolvedTags = await ensureTagsExist(supabase, pendingBatchTags)
+
+      const currentTags = (form.getValues(`demos.${demoIndex}.tags`) || []) as {
+        id?: number
+        name: string
+        slug: string
+      }[]
+      const tagsMap = new Map<
+        string,
+        { id?: number; name: string; slug: string }
+      >()
+      currentTags.forEach((t) => tagsMap.set(t.slug, t))
+      resolvedTags.forEach((t) =>
+        tagsMap.set(t.slug, {
+          id: t.id,
+          name: t.name,
+          slug: t.slug,
+        }),
+      )
+
+      form.setValue(`demos.${demoIndex}.tags`, Array.from(tagsMap.values()) as any, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+
+      queryClient.invalidateQueries({ queryKey: ["availableTags"] })
+      multipleSelectorRef.current?.clearInput()
+
+      toast.success(`Added ${resolvedTags.length} tags`)
+      setIsBatchTagsDialogOpen(false)
+      setIsManualBatchModalOpen(false)
+      setManualBatchInput("")
+      setPendingBatchTags([])
+    } catch (error) {
+      console.error("Error adding batch tags:", error)
+      toast.error("Failed to add tags")
+    } finally {
+      setIsAddingTags(false)
+    }
+  }, [demoIndex, form, pendingBatchTags, queryClient, supabase])
 
   const handleExtractFrame = (videoUrl: string, time: number = 0) => {
     const video = document.createElement("video")
@@ -203,11 +295,23 @@ export const DemoDetailsForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={tagsId}>
-            Tags <span className="text-destructive">*</span>
-          </Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor={tagsId}>
+              Tags <span className="text-destructive">*</span>
+            </Label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 px-1.5 text-xs text-muted-foreground hover:text-foreground"
+              onClick={() => setIsManualBatchModalOpen(true)}
+            >
+              + Batch add
+            </Button>
+          </div>
           <div>
             <MultipleSelector
+              ref={multipleSelectorRef}
               value={form.watch(`demos.${demoIndex}.tags`)?.map((tag) => ({
                 value: tag.slug,
                 label: tag.name,
@@ -219,12 +323,32 @@ export const DemoDetailsForm = ({
                     name: option.label,
                     slug: option.value,
                   })),
+                  { shouldDirty: true, shouldValidate: true },
                 )
               }}
               defaultOptions={tagOptions}
               options={tagOptions}
-              placeholder="Search tags..."
+              placeholder="Search tags or paste comma-separated list..."
               creatable={true}
+              inputProps={{
+                onPaste: (e) => {
+                  const text = e.clipboardData.getData("text")
+                  if (text && text.includes(",")) {
+                    e.preventDefault()
+                    handleOpenBatchTags(text)
+                  }
+                },
+                onKeyDown: (e) => {
+                  if (e.key === "Enter") {
+                    const text = (e.target as HTMLInputElement).value
+                    if (text && text.includes(",")) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleOpenBatchTags(text)
+                    }
+                  }
+                },
+              }}
               emptyIndicator={
                 <p className="text-center text-sm">No tags found</p>
               }
@@ -585,6 +709,120 @@ export const DemoDetailsForm = ({
               }}
             >
               Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Batch Tags Confirmation Modal */}
+      <Dialog
+        open={isBatchTagsDialogOpen}
+        onOpenChange={setIsBatchTagsDialogOpen}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add these tags?</DialogTitle>
+            <DialogDescription>
+              We detected {pendingBatchTags.length} comma-separated tag
+              {pendingBatchTags.length > 1 ? "s" : ""}. Existing tags will be
+              utilized, and new ones will be created and saved.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex flex-wrap gap-1.5 max-h-56 overflow-y-auto p-3 border rounded-lg bg-muted/30">
+            {pendingBatchTags.map((tagName) => {
+              const slug = makeSlugFromName(tagName)
+              const isExisting = availableTags.some(
+                (t) =>
+                  t.slug === slug ||
+                  t.name.toLowerCase() === tagName.toLowerCase(),
+              )
+
+              return (
+                <Badge
+                  key={slug}
+                  variant={isExisting ? "secondary" : "outline"}
+                  className={cn(
+                    "gap-1 py-1 px-2.5 text-xs font-normal",
+                    isExisting
+                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      : "border-primary/30 bg-primary/5 text-primary",
+                  )}
+                >
+                  <span>{tagName}</span>
+                  <span className="text-[10px] opacity-70">
+                    ({isExisting ? "existing" : "new"})
+                  </span>
+                </Badge>
+              )
+            })}
+          </div>
+
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isAddingTags}
+              onClick={() => {
+                setIsBatchTagsDialogOpen(false)
+                setPendingBatchTags([])
+              }}
+            >
+              No
+            </Button>
+            <Button
+              type="button"
+              onClick={handleConfirmBatchTags}
+              disabled={isAddingTags}
+            >
+              {isAddingTags ? "Adding..." : "Yes, add tags"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manual Batch Tags Entry Modal */}
+      <Dialog
+        open={isManualBatchModalOpen}
+        onOpenChange={setIsManualBatchModalOpen}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Batch add tags</DialogTitle>
+            <DialogDescription>
+              Paste or enter tags separated by commas.
+            </DialogDescription>
+          </DialogHeader>
+
+          <Textarea
+            value={manualBatchInput}
+            onChange={(e) => setManualBatchInput(e.target.value)}
+            placeholder="Authentication, Login, Sign In, Split Screen, Glassmorphism, Form, Social Proof, Dual Theme, React, Tailwind CSS"
+            rows={4}
+            className="text-sm"
+          />
+
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsManualBatchModalOpen(false)
+                setManualBatchInput("")
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (manualBatchInput.trim()) {
+                  handleOpenBatchTags(manualBatchInput)
+                }
+              }}
+              disabled={!manualBatchInput.trim()}
+            >
+              Continue
             </Button>
           </DialogFooter>
         </DialogContent>

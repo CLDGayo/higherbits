@@ -18,12 +18,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface VisibilityToggleProps {
   isPrivate: boolean
   onToggle?: (isPrivate: boolean) => Promise<void>
   disabled?: boolean
   readonly?: boolean
+  disabledReason?: string
 }
 
 const visibilityOptions = [
@@ -46,6 +53,7 @@ export function VisibilityToggle({
   onToggle,
   disabled = false,
   readonly = false,
+  disabledReason,
 }: VisibilityToggleProps) {
   const [isUpdating, setIsUpdating] = useState(false)
   const [open, setOpen] = useState(false)
@@ -66,11 +74,12 @@ export function VisibilityToggle({
 
   // Read-only view
   if (readonly) {
-    return (
+    const badge = (
       <div className="flex items-center">
         <div
           className={cn(
             "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[2px] text-xs font-normal select-none",
+            disabledReason && "cursor-not-allowed opacity-80",
             isPrivate
               ? "border-border bg-muted text-muted-foreground"
               : "border-emerald-500/25 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
@@ -85,6 +94,21 @@ export function VisibilityToggle({
         </div>
       </div>
     )
+
+    if (disabledReason) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>{badge}</TooltipTrigger>
+            <TooltipContent>
+              <p>{disabledReason}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
+
+    return badge
   }
 
   const currentValue = isPrivate ? "private" : "public"

@@ -74,7 +74,7 @@ const getUserSandboxes = async (userId: string) => {
     (sandbox): ExtendedDemoWithComponent => ({
       // @ts-ignore TODO FIX LATER
       id: shortUUID.fromUUID(sandbox.id), // Use short UUID if needed, or original ID if consistent
-      name: sandbox.name || "Untitled Sandbox",
+      name: "Default Demo",
       created_at: sandbox.created_at,
       updated_at: sandbox.updated_at,
       submission_status: "draft", // Mark as draft
@@ -84,7 +84,13 @@ const getUserSandboxes = async (userId: string) => {
       preview_url: null,
       video_url: null,
       // @ts-ignore TODO FIX LATER
-      component: null, // No linked component initially
+      component: {
+        id: 0,
+        name: sandbox.name || "Untitled",
+        description: "",
+        component_slug: sandbox.id,
+        user: null as any,
+      },
       // @ts-ignore TODO FIX LATER
       user: null, // User data can be added if needed, but might not be necessary for table display
       component_user: null,

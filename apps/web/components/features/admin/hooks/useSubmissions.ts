@@ -398,6 +398,12 @@ export const useSubmissions = (isAdmin: boolean) => {
                 ...sub,
                 submission_status: status,
                 moderators_feedback: feedback || "",
+                is_public:
+                  status === "posted" || status === "featured"
+                    ? true
+                    : status === "rejected"
+                      ? false
+                      : sub.is_public,
               }
             : sub,
         ),

@@ -28,6 +28,8 @@ import {
 } from "@/components/features/studio/nav-config"
 import { resolveStatus } from "@/components/features/studio/ui/component-status"
 import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
+import { getAllDrafts } from "@/lib/indexeddb-drafts"
+import type { FormData } from "@/components/features/studio/publish/config/utils"
 
 /**
  * Studio section that owns the create flow for each non-sandbox "+ New" option.
@@ -89,6 +91,99 @@ export function StudioUsernameClient({
   useEffect(() => {
     setLocalDemos(demos)
   }, [demos])
+
+  // Hydrate draft details (name, demo title, and cover image) from client IndexedDB
+  useEffect(() => {
+    let isMounted = true
+    const createdBlobUrls: string[] = []
+
+    async function hydrateDrafts() {
+      try {
+        const draftsMap = await getAllDrafts<FormData>()
+        if (!isMounted || draftsMap.size === 0) return
+
+        setLocalDemos((prevDemos) => {
+          let hasChanges = false
+          const updated = prevDemos.map((demo) => {
+            if (resolveStatus(demo) !== "draft") return demo
+            const draftKey = `studio_publish_draft_${demo.id}`
+            const draftRecord = draftsMap.get(draftKey)
+            if (!draftRecord?.data) return demo
+
+            const draft = draftRecord.data
+            const firstDemo = draft.demos?.[0]
+            let previewUrl = demo.preview_url
+
+            if (firstDemo) {
+              if (firstDemo.preview_image_file) {
+                try {
+                  const blobUrl = URL.createObjectURL(
+                    firstDemo.preview_image_file,
+                  )
+                  createdBlobUrls.push(blobUrl)
+                  previewUrl = blobUrl
+                } catch {
+                  // Fall back to data URL
+                }
+              }
+              if (!previewUrl && firstDemo.preview_image_data_url) {
+                previewUrl = firstDemo.preview_image_data_url
+              }
+            }
+
+            const componentName =
+              draft.name?.trim() || demo.component?.name || "Untitled"
+            const demoTitle =
+              firstDemo?.name?.trim() || demo.name || "Default Demo"
+
+            if (
+              demo.preview_url !== previewUrl ||
+              demo.component?.name !== componentName ||
+              demo.name !== demoTitle
+            ) {
+              hasChanges = true
+              return {
+                ...demo,
+                name: demoTitle,
+                preview_url: previewUrl,
+                component: {
+                  ...demo.component,
+                  id: demo.component?.id || 0,
+                  name: componentName,
+                  description:
+                    draft.description || demo.component?.description || "",
+                  component_slug:
+                    draft.component_slug ||
+                    demo.component?.component_slug ||
+                    String(demo.id),
+                  user: demo.component?.user || null,
+                } as any,
+              }
+            }
+            return demo
+          })
+          return hasChanges ? updated : prevDemos
+        })
+      } catch (err) {
+        console.warn(
+          "[Studio] Error hydrating draft previews from IndexedDB:",
+          err,
+        )
+      }
+    }
+
+    hydrateDrafts()
+
+    return () => {
+      isMounted = false
+      createdBlobUrls.forEach((url) => {
+        try {
+          URL.revokeObjectURL(url)
+        } catch {}
+      })
+    }
+  }, [demos])
+
 
   const handleCreateNewSandbox = useCallback(
     async (overrideType?: string) => {
@@ -215,7 +310,19 @@ export function StudioUsernameClient({
     componentIds: number[],
     isPrivate: boolean,
   ) => {
-    await runOverComponents(componentIds, async (componentId) => {
+    let idsToUpdate = componentIds
+    if (!isPrivate && !isAdmin) {
+      idsToUpdate = componentIds.filter((cid) => {
+        const d = localDemos.find((demo) => demo?.component?.id === cid)
+        return !d || resolveStatus(d) !== "on_review"
+      })
+      if (idsToUpdate.length === 0) {
+        toast.error("Components in review cannot be made public by non-admins.")
+        return
+      }
+    }
+
+    await runOverComponents(idsToUpdate, async (componentId) => {
       const { error } = await supabase
         .from("components")
         .update({ is_public: !isPrivate } as any)
@@ -225,14 +332,14 @@ export function StudioUsernameClient({
 
     setLocalDemos((prevDemos) =>
       prevDemos.map((demo) =>
-        demo?.component?.id && componentIds.includes(demo.component.id)
+        demo?.component?.id && idsToUpdate.includes(demo.component.id)
           ? { ...demo, is_private: isPrivate }
           : demo,
       ),
     )
 
     toast.success(
-      `${componentIds.length} ${componentIds.length === 1 ? "component" : "components"} set to ${isPrivate ? "private" : "public"}`,
+      `${idsToUpdate.length} ${idsToUpdate.length === 1 ? "component" : "components"} set to ${isPrivate ? "private" : "public"}`,
     )
   }
 
@@ -358,6 +465,16 @@ export function StudioUsernameClient({
     isPrivate: boolean,
   ) => {
     try {
+      if (!isPrivate && !isAdmin) {
+        const targetDemo = localDemos.find(
+          (d) => d?.component?.id === componentId,
+        )
+        if (targetDemo && resolveStatus(targetDemo) === "on_review") {
+          toast.error("Components in review cannot be made public by non-admins.")
+          return
+        }
+      }
+
       // Update in Supabase - change to use is_public (which is the inverse of isPrivate)
       const { error } = await supabase
         .from("components")

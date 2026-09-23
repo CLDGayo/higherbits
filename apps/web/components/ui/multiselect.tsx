@@ -88,6 +88,8 @@ export interface MultipleSelectorRef {
   input: HTMLInputElement
   focus: () => void
   reset: () => void
+  clearInput: () => void
+  setInputValue: (val: string) => void
 }
 
 export function useDebounce<T>(value: T, delay?: number): T {
@@ -226,6 +228,8 @@ const MultipleSelector = React.forwardRef<
         input: inputRef.current as HTMLInputElement,
         focus: () => inputRef?.current?.focus(),
         reset: () => setSelected([]),
+        clearInput: () => setInputValue(""),
+        setInputValue: (val: string) => setInputValue(val),
       }),
       [selected],
     )

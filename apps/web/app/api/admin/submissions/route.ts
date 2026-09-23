@@ -96,9 +96,11 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // null means "leave is_public alone" -- which is what lets an owner's
-    // private setting survive an admin patch that did not change the status.
-    const visibilityWrite = visibilityWriteFor(priorStatus, status)
+    // When status is posted or featured, visibility automatically turns to public (is_public: true)
+    const visibilityWrite =
+      status === "posted" || status === "featured"
+        ? true
+        : visibilityWriteFor(priorStatus, status)
 
     if (visibilityWrite !== null) {
       const { error: componentError } = await supabaseAdmin

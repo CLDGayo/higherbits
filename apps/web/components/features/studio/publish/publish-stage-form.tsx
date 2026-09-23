@@ -62,6 +62,16 @@ export function PublishStageForm({
     username: form.watch("publish_as_username") || username,
   })
 
+  const isSubmittingForFeaturing = form.watch("submit_for_featuring")
+
+  // For regular users (non-admins), when submitting for featuring (In review),
+  // visibility must naturally be private.
+  useEffect(() => {
+    if (!isAdmin && isSubmittingForFeaturing && form.getValues("is_public")) {
+      form.setValue("is_public", false, { shouldDirty: true })
+    }
+  }, [isAdmin, isSubmittingForFeaturing, form])
+
   const safeLibraries = Array.isArray(libraries) ? libraries : []
 
   useEffect(() => {
@@ -201,24 +211,34 @@ export function PublishStageForm({
         <FormField
           control={form.control}
           name="is_public"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm bg-background/50">
-              <div className="space-y-0.5 mr-4">
-                <FormLabel className="text-base font-medium">Public</FormLabel>
-                <FormDescription className="text-xs">
-                  {field.value
-                    ? "Anyone with the link can install it, and it shows on your profile"
-                    : "Only you can see and install it"}
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const isLockedInReview = !isAdmin && isSubmittingForFeaturing
+            return (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm bg-background/50">
+                <div className="space-y-0.5 mr-4">
+                  <FormLabel className="text-base font-medium">Public</FormLabel>
+                  <FormDescription className="text-xs">
+                    {isLockedInReview
+                      ? "Components under review are private until approved by an admin. Visibility cannot be changed while in review."
+                      : field.value
+                        ? "Anyone with the link can install it, and it shows on your profile"
+                        : "Only you can see and install it"}
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={isLockedInReview ? false : field.value}
+                    disabled={isLockedInReview}
+                    onCheckedChange={(val) => {
+                      if (!isLockedInReview) {
+                        field.onChange(val)
+                      }
+                    }}
+                  />
+                </FormControl>
+              </FormItem>
+            )
+          }}
         />
 
         {/* Submit for featuring */}
@@ -230,13 +250,18 @@ export function PublishStageForm({
               <div className="space-y-0.5 mr-4">
                 <FormLabel className="text-base font-medium">Submit for featuring</FormLabel>
                 <FormDescription className="text-xs">
-                  Send it to the catalog for review so people can discover it. It stays public either way.
+                  Send it to the catalog for review so people can discover it. Components submitted for review default to private until approved by an admin.
                 </FormDescription>
               </div>
               <FormControl>
                 <Switch
                   checked={field.value}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(val) => {
+                    field.onChange(val)
+                    if (!isAdmin && val) {
+                      form.setValue("is_public", false, { shouldDirty: true })
+                    }
+                  }}
                 />
               </FormControl>
             </FormItem>

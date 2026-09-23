@@ -30,6 +30,7 @@ import {
 } from "@/components/features/studio/publish/config/utils"
 import { useComponentData } from "@/components/features/studio/publish/hooks/use-component-data"
 import { useSubmitComponent } from "@/components/features/studio/publish/hooks/use-submit-component"
+import { useComponentDraft } from "@/components/features/studio/publish/hooks/use-component-draft"
 
 import { usePublishAs } from "@/components/features/publish/hooks/use-publish-as"
 import { editSandbox } from "@/components/features/studio/sandbox/api"
@@ -147,6 +148,13 @@ const PublishPage = () => {
     submitComponent,
     setIsSuccessDialogOpen,
   } = useSubmitComponent()
+
+  const draftKey = sandboxId ? `studio_publish_draft_${sandboxId}` : null
+  const { clearDraft } = useComponentDraft({
+    form,
+    draftKey,
+    enabled: !!sandboxId,
+  })
 
   const prevNameRef = useRef<string>("")
 
@@ -274,6 +282,7 @@ const PublishPage = () => {
 
   useEffect(() => {
     if (isSuccessDialogOpen) {
+      clearDraft()
       const usernameToUse = publishAsUser?.username || user?.username
       const componentSlugValue = form.getValues("component_slug")
       const demoSlugToUse = createdDemoSlug || "default"

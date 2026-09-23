@@ -256,6 +256,54 @@ export function useAvailableTags() {
   })
 }
 
+export async function ensureTagsExist(
+  supabase: SupabaseClient<Database>,
+  tagNames: string[],
+): Promise<Tag[]> {
+  const resolvedTags: Tag[] = []
+
+  for (const rawName of tagNames) {
+    const trimmed = rawName.trim()
+    if (!trimmed) continue
+
+    const capitalizedName =
+      trimmed.charAt(0).toUpperCase() + trimmed.slice(1)
+    const slug = makeSlugFromName(trimmed)
+
+    // Check if tag already exists by slug
+    const { data: existingTag } = await supabase
+      .from("tags")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle()
+
+    if (existingTag) {
+      resolvedTags.push(existingTag)
+    } else {
+      // Insert non-existent tag
+      const { data: newTag, error: insertError } = await supabase
+        .from("tags")
+        .insert({ name: capitalizedName, slug })
+        .select()
+        .maybeSingle()
+
+      if (insertError) {
+        console.warn(
+          "Could not insert tag into database, returning fallback tag object:",
+          insertError,
+        )
+        resolvedTags.push({ name: capitalizedName, slug } as Tag)
+      } else if (newTag) {
+        resolvedTags.push(newTag)
+      } else {
+        resolvedTags.push({ name: capitalizedName, slug } as Tag)
+      }
+    }
+  }
+
+  return resolvedTags
+}
+
 export async function updateComponentWithTags(
   supabase: SupabaseClient,
   componentId: number,

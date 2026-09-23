@@ -680,24 +680,34 @@ export function DemosTable({
         const status = resolveStatus(demo)
         const isPrivate = Boolean(demo.is_private)
         const isDraft = status === "draft"
+        const isOnReview = status === "on_review"
 
         const handleToggleVisibility = async (newIsPrivate: boolean) => {
           const componentId = componentIdOf(demo)
           if (!onUpdateVisibility || !componentId) return
           if (isDraft && !newIsPrivate) return
+          if (isOnReview && !isAdmin) return
 
           await onUpdateVisibility(componentId, newIsPrivate)
         }
 
         const canToggle = Boolean(
-          (isOwnProfile || isAdmin) && onUpdateVisibility && !isDraft,
+          (isOwnProfile || isAdmin) &&
+            onUpdateVisibility &&
+            !isDraft &&
+            (!isOnReview || isAdmin),
         )
 
         return (
           <VisibilityToggle
-            isPrivate={isDraft ? true : isPrivate}
+            isPrivate={isDraft || (isOnReview && !isAdmin) ? true : isPrivate}
             onToggle={canToggle ? handleToggleVisibility : undefined}
             readonly={!canToggle}
+            disabledReason={
+              isOnReview && !isAdmin
+                ? "Visibility cannot be changed while in review (Admin only)"
+                : undefined
+            }
           />
         )
       },
@@ -836,12 +846,14 @@ export function DemosTable({
       selectedRows.map((row) => {
         const demo = row.original
         const componentId = componentIdOf(demo)
-        const isDraft = resolveStatus(demo) === "draft"
+        const status = resolveStatus(demo)
+        const isDraft = status === "draft"
         return {
           id: String(demo.id),
           componentId,
           sandboxId: isDraft ? String(demo.id) : undefined,
           isDraft,
+          status,
         }
       }),
     [selectedRows],
@@ -905,7 +917,28 @@ export function DemosTable({
                   toast.info("Drafts remain private until submitted and approved.")
                   return
                 }
-                runBulk(() => onBulkVisibility(selectedComponentIds, false))
+
+                const eligibleIds = isAdmin
+                  ? selectedComponentIds
+                  : selectedItems
+                      .filter((item) => item.status !== "on_review")
+                      .map((item) => item.componentId)
+                      .filter((id): id is number => typeof id === "number")
+
+                if (eligibleIds.length === 0) {
+                  toast.warning(
+                    "Components in review cannot be made public by non-admins.",
+                  )
+                  return
+                }
+
+                if (!isAdmin && eligibleIds.length < selectedComponentIds.length) {
+                  toast.info(
+                    `${selectedComponentIds.length - eligibleIds.length} in-review component(s) remain private.`,
+                  )
+                }
+
+                runBulk(() => onBulkVisibility(eligibleIds, false))
               }}
             >
               <Globe size={14} className="mr-2 text-green-500" />

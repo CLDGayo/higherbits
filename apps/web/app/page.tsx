@@ -100,9 +100,10 @@ export const generateMetadata = async ({
         SITE_DESCRIPTION,
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`,
+          url: `${process.env.NEXT_PUBLIC_APP_URL || SITE_URL}/og-image.png`,
           width: 1200,
           height: 630,
+          alt: SITE_TITLE,
         },
       ],
     },
@@ -111,7 +112,7 @@ export const generateMetadata = async ({
       title: SITE_TITLE,
       description:
         SITE_DESCRIPTION,
-      images: [`${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`],
+      images: [`${process.env.NEXT_PUBLIC_APP_URL || SITE_URL}/og-image.png`],
     },
   }
 }

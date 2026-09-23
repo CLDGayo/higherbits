@@ -26,6 +26,7 @@ import { useDebugMode } from "@/hooks/use-debug-mode"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { useCodeInputsAutoFocus } from "./hooks/use-code-inputs-auto-focus"
 import { usePublishAs } from "./hooks/use-publish-as"
+import { useComponentDraft } from "@/components/features/studio/publish/hooks/use-component-draft"
 
 import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { addTagsToDemo } from "@/lib/queries"
@@ -257,6 +258,16 @@ export default function PublishComponentForm({
           website_url: "",
           is_public: isUserAdmin,
         },
+  })
+
+  const draftKey = isAddDemoMode
+    ? `publish_draft_demo_${existingComponent?.component_slug || "new"}`
+    : "publish_draft_component"
+
+  const { clearDraft } = useComponentDraft({
+    form,
+    draftKey,
+    enabled: true,
   })
 
   const { component_slug: componentSlug, code, demos } = form.getValues()
@@ -810,6 +821,7 @@ export default function PublishComponentForm({
       }
 
       setPublishProgress("Done!")
+      clearDraft()
       setIsSuccessDialogOpen(true)
       trackEvent(AMPLITUDE_EVENTS.PUBLISH_COMPONENT, {
         componentName: data.name,
