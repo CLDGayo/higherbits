@@ -27,16 +27,11 @@ export function PublishHeader({
   onNameChange,
 }: PublishHeaderProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const [name, setName] = useState(sandboxName)
   const [isNavigating, setIsNavigating] = useState(false)
 
   const pathname = usePathname()
   const params = useParams()
   const router = useRouter()
-
-  useEffect(() => {
-    setName(sandboxName)
-  }, [sandboxName])
 
   const handlePublish = async () => {
     if (!sandboxId) return
@@ -56,11 +51,6 @@ export function PublishHeader({
     setIsNavigating(true)
     router.push(`${pathname}/publish`)
   }
-
-  // Update outside components when name changes
-  useEffect(() => {
-    onNameChange?.(name)
-  }, [name, onNameChange])
 
   return (
     <SandboxHeader

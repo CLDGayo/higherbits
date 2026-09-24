@@ -2,7 +2,7 @@
 
 import { studioHardNavigate } from "@/components/features/studio/nav-config"
 import { LoadingDialog } from "@/components/ui/loading-dialog"
-import React, { useEffect, useState, useRef, Suspense, Component, type ErrorInfo, type ReactNode } from "react"
+import React, { useEffect, useState, useRef, useCallback, Suspense, Component, type ErrorInfo, type ReactNode } from "react"
 import { useParams, useRouter, usePathname, useSearchParams } from "next/navigation"
 import {
   ResizableHandle,
@@ -336,6 +336,15 @@ function PublishClientPageContent({
 
   const watchedName = form.watch("name")
   const lastSavedSandboxNameRef = useRef<string | null>(null)
+
+  const handleHeaderNameChange = useCallback(
+    (newName: string) => {
+      if (form.getValues("name") !== newName) {
+        form.setValue("name", newName, { shouldDirty: true })
+      }
+    },
+    [form],
+  )
 
   useEffect(() => {
     if (!sandboxId || !watchedName || watchedName.trim() === "") return
@@ -953,9 +962,7 @@ function PublishClientPageContent({
         sandboxName={watchedName || serverSandbox?.name || "Untitled"}
         username={username}
         status={serverSandbox?.component_id ? "edit" : "draft"}
-        onNameChange={(newName) => {
-          form.setValue("name", newName, { shouldDirty: true })
-        }}
+        onNameChange={handleHeaderNameChange}
         customNextAction={handleNextStage}
         customNextIcon={activeStage === "Publish" ? undefined : <ArrowRight size={16} />}
         customNextLabel={activeStage === "Publish" ? "Send to review" : "Next"}

@@ -166,11 +166,6 @@ export function SandboxHeader({
     }
   }
 
-  // Update outside components when name changes
-  useEffect(() => {
-    onNameChange?.(name)
-  }, [name, onNameChange])
-
   const getStatusBadge = () => {
     switch (status) {
       case "edit":
