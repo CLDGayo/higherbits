@@ -37,7 +37,9 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
   const handleCopy = async () => {
     if (!apiKey) return
     try {
-      await navigator.clipboard.writeText(command)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(command)
+      }
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
@@ -48,9 +50,11 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
   const handleCopyCommand = async () => {
     if (!apiKey) return
     try {
-      await navigator.clipboard.writeText(
-        getInstallCommand(activeTab, apiKey.key, selectedOS),
-      )
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(
+          getInstallCommand(activeTab, apiKey.key, selectedOS),
+        )
+      }
       setCopiedCommand(true)
       setTimeout(() => setCopiedCommand(false), 2000)
     } catch (err) {
@@ -61,7 +65,9 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
   const handleCopyApiKey = async () => {
     if (!apiKey) return
     try {
-      await navigator.clipboard.writeText(apiKey.key)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(apiKey.key)
+      }
       setCopiedApiKey(true)
       setTimeout(() => setCopiedApiKey(false), 2000)
     } catch (err) {
@@ -73,7 +79,9 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
     if (!apiKey) return
     try {
       const config = getMcpConfigJson(apiKey.key, selectedOS)
-      await navigator.clipboard.writeText(config)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(config)
+      }
       setCopiedConfig(true)
       toast.success("Configuration copied to clipboard")
       setTimeout(() => setCopiedConfig(false), 2000)

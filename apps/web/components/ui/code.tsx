@@ -122,8 +122,9 @@ const Code = ({
   }, [highlight])
 
   const handleCopyClick = async () => {
-    if (isCopied) return
-    await navigator.clipboard.writeText(code)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(code)
+    }
     setIsCopied(true)
     toast.success("Copied to clipboard", {
       duration: 1500,

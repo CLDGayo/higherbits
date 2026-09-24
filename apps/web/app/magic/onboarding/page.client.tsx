@@ -159,7 +159,10 @@ export function OnboardingClient({
 
   // Detect OS once on mount
   useEffect(() => {
-    const userAgent = window.navigator.userAgent.toLowerCase()
+    const userAgent =
+      typeof window !== "undefined" && typeof navigator !== "undefined"
+        ? window.navigator.userAgent.toLowerCase()
+        : ""
     let os: OsType = "mac"
 
     if (userAgent.includes("windows")) {

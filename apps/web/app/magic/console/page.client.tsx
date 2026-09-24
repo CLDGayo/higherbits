@@ -141,7 +141,10 @@ export function ConsoleClient({
   useEffect(() => {
     try {
       // Detect OS
-      const userAgent = window.navigator.userAgent.toLowerCase()
+      const userAgent =
+        typeof window !== "undefined" && typeof navigator !== "undefined"
+          ? window.navigator.userAgent.toLowerCase()
+          : ""
       let detectedOs: OsType = "mac"
 
       if (userAgent.includes("windows")) {

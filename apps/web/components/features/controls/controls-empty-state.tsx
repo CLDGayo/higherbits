@@ -24,7 +24,9 @@ export function ControlsEmptyState() {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(SAMPLE_SETTINGS_CODE)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(SAMPLE_SETTINGS_CODE)
+      }
       setCopied(true)
       toast.success("Copied settings snippet to clipboard")
       setTimeout(() => setCopied(false), 2000)

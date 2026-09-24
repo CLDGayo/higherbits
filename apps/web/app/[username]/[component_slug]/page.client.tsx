@@ -594,7 +594,9 @@ export default function ComponentPage({
         throw new Error("No prompt received in response")
       }
 
-      await navigator.clipboard.writeText(data.prompt)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(data.prompt)
+      }
 
       if (data.debug) {
         const debugMessage = []

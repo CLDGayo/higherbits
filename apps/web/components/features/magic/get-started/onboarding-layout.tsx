@@ -32,7 +32,10 @@ export function Onboarding({
 
   useEffect(() => {
     // Detect OS on mount
-    const userAgent = window.navigator.userAgent.toLowerCase()
+    const userAgent =
+      typeof window !== "undefined" && typeof navigator !== "undefined"
+        ? window.navigator.userAgent.toLowerCase()
+        : ""
     setSelectedOS(userAgent.includes("windows") ? "windows" : "mac")
   }, [])
 

@@ -846,7 +846,7 @@ export default function PublishComponentForm({
                 "Bug: Error while publishing component",
               )
               const body = encodeURIComponent(
-                `## Error Description\n\`\`\`\n${errorMessage}\n\`\`\`\n\n## Additional Information\n- Time: ${new Date().toISOString()}\n- Environment: ${process.env.NODE_ENV}\n- Browser: ${navigator.userAgent}`,
+                `## Error Description\n\`\`\`\n${errorMessage}\n\`\`\`\n\n## Additional Information\n- Time: ${new Date().toISOString()}\n- Environment: ${process.env.NODE_ENV}\n- Browser: ${typeof navigator !== "undefined" ? navigator.userAgent : "unknown"}`,
               )
               window.open(
                 `https://github.com/CLDGayo/higherbits/issues/new?title=${title}&body=${body}`,

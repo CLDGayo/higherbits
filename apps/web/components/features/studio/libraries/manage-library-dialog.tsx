@@ -89,7 +89,9 @@ export function ManageLibraryDialog({
   const available = allComponents.filter((c) => !members.includes(c.id))
 
   const handleCopyInstall = async () => {
-    await navigator.clipboard.writeText(installCommand)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(installCommand)
+    }
     setCopied(true)
     toast.success("Install command copied")
     setTimeout(() => setCopied(false), 2000)

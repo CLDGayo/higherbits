@@ -44,7 +44,9 @@ const AssetCard = ({
     ) as SVGElement
     if (svgElement) {
       const svgString = new XMLSerializer().serializeToString(svgElement)
-      navigator.clipboard.writeText(svgString)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(svgString)
+      }
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }

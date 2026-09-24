@@ -33,7 +33,9 @@ export function LibraryInstallCommand({
   const command = libraryInstallCommand(libraryIdentifier(namespace, slug))
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(command)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(command)
+    }
     setCopied(true)
     toast.success("Install command copied")
     setTimeout(() => setCopied(false), 2000)

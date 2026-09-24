@@ -577,7 +577,9 @@ export const useSandbox = ({ sandboxId }: { sandboxId: string }) => {
       const body = JSON.stringify({ shortSandboxId: sandboxId })
       if (transport === "beacon") {
         // A real tab close does not reliably let even keepalive:true finish.
-        navigator.sendBeacon?.("/api/sandbox/hibernate", body)
+        if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+          navigator.sendBeacon("/api/sandbox/hibernate", body)
+        }
         return
       }
       void fetch("/api/sandbox/hibernate", {

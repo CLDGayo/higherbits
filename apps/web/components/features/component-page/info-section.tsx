@@ -112,7 +112,9 @@ export const ComponentPageInfo = ({
     })
       .map(([dep, version]) => `"${dep}": "${version}"`)
       .join(",\n")
-    navigator?.clipboard?.writeText(`{\n${dependenciesString}\n}`)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(`{\n${dependenciesString}\n}`)
+    }
     setCopiedLibDependencies(true)
     toast("Dependencies copied to clipboard")
     trackEvent(AMPLITUDE_EVENTS.COPY_ALL_DEPENDENCIES, {
@@ -124,7 +126,9 @@ export const ComponentPageInfo = ({
   }
 
   const copySingleDependency = (dep: string, version: string) => {
-    navigator?.clipboard?.writeText(`"${dep}": "${version}"`)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(`"${dep}": "${version}"`)
+    }
     setCopiedDependency(dep)
     toast("Dependency copied to clipboard")
     trackEvent(AMPLITUDE_EVENTS.COPY_DEPENDENCY, {

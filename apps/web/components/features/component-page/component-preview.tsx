@@ -427,7 +427,9 @@ function CopyCommandSection({
   const copyCommand = () => {
     const runner = getPackageRunner(selectedPackageManager)
     const command = `${runner} shadcn@latest add "${installUrl}"`
-    navigator?.clipboard?.writeText(command)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(command)
+    }
     setCopied(true)
     trackEvent(AMPLITUDE_EVENTS.COPY_INSTALL_COMMAND, {
       componentId: component.id,

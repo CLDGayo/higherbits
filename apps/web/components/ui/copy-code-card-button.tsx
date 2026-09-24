@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { useSandpack } from "@codesandbox/sandpack-react"
 import { toast } from "sonner"
@@ -5,6 +7,7 @@ import { CheckIcon, Clipboard } from "lucide-react"
 import { trackEvent, AMPLITUDE_EVENTS } from "../../lib/amplitude"
 import { useSupabaseAnalytics } from "@/hooks/use-analytics"
 import { AnalyticsActivityType } from "@/types/global"
+import { isMac } from "@/lib/utils"
 
 export const CopyCodeButton = ({
   component_id,
@@ -22,7 +25,9 @@ export const CopyCodeButton = ({
     const activeFile = sandpack.activeFile
     const fileContent = sandpack.files[activeFile]?.code
     if (fileContent) {
-      navigator?.clipboard?.writeText(fileContent)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(fileContent)
+      }
       setCodeCopied(true)
       toast("Code copied to clipboard")
       trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
@@ -85,9 +90,7 @@ export const CopyCodeButton = ({
                 : "text-muted-foreground/70"
             }`}
           >
-            {navigator?.platform?.toLowerCase()?.includes("mac")
-              ? "⌘C"
-              : "Ctrl+C"}
+            {isMac ? "⌘C" : "Ctrl+C"}
           </kbd>
         </>
       )}

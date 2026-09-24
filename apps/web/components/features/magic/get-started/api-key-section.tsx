@@ -73,7 +73,9 @@ export function ApiKeySection({
       }
 
       setApiKey(newKey)
-      await navigator.clipboard.writeText(newKey.key)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(newKey.key)
+      }
 
       toast.success("API key created and copied to clipboard")
     } catch (error) {
@@ -94,7 +96,9 @@ export function ApiKeySection({
       return
     }
     try {
-      await navigator.clipboard.writeText(apiKey.key)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(apiKey.key)
+      }
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
       toast.success("API key copied to clipboard")

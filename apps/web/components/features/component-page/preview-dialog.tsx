@@ -303,7 +303,7 @@ export function ComponentPreviewDialog({
       // Use the more reliable clipboard copy approach
       const copyToClipboard = (text: string) => {
         // Try the modern clipboard API first
-        if (navigator.clipboard && window.isSecureContext) {
+        if (typeof navigator !== "undefined" && navigator?.clipboard && window.isSecureContext) {
           navigator.clipboard
             .writeText(text)
             .then(() => {
@@ -419,8 +419,10 @@ export function ComponentPreviewDialog({
 
   const handleShare = async () => {
     const componentUrl = `${window.location.origin}/${demo.user.display_username || demo.user.username}/${demo.component.component_slug}/${demo.demo_slug || "default"}`
-    await navigator.clipboard.writeText(componentUrl)
-    toast.success("Link copied to clipboard")
+    if (typeof navigator !== "undefined" && navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(componentUrl)
+      toast.success("Link copied to clipboard")
+    }
   }
 
   const toggleTheme = () => {

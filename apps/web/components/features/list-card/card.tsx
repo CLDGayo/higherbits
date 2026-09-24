@@ -183,7 +183,9 @@ export const ComponentCard = React.memo(function ComponentCard({
   const componentName = isDemo ? demo.component?.name || "" : demo.name || ""
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.origin + componentUrl)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(window.location.origin + componentUrl)
+    }
     toast.success("Link copied to clipboard")
   }
 
@@ -206,7 +208,9 @@ export const ComponentCard = React.memo(function ComponentCard({
       }
 
       const { prompt } = await response.json()
-      navigator.clipboard.writeText(prompt)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(prompt)
+      }
       toast.success("Prompt copied to clipboard")
     } catch (error: any) {
       toast.error(error?.message || "Error generating prompt")

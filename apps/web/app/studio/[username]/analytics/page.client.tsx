@@ -23,7 +23,8 @@ interface AuthorStats {
 }
 
 async function fetchAuthorStats(userId?: string): Promise<AuthorStats> {
-  const url = new URL("/api/author/stats", window.location.origin)
+  const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000"
+  const url = new URL("/api/author/stats", origin)
   if (userId) {
     url.searchParams.set("user_id", userId)
   }

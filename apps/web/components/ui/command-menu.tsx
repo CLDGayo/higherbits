@@ -41,7 +41,7 @@ import { Logo } from "@/components/ui/logo"
 import { categories } from "@/lib/navigation"
 import { trackEvent, AMPLITUDE_EVENTS } from "@/lib/amplitude"
 import { useClerkSupabaseClient } from "@/lib/clerk"
-import { cn } from "@/lib/utils"
+import { cn, isMac } from "@/lib/utils"
 import { getComponentInstallPrompt } from "@/lib/prompts"
 import { resolveRegistryDependencyTree } from "@/lib/queries.server"
 import { useUserProfile } from "@/components/hooks/use-user-profile"
@@ -106,8 +106,9 @@ const useKeyboardShortcuts = ({
         setIsCopying(true)
         const response = await fetch(selectedComponent.component.code)
         const code = await response.text()
-
-        await navigator.clipboard.writeText(code)
+        if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(code)
+        }
         trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
           componentId: selectedComponent.id,
           componentName: selectedComponent.name,
@@ -342,7 +343,9 @@ export function CommandMenu() {
         globalCss: globalCssResult!.data as string,
       })
 
-      await navigator.clipboard.writeText(prompt)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(prompt)
+      }
       toast.dismiss("ai-prompt")
       toast.success("AI prompt copied to clipboard")
 
@@ -949,11 +952,7 @@ export function CommandMenu() {
                         {!isGenerating && (
                           <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-sans text-[11px] leading-none opacity-100 flex">
                             <span className="text-[11px] leading-none font-sans">
-                              {navigator?.platform
-                                ?.toLowerCase()
-                                ?.includes("mac")
-                                ? "⌘"
-                                : "Ctrl"}
+                              {isMac ? "⌘" : "Ctrl"}
                             </span>
                             <span className="text-[11px] leading-none font-sans">
                               X
@@ -984,7 +983,9 @@ export function CommandMenu() {
                               selectedComponent.component.code,
                             )
                             const code = await response.text()
-                            await navigator.clipboard.writeText(code)
+                            if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+                              await navigator.clipboard.writeText(code)
+                            }
                             trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
                               componentId: selectedComponent.id,
                               componentName: selectedComponent.name,
@@ -1006,11 +1007,7 @@ export function CommandMenu() {
                         {!isCopying && (
                           <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-sans  text-[11px] leading-none  opacity-100 flex">
                             <span className="text-[11px] leading-none font-sans">
-                              {navigator?.platform
-                                ?.toLowerCase()
-                                ?.includes("mac")
-                                ? "⌘"
-                                : "Ctrl"}
+                              {isMac ? "⌘" : "Ctrl"}
                             </span>
                             C
                           </kbd>

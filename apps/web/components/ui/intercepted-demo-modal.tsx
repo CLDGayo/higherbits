@@ -206,7 +206,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
       const { prompt } = await response.json()
       
       let copied = false
-      if (navigator.clipboard && window.isSecureContext) {
+      if (typeof navigator !== "undefined" && navigator.clipboard && window.isSecureContext) {
         try {
           await navigator.clipboard.writeText(prompt)
           copied = true
@@ -293,7 +293,9 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         text = await response.text()
       }
       const finalCode = applyControlsToCode(text, activeControls)
-      await navigator.clipboard.writeText(finalCode)
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(finalCode)
+      }
       toast.success(`Copied ${name}`)
     } catch (err) {
       toast.error(`Failed to copy ${name}`)
@@ -341,7 +343,9 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         })
       )
 
-      await navigator.clipboard.writeText(fetchedFiles.join("\n\n"))
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(fetchedFiles.join("\n\n"))
+      }
       toast.success(`Copied all files (${files.length} files) to clipboard!`, { id: toastId })
     } catch (err: any) {
       console.error("Failed to copy all files:", err)
@@ -352,7 +356,9 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
   const handleCopyCLI = (e: React.MouseEvent) => {
     e.stopPropagation()
     const command = `npx higherbits add ${demo.component.component_slug}`
-    navigator.clipboard.writeText(command)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(command)
+    }
     toast.success("Copied CLI command")
   }
 

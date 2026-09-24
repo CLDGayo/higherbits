@@ -22,7 +22,7 @@ import {
 import { PlanType } from "@/lib/config/subscription-plans"
 import { usePurchaseComponent } from "@/lib/queries"
 import { componentAccessAtom, userStateAtom } from "@/lib/store/user-store"
-import { cn, formatPrice } from "@/lib/utils"
+import { cn, formatPrice, isMac } from "@/lib/utils"
 import { Component } from "@/types/global"
 import { useUser } from "@clerk/nextjs"
 import { AvatarImage } from "@radix-ui/react-avatar"
@@ -195,9 +195,7 @@ export function PayWall({ accessState, component }: PayWallProps) {
                   Unlock
                   <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
                     <span className="text-[10px]">
-                      {navigator?.platform?.toLowerCase()?.includes("mac")
-                        ? "⌘"
-                        : "Ctrl"}
+                      {isMac ? "⌘" : "Ctrl"}
                     </span>
                     <Icons.enter className="h-2.5 w-2.5" />
                   </kbd>
@@ -347,9 +345,7 @@ function UnlockPaywall({
               Unlock
               <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
                 <span className="text-[10px]">
-                  {navigator?.platform?.toLowerCase()?.includes("mac")
-                    ? "⌘"
-                    : "Ctrl"}
+                  {isMac ? "⌘" : "Ctrl"}
                 </span>
                 <Icons.enter className="h-2.5 w-2.5" />
               </kbd>
@@ -422,9 +418,7 @@ function UnlockPaywall({
                   Unlock
                   <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
                     <span className="text-[10px]">
-                      {navigator?.platform?.toLowerCase()?.includes("mac")
-                        ? "⌘"
-                        : "Ctrl"}
+                      {isMac ? "⌘" : "Ctrl"}
                     </span>
                     <Icons.enter className="h-2.5 w-2.5" />
                   </kbd>
@@ -489,9 +483,7 @@ function SubscriptionPaywall() {
           {isSignedIn && (
             <kbd className="pointer-events-none h-5 select-none items-center gap-1 rounded border-muted-foreground/40 bg-muted-foreground/20 px-1.5 ml-1.5 font-sans text-[11px] text-kbd leading-none opacity-100 flex">
               <span className="text-[11px] leading-none font-sans">
-                {navigator?.platform?.toLowerCase()?.includes("mac")
-                  ? "⌘"
-                  : "Ctrl"}
+                {isMac ? "⌘" : "Ctrl"}
               </span>
               <Icons.enter className="h-2.5 w-2.5" />
             </kbd>

@@ -21,8 +21,9 @@ export function LibraryCard({ library, viewMode = "grid" }: LibraryCardProps) {
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault()
-    e.stopPropagation()
-    navigator.clipboard.writeText(installCmd)
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(installCmd)
+    }
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
