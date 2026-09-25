@@ -37,7 +37,10 @@ import { useRouter } from "next/navigation"
 import { UpvoteIcon } from "../../icons/upvote-icon"
 import { ComponentCardSkeleton } from "../../ui/skeletons"
 import { UserAvatar } from "../../ui/user-avatar"
-import { NavigationProgressBar } from "../../ui/navigation-progress"
+import {
+  startNavigationProgress,
+  stopNavigationProgress,
+} from "../../ui/navigation-progress"
 import ComponentPreviewImage from "./card-image"
 import { ComponentVideoPreview } from "./card-video"
 import { getPreviewCropScale } from "./preview-crop"
@@ -190,6 +193,7 @@ export const ComponentCard = React.memo(function ComponentCard({
   }
 
   const handleCopyPrompt = async (promptType: PromptType) => {
+    startNavigationProgress()
     try {
       const response = await fetch("/api/prompts", {
         method: "POST",
@@ -214,6 +218,8 @@ export const ComponentCard = React.memo(function ComponentCard({
       toast.success("Prompt copied to clipboard")
     } catch (error: any) {
       toast.error(error?.message || "Error generating prompt")
+    } finally {
+      stopNavigationProgress()
     }
   }
 
@@ -352,7 +358,6 @@ export const ComponentCard = React.memo(function ComponentCard({
             }}
           >
             <span className="sr-only">View {componentName}</span>
-            <NavigationProgressBar />
           </Link>
           {/* Card body layer */}
           <div

@@ -30,6 +30,9 @@ const SECONDS_PER_CARD = 7.5
 /** Maximum flick/swipe velocity in px/s. */
 const MAX_SWIPE_VELOCITY = 3500
 
+/** Minimum displacement in pixels to transition from a tap/click to a drag swipe. */
+const DRAG_THRESHOLD_PX = 8
+
 /** Friction coefficient for swipe momentum deceleration towards default speed. */
 const MOMENTUM_FRICTION = 2.2
 
@@ -89,16 +92,19 @@ function InteractiveMarqueeRow({
   const posRef = React.useRef<number>(0)
   const velocityRef = React.useRef<number>(0)
   const halfWidthRef = React.useRef<number>(0)
-  const isDraggingRef = React.useRef<boolean>(false)
+  const isPointerDownRef = React.useRef<boolean>(false)
+  const hasPointerCapturedRef = React.useRef<boolean>(false)
   const isWheelScrollingRef = React.useRef<boolean>(false)
   const wheelTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
   const wheelHistoryRef = React.useRef<Array<{ dx: number; time: number }>>([])
   const hasDraggedRef = React.useRef<boolean>(false)
   const startXRef = React.useRef<number>(0)
+  const startYRef = React.useRef<number>(0)
   const lastXRef = React.useRef<number>(0)
   const lastTimeRef = React.useRef<number>(0)
   const historyRef = React.useRef<Array<{ x: number; time: number }>>([])
   const isVisibleRef = React.useRef<boolean>(true)
+  const isHoveredRef = React.useRef<boolean>(false)
   const isFocusedRef = React.useRef<boolean>(false)
 
   const [isDragging, setIsDragging] = React.useState(false)
@@ -185,27 +191,35 @@ function InteractiveMarqueeRow({
       const dt = Math.min((currentTime - lastTimeRef.current) / 1000, 0.1)
       lastTimeRef.current = currentTime
 
-      if (
-        isVisibleRef.current &&
-        !isDraggingRef.current &&
-        !isWheelScrollingRef.current &&
-        !isFocusedRef.current &&
-        halfWidthRef.current > 0
-      ) {
+      const isStationary =
+        !isVisibleRef.current ||
+        isPointerDownRef.current ||
+        isWheelScrollingRef.current ||
+        halfWidthRef.current <= 0
+
+      if (!isStationary) {
+        // When hovered or focused, target speed is 0 (pauses under pointer per globals.css)
+        const activeTargetSpeed =
+          prefersReducedMotion || isHoveredRef.current || isFocusedRef.current
+            ? 0
+            : vDefault
+
         // Exponential decay towards cruising speed (without stopping)
         const decay = Math.exp(-MOMENTUM_FRICTION * dt)
         velocityRef.current =
-          targetSpeed + (velocityRef.current - targetSpeed) * decay
+          activeTargetSpeed + (velocityRef.current - activeTargetSpeed) * decay
 
-        if (Math.abs(velocityRef.current - targetSpeed) < 0.2) {
-          velocityRef.current = targetSpeed
+        if (Math.abs(velocityRef.current - activeTargetSpeed) < 0.2) {
+          velocityRef.current = activeTargetSpeed
         }
 
-        posRef.current += velocityRef.current * dt
-        posRef.current = wrap(posRef.current, halfWidthRef.current)
+        if (Math.abs(velocityRef.current) > 0.05) {
+          posRef.current += velocityRef.current * dt
+          posRef.current = wrap(posRef.current, halfWidthRef.current)
 
-        if (trackRef.current) {
-          trackRef.current.style.transform = `translate3d(${posRef.current}px, 0, 0)`
+          if (trackRef.current) {
+            trackRef.current.style.transform = `translate3d(${posRef.current}px, 0, 0)`
+          }
         }
       }
 
@@ -328,98 +342,123 @@ function InteractiveMarqueeRow({
     // Only primary mouse button or touch
     if (e.button !== 0) return
 
-    isDraggingRef.current = true
-    setIsDragging(true)
+    isPointerDownRef.current = true
     hasDraggedRef.current = false
+    hasPointerCapturedRef.current = false
     startXRef.current = e.clientX
+    startYRef.current = e.clientY
     lastXRef.current = e.clientX
     lastTimeRef.current = performance.now()
     historyRef.current = [{ x: e.clientX, time: performance.now() }]
-
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId)
-    } catch {
-      // Ignore if pointer capture fails
-    }
   }
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return
+    if (!isPointerDownRef.current) return
 
     const now = performance.now()
     const dx = e.clientX - lastXRef.current
     lastXRef.current = e.clientX
 
-    if (Math.abs(e.clientX - startXRef.current) > 5) {
-      hasDraggedRef.current = true
+    const totalDx = Math.abs(e.clientX - startXRef.current)
+    const totalDy = Math.abs(e.clientY - startYRef.current)
+
+    // On touch/trackpad, if movement is predominantly vertical before drag threshold,
+    // surrender to native page scrolling
+    if (!hasDraggedRef.current && totalDy > totalDx && totalDy > 6) {
+      isPointerDownRef.current = false
+      return
     }
 
-    if (halfWidthRef.current > 0) {
+    if (totalDx > DRAG_THRESHOLD_PX && !hasDraggedRef.current) {
+      hasDraggedRef.current = true
+      setIsDragging(true)
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId)
+        hasPointerCapturedRef.current = true
+      } catch {
+        // Ignore if pointer capture fails
+      }
+    }
+
+    if (hasDraggedRef.current && halfWidthRef.current > 0) {
       posRef.current += dx
       posRef.current = wrap(posRef.current, halfWidthRef.current)
       if (trackRef.current) {
         trackRef.current.style.transform = `translate3d(${posRef.current}px, 0, 0)`
       }
-    }
 
-    historyRef.current.push({ x: e.clientX, time: now })
-    while (
-      historyRef.current.length > 0 &&
-      historyRef.current[0] &&
-      now - historyRef.current[0].time > 100
-    ) {
-      historyRef.current.shift()
+      historyRef.current.push({ x: e.clientX, time: now })
+      while (
+        historyRef.current.length > 0 &&
+        historyRef.current[0] &&
+        now - historyRef.current[0].time > 100
+      ) {
+        historyRef.current.shift()
+      }
     }
   }
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return
-    isDraggingRef.current = false
+    if (!isPointerDownRef.current) return
+    isPointerDownRef.current = false
     setIsDragging(false)
 
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId)
-    } catch {
-      // Ignore
-    }
-
-    const now = performance.now()
-    const recent = historyRef.current.filter((p) => now - p.time <= 100)
-    const oldest = recent[0]
-    const newest = recent[recent.length - 1]
-    if (oldest && newest && recent.length >= 2) {
-      const dt = (newest.time - oldest.time) / 1000
-      if (dt > 0.01) {
-        const rawVel = (newest.x - oldest.x) / dt
-        velocityRef.current = Math.max(
-          -MAX_SWIPE_VELOCITY,
-          Math.min(MAX_SWIPE_VELOCITY, rawVel),
-        )
-      } else {
-        velocityRef.current = 0
+    if (hasPointerCapturedRef.current) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId)
+      } catch {
+        // Ignore
       }
-    } else {
-      velocityRef.current = 0
+      hasPointerCapturedRef.current = false
     }
 
     if (hasDraggedRef.current) {
+      const now = performance.now()
+      const recent = historyRef.current.filter((p) => now - p.time <= 100)
+      const oldest = recent[0]
+      const newest = recent[recent.length - 1]
+      if (oldest && newest && recent.length >= 2) {
+        const dt = (newest.time - oldest.time) / 1000
+        if (dt > 0.01) {
+          const rawVel = (newest.x - oldest.x) / dt
+          velocityRef.current = Math.max(
+            -MAX_SWIPE_VELOCITY,
+            Math.min(MAX_SWIPE_VELOCITY, rawVel),
+          )
+        } else {
+          velocityRef.current = 0
+        }
+      } else {
+        velocityRef.current = 0
+      }
+
+      // Suppress the synthetic click that follows a drag
       setTimeout(() => {
         hasDraggedRef.current = false
-      }, 100)
+      }, 120)
+      lastTimeRef.current = now
+    } else {
+      // Clean stationary click — leave hasDraggedRef false so link click proceeds
+      hasDraggedRef.current = false
     }
-
-    lastTimeRef.current = now
   }
 
   const handlePointerCancel = () => {
-    if (!isDraggingRef.current) return
-    isDraggingRef.current = false
+    if (!isPointerDownRef.current) return
+    isPointerDownRef.current = false
     setIsDragging(false)
+    if (hasPointerCapturedRef.current) {
+      try {
+        hasPointerCapturedRef.current = false
+      } catch {
+        // Ignore
+      }
+    }
     velocityRef.current = vDefault
     if (hasDraggedRef.current) {
       setTimeout(() => {
         hasDraggedRef.current = false
-      }, 100)
+      }, 120)
     }
     lastTimeRef.current = performance.now()
   }
@@ -451,6 +490,13 @@ function InteractiveMarqueeRow({
       onPointerCancel={handlePointerCancel}
       onClickCapture={handleClickCapture}
       onDragStart={(e) => e.preventDefault()}
+      onMouseEnter={() => {
+        isHoveredRef.current = true
+      }}
+      onMouseLeave={() => {
+        isHoveredRef.current = false
+        lastTimeRef.current = performance.now()
+      }}
       onFocus={() => {
         isFocusedRef.current = true
       }}
