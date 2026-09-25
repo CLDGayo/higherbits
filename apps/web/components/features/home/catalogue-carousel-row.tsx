@@ -90,6 +90,9 @@ function InteractiveMarqueeRow({
   const velocityRef = React.useRef<number>(0)
   const halfWidthRef = React.useRef<number>(0)
   const isDraggingRef = React.useRef<boolean>(false)
+  const isWheelScrollingRef = React.useRef<boolean>(false)
+  const wheelTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+  const wheelHistoryRef = React.useRef<Array<{ dx: number; time: number }>>([])
   const hasDraggedRef = React.useRef<boolean>(false)
   const startXRef = React.useRef<number>(0)
   const lastXRef = React.useRef<number>(0)
@@ -185,6 +188,7 @@ function InteractiveMarqueeRow({
       if (
         isVisibleRef.current &&
         !isDraggingRef.current &&
+        !isWheelScrollingRef.current &&
         !isFocusedRef.current &&
         halfWidthRef.current > 0
       ) {
@@ -210,10 +214,113 @@ function InteractiveMarqueeRow({
 
     rafId = requestAnimationFrame(loop)
 
+    const handleWheel = (e: WheelEvent) => {
+      // Ignore pinch-to-zoom gestures
+      if (e.ctrlKey) return
+
+      let deltaX = e.deltaX
+      let deltaY = e.deltaY
+
+      if (e.deltaMode === 1) {
+        deltaX *= 16
+        deltaY *= 16
+      } else if (e.deltaMode === 2) {
+        deltaX *= 400
+        deltaY *= 400
+      }
+
+      // Shift + vertical scroll converts to horizontal scroll
+      if (Math.abs(deltaX) === 0 && e.shiftKey && Math.abs(deltaY) > 0) {
+        deltaX = deltaY
+        deltaY = 0
+      }
+
+      // If not currently in a horizontal gesture, require horizontal intent.
+      // This guarantees vertical page scrolling is never blocked or hijacked.
+      const isOngoingGesture = isWheelScrollingRef.current
+      if (!isOngoingGesture) {
+        if (Math.abs(deltaX) <= Math.abs(deltaY) || Math.abs(deltaX) < 0.5) {
+          return
+        }
+      } else {
+        // In an ongoing horizontal gesture, pass through only if movement is purely vertical
+        if (Math.abs(deltaX) < 0.1 && Math.abs(deltaY) > 5) {
+          return
+        }
+      }
+
+      // Prevent browser back/forward swipe history navigation
+      e.preventDefault()
+
+      const now = performance.now()
+      isWheelScrollingRef.current = true
+      hasDraggedRef.current = true
+
+      if (halfWidthRef.current > 0) {
+        posRef.current -= deltaX
+        posRef.current = wrap(posRef.current, halfWidthRef.current)
+        if (trackRef.current) {
+          trackRef.current.style.transform = `translate3d(${posRef.current}px, 0, 0)`
+        }
+      }
+
+      wheelHistoryRef.current.push({ dx: -deltaX, time: now })
+      while (
+        wheelHistoryRef.current.length > 0 &&
+        wheelHistoryRef.current[0] &&
+        now - wheelHistoryRef.current[0].time > 120
+      ) {
+        wheelHistoryRef.current.shift()
+      }
+
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current)
+      }
+
+      wheelTimeoutRef.current = setTimeout(() => {
+        isWheelScrollingRef.current = false
+
+        const samples = wheelHistoryRef.current
+        if (samples.length >= 2) {
+          const oldest = samples[0]
+          const newest = samples[samples.length - 1]
+          if (oldest && newest) {
+            const dt = (newest.time - oldest.time) / 1000
+            const totalDx = samples.reduce((acc, s) => acc + s.dx, 0)
+            if (dt > 0.01) {
+              const rawVel = totalDx / dt
+              velocityRef.current = Math.max(
+                -MAX_SWIPE_VELOCITY,
+                Math.min(MAX_SWIPE_VELOCITY, rawVel),
+              )
+            }
+          }
+        }
+
+        wheelHistoryRef.current = []
+        lastTimeRef.current = performance.now()
+
+        setTimeout(() => {
+          hasDraggedRef.current = false
+        }, 120)
+      }, 80)
+    }
+
+    const containerEl = containerRef.current
+    if (containerEl) {
+      containerEl.addEventListener("wheel", handleWheel, { passive: false })
+    }
+
     return () => {
       cancelAnimationFrame(rafId)
       ro.disconnect()
       io.disconnect()
+      if (containerEl) {
+        containerEl.removeEventListener("wheel", handleWheel)
+      }
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current)
+      }
     }
   }, [items, autoScroll, vDefault])
 
@@ -329,7 +436,7 @@ function InteractiveMarqueeRow({
     <div
       ref={containerRef}
       className={cn(
-        "lp-marquee touch-pan-y select-none",
+        "lp-marquee touch-pan-y select-none overscroll-x-contain",
         isDragging ? "cursor-grabbing" : "cursor-grab",
         className,
       )}

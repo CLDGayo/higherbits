@@ -107,6 +107,7 @@ describe("CatalogueCarouselRow", () => {
     expect(html).toContain("touch-pan-y")
     expect(html).toContain("select-none")
     expect(html).toContain("cursor-grab")
+    expect(html).toContain("overscroll-x-contain")
     expect(html).toContain('data-direction="ltr"')
   })
 
