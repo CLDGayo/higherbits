@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType } from "@/types/global"
+import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType, User } from "@/types/global"
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,7 @@ import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { Spinner } from "@/components/icons/spinner"
 import Link from "next/link"
+import { UserAvatar } from "@/components/ui/user-avatar"
 import { PayWall } from "@/components/features/component-page/pay-wall"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
@@ -92,6 +93,15 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     user?.id && (demo.user_id === user.id || demo.component?.user_id === user.id),
   )
   const accessState = useComponentAccess(demo.component, hasPurchased || isOwner)
+
+  const author = (demo.component?.user || demo.user) as User | undefined
+  const authorName =
+    author?.display_name ||
+    author?.name ||
+    author?.display_username ||
+    author?.username ||
+    ""
+  const authorUsername = author?.display_username || author?.username
 
   useEffect(() => {
     if (accessState === "UNLOCKED") {
@@ -426,6 +436,40 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             {isLoading && bundleUrl && (
               <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm z-10 text-primary">
                 <Spinner size={32} />
+              </div>
+            )}
+
+            {/* Top Left User Avatar & Name */}
+            {author && (authorName || authorUsername) && (
+              <div className="absolute top-3 left-3 z-20 flex items-center gap-2 transition-all duration-300 opacity-90 hover:opacity-100">
+                <div className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium pl-1.5 pr-3 py-1.5 rounded-full shadow-lg flex items-center gap-2">
+                  <UserAvatar
+                    src={
+                      author.display_image_url ||
+                      author.image_url ||
+                      (author as any)?.imageUrl ||
+                      "/placeholder.svg"
+                    }
+                    alt={authorName || "User"}
+                    size={22}
+                    user={author}
+                    isClickable={true}
+                    className="flex-shrink-0"
+                  />
+                  {authorUsername ? (
+                    <Link
+                      href={`/${authorUsername}`}
+                      className="truncate max-w-[140px] sm:max-w-[200px] hover:underline cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {authorName || `@${authorUsername}`}
+                    </Link>
+                  ) : (
+                    <span className="truncate max-w-[140px] sm:max-w-[200px]">
+                      {authorName}
+                    </span>
+                  )}
+                </div>
               </div>
             )}
 

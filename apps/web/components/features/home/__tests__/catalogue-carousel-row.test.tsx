@@ -1,7 +1,7 @@
 import { renderToString } from "react-dom/server"
 import { beforeAll, describe, expect, it, vi } from "vitest"
 
-import { CatalogueCarouselRow } from "../catalogue-carousel-row"
+import { CatalogueCarouselRow, wrap } from "../catalogue-carousel-row"
 import type { DemoWithComponent } from "@/types/global"
 
 // `ComponentCard` reads `window.matchMedia` and `useRouter()` during render.
@@ -99,4 +99,42 @@ describe("CatalogueCarouselRow", () => {
     expect(cards.length).toBeGreaterThan(0)
     expect(decorated).toHaveLength(cards.length / 2)
   })
+
+  it("renders interactive touch-action, select-none, and grab cursor classes on autoScroll row", () => {
+    const html = renderToString(
+      <CatalogueCarouselRow items={fixture} autoScroll="ltr" />,
+    )
+    expect(html).toContain("touch-pan-y")
+    expect(html).toContain("select-none")
+    expect(html).toContain("cursor-grab")
+    expect(html).toContain('data-direction="ltr"')
+  })
+
+  it("renders data-direction=rtl for rtl autoScroll", () => {
+    const html = renderToString(
+      <CatalogueCarouselRow items={fixture} autoScroll="rtl" />,
+    )
+    expect(html).toContain('data-direction="rtl"')
+  })
 })
+
+describe("wrap (infinite scroll coordinate normalizer)", () => {
+  it("normalizes negative coordinates to stay within [-width, 0]", () => {
+    expect(wrap(-200, 1000)).toBe(-200)
+    expect(wrap(-1000, 1000)).toBe(0)
+    expect(wrap(-1200, 1000)).toBe(-200)
+  })
+
+  it("normalizes positive coordinates into equivalent negative offsets", () => {
+    expect(wrap(100, 1000)).toBe(-900)
+    expect(wrap(1000, 1000)).toBe(0)
+    expect(wrap(1200, 1000)).toBe(-800)
+  })
+
+  it("returns 0 for 0 or non-positive width", () => {
+    expect(wrap(0, 1000)).toBe(0)
+    expect(wrap(100, 0)).toBe(0)
+    expect(wrap(-100, -500)).toBe(0)
+  })
+})
+

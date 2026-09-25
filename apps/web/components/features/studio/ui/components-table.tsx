@@ -681,12 +681,13 @@ export function DemosTable({
         const isPrivate = Boolean(demo.is_private)
         const isDraft = status === "draft"
         const isOnReview = status === "on_review"
+        const isRejected = status === "rejected"
+        const isApproved = status === "posted" || status === "featured"
 
         const handleToggleVisibility = async (newIsPrivate: boolean) => {
           const componentId = componentIdOf(demo)
           if (!onUpdateVisibility || !componentId) return
-          if (isDraft && !newIsPrivate) return
-          if (isOnReview && !isAdmin) return
+          if (!isApproved) return
 
           await onUpdateVisibility(componentId, newIsPrivate)
         }
@@ -695,19 +696,38 @@ export function DemosTable({
           (isOwnProfile || isAdmin) &&
             onUpdateVisibility &&
             !isDraft &&
-            (!isOnReview || isAdmin),
+            !isOnReview &&
+            !isRejected &&
+            isApproved,
         )
+
+        const effectiveIsPrivate = !isApproved ? true : isPrivate
+
+        let disabledReason: string | undefined
+        if (!canToggle) {
+          if (isOnReview) {
+            disabledReason =
+              "Components under review cannot be made public until approved by an admin."
+          } else if (isRejected) {
+            disabledReason =
+              "Rejected components cannot be made public until approved by an admin."
+          } else if (isDraft) {
+            disabledReason = "Drafts cannot be made public."
+          } else if (!isApproved) {
+            disabledReason =
+              "Components must be submitted and approved by an admin before they can be made public."
+          } else if (!isOwnProfile && !isAdmin) {
+            disabledReason =
+              "You do not have permission to change this component's visibility."
+          }
+        }
 
         return (
           <VisibilityToggle
-            isPrivate={isDraft || (isOnReview && !isAdmin) ? true : isPrivate}
+            isPrivate={effectiveIsPrivate}
             onToggle={canToggle ? handleToggleVisibility : undefined}
             readonly={!canToggle}
-            disabledReason={
-              isOnReview && !isAdmin
-                ? "Visibility cannot be changed while in review (Admin only)"
-                : undefined
-            }
+            disabledReason={disabledReason}
           />
         )
       },

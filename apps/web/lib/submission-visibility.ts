@@ -24,8 +24,29 @@ export const isPublicStatus = (status: string | null | undefined): boolean =>
 export function visibilityWriteFor(
   priorStatus: string | null | undefined,
   nextStatus: string | null | undefined,
+  targetVisibility?: boolean | null,
 ): boolean | null {
+  // If moving into rejected or on_review, ALWAYS force private (is_public: false)
+  if (nextStatus === "rejected" || nextStatus === "on_review") {
+    return false
+  }
+
   const was = isPublicStatus(priorStatus)
   const now = isPublicStatus(nextStatus)
-  return was === now ? null : now
+
+  // Moving between posted and featured, or editing feedback on an already published component
+  if (was && now) {
+    return null
+  }
+
+  // Transitioning into published (posted/featured) from unpublished/on_review/rejected
+  if (!was && now) {
+    if (targetVisibility === false) {
+      return false
+    }
+    return true
+  }
+
+  return null
 }
+

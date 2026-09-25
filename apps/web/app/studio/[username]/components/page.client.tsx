@@ -311,13 +311,14 @@ export function StudioUsernameClient({
     isPrivate: boolean,
   ) => {
     let idsToUpdate = componentIds
-    if (!isPrivate && !isAdmin) {
+    if (!isPrivate) {
       idsToUpdate = componentIds.filter((cid) => {
         const d = localDemos.find((demo) => demo?.component?.id === cid)
-        return !d || resolveStatus(d) !== "on_review"
+        const status = d ? resolveStatus(d) : null
+        return status === "posted" || status === "featured"
       })
       if (idsToUpdate.length === 0) {
-        toast.error("Components in review cannot be made public by non-admins.")
+        toast.error("Only admin-approved components can be made public.")
         return
       }
     }
@@ -465,12 +466,13 @@ export function StudioUsernameClient({
     isPrivate: boolean,
   ) => {
     try {
-      if (!isPrivate && !isAdmin) {
+      if (!isPrivate) {
         const targetDemo = localDemos.find(
           (d) => d?.component?.id === componentId,
         )
-        if (targetDemo && resolveStatus(targetDemo) === "on_review") {
-          toast.error("Components in review cannot be made public by non-admins.")
+        const status = targetDemo ? resolveStatus(targetDemo) : null
+        if (status !== "posted" && status !== "featured") {
+          toast.error("Components in review or rejected cannot be made public until approved by an admin.")
           return
         }
       }

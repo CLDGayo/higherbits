@@ -96,11 +96,23 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // When status is posted or featured, visibility automatically turns to public (is_public: true)
-    const visibilityWrite =
-      status === "posted" || status === "featured"
-        ? true
-        : visibilityWriteFor(priorStatus, status)
+    // Check if the user requested private visibility at publish time
+    let targetVisibility: boolean | null = null
+    const { data: sandboxRow } = await supabaseAdmin
+      .from("sandboxes")
+      .select("status")
+      .eq("component_id", componentId)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (sandboxRow?.status === "publish_private") {
+      targetVisibility = false
+    } else if (sandboxRow?.status === "publish_public") {
+      targetVisibility = true
+    }
+
+    const visibilityWrite = visibilityWriteFor(priorStatus, status, targetVisibility)
 
     if (visibilityWrite !== null) {
       const { error: componentError } = await supabaseAdmin

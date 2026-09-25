@@ -83,12 +83,19 @@ export async function _stepManageSandboxLinkAndSubmission(
     throw new Error("Component ID is missing after create/update.")
   }
 
+  const targetVisibilityStatus = context.form.is_public
+    ? "publish_public"
+    : "publish_private"
+
   // Link sandbox to component if it's a new component
   if (state.isNewComponent) {
     context.setPublishProgress("Linking sandbox to new component...")
     const { error: updateSandboxError } = await context.supabase
       .from("sandboxes")
-      .update({ component_id: componentIdToUse })
+      .update({
+        component_id: componentIdToUse,
+        status: targetVisibilityStatus,
+      })
       .eq("id", context.sandboxId)
 
     if (updateSandboxError) {
@@ -135,12 +142,15 @@ export async function _stepManageSandboxLinkAndSubmission(
     }
   }
 
-  // Update sandbox link if needed
-  if (!sandboxData?.component_id) {
+  // Update sandbox link and status for existing components
+  if (!state.isNewComponent) {
     context.setPublishProgress("Updating sandbox link...")
     const { error: updateSandboxError } = await context.supabase
       .from("sandboxes")
-      .update({ component_id: componentIdToUse })
+      .update({
+        component_id: componentIdToUse,
+        status: targetVisibilityStatus,
+      })
       .eq("id", context.sandboxId)
 
     if (updateSandboxError) {
@@ -191,23 +201,26 @@ export async function _stepUpsertComponent(
       : "Creating component entry...",
   )
 
-  // For in-review submissions or new components submitted for featuring:
-  // non-admins must have is_public forced to false.
-  let isUnderReview = Boolean(context.form.submit_for_featuring)
-  if (!isUnderReview && componentIdToUse) {
+  // Determine if this component was already reviewed and approved by an admin
+  let isApproved = false
+  if (componentIdToUse) {
     const { data: sub } = await context.supabase
       .from("submissions")
       .select("status")
       .eq("component_id", componentIdToUse)
       .maybeSingle()
-    if (sub?.status === "on_review") {
-      isUnderReview = true
+    if (sub?.status === "posted" || sub?.status === "featured") {
+      isApproved = true
     }
   }
 
+  const isEnteringReview = Boolean(context.form.submit_for_featuring)
+
+  // Non-admins can ONLY have is_public: true if the component was already
+  // reviewed & approved by an admin, AND is not currently entering review.
   const effectiveIsPublic = context.isAdmin
     ? Boolean(context.form.is_public)
-    : isUnderReview
+    : isEnteringReview || !isApproved
       ? false
       : Boolean(context.form.is_public)
 

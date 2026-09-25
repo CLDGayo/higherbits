@@ -161,15 +161,19 @@ describe("Components Table Visibility Gating Predicates", () => {
   }) => {
     const isDraft = status === "draft"
     const isOnReview = status === "on_review"
+    const isRejected = status === "rejected"
+    const isApproved = status === "posted" || status === "featured"
     return Boolean(
       (isOwnProfile || isAdmin) &&
         hasHandler &&
         !isDraft &&
-        (!isOnReview || isAdmin),
+        !isOnReview &&
+        !isRejected &&
+        isApproved,
     )
   }
 
-  it("disables visibility toggle for regular users on components in review", () => {
+  it("disables visibility toggle for all users on components in review", () => {
     expect(
       canToggleVisibility({
         isOwnProfile: true,
@@ -178,9 +182,6 @@ describe("Components Table Visibility Gating Predicates", () => {
         status: "on_review",
       }),
     ).toBe(false)
-  })
-
-  it("enables visibility toggle for admins on components in review", () => {
     expect(
       canToggleVisibility({
         isOwnProfile: true,
@@ -188,16 +189,78 @@ describe("Components Table Visibility Gating Predicates", () => {
         hasHandler: true,
         status: "on_review",
       }),
-    ).toBe(true)
+    ).toBe(false)
   })
 
-  it("enables visibility toggle for regular users on approved/posted components", () => {
+  it("disables visibility toggle for all users on rejected components", () => {
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: false,
+        hasHandler: true,
+        status: "rejected",
+      }),
+    ).toBe(false)
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: true,
+        hasHandler: true,
+        status: "rejected",
+      }),
+    ).toBe(false)
+  })
+
+  it("disables visibility toggle for all users on unsubmitted components", () => {
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: false,
+        hasHandler: true,
+        status: "none",
+      }),
+    ).toBe(false)
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: true,
+        hasHandler: true,
+        status: "none",
+      }),
+    ).toBe(false)
+  })
+
+  it("enables visibility toggle for owners and admins on approved components", () => {
     expect(
       canToggleVisibility({
         isOwnProfile: true,
         isAdmin: false,
         hasHandler: true,
         status: "posted",
+      }),
+    ).toBe(true)
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: true,
+        hasHandler: true,
+        status: "posted",
+      }),
+    ).toBe(true)
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: false,
+        hasHandler: true,
+        status: "featured",
+      }),
+    ).toBe(true)
+    expect(
+      canToggleVisibility({
+        isOwnProfile: true,
+        isAdmin: true,
+        hasHandler: true,
+        status: "featured",
       }),
     ).toBe(true)
   })
@@ -213,20 +276,24 @@ describe("Components Table Visibility Gating Predicates", () => {
     ).toBe(false)
   })
 
-  it("filters out on_review components from bulk public visibility for non-admins", () => {
+  it("filters out unapproved (on_review, rejected, none) components from bulk public visibility for non-admins", () => {
     const items = [
       { id: 1, status: "posted" },
       { id: 2, status: "on_review" },
       { id: 3, status: "none" },
+      { id: 4, status: "rejected" },
+      { id: 5, status: "featured" },
     ]
 
     const filterForPublic = (isAdmin: boolean) =>
       isAdmin
         ? items.map((i) => i.id)
-        : items.filter((i) => i.status !== "on_review").map((i) => i.id)
+        : items
+            .filter((i) => i.status === "posted" || i.status === "featured")
+            .map((i) => i.id)
 
-    expect(filterForPublic(false)).toEqual([1, 3])
-    expect(filterForPublic(true)).toEqual([1, 2, 3])
+    expect(filterForPublic(false)).toEqual([1, 5])
+    expect(filterForPublic(true)).toEqual([1, 2, 3, 4, 5])
   })
 })
 
