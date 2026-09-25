@@ -34,7 +34,7 @@ PM2_APP_NAME="higherbits.dev" # verified live pm2 app; `pm2 id higherbits` retur
 if [[ "${1:-}" == "--rollback" ]]; then
     echo ""
     echo "🚨 Triggering rollback to previous build on VPS..."
-    ssh "$VPS_USER@$VPS_HOST" "
+    ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=120 "$VPS_USER@$VPS_HOST" "
         set -e
         su - higherbits -c '
             set -e
@@ -93,7 +93,7 @@ if [[ "${1:-}" == "--deploy" ]]; then
     echo "🚀 Triggering build and deploy on VPS..."
     
     # Run commands on the VPS via SSH to install dependencies, build, and restart the app
-    ssh "$VPS_USER@$VPS_HOST" "
+    ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=120 "$VPS_USER@$VPS_HOST" "
         set -e
         chown -R higherbits:higherbits \"$VPS_DEST\"
         su - higherbits -c '
