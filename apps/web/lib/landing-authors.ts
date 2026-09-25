@@ -1,5 +1,3 @@
-import { unstable_cache } from "next/cache"
-
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
@@ -41,48 +39,44 @@ export interface LandingAuthor {
  * fabrication. Against live data this yields 2 tiles today — a disclosed known
  * gap, not a defect.
  */
-export const getCachedLandingAuthors = unstable_cache(
-  async (): Promise<LandingAuthor[]> => {
-    const { data: usersData, error: usersError } = await supabaseWithAdminAccess
-      .from("users")
-      .select(PUBLIC_USER_COLUMNS, { count: "exact" })
-      .range(0, 9)
+export async function getCachedLandingAuthors(): Promise<LandingAuthor[]> {
+  const { data: usersData, error: usersError } = await supabaseWithAdminAccess
+    .from("users")
+    .select(PUBLIC_USER_COLUMNS, { count: "exact" })
+    .range(0, 9)
 
-    if (usersError) {
-      console.error("[landing] authors lookup failed:", usersError)
-      return []
-    }
+  if (usersError) {
+    console.error("[landing] authors lookup failed:", usersError)
+    return []
+  }
 
-    if (!usersData || usersData.length === 0) return []
+  if (!usersData || usersData.length === 0) return []
 
-    const authors = await Promise.all(
-      (usersData as any[]).map(async (u: any) => {
-        const { data: componentsData } = await supabaseWithAdminAccess
-          .from("components")
-          .select("id, downloads_count")
-          .eq("user_id", u.id)
+  const authors = await Promise.all(
+    (usersData as any[]).map(async (u: any) => {
+      const { data: componentsData } = await supabaseWithAdminAccess
+        .from("components")
+        .select("id, downloads_count")
+        .eq("user_id", u.id)
 
-        const componentIds: number[] = componentsData
-          ? (componentsData as any[]).map((c: any) => c.id)
-          : []
+      const componentIds: number[] = componentsData
+        ? (componentsData as any[]).map((c: any) => c.id)
+        : []
 
-        return {
-          id: u.id,
-          username: u.username || u.display_username || "",
-          display_username: u.display_username || u.username || "",
-          name: u.name || u.display_name || "",
-          display_name: u.display_name || u.name || "",
-          image_url: u.image_url || u.display_image_url || "",
-          display_image_url: u.display_image_url || u.image_url || "",
-          component_count: componentIds.length,
-        } satisfies LandingAuthor
-      }),
-    )
+      return {
+        id: u.id,
+        username: u.username || u.display_username || "",
+        display_username: u.display_username || u.username || "",
+        name: u.name || u.display_name || "",
+        display_name: u.display_name || u.name || "",
+        image_url: u.image_url || u.display_image_url || "",
+        display_image_url: u.display_image_url || u.image_url || "",
+        component_count: componentIds.length,
+      } satisfies LandingAuthor
+    }),
+  )
 
-    return authors
-      .filter((author) => author.component_count > 0)
-      .sort((a, b) => b.component_count - a.component_count)
-  },
-  ["landing-authors"],
-  { revalidate: 300, tags: ["landing-authors"] },
-)
+  return authors
+    .filter((author) => author.component_count > 0)
+    .sort((a, b) => b.component_count - a.component_count)
+}

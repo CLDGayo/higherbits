@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { revalidatePath } from "next/cache"
 import { auth, clerkClient } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess as supabaseAdmin } from "@/lib/supabase"
 import { generateGhlTemplate } from "@/lib/ghl-generator"
@@ -146,6 +147,12 @@ export async function PATCH(request: Request) {
     }
 
 
+    try {
+      revalidatePath("/")
+    } catch (e) {
+      console.error("Failed to revalidate landing page:", e)
+    }
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Internal server error:", error)
@@ -195,6 +202,12 @@ export async function DELETE(request: Request) {
       if (error) throw error
     } else {
       return new NextResponse("Invalid mode", { status: 400 })
+    }
+
+    try {
+      revalidatePath("/")
+    } catch (e) {
+      console.error("Failed to revalidate landing page:", e)
     }
 
     return NextResponse.json({ success: true })

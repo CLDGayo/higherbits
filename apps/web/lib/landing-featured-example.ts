@@ -1,5 +1,3 @@
-import { unstable_cache } from "next/cache"
-
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import type { DemoWithComponent } from "@/types/global"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
@@ -205,42 +203,38 @@ async function getPaidComponentIds(): Promise<Set<number>> {
   )
 }
 
-export const getCachedFeaturedExample = unstable_cache(
-  async (): Promise<FeaturedExample | null> => {
-    const paidComponentIds = await getPaidComponentIds()
+export async function getCachedFeaturedExample(): Promise<FeaturedExample | null> {
+  const paidComponentIds = await getPaidComponentIds()
 
-    // Fail-closed sentinel from `getPaidComponentIds`: the paid list is unknown,
-    // so no component can be proven free.
-    if (paidComponentIds.has(Number.NaN)) return null
+  // Fail-closed sentinel from `getPaidComponentIds`: the paid list is unknown,
+  // so no component can be proven free.
+  if (paidComponentIds.has(Number.NaN)) return null
 
-    const { data, error } = await supabaseWithAdminAccess
-      .from("demos")
-      .select(
-        `
-        id, demo_slug, video_url, bookmarks_count, preview_url,
-        pro_preview_image_url, component_id, created_at,
-        user:users!demos_user_id_fkey (${PUBLIC_USER_COLUMNS}),
-        component:components!inner (
-          id, name, component_slug, user_id, is_public, likes_count, code,
-          user:users!components_user_id_fkey (${PUBLIC_USER_COLUMNS})
-        )
-      `,
+  const { data, error } = await supabaseWithAdminAccess
+    .from("demos")
+    .select(
+      `
+      id, demo_slug, video_url, bookmarks_count, preview_url,
+      pro_preview_image_url, component_id, created_at,
+      user:users!demos_user_id_fkey (${PUBLIC_USER_COLUMNS}),
+      component:components!inner (
+        id, name, component_slug, user_id, is_public, likes_count, code,
+        user:users!components_user_id_fkey (${PUBLIC_USER_COLUMNS})
       )
-      .eq("components.is_public", true)
-      .not("preview_url", "is", null)
+    `,
+    )
+    .eq("components.is_public", true)
+    .not("preview_url", "is", null)
 
-    if (error) {
-      console.error("[landing] featured-example query failed:", error)
-      return null
-    }
+  if (error) {
+    console.error("[landing] featured-example query failed:", error)
+    return null
+  }
 
-    const candidates = ((data ?? []) as unknown[]).map((demo) => ({
-      ...(demo as DemoWithComponent),
-      tags: [],
-    })) as DemoWithComponent[]
+  const candidates = ((data ?? []) as unknown[]).map((demo) => ({
+    ...(demo as DemoWithComponent),
+    tags: [],
+  })) as DemoWithComponent[]
 
-    return selectFeaturedExample(candidates, paidComponentIds)
-  },
-  ["landing-featured-example"],
-  { revalidate: 300, tags: ["landing-featured-example"] },
-)
+  return selectFeaturedExample(candidates, paidComponentIds)
+}

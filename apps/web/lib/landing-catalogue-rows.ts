@@ -1,5 +1,3 @@
-import { unstable_cache } from "next/cache"
-
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import type { DemoWithComponent } from "@/types/global"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
@@ -117,33 +115,29 @@ function flattenTags(rows: any[] | null): DemoWithComponent[] {
  * Row 1 — "Most Loved". Fetches the full public candidate pool (~51 rows today,
  * no pagination concern), sorts `likes_count desc, id asc` in JS, slices.
  */
-export const getMostLovedRow = unstable_cache(
-  async (): Promise<DemoWithComponent[]> => {
-    const { data, error } = await supabaseWithAdminAccess
-      .from("demos")
-      .select(
-        `
-        ${ROW_SELECT}
-      `,
-      )
-      .eq("components.is_public", true)
-      .not("components.registry", "eq", "shadcn")
-      .not("preview_url", "is", null)
-
-    if (error) {
-      console.error("[landing] most-loved row query failed:", error)
-      return []
-    }
-
-    const filtered = flattenTags(data as any[]).filter(
-      (demo) => !isPrimitiveShadcnDemo(demo),
+export async function getMostLovedRow(): Promise<DemoWithComponent[]> {
+  const { data, error } = await supabaseWithAdminAccess
+    .from("demos")
+    .select(
+      `
+      ${ROW_SELECT}
+    `,
     )
+    .eq("components.is_public", true)
+    .not("components.registry", "eq", "shadcn")
+    .not("preview_url", "is", null)
 
-    return sortByLikesDesc(filtered).slice(0, LANDING_ROW_SIZE)
-  },
-  ["landing-row-most-loved"],
-  { revalidate: 300, tags: ["landing-row-most-loved"] },
-)
+  if (error) {
+    console.error("[landing] most-loved row query failed:", error)
+    return []
+  }
+
+  const filtered = flattenTags(data as any[]).filter(
+    (demo) => !isPrimitiveShadcnDemo(demo),
+  )
+
+  return sortByLikesDesc(filtered).slice(0, LANDING_ROW_SIZE)
+}
 
 /**
  * Row 2 — "Newest Additions". `demos.created_at` is a native column on the
@@ -151,36 +145,32 @@ export const getMostLovedRow = unstable_cache(
  * FINAL sliced ids — never its internal candidate pool, which would empty this
  * row entirely.
  */
-export const getNewestRow = unstable_cache(
-  async (excludeIds: number[]): Promise<DemoWithComponent[]> => {
-    const { data, error } = await supabaseWithAdminAccess
-      .from("demos")
-      .select(
-        `
-        ${ROW_SELECT}
-      `,
-      )
-      .eq("components.is_public", true)
-      .not("components.registry", "eq", "shadcn")
-      .not("preview_url", "is", null)
-      .not("id", "in", buildExclusionList(excludeIds))
-      .order("created_at", { ascending: false })
-      .limit(LANDING_ROW_SIZE)
-
-    if (error) {
-      console.error("[landing] newest row query failed:", error)
-      return []
-    }
-
-    const filtered = flattenTags(data as any[]).filter(
-      (demo) => !isPrimitiveShadcnDemo(demo),
+export async function getNewestRow(excludeIds: number[]): Promise<DemoWithComponent[]> {
+  const { data, error } = await supabaseWithAdminAccess
+    .from("demos")
+    .select(
+      `
+      ${ROW_SELECT}
+    `,
     )
+    .eq("components.is_public", true)
+    .not("components.registry", "eq", "shadcn")
+    .not("preview_url", "is", null)
+    .not("id", "in", buildExclusionList(excludeIds))
+    .order("created_at", { ascending: false })
+    .limit(LANDING_ROW_SIZE)
 
-    return filtered
-  },
-  ["landing-row-newest"],
-  { revalidate: 300, tags: ["landing-row-newest"] },
-)
+  if (error) {
+    console.error("[landing] newest row query failed:", error)
+    return []
+  }
+
+  const filtered = flattenTags(data as any[]).filter(
+    (demo) => !isPrimitiveShadcnDemo(demo),
+  )
+
+  return filtered
+}
 
 export interface LandingCatalogueRows {
   mostLoved: DemoWithComponent[]
@@ -215,26 +205,22 @@ export async function getLandingCatalogueRows(): Promise<LandingCatalogueRows> {
  * 2026-08-23: 9 tags total, `component_tags` empty, best tag yields 4), so a
  * hardcoded strip would render chips that filter to nothing.
  */
-export const getCatalogueChipPool = unstable_cache(
-  async (): Promise<DemoWithComponent[]> => {
-    const { data, error } = await supabaseWithAdminAccess
-      .from("demos")
-      .select(`${ROW_SELECT}`)
-      .eq("components.is_public", true)
-      .not("components.registry", "eq", "shadcn")
-      .not("preview_url", "is", null)
+export async function getCatalogueChipPool(): Promise<DemoWithComponent[]> {
+  const { data, error } = await supabaseWithAdminAccess
+    .from("demos")
+    .select(`${ROW_SELECT}`)
+    .eq("components.is_public", true)
+    .not("components.registry", "eq", "shadcn")
+    .not("preview_url", "is", null)
 
-    if (error) {
-      console.error("[landing] chip pool query failed:", error)
-      return []
-    }
+  if (error) {
+    console.error("[landing] chip pool query failed:", error)
+    return []
+  }
 
-    const filtered = flattenTags(data as any[]).filter(
-      (demo) => !isPrimitiveShadcnDemo(demo),
-    )
+  const filtered = flattenTags(data as any[]).filter(
+    (demo) => !isPrimitiveShadcnDemo(demo),
+  )
 
-    return sortByLikesDesc(filtered)
-  },
-  ["landing-catalogue-chip-pool"],
-  { revalidate: 300, tags: ["landing-catalogue-chip-pool"] },
-)
+  return sortByLikesDesc(filtered)
+}
