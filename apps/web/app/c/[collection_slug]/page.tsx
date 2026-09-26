@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 import { CollectionPageContent } from "./page.client"
 import { SortOption, User } from "@/types/global"
 import { cookies } from "next/headers"
@@ -25,7 +26,7 @@ const getCachedCollectionInfo = unstable_cache(
       .select(
         `
         *,
-        user_data:users(*),
+        user_data:users(${PUBLIC_USER_COLUMNS}),
         components_count:components_to_collections(count)
       `,
       )

@@ -8,7 +8,7 @@ import { PUBLIC_USER_COLUMNS } from "./user-select"
 /**
  * Regression guard for the PII-in-RSC-payload defect.
  *
- * `users!<fk>(*)` hangs a full author row off a `demos`/`components` result.
+ * `users!<fk>(*)` (or the unhinted/aliased `alias:users(*)`) hangs a full author row off a `demos`/`components` result.
  * Those results are passed as props into `"use client"` components, so React
  * serialises them into the RSC flight payload — which ships inside the HTML of
  * pages anonymous visitors can `curl`. Measured before the fix: `/{username}`
@@ -30,7 +30,8 @@ const PRIVATE_USER_COLUMNS = [
 ] as const
 
 const ROOTS = ["app", "components", "lib"]
-const EMBED_STAR = /users!\w+\s*\(\s*\*\s*\)/
+// Matches both `users!fk(*)` and `alias:users(*)`; not `.from("users").select("*")`.
+const EMBED_STAR = /\busers(?:!\w+)?\s*\(\s*\*\s*\)/
 
 function sourceFiles(dir: string, acc: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
