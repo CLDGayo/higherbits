@@ -144,6 +144,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
         apiKey,
         baseURL: process.env.OPENAI_BASE_URL || undefined,
         defaultHeaders: Object.keys(defaultHeaders).length ? defaultHeaders : undefined,
+        timeout: 90000,
       })
     }
 
@@ -326,17 +327,17 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
 
     // Option B: OpenAI / OpenRouter API
     if (!rawOutput && openai) {
-      let model = process.env.OPENAI_MODEL || "minimax/minimax-m3"
-      if (model === "minimax/minimax-m3:free") {
-        model = "minimax/minimax-m3"
-      }
-      const configuredMaxTokens = Number(process.env.OPENAI_MAX_TOKENS) || 8192
+      let model = process.env.OPENAI_MODEL || "cohere/north-mini-code:free"
+      const configuredMaxTokens = Number(process.env.OPENAI_MAX_TOKENS) || 16384
 
       const executeCompletion = async (targetModel: string, tokens: number) => {
         console.log(`Calling OpenAI/OpenRouter API (${targetModel}, max_tokens: ${tokens}) to generate GHL template for demo ${demoId}...`)
         
         const extraBody: Record<string, any> = {}
-        if (targetModel.includes("minimax") || targetModel.includes("deepseek") || targetModel.includes("r1")) {
+        if (targetModel.includes("nemotron") || targetModel.includes("ultra") || targetModel.includes("super")) {
+          // Disable internal reasoning to reserve all output tokens for HTML generation
+          extraBody.reasoning = { effort: "none" }
+        } else if (targetModel.includes("minimax") || targetModel.includes("deepseek") || targetModel.includes("r1") || targetModel.includes("reasoning")) {
           // Limit reasoning effort so tokens are dedicated to actual HTML generation
           extraBody.reasoning = { effort: "minimal" }
         }
@@ -353,6 +354,12 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
           extra_body: Object.keys(extraBody).length ? extraBody : undefined,
         })
 
+        if (!completion?.choices || !completion.choices[0]) {
+          console.error(`OpenAI/OpenRouter raw response with missing choices from ${targetModel}:`, JSON.stringify(completion))
+          const errorMsg = (completion as any)?.error?.message || `Model ${targetModel} returned a response without completion choices.`
+          throw new Error(errorMsg)
+        }
+
         const choice = completion.choices[0]
         if (choice?.finish_reason === "length") {
           throw new Error(`Model ${targetModel} hit token limit (${tokens} tokens) and output was truncated.`)
@@ -366,6 +373,8 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
           const codeBlockMatch = reasoningText.match(/```(?:html|xml)?\s*([\s\S]*?)\s*```/i)
           if (codeBlockMatch && codeBlockMatch[1]) {
             output = codeBlockMatch[1]
+          } else if (reasoningText && (reasoningText.includes("<div") || reasoningText.includes("<section") || reasoningText.includes("<style"))) {
+            output = reasoningText
           }
         }
         return output
@@ -377,28 +386,36 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
         const errMsg = String(err?.message || "")
         console.warn(`OpenAI/OpenRouter call to ${model} failed:`, errMsg)
 
-        // 1. If OpenRouter returned 402 with affordable token count, retry with what's affordable
+        // 1. If OpenRouter returned 402 with affordable token count, only retry if affordable >= 2000
         const affordMatch = errMsg.match(/can only afford (\d+)/i)
         if (affordMatch && affordMatch[1]) {
           const affordable = parseInt(affordMatch[1], 10)
-          const retryTokens = Math.max(1500, Math.min(affordable - 250, configuredMaxTokens))
-          console.log(`OpenRouter 402 credit threshold detected. Retrying ${model} with affordable max_tokens: ${retryTokens}...`)
-          try {
-            rawOutput = await executeCompletion(model, retryTokens)
-          } catch (retryErr: any) {
-            console.warn(`Retry with reduced tokens failed:`, retryErr?.message)
+          if (affordable >= 2000) {
+            const retryTokens = Math.min(affordable - 200, configuredMaxTokens)
+            console.log(`OpenRouter 402 credit threshold detected. Retrying ${model} with affordable max_tokens: ${retryTokens}...`)
+            try {
+              rawOutput = await executeCompletion(model, retryTokens)
+            } catch (retryErr: any) {
+              console.warn(`Retry with reduced tokens failed:`, retryErr?.message)
+            }
+          } else {
+            console.warn(`OpenRouter 402 affordable tokens (${affordable}) is too low to produce complete HTML. Skipping retry and switching to fallback models.`)
           }
         }
 
         // 2. If still no output (or output was truncated due to token limit, 402 credits, or 429 rate limit), fallback to verified free OpenRouter models with high token budget
-        if (!rawOutput && (errMsg.includes("402") || errMsg.includes("credits") || errMsg.includes("429") || errMsg.includes("truncated") || err?.status === 402)) {
+        if (!rawOutput) {
           const fallbackCandidates = [
             process.env.OPENAI_FALLBACK_MODEL,
+            "cohere/north-mini-code:free",
+            "nvidia/nemotron-3-super-120b-a12b:free",
+            "nvidia/nemotron-3-ultra-550b-a55b:free",
             "google/gemma-4-31b-it:free",
-            "deepseek/deepseek-v4-flash-0731:free",
           ].filter(Boolean) as string[]
 
-          for (const fallbackModel of fallbackCandidates) {
+          const uniqueFallbacks = Array.from(new Set(fallbackCandidates)).filter(m => m !== model)
+
+          for (const fallbackModel of uniqueFallbacks) {
             console.log(`Attempting fallback to free model (${fallbackModel}, max_tokens: 16384)...`)
             try {
               rawOutput = await executeCompletion(fallbackModel, 16384)
@@ -413,8 +430,6 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
               `OpenRouter generation failed across primary and fallback models (${errMsg}). Please top up credits or try again.`
             )
           }
-        } else if (!rawOutput) {
-          throw err
         }
       }
     }
