@@ -22,6 +22,7 @@ import { Globe, SquareArrowOutUpRight } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { type PublicUser } from "@/lib/user-select"
+import { ReportDialog } from "@/components/features/reports/report-dialog.client"
 
 const useProfileAnalytics = ({
   username,
@@ -54,6 +55,7 @@ export function UserPageClient({ user, initialTab }: UserPageClientProps) {
   const [tab, setTab] = useAtom(userTabAtom)
   const { user: currentUser } = useUser()
   const [mounted, setMounted] = useState(false)
+  const [isClaimOpen, setIsClaimOpen] = useState(false)
   const isOwnProfile = mounted && currentUser?.id === user.id
 
   useEffect(() => {
@@ -173,17 +175,22 @@ export function UserPageClient({ user, initialTab }: UserPageClientProps) {
                       This profile was created by HigherBits.dev
                     </AlertTitle>
                     <AlertDescription>
-                      To claim this profile, please contact{" "}
-                      <Link
-                        href="https://x.com/CLDGayo"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline"
+                      Is this yours?{" "}
+                      <button
+                        type="button"
+                        onClick={() => setIsClaimOpen(true)}
+                        className="underline hover:no-underline"
                       >
-                        @CLDGayo
-                      </Link>
+                        Claim this profile
+                      </button>
                     </AlertDescription>
                   </Alert>
+                  <ReportDialog
+                    open={isClaimOpen}
+                    onOpenChange={setIsClaimOpen}
+                    defaultReason="claim"
+                    profileUsername={user.username ?? undefined}
+                  />
                 </div>
               )}
             </div>

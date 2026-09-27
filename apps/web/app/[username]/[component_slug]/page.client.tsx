@@ -60,6 +60,7 @@ import {
 import { isEditingCodeAtom } from "@/components/ui/edit-component-dialog"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 import { Logo } from "@/components/ui/logo"
+import { ReportDialog } from "@/components/features/reports/report-dialog.client"
 import {
   Popover,
   PopoverContent,
@@ -636,16 +637,8 @@ export default function ComponentPage({
     }
   }
 
-  const handleReportClick = () => {
-    const issueTitle = encodeURIComponent(`Report: ${component.name} component`)
-    const issueBody = encodeURIComponent(
-      `Component: ${component.name}\nAuthor: ${component.user.username}\nURL: ${window.location.href}\n\nPlease describe the issue:`,
-    )
-    window.open(
-      `https://github.com/CLDGayo/higherbits/issues/new?title=${issueTitle}&body=${issueBody}`,
-      "_blank",
-    )
-  }
+  const [isReportOpen, setIsReportOpen] = useState(false)
+  const handleReportClick = () => setIsReportOpen(true)
 
   useAnalytics({
     component,
@@ -901,6 +894,11 @@ export default function ComponentPage({
         </div>
 
         <div className="flex items-center gap-1">
+          <ReportDialog
+            open={isReportOpen}
+            onOpenChange={setIsReportOpen}
+            componentId={component.id}
+          />
           <ThemeToggle fillIcon={false} />
           <Tooltip>
             <TooltipTrigger className="hidden md:flex" asChild>
