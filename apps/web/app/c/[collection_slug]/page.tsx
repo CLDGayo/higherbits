@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
+import { auth } from "@clerk/nextjs/server"
 
 import { Header } from "@/components/ui/header.client"
 import { Footer } from "@/components/ui/footer"
@@ -12,6 +13,7 @@ import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { unstable_cache } from "next/cache"
 import { SITE_TITLE, BASE_KEYWORDS } from "@/lib/constants"
 import { JsonLd } from "@/components/seo/json-ld"
+import { isCollectionVisibleTo } from "@/lib/collection-visibility"
 
 interface CollectionPageProps {
   params: Promise<{
@@ -92,6 +94,12 @@ export default async function CollectionPage(props: CollectionPageProps) {
     if (!collectionInfo) {
       redirect("/")
     }
+    // Access check runs per request, outside the slug-keyed unstable_cache.
+    // Private collections redirect exactly like a missing slug (indistinguishable).
+    const { userId } = await auth()
+    if (!isCollectionVisibleTo(collectionInfo, userId)) {
+      redirect("/")
+    }
 
     console.log("[CollectionPage] Collection info:", {
       id: collectionInfo.id,
@@ -134,6 +142,12 @@ export async function generateMetadata(
   try {
     const collectionInfo = await getCollectionInfo(params.collection_slug)
     if (!collectionInfo) {
+      redirect("/")
+    }
+    // Access check runs per request, outside the slug-keyed unstable_cache.
+    // Private collections redirect exactly like a missing slug (indistinguishable).
+    const { userId } = await auth()
+    if (!isCollectionVisibleTo(collectionInfo, userId)) {
       redirect("/")
     }
 
