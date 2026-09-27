@@ -904,6 +904,7 @@ export default function ComponentPage({
             <TooltipTrigger className="hidden md:flex" asChild>
               <button
                 onClick={handleReportClick}
+                aria-label="Report"
                 className="h-8 w-8 flex items-center justify-center hover:bg-accent rounded-md relative group"
               >
                 <div className="absolute inset-0 flex items-center justify-center">

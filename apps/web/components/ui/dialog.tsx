@@ -33,8 +33,10 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     hideCloseButton?: boolean
+    /** Skip the sr-only "Dialog" fallback title when the dialog renders its own DialogTitle. */
+    hideFallbackTitle?: boolean
   }
->(({ className, children, hideCloseButton = false, ...props }, ref) => (
+>(({ className, children, hideCloseButton = false, hideFallbackTitle = false, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -46,7 +48,9 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      <DialogPrimitive.Title className="sr-only">Dialog</DialogPrimitive.Title>
+      {!hideFallbackTitle && (
+        <DialogPrimitive.Title className="sr-only">Dialog</DialogPrimitive.Title>
+      )}
       {children}
       {!hideCloseButton && (
         <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">

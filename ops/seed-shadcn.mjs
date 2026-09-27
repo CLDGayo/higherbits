@@ -57,7 +57,8 @@ async function main() {
       display_username: 'shadcn',
       display_name: 'shadcn',
       image_url: 'https://github.com/shadcn.png',
-      email: 'shadcn@ui.com'
+      email: 'shadcn@ui.com',
+      manually_added: true
     })
     .select('id')
     .single()

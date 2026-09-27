@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { SignInButton, useAuth } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -43,6 +44,7 @@ export function ReportDialog({
   const [reason, setReason] = useState<ReportReason | undefined>(defaultReason)
   const [message, setMessage] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const { isLoaded, isSignedIn } = useAuth()
 
   useEffect(() => {
     if (open) setReason(defaultReason)
@@ -84,13 +86,22 @@ export function ReportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent hideFallbackTitle>
         <DialogHeader>
           <DialogTitle>Report to support</DialogTitle>
           <DialogDescription>
             Your report is emailed to support@higherbits.dev. Support will reply to your account email.
           </DialogDescription>
         </DialogHeader>
+        {isLoaded && !isSignedIn ? (
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-muted-foreground">Sign in to send a report.</p>
+            <SignInButton mode="modal">
+              <Button>Sign in</Button>
+            </SignInButton>
+          </div>
+        ) : (
+        <>
         <div className="flex flex-col gap-3">
           <Select
             value={reason}
@@ -121,6 +132,8 @@ export function ReportDialog({
             {submitting ? "Sending..." : "Send report"}
           </Button>
         </DialogFooter>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   )
