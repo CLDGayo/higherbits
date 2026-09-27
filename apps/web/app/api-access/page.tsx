@@ -92,7 +92,7 @@ export default async function ApiAccessPage() {
               <AlertTriangleIcon className="h-4 w-4" />
               <AlertTitle>Important Notice</AlertTitle>
               <AlertDescription>
-                To help us better understand how you're using our API and provide better support, please reach out to us! Contact Serafim{" "}
+                To help us better understand how you're using our API and provide better support, please reach out to us! Contact Clarence{" "}
                 <a
                   href="https://twitter.com/CLDGayo"
                   className="underline"

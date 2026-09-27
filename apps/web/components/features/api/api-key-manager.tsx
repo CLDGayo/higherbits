@@ -144,7 +144,7 @@ export function ApiKeyManager({ initialKey, userId }: ApiKeyManagerProps) {
           )}
           {key && (
             <span className="text-sm text-muted-foreground">
-              Contact Serafim to upgrade your plan
+              Contact Clarence to upgrade your plan
             </span>
           )}
         </div>

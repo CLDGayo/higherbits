@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     const { error } = await resend.emails.send({
-      from: "HigherBits.dev <serafim@hey.HigherBits.dev>",
+      from: "HigherBits.dev <clarence@hey.higherbits.dev>",
       to: SUPPORT_EMAIL,
       subject: `[Report] ${REASON_LABELS[reason]}`,
       replyTo: replyTo,

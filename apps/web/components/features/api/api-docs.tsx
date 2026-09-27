@@ -49,7 +49,7 @@ export function ApiDocs() {
       "install_command": "pnpm dlx shadcn@latest add \"https://higherbits.dev/r/...\""
     },
     "component_user_data": {
-      "name": "serafim",
+      "name": "Clarence",
       "username": "CLDGayo", 
       "image_url": "https://img.clerk.com/..."
     },

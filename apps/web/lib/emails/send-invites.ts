@@ -18,8 +18,9 @@ export async function sendInvites() {
       const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/magic/console?waitlist=${encodedEmail}`
 
       const data = await resend.emails.send({
-        from: "Serafim from HigherBits.dev <serafim@hey.HigherBits.dev>",
+        from: "Clarence from HigherBits.dev <clarence@hey.higherbits.dev>",
         to: email,
+        replyTo: "HigherBits.dev Support <support@higherbits.dev>",
         subject: "You're invited to join HigherBits.dev",
         react: InviteEmail({ inviteUrl }),
       })
