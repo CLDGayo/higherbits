@@ -1,6 +1,7 @@
 "use client"
 
 import AdminHeader from "@/components/features/admin/AdminHeader"
+import AutoIndexedView from "@/components/features/admin/AutoIndexedView"
 import { DbLinks } from "@/components/features/admin/db-links"
 import DeleteComponentDialog from "@/components/features/admin/DeleteComponentDialog"
 import EditDemoModal from "@/components/features/admin/EditDemoModal"
@@ -588,6 +589,7 @@ const SubmissionsAdminPage: FC = () => {
 
   const [contestDemoId, setContestDemoId] = useState<number | null>(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [activeView, setActiveView] = useState<"submissions" | "auto-indexed">("submissions")
 
   // Handle adding to a contest
   const handleAddToContest = (demoId: number, roundId: number) => {
@@ -640,6 +642,12 @@ const SubmissionsAdminPage: FC = () => {
           subtitle="Manage submitted components from users"
         />
 
+        <div role="tablist" aria-label="Component submission views" className="mb-4 flex gap-2">
+          <Button role="tab" aria-selected={activeView === "submissions"} variant={activeView === "submissions" ? "default" : "outline"} onClick={() => setActiveView("submissions")}>Submissions</Button>
+          <Button role="tab" aria-selected={activeView === "auto-indexed"} variant={activeView === "auto-indexed" ? "default" : "outline"} onClick={() => setActiveView("auto-indexed")}>Auto-indexed</Button>
+        </div>
+
+        {activeView === "auto-indexed" ? <AutoIndexedView /> : <>
         <div className="flex justify-between items-center mb-4">
           <div className="text-sm text-muted-foreground">
             {totalCount > 0 && <>Total: {totalCount} submissions</>}
@@ -1045,6 +1053,7 @@ const SubmissionsAdminPage: FC = () => {
             isDeleting={isDeletingComponent}
           />
         )}
+        </>}
       </motion.div>
     </div>
   )

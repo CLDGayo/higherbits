@@ -41,6 +41,9 @@ export const generateMetadata = async (props: {
   }
 
   const ogImageUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${user.display_username || user.username}/${component.component_slug}/opengraph-image`
+  const autoIndexDescription = user.manually_added
+    ? "Auto-indexed open-source component; publisher identity is unclaimed."
+    : `Auto-indexed open-source component by ${user.display_name || user.name || user.username}.`
 
   return {
     metadataBase: new URL(
@@ -49,7 +52,7 @@ export const generateMetadata = async (props: {
     title: `${component.name}`,
     description:
       component.description ||
-      (component.registry === "auto-index" ? "Auto-indexed open-source component; publisher identity is unclaimed." :
+      (component.registry === "auto-index" ? autoIndexDescription :
         `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`),
     keywords: [
       ...BASE_KEYWORDS,
@@ -62,7 +65,7 @@ export const generateMetadata = async (props: {
       title: `${component.name} | ${SITE_TITLE}`,
       description:
         component.description ||
-        (component.registry === "auto-index" ? "Auto-indexed open-source component; publisher identity is unclaimed." :
+        (component.registry === "auto-index" ? autoIndexDescription :
           `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`),
       images: [
         {

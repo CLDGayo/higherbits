@@ -11,6 +11,8 @@ export async function getUsers({ searchQuery }: { searchQuery?: string }) {
         display_username: { contains: searchQuery, mode: "insensitive" },
       },
       { username: { contains: searchQuery, mode: "insensitive" } },
+      { email: { contains: searchQuery, mode: "insensitive" } },
+      { id: searchQuery },
     ]
   }
 

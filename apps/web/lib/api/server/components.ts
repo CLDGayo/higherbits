@@ -76,6 +76,13 @@ export const transferOwnership = async (
   componentId: number,
   userId: string,
 ) => {
+  const component = await prisma.components.findUnique({
+    where: { id: componentId },
+    select: { registry: true },
+  })
+  if (component?.registry === "auto-index") {
+    throw new Error("Use verified creator claim transfer for auto-indexed components")
+  }
   const demos = await prisma.demos.findMany({
     where: {
       component_id: componentId,

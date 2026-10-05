@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
       // Plain text on purpose: the reporter's message is never rendered as HTML.
       text: [
         `Reason: ${REASON_LABELS[reason]}`,
+        `Reporter account: ${userId}`,
         `Page: ${pageUrl}`,
         target,
         "",

@@ -28,6 +28,9 @@ const getPurchasesWithBundles = vi.fn(async (_userId: string) => [] as unknown[]
 const planFindUnique = vi.fn(async () => null)
 const bundlesFindMany = vi.fn(async () => [])
 const componentFindUnique = vi.fn(async () => null)
+const componentUpdate = vi.fn()
+const demoFindMany = vi.fn()
+const demoUpdate = vi.fn()
 
 vi.mock("server-only", () => ({}))
 vi.mock("../bundle_purchases", () => ({
@@ -36,7 +39,8 @@ vi.mock("../bundle_purchases", () => ({
 }))
 vi.mock("../../../prisma", () => ({
   default: {
-    components: { findUnique: () => componentFindUnique() },
+    components: { findUnique: () => componentFindUnique(), update: () => componentUpdate() },
+    demos: { findMany: () => demoFindMany(), update: () => demoUpdate() },
     users_to_plans: { findUnique: () => planFindUnique() },
     bundles: { findMany: () => bundlesFindMany() },
   },
@@ -61,6 +65,14 @@ describe("hasUserComponentAccess — load-bearing invariants", () => {
     const hasUserComponentAccess = await load()
 
     await expect(hasUserComponentAccess(null, 1)).resolves.toBe(true)
+  })
+
+  it("rejects generic transfer of an auto-indexed component before changing demos", async () => {
+    componentFindUnique.mockResolvedValueOnce({ registry: "auto-index" } as never)
+    const { transferOwnership } = await import("../components")
+    await expect(transferOwnership(41, "user_creator")).rejects.toThrow("verified creator claim")
+    expect(componentUpdate).not.toHaveBeenCalled()
+    expect(demoUpdate).not.toHaveBeenCalled()
   })
 
   it("denies an anonymous caller a PAID component", async () => {

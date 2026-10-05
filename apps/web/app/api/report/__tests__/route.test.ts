@@ -87,7 +87,7 @@ describe("POST /api/report", () => {
     expect(payload.text).toContain(valid.message)
     expect(payload.text).toContain(valid.pageUrl)
     expect(payload.text).toContain("Component ID: 42")
-    expect(payload.text).not.toContain("user_reporter")
+    expect(payload.text).toContain("Reporter account: user_reporter")
   })
 
   it("uses the profile username as target when no componentId", async () => {
