@@ -98,6 +98,10 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/auto-index/vgpu-assets/:path*",
+        headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
+      },
+      {
         source: "/og-image.png",
         headers: [
           {

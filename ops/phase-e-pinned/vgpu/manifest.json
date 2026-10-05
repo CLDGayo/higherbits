@@ -1,0 +1,2183 @@
+{
+  "repositoryUrl": "https://github.com/vercel-labs/vgpu",
+  "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+  "licenseSha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee",
+  "items": [
+    {
+      "slug": "adaptive-quality",
+      "exampleSlug": "adaptive-quality",
+      "title": "Adaptive Quality",
+      "description": "Start on a High pipeline and downgrade once to a cheaper Low pipeline when the GPU tier, battery level, or presented FPS say so. The tier swap is prepared off-screen and every signal is advisory.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/adaptive-quality/index.tsx",
+          "size": 2702,
+          "sha256": "0b091bde70c23ae6ed4b4591fa31c72fee20f58388ab8fcce3a3aac2bd2ece8d",
+          "target": "components/auto-index/vgpu-adaptive-quality/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/renderer.ts",
+          "size": 7927,
+          "sha256": "2a22eb30b11778681ae1920e3b5cce0ffa51ba31489a993aa14e400890757aea",
+          "target": "components/auto-index/vgpu-adaptive-quality/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/quality.ts",
+          "size": 1264,
+          "sha256": "4ac72db0300552f7a665856f781b31506a035efd5f9304892a6daa4b1b2feb89",
+          "target": "components/auto-index/vgpu-adaptive-quality/quality.ts"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/quality-controller.ts",
+          "size": 5116,
+          "sha256": "1c485489ec00c7340a977f35d8ba2ec0517bf95c02480f803f9ab740b373f527",
+          "target": "components/auto-index/vgpu-adaptive-quality/quality-controller.ts"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/quality-signals.ts",
+          "size": 6745,
+          "sha256": "8babdf47c2dff2fc0d6a9f1fd133411f6cc4763e9b8ac3e14064a226a26c5d15",
+          "target": "components/auto-index/vgpu-adaptive-quality/quality-signals.ts"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/frame-health.ts",
+          "size": 5989,
+          "sha256": "b667e976fdb42322da6afc135cbfc39995c89ea74127a2f010520df052899949",
+          "target": "components/auto-index/vgpu-adaptive-quality/frame-health.ts"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/scene.ts",
+          "size": 4559,
+          "sha256": "66024539e354f1d78475998d27fc31327c4a17415a4a08e0158e1be7e08d222d",
+          "target": "components/auto-index/vgpu-adaptive-quality/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/field.wgsl",
+          "size": 3351,
+          "sha256": "268eb2b9938e56742da24b359ac004fc4f9ebf321f67d3fdacbb12e5d84159f1",
+          "target": "components/auto-index/vgpu-adaptive-quality/field.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/bloom-extract.wgsl",
+          "size": 638,
+          "sha256": "250258dac15a8245fc38f55b3eaadf79fb4a00427bda47ccd96ae179d03405ee",
+          "target": "components/auto-index/vgpu-adaptive-quality/bloom-extract.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/bloom-blur.wgsl",
+          "size": 810,
+          "sha256": "692c87630868d55e9a32d1a1f415fb34b76147fe058878fc7bf082f298a172fd",
+          "target": "components/auto-index/vgpu-adaptive-quality/bloom-blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/adaptive-quality/composite.wgsl",
+          "size": 799,
+          "sha256": "a1b03652099c561b96cdf805eeddd62686e4f07736ffb06ad80c08b02d464b3c",
+          "target": "components/auto-index/vgpu-adaptive-quality/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@pmndrs/detect-gpu": "6.0.20",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "120e5e21639550a390a9178efaccf018d92d2bd53ceeb9150172397015deb047",
+      "htmlBytes": 344809,
+      "previewSha256": "bb0487ba427c24fe3b412f55a16d611c6c38f19137752b3f95bf238edd7e8088"
+    },
+    {
+      "slug": "agent-radiance-cascades",
+      "exampleSlug": "agent-radiance-cascades",
+      "title": "Agent Radiance Cascades",
+      "description": "The static ten-dot Agent mark becomes a selectable loading field with capture-quality controls: every gray-to-white dot is both an HDR emitter and an occluder, feeding a jump-flooded distance field and six top-down radiance cascades.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/index.tsx",
+          "size": 849,
+          "sha256": "c10da19ec43c1344e9f7ae6049232d197750b4d6908ca6ac78715c298e1c686c",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/renderer.ts",
+          "size": 8513,
+          "sha256": "03d0da62c84a8ffacfefc0f823598db5bcbff288e19d00a899af110398841e14",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/simulation.ts",
+          "size": 8646,
+          "sha256": "8150e77195ce20f89a0f98f03c7b427d14cc3b7b36a16629b0a2430fb29cad8a",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/simulation.ts"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/agent-dots.wgsl",
+          "size": 3666,
+          "sha256": "f0e4aa870cf1934f6852d6930f16a850af6e15cecad23b2723007b7d21b4f786",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/agent-dots.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/jfa-init.wgsl",
+          "size": 719,
+          "sha256": "ef4b22a45cfdf63b5a94eff235d3d1292c153ac2ee9be4cb6484d01d78afaa8b",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/jfa-init.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/jfa-pass.wgsl",
+          "size": 1654,
+          "sha256": "563e9c2f7d2b1c7e73c04c6d937dc6e472ac362cd3d6fad880c395549f183d3c",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/jfa-pass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/sdf-finalize.wgsl",
+          "size": 707,
+          "sha256": "27aec1d05f74100678a4553ee65ad5d267bbb9f358796cac76863bc67b85793c",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/sdf-finalize.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/sdf-sample.wgsl",
+          "size": 1440,
+          "sha256": "10153dd04f86f6ce88bf75eeea44e1766aff369e141247b3121feb89b9126af7",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/sdf-sample.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/radiance-cascade.wgsl",
+          "size": 3487,
+          "sha256": "1aed29b814a8f4a53ffe0e5b976958e88079f53084246cd5b898dbb37e4f52a1",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/radiance-cascade.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/rc-directions.wgsl",
+          "size": 1168,
+          "sha256": "021c67f2867c4fe86bb53af1141bd151eba7ae42f5a628fe8aae7cf192364cef",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/rc-directions.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/agent-radiance-cascades/present.wgsl",
+          "size": 4066,
+          "sha256": "1663e181f77ed2a94cf51c33c0fc1dad062ebae4511ae8f574e29c663945ad64",
+          "target": "components/auto-index/vgpu-agent-radiance-cascades/present.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "ac0104b301dd556bee027d7fe45a0f2a28bf459fe4c1e3531c6ff62dd1ce585f",
+      "htmlBytes": 427828,
+      "previewSha256": "8ab2c56bf1983a909d809266a2686f09f0b4aa108713d6b74fdfc13fd74dd28b"
+    },
+    {
+      "slug": "air-painting",
+      "exampleSlug": "air-painting",
+      "title": "Air Painting",
+      "description": "Wipe fog off the glass with your hands. ONNX Runtime Web tracks both palms on WebGPU to clear a frosted camera feed.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/air-painting/index.tsx",
+          "size": 740,
+          "sha256": "9e37778a04fed44c3271084c082b6384d5c8bb351b59065084ece043780e5224",
+          "target": "components/auto-index/vgpu-air-painting/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/renderer.ts",
+          "size": 2876,
+          "sha256": "87ec55d47e7a1c5de89ecbfb018c7b44bb70856bbc40d017731c08914d248f46",
+          "target": "components/auto-index/vgpu-air-painting/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/ort-runtime.ts",
+          "size": 12180,
+          "sha256": "1d274bf72fc63ece928a4fa95e92b9cf57ee41ad286f90fee314e3bb536ba28e",
+          "target": "components/auto-index/vgpu-air-painting/ort-runtime.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/ort-webgpu.ts",
+          "size": 5546,
+          "sha256": "e07f40d3df31ff746567b88d0b54f1b41db7174275dcc9ade34f8a15e7637d2e",
+          "target": "components/auto-index/vgpu-air-painting/ort-webgpu.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/visual-pipeline.ts",
+          "size": 12717,
+          "sha256": "12cb80e267f83c2c2d41581c223a306493eb867385f99669fdd872b2c43269ac",
+          "target": "components/auto-index/vgpu-air-painting/visual-pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/inference-scheduler.ts",
+          "size": 1522,
+          "sha256": "dd10b50283ad09b942c0335540983c15286101f5b19a706886db04c0bcccbd6b",
+          "target": "components/auto-index/vgpu-air-painting/inference-scheduler.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/camera-source.ts",
+          "size": 5850,
+          "sha256": "29c9ed745a7e24b9fc6b28505437e75ccca80518accdf1e2fff114dac8e503ba",
+          "target": "components/auto-index/vgpu-air-painting/camera-source.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/hand-model-contract.ts",
+          "size": 1802,
+          "sha256": "27e58b64d77d6ad4d08f8c5d55f287adf1bebe1f3e3a9b2e2afaffd24ede72db",
+          "target": "components/auto-index/vgpu-air-painting/hand-model-contract.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/hand-pipeline.ts",
+          "size": 7467,
+          "sha256": "395c66bcc7d2b01fba95b6fe8576a1fc7e4694a6b07fc38b219cd334b8d4838d",
+          "target": "components/auto-index/vgpu-air-painting/hand-pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/hand-tracker.ts",
+          "size": 6090,
+          "sha256": "75af08ffdc52f37695f5bcd8c91e45085809aa479da9190351ce9643c3d89148",
+          "target": "components/auto-index/vgpu-air-painting/hand-tracker.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/fixtures.ts",
+          "size": 5371,
+          "sha256": "13eb3bd694ac64d2bc1318cc0ba56e4b3b6df482e17cf457f5faa28d7512819b",
+          "target": "components/auto-index/vgpu-air-painting/fixtures.ts"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/hand-crop.wgsl",
+          "size": 1527,
+          "sha256": "2cba2b08d71aed6a1ddb973ab45da3d7af91e0569c0808ebf52a27e1e914855f",
+          "target": "components/auto-index/vgpu-air-painting/hand-crop.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/hand.wgsl",
+          "size": 5925,
+          "sha256": "5c6cd4c8dd553cda7502f5b1bbb9556ebbff8012d71ca5cf860444d9578b767c",
+          "target": "components/auto-index/vgpu-air-painting/hand.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/paint.wgsl",
+          "size": 1928,
+          "sha256": "ea1668bacf936aeb1ca195d911811afb46fd8d210aef0cbe2ef93c875952e31b",
+          "target": "components/auto-index/vgpu-air-painting/paint.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/composite.wgsl",
+          "size": 4437,
+          "sha256": "fb0f64ec35ee2146861d8e85f2258855fee3b379a3aacfa869b346ef8b3b8665",
+          "target": "components/auto-index/vgpu-air-painting/composite.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/air-painting/frost.wgsl",
+          "size": 1018,
+          "sha256": "2aec42fa2710206cae7a2f35129fd1d555598e7f6af8e70dba56a3f63dea8003",
+          "target": "components/auto-index/vgpu-air-painting/frost.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "onnxruntime-web": "1.27.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "runtimeAssets": [
+        {
+          "path": "auto-index/vgpu-assets/models/mediapipe-hands/palm-detector.onnx",
+          "url": "/auto-index/vgpu-assets/models/mediapipe-hands/palm-detector.onnx",
+          "size": 4589374,
+          "sha256": "836e25f3f6d365cd7a67c36ad69876c3da9b540cb434a26e9d100a00938cfd2e",
+          "license": "Apache-2.0",
+          "licensePath": "auto-index/vgpu-assets/models/mediapipe-hands/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68"
+        },
+        {
+          "path": "auto-index/vgpu-assets/models/mediapipe-hands/hand-landmark.onnx",
+          "url": "/auto-index/vgpu-assets/models/mediapipe-hands/hand-landmark.onnx",
+          "size": 10903457,
+          "sha256": "6d98325697613ffb250a29bedd78450f87ecf1968797f9c54829cda45b44c00c",
+          "license": "Apache-2.0",
+          "licensePath": "auto-index/vgpu-assets/models/mediapipe-hands/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68"
+        },
+        {
+          "path": "auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.mjs",
+          "url": "/auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.mjs",
+          "size": 47507,
+          "sha256": "7236653b8565da4046e459cd0e274123419a1d9f1f8f18fd36c28058346ca655",
+          "license": "MIT",
+          "licensePath": "auto-index/vgpu-assets/ort/LICENSE",
+          "provenance": "onnxruntime-web npm 1.27.0 package",
+          "noticePath": "auto-index/vgpu-assets/ort/ThirdPartyNotices.txt",
+          "licenseSha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+          "noticeSha256": "0e07b95f3a8d6230037707c5c4a2b554d12c4cb67369669ac255635528ffcee2"
+        },
+        {
+          "path": "auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.wasm",
+          "url": "/auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.wasm",
+          "size": 24254953,
+          "sha256": "7e83cd6cee77e478bc96a7e91b198144fb5e4126287daf1f9b54bb195ebcd55a",
+          "license": "MIT",
+          "licensePath": "auto-index/vgpu-assets/ort/LICENSE",
+          "provenance": "onnxruntime-web npm 1.27.0 package",
+          "noticePath": "auto-index/vgpu-assets/ort/ThirdPartyNotices.txt",
+          "licenseSha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+          "noticeSha256": "0e07b95f3a8d6230037707c5c4a2b554d12c4cb67369669ac255635528ffcee2"
+        }
+      ],
+      "htmlSha256": "3125748dce52fc2ed9102c08485e9e5323ee8af55b736320adc9982a946cabe6",
+      "htmlBytes": 541143,
+      "previewSha256": "0ea4c4b35177b7caf1078fb394e9ff5d7bbb81e680f5bff125c65bceebd6b1a7"
+    },
+    {
+      "slug": "anti-aliasing",
+      "exampleSlug": "anti-aliasing",
+      "title": "Anti-Aliasing",
+      "description": "One high-contrast scene through Off, MSAA 4×, SSAA 2×, and FXAA — pick a mode and watch the edges.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/anti-aliasing/index.tsx",
+          "size": 591,
+          "sha256": "ce8eafa5b5722f2e95d038b5f7929323ccbe1a7a3c32379e41a3df9ab098a6ab",
+          "target": "components/auto-index/vgpu-anti-aliasing/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/anti-aliasing/renderer.ts",
+          "size": 3076,
+          "sha256": "11d074ad10aaf185f9327d88bc7a12cc1a08eb12a6725c28cf05c11d0d29133d",
+          "target": "components/auto-index/vgpu-anti-aliasing/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/anti-aliasing/scene.ts",
+          "size": 4437,
+          "sha256": "76aba15a05c3e7cbd701dccf4c81c90da5b357de183d0c8e7a6f84b1455c842e",
+          "target": "components/auto-index/vgpu-anti-aliasing/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/anti-aliasing/scene.wgsl",
+          "size": 873,
+          "sha256": "abe02c462b3e49cecf61e983d31860f02ac675feaf49f4953c19815f1b31945e",
+          "target": "components/auto-index/vgpu-anti-aliasing/scene.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/anti-aliasing/resolve.wgsl",
+          "size": 634,
+          "sha256": "789f9e25e3c3f58561327cd121f9fcb990dfd4a4d5165b415d672dec6b6fa137",
+          "target": "components/auto-index/vgpu-anti-aliasing/resolve.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/anti-aliasing/fxaa.wgsl",
+          "size": 1211,
+          "sha256": "80ee9cd6ec7fec2adca222d4b70f7686ed3800cf4550d1c15560066270babb0f",
+          "target": "components/auto-index/vgpu-anti-aliasing/fxaa.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "25827029d678d4e4b026484b9606ea2218d7a07b7cf8021efb8680ec568ba2ca",
+      "htmlBytes": 406370,
+      "previewSha256": "6e44615f0d23fa685bc83d2df7804a36a56150fbe3b40b36a0cda25b530bb6fd"
+    },
+    {
+      "slug": "batch-rendering",
+      "exampleSlug": "batch-rendering",
+      "title": "Batch Rendering",
+      "description": "Four primitive ranges in one mesh, recorded once as a render bundle.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/batch-rendering/index.tsx",
+          "size": 593,
+          "sha256": "d848b2833138f2b0a097d2e9f8ad57a712d1858c3732a4de023e829a4822f25f",
+          "target": "components/auto-index/vgpu-batch-rendering/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/batch-rendering/renderer.ts",
+          "size": 4027,
+          "sha256": "bfe5c1bfebe4488b8c48963a9491921abfe4dc4cf8d5845d1450d56bb87160ae",
+          "target": "components/auto-index/vgpu-batch-rendering/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/batch-rendering/camera.ts",
+          "size": 1098,
+          "sha256": "02b94e2d9ed836908996590072dda07114a25c58b66592013ee196330912b2a1",
+          "target": "components/auto-index/vgpu-batch-rendering/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/batch-rendering/scene-pipeline.ts",
+          "size": 7393,
+          "sha256": "d820b075a5693325f6ad44b6efdc0b1df08ccf7870d106775bbf631302238bfe",
+          "target": "components/auto-index/vgpu-batch-rendering/scene-pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/batch-rendering/scene.wgsl",
+          "size": 1050,
+          "sha256": "0cad249e611401e183dc6e2a8d390de3ecfcc4dfd9e418630531ac22e877a487",
+          "target": "components/auto-index/vgpu-batch-rendering/scene.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/batch-rendering/blit.wgsl",
+          "size": 348,
+          "sha256": "1d6957358650364304515e7deb8728bf20186482b84dcd361e5525b60c0c6566",
+          "target": "components/auto-index/vgpu-batch-rendering/blit.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "1b47e7d12e8386b25e0f8fc7135c188e8008d22fc075151d15c6f2fcbcc0998f",
+      "htmlBytes": 388824,
+      "previewSha256": "d97b3e2fc9830667a042652b138393a56b08ad7cb6768d3d0fd3935b0092af63"
+    },
+    {
+      "slug": "black-hole",
+      "exampleSlug": "black-hole",
+      "title": "Black Hole",
+      "description": "Raymarched gravitational lensing — null geodesics bend starlight around an event horizon while a Keplerian accretion disk glows with Doppler beaming, graded through an HDR bloom chain.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/black-hole/index.tsx",
+          "size": 593,
+          "sha256": "14c68d37534a6dcceedf44f587cd491908e66d8572910a0d4417a3052d805418",
+          "target": "components/auto-index/vgpu-black-hole/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/black-hole/renderer.ts",
+          "size": 5925,
+          "sha256": "85d1460b88afe2c9a2bb958cbe94f195d18f32b4cdf1114fd8345831479a5b7f",
+          "target": "components/auto-index/vgpu-black-hole/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/black-hole/pipeline.ts",
+          "size": 3413,
+          "sha256": "ed8c3f232f44ea531954e9887dbfc0e40158af44cd7c0fb6c6598ae0bd66bc52",
+          "target": "components/auto-index/vgpu-black-hole/pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/black-hole/black-hole.wgsl",
+          "size": 6397,
+          "sha256": "de290cc9326ba45487c4afb000a4372a6ff77404a60139f4aa94536194aea8b4",
+          "target": "components/auto-index/vgpu-black-hole/black-hole.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/black-hole/bright-pass.wgsl",
+          "size": 599,
+          "sha256": "407ff3883b24c95632a4e550bf0601d48adcf265e9047b6383d49e6e214ea7ad",
+          "target": "components/auto-index/vgpu-black-hole/bright-pass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/black-hole/blur.wgsl",
+          "size": 781,
+          "sha256": "91f570ff052ae08a14f62ee9d84c204cb495dbe9363665d2a68df02ad5b820cf",
+          "target": "components/auto-index/vgpu-black-hole/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/black-hole/composite.wgsl",
+          "size": 881,
+          "sha256": "44cf949831eeccb0ae812a87d5aad7942d745ba19a3207153d15cb0635f9eea4",
+          "target": "components/auto-index/vgpu-black-hole/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "31525a1ae06a6e90e01128ad0dcea9c97ff36c858d41aadb6526c46baedf6e24",
+      "htmlBytes": 381322,
+      "previewSha256": "63fe3b176295433b26a0b03ee8f669887fb0f7a2b52822ca29372a4c035617bb"
+    },
+    {
+      "slug": "clipping",
+      "exampleSlug": "clipping",
+      "title": "Clipping",
+      "description": "A single signed-distance test slices an animated icosphere, while a fitted disk reveals the moving cross-section.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/clipping/index.tsx",
+          "size": 493,
+          "sha256": "5939ae6efb98586dd8357c946d7a6f66fb13356319b305411a754e6dc29bf175",
+          "target": "components/auto-index/vgpu-clipping/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/clipping/renderer.ts",
+          "size": 1631,
+          "sha256": "491ae187a4b6accbd13a0dc4e4520744673815e0efc4da7ca790eeb0c3a05dff",
+          "target": "components/auto-index/vgpu-clipping/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/clipping/camera.ts",
+          "size": 1098,
+          "sha256": "02b94e2d9ed836908996590072dda07114a25c58b66592013ee196330912b2a1",
+          "target": "components/auto-index/vgpu-clipping/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/clipping/scene.ts",
+          "size": 2276,
+          "sha256": "47e8a023313c4ab22fa1393bcdd083368df656dacd0188987d451fc5fb2057f5",
+          "target": "components/auto-index/vgpu-clipping/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/clipping/clipped.wgsl",
+          "size": 2165,
+          "sha256": "f289764c7dbd473d4171899fcdeb1a9422102d9d64285ca3ae2e210de908012d",
+          "target": "components/auto-index/vgpu-clipping/clipped.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "bc3d33a56f42a90034152ef3e24334ddfadf999e9fb49cbb4476053d2f9ebc82",
+      "htmlBytes": 348581,
+      "previewSha256": "cdd195b0459bfdf2f521662d00a3a77c23b1037a21073a9fde337b28989cc410"
+    },
+    {
+      "slug": "earth",
+      "exampleSlug": "earth",
+      "title": "Earth",
+      "description": "A procedural planet with GPU-baked albedo, night lights and clouds, a lit atmosphere, and an HDR bloom chain tuned so only the sun glows.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/earth/index.tsx",
+          "size": 591,
+          "sha256": "28afa1b260a1730e9ad13d7c0f4437e5765eac9125aa37d7675adbca7ba04cf6",
+          "target": "components/auto-index/vgpu-earth/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/earth/renderer.ts",
+          "size": 16537,
+          "sha256": "fa29e5bf3100843abf20115bd3560f4063e7aaa6025a1e5d35955c60e928035b",
+          "target": "components/auto-index/vgpu-earth/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/earth/camera.ts",
+          "size": 1098,
+          "sha256": "02b94e2d9ed836908996590072dda07114a25c58b66592013ee196330912b2a1",
+          "target": "components/auto-index/vgpu-earth/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/earth/planet.ts",
+          "size": 2703,
+          "sha256": "802f101eb7386b760a7f4cb6e13028aef3f3a4d3a175d4f64d16ba14b66fdd9e",
+          "target": "components/auto-index/vgpu-earth/planet.ts"
+        },
+        {
+          "path": "apps/docs/examples/earth/planet-common.wgsl",
+          "size": 4221,
+          "sha256": "d705a51f4d8a5c3d53854da30bb8fe7c769da8f32146dc106d3cea1f34440687",
+          "target": "components/auto-index/vgpu-earth/planet-common.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/bake-surface.wgsl",
+          "size": 2630,
+          "sha256": "8cb4128fab95d6b888779a6d661ace9b6a979e91eb2aff790b36b06b2026f466",
+          "target": "components/auto-index/vgpu-earth/bake-surface.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/bake-clouds.wgsl",
+          "size": 1352,
+          "sha256": "9431bcbbb2ec48928835ed17aa168c85e64d7899bc9d3f6a8ea6f617e29bad8e",
+          "target": "components/auto-index/vgpu-earth/bake-clouds.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/sky.wgsl",
+          "size": 2898,
+          "sha256": "8d6fbf7c5935cb42c03e6a1bea541b8a0b2a550b7bb976b05ffb663df8adc7ca",
+          "target": "components/auto-index/vgpu-earth/sky.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/earth.wgsl",
+          "size": 4668,
+          "sha256": "37da09c3596857c26627b0bf1466306f5a227a990cefb788e4d2c186dd9f0d18",
+          "target": "components/auto-index/vgpu-earth/earth.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/atmosphere.wgsl",
+          "size": 1587,
+          "sha256": "b1b7699a04d827a5e140253f2c2bf0dd39a45bd8bea83a90cedf4d2cf8016613",
+          "target": "components/auto-index/vgpu-earth/atmosphere.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/overlay.wgsl",
+          "size": 293,
+          "sha256": "3f2d8ec10f99978ee744bd35cc61dee9a0db3552971f76be070374cc5196f48c",
+          "target": "components/auto-index/vgpu-earth/overlay.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/bright-pass.wgsl",
+          "size": 612,
+          "sha256": "5b53411c375ea937e811b4f369a9a3e906b657112e0f8374bed108be11385bbf",
+          "target": "components/auto-index/vgpu-earth/bright-pass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/blur.wgsl",
+          "size": 834,
+          "sha256": "9c415269dc9abb96e5cdba77a1231dfdb1166af29744d9c7dc48fefc04e58d1e",
+          "target": "components/auto-index/vgpu-earth/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/earth/composite.wgsl",
+          "size": 1673,
+          "sha256": "2f1d786fbf972708a35198e1730bf4055e35894d9166c4efacc34676dec715bd",
+          "target": "components/auto-index/vgpu-earth/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl-std": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "261054abdba305b171191d2319b03573fd8c128910e7496ada5ad70f0cf2a3aa",
+      "htmlBytes": 466575,
+      "previewSha256": "0fc990083e3ba8db4f9d8123a970c30d48c671c7d9e99ab88b7863a799483b7d"
+    },
+    {
+      "slug": "environment-map",
+      "exampleSlug": "environment-map",
+      "title": "Environment Map",
+      "description": "One 360° equirectangular map lights the whole scene: it is the background and every reflection on a mirror-metal cube floating in it.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/environment-map/index.tsx",
+          "size": 1051,
+          "sha256": "b05f422fc32e9ca50030836890f514554c04472a8a924e4c951b0e7ee5edace4",
+          "target": "components/auto-index/vgpu-environment-map/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/renderer.ts",
+          "size": 4502,
+          "sha256": "5a0a781366ae405ac0a296e0d70ce4b622ef542a20866dc6b1e61531df321151",
+          "target": "components/auto-index/vgpu-environment-map/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/scene.ts",
+          "size": 7572,
+          "sha256": "ef20604c8d8ec0a25fcba5216707bcd0be5d91161bfee349c7004b38fd43ffa0",
+          "target": "components/auto-index/vgpu-environment-map/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/camera.ts",
+          "size": 2095,
+          "sha256": "4b95ca8356c48989a7991c34a2a839bb4a99ddd49916ae3d6932761dce4dab24",
+          "target": "components/auto-index/vgpu-environment-map/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/sky.wgsl",
+          "size": 3138,
+          "sha256": "45ae183b79a5901f55547f729feb6568aa0000efa6267623ae3268120dc2aab1",
+          "target": "components/auto-index/vgpu-environment-map/sky.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/blur.wgsl",
+          "size": 963,
+          "sha256": "ef42092e1e9ada73d5b68182baaf96696786041767115d2857b359dbd4139219",
+          "target": "components/auto-index/vgpu-environment-map/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/metal.wgsl",
+          "size": 1414,
+          "sha256": "1f8899aa1f22cefcd01379ca8db157d87a30c6ac18920818bc04f596315e3dee",
+          "target": "components/auto-index/vgpu-environment-map/metal.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/present.wgsl",
+          "size": 1222,
+          "sha256": "e13661b9d53c665abd47c4578698d7d6fc810ac6b2114f2e5844773c162b6916",
+          "target": "components/auto-index/vgpu-environment-map/present.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/environment-map/env-common.wgsl",
+          "size": 1369,
+          "sha256": "d49d05a9b7dced2de190fa762052832783b4bbe2dfd6ab030daf47e596bd81f1",
+          "target": "components/auto-index/vgpu-environment-map/env-common.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "54064e3946344969c7998d76de515bd0af1c8079d19b6050265029a5c363f91b",
+      "htmlBytes": 401189,
+      "previewSha256": "f38dc844ed75a26c1ba5a620b6fcf6e47fcdb9b3789896b95250744c0842fc44"
+    },
+    {
+      "slug": "fft-ocean",
+      "exampleSlug": "fft-ocean",
+      "title": "Particles ocean",
+      "description": "A deep-water surface driven by a real inverse FFT. A Phillips spectrum evolves in frequency space, Stockham passes produce a displacement field, and half a million particles ride the waves through an HDR bloom chain.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/fft-ocean/index.tsx",
+          "size": 591,
+          "sha256": "28afa1b260a1730e9ad13d7c0f4437e5765eac9125aa37d7675adbca7ba04cf6",
+          "target": "components/auto-index/vgpu-fft-ocean/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/renderer.ts",
+          "size": 15352,
+          "sha256": "082794622dc9fc586c631f57f696c1e599735ccc3910ffbf340e402036032dfd",
+          "target": "components/auto-index/vgpu-fft-ocean/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/ocean-graph.ts",
+          "size": 986,
+          "sha256": "066f2a4f7b23ef7a619dbd1d6a5c3ffc2d0acc9d961e3ab587561b73e91b4d7f",
+          "target": "components/auto-index/vgpu-fft-ocean/ocean-graph.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/tuning.ts",
+          "size": 1547,
+          "sha256": "e897a1cfcd04e685615363624b48617f57a3ac4a3a5680e59c175e28eba258b0",
+          "target": "components/auto-index/vgpu-fft-ocean/tuning.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/camera.ts",
+          "size": 944,
+          "sha256": "4d919d4bb20b3b84ce26d9038a20830276c4c0efa681d52a75827c41d89e646b",
+          "target": "components/auto-index/vgpu-fft-ocean/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/ocean-common.wgsl",
+          "size": 448,
+          "sha256": "d2410f76f1178ff5270ee0cd9b56d9e5d9178212f277c4d4cdda6df7b3288ae9",
+          "target": "components/auto-index/vgpu-fft-ocean/ocean-common.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/noise.wgsl",
+          "size": 966,
+          "sha256": "aac0d948c2c1dc9896de6de8ab49bedc0041e7899733efab0b541d7d762b6500",
+          "target": "components/auto-index/vgpu-fft-ocean/noise.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/initial-spectrum.wgsl",
+          "size": 1260,
+          "sha256": "ac16774cce14269fe16f6b53d5a045e52b43a1aa4519c7abe227280e39178ad4",
+          "target": "components/auto-index/vgpu-fft-ocean/initial-spectrum.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/spectrum.wgsl",
+          "size": 1624,
+          "sha256": "e1a8426143ef780a1da6275904f2ca1a7ef76a2b8a7623a3c253df365b932abc",
+          "target": "components/auto-index/vgpu-fft-ocean/spectrum.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/ifft-stage.wgsl",
+          "size": 1286,
+          "sha256": "ef2bb00476c7f7780d968a44c77f9b27e98a0fb91c98a3eec50541427c0ed069",
+          "target": "components/auto-index/vgpu-fft-ocean/ifft-stage.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/normal-foam.wgsl",
+          "size": 1280,
+          "sha256": "a506d08636d39cb78f818530e02618a8e1817dececfa174e54d8fc3ca719a357",
+          "target": "components/auto-index/vgpu-fft-ocean/normal-foam.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/particles.wgsl",
+          "size": 3002,
+          "sha256": "3e096724a90667a2eb775aa04849b69460a51d18753f8d1dbea16fe50deca0fd",
+          "target": "components/auto-index/vgpu-fft-ocean/particles.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/bloom-bright.wgsl",
+          "size": 790,
+          "sha256": "54bd1ae8f8e8d376e455444e7f92367599117cfd12c4c4c5f38bc4fe5b627867",
+          "target": "components/auto-index/vgpu-fft-ocean/bloom-bright.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/bloom-blur.wgsl",
+          "size": 1589,
+          "sha256": "abf93035ce3454ae18b07289ad22cccdb7e7a754cbee01cd8264c1981f74763b",
+          "target": "components/auto-index/vgpu-fft-ocean/bloom-blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/bloom-composite.wgsl",
+          "size": 1682,
+          "sha256": "51caa5b5f03b3173b5d1d7392dbb13bc92d984cf9c9a8785ff2fe2d007c0b38d",
+          "target": "components/auto-index/vgpu-fft-ocean/bloom-composite.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean/present.wgsl",
+          "size": 657,
+          "sha256": "7aaf8acb128e0b826f89fc17ad9dacb624d72bcc74dac33678f9c7f0d1efb6eb",
+          "target": "components/auto-index/vgpu-fft-ocean/present.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "e0c51cb703440e320b8f9c3bbe3aae92f3b7340a9edef4c37aa9774f614ff391",
+      "htmlBytes": 393034,
+      "previewSha256": "792d58b9a990938861060623cb3baecbc04afa73556cffb1e650397360462038"
+    },
+    {
+      "slug": "fft-ocean-surface",
+      "exampleSlug": "fft-ocean-surface",
+      "title": "FFT ocean surface",
+      "description": "A displaced ocean surface driven by a real inverse FFT. A Phillips spectrum evolves in frequency space, two compute passes run a shared-memory radix-2 IFFT into a displacement field, and a procedural grid rides it with per-pixel normals, foam and a Fresnel sky reflection under a tunable sunset. Orbit with the mouse; tweak the sea from the panel.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/index.tsx",
+          "size": 590,
+          "sha256": "0c4f723a5196b9e613bfa20e22a54868a2e9551e5bf6112e093519440a8a1b9b",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/renderer.ts",
+          "size": 5026,
+          "sha256": "5b897726c4d2b4df3274ee6a20cdb8511640183bb03846b4e0665ea23f86b7a7",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/camera.ts",
+          "size": 2004,
+          "sha256": "7f0e9e2a2aea46eeb8694ed5c1740aaa80a611aa8a55b4ce838aa3f107a4b56f",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/orbit-input.ts",
+          "size": 2588,
+          "sha256": "ef14cc43fcaf321164e678e4445ad091b7e85fd29d8c8e0514ca948df06c57fd",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/orbit-input.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/scene.ts",
+          "size": 8009,
+          "sha256": "55e16c133d078895c3f8cf6a033a2d0b9c0cf258880b29aacf5dd3708f8d2c3d",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/params.wgsl",
+          "size": 263,
+          "sha256": "bf307ddb98aca0e9ff7e7a48c77b8c8ed50cecd831800746601079e62d4d76e2",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/params.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/fft-core.wgsl",
+          "size": 1151,
+          "sha256": "2f07cb9f3cc112a7da9b2e0ecf6353747705c012e16e9bdc9e49f3daeb2ce321",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/fft-core.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/fft-row.wgsl",
+          "size": 1354,
+          "sha256": "d0258ece380a0aea7878ffec87ce716020600c81bfec99cf8bbbee475f8bf268",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/fft-row.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/fft-col.wgsl",
+          "size": 1319,
+          "sha256": "2426eb62378228078dedeca3e9d59981158d9d60758e461c51049b3ed596fd01",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/fft-col.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/bake.wgsl",
+          "size": 351,
+          "sha256": "166a83f5c76b86df54555f82783384d8acf4c3dda1255dad1fc87d7084cc068c",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/bake.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/spectrum-init.wgsl",
+          "size": 1706,
+          "sha256": "6b2d334e4a5eb71f18a2a2a2d3ca349b2ba26c957b8fb3f4e2b0cb0bc2904d9b",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/spectrum-init.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/spectrum-update.wgsl",
+          "size": 1266,
+          "sha256": "d24af6635937f05a4c9997fa2cb599748e265d32076674fd25c574f0fd7c8b65",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/spectrum-update.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/sky.wgsl",
+          "size": 750,
+          "sha256": "415627b78df69b28c0c6c047191024a64f032d43c351946f774c250cc98cf413",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/sky.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/skydome.wgsl",
+          "size": 637,
+          "sha256": "a63b959ef3c7713471fb43378b0035ad57bc94e00166a4c9629413459c896f4a",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/skydome.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/ocean-surface.wgsl",
+          "size": 3452,
+          "sha256": "5b95af78780e9e9b4b89f2e8d66ff0dda1fd9cbba8043a424e658feb8cd2dc14",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/ocean-surface.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fft-ocean-surface/composite.wgsl",
+          "size": 721,
+          "sha256": "a752a2ce9b4c057070ee4332baa885d746ebe8ff48a97e1429ae82ca83a49377",
+          "target": "components/auto-index/vgpu-fft-ocean-surface/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "2e7c73e206ff319a9e0d8765ff357297e6dfd0d896ed12f780bf5d556fb4a438",
+      "htmlBytes": 437213,
+      "previewSha256": "d03c26a6ad79ba6128910c9314ba3dea4a699aca3f00471c9d918a5e5f398c49"
+    },
+    {
+      "slug": "fluid",
+      "exampleSlug": "fluid",
+      "title": "Interactive Fluid",
+      "description": "A compact pressure-projected fluid solver with velocity advection, colorful dye, and pointer or touch stirring.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/fluid/index.tsx",
+          "size": 785,
+          "sha256": "455cbbe43c52c9c8c4aafc1c21c7cdc5b6f0842cbf9675bf3cd87a0fb09d737c",
+          "target": "components/auto-index/vgpu-fluid/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/fluid/renderer.ts",
+          "size": 2571,
+          "sha256": "15266e9086b5a5cd30da9297d2e74a6faf9251a096249c4cabaa98baa129d1fa",
+          "target": "components/auto-index/vgpu-fluid/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/fluid/pointer-input.ts",
+          "size": 3306,
+          "sha256": "f06357e7ca9d7c13d65fe92bd9a5624aba54eb74a2ca24fe3a21602842bd2e30",
+          "target": "components/auto-index/vgpu-fluid/pointer-input.ts"
+        },
+        {
+          "path": "apps/docs/examples/fluid/simulation.ts",
+          "size": 6136,
+          "sha256": "7588ec94310353db7f6e14f600ec8d7fb7bc28f1e90872e3cbb35ebda0ca4b74",
+          "target": "components/auto-index/vgpu-fluid/simulation.ts"
+        },
+        {
+          "path": "apps/docs/examples/fluid/fluid-common.wgsl",
+          "size": 1057,
+          "sha256": "c3d3e078a8a105a8d3c6f121fdf63a97788be1d345202c513d99dec019779735",
+          "target": "components/auto-index/vgpu-fluid/fluid-common.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/advect-velocity.wgsl",
+          "size": 2088,
+          "sha256": "bdc23899f55dfa24c8de0a511b13bcc6c7e99a6848d227a500976d74d4f92d77",
+          "target": "components/auto-index/vgpu-fluid/advect-velocity.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/curl.wgsl",
+          "size": 709,
+          "sha256": "1aa32c367a94df729ef975db7a45cf5ac5db577d2db90f5ecd222422aa8e8fcc",
+          "target": "components/auto-index/vgpu-fluid/curl.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/vorticity.wgsl",
+          "size": 1055,
+          "sha256": "672e2620e0e1821dfaf331343c9d0b07a7bbd67fb438e8154bfdf1611a48792d",
+          "target": "components/auto-index/vgpu-fluid/vorticity.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/divergence.wgsl",
+          "size": 870,
+          "sha256": "1769b8808f894d88b06254db3babcc117923e42c32e58a93d12e9b8c880f4b66",
+          "target": "components/auto-index/vgpu-fluid/divergence.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/pressure.wgsl",
+          "size": 1215,
+          "sha256": "979ca97b320fdf586815277e7219a8da234ccee24ddfaf3b6f8e3ccb38298449",
+          "target": "components/auto-index/vgpu-fluid/pressure.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/project.wgsl",
+          "size": 1242,
+          "sha256": "b0b9edd80f3f7c203749fb93dd695b3b048e90262e8a0a5672409991cf7e44fb",
+          "target": "components/auto-index/vgpu-fluid/project.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/advect-dye.wgsl",
+          "size": 2176,
+          "sha256": "2a129dd946965775c25337b848f6a417b4740305cd722cb45b183a8cfd2b7b06",
+          "target": "components/auto-index/vgpu-fluid/advect-dye.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/fluid/display.wgsl",
+          "size": 1147,
+          "sha256": "176dc84333ebd9d18b6ea21bf0087c1b611b6c6738a00a8217dc0b3178e38797",
+          "target": "components/auto-index/vgpu-fluid/display.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "b774a9ba2eb27e61fb35c56b3f037cfc44becb349b0d428f98e386fb887b8ce1",
+      "htmlBytes": 390930,
+      "previewSha256": "6c72999dc8999c8ca4da1a2da421dc77e2eb4876245118a4641844701698e829"
+    },
+    {
+      "slug": "glass-fractal",
+      "exampleSlug": "glass-fractal",
+      "title": "Glass Fractal",
+      "description": "A beveled glass tetrahedron contains a morphing fractal mesh and liquid orb, combining screen-space transmission, studio reflections, soft material lighting and interactive controls.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/glass-fractal/index.tsx",
+          "size": 2601,
+          "sha256": "377cd80c0cdc12eb93feb3b60b7d4002b9f7e81dc50a1a4d5521b79937fd2133",
+          "target": "components/auto-index/vgpu-glass-fractal/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/renderer.ts",
+          "size": 23010,
+          "sha256": "30bcbf3625ae31627132b87a01e647c1dba62709a4dfceff00f88f6b47b8da12",
+          "target": "components/auto-index/vgpu-glass-fractal/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/camera.ts",
+          "size": 1098,
+          "sha256": "02b94e2d9ed836908996590072dda07114a25c58b66592013ee196330912b2a1",
+          "target": "components/auto-index/vgpu-glass-fractal/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/scene.ts",
+          "size": 15098,
+          "sha256": "7251722a4da955d4c40bdba45ea2e1ef98fa69e1f9556a4f1ddb5a30cafbdaeb",
+          "target": "components/auto-index/vgpu-glass-fractal/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/settings.ts",
+          "size": 2139,
+          "sha256": "8069ba2f92dfe4070d2f3e2aed966ca5aa7ef50e399e3a48fef8574fc47c9286",
+          "target": "components/auto-index/vgpu-glass-fractal/settings.ts"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass-assets.ts",
+          "size": 2444,
+          "sha256": "0bda7fbee024e05fadbfe7918576a48e5e1e6b89eca215fbe64358a1b9a0c9df",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass-assets.ts"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass-assets-core.ts",
+          "size": 8501,
+          "sha256": "c0e5891ce428822f7747be8f0bb8630dee9d31b7ae2be79951eb27d6814a2096",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass-assets-core.ts"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-debug-axes.wgsl",
+          "size": 1334,
+          "sha256": "dfa5d4c95b01484f96a5083e98e3b3b1374e5356e954494be47a2c05b0d3f83e",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-debug-axes.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-background-draw.wgsl",
+          "size": 3803,
+          "sha256": "47523b11a17d9fc165647cc0b34596f9449763911c701d1a182634f1d69377bb",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-background-draw.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-presentation.wgsl",
+          "size": 398,
+          "sha256": "bcd85c20e203dcab3ca357cfdc17fcc440a2e6fff2dc0aff6d3220ec51ad888d",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-presentation.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-face-instance.wgsl",
+          "size": 5198,
+          "sha256": "83942e19d15ae2a229087248d9d41a2c9f47bdd4a725eb41dbfa932637c7f15a",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-face-instance.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-floor-ao.wgsl",
+          "size": 4255,
+          "sha256": "817208405d6531e682c08120f48b236f08376e1a095646e3325bef3df040582d",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-floor-ao.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-mesh.wgsl",
+          "size": 4714,
+          "sha256": "7a90911880a3818c9ba976fa1b24382e08f840bd249387194a0e2b1d68abbd07",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-mesh.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-present.wgsl",
+          "size": 205,
+          "sha256": "3a556a1ab67e4e6f4142df2aa95a6758f9ae4262f5e21b24131bb9caa88b4135",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-present.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-fractal-wireframe.wgsl",
+          "size": 1282,
+          "sha256": "432ec0e280f76783e25496a43926b31bd3f102e8e7e8a0a3f75128b03ba5c598",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-fractal-wireframe.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass-environment-debug.wgsl",
+          "size": 1402,
+          "sha256": "597f53291c453ffb91ed56345d03fc76f4293521007e3e9bdd80f1bd51f20e2e",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass-environment-debug.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass-environment.wgsl",
+          "size": 1820,
+          "sha256": "4df45aa689bc29b4ec28e1f6d9204f8aadba1176a59832e1d4b9ba61414027fe",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass-environment.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass-transmission.wgsl",
+          "size": 9499,
+          "sha256": "e586bc3a18ddd25c491de3ccd5a715472cc5afa1959dbb72830dcafe2ee770c7",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass-transmission.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass-wireframe.wgsl",
+          "size": 581,
+          "sha256": "8b1b92aaa54a90c7ad0b24aa27d2bac4f5a585e9a68cc62823bd23c78dc40d0a",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass-wireframe.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/glass-fractal/hero-glass.wgsl",
+          "size": 2275,
+          "sha256": "3f847b725fa9f8749d78255ce440d68d09037268adb0861aa3f8547acb5c7926",
+          "target": "components/auto-index/vgpu-glass-fractal/hero-glass.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "runtimeAssets": [
+        {
+          "path": "auto-index/vgpu-assets/examples/glass-fractal/fractal-tetrahedron-l7.mesh",
+          "url": "/auto-index/vgpu-assets/examples/glass-fractal/fractal-tetrahedron-l7.mesh",
+          "size": 1159636,
+          "sha256": "9c00ceced46cb205851f907ca28d93325878f3fd53765fed272d5591c249f9c7",
+          "license": "MIT",
+          "licensePath": "https://raw.githubusercontent.com/vercel-labs/vgpu/c35762d271fe1a1fc48464a7691d0ce97a18aa7e/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee"
+        },
+        {
+          "path": "auto-index/vgpu-assets/examples/glass-fractal/rounded-tetrahedron.mesh",
+          "url": "/auto-index/vgpu-assets/examples/glass-fractal/rounded-tetrahedron.mesh",
+          "size": 4688,
+          "sha256": "493e165bc0a87e0fb484c1c6b54e8a70c58d828a8fb88de3bb5802a893d60561",
+          "license": "MIT",
+          "licensePath": "https://raw.githubusercontent.com/vercel-labs/vgpu/c35762d271fe1a1fc48464a7691d0ce97a18aa7e/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee"
+        },
+        {
+          "path": "auto-index/vgpu-assets/examples/glass-fractal/studio-cubemap.png",
+          "url": "/auto-index/vgpu-assets/examples/glass-fractal/studio-cubemap.png",
+          "size": 36605,
+          "sha256": "a77f4d558acbf2b55828df996288b65000661325c3029d1c2140f6693a20de2d",
+          "license": "MIT",
+          "licensePath": "https://raw.githubusercontent.com/vercel-labs/vgpu/c35762d271fe1a1fc48464a7691d0ce97a18aa7e/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee"
+        },
+        {
+          "path": "auto-index/vgpu-assets/examples/glass-fractal/studio-cubemap-prefiltered.png",
+          "url": "/auto-index/vgpu-assets/examples/glass-fractal/studio-cubemap-prefiltered.png",
+          "size": 68175,
+          "sha256": "1a121188be586f48a44b6100490bf333325fd6cb86c8b975c44bbe72062c8198",
+          "license": "MIT",
+          "licensePath": "https://raw.githubusercontent.com/vercel-labs/vgpu/c35762d271fe1a1fc48464a7691d0ce97a18aa7e/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee"
+        }
+      ],
+      "htmlSha256": "f6e7a768b9e5549b55f783383cf0c1c966492a15456f6d2e88aae892aac71bb2",
+      "htmlBytes": 486703,
+      "previewSha256": "637c77cd3bf8dabf280fdd0fc7dbd8c175b59677aa859c662405984d5efb4f3a"
+    },
+    {
+      "slug": "gradient-shader-background",
+      "exampleSlug": "gradient",
+      "title": "Simple Gradient",
+      "description": "Map screen coordinates to color with a tiny fullscreen fragment shader.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/gradient/index.tsx",
+          "size": 618,
+          "sha256": "cbfe108dc8e35034f73080b26e8f49b339120530ff5f006c1f9041634bb457ce",
+          "target": "components/auto-index/vgpu-gradient-shader-background/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/gradient/renderer.ts",
+          "size": 478,
+          "sha256": "300d474176e7c9bdf5c879682bf9c07fa826c1c929c5bdb272b8e37eeb931773",
+          "target": "components/auto-index/vgpu-gradient-shader-background/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/gradient/shader.wgsl",
+          "size": 193,
+          "sha256": "0fd7a096a94ab76456fef42534a7cc9712894e549aa4175539eaa841a6b7ee99",
+          "target": "components/auto-index/vgpu-gradient-shader-background/shader.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "79219db5c3b756f6f0f3e540cd52d98853d2286d9d3ea7a0227909d0f0485396",
+      "htmlBytes": 315190,
+      "previewSha256": "cf5e92bd7dbfa816b9637a4190fb08f08acbc9ccea5f1e0b09fb8929ea8782b6"
+    },
+    {
+      "slug": "instanced-rendering",
+      "exampleSlug": "instanced-rendering",
+      "title": "Instanced Rendering",
+      "description": "One cube mesh + one instance stream, with 125,000 independently animated cubes.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/instanced-rendering/index.tsx",
+          "size": 585,
+          "sha256": "4d27dedc7a9678a1771fbee1b607f516e72b680782bc3bee8042dffbf6740153",
+          "target": "components/auto-index/vgpu-instanced-rendering/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/instanced-rendering/renderer.ts",
+          "size": 6092,
+          "sha256": "646f9b665a0b76dd2ebdf020af4987d2f00d0c42a9fa73e0755eb45ab869932c",
+          "target": "components/auto-index/vgpu-instanced-rendering/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/instanced-rendering/camera.ts",
+          "size": 1098,
+          "sha256": "02b94e2d9ed836908996590072dda07114a25c58b66592013ee196330912b2a1",
+          "target": "components/auto-index/vgpu-instanced-rendering/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/instanced-rendering/scene-pipeline.ts",
+          "size": 4884,
+          "sha256": "f0a711f1a0ca6999c8716bd6631ec1175b404b8b9251d5c36eef6d4bdfa7cf03",
+          "target": "components/auto-index/vgpu-instanced-rendering/scene-pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/instanced-rendering/scene.wgsl",
+          "size": 1763,
+          "sha256": "a0e520cad5e2994dd3391118fd2a815acab42b5727d8cdf3a945e8c94048052b",
+          "target": "components/auto-index/vgpu-instanced-rendering/scene.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/instanced-rendering/blit.wgsl",
+          "size": 348,
+          "sha256": "1d6957358650364304515e7deb8728bf20186482b84dcd361e5525b60c0c6566",
+          "target": "components/auto-index/vgpu-instanced-rendering/blit.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "62a2781a8ba1834988e938104ffbcbdd9230ca74b28685fd4372f5c69b096511",
+      "htmlBytes": 420846,
+      "previewSha256": "f0e9b52292067fed058272d7ab7bb7b0730b7a7aa15081817b890daef3180819"
+    },
+    {
+      "slug": "mnist-classifier",
+      "exampleSlug": "mnist-classifier",
+      "title": "MNIST Classifier",
+      "description": "Draw a digit and classify it with ONNX Runtime Web on WebGPU. Render the GPU-resident logits through a non-owning vgpu buffer wrap.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/mnist-classifier/index.tsx",
+          "size": 3806,
+          "sha256": "845fc10a86d20ee6645d21906ca0f6aef3b1bd9a468bba8ace06265e946d5625",
+          "target": "components/auto-index/vgpu-mnist-classifier/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/mnist-classifier/renderer.ts",
+          "size": 1176,
+          "sha256": "a3d110ba8fe943fc5ab73ea180c0eca5c0911d139e577faa86bd65ea5de230a3",
+          "target": "components/auto-index/vgpu-mnist-classifier/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/mnist-classifier/ort-runtime.ts",
+          "size": 12630,
+          "sha256": "8e8f2bb6ac14078e3b6889e3ba3391b8ea1eee8ab0764e8e1e49d8627c5569f9",
+          "target": "components/auto-index/vgpu-mnist-classifier/ort-runtime.ts"
+        },
+        {
+          "path": "apps/docs/examples/mnist-classifier/ort-webgpu.ts",
+          "size": 6580,
+          "sha256": "12758be55ce03579a1636d7544bd651a8c3bad2b7993346ed71c4cad571f2e3b",
+          "target": "components/auto-index/vgpu-mnist-classifier/ort-webgpu.ts"
+        },
+        {
+          "path": "apps/docs/examples/mnist-classifier/preprocess.ts",
+          "size": 3762,
+          "sha256": "051d70c5aa2f3f848e1669e6236069a43fda50ac47747677e44870ecf2184e42",
+          "target": "components/auto-index/vgpu-mnist-classifier/preprocess.ts"
+        },
+        {
+          "path": "apps/docs/examples/mnist-classifier/visualize.wgsl",
+          "size": 3466,
+          "sha256": "295807a25fefbd005f270e52edef4bcce9a3625684ef555adcefecd5faaf2b51",
+          "target": "components/auto-index/vgpu-mnist-classifier/visualize.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "onnxruntime-web": "1.27.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "runtimeAssets": [
+        {
+          "path": "auto-index/vgpu-assets/models/mnist/mnist-12.onnx",
+          "url": "/auto-index/vgpu-assets/models/mnist/mnist-12.onnx",
+          "size": 26143,
+          "sha256": "5c688690f8bacf667d4c2074af5ad0646ca328d7ab03eccf944a65b320171bdd",
+          "license": "MIT",
+          "licensePath": "auto-index/vgpu-assets/models/mnist/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "10630beb5ff8e2c079085627ea7d633ce30d03f44d6f2e432f512d29a1ada993"
+        },
+        {
+          "path": "auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.mjs",
+          "url": "/auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.mjs",
+          "size": 47507,
+          "sha256": "7236653b8565da4046e459cd0e274123419a1d9f1f8f18fd36c28058346ca655",
+          "license": "MIT",
+          "licensePath": "auto-index/vgpu-assets/ort/LICENSE",
+          "provenance": "onnxruntime-web npm 1.27.0 package",
+          "noticePath": "auto-index/vgpu-assets/ort/ThirdPartyNotices.txt",
+          "licenseSha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+          "noticeSha256": "0e07b95f3a8d6230037707c5c4a2b554d12c4cb67369669ac255635528ffcee2"
+        },
+        {
+          "path": "auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.wasm",
+          "url": "/auto-index/vgpu-assets/ort/ort-wasm-simd-threaded.asyncify.wasm",
+          "size": 24254953,
+          "sha256": "7e83cd6cee77e478bc96a7e91b198144fb5e4126287daf1f9b54bb195ebcd55a",
+          "license": "MIT",
+          "licensePath": "auto-index/vgpu-assets/ort/LICENSE",
+          "provenance": "onnxruntime-web npm 1.27.0 package",
+          "noticePath": "auto-index/vgpu-assets/ort/ThirdPartyNotices.txt",
+          "licenseSha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+          "noticeSha256": "0e07b95f3a8d6230037707c5c4a2b554d12c4cb67369669ac255635528ffcee2"
+        }
+      ],
+      "htmlSha256": "35cb881d7bdad14391dfbf0a0875245048c8194d0adfac96dc793f1354a85f60",
+      "htmlBytes": 522724,
+      "previewSha256": "26633c15513135b2af9e27ac601d8427ff5edc9344e33f2cb1d096002c7d134a"
+    },
+    {
+      "slug": "nextjs-flare",
+      "exampleSlug": "nextjs-flare",
+      "title": "Next.js Flare",
+      "description": "Next.js logo shader — a rim-lit N glyph with volumetric scattering: a 48-step ray walk jittered by blue noise over a separable Gaussian blur chain, breathing autonomously until the pointer takes over.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/nextjs-flare/index.tsx",
+          "size": 593,
+          "sha256": "06579314a76318a26e7108bb18a8dbe70faa6f920cf7ddee15b8b6d93f17d577",
+          "target": "components/auto-index/vgpu-nextjs-flare/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/renderer.ts",
+          "size": 6881,
+          "sha256": "162b5dac55a69cf9909bf338351f291b3953b11313e38e93011a57ff71ced1a6",
+          "target": "components/auto-index/vgpu-nextjs-flare/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/pipeline.ts",
+          "size": 16043,
+          "sha256": "5151a37382cc8d37ce04dbc2931b7604a9f6bbba72697398e8a4ec07dda54462",
+          "target": "components/auto-index/vgpu-nextjs-flare/pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/blue-noise-128.ts",
+          "size": 23811,
+          "sha256": "c09d2607fa60308e324fe42d83224e4832f0b6ec40ca7c47a6c73f6218ce96b0",
+          "target": "components/auto-index/vgpu-nextjs-flare/blue-noise-128.ts"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/logo-raster.ts",
+          "size": 2674,
+          "sha256": "20544c75be7a0bc78d67dbecdf8a197f538a83bb26d62476c5710b081aaae60e",
+          "target": "components/auto-index/vgpu-nextjs-flare/logo-raster.ts"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/logo.wgsl",
+          "size": 892,
+          "sha256": "84ce3ec2e4c0c37a03a8bdd31907b27c8ff35ed2ac62c1f46eac0fb6037f4f91",
+          "target": "components/auto-index/vgpu-nextjs-flare/logo.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/rim.wgsl",
+          "size": 1061,
+          "sha256": "691f5fe8c43602218a1f4a36cb13b05e73b0f7c9dabf4e2f433145b17bc34e76",
+          "target": "components/auto-index/vgpu-nextjs-flare/rim.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/blur.wgsl",
+          "size": 933,
+          "sha256": "cd859c2e2560457d271dcf535efebef3cc6cc420cdba6e3ac08e31ecf84c9c88",
+          "target": "components/auto-index/vgpu-nextjs-flare/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/nextjs-flare/composite.wgsl",
+          "size": 4587,
+          "sha256": "874dd153f6ebb4519b44ef784e0e41441638d46d70fe080669f8c1c824726080",
+          "target": "components/auto-index/vgpu-nextjs-flare/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "653e5bd2e19dcdc770a4f6cd14c4e8777829e57f9336456995e4c4a1411ae62c",
+      "htmlBytes": 409270,
+      "previewSha256": "8dc3af49297b38cf5f0ec5d8773e2c7d472e2cf67c045ac92c1927358f825784"
+    },
+    {
+      "slug": "optimized-black-hole",
+      "exampleSlug": "optimized-black-hole",
+      "title": "Optimized Black Hole",
+      "description": "A multi-pass black hole that bakes relativistic ray traversal once into a G-buffer, then reuses it for animated disk shading, stars, antialiasing and HDR bloom.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/optimized-black-hole/index.tsx",
+          "size": 985,
+          "sha256": "67d42dd9fc2541366c4efed339a2b22e7e6652bb287a9b778adc350af4d5e658",
+          "target": "components/auto-index/vgpu-optimized-black-hole/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/renderer.ts",
+          "size": 9027,
+          "sha256": "34cbbd0fe8a69c82d173da8c0ff6d71dbbf04ecc34f9c16e0e24d41e8a1fd74e",
+          "target": "components/auto-index/vgpu-optimized-black-hole/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/settings.ts",
+          "size": 1611,
+          "sha256": "8c48d7933633473bd2113b9df09908b094732790a38acff6f078af6090ded086",
+          "target": "components/auto-index/vgpu-optimized-black-hole/settings.ts"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/pipeline.ts",
+          "size": 11381,
+          "sha256": "55525f9f6e17df9656d2bf614b94a0c303c2e29e7a8c9044e99bade265327973",
+          "target": "components/auto-index/vgpu-optimized-black-hole/pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/noise-volume.mjs",
+          "size": 2716,
+          "sha256": "beb7f245b5a2ca149fe022b3bd628878e567f5010ee982af35109d3cd6dbea42",
+          "target": "components/auto-index/vgpu-optimized-black-hole/noise-volume.mjs"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/bake.wgsl",
+          "size": 1221,
+          "sha256": "4f4fd41b6d8d70f08d4f4f5c09f3b72cb8ee680d3bcd69504fb88f8403ffe189",
+          "target": "components/auto-index/vgpu-optimized-black-hole/bake.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/refine.wgsl",
+          "size": 4263,
+          "sha256": "50db4f9cf826743a225c494e51e7313a2a5fa10e67396ae3917107453f127d40",
+          "target": "components/auto-index/vgpu-optimized-black-hole/refine.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/gbuffer.wgsl",
+          "size": 3095,
+          "sha256": "7577a432e31ad966b6c22f89d4de932bbc403c084556557b98d129c35a4a659d",
+          "target": "components/auto-index/vgpu-optimized-black-hole/gbuffer.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/geodesic.wgsl",
+          "size": 4119,
+          "sha256": "f27fd628138d1e253515cdfe4a115c58cc51ec495c364c375bba401ae9153dab",
+          "target": "components/auto-index/vgpu-optimized-black-hole/geodesic.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/shade.wgsl",
+          "size": 6092,
+          "sha256": "4744871c0a2fcb4c8c26de9db83a0b3803e9062133879198d3fd24af6e48c9fc",
+          "target": "components/auto-index/vgpu-optimized-black-hole/shade.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/disk.wgsl",
+          "size": 9807,
+          "sha256": "3e101877bc02f99d35238a1ce92b578e5f4c259d54c9403b678ec2848660ab50",
+          "target": "components/auto-index/vgpu-optimized-black-hole/disk.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/stars.wgsl",
+          "size": 6207,
+          "sha256": "b5aabdacfe10367944a10e3f4e0ba0e8984d0e6ed41a8a160ed2042521b1c1d4",
+          "target": "components/auto-index/vgpu-optimized-black-hole/stars.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/bloom.wgsl",
+          "size": 2545,
+          "sha256": "4dccbabc1162011a754acce2ca03805c6f997ca573128b4458c6379f257c292e",
+          "target": "components/auto-index/vgpu-optimized-black-hole/bloom.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/optimized-black-hole/composite.wgsl",
+          "size": 1521,
+          "sha256": "11bc13affd7fc50fe165b1b91a3745550ad3d76fd3f1e0cf4dabeb1b710960e4",
+          "target": "components/auto-index/vgpu-optimized-black-hole/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl-std": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "5a8cce01248607012b8c4933f1d2f591fa5ee01023bcbb84a3be79d103ea986e",
+      "htmlBytes": 429079,
+      "previewSha256": "4bc46bad4d47fa89cae05021e7346f06e0f903eecbfdbb2821b189fd91e1016d"
+    },
+    {
+      "slug": "particle-orbit",
+      "exampleSlug": "particle-orbit",
+      "title": "Particle Orbit",
+      "description": "A shared-device vgpu + TypeGPU experiment: TypeGPU advances light-seeking dust through a radiance field rendered by vgpu, then vgpu draws the same particle buffer zero-copy alongside orbiting lights, HDR bloom, and a CRT finish.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/particle-orbit/index.tsx",
+          "size": 591,
+          "sha256": "ce8eafa5b5722f2e95d038b5f7929323ccbe1a7a3c32379e41a3df9ab098a6ab",
+          "target": "components/auto-index/vgpu-particle-orbit/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/renderer.ts",
+          "size": 6415,
+          "sha256": "3dc578db8fe8873668c62040248b1d3ca85040d3f68a2f57b26f81db5667c72b",
+          "target": "components/auto-index/vgpu-particle-orbit/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/pipeline.ts",
+          "size": 6968,
+          "sha256": "997950cca48536924c9dc9e48ba5f5aa95f2b7dd6dd0b0c0823127f57275eca8",
+          "target": "components/auto-index/vgpu-particle-orbit/pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/dust.ts",
+          "size": 6766,
+          "sha256": "503ede87e35ddb4e7a133056f62d26f7f67c48e39d9fc0ac618deaada6794652",
+          "target": "components/auto-index/vgpu-particle-orbit/dust.ts"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/radiance.ts",
+          "size": 6756,
+          "sha256": "dc7f195c38df6fe22630c131e9baa36805ec1d711c96377019f373d59ab6d4ff",
+          "target": "components/auto-index/vgpu-particle-orbit/radiance.ts"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/nebula.wgsl",
+          "size": 1128,
+          "sha256": "cf1e83f019d55e5ea46ef22ffa426ceb3035c0a9acd3fb0b4b41769aed070d47",
+          "target": "components/auto-index/vgpu-particle-orbit/nebula.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/stars.wgsl",
+          "size": 1846,
+          "sha256": "85340da9094fb2f7bf150d77ec82b840515a94fccaa6e2d3bc205260d714b5d2",
+          "target": "components/auto-index/vgpu-particle-orbit/stars.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/atmosphere.wgsl",
+          "size": 1911,
+          "sha256": "21829b646dbab0fcd996277a6c5ce36d3deb7e61836e4397b31f38869080f433",
+          "target": "components/auto-index/vgpu-particle-orbit/atmosphere.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/trails.wgsl",
+          "size": 3798,
+          "sha256": "8e13bd4e1d74049dc1143984c09a784d462717864249063c5dfba6ad9f39ba56",
+          "target": "components/auto-index/vgpu-particle-orbit/trails.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/rc-emitter.wgsl",
+          "size": 2214,
+          "sha256": "57b1b6d8a3c96765794b29e710313bf2a22837e75213aad82fc5dcaac5505f8d",
+          "target": "components/auto-index/vgpu-particle-orbit/rc-emitter.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/rc-directions.wgsl",
+          "size": 1840,
+          "sha256": "2c8786c881287214471a96849d4320ca5641370925adfeef4eda476d499fdf41",
+          "target": "components/auto-index/vgpu-particle-orbit/rc-directions.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/sdf-sample.wgsl",
+          "size": 2953,
+          "sha256": "5bc048b338fc1847b792cacf757030b55ba4dc998de126b10dd5661abd8df7ae",
+          "target": "components/auto-index/vgpu-particle-orbit/sdf-sample.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/jfa-init.wgsl",
+          "size": 857,
+          "sha256": "9e7461840564f4ebd04df1fa5409c651f4610e6379e08584ca2f04ec932336e9",
+          "target": "components/auto-index/vgpu-particle-orbit/jfa-init.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/jfa-pass.wgsl",
+          "size": 1662,
+          "sha256": "a235ff6391eff805836f259c5b47391ac6c1479d311fb17dc928d1bdb70ad2ef",
+          "target": "components/auto-index/vgpu-particle-orbit/jfa-pass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/sdf-finalize.wgsl",
+          "size": 802,
+          "sha256": "06ecec4b8070c80ad28b1ff172a33348f3a25a3a550f94d70d36677e78a08e1b",
+          "target": "components/auto-index/vgpu-particle-orbit/sdf-finalize.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/radiance-cascade.wgsl",
+          "size": 4407,
+          "sha256": "79f02a930a0be58e3e1ec1fa24dd466c535d27a483970a65cc091847023af536",
+          "target": "components/auto-index/vgpu-particle-orbit/radiance-cascade.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/rc-resolve.wgsl",
+          "size": 841,
+          "sha256": "5d4e5f8fbb24098a734954ea482d314158a1ed545f984801496f053ae4ef87aa",
+          "target": "components/auto-index/vgpu-particle-orbit/rc-resolve.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/bright.wgsl",
+          "size": 736,
+          "sha256": "04c8cb10c57f2df52c0d2964e803e1e670f03e3b452878b3037793bc404da352",
+          "target": "components/auto-index/vgpu-particle-orbit/bright.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/blur.wgsl",
+          "size": 818,
+          "sha256": "bfd3b0c87e5088c5d2b86f840e9d4015657811cf9cbd9106db3c4ac443c64917",
+          "target": "components/auto-index/vgpu-particle-orbit/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/particle-orbit/post.wgsl",
+          "size": 2240,
+          "sha256": "aaf122a01c6f24f982ff47f4764baf4b38483a82fe2abee37bae2c507e2ddda2",
+          "target": "components/auto-index/vgpu-particle-orbit/post.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "typegpu": "0.12.3",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "3836099f282d8b191f590b3ca9294dfb4bb9d06cadefee3be41360aa54e8aac2",
+      "htmlBytes": 698099,
+      "previewSha256": "b558a9f78dbc3cf7370fbf60fd3f26c81f8e8803909872bfedea947577f08da5"
+    },
+    {
+      "slug": "radiance-cascades",
+      "exampleSlug": "radiance-cascades",
+      "title": "Radiance Cascades",
+      "description": "Draw light with the pointer and watch it bounce: a jump-flooded distance field feeds six radiance cascades — base 4, geometric intervals, linear RGBA16F — merged top-down with visibility alpha into 2D global illumination.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/radiance-cascades/index.tsx",
+          "size": 836,
+          "sha256": "46f0191fc7c52ad89e8143fa675a18df757140ab3d8b894b2a3bdec615a1ec64",
+          "target": "components/auto-index/vgpu-radiance-cascades/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/renderer.ts",
+          "size": 6837,
+          "sha256": "5b7bf8b322cee654567e01b0b10e60f13e6a2952b66bd1e5ccd7a8304ca8ebc0",
+          "target": "components/auto-index/vgpu-radiance-cascades/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/simulation.ts",
+          "size": 8547,
+          "sha256": "e2db3c291386bfe9bcd66a196a8711c09b8337bebe65720059c6605d28622ab8",
+          "target": "components/auto-index/vgpu-radiance-cascades/simulation.ts"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/pointer-input.ts",
+          "size": 2833,
+          "sha256": "de3274c11d42314f7a1ca14e494758f4fb297b9ff4da0a33ce12ba8b99c70dfc",
+          "target": "components/auto-index/vgpu-radiance-cascades/pointer-input.ts"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/rc-directions.wgsl",
+          "size": 1840,
+          "sha256": "2c8786c881287214471a96849d4320ca5641370925adfeef4eda476d499fdf41",
+          "target": "components/auto-index/vgpu-radiance-cascades/rc-directions.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/sdf-sample.wgsl",
+          "size": 2953,
+          "sha256": "5bc048b338fc1847b792cacf757030b55ba4dc998de126b10dd5661abd8df7ae",
+          "target": "components/auto-index/vgpu-radiance-cascades/sdf-sample.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/paint-emitter.wgsl",
+          "size": 1982,
+          "sha256": "31ea2aa6981381addea37bec639c4f87607bccc0f6dafde1f48c0619688cda0a",
+          "target": "components/auto-index/vgpu-radiance-cascades/paint-emitter.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/jfa-init.wgsl",
+          "size": 857,
+          "sha256": "9e7461840564f4ebd04df1fa5409c651f4610e6379e08584ca2f04ec932336e9",
+          "target": "components/auto-index/vgpu-radiance-cascades/jfa-init.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/jfa-pass.wgsl",
+          "size": 1662,
+          "sha256": "a235ff6391eff805836f259c5b47391ac6c1479d311fb17dc928d1bdb70ad2ef",
+          "target": "components/auto-index/vgpu-radiance-cascades/jfa-pass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/sdf-finalize.wgsl",
+          "size": 802,
+          "sha256": "06ecec4b8070c80ad28b1ff172a33348f3a25a3a550f94d70d36677e78a08e1b",
+          "target": "components/auto-index/vgpu-radiance-cascades/sdf-finalize.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/radiance-cascade.wgsl",
+          "size": 4407,
+          "sha256": "79f02a930a0be58e3e1ec1fa24dd466c535d27a483970a65cc091847023af536",
+          "target": "components/auto-index/vgpu-radiance-cascades/radiance-cascade.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/radiance-cascades/present.wgsl",
+          "size": 3922,
+          "sha256": "3a5f227bb8e9681cb7325cc7075be6cf1384749e9778b08baddbb0bcefefa469",
+          "target": "components/auto-index/vgpu-radiance-cascades/present.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "d38b20ad0dcf8a93798eba7bad88f7f0343923f557c5cac976f7a3456b681f39",
+      "htmlBytes": 431122,
+      "previewSha256": "ff4181467c86c1c59030955c62a7b13de9ebfb7deb6c48b2d04ccdc50b6e7286"
+    },
+    {
+      "slug": "raymarched-fractal",
+      "exampleSlug": "raymarched-fractal",
+      "title": "Raymarched fractal",
+      "description": "A raymarched Sierpiński tetrahedron emerges from pure black under directional light and restrained HDR bloom, with drag-only orbit controls.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/raymarched-fractal/index.tsx",
+          "size": 591,
+          "sha256": "28afa1b260a1730e9ad13d7c0f4437e5765eac9125aa37d7675adbca7ba04cf6",
+          "target": "components/auto-index/vgpu-raymarched-fractal/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/renderer.ts",
+          "size": 3391,
+          "sha256": "f92aa32a394b4246e39244019181e3ccc1af9511be7893de59c82821c5035acc",
+          "target": "components/auto-index/vgpu-raymarched-fractal/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/pipeline.ts",
+          "size": 5722,
+          "sha256": "f5016a949af5ef2b4333467eb5374b108107a5574e74751a9f1196f989405d81",
+          "target": "components/auto-index/vgpu-raymarched-fractal/pipeline.ts"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/pointer-input.ts",
+          "size": 3202,
+          "sha256": "49a83f85f433a362f01dd62bff0cb10d06f5ce1185284a84054af8721cc95d41",
+          "target": "components/auto-index/vgpu-raymarched-fractal/pointer-input.ts"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/lifecycle.ts",
+          "size": 444,
+          "sha256": "3fd557dd3ffb56c3c212c40e0355afc6391b6cca2a97037e3f60a4a996f07242",
+          "target": "components/auto-index/vgpu-raymarched-fractal/lifecycle.ts"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/fractal.wgsl",
+          "size": 3893,
+          "sha256": "fa29bc6a6b23620e01cfe7388c1bf36c67a7afaa36fa648868c54d687925824e",
+          "target": "components/auto-index/vgpu-raymarched-fractal/fractal.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/bright-pass.wgsl",
+          "size": 653,
+          "sha256": "d9b07a3d2e732c3dcf790c318b5f7825cf0a5f29d5e77b5cece2e20a257e3a90",
+          "target": "components/auto-index/vgpu-raymarched-fractal/bright-pass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/blur.wgsl",
+          "size": 758,
+          "sha256": "0c3b8019fa1289b60a067762a75b6e5167230620832a667a8f2234439af383f0",
+          "target": "components/auto-index/vgpu-raymarched-fractal/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/raymarched-fractal/composite.wgsl",
+          "size": 844,
+          "sha256": "21847b81018ad9a20891b8f26437dd342319912bdb6de8238b33b56095de237d",
+          "target": "components/auto-index/vgpu-raymarched-fractal/composite.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "e2e12a7bc5100002e9f67c67e57050a7464001427e1a44277a3565ee129b8fe7",
+      "htmlBytes": 379614,
+      "previewSha256": "20862ad903f72f7c34bf30fdf88611fa255a4894da2383d93a9fba4459a71ea3"
+    },
+    {
+      "slug": "three-tsl",
+      "exampleSlug": "three-tsl",
+      "title": "Lava material",
+      "description": "Author a procedural lava material as plain WGSL modules and wire them into a three.js node material — twelve surface slots, all driven from shader source.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/three-tsl/index.tsx",
+          "size": 1203,
+          "sha256": "234bc4f045f28072ba107164fd94329f50096939cc83a9f585eb562c283f8ac8",
+          "target": "components/auto-index/vgpu-three-tsl/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/renderer.ts",
+          "size": 3636,
+          "sha256": "9c178d939f42052526d7f6ef41b9b3f79a30e970f635f92d596a80958656eaa0",
+          "target": "components/auto-index/vgpu-three-tsl/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/object-drag-controls.ts",
+          "size": 3931,
+          "sha256": "2d1cde6e8f69e7aafd9c2d40d3794ede502dc8044cfdeaa749cb66a6bf5bfbb1",
+          "target": "components/auto-index/vgpu-three-tsl/object-drag-controls.ts"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/scenes.ts",
+          "size": 4076,
+          "sha256": "43382572d5d6bdadcbf1bf44ddf14bdd837c9a51e1d154abd6b769f9dfc385a5",
+          "target": "components/auto-index/vgpu-three-tsl/scenes.ts"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/lava-material.ts",
+          "size": 12090,
+          "sha256": "d38e173662da3ee1e3ef82f641171fa04ed5745e29fe3fc7787c77cfd6b39b20",
+          "target": "components/auto-index/vgpu-three-tsl/lava-material.ts"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/bake-lava.ts",
+          "size": 13908,
+          "sha256": "c5d5a160ad87b29862b97312cb68d185fdcf1ff65b1f59fa479651cb36e91ef5",
+          "target": "components/auto-index/vgpu-three-tsl/bake-lava.ts"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/environment.ts",
+          "size": 1361,
+          "sha256": "632373cef8df2c51f23a9c78d3de1f545626b211234042ff2dd2d11050ae1b72",
+          "target": "components/auto-index/vgpu-three-tsl/environment.ts"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/lava.wgsl",
+          "size": 20458,
+          "sha256": "e4f31a8698d7df74e98437ca731b7cf5d866c3b237e5272baff0fee6ea981f89",
+          "target": "components/auto-index/vgpu-three-tsl/lava.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/three-tsl/noise.wgsl",
+          "size": 8302,
+          "sha256": "e2c7bb7f4aac951fd0ccd759a6133177cad1f7c94ab0a9a8d6ea8b04db43a3f5",
+          "target": "components/auto-index/vgpu-three-tsl/noise.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "three": "0.180.0",
+        "@vgpu/wgsl-std": "0.6.0-rc.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "runtimeAssets": [
+        {
+          "path": "auto-index/vgpu-assets/examples/three-tsl/sunset.exr",
+          "url": "/auto-index/vgpu-assets/examples/three-tsl/sunset.exr",
+          "size": 148357,
+          "sha256": "d09a4d7581f5454f13c3da3c323a231d00a34e60200de7654a895d2d41a7ceb7",
+          "license": "MIT",
+          "licensePath": "https://raw.githubusercontent.com/vercel-labs/vgpu/c35762d271fe1a1fc48464a7691d0ce97a18aa7e/LICENSE",
+          "provenance": "vercel-labs/vgpu pinned commit c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+          "licenseSha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee"
+        }
+      ],
+      "htmlSha256": "3fb40bebbbc01a0bbd8f73461be98c8e3cc820ac2ef0b254b012d371154b8336",
+      "htmlBytes": 428563,
+      "previewSha256": "54f0baf8d135bb03d183ba092de6735d65277422a4e6ec26678d093d57fb0844"
+    },
+    {
+      "slug": "transmission",
+      "exampleSlug": "transmission",
+      "title": "Transmission",
+      "description": "A glass cube refracts the scene behind it in screen space: the frame is rendered, blurred into a pyramid, and read back through Snell refraction, chromatic dispersion and a Fresnel-weighted environment reflection.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/transmission/index.tsx",
+          "size": 591,
+          "sha256": "28afa1b260a1730e9ad13d7c0f4437e5765eac9125aa37d7675adbca7ba04cf6",
+          "target": "components/auto-index/vgpu-transmission/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/transmission/renderer.ts",
+          "size": 4309,
+          "sha256": "a1f48fe869a5417222c31765a61dcf49eb545ab6ae7a7cb1c9471cf851eb93e1",
+          "target": "components/auto-index/vgpu-transmission/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/transmission/scene.ts",
+          "size": 15190,
+          "sha256": "5b3e07f149d68854d216e84b3ad22117604d85e1243670d1f0101b8896540a5f",
+          "target": "components/auto-index/vgpu-transmission/scene.ts"
+        },
+        {
+          "path": "apps/docs/examples/transmission/camera.ts",
+          "size": 2707,
+          "sha256": "211c56531c5374c3b141eebdfb0b83798621dd4093e8b76d5a0065e093fcf63a",
+          "target": "components/auto-index/vgpu-transmission/camera.ts"
+        },
+        {
+          "path": "apps/docs/examples/transmission/pointer-input.ts",
+          "size": 3314,
+          "sha256": "e30966ed7678a2c7e1bc85b02f5bc795db8d0b177a182887d7a5a6174075432f",
+          "target": "components/auto-index/vgpu-transmission/pointer-input.ts"
+        },
+        {
+          "path": "apps/docs/examples/transmission/sky.wgsl",
+          "size": 3242,
+          "sha256": "8c97b6020f03224702b0552ecadbe85a46928734d9e281087189df618ce72686",
+          "target": "components/auto-index/vgpu-transmission/sky.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/transmission/blur.wgsl",
+          "size": 1090,
+          "sha256": "b9dcbafa8d9688c0e03d7d9687531f18eeb62c25ad9fdf42a4b76da3f029c805",
+          "target": "components/auto-index/vgpu-transmission/blur.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/transmission/env-common.wgsl",
+          "size": 1549,
+          "sha256": "5fab216c6d4f5f2730d6e35aa602ca9cad4cb08278535a2c99cae1fd7467b581",
+          "target": "components/auto-index/vgpu-transmission/env-common.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/transmission/scene-background.wgsl",
+          "size": 1380,
+          "sha256": "42b3e9075653f56d987eb140549b9f28ea301cd178b93ee0d8714b3bb8230617",
+          "target": "components/auto-index/vgpu-transmission/scene-background.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/transmission/floor.wgsl",
+          "size": 2005,
+          "sha256": "d6cd7daad20a74392e439b5008087ad45109f955bdfab0a457a48db01786a0ce",
+          "target": "components/auto-index/vgpu-transmission/floor.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/transmission/glass.wgsl",
+          "size": 7332,
+          "sha256": "487b8069b80b33c683b64fc5f79d89dccfc37c8a60983d372b1090e6f507d959",
+          "target": "components/auto-index/vgpu-transmission/glass.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/transmission/present.wgsl",
+          "size": 446,
+          "sha256": "13c58faf74c877c06df4ccc5dae4a77b60262abe0256bfbefd5904393c70f581",
+          "target": "components/auto-index/vgpu-transmission/present.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "7fd92ceaacc97423b17b33ddaf5459de6cce72bb9bd2f7bab165ccae921100f7",
+      "htmlBytes": 451027,
+      "previewSha256": "f7136a494d75fac52446b0de1b3347c4026130d252128bf59adc89882917b977"
+    },
+    {
+      "slug": "triangle-led-front",
+      "exampleSlug": "triangle-led-front",
+      "title": "Triangle LED Hero",
+      "description": "Analytic edge-glow triangle with LED emitters, floor radiance, and interactive color deploy. Canvas-scoped pointer input drives the lighting while a lil-gui selector chooses highlighted edges.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/triangle-led-front/index.tsx",
+          "size": 591,
+          "sha256": "ce8eafa5b5722f2e95d038b5f7929323ccbe1a7a3c32379e41a3df9ab098a6ab",
+          "target": "components/auto-index/vgpu-triangle-led-front/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/types.ts",
+          "size": 351,
+          "sha256": "9a96bdd83171063d270fc274a20cb804f4543c82f92b50899a78e7b45590186e",
+          "target": "components/auto-index/vgpu-triangle-led-front/types.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/renderer.ts",
+          "size": 9285,
+          "sha256": "96a402c2fd462442a2ccf09530b91a48600a20a4ce35d1cdb57e60061e7689d8",
+          "target": "components/auto-index/vgpu-triangle-led-front/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/scene-renderer.ts",
+          "size": 10972,
+          "sha256": "e79fc22475a28fa8c8dd933a49a1df58c1959d210ea57c97097a5e4d0df23644",
+          "target": "components/auto-index/vgpu-triangle-led-front/scene-renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/light-sources-raw.ts",
+          "size": 8452,
+          "sha256": "c437ba383b19ba7d3c91b18db8968ff5c08734b1196ee0be4e4be6e0c3463cb6",
+          "target": "components/auto-index/vgpu-triangle-led-front/light-sources-raw.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/led-buffer.ts",
+          "size": 17372,
+          "sha256": "1f5f669779be6cde5d16fbd641b0caf279289eda67787c73c404eb4d33d20166",
+          "target": "components/auto-index/vgpu-triangle-led-front/led-buffer.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/settings.ts",
+          "size": 7706,
+          "sha256": "a65de31fcadb5e804a98645295fe22029501166fb39bc1a91962ddc9fba576e6",
+          "target": "components/auto-index/vgpu-triangle-led-front/settings.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/hero-frame-state.ts",
+          "size": 2987,
+          "sha256": "5a6b68f1d97fa8623e79cd75f274ebd6b534fb8632c86a2a9f1a4bc1c75159f3",
+          "target": "components/auto-index/vgpu-triangle-led-front/hero-frame-state.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/sim-sizing.ts",
+          "size": 1577,
+          "sha256": "bfa1d7a35922eb6c754a9fe4ce02c493641d80820b8cd0afa9fdadfb4e492271",
+          "target": "components/auto-index/vgpu-triangle-led-front/sim-sizing.ts"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/led-emitters.wgsl",
+          "size": 2572,
+          "sha256": "744fcc3e16289cf802a1f601b73c05586c599a59d804ce31e07bdda25654f7cb",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/led-emitters.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/direct-triangle-raycast.wgsl",
+          "size": 8778,
+          "sha256": "dd4427486684a30ad179aff83332972752eccc6a6196899a5de11a7e23fb0440",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/direct-triangle-raycast.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/floor-noise.wgsl",
+          "size": 582,
+          "sha256": "b2aa2a8782abc717f0dfc25efd6cf6287acf749bd64ec08b333f7b66788e5ff5",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/floor-noise.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/color-utils.wgsl",
+          "size": 2270,
+          "sha256": "716dfa04e86d29840b69703bfc3b07a0e5780f555a53d7f105b62699ec8502b2",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/color-utils.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/geometry.wgsl",
+          "size": 737,
+          "sha256": "963bea7617dfc4673c04d3b0bd175c91d380b936f17d8f064870553764a240c5",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/geometry.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/floor-falloff.wgsl",
+          "size": 1435,
+          "sha256": "ca5fb99a0944f31816bce23c9a796ddc3b428659479d72d26941367b67d99d43",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/floor-falloff.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/hash.wgsl",
+          "size": 104,
+          "sha256": "b3af41e05b2f309c30fe03c87971715cac7889d82c5f24771e688dc44998a01b",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/hash.wgsl"
+        },
+        {
+          "path": "apps/docs/examples/triangle-led-front/shaders/themes/dark/main-scene-floor.wgsl",
+          "size": 15546,
+          "sha256": "199e4688a7bc37da632588f56921a0fca889aa460f11f19949314fc7f3bef404",
+          "target": "components/auto-index/vgpu-triangle-led-front/shaders/themes/dark/main-scene-floor.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "lil-gui": "0.21.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "65e96695895d257f796b752002e87e7a1ee94152a756587012eb64e10c912711",
+      "htmlBytes": 455720,
+      "previewSha256": "70be4f6d0b6e70f166fb82138e15acce49907aa259da076930a13b16cc601bfe"
+    },
+    {
+      "slug": "tsl-exports",
+      "exampleSlug": "tsl-exports",
+      "title": "Three.js WGSL modules",
+      "description": "Turn one exported WGSL function into a callable Three.js TSL node and use it on a physical material.",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "files": [
+        {
+          "path": "apps/docs/examples/tsl-exports/index.tsx",
+          "size": 582,
+          "sha256": "67508fc5f353980a6d26ed4dd88104b1fefa8c5b4f2e09edd674324379b58f86",
+          "target": "components/auto-index/vgpu-tsl-exports/index.tsx"
+        },
+        {
+          "path": "apps/docs/examples/tsl-exports/renderer.ts",
+          "size": 3466,
+          "sha256": "58f2c8d9d846714c2c0f4c41379f99a669a73571ef3c97672912266d66572709",
+          "target": "components/auto-index/vgpu-tsl-exports/renderer.ts"
+        },
+        {
+          "path": "apps/docs/examples/tsl-exports/surface.wgsl",
+          "size": 231,
+          "sha256": "19476765fa00a1c96e74d0d20a624e6ee6fd40e6137478f4c1827bc5db8126cb",
+          "target": "components/auto-index/vgpu-tsl-exports/surface.wgsl"
+        }
+      ],
+      "dependencies": {
+        "vgpu": "0.6.0-rc.0",
+        "three": "0.180.0",
+        "@vgpu/wgsl": "0.6.0-rc.0"
+      },
+      "htmlSha256": "aa710eb5c0204d64a13e932254a187bfe7194f92f3400314f14612a21f9a7f7f",
+      "htmlBytes": 919953,
+      "previewSha256": "a582239d41d58ed405dd3e18647ed5b6833469afcbf49c0d8de8cac0a181e6d2"
+    }
+  ]
+}
