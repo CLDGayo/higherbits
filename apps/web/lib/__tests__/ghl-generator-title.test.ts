@@ -23,3 +23,12 @@ it("rejects a JavaScript-only preview after scripts are removed", () => {
   expect(cleanGhlHtml('<div class="ghl-component-wrapper"><img src="data:image/png;base64,aGVsbG8=" alt="Static preview"></div>'))
     .toContain('alt="Static preview"')
 })
+
+it("allows only HigherBits-hosted component embeds", () => {
+  const safe = cleanGhlHtml('<div><iframe src="https://higherbits.dev/auto-index/vgpu-earth.html" onload="alert(1)"></iframe><iframe src="https://higherbits.dev/api/ghl-embed/140?controls=eyJzdW4iOjB9"></iframe></div>')
+  expect(safe).toContain('src="https://higherbits.dev/auto-index/vgpu-earth.html"')
+  expect(safe).toContain('src="https://higherbits.dev/api/ghl-embed/140?controls=eyJzdW4iOjB9"')
+  expect(safe).not.toContain("onload")
+  expect(cleanGhlHtml('<div><iframe src="https://evil.invalid/steal" srcdoc="<script>alert(1)</script>"></iframe><script>alert(1)</script></div>'))
+    .not.toMatch(/iframe|script|srcdoc/)
+})

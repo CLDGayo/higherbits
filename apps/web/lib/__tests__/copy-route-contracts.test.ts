@@ -523,9 +523,9 @@ it("E-GHL-NO-TRACKING: generated, saved, and copied GHL HTML has no remote resou
   const copiedResponse=await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
   expect(copiedResponse.status).toBe(200)
   const copied=(await copiedResponse.json()).prompt
-  expect(copied).toContain(savedHtml)
-  expect(withoutSvgNamespace(copied)).not.toMatch(/(?:https?:)?\/\/|\.invalid|@import|fonts\.googleapis|cdn\.tailwind/i)
-  expect(copied).toContain('xmlns="http://www.w3.org/2000/svg"')
+  expect(copied).toContain('src="https://higherbits.dev/api/ghl-embed/2"')
+  expect(copied).not.toContain(savedHtml)
+  expect(copied).not.toMatch(/\.invalid|@import|fonts\.googleapis|cdn\.tailwind/i)
   expect(fetchGuard).not.toHaveBeenCalled()
   expect(mocks.from).not.toHaveBeenCalled()
 })
@@ -537,7 +537,8 @@ it("U-GHL-03: GHL copies only fingerprint-matched saved output and never generat
   expect(mocks.ghl).not.toHaveBeenCalled()
   const copied=(await response.json()).prompt
   expect(copied).toContain(`<!--\n${notice.displayText}\n-->`)
-  expect(copied.startsWith("<div>saved fixture</div>")).toBe(true)
+  expect(copied).toContain('src="https://higherbits.dev/api/ghl-embed/2"')
+  expect(copied).not.toContain("<div>saved fixture</div>")
   expect(mocks.admit).toHaveBeenCalledTimes(1)
 })
 it("U-GHL-03: legacy saved GHL without a fingerprint remains copyable with controls and notice", async () => {
@@ -552,7 +553,8 @@ it("U-GHL-03: legacy saved GHL without a fingerprint remains copyable with contr
   const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,controls:{label:"after"},requestId}))
   expect(response.status).toBe(200)
   const copied = (await response.json()).prompt as string
-  expect(copied).toContain('"after"')
+  const token = copied.match(/\?controls=([A-Za-z0-9_-]+)/)?.[1]
+  expect(JSON.parse(Buffer.from(token!, "base64url").toString("utf8"))).toEqual({ label: "after" })
   expect(copied).not.toContain("onclick")
   expect(copied).not.toContain("<script")
   expect(copied).toContain(`<!--\n${notice.displayText}\n-->`)
@@ -621,9 +623,14 @@ it.each(Object.values(PROMPT_TYPES))("U-GHL-03/U-DEMO-02: %s applies active sett
   const response = await prompt(request({demo_id:2,prompt_type,controls:{label:"after",count:9,enabled:true},requestId}))
   expect(response.status).toBe(200)
   const copied = (await response.json()).prompt as string
-  expect(copied).toContain('"after"')
-  expect(copied).toContain("9")
-  expect(copied).toContain("true")
+  if (prompt_type === PROMPT_TYPES.GOHIGHLEVEL) {
+    const token = copied.match(/\?controls=([A-Za-z0-9_-]+)/)?.[1]
+    expect(JSON.parse(Buffer.from(token!, "base64url").toString("utf8"))).toEqual({ label: "after", count: 9, enabled: true })
+  } else {
+    expect(copied).toContain('"after"')
+    expect(copied).toContain("9")
+    expect(copied).toContain("true")
+  }
   expect(mocks.ghl).not.toHaveBeenCalled()
   expect(mocks.admit).toHaveBeenCalledTimes(1)
   expect(code).toBe('const settings = { label: "before", count: 1, enabled: false }; export default settings')

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getComponentInstallPrompt } from "@/lib/prompts"
 import { computeGhlSourceFingerprint, cleanGhlHtml } from "@/lib/ghl-generator"
-import { applyControlsToCode, applyControlsToGhlHtml } from "@/lib/controls-transform"
+import { applyControlsToCode } from "@/lib/controls-transform"
 import { PROMPT_TYPES, PromptType } from "@/types/global"
 import { supabaseWithAdminAccess as db } from "@/lib/supabase"
 import { admitCopy, COPY_HEADERS, CopyError, copyErrorResponse, copyRequestId } from "@/lib/api/server/copy-admission"
@@ -68,9 +68,19 @@ export async function POST(request: Request) {
       if (force_regenerate || typeof stored !== "string" || !stored || (!legacySavedOutput && storedFingerprint !== currentFingerprint)) {
         throw new CopyError(503, "ghl_output_unavailable")
       }
-      const html = cleanGhlHtml(stored)
+      const slug = prepared.component.component_slug
+      const preview = prepared.demo?.preview_url
+      const pinnedVgpu = prepared.component.registry === "auto-index" &&
+        typeof slug === "string" && /^[a-z0-9][a-z0-9-]+$/.test(slug) &&
+        preview === `https://higherbits.dev/auto-index/vgpu-${slug}.png`
+      const controlToken = controls && Object.keys(controls).length
+        ? Buffer.from(JSON.stringify(controls)).toString("base64url") : ""
+      const src = pinnedVgpu
+        ? `https://higherbits.dev/auto-index/vgpu-${slug}.html`
+        : `https://higherbits.dev/api/ghl-embed/${demo_id}${controlToken ? `?controls=${controlToken}` : ""}`
+      const html = cleanGhlHtml(`<div class="ghl-component-wrapper" style="width:100%;height:65vh;min-height:480px"><iframe src="${src}" title="Interactive component preview"></iframe></div>`)
       if (!html) throw new CopyError(503, "ghl_output_unavailable")
-      prompt = controls ? applyControlsToGhlHtml(html, controls) : html
+      prompt = html
     } else if (prepared.component.registry === "auto-index" && (!controls || Object.keys(controls).length === 0) && !ruleData && !additional_context) {
       const { data: saved, error } = await (db.from as any)("auto_index_copy_prompts")
         .select("prompt,source_fingerprint").eq("demo_id", demo_id).eq("prompt_type", prompt_type).maybeSingle()

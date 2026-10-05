@@ -21,9 +21,8 @@ const quoted = value => `'${value.replaceAll("'", "''")}'`
 const promptTypes = ['sitebrew', 'v0', 'lovable', 'bolt', 'extended', 'replit', 'magic_patterns', 'claude', 'codex', 'antigravity']
 const assetBase = 'https://higherbits.dev/auto-index'
 const ghlPreview = item => {
-  const png = readFileSync(join(repo, 'apps/web/public/auto-index', `vgpu-${item.slug}.png`))
   const title = item.title.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;')
-  return `<div class="ghl-component-wrapper"><img alt="${title} static preview" src="data:image/png;base64,${png.toString('base64')}" style="display:block;width:100%;height:auto"></div>`
+  return `<div class="ghl-component-wrapper" style="width:100%;height:65vh;min-height:480px"><iframe src="${assetBase}/vgpu-${item.slug}.html" title="${title} interactive preview" loading="lazy" allow="webgpu; fullscreen" style="display:block;width:100%;height:100%;border:0"></iframe></div>`
 }
 if (manifest.repositoryUrl !== 'https://github.com/vercel-labs/vgpu' ||
     manifest.revision !== 'c35762d271fe1a1fc48464a7691d0ce97a18aa7e' ||

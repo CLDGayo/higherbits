@@ -60,6 +60,12 @@ export function sanitizeGhlHtml(markup: string): string {
   for (const element of $.root().find("*").toArray()) {
     const node = $(element)
     const tag = element.tagName.toLowerCase()
+    if (tag === "iframe" && /^https:\/\/higherbits\.dev\/(?:auto-index\/vgpu-[a-z0-9-]+\.html|api\/ghl-embed\/[1-9][0-9]*(?:\?controls=[A-Za-z0-9_-]+)?)$/.test(element.attribs.src ?? "")) {
+      const src = element.attribs.src
+      const title = element.attribs.title || "Interactive component preview"
+      node.replaceWith(`<iframe src="${src}" title="${title.replace(/[&"<>]/g, "")}" loading="lazy" allow="webgpu; fullscreen" style="display:block;width:100%;height:100%;min-height:480px;border:0"></iframe>`)
+      continue
+    }
     if (GHL_REMOVE_SUBTREE_TAGS.has(tag)) {
       node.remove()
       continue
