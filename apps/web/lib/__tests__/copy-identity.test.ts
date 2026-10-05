@@ -28,6 +28,7 @@ it("rejects identity/header conflicts and cross-origin cookie mutation", async (
   await expect(copyIdentity(request({ authorization: "Bearer a" }))).rejects.toMatchObject({ status: 401 })
   await expect(copyIdentity(request({ origin: "https://evil.invalid" }))).rejects.toMatchObject({ status: 403 })
   expect(await copyIdentity(request({ origin: "http://localhost:56331" }))).toBe("session-user")
+  expect(await copyIdentity(request({ origin: "https://higherbits.dev" }))).toBe("session-user")
 })
 it("G6-PRO: preserves persisted active Pro across provider markers and stale period metadata", () => {
   for (const extra of [{}, { meta: { stripe_customer_id: "synthetic", period_end: 1 } }, { lemon_squeezy_subscription_id: "synthetic" }]) {

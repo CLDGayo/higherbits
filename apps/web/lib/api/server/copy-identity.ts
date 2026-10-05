@@ -2,6 +2,7 @@ import "server-only"
 import { auth } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { deriveBillingProvider } from "@/lib/billing-provider-guard"
+import { SITE_URL } from "@/lib/constants"
 import { CopyError } from "./copy-admission"
 
 export function persistedCopyTier(rows: any[]): boolean {
@@ -42,7 +43,7 @@ export async function copyIdentity(request: Request): Promise<string> {
   if (!userId) throw new CopyError(401, "sign_in_required")
   if (!keyUser && request.method !== "GET") {
     const origin = request.headers.get("origin")
-    if (!origin || origin !== new URL(request.url).origin) throw new CopyError(403, "invalid_origin")
+    if (!origin || (origin !== new URL(request.url).origin && origin !== SITE_URL)) throw new CopyError(403, "invalid_origin")
   }
   return userId
 }
