@@ -71,6 +71,29 @@ type SubmissionProcessState = {
   componentRegistryJSON?: string
 }
 
+export function assertReviewRetryAllowed(
+  existingStatus: string | null | undefined,
+  submitForFeaturing: boolean,
+) {
+  if (submitForFeaturing && existingStatus === "on_review") {
+    throw new Error(
+      "This version is already awaiting review; its saved demos and GHL outputs were left unchanged.",
+    )
+  }
+}
+
+async function prepareGhlForReview(demoId: number) {
+  const response = await fetch("/api/sandbox/prepare-ghl-review", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ demoId }),
+  })
+  if (!response.ok) {
+    throw new Error("GoHighLevel output could not be saved. Retry before submitting for review.")
+  }
+}
+
 // Hoisted to module scope (behaviour unchanged - it only ever read its own
 // arguments) so the featuring and library-link branches are directly testable.
 export async function _stepManageSandboxLinkAndSubmission(
@@ -106,6 +129,9 @@ export async function _stepManageSandboxLinkAndSubmission(
 
   // Create or update submission entry for catalog review
   if (typeof componentIdToUse === "number" && context.form.submit_for_featuring) {
+    if (!state.finalDemo?.id) throw new Error("Submitted demo is missing before review preparation.")
+    context.setPublishProgress("Saving GoHighLevel output before review…")
+    await prepareGhlForReview(state.finalDemo.id)
     context.setPublishProgress("Ensuring submission status is on review…")
 
     const { data: existingSubmission, error: submissionFetchError } =
@@ -512,6 +538,22 @@ export const useSubmitComponent = () => {
         "Found existing component link. Preparing update...",
       )
 
+      const { data: existingSubmission, error: submissionFetchError } =
+        await context.supabase
+          .from("submissions")
+          .select("status")
+          .eq("component_id", componentIdToUse)
+          .maybeSingle()
+
+      if (submissionFetchError && submissionFetchError.code !== "PGRST116") {
+        console.error("Error checking review status before component update:", submissionFetchError)
+        throw submissionFetchError
+      }
+      assertReviewRetryAllowed(
+        existingSubmission?.status,
+        Boolean(context.form.submit_for_featuring),
+      )
+
       const { data: existingDemoData, error: demoFetchError } =
         await context.supabase
           .from("demos")
@@ -794,6 +836,7 @@ export const useSubmitComponent = () => {
       }),
       compiled_css: null,
       ghl_html_content: null,
+      ghl_source_fingerprint: null,
       pro_preview_image_url: null,
       name: demo.name || "Default Demo",
       demo_direct_registry_dependencies:
@@ -973,14 +1016,14 @@ export const useSubmitComponent = () => {
       console.log("after _stepUploadFiles state", submissionState)
       submissionState = await _stepUpsertComponent(stepContext, submissionState)
       console.log("after _stepUpsertComponent state", submissionState)
-      submissionState = await _stepManageSandboxLinkAndSubmission(
-        stepContext,
-        submissionState,
-      )
       submissionState = await _stepUpsertDemo(stepContext, submissionState)
       console.log("after _stepUpsertDemo state", submissionState)
       submissionState = await _stepUpdateDemoTags(stepContext, submissionState)
       console.log("after _stepUpdateDemoTags state", submissionState)
+      submissionState = await _stepManageSandboxLinkAndSubmission(
+        stepContext,
+        submissionState,
+      )
 
       // Final success handling
       setPublishProgress("Done!")

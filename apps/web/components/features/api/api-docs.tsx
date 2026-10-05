@@ -4,166 +4,41 @@ import { Code } from "@/components/ui/code"
 import { PROMPT_TYPES } from "@/types/global"
 
 export function ApiDocs() {
-  const promptTypeValues = Object.values(PROMPT_TYPES)
-
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
+      <p className="text-sm text-muted-foreground">
+        Search returns metadata only and is unmetered. Source exports share two free copies
+        per day across code, prompts, CLI and MCP, resetting at 00:00 UTC. Pro copies are
+        unlimited; component access permissions still apply.
+      </p>
+      <section className="space-y-3">
         <h2 className="text-sm font-medium">Authentication</h2>
-        <Code
-          code="x-api-key: your_api_key_here"
-          language="bash"
-          display="block"
-          fontSize="sm"
-        />
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-sm font-medium">Search API</h2>
-        <h3 className="text-sm font-medium text-muted-foreground">Request</h3>
-        <Code
-          code={`// POST /api/search
-{
-  "search": "hero section",  // Required: search query
-  "page": 1,                // Optional: page number (default: 1)
-  "per_page": 20           // Optional: results per page (default: 20)
-}`}
-          language="json"
-          display="block"
-          fontSize="sm"
-        />
-        <h3 className="text-sm font-medium text-muted-foreground">
-          Success Response
-        </h3>
-        <Code
-          code={`{
-  "results": [{
-    "name": "Default",
-    "preview_url": "https://cdn.HigherBits.dev/...",
-    "video_url": "https://cdn.HigherBits.dev/...",
-    "demo_id": 123,              // Use this ID for prompt generation
-    "component_data": {
-      "name": "Animated hero",
-      "description": "Animated hero with text and two shadcn/ui buttons",
-      "code": "https://cdn.HigherBits.dev/...",
-      "install_command": "pnpm dlx shadcn@latest add \"https://higherbits.dev/r/...\""
-    },
-    "component_user_data": {
-      "name": "Clarence",
-      "username": "CLDGayo", 
-      "image_url": "https://img.clerk.com/..."
-    },
-    "usage_count": 1621
-  }],
-  "metadata": {
-    "plan": "free",           // Current API plan
-    "requests_remaining": 80,  // Remaining API requests
-    "pagination": {
-      "total": 45,            // Total number of results
-      "page": 1,              // Current page
-      "per_page": 20,         // Results per page
-      "total_pages": 3        // Total number of pages
-    }
-  }
-}`}
-          language="json"
-          display="block"
-          fontSize="sm"
-        />
-        <h3 className="text-sm font-medium text-muted-foreground">
-          Error Responses
-        </h3>
-        <Code
-          code={`// 401 Unauthorized
-{
-  "error": "API key is required"
-}
-// or
-{
-  "error": "Invalid API key"
-}
-
-// 400 Bad Request
-{
-  "error": "Search query is required"
-}
-
-// 500 Internal Server Error
-{
-  "error": "Internal server error",
-  "details": "Error message details"
-}`}
-          language="json"
-          display="block"
-          fontSize="sm"
-        />
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-sm font-medium">Generate Prompt API</h2>
-        <h3 className="text-sm font-medium text-muted-foreground">Request</h3>
-        <Code
-          code={`// POST /api/prompts
-{
-  "prompt_type": "basic",    // Required: one of ${JSON.stringify(promptTypeValues)}
-  "demo_id": "123"          // Required: demo ID from search results
-}`}
-          language="json"
-          display="block"
-          fontSize="sm"
-        />
-        <h3 className="text-sm font-medium text-muted-foreground">
-          Success Response
-        </h3>
-        <Code
-          code={`{
-  "prompt": "Copy-paste this component to /components/ui folder:\\n\`\`\`tsx\\ncomponent.tsx\\n// Component code here...\\n\\ndemo.tsx\\n// Demo code here...\\n\`\`\`\\n"
-}`}
-          language="json"
-          display="block"
-          fontSize="sm"
-        />
-        <h3 className="text-sm font-medium text-muted-foreground">
-          Error Responses
-        </h3>
-        <Code
-          code={`// 401 Unauthorized
-{
-  "error": "API key is required"
-}
-// or
-{
-  "error": "Invalid API key"
-}
-
-// 400 Bad Request
-{
-  "error": "prompt_type and demo_id are required"
-}
-// or
-{
-  "error": "Demo or component code is missing"
-}
-
-// 404 Not Found
-{
-  "error": "Demo not found"
-}
-// or
-{
-  "error": "Component data not found"
-}
-
-// 500 Internal Server Error
-{
-  "error": "Internal server error",
-  "details": "Error message details"
-}`}
-          language="json"
-          display="block"
-          fontSize="sm"
-        />
-      </div>
+        <Code code="Authorization: Bearer your_api_key_here" language="text" display="block" fontSize="sm" />
+        <p className="text-sm text-muted-foreground">Send credentials in headers, never in URLs.</p>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-sm font-medium">Search metadata — POST /api/search</h2>
+        <Code code={JSON.stringify({search:"hero section",page:1,per_page:20},null,2)} language="json" display="block" fontSize="sm" />
+        <Code code={JSON.stringify({results:[{demo_id:123,component_id:456,name:"Default",component_data:{id:456,name:"Animated hero",description:"An animated hero"}}],metadata:{pagination:{page:1,per_page:20,total:1,total_pages:1}}},null,2)} language="json" display="block" fontSize="sm" />
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-sm font-medium">Copy prompt — POST /api/prompts</h2>
+        <Code code={JSON.stringify({prompt_type:PROMPT_TYPES.EXTENDED,demo_id:123,requestId:"f47ac10b-58cc-4372-a567-0e02b2c3d479"},null,2)} language="json" display="block" fontSize="sm" />
+        <p className="text-sm text-muted-foreground">Returns a prompt string. Use a fresh UUID for each intentional copy; reuse it only when retrying the same request within two minutes.</p>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-sm font-medium">MCP source — POST /api/mcp/component-source</h2>
+        <Code code={JSON.stringify({componentId:456,demoId:123,requestId:"f47ac10b-58cc-4372-a567-0e02b2c3d479"},null,2)} language="json" display="block" fontSize="sm" />
+        <p className="text-sm text-muted-foreground">Returns authorized files and dependencies. MCP tools: search_higherbits_components for metadata, get_higherbits_component_source for one source copy.</p>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-sm font-medium">Install — POST /api/copy-grants</h2>
+        <p className="text-sm text-muted-foreground">Send componentId and a fresh requestId UUID. The returned registryUrl works with shadcn@4.15.0 and expires after five minutes. Issuing or copying the command is free; its first source release uses one copy. One complete CLI retry is supported. Keep the capability URL private.</p>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-sm font-medium">Errors</h2>
+        <p className="text-sm text-muted-foreground">401: sign in or check API key. 403/404: source unavailable. 409: changed target or reused issuance ID. 410: expired command. 429: daily, issuance or retry limit reached. 503: temporarily unavailable. Failed preparation does not use a copy; failed clipboard or network delivery after admission may use one.</p>
+      </section>
     </div>
   )
 }

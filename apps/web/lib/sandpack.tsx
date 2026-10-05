@@ -409,6 +409,24 @@ a {
 }
 `
 
+function resolveAutoIndexDemoImports(
+  demoCode: string,
+  componentSlug: string,
+  relativeImportPath: string,
+) {
+  if (relativeImportPath !== "/components/auto-index") return demoCode
+
+  // The upstream demo lives in a different directory than Sandpack's /demo.tsx.
+  // Rewrite only static imports of this exact component in the generated preview.
+  return demoCode.replace(
+    /^([ \t]*import[ \t]+[^\r\n;]+?[ \t]+from[ \t]*)(["'])(?:\.\.\/blocks\/|@\/registry\/[a-z0-9-]+\/blocks\/)([a-z0-9-]+)\2/gm,
+    (original, prefix: string, quote: string, importedSlug: string) =>
+      importedSlug === componentSlug
+        ? `${prefix}${quote}./components/auto-index/${componentSlug}${quote}`
+        : original,
+  )
+}
+
 export function generateSandpackFiles({
   demoComponentNames,
   componentSlug,
@@ -948,7 +966,11 @@ export {
       export { usePathname } from './router';
     `,
     [`${relativeImportPath}/${componentSlug}.tsx`]: code,
-    "/demo.tsx": demoCode,
+    "/demo.tsx": resolveAutoIndexDemoImports(
+      demoCode,
+      componentSlug,
+      relativeImportPath,
+    ),
     "/lib/utils.ts": `
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
@@ -1558,7 +1580,11 @@ export {
       export { usePathname } from './router';
     `,
     [`${relativeImportPath}/${componentSlug}.tsx`]: code,
-    "/demo.tsx": demoCode,
+    "/demo.tsx": resolveAutoIndexDemoImports(
+      demoCode,
+      componentSlug,
+      relativeImportPath,
+    ),
     "/lib/utils.ts": `
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"

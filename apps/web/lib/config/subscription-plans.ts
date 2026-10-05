@@ -25,7 +25,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     name: "Free",
     description: "Perfect for trying out",
     features: [
-      "2 free copies per day",
+      "2 shared copies per day · resets daily at 00:00 UTC",
       "Unlimited UI Inspirations",
       "Unlimited SVG Logo Search",
       "Community support",
@@ -93,18 +93,10 @@ export const FREE_USAGE_LIMIT = 2
 
 export const COMPARISON_FEATURES: ComparisonFeature[] = [
   {
-    name: "Code Copies",
+    name: "Shared copies (code, prompts, CLI and MCP)",
     section: "Usage",
     values: {
-      free: "2 per day",
-      pro: "Unlimited",
-    },
-  },
-  {
-    name: "Prompt Copies",
-    section: "Usage",
-    values: {
-      free: "2 per day",
+      free: "2 per day total · resets daily at 00:00 UTC",
       pro: "Unlimited",
     },
   },
@@ -144,20 +136,11 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
 
 export const PLAN_FEATURES: PlanFeature[] = [
   {
-    name: "Code Copies",
+    name: "Shared copies (code, prompts, CLI and MCP)",
     included: "free",
     category: "Usage",
     valueByPlan: {
-      free: "2 per day",
-      pro: "Unlimited",
-    },
-  },
-  {
-    name: "Prompt Copies",
-    included: "free",
-    category: "Usage",
-    valueByPlan: {
-      free: "2 per day",
+      free: "2 per day total · resets daily at 00:00 UTC",
       pro: "Unlimited",
     },
   },

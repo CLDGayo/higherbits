@@ -1,5 +1,7 @@
 "use client"
 
+import { getInstallCommand } from "@/lib/copy-client"
+
 import { useAtom } from "jotai"
 import {
   CheckIcon,
@@ -48,7 +50,7 @@ import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { generateSandpackFiles } from "@/lib/sandpack"
 import { cn, getPackageRunner } from "@/lib/utils"
 import { Component, Demo, Tag, User } from "@/types/global"
-import { useAuth, useUser } from "@clerk/nextjs"
+import { useUser } from "@clerk/nextjs"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -326,7 +328,9 @@ export function ComponentPagePreview({
                               className={`overflow-auto ${styles.codeViewerWrapper} relative`}
                             >
                               <CopyCodeButton
+                                exportableFiles={visibleFiles}
                                 component_id={component.id}
+                                demo_id={demo.id}
                                 user_id={user?.id}
                               />
                               <Tabs
@@ -380,41 +384,12 @@ export function ComponentPagePreview({
   )
 }
 
-const useInstallUrl = (component: Component, user: User) => {
-  const auth = useAuth()
-  const [installUrl, setInstallUrl] = useState<string | undefined>()
-
-  useEffect(() => {
-    // TODO: Add custom template to make JWT live longer
-    auth.getToken({ template: "long-token" })
-      .then((token) => {
-        const url = new URL(
-          `${process.env.NEXT_PUBLIC_APP_URL}/r/${user.username}/${component.component_slug}`,
-        )
-        if (token) {
-          url.searchParams.set("api_key", token)
-        }
-        setInstallUrl(url.toString())
-      })
-      .catch((error) => {
-        console.error("Error fetching token for install URL:", error)
-        // Fallback to URL without API key on timeout/error
-        const url = new URL(
-          `${process.env.NEXT_PUBLIC_APP_URL}/r/${user.username}/${component.component_slug}`,
-        )
-        setInstallUrl(url.toString())
-      })
-  }, [component.id, user.id])
-
-  return installUrl
-}
-
 function CopyCommandSection({
   component,
 }: {
   component: Component & { user: User }
 }) {
-  const installUrl = useInstallUrl(component, component.user)
+  const installUrl = "<generated when copied>"
   const [copied, setCopied] = useState(false)
   const [selectedPackageManager, setSelectedPackageManager] = useState(() =>
     typeof window !== "undefined"
@@ -424,21 +399,17 @@ function CopyCommandSection({
 
   const controls = useAnimation()
 
-  const copyCommand = () => {
-    const runner = getPackageRunner(selectedPackageManager)
-    const command = `${runner} shadcn@latest add "${installUrl}"`
-    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(command)
-    }
-    setCopied(true)
-    trackEvent(AMPLITUDE_EVENTS.COPY_INSTALL_COMMAND, {
-      componentId: component.id,
-      componentName: component.name,
-      packageManager: selectedPackageManager,
-      installUrl,
-    })
-    setTimeout(() => setCopied(false), 1000)
-    toast("Command copied to clipboard")
+  const copyCommand = async () => {
+    try {
+      const command = await getInstallCommand(component.id, getPackageRunner(selectedPackageManager))
+      await navigator.clipboard.writeText(command)
+      setCopied(true)
+      trackEvent(AMPLITUDE_EVENTS.COPY_INSTALL_COMMAND, {
+        componentId: component.id, packageManager: selectedPackageManager,
+      })
+      setTimeout(() => setCopied(false), 1000)
+      toast("Command copied. Expires in five minutes; allowance is used when installed.")
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Unable to copy install command") }
   }
 
   const handlePackageManagerChange = (pm: string) => {
@@ -502,7 +473,7 @@ function CopyCommandSection({
                 {getPackageRunner(selectedPackageManager)}
               </span>
               <span className="text-muted-foreground">
-                shadcn@latest add "{installUrl}"
+                shadcn@4.15.0 add "{installUrl}"
               </span>
             </code>
           )}

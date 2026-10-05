@@ -1,6 +1,100 @@
+import { createHash } from "node:crypto"
 import OpenAI from "openai"
-import { supabaseWithAdminAccess } from "./supabase"
 import endent from "endent"
+import { load } from "cheerio"
+
+const GHL_ALLOWED_TAGS = new Set([
+  "a", "article", "aside", "b", "blockquote", "br", "button", "canvas", "code", "dd", "del", "details", "div", "dl", "dt", "em",
+  "fieldset", "figcaption", "figure", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hr", "i", "img", "label", "legend",
+  "li", "main", "mark", "ol", "p", "path", "polygon", "polyline", "rect", "circle", "ellipse", "line", "g", "defs",
+  "lineargradient", "radialgradient", "stop", "svg", "section", "small", "span", "strong", "style", "summary", "table", "tbody",
+  "td", "th", "thead", "tr", "u", "ul", "use",
+])
+const GHL_REMOVE_SUBTREE_TAGS = new Set([
+  "base", "embed", "form", "iframe", "input", "link", "meta", "object", "option", "script", "select", "set", "textarea", "foreignobject",
+  "animate", "animatemotion", "animatetransform",
+])
+const GHL_SVG_PRESENTATION_URL_ATTRIBUTES = new Set([
+  "fill", "filter", "clip-path", "mask", "marker-start", "marker-mid", "marker-end", "stroke", "cursor",
+])
+
+function sanitizeGhlCss(value: string): string {
+  return value
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    // Remove CSS escapes before checking resource syntax so escaped `url`/`@import`
+    // spellings cannot bypass the conservative resource allowlist.
+    .replace(/\\(?:[0-9a-f]{1,6}\s?|[\r\n\f]|.)/gi, "")
+    .replace(/@import\b[^;]*(?:;|$)/gi, "")
+    .replace(/(?:-webkit-)?image-set\s*\([^)]*\)/gi, "")
+    .replace(/url\s*\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi, (_match, doubleQuoted, singleQuoted, unquoted) => {
+      const resource = String(doubleQuoted ?? singleQuoted ?? unquoted ?? "").trim()
+      return /^#[a-zA-Z0-9_.:-]{1,128}$/.test(resource) ? `url(${resource})` : ""
+    })
+    // Fail closed for malformed or unbalanced URL functions too.
+    .replace(/url\s*\((?:(?!\)).)*$/gi, "")
+    .replace(/expression\s*\([^)]*\)/gi, "")
+    .replace(/(?:javascript|vbscript)\s*:/gi, "")
+    .replace(/-moz-binding\s*:[^;}]*/gi, "")
+    .replace(/behavior\s*:[^;}]*/gi, "")
+}
+
+function hasOnlyLocalSvgUrlReferences(value: string): boolean {
+  const decoded = value
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\\([0-9a-f]{1,6})\s?|\\([\r\n\f])|\\(.)/gi, (_match, hex, newline, escaped) => {
+      if (hex) {
+        const codePoint = Number.parseInt(hex, 16)
+        return String.fromCodePoint(codePoint > 0 && codePoint <= 0x10ffff ? codePoint : 0xfffd)
+      }
+      return newline ? "" : escaped ?? ""
+    })
+  const urlCount = decoded.match(/url\s*\(/gi)?.length ?? 0
+  if (!urlCount) return true
+  if (value.includes("\\")) return false
+  return (sanitizeGhlCss(value).match(/url\s*\(/gi)?.length ?? 0) === urlCount
+}
+
+/** Sanitizes generated markup before persistence or copy; it is never executed in the app. */
+export function sanitizeGhlHtml(markup: string): string {
+  const $ = load(markup, {}, false)
+  for (const element of $.root().find("*").toArray()) {
+    const node = $(element)
+    const tag = element.tagName.toLowerCase()
+    if (GHL_REMOVE_SUBTREE_TAGS.has(tag)) {
+      node.remove()
+      continue
+    }
+    if (!GHL_ALLOWED_TAGS.has(tag)) {
+      node.replaceWith(node.contents())
+      continue
+    }
+    if (tag === "style") node.text(sanitizeGhlCss(node.text()))
+    for (const [name, rawValue] of Object.entries(element.attribs)) {
+      const value = rawValue ?? ""
+      const lowerName = name.toLowerCase()
+      if (lowerName.startsWith("on") || ["action", "background", "formaction", "poster", "srcdoc", "srcset", "target", "download", "ping"].includes(lowerName)) {
+        node.removeAttr(name)
+        continue
+      }
+      if (GHL_SVG_PRESENTATION_URL_ATTRIBUTES.has(lowerName) && !hasOnlyLocalSvgUrlReferences(value)) {
+        node.removeAttr(name)
+        continue
+      }
+      if (lowerName === "href" || lowerName === "xlink:href") {
+        if (/^#[a-zA-Z0-9_.:-]{1,128}$/.test(value)) continue
+        node.removeAttr(name)
+        continue
+      }
+      if (lowerName === "src") {
+        if (/^data:image\/(?:png|jpeg|gif|webp|avif);base64,[a-z0-9+/=]+$/i.test(value)) continue
+        node.removeAttr(name)
+        continue
+      }
+      if (lowerName === "style") node.attr(name, sanitizeGhlCss(value))
+    }
+  }
+  return $.root().html()?.trim() ?? ""
+}
 
 /**
  * Robustly clean and extract raw embeddable HTML from model output.
@@ -40,13 +134,7 @@ export function cleanGhlHtml(raw: string): string {
     }
   }
 
-  // 3. Ensure Inter Google Font stylesheet is loaded at the very top
-  if (!text.includes("fonts.googleapis.com/css2?family=Inter")) {
-    const fontLinks = `<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">\n`
-    text = fontLinks + text
-  }
-
-  // 4. Auto-heal any high-specificity button resets (replace with zero-specificity :where)
+  // 3. Auto-heal any high-specificity button resets (replace with zero-specificity :where)
   text = text.replace(
     /\.ghl-component-wrapper\s+button,\s*\.ghl-component-wrapper\s+\[role=["']?button["']?\]\s*\{[^}]*background:\s*transparent[^}]*padding:\s*0[^}]*\}/gi,
     `:where(.ghl-component-wrapper) :where(button, [role="button"]) {
@@ -61,7 +149,7 @@ export function cleanGhlHtml(raw: string): string {
   )
 
   // 4b. Inject Shadcn semantic fallback utilities into style block so unmapped tokens never break layout
-  if (!text.includes(".ghl-component-wrapper .bg-primary") && text.includes("</style>")) {
+  if (!text.includes(".ghl-component-wrapper .bg-primary") && !text.includes(":where(.ghl-component-wrapper) .bg-primary") && text.includes("</style>")) {
     const shadcnFallbacks = `
     /* Shadcn Semantic Fallbacks for GoHighLevel */
     :where(.ghl-component-wrapper) .bg-primary { background-color: #f4f4f5 !important; color: #09090b !important; }
@@ -119,13 +207,81 @@ export function cleanGhlHtml(raw: string): string {
     text += "\n" + "</div>".repeat(openDivs - closeDivs)
   }
 
-  return text.trim()
+  return sanitizeGhlHtml(text.trim())
 }
 
-export async function generateGhlTemplate(demoId: number, forceRegenerate = false): Promise<string> {
+export const GHL_TEMPLATE_VERSION = "higherbits-ghl-template-v3"
+const GHL_PROVIDER_TIMEOUT_MS = 90_000
+export const GHL_GENERATION_DEADLINE_MS = 100_000
+const GHL_MAX_INPUT_BYTES = 2_097_152
+const GHL_MAX_PROVIDER_RESPONSE_BYTES = 2_097_152
+const GHL_MAX_OUTPUT_BYTES = 1_048_576
+
+async function readGhlProviderResponseText(response: Response): Promise<string> {
+  const declaredLength = Number(response.headers.get("content-length"))
+  if (Number.isFinite(declaredLength) && declaredLength > GHL_MAX_PROVIDER_RESPONSE_BYTES) {
+    await response.body?.cancel().catch(() => undefined)
+    throw new Error("GHL provider response exceeds the supported byte limit")
+  }
+
+  const reader = response.body?.getReader()
+  if (!reader) return ""
+  const decoder = new TextDecoder()
+  let byteLength = 0
+  let text = ""
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    byteLength += value.byteLength
+    if (byteLength > GHL_MAX_PROVIDER_RESPONSE_BYTES) {
+      await reader.cancel().catch(() => undefined)
+      throw new Error("GHL provider response exceeds the supported byte limit")
+    }
+    text += decoder.decode(value, { stream: true })
+  }
+  return text + decoder.decode()
+}
+
+export function computeGhlSourceFingerprint(componentCode: string, demoCode: string): string {
+  if (typeof componentCode !== "string" || typeof demoCode !== "string") {
+    throw new TypeError("GHL source must be resolved text")
+  }
+  const hash = createHash("sha256").update(GHL_TEMPLATE_VERSION).update(Buffer.from([0]))
+  for (const part of [componentCode, demoCode]) {
+    const bytes = Buffer.from(part, "utf8")
+    const length = Buffer.allocUnsafe(4)
+    length.writeUInt32BE(bytes.byteLength)
+    hash.update(length).update(bytes)
+  }
+  return hash.digest("hex")
+}
+
+export type PreparedGhlSource = {
+  componentCode: string
+  demoCode: string
+  savedGhlHtml?: string | null
+  savedFingerprint?: string | null
+  generationSignal?: AbortSignal
+  persistOutput: (html: string, sourceFingerprint: string) => Promise<void>
+}
+
+export async function generateGhlTemplate(demoId: number, forceRegenerate: boolean, prepared: PreparedGhlSource): Promise<string> {
   console.log(`Starting GHL template generation for demo ${demoId} (forceRegenerate: ${forceRegenerate})`)
   
   try {
+    if (typeof prepared.componentCode !== "string" || typeof prepared.demoCode !== "string" ||
+        typeof prepared.persistOutput !== "function") {
+      throw new Error("Authorized source and fenced output persistence are required")
+    }
+    if (Buffer.byteLength(prepared.componentCode) + Buffer.byteLength(prepared.demoCode) > GHL_MAX_INPUT_BYTES) {
+      throw new Error("GHL generation input exceeds the supported byte limit")
+    }
+    const sourceFingerprint = computeGhlSourceFingerprint(prepared.componentCode, prepared.demoCode)
+    if (!forceRegenerate && prepared.savedFingerprint === sourceFingerprint && prepared.savedGhlHtml) {
+      const saved = cleanGhlHtml(prepared.savedGhlHtml)
+      if (saved) return saved
+    }
+
     const relmioToken = process.env.RELMIO_AUTH_TOKEN
     const apiKey = process.env.OPENAI_API_KEY
     if (!relmioToken && (!apiKey || apiKey === "sk-placeholder")) {
@@ -144,46 +300,15 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
         apiKey,
         baseURL: process.env.OPENAI_BASE_URL || undefined,
         defaultHeaders: Object.keys(defaultHeaders).length ? defaultHeaders : undefined,
-        timeout: 90000,
+        timeout: GHL_PROVIDER_TIMEOUT_MS,
       })
     }
 
-    // 1. Fetch demo data
-    const { data: demo, error } = await supabaseWithAdminAccess
-      .from("demos")
-      .select(`
-        *,
-        component:components(*)
-      `)
-      .eq("id", demoId)
-      .single()
-
-    if (error || !demo) {
-      throw new Error(`Failed to fetch demo ${demoId}: ${error?.message}`)
-    }
-
-    if (!demo.demo_code || !demo.component?.code) {
-      throw new Error(`Demo ${demoId} is missing code or component code.`)
-    }
-
-    // Helper to fetch code if it's a URL
-    const fetchCode = async (urlOrCode: string) => {
-      if (!urlOrCode) return ""
-      if (!urlOrCode.startsWith("http://") && !urlOrCode.startsWith("https://")) {
-        return urlOrCode
-      }
-      try {
-        const response = await fetch(urlOrCode)
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        return response.text()
-      } catch (error) {
-        console.error(`Error fetching URL ${urlOrCode}:`, error)
-        return urlOrCode
-      }
-    }
-
-    const componentCode = await fetchCode(demo.component.code)
-    const demoCode = await fetchCode(demo.demo_code)
+    // Callers provide the exact authorized snapshot; never re-fetch source locators here.
+    const componentCode = prepared.componentCode
+    const demoCode = prepared.demoCode
+    const generationDeadline = prepared.generationSignal ?? AbortSignal.timeout(GHL_GENERATION_DEADLINE_MS)
+    if (generationDeadline.aborted) throw new Error("GHL generation deadline exceeded")
 
     // 2. Construct the system prompt
     const systemInstruction = endent`
@@ -198,11 +323,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       - DO NOT include <!DOCTYPE html>, <html>, <head>, or <body> tags. This is an embedded snippet for an existing page.
 
       2. FONTS & SCRIPTS:
-      - Include font preconnect & Inter stylesheet:
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-      - Include Tailwind CDN: <script src="https://cdn.tailwindcss.com"></script>
+      - Use system font stacks and inline CSS only. Never include remote fonts, scripts, stylesheets, images, or other resources.
 
       3. SCOPED STYLES & ZERO-SPECIFICITY RESETS:
       Include a <style> block with CSS variables, keyframe animations, and reset:
@@ -304,17 +425,18 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
             "Authorization": `Bearer ${relmioToken}`,
             "Content-Type": "application/json",
           },
+          signal: AbortSignal.any([generationDeadline, AbortSignal.timeout(GHL_PROVIDER_TIMEOUT_MS)]),
           body: JSON.stringify({
             input: `${systemInstruction}\n\n${userMessage}`,
           }),
         })
 
         if (!relmioRes.ok) {
-          const errorText = await relmioRes.text().catch(() => "")
-          throw new Error(`Relmio request failed (${relmioRes.status}): ${errorText}`)
+          await readGhlProviderResponseText(relmioRes)
+          throw new Error(`Relmio request failed (${relmioRes.status})`)
         }
 
-        const relmioData = await relmioRes.json()
+        const relmioData = JSON.parse(await readGhlProviderResponseText(relmioRes))
         rawOutput = relmioData.output || ""
       } catch (relmioErr) {
         if (openai) {
@@ -352,7 +474,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
           temperature: 0.1,
           // @ts-ignore
           extra_body: Object.keys(extraBody).length ? extraBody : undefined,
-        })
+        }, { signal: generationDeadline })
 
         if (!completion?.choices || !completion.choices[0]) {
           console.error(`OpenAI/OpenRouter raw response with missing choices from ${targetModel}:`, JSON.stringify(completion))
@@ -434,22 +556,21 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate = fals
       }
     }
 
+    if (Buffer.byteLength(rawOutput) > GHL_MAX_OUTPUT_BYTES) {
+      throw new Error("GHL generated output exceeds the supported byte limit")
+    }
     const ghlHtml = cleanGhlHtml(rawOutput)
 
     if (!ghlHtml) {
       throw new Error("AI returned an empty response.")
     }
+    if (Buffer.byteLength(ghlHtml) > GHL_MAX_OUTPUT_BYTES) {
+      throw new Error("GHL sanitized output exceeds the supported byte limit")
+    }
 
     // 4. Save to database
     console.log(`Saving generated GHL HTML to demo ${demoId}...`)
-    const { error: updateError } = await supabaseWithAdminAccess
-      .from("demos")
-      .update({ ghl_html_content: ghlHtml })
-      .eq("id", demoId)
-
-    if (updateError) {
-      throw new Error(`Failed to update demo ${demoId} with GHL HTML: ${updateError.message}`)
-    }
+    await prepared.persistOutput(ghlHtml, sourceFingerprint)
 
     console.log(`Successfully generated and saved GHL template for demo ${demoId}`)
     return ghlHtml

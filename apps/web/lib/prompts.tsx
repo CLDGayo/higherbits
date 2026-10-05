@@ -144,6 +144,7 @@ export type { PromptOption, PromptOptionBase }
 export const getComponentInstallPrompt = ({
   promptType,
   codeFileName,
+  componentInstallPath,
   demoCodeFileName,
   code,
   demoCode,
@@ -158,6 +159,7 @@ export const getComponentInstallPrompt = ({
 }: {
   promptType: PromptType
   codeFileName: string
+  componentInstallPath?: string
   demoCodeFileName: string
   code: string
   demoCode: string
@@ -172,6 +174,8 @@ export const getComponentInstallPrompt = ({
 }) => {
   const componentFileName = codeFileName.split("/").slice(-1)[0]
   const componentDemoFileName = demoCodeFileName.split("/").slice(-1)[0]
+  const componentPath = componentInstallPath || `components/ui/${componentFileName}`
+  const componentAliasPath = componentInstallPath ? `@/${componentInstallPath}` : `@components/ui/${componentFileName}`
 
   const allDependencies = uniq([
     ...Object.keys(npmDependencies || {}),
@@ -269,7 +273,7 @@ export const getComponentInstallPrompt = ({
          - Check the styling configuration (Tailwind v3 in \`tailwind.config.{js,ts}\` or Tailwind v4 in \`globals.css\` / \`index.css\`).
 
       2. **Write Component Files**:
-         - Use \`write_to_file\` to create the component at \`components/ui/${componentFileName}\` (or the project's corresponding path) with the complete implementation below.
+         - Use \`write_to_file\` to create the component at \`${componentPath}\` (or the project's corresponding path) with the complete implementation below.
          - If any registry dependencies are provided, write each helper file to its proper path.
          - Create or update an example showcase page/view using the demo code below so the component can be tested immediately.
 
@@ -322,7 +326,7 @@ export const getComponentInstallPrompt = ({
       Integrate the following React component into the codebase using Cursor Composer or your AI IDE.
 
       ## Composer Instructions:
-      1. Create the component file at \`@components/ui/${componentFileName}\` (or your project's standard component directory).
+      1. Create the component file at \`${componentAliasPath}\` (or your project's standard component directory).
       2. Install the necessary NPM dependencies:
          \`\`\`bash
          ${allDependencies.length ? `npm install ${allDependencies.join(" ")}` : "# No external dependencies required"}
@@ -358,7 +362,7 @@ export const getComponentInstallPrompt = ({
       Add and integrate this React component into the Bolt.new project.
 
       ## Bolt.new Setup Instructions:
-      1. **Component File**: Create \`src/components/ui/${componentFileName}\` with the complete component code below.
+      1. **Component File**: Create \`src/${componentPath}\` with the complete component code below.
       2. **Install Dependencies**: In the WebContainer terminal, install the required packages:
          \`\`\`bash
          ${allDependencies.length ? `npm install ${allDependencies.join(" ")}` : "# No extra packages required"}
@@ -394,7 +398,7 @@ export const getComponentInstallPrompt = ({
       Integrate the following React component into this Lovable project.
 
       ## Lovable Implementation Steps:
-      1. **Component File**: Create \`src/components/ui/${componentFileName}\` with the complete code below.
+      1. **Component File**: Create \`src/${componentPath}\` with the complete code below.
       2. **Dependencies**: Ensure the following packages are installed:
          \`\`\`bash
          ${allDependencies.length ? `npm i ${allDependencies.join(" ")}` : "# No extra packages required"}
@@ -465,7 +469,7 @@ export const getComponentInstallPrompt = ({
 
       ## Instructions:
       1. Provide the complete code for the component without placeholders, \`// ... rest of code\`, or omissions.
-      2. Recommend placing the component in \`components/ui/${componentFileName}\` (or the appropriate modular directory).
+      2. Recommend placing the component in \`${componentPath}\` (or the appropriate modular directory).
       3. Specify the terminal command to install any required dependencies:
          \`\`\`bash
          ${allDependencies.length ? `npm install ${allDependencies.join(" ")}` : "# No external dependencies required"}
@@ -502,7 +506,7 @@ export const getComponentInstallPrompt = ({
       Implement and integrate the following React component into the codebase.
 
       ## Specifications:
-      1. Target path: \`components/ui/${componentFileName}\` (or project equivalent).
+      1. Target path: \`${componentPath}\` (or project equivalent).
       2. Dependencies to install:
          \`\`\`bash
          ${allDependencies.length ? `npm install ${allDependencies.join(" ")}` : "# No external dependencies required"}
@@ -538,7 +542,7 @@ export const getComponentInstallPrompt = ({
       Build and integrate this component as my prototype in Replit.
 
       ## Replit Agent Instructions:
-      1. Add the component file to \`client/src/components/ui/${componentFileName}\` (or the project's frontend component directory).
+      1. Add the component file to \`client/src/${componentPath}\` (or the project's frontend component directory).
       2. Install the necessary dependencies:
          \`\`\`bash
          ${allDependencies.length ? `npm install ${allDependencies.join(" ")}` : "# No external dependencies required"}

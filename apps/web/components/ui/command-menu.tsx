@@ -1,5 +1,8 @@
 "use client"
 
+import { requestCopy, getCopySource } from "@/lib/copy-client"
+import { withCopyNotice } from "@/lib/copy-notice"
+
 import { useState, useMemo, useEffect, Dispatch, SetStateAction } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Image from "next/image"
@@ -42,8 +45,6 @@ import { categories } from "@/lib/navigation"
 import { trackEvent, AMPLITUDE_EVENTS } from "@/lib/amplitude"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { cn, isMac } from "@/lib/utils"
-import { getComponentInstallPrompt } from "@/lib/prompts"
-import { resolveRegistryDependencyTree } from "@/lib/queries.server"
 import { useUserProfile } from "@/components/hooks/use-user-profile"
 
 import { Component, DemoWithComponent, User as UserType } from "@/types/global"
@@ -104,10 +105,10 @@ const useKeyboardShortcuts = ({
 
       try {
         setIsCopying(true)
-        const response = await fetch(selectedComponent.component.code)
-        const code = await response.text()
+        const { code, notice } = await getCopySource({ demoId: selectedComponent.id })
         if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(code)
+          await navigator.clipboard.writeText(withCopyNotice(code, notice, selectedComponent.component.component_slug + ".tsx"))
+          toast("Copied to clipboard")
         }
         trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
           componentId: selectedComponent.id,
@@ -116,11 +117,11 @@ const useKeyboardShortcuts = ({
         })
       } catch (err) {
         console.error("Failed to copy code:", err)
-        toast.error("Failed to copy code")
+        toast.error(err instanceof Error ? err.message : "Failed to copy code")
       } finally {
         setTimeout(() => {
           setIsCopying(false)
-          toast("Copied to clipboard")
+
         }, 1000)
       }
     }
@@ -271,77 +272,9 @@ export function CommandMenu() {
 
     setIsGenerating(true)
     try {
-      // Source comes from the entitlement-gated route rather than the CDN: a
-      // browser cannot sign a private R2 read.
-      const sourcePromise = fetch("/api/component-source", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ demoId: selectedComponent.id }),
-      }).then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`component-source failed (${res.status})`)
-        }
-        return res.json()
-      })
-
-      const componentAndDemoCodePromises = [
-        sourcePromise.then((s) => ({ data: s.code, error: null })),
-        sourcePromise.then((s) => ({ data: s.demoCode, error: null })),
-        sourcePromise.then((s) => ({ data: s.tailwindConfig, error: null })),
-        sourcePromise.then((s) => ({ data: s.compiledCss, error: null })),
-      ]
-
-      const [
-        codeResult,
-        demoResult,
-        tailwindConfigResult,
-        globalCssResult,
-        registryDependenciesResult,
-      ] = await Promise.all([
-        ...componentAndDemoCodePromises,
-        resolveRegistryDependencyTree({
-          supabase: supabase,
-          sourceDependencySlugs: [
-            `${selectedComponent.component.user.username}/${selectedComponent.component.component_slug}`,
-          ],
-          withDemoDependencies: false,
-        }),
-      ])
-
-      if (
-        codeResult?.error ||
-        demoResult?.error ||
-        tailwindConfigResult?.error ||
-        globalCssResult?.error
-      ) {
-        throw new Error("Failed to fetch component files")
-      }
-
-      const registryDependenciesData = registryDependenciesResult?.data as {
-        filesWithRegistry: Record<string, { code: string; registry: string }>
-        npmDependencies: Record<string, string>
-      }
-
-      const registryDependenciesFiles = Object.fromEntries(
-        Object.entries(registryDependenciesData.filesWithRegistry).map(
-          ([key, value]) => [key, value.code!],
-        ),
-      )
-
-      const prompt = getComponentInstallPrompt({
-        promptType: PROMPT_TYPES.EXTENDED,
-        codeFileName: selectedComponent.component.code.split("/").slice(-1)[0]!,
-        demoCodeFileName: selectedComponent.demo_code.split("/").slice(-1)[0]!,
-        code: codeResult.data as string,
-        demoCode: demoResult!.data as string,
-        registryDependencies: registryDependenciesFiles,
-        npmDependencies: (selectedComponent.component.dependencies ??
-          {}) as Record<string, string>,
-        npmDependenciesOfRegistryDependencies:
-          registryDependenciesData.npmDependencies,
-        tailwindConfig: tailwindConfigResult!.data as string,
-        globalCss: globalCssResult!.data as string,
-      })
+      const { prompt } = await (await requestCopy("/api/prompts", {
+        prompt_type: PROMPT_TYPES.EXTENDED, demo_id: selectedComponent.id,
+      })).json()
 
       if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(prompt)
@@ -357,7 +290,7 @@ export function CommandMenu() {
     } catch (err) {
       console.error("Failed to copy AI prompt:", err)
       toast.dismiss("ai-prompt")
-      toast.error("Failed to generate AI prompt")
+      toast.error(err instanceof Error ? err.message : "Failed to generate AI prompt")
     } finally {
       setIsGenerating(false)
     }
@@ -892,7 +825,7 @@ export function CommandMenu() {
             <div className="flex items-center gap-2 group hover:cursor-pointer">
               <div className="relative w-3 h-3">
                 <div
-                  className="absolute inset-0 transition-all duration-500 
+                  className="absolute inset-0 transition-all duration-500
                   group-hover:opacity-0 group-hover:scale-90"
                 >
                   <Logo position="flex" className="w-3 h-3 !left-0 !top-0" />
@@ -913,7 +846,7 @@ export function CommandMenu() {
                       ❤️
                     </span>
                     <div
-                      className="absolute inset-0 rounded-full bg-pink-500/20 animate-ping-slow 
+                      className="absolute inset-0 rounded-full bg-pink-500/20 animate-ping-slow
                       group-hover:opacity-100 opacity-0 transition-opacity duration-300"
                     />
                     <div
@@ -979,12 +912,10 @@ export function CommandMenu() {
                         onClick={async () => {
                           try {
                             setIsCopying(true)
-                            const response = await fetch(
-                              selectedComponent.component.code,
-                            )
-                            const code = await response.text()
+                            const { code, notice } = await getCopySource({ demoId: selectedComponent.id })
                             if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-                              await navigator.clipboard.writeText(code)
+                              await navigator.clipboard.writeText(withCopyNotice(code, notice, selectedComponent.component.component_slug + ".tsx"))
+                              toast("Copied to clipboard")
                             }
                             trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
                               componentId: selectedComponent.id,
@@ -993,11 +924,11 @@ export function CommandMenu() {
                             })
                           } catch (err) {
                             console.error("Failed to copy code:", err)
-                            toast.error("Failed to copy code")
+                            toast.error(err instanceof Error ? err.message : "Failed to copy code")
                           } finally {
                             setTimeout(() => {
                               setIsCopying(false)
-                              toast("Copied to clipboard")
+
                             }, 1000)
                           }
                         }}

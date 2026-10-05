@@ -1,5 +1,8 @@
 "use client"
 
+import { getCopySource } from "@/lib/copy-client"
+import { isReviewOnlyCopy, withCopyNotice } from "@/lib/copy-notice"
+
 import { useState, useEffect } from "react"
 import { useSandpack } from "@codesandbox/sandpack-react"
 import { toast } from "sonner"
@@ -11,32 +14,51 @@ import { isMac } from "@/lib/utils"
 
 export const CopyCodeButton = ({
   component_id,
+  demo_id,
   user_id,
+  exportableFiles,
 }: {
   component_id: number
+  demo_id?: number
   user_id?: string
+  exportableFiles: string[]
 }) => {
   const [codeCopied, setCodeCopied] = useState(false)
   const [hasSelection, setHasSelection] = useState(false)
   const { sandpack } = useSandpack()
   const { capture } = useSupabaseAnalytics()
 
-  const copyCode = (source: "button" | "shortcut") => {
+  const copyCode = async (source: "button" | "shortcut") => {
     const activeFile = sandpack.activeFile
     const fileContent = sandpack.files[activeFile]?.code
-    if (fileContent) {
-      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(fileContent)
-      }
-      setCodeCopied(true)
-      toast("Code copied to clipboard")
-      trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
-        fileName: activeFile,
-        fileExtension: activeFile.split(".").pop(),
-        copySource: source,
-      })
-      capture(component_id, AnalyticsActivityType.COMPONENT_CODE_COPY, user_id)
-      setTimeout(() => setCodeCopied(false), 2000)
+    const knownFile = exportableFiles.some(file => file.replace(/^\//, "") === activeFile.replace(/^\//, ""))
+    if (!knownFile || typeof fileContent !== "string") {
+      toast.error("This preview file is not available for export.")
+      return
+    }
+    if (!navigator.clipboard?.writeText) {
+      toast.error("Clipboard access is unavailable.")
+      return
+    }
+    {
+      try {
+        const { notice } = await getCopySource({ componentId: component_id, demoId: demo_id })
+        // Admission authorizes this component closure; copy the captured visible tab,
+        // including local preview transforms (the explicit preview-source ceiling).
+        const content = withCopyNotice(fileContent, notice, activeFile)
+        if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(content)
+        }
+        setCodeCopied(true)
+        toast(isReviewOnlyCopy(activeFile) ? "Review text copied with attribution" : "Code copied with attribution")
+        trackEvent(AMPLITUDE_EVENTS.COPY_CODE, {
+          fileName: activeFile,
+          fileExtension: activeFile.split(".").pop(),
+          copySource: source,
+        })
+        capture(component_id, AnalyticsActivityType.COMPONENT_CODE_COPY, user_id)
+        setTimeout(() => setCodeCopied(false), 2000)
+      } catch (error) { toast.error(error instanceof Error ? error.message : "Unable to copy code") }
     }
   }
 
@@ -56,7 +78,7 @@ export const CopyCodeButton = ({
 
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [sandpack])
+  }, [sandpack, component_id, demo_id, exportableFiles])
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -82,7 +104,7 @@ export const CopyCodeButton = ({
       ) : (
         <>
           <Clipboard size={14} className="text-muted-foreground/70" />
-          Copy Code{" "}
+          {isReviewOnlyCopy(sandpack.activeFile) ? "Copy with attribution (review text)" : "Copy Code"}{" "}
           <kbd
             className={`hidden md:inline-flex h-5 max-h-full items-center rounded border border-border px-1 ml-1 -mr-1 font-[inherit] text-[0.625rem] font-medium ${
               hasSelection

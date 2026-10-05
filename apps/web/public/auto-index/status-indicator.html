@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Service status indicators</title><style>
+.hb-status-list{font:15px/1.5 system-ui,sans-serif;max-width:320px;margin:24px auto;padding:20px;border:1px solid #d4d4d8;border-radius:12px}
+.hb-status-row{display:flex;align-items:center;gap:10px;margin:10px 0}.hb-status-dot{position:relative;display:inline-block;flex:none;width:12px;height:12px;border-radius:50%;background:#64748b}
+.hb-status-dot[data-state=active]{background:#22c55e}.hb-status-dot[data-state=down]{background:#ef4444}.hb-status-dot[data-state=fixing]{background:#eab308}
+.hb-status-dot[data-state=active]:before,.hb-status-dot[data-state=down]:before,.hb-status-dot[data-state=fixing]:before{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:hb-status-ping 1.5s ease-out infinite}
+.hb-status-dot[data-size=sm]{width:8px;height:8px}.hb-status-dot[data-size=lg]{width:16px;height:16px}
+@keyframes hb-status-ping{0%{transform:scale(1);opacity:.65}75%,100%{transform:scale(2);opacity:0}}
+@media(prefers-reduced-motion:reduce){.hb-status-dot:before{animation:none!important;display:none}}
+</style></head><body><div class="hb-status-list" aria-label="Service status examples">
+<div class="hb-status-row"><span class="hb-status-dot" data-state="active" aria-hidden="true"></span>All systems operational</div>
+<div class="hb-status-row"><span class="hb-status-dot" data-state="down" aria-hidden="true"></span>Systems down</div>
+<div class="hb-status-row"><span class="hb-status-dot" data-state="idle" aria-hidden="true"></span>Systems idle</div>
+<div class="hb-status-row"><span class="hb-status-dot" data-state="fixing" aria-hidden="true"></span>Diagnosing issue, fixing</div>
+<div class="hb-status-row"><span class="hb-status-dot" data-state="active" data-size="sm" aria-hidden="true"></span>Small size</div>
+<div class="hb-status-row"><span class="hb-status-dot" data-state="fixing" data-size="lg" aria-hidden="true"></span>Large size</div>
+</div></body></html>

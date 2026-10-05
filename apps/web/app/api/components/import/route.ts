@@ -25,6 +25,12 @@ export async function POST(request: Request) {
     }
 
     const data = await request.json()
+    if (data.registry === "auto-index") {
+      return NextResponse.json(
+        { error: "auto_index_requires_official_finalizer" },
+        { status: 403 },
+      )
+    }
     const baseFolder = `${userId}/${data.component_slug}`
 
     // Extract component names from code

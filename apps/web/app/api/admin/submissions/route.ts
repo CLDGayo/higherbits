@@ -2,7 +2,8 @@ import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { auth, clerkClient } from "@clerk/nextjs/server"
 import { supabaseWithAdminAccess as supabaseAdmin } from "@/lib/supabase"
-import { generateGhlTemplate } from "@/lib/ghl-generator"
+import { computeGhlSourceFingerprint } from "@/lib/ghl-generator"
+import { prepareCopySource } from "@/lib/api/server/copy-source"
 import { visibilityWriteFor } from "@/lib/submission-visibility"
 
 export async function GET(request: Request) {
@@ -70,6 +71,35 @@ export async function PATCH(request: Request) {
       return new NextResponse("Missing required fields", { status: 400 })
     }
 
+    if (status === "on_review" || status === "posted" || status === "featured") {
+      const { data: component, error: componentReadError } = await supabaseAdmin
+        .from("components")
+        .select("user_id")
+        .eq("id", componentId)
+        .maybeSingle()
+      if (componentReadError || !component) {
+        return NextResponse.json({ error: "ghl_output_unavailable" }, { status: 409 })
+      }
+      const { data: demos, error: demoReadError } = await supabaseAdmin
+        .from("demos")
+        .select("id")
+        .eq("component_id", componentId)
+      if (demoReadError || !demos?.length) {
+        return NextResponse.json({ error: "ghl_output_unavailable" }, { status: 409 })
+      }
+      for (const demo of demos) {
+        try {
+          const prepared = await prepareCopySource(component.user_id, { demoId: demo.id }, true)
+          const expectedFingerprint = computeGhlSourceFingerprint(prepared.source.code, prepared.source.demoCode)
+          if (!prepared.demo?.ghl_html_content || prepared.demo.ghl_source_fingerprint !== expectedFingerprint) {
+            return NextResponse.json({ error: "ghl_output_unavailable" }, { status: 409 })
+          }
+        } catch {
+          return NextResponse.json({ error: "ghl_output_unavailable" }, { status: 409 })
+        }
+      }
+    }
+
 
     // Read the status BEFORE overwriting it. Visibility must follow a
     // transition, not the mere fact that this route ran -- see
@@ -126,26 +156,6 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: componentError.message }, { status: 500 })
       }
     }
-
-    // Trigger AI generation for GoHighLevel template in the background
-    if (status === "posted" || status === "featured") {
-      // Find the demo ID for this component
-      const { data: demo } = await supabaseAdmin
-        .from("demos")
-        .select("id")
-        .eq("component_id", componentId)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-
-      if (demo) {
-        // Run asynchronously, do not await
-        generateGhlTemplate(demo.id).catch((err) => {
-          console.error("Background GHL generation failed:", err)
-        })
-      }
-    }
-
 
     try {
       revalidatePath("/")

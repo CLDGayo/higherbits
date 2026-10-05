@@ -1,5 +1,7 @@
 "use client"
 
+import { requestCopy } from "@/lib/copy-client"
+
 import { Icons } from "@/components/icons"
 import { Spinner } from "@/components/icons/spinner"
 import { BookmarkButton } from "@/components/ui/bookmark-button"
@@ -175,6 +177,7 @@ export function ComponentPreviewDialog({
   // Listen for READY message from iframe for instant loading
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (event.source !== iframeRef.current?.contentWindow) return
       if (event.data?.type === "READY" || event.data?.type === "preview-ready") {
         setIsLoading(false)
         sendThemeToIframe()
@@ -273,6 +276,7 @@ export function ComponentPreviewDialog({
     }
 
     const typeToUse = overridePromptType || selectedPromptType
+    const controlsSnapshot = { ...activeControls }
     if (overridePromptType && overridePromptType !== selectedPromptType) {
       setSelectedPromptType(overridePromptType)
     }
@@ -281,17 +285,11 @@ export function ComponentPreviewDialog({
     setIsPromptLoading(true)
 
     try {
-      const response = await fetch("/api/prompts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await requestCopy("/api/prompts", {
           prompt_type: typeToUse,
           demo_id: demo.id,
-          controls: activeControls,
-        }),
-      })
+          controls: controlsSnapshot,
+        })
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -404,7 +402,7 @@ export function ComponentPreviewDialog({
       }
     } catch (error) {
       console.error("Error copying prompt:", error)
-      toast.error("Failed to copy prompt")
+      toast.error(error instanceof Error ? error.message : "Failed to copy prompt")
     } finally {
       // Reset loading state when done
       setIsPromptLoading(false)
@@ -467,7 +465,7 @@ export function ComponentPreviewDialog({
                   <>
                     <Loader2 className="h-4 w-4 animate-spin shrink-0" />
                     <span>
-                      {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Generating GHL..." : "Generating..."}
+                      {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Preparing GHL..." : "Generating..."}
                     </span>
                   </>
                 ) : (
@@ -718,6 +716,7 @@ export function ComponentPreviewDialog({
                 </AnimatePresence>
                 <iframe
                   ref={iframeRef}
+                  sandbox="allow-scripts"
                   src={`${bundleUrl}?theme=${previewTheme}${
                     previewTheme === "dark" ? "&dark=true" : ""
                   }`}
@@ -726,7 +725,6 @@ export function ComponentPreviewDialog({
                     flex: 1,
                     minHeight: 0,
                   }}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   onLoad={() => {
                     setIsLoading(false)

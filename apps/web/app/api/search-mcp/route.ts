@@ -1,246 +1,26 @@
-import { createClient } from "@supabase/supabase-js"
-import { NextRequest, NextResponse } from "next/server"
-import { SearchResponseMCP } from "@/types/global"
-import { hasUserComponentAccess } from "@/lib/api/server/components"
-import { fetchComponentSource } from "@/lib/r2-read"
-import { resolveRegistryDependencyTree } from "@/lib/queries.server"
-import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
-import { PromptRule } from "@/types/prompt-rules"
+import { NextResponse } from "next/server"
+import { supabaseWithAdminAccess as db } from "@/lib/supabase"
+import { COPY_HEADERS, CopyError, copyErrorResponse } from "@/lib/api/server/copy-admission"
+import { copyIdentity } from "@/lib/api/server/copy-identity"
+import { visibleSearchDemos } from "@/lib/api/server/auto-index-search"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-)
-
-export async function POST(request: NextRequest) {
-  const apiKey = request.headers.get("x-api-key")
-
-  if (!apiKey) {
-    return NextResponse.json({ error: "API key is required" }, { status: 401 })
-  }
-
+/** Search is metadata-only. Full source is a separate metered operation. */
+export async function POST(request: Request) {
   try {
-    const { data: keyCheck, error: keyError } = await supabase.rpc(
-      "check_api_key",
-      { api_key: apiKey },
-    )
-    if (keyError) {
-      console.error("API key check error:", keyError)
-      return NextResponse.json(
-        { error: "Error validating API key" },
-        { status: 401 },
-      )
-    }
-
-    if (!keyCheck?.valid) {
-      return NextResponse.json(
-        { error: keyCheck?.error || "Invalid API key" },
-        { status: 401 },
-      )
-    }
-
+    await copyIdentity(request)
     const body = await request.json()
-    const { search, match_threshold = 0.33, limit = 5, promptRuleId } = body
-
-    if (!search) {
-      return NextResponse.json(
-        { error: "Search query is required" },
-        { status: 400 },
-      )
-    }
-
-    // Get user ID from API key
-    const { data: userData, error: userError } = await supabase
-      .from("api_keys")
-      .select("user_id")
-      .eq("key", apiKey)
-      .single()
-
-    if (userError || !userData) {
-      console.error("User ID fetch error:", userError)
-      return NextResponse.json(
-        { error: "Error fetching user data" },
-        { status: 500 },
-      )
-    }
-
-    const userId = userData.user_id
-
-    // Get prompt rule if provided
-    let promptRule: PromptRule | null = null
-    if (promptRuleId) {
-      const { data: promptRuleData, error: promptRuleError } = await supabase
-        .from("prompt_rules")
-        .select("*")
-        .eq("id", promptRuleId)
-        .eq("user_id", userId)
-        .single()
-
-      if (promptRuleError) {
-        if (promptRuleError.code !== "PGRST116") {
-          console.error("Prompt rule fetch error:", promptRuleError)
-        }
-      } else {
-        promptRule = promptRuleData as PromptRule
-      }
-    }
-
-    const { data: searchResults, error } = await supabase.functions.invoke(
-      "ai-search-oai",
-      {
-        body: {
-          search: search,
-          match_threshold: match_threshold,
-          limit: limit,
-        },
-      },
-    )
-
-    if (error) {
-      console.error("Search error:", error)
-      return NextResponse.json(
-        { error: "Error fetching search results" },
-        { status: 500 },
-      )
-    }
-
-    const searchResultsTruncated = searchResults.slice(0, limit)
-
-    const { data: demos, error: demosError } = await supabase
-      .from("demos")
-      .select(
-        `
-        id,
-        name,
-        demo_code,
-        component_id,
-        component:components!component_id (
-            name,
-            code,
-            user_id,
-            direct_registry_dependencies,
-            demo_direct_registry_dependencies
-        )
-      `,
-      )
-      .in(
-        "id",
-        searchResultsTruncated.map((result: any) => result.id),
-      )
-
-    if (demosError) {
-      console.error("Fetching demos error:", demosError)
-      return NextResponse.json(
-        { error: "Error fetching demos" },
-        { status: 500 },
-      )
-    }
-
-    const promises = demos?.map(async (demoRaw) => {
-      const component = Array.isArray(demoRaw.component)
-        ? demoRaw.component[0]
-        : demoRaw.component
-      const d = { ...demoRaw, component }
-
-      // Paid source is only fetched for callers entitled to it. Without this the
-      // route hands out purchasable component code to any valid API key.
-      const hasAccess = await hasUserComponentAccess(
-        userId,
-        d.component_id,
-      )
-
-      const { data: demoCode } = hasAccess
-        ? await fetchComponentSource(d.demo_code)
-        : { data: null }
-      const { data: componentCode } = hasAccess
-        ? await fetchComponentSource(d.component!.code as string)
-        : { data: null }
-
-      const { data: registryDependencies } =
-        await resolveRegistryDependencyTree({
-          supabase,
-          sourceDependencySlugs: [
-            ...d.component!.direct_registry_dependencies,
-            ...d.component!.demo_direct_registry_dependencies,
-          ],
-          withDemoDependencies: false,
-        })
-
-      return {
-        demoName: d.name,
-        demoCode: demoCode ?? "",
-        componentName: d.component!.name,
-        componentCode: componentCode ?? "",
-        registryDependencies: registryDependencies || undefined,
-        locked: !hasAccess,
-      }
-    })
-
-    const demosWithCodeAndRegistryDependencies = await Promise.all(promises)
-
-    const response = {
-      results: demosWithCodeAndRegistryDependencies,
-      promptRule: promptRule,
-    }
-
-    const responseObj = NextResponse.json<SearchResponseMCP>(response)
-
-    const componentIds =
-      demos
-        ?.map((demoRaw) => {
-          return demoRaw.component_id
-        })
-        .filter(Boolean) || []
-
-    const authorIds =
-      demos
-        ?.map((demoRaw) => {
-          const component = Array.isArray(demoRaw.component)
-            ? demoRaw.component[0]
-            : demoRaw.component
-          return component?.user_id
-        })
-        .filter(Boolean) || []
-
-    if (componentIds.length > 0) {
-      supabase
-        .rpc("record_mcp_component_usage", {
-          p_user_id: userId,
-          p_api_key: apiKey,
-          p_search_query: search,
-          p_component_ids: componentIds,
-          p_author_ids: authorIds,
-        })
-        .then(({ data, error }) => {
-          if (error) {
-            console.error("Error recording component usage:", error)
-          } else {
-            console.log("Component usage recorded successfully:", data)
-            if (data && typeof data === "object") {
-              console.log("Generation cost details:", {
-                subscription_plan: data.subscription_plan,
-                generation_cost: data.generation_cost,
-                ai_cost_share: data.ai_cost_share,
-                platform_share: data.platform_share,
-                total_author_share: data.total_author_share,
-              })
-            }
-          }
-        })
-        .then(undefined, (err: Error) => {
-          console.error("Exception recording component usage:", err)
-        })
-    }
-
-    return responseObj
-  } catch (error) {
-    console.error("Search error:", error)
-    return NextResponse.json(
-      {
-        error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
-    )
-  }
+    const { search, match_threshold = 0.33, userMessage = "", page = 1 } = body
+    const limit = body.per_page ?? body.limit ?? 20
+    if (typeof search !== "string" || !search.trim() || search.length > 2000 || !Number.isInteger(limit) || limit < 1 || limit > 50 || !Number.isInteger(page) || page < 1 || page > 1000) throw new CopyError(400, "invalid_search")
+    const { data, error } = await db.functions.invoke("ai-search-oai", { body: { search, match_threshold, limit: Math.min(page * limit, 1000), userMessage } })
+    if (error || !Array.isArray(data)) throw new CopyError(503, "search_unavailable")
+    const visible = await visibleSearchDemos(data)
+    const selected = visible.slice((page - 1) * limit, page * limit)
+    const results = selected.map((demo: any) => ({
+      id: demo.id, demo_id: demo.id, component_id: demo.component_id, name: demo.name, preview_url: demo.preview_url,
+      component_data: { id: demo.component_id, name: demo.component.name, description: demo.component.description },
+      component: { id: demo.component_id, name: demo.component.name, component_slug: demo.component.component_slug },
+    }))
+    return NextResponse.json({ results, metadata: { pagination: { page, per_page: limit, total: visible.length, total_pages: Math.ceil(visible.length / limit) } } }, { headers: COPY_HEADERS })
+  } catch (error) { return copyErrorResponse(error) }
 }

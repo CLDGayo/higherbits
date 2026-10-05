@@ -2,11 +2,12 @@
  * Pins the invariant that makes the /api/bundle ownership fix necessary.
  *
  * hasUserComponentAccess returns TRUE for an anonymous caller on a FREE
- * component. That is correct and deliberate — three read paths depend on it so
+ * component. That is correct and deliberate — page read paths depend on it so
  * that logged-out visitors can view free components:
  *   app/[username]/[component_slug]/page.tsx
  *   app/@modal/(...)[username]/[component_slug]/[demo_slug]/page.tsx
- *   app/api/r/[username]/[component_slug]/route.ts
+ * The registry convenience export separately requires a Phase B copy grant;
+ * this entitlement helper alone is not its caller-authentication boundary.
  *
  * It is also a trap. It reads like an authorization check, so it was used to
  * gate the rebuild-and-persist path in /api/bundle, which overwrites the

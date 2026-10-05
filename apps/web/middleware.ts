@@ -19,6 +19,11 @@ export default clerkMiddleware(async (auth, request) => {
   if (request.nextUrl.pathname.startsWith("/api/")) {
     const requestHeaders = new Headers(request.headers)
     requestHeaders.set("x-internal-token", process.env.INTERNAL_API_SECRET!)
+    // Convenience source/search routes resolve the caller themselves. Never treat
+    // this middleware's server token (or a caller-supplied one) as user identity.
+    if (/^\/api\/(?:prompts|component-source|copy-grants|mcp\/component-source|r|search(?:-mcp)?|magic-search|magic\/check)(?:\/|$)/.test(request.nextUrl.pathname)) {
+      requestHeaders.delete("x-internal-token")
+    }
 
     // Global Rate Limiting for API routes
     const pathname = request.nextUrl.pathname

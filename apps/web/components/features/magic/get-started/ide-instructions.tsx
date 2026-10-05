@@ -155,12 +155,12 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
                     1
                   </div>
                   <div className="space-y-3 w-full">
-                    <h3 className="font-medium">Run Installation Command</h3>
+                    <h3 className="font-medium">Add MCP Configuration</h3>
                     <div className="text-sm text-muted-foreground space-y-2">
-                      <p>Run this command in your terminal:</p>
+                      <p>Paste this JSON into your IDE’s MCP configuration:</p>
                       <div className="bg-muted rounded-md flex items-center w-full group relative">
-                        <input
-                          type="text"
+                        <textarea
+                          rows={10}
                           readOnly
                           value={getInstallCommand(
                             activeTab,
@@ -349,15 +349,15 @@ export function IdeInstructions({ apiKey, selectedOS }: IdeInstructionsProps) {
                       </div>
                       <div className="space-y-3 w-full">
                         <h3 className="font-medium">
-                          Run Installation Command
+                          Add MCP Configuration
                         </h3>
                         <div className="text-sm text-muted-foreground space-y-2">
-                          <p>Run this command in your terminal:</p>
+                          <p>Paste this JSON into your IDE’s MCP configuration:</p>
                           <div className="bg-muted rounded-md flex items-center w-full group relative">
-                            <input
-                              type="text"
-                              readOnly
-                              value={getInstallCommand(
+                            <textarea
+                          rows={10}
+                          readOnly
+                          value={getInstallCommand(
                                 activeTab,
                                 apiKey?.key || "",
                                 selectedOS,

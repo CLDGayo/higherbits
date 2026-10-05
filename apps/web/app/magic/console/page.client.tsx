@@ -351,7 +351,7 @@ export function ConsoleClient({
       document.execCommand("copy")
       document.body.removeChild(textArea)
       setCopiedCommand(true)
-      toast.success("Command copied to clipboard")
+      toast.success("MCP configuration copied to clipboard")
       setTimeout(() => setCopiedCommand(false), 2000)
     } catch (err) {
       console.error("Failed to copy:", err)
@@ -652,16 +652,16 @@ export function ConsoleClient({
           {/* Install Command Section */}
           <div className="space-y-2 mt-8">
             <div className="flex items-center justify-between pb-3 border-b mb-4">
-              <h3 className="font-medium">Install HigherBits AI</h3>
+              <h3 className="font-medium">Configure HigherBits AI</h3>
             </div>
             <div className="bg-background rounded-lg border border-border overflow-hidden">
               <div className="p-4">
                 <p className="text-sm text-muted-foreground mb-4">
-                  Run this command to start the HigherBits AI MCP server.
+                  Paste this JSON into your IDE MCP configuration, then restart its MCP server.
                 </p>
                 <div className="flex items-center gap-2 w-full max-w-[650px]">
                   <div className="flex-1 overflow-hidden">
-                    <Code code={command || "npx higherbits-ai"} language="bash" className="w-full" />
+                    <Code code={command || "{}"} language="json" className="w-full" />
                   </div>
                 </div>
               </div>

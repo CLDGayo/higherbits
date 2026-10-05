@@ -101,13 +101,21 @@ export function PricingSection({
   }
 
   const renderUpgradeButton = (tier: PricingProps["tiers"][0]) => {
+    if (tier.type === "free") {
+      if (!isAuthenticated) {
+        return <SignInButton mode="modal"><Button variant="outline" className="w-full">Get started</Button></SignInButton>
+      }
+      if (currentPlan === "free") {
+        return <Button variant="outline" className="w-full" disabled>Current Plan</Button>
+      }
+      return <Button variant="outline" className="w-full" asChild><a href="/">Explore free components</a></Button>
+    }
     const buttonContent = (
       <Button
         variant={currentPlan === tier.type ? "outline" : "default"}
         className={cn("w-full")}
         disabled={
-          (currentPlan === tier.type && currentFrequency === frequency) ||
-          (tier.type === "free" && currentPlan === "free")
+          currentPlan === tier.type && currentFrequency === frequency
         }
         onClick={() => handleClick(tier.type)}
       >
@@ -115,7 +123,7 @@ export function PricingSection({
       </Button>
     )
 
-    if (!isAuthenticated && tier.type !== "free") {
+    if (!isAuthenticated) {
       return <SignInButton mode="modal">{buttonContent}</SignInButton>
     }
 
@@ -192,7 +200,7 @@ export function PricingSection({
                         </span>
                       </div>
                       <span className="text-sm text-muted-foreground block">
-                        per month {frequency === "yearly" && "billed yearly"}
+                        {tier.type === "free" ? "Free forever" : <>per month {frequency === "yearly" && "billed yearly"}</>}
                       </span>
                     </div>
 

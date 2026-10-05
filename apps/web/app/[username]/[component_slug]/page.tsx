@@ -12,6 +12,7 @@ import {
 } from "@/lib/queries"
 import { resolveRegistryDependencyTree } from "@/lib/queries.server"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { approvedAutoIndexSnapshot } from "@/lib/api/server/auto-index-snapshot"
 import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { auth } from "@clerk/nextjs/server"
 import { notFound, redirect } from "next/navigation"
@@ -30,10 +31,13 @@ export const generateMetadata = async (props: {
     params.username,
   )
 
-  if (!component || !user) {
+  if (!component || !user || (component.registry === "auto-index" && !component.is_public)) {
     return {
       title: "Component Not Found",
     }
+  }
+  if (component.registry === "auto-index") {
+    try { await approvedAutoIndexSnapshot(component.id) } catch { return { title: "Component Not Found" } }
   }
 
   const ogImageUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${user.display_username || user.username}/${component.component_slug}/opengraph-image`
@@ -45,7 +49,8 @@ export const generateMetadata = async (props: {
     title: `${component.name}`,
     description:
       component.description ||
-      `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`,
+      (component.registry === "auto-index" ? "Auto-indexed open-source component; publisher identity is unclaimed." :
+        `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`),
     keywords: [
       ...BASE_KEYWORDS,
       `${component.name.toLowerCase()} component`,
@@ -57,7 +62,8 @@ export const generateMetadata = async (props: {
       title: `${component.name} | ${SITE_TITLE}`,
       description:
         component.description ||
-        `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`,
+        (component.registry === "auto-index" ? "Auto-indexed open-source component; publisher identity is unclaimed." :
+          `A React component by ${user.display_name || user.name || user.username}. Ship polished UIs faster with ready-to-use Tailwind components inspired by shadcn/ui.`),
       images: [
         {
           url: ogImageUrl,
@@ -90,10 +96,10 @@ const componentJsonLd = (component: any, user: any) => ({
   name: component.name,
   description: component.description,
   programmingLanguage: { "@type": "ComputerLanguage", name: "React" },
-  author: {
+  ...(component.registry === "auto-index" ? {} : { author: {
     "@type": "Person",
     name: user.display_name || user.name || user.username,
-  },
+  } }),
   dateCreated: component.created_at,
   license: component.license,
 })
@@ -132,6 +138,14 @@ export default async function ComponentPageServer(props: {
     }
 
     const { component, demo } = data
+    if (component.registry === "auto-index") {
+      if (!component.is_public) notFound()
+      let snapshot
+      try { snapshot = await approvedAutoIndexSnapshot(component.id) } catch { notFound() }
+      component.code = snapshot.code
+      demo.demo_code = snapshot.demoCode
+      component.registry_url = JSON.stringify({ name: component.component_slug, type: "registry:ui", files: snapshot.files })
+    }
 
     const [{ data: componentDemos }, hasPurchased] = await Promise.all([
       getComponentDemos(supabaseWithAdminAccess, component.id),

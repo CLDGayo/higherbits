@@ -20,7 +20,16 @@ import { useAuth } from "@clerk/nextjs"
 const PAYMENT_FREQUENCIES = ["yearly", "monthly"] as const
 
 // Using consolidated configuration from PLAN_LIMITS
-const TIERS = [
+export const TIERS = [
+  {
+    name: PLAN_LIMITS.free.displayName,
+    type: "free" as PlanType,
+    price: { monthly: 0, yearly: 0 },
+    description: PLAN_LIMITS.free.description,
+    features: PLAN_LIMITS.free.features,
+    cta: "Get started",
+    href: "/sign-in",
+  },
   {
     name: PLAN_LIMITS.pro.displayName,
     type: "pro" as PlanType,

@@ -1,5 +1,7 @@
 "use client"
 
+import { requestCopy } from "@/lib/copy-client"
+
 import React from "react"
 import {
   ContextMenu,
@@ -195,16 +197,10 @@ export const ComponentCard = React.memo(function ComponentCard({
   const handleCopyPrompt = async (promptType: PromptType) => {
     startNavigationProgress()
     try {
-      const response = await fetch("/api/prompts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await requestCopy("/api/prompts", {
           prompt_type: promptType,
           demo_id: demo.id,
-        }),
-      })
+        })
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)

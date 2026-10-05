@@ -313,6 +313,7 @@ function useSearchDemos(
               bundle_hash: null,
               bundle_html_url: null,
               ghl_html_content: null,
+              ghl_source_fingerprint: null,
               compiled_css: "",
               component_id: componentData.id,
               created_at: result.created_at || null,

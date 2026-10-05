@@ -6,9 +6,22 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+// Phase E migration tables. Keep these explicit until the next full local type regeneration.
+type AutoIndexTable<Row> = { Row: Row; Insert: Partial<Row>; Update: Partial<Row>; Relationships: [] }
+type AutoIndexTables = {
+  auto_index_publications: AutoIndexTable<{ source_id: number; item_key: string; component_id: number; approved_decision_id: number; delisted_decision_id: number | null; delisted_at: string | null; superseded_at: string | null; published_at: string }>
+  auto_index_sources: AutoIndexTable<{ id: number; kind: string; canonical_url: string; owner_label: string; vendor_user_id: string; opted_out: boolean; created_at: string }>
+  auto_index_decisions: AutoIndexTable<{ id: number; candidate_id: number; outcome: string; reason_code: string; evidence: Json; detector: string | null; decided_at: string }>
+  auto_index_candidates: AutoIndexTable<{ id: number; source_id: number; item_key: string; revision: string; component_source_path: string | null; repository_url: string | null; manifest_sha256: string | null; dependencies: Json; dependencies_approved: boolean; license_spdx: string | null; license_text: string | null; license_sha256: string | null; notice_text: string | null; fetched_at: string; etag: string | null; last_modified: string | null }>
+  auto_index_candidate_files: AutoIndexTable<{ candidate_id: number; path: string; registry_type: string; target: string | null; bytes: string; sha256: string }>
+  auto_index_candidate_demos: AutoIndexTable<{ candidate_id: number; demo_code: string; demo_sha256: string; provenance_class: string; author_label: string; source_url: string | null; source_revision: string | null; source_sha256: string | null; derivation: string; control_settings: Json; ghl_html_content: string; ghl_source_fingerprint: string; created_at: string }>
+  auto_index_candidate_assets: AutoIndexTable<{ candidate_id: number; asset_key: string; asset_role: string; provenance_class: string; source_url: string | null; source_revision: string | null; asset_sha256: string; license_spdx: string; license_text: string; license_sha256: string; notice_text: string; notice_sha256: string; derivation: string }>
+  sandbox_ghl_review_leases: AutoIndexTable<{ user_id: string; demo_id: number; input_fingerprint: string | null; owner_token: string | null; fencing_generation: number; lease_expires_at: string | null; updated_at: string }>
+}
+
 export type Database = {
   public: {
-    Tables: {
+    Tables: AutoIndexTables & {
       api_keys: {
         Row: {
           created_at: string | null
@@ -1444,6 +1457,7 @@ export type Database = {
           bundle_hash: string | null
           bundle_html_url: string | null
           ghl_html_content: string | null
+          ghl_source_fingerprint: string | null
           compiled_css: string | null
           component_id: number | null
           created_at: string | null
@@ -1467,6 +1481,7 @@ export type Database = {
           bundle_hash?: string | null
           bundle_html_url?: string | null
           ghl_html_content?: string | null
+          ghl_source_fingerprint?: string | null
           compiled_css?: string | null
           component_id?: number | null
           created_at?: string | null
@@ -1490,6 +1505,7 @@ export type Database = {
           bundle_hash?: string | null
           bundle_html_url?: string | null
           ghl_html_content?: string | null
+          ghl_source_fingerprint?: string | null
           compiled_css?: string | null
           component_id?: number | null
           created_at?: string | null
@@ -3281,6 +3297,82 @@ export type Database = {
       vec_dim: {
         Args: { v: string }
         Returns: number
+      }
+      publish_auto_index_candidate: {
+        Args: {
+          p_approved_decision_id: number
+          p_slug: string
+          p_title: string
+          p_description: string
+          p_preview_url: string
+        }
+        Returns: number
+      }
+      claim_sandbox_ghl_review_lease: {
+        Args: {
+          p_user_id: string
+          p_demo_id: number
+          p_input_fingerprint: string
+          p_owner_token: string
+          p_lease_seconds: number
+        }
+        Returns: Json
+      }
+      release_sandbox_ghl_review_lease: {
+        Args: {
+          p_user_id: string
+          p_demo_id: number
+          p_input_fingerprint: string
+          p_owner_token: string
+          p_fencing_generation: number
+        }
+        Returns: boolean
+      }
+      persist_sandbox_ghl_review_output: {
+        Args: {
+          p_user_id: string
+          p_demo_id: number
+          p_input_fingerprint: string
+          p_owner_token: string
+          p_fencing_generation: number
+          p_html: string
+        }
+        Returns: boolean
+      }
+      record_auto_index_candidate_demo: {
+        Args: {
+          p_candidate_id: number
+          p_demo_code: string
+          p_provenance_class: string
+          p_author_label: string
+          p_source_url: string | null
+          p_source_revision: string | null
+          p_source_sha256: string | null
+          p_derivation: string
+          p_control_settings: Json
+          p_ghl_html_content: string
+          p_ghl_source_fingerprint: string
+        }
+        Returns: undefined
+      }
+      record_auto_index_candidate_asset: {
+        Args: {
+          p_candidate_id: number
+          p_asset_key: string
+          p_asset_role: string
+          p_provenance_class: string
+          p_source_url: string | null
+          p_source_revision: string | null
+          p_asset_sha256: string
+          p_license_spdx: string
+          p_license_text: string
+          p_notice_text: string
+          p_derivation: string
+          p_source_asset_key: string | null
+          p_source_asset_sha256: string | null
+          p_transform_record: Json | null
+        }
+        Returns: undefined
       }
     }
     Enums: {

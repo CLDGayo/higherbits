@@ -26,7 +26,8 @@
     "global.d.ts",
     "next-env.d.ts",
     "video-converter/**/*.js",
-    ".next-validate/types/**/*.ts"
+    ".next-validate/types/**/*.ts",
+    ".next-release/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

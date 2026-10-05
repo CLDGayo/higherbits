@@ -1,170 +1,26 @@
-import { createClient } from "@supabase/supabase-js"
-import { NextRequest, NextResponse } from "next/server"
-import { SearchResponse } from "@/types/global"
-import { hasUserComponentAccess } from "@/lib/api/server/components"
+import { NextResponse } from "next/server"
+import { supabaseWithAdminAccess as db } from "@/lib/supabase"
+import { COPY_HEADERS, CopyError, copyErrorResponse } from "@/lib/api/server/copy-admission"
+import { copyIdentity } from "@/lib/api/server/copy-identity"
+import { visibleSearchDemos } from "@/lib/api/server/auto-index-search"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-)
-
-const SUPABASE_SEARCH_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/ai-search-oai`
-
-export async function POST(request: NextRequest) {
-  const apiKey = request.headers.get("x-api-key")
-
-  if (!apiKey) {
-    return NextResponse.json({ error: "API key is required" }, { status: 401 })
-  }
-
+/** Search is metadata-only. Full source is a separate metered operation. */
+export async function POST(request: Request) {
   try {
-    // Check API key
-    const { data: keyCheck, error: keyError } = await supabase.rpc(
-      "check_api_key",
-      { api_key: apiKey },
-    )
-
-    if (keyError) {
-      console.error("API key check error:", keyError)
-      return NextResponse.json(
-        { error: "Error validating API key" },
-        { status: 401 },
-      )
-    }
-
-    if (!keyCheck?.valid) {
-      return NextResponse.json(
-        { error: keyCheck?.error || "Invalid API key" },
-        { status: 401 },
-      )
-    }
-
-    // Get search query and pagination params
+    await copyIdentity(request)
     const body = await request.json()
-    const { search, page = 1, per_page = 20 } = body
-
-    if (!search) {
-      return NextResponse.json(
-        { error: "Search query is required" },
-        { status: 400 },
-      )
-    }
-
-    // Call Supabase search function
-    const response = await fetch(SUPABASE_SEARCH_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ search }),
-    })
-
-    if (!response.ok) {
-      console.error("Supabase search error:", {
-        status: response.status,
-        statusText: response.statusText,
-      })
-      const errorText = await response.text()
-      console.error("Error response:", errorText)
-      throw new Error(`Failed to fetch from Supabase: ${errorText}`)
-    }
-
-    const data = await response.json()
-
-    if (!Array.isArray(data)) {
-      console.error("Unexpected data format:", data)
-      throw new Error("Unexpected response format from search")
-    }
-
-    // Filter and transform data
-    const transformedResults = data
-      .map((item: any) => ({
-        name: item.name || "",
-        preview_url: item.preview_url || "",
-        video_url: item.video_url,
-        demo_id: item.id,
-        component_data: {
-          name: item.component_data?.name || "",
-          description: item.component_data?.description || "",
-          code: item.component_data?.code || "",
-          install_command: item.component_data?.install_command || "",
-        },
-        component_user_data: {
-          name: item.user_data?.name || "",
-          username: item.user_data?.username || "",
-          image_url: item.user_data?.image_url || null,
-        },
-        usage_count: item.usage_data?.total_usages || 0,
-      }))
-      .sort((a, b) => b.usage_count - a.usage_count)
-
-    const total = transformedResults.length
-    const total_pages = Math.ceil(total / per_page)
-    const start = (page - 1) * per_page
-    const end = start + per_page
-    const results = transformedResults.slice(start, end)
-
-    // `code` is a public CDN URL to the component source — handing it out is
-    // equivalent to handing out the source, so it is stripped for callers not
-    // entitled to that component. Only the paginated slice is resolved.
-    const { data: requesterRow } = await supabase
-      .from("api_keys")
-      .select("user_id")
-      .eq("key", apiKey)
-      .single()
-    const requesterId = requesterRow?.user_id ?? null
-
-    const { data: demoRows } = await supabase
-      .from("demos")
-      .select("id, component_id")
-      .in(
-        "id",
-        results.map((r) => r.demo_id).filter((v) => v != null),
-      )
-
-    const componentIdByDemo = new Map(
-      (demoRows ?? []).map((row) => [row.id, row.component_id]),
-    )
-    const accessByComponent = new Map<number, boolean>()
-    for (const componentId of new Set(componentIdByDemo.values())) {
-      if (componentId == null) continue
-      accessByComponent.set(
-        componentId,
-        await hasUserComponentAccess(requesterId, componentId),
-      )
-    }
-
-    const gatedResults = results.map((r) => {
-      const componentId = componentIdByDemo.get(r.demo_id)
-      if (componentId != null && accessByComponent.get(componentId)) {
-        return r
-      }
-      return { ...r, component_data: { ...r.component_data, code: "" } }
-    })
-
-    // Return filtered results with metadata
-    return NextResponse.json<SearchResponse>({
-      results: gatedResults,
-      metadata: {
-        plan: keyCheck.plan,
-        requests_remaining: keyCheck.requests_remaining,
-        pagination: {
-          total,
-          page,
-          per_page,
-          total_pages,
-        },
-      },
-    })
-  } catch (error) {
-    console.error("Search error:", error)
-    return NextResponse.json(
-      {
-        error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
-    )
-  }
+    const { search, match_threshold = 0.33, userMessage = "", page = 1 } = body
+    const limit = body.per_page ?? body.limit ?? 20
+    if (typeof search !== "string" || !search.trim() || search.length > 2000 || !Number.isInteger(limit) || limit < 1 || limit > 50 || !Number.isInteger(page) || page < 1 || page > 1000) throw new CopyError(400, "invalid_search")
+    const { data, error } = await db.functions.invoke("ai-search-oai", { body: { search, match_threshold, limit: Math.min(page * limit, 1000), userMessage } })
+    if (error || !Array.isArray(data)) throw new CopyError(503, "search_unavailable")
+    const visible = await visibleSearchDemos(data)
+    const selected = visible.slice((page - 1) * limit, page * limit)
+    const results = selected.map((demo: any) => ({
+      id: demo.id, demo_id: demo.id, component_id: demo.component_id, name: demo.name, preview_url: demo.preview_url,
+      component_data: { id: demo.component_id, name: demo.component.name, description: demo.component.description },
+      component: { id: demo.component_id, name: demo.component.name, component_slug: demo.component.component_slug },
+    }))
+    return NextResponse.json({ results, metadata: { pagination: { page, per_page: limit, total: visible.length, total_pages: Math.ceil(visible.length / limit) } } }, { headers: COPY_HEADERS })
+  } catch (error) { return copyErrorResponse(error) }
 }

@@ -2,10 +2,8 @@
 
 import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { useClerkSupabaseClient } from "@/lib/clerk"
 import PublishComponentForm from "@/components/features/publish/publish-layout"
 import { LoadingSpinnerPage } from "@/components/ui/loading-spinner"
-import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
 interface ComponentData {
   code: string
@@ -17,7 +15,6 @@ interface ComponentData {
 function AddDemoContent() {
   const searchParams = useSearchParams()
   const componentId = searchParams.get("componentId")
-  const supabase = useClerkSupabaseClient()
   const [componentData, setComponentData] = useState<ComponentData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -37,32 +34,8 @@ function AddDemoContent() {
           return
         }
 
-        const { data: component, error: supabaseError } = await supabase
-          .from("components")
-          .select(
-            `
-            *,
-            user:users!components_user_id_fkey(${PUBLIC_USER_COLUMNS})
-          `,
-          )
-          .eq("id", componentIdNum)
-          .single()
-
-        if (supabaseError) {
-          console.error("Supabase error:", supabaseError)
-          setError(supabaseError.message)
-          return
-        }
-
-        if (!component) {
-          console.error("No component found")
-          setError("Component not found")
-          return
-        }
-
-        // Source is fetched through the entitlement-gated route rather than
-        // straight from the CDN: a browser cannot sign a private R2 read.
-        const sourceResponse = await fetch("/api/component-source", {
+        // Owner-checked metadata and source come from one server snapshot.
+        const sourceResponse = await fetch("/api/component-source/editor", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ componentId: componentIdNum }),
@@ -97,7 +70,7 @@ function AddDemoContent() {
           tailwindConfig: tailwindConfigResult.data,
           globalCss: globalCssResult.data,
           component: {
-            ...component,
+            ...source.component,
             code: codeResult.data!,
           },
         })
@@ -110,7 +83,7 @@ function AddDemoContent() {
     }
 
     fetchComponentData()
-  }, [componentId, supabase])
+  }, [componentId])
 
   if (error) {
     return (

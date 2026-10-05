@@ -1,63 +1,17 @@
 export type IdeOption = "cursor" | "windsurf" | "cline"
 export type OsType = "windows" | "mac" | "linux"
 
-interface McpCommandConfig {
-  command: string
-  args: string[]
-}
+export const createPlatformCommand = (args: string[], osType: OsType = "mac") =>
+  osType === "windows" ? { command: "cmd", args: ["/c", "npx", ...args] } : { command: "npx", args }
 
-const PACKAGE_NAMES = {
-  CLI: "@higherbits-dev/cli@latest",
-  MAGIC_MCP: "@higherbits-dev/cli@latest",
-} as const
-
-export const getMcpConfig = (apiKey: string): McpCommandConfig => ({
-  command: "npx",
-  args: ["-y", PACKAGE_NAMES.CLI, `API_KEY="${apiKey}"`],
+export const getMcpConfig = (apiKey: string, osType: OsType = "mac") => ({
+  ...createPlatformCommand(["-y", "@higherbits-dev/cli@latest"], osType),
+  env: { API_KEY: apiKey },
 })
 
-export const getInstallCommand = (
-  ide: IdeOption,
-  apiKey: string,
-  osType: OsType = "mac",
-): string => {
-  const platformCmd = createPlatformCommand(
-    ["-y", PACKAGE_NAMES.CLI, "install", ide, `--api-key "${apiKey}"`],
-    osType,
-  )
+export const getMcpConfigJson = (apiKey: string, osType: OsType = "mac"): string =>
+  JSON.stringify({ mcpServers: { "@higherbits-dev/cli": getMcpConfig(apiKey, osType) } }, null, 2)
 
-  return `${platformCmd.command} ${platformCmd.args.join(" ")}`
-}
-
-export const getMcpConfigJson = (
-  apiKey: string,
-  osType: OsType = "mac",
-): string => {
-  const platformCmd = createPlatformCommand(
-    ["-y", PACKAGE_NAMES.MAGIC_MCP, `API_KEY="${apiKey}"`],
-    osType,
-  )
-
-  const config = {
-    mcpServers: {
-      "@higherbits-dev/cli": platformCmd,
-    },
-  }
-  return JSON.stringify(config, null, 2)
-}
-
-export const createPlatformCommand = (
-  args: string[],
-  osType: OsType = "mac",
-) => {
-  if (osType === "windows") {
-    return {
-      command: "cmd",
-      args: ["/c", "npx", ...args],
-    }
-  }
-  return {
-    command: "npx",
-    args,
-  }
-}
+// Compatibility name: this stdio package provides no installer subcommand.
+export const getInstallCommand = (_ide: IdeOption, apiKey: string, osType: OsType = "mac") =>
+  getMcpConfigJson(apiKey, osType)

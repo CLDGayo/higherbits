@@ -6,6 +6,7 @@ import { InterceptedDemoModal } from "@/components/ui/intercepted-demo-modal"
 import { notFound } from "next/navigation"
 import { RESERVED_TOP_LEVEL_SLUGS } from "@/lib/constants"
 import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
+import { approvedAutoIndexSnapshot } from "@/lib/api/server/auto-index-snapshot"
 
 export default async function InterceptedDemoComponentPage(props: {
   params: Promise<{
@@ -53,6 +54,13 @@ export default async function InterceptedDemoComponentPage(props: {
     }
 
     const { component, demo } = data
+    if (component.registry === "auto-index") {
+      if (!component.is_public) return notFound()
+      let snapshot
+      try { snapshot = await approvedAutoIndexSnapshot(component.id) } catch { return notFound() }
+      component.code = snapshot.code
+      demo.demo_code = snapshot.demoCode
+    }
 
     const [{ data: componentDemos }, hasPurchased] = await Promise.all([
       getComponentDemos(supabaseWithAdminAccess, component.id),

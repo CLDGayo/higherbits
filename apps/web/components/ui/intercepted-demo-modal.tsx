@@ -1,5 +1,8 @@
 "use client"
 
+import { requestCopy, getCopySource, getInstallCommand } from "@/lib/copy-client"
+import { isReviewOnlyCopy, withCopyNotice } from "@/lib/copy-notice"
+
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType, User } from "@/types/global"
@@ -157,6 +160,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (event.source !== iframeRef.current?.contentWindow) return
       if (event.data?.type === "READY" || event.data?.type === "preview-ready") {
         setIsLoading(false)
         sendThemeToIframe()
@@ -182,6 +186,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
 
     const typeToUse = promptTypeOverride || selectedPromptType
+    const controlsSnapshot = { ...activeControls }
     if (promptTypeOverride) {
       setSelectedPromptType(promptTypeOverride as PromptType)
     }
@@ -199,15 +204,11 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     )
 
     try {
-      const response = await fetch("/api/prompts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const response = await requestCopy("/api/prompts", {
           prompt_type: typeToUse,
           demo_id: demo.id,
-          controls: activeControls,
-        }),
-      })
+          controls: controlsSnapshot,
+        })
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
@@ -296,19 +297,16 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
     
     try {
-      let text = url
-      if (url.startsWith("http://") || url.startsWith("https://")) {
-        const response = await fetch(url)
-        if (!response.ok) throw new Error("Failed to fetch code")
-        text = await response.text()
-      }
-      const finalCode = applyControlsToCode(text, activeControls)
+      const source = await getCopySource({ demoId: demo.id })
+      const text = url === demo.demo_code ? source.demoCode : source.code
+      if (typeof text !== "string") throw new Error("Source file unavailable")
+      const finalCode = withCopyNotice(applyControlsToCode(text, activeControls), source.notice, name)
       if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(finalCode)
       }
       toast.success(`Copied ${name}`)
     } catch (err) {
-      toast.error(`Failed to copy ${name}`)
+      toast.error(err instanceof Error ? err.message : `Failed to copy ${name}`)
     }
   }
 
@@ -321,55 +319,26 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
 
     const toastId = toast.loading("Copying all files...")
     try {
-      const files: { name: string; contentOrUrl?: string | null }[] = []
-      if (demo.component.code) {
-        files.push({
-          name: `${demo.component.component_slug || "component"}.tsx`,
-          contentOrUrl: demo.component.code,
-        })
-      }
-      if (demo.demo_code) {
-        files.push({
-          name: `${demo.name && demo.name !== "Default" ? demo.name : "demo"}.tsx`,
-          contentOrUrl: demo.demo_code,
-        })
-      }
-
-      if (files.length === 0) {
-        toast.error("No files available to copy", { id: toastId })
-        return
-      }
-
-      const fetchedFiles = await Promise.all(
-        files.map(async (file) => {
-          let text = file.contentOrUrl || ""
-          if (text.startsWith("http://") || text.startsWith("https://")) {
-            const res = await fetch(text)
-            if (!res.ok) throw new Error(`Failed to fetch ${file.name}`)
-            text = await res.text()
-          }
-          const finalContent = applyControlsToCode(text, activeControls)
-          return `// ${file.name}\n${finalContent}`
-        })
-      )
+      const source = await getCopySource({ demoId: demo.id })
+      const files = source.files as {path:string;content:string}[]
+      const fetchedFiles = files.map(file => "// " + file.path + "\n" + applyControlsToCode(file.content, activeControls))
 
       if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(fetchedFiles.join("\n\n"))
+        await navigator.clipboard.writeText(withCopyNotice(fetchedFiles.join("\n\n"), source.notice, "all-files.txt"))
       }
       toast.success(`Copied all files (${files.length} files) to clipboard!`, { id: toastId })
     } catch (err: any) {
       console.error("Failed to copy all files:", err)
-      toast.error("Failed to copy all files", { id: toastId })
+      toast.error(err instanceof Error ? err.message : "Failed to copy all files", { id: toastId })
     }
   }
 
-  const handleCopyCLI = (e: React.MouseEvent) => {
+  const handleCopyCLI = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    const command = `npx higherbits add ${demo.component.component_slug}`
-    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(command)
-    }
-    toast.success("Copied CLI command")
+    try {
+      await navigator.clipboard.writeText(await getInstallCommand(demo.component.id))
+      toast.success("Copied install command. Expires in five minutes.")
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Unable to prepare install") }
   }
 
   const handleBookmark = async (e: React.MouseEvent) => {
@@ -417,9 +386,9 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             {bundleUrl ? (
               <iframe
                 ref={iframeRef}
+                sandbox="allow-scripts"
                 src={`${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
                 className={cn("w-full h-full border-0 transition-opacity duration-300", isLoading ? "opacity-0" : "opacity-100")}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 onLoad={() => {
                   setIsLoading(false)
@@ -573,7 +542,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                         <>
                           <Loader2 className="h-3.5 w-3.5 animate-spin text-white shrink-0" />
                           <span className="text-xs font-medium">
-                            {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Generating GHL..." : "Generating..."}
+                            {selectedPromptType === PROMPT_TYPES.GOHIGHLEVEL ? "Preparing GHL..." : "Generating..."}
                           </span>
                         </>
                       ) : (
@@ -613,12 +582,12 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                       {demo.demo_code && (
                         <DropdownMenuItem onClick={(e) => handleCopyFile(e as any, demo.demo_code!, demo.name || "demo.tsx")} className="cursor-pointer">
                           <Code2 className="mr-2 h-4 w-4 text-blue-500" />
-                          <span className="truncate">{demo.name || "demo.tsx"}</span>
+                          <span className="truncate">{isReviewOnlyCopy(demo.name || "demo.tsx") ? "Copy with attribution (review text)" : demo.name || "demo.tsx"}</span>
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem onClick={handleCopyAllFiles} className="cursor-pointer">
                         <Code2 className="mr-2 h-4 w-4 opacity-70" />
-                        <span>Copy all files</span>
+                        <span>Copy with attribution (review text)</span>
                         <span className="ml-auto text-xs opacity-50">
                           {(demo.component.code ? 1 : 0) + (demo.demo_code ? 1 : 0)} files
                         </span>

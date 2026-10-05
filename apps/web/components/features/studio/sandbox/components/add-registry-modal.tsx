@@ -197,6 +197,7 @@ export function AddRegistryModal({
               bundle_hash: null,
               bundle_html_url: result.bundle_html_url || null,
               ghl_html_content: result.ghl_html_content || null,
+              ghl_source_fingerprint: result.ghl_source_fingerprint || null,
               bundle_url: result.bundle_url || null,
               compiled_css: result.compiled_css || "",
               component_id: componentData.id,

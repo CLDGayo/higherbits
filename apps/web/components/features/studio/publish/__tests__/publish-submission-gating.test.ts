@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+import { readFile } from "node:fs/promises"
+import { join } from "node:path"
 
 const addComponentToLibraryAction = vi.fn(
   async (_args: { collectionId: string; componentId: number }) => ({
@@ -17,9 +19,10 @@ vi.mock("sonner", () => ({
   toast: { warning: vi.fn(), error: vi.fn(), success: vi.fn() },
 }))
 
-import { _stepManageSandboxLinkAndSubmission } from "../hooks/use-submit-component"
+import { _stepManageSandboxLinkAndSubmission, assertReviewRetryAllowed } from "../hooks/use-submit-component"
 
 type Op = { table: string; op: string; payload?: unknown }
+const order: string[] = []
 
 // Minimal stand-in for the postgrest chain. `.eq()` terminates some calls and
 // continues others, so the chain object is itself thenable.
@@ -36,6 +39,7 @@ const makeSupabase = (
       },
       insert: (payload: unknown) => {
         ops.push({ table, op: "insert", payload })
+        if (table === "submissions") order.push("submission:on_review")
         return Promise.resolve({ error: null })
       },
       update: (payload: unknown) => {
@@ -71,16 +75,42 @@ const makeState = (overrides: Record<string, unknown> = {}) =>
     sandboxData: { component_id: 42 },
     existingDemoId: null,
     finalComponent: null,
-    finalDemo: null,
+    finalDemo: { id: 2 },
     isNewComponent: false,
     ...overrides,
   }) as never
 
 const submissionOps = (ops: Op[]) => ops.filter((o) => o.table === "submissions")
 
+it("U-GHL-01: rejects a resubmission while an existing review version is pending", () => {
+  expect(() => assertReviewRetryAllowed("on_review", true)).toThrow(
+    "This version is already awaiting review; its saved demos and GHL outputs were left unchanged.",
+  )
+  expect(() => assertReviewRetryAllowed("on_review", false)).not.toThrow()
+  expect(() => assertReviewRetryAllowed("rejected", true)).not.toThrow()
+})
+
+it("U-GHL-01: pending-review guard runs before Studio file uploads and component/demo writes", async () => {
+  const source = await readFile(join(process.cwd(), "components/features/studio/publish/hooks/use-submit-component.ts"), "utf8")
+  const guard = source.indexOf("assertReviewRetryAllowed(\n        existingSubmission?.status")
+  const fetchStep = source.indexOf("submissionState = await _stepFetchSandboxAndExistingInfo(")
+  const uploadStep = source.indexOf("submissionState = await _stepUploadFiles(")
+  const componentWrite = source.indexOf("submissionState = await _stepUpsertComponent(")
+  const demoWrite = source.indexOf("submissionState = await _stepUpsertDemo(")
+
+  expect(guard).toBeGreaterThanOrEqual(0)
+  expect(fetchStep).toBeGreaterThan(guard)
+  expect(uploadStep).toBeGreaterThan(fetchStep)
+  expect(componentWrite).toBeGreaterThan(uploadStep)
+  expect(demoWrite).toBeGreaterThan(componentWrite)
+})
+
 beforeEach(() => {
   addComponentToLibraryAction.mockClear()
+  order.length = 0
+  vi.stubGlobal("fetch", vi.fn(async () => { order.push("ghl:saved"); return new Response("{}", { status: 200 }) }))
 })
+afterEach(() => vi.unstubAllGlobals())
 
 describe("G7.4 - submit_for_featuring gates the submissions write", () => {
   it("writes nothing to submissions when featuring is off", async () => {
@@ -110,6 +140,45 @@ describe("G7.4 - submit_for_featuring gates the submissions write", () => {
         payload: { component_id: 42, status: "on_review" },
       },
     ])
+    expect(order.indexOf("ghl:saved")).toBeGreaterThanOrEqual(0)
+    expect(order.indexOf("ghl:saved")).toBeLessThan(order.indexOf("submission:on_review"))
+    expect(fetch).toHaveBeenCalledWith("/api/sandbox/prepare-ghl-review", expect.objectContaining({
+      method: "POST",
+      body: JSON.stringify({ demoId: 2 }),
+    }))
+  })
+
+  it("U-GHL-01 leaves submission out of review when GHL save fails", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 503 })))
+    const { client, ops } = makeSupabase(null)
+    await expect(_stepManageSandboxLinkAndSubmission(
+      makeContext(client, { submit_for_featuring: true }), makeState(),
+    )).rejects.toThrow("GoHighLevel output could not be saved")
+    expect(submissionOps(ops)).toEqual([])
+  })
+
+  it("U-GHL-01 preserves an existing on_review submission and saved demo fingerprint when retry preparation fails", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("{}", { status: 503 })))
+    const priorDemo = {
+      id: 2,
+      ghl_html_content: "<div>previous matching output</div>",
+      ghl_source_fingerprint: "previous-matching-fingerprint",
+    }
+    const priorSubmission = { id: 7, status: "on_review" }
+    const { client, ops } = makeSupabase(priorSubmission)
+
+    await expect(_stepManageSandboxLinkAndSubmission(
+      makeContext(client, { submit_for_featuring: true }),
+      makeState({ finalDemo: priorDemo }),
+    )).rejects.toThrow("GoHighLevel output could not be saved")
+
+    expect(priorDemo).toEqual({
+      id: 2,
+      ghl_html_content: "<div>previous matching output</div>",
+      ghl_source_fingerprint: "previous-matching-fingerprint",
+    })
+    expect(priorSubmission).toEqual({ id: 7, status: "on_review" })
+    expect(submissionOps(ops).filter(operation => operation.op === "insert" || operation.op === "update")).toEqual([])
   })
 
   it("updates the existing submission back to on_review when featuring is on", async () => {

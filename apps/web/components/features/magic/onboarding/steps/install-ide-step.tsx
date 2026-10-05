@@ -113,7 +113,7 @@ export function InstallIdeStep({
       document.execCommand("copy")
       document.body.removeChild(textArea)
       setCopied(true)
-      toast.success("Command copied to clipboard")
+      toast.success("MCP configuration copied to clipboard")
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error("Failed to copy:", err)
@@ -177,14 +177,14 @@ export function InstallIdeStep({
                       1
                     </div>
                     <div className="space-y-3 w-full">
-                      <h3 className="font-medium">Run Installation Command</h3>
+                      <h3 className="font-medium">Add MCP Configuration</h3>
                       <div className="text-sm text-muted-foreground space-y-2">
-                        <p>Run this command in your terminal:</p>
+                        <p>Paste this JSON into your IDE’s MCP configuration:</p>
                         <div className="bg-muted rounded-md flex items-center w-full group relative">
-                          <input
-                            type="text"
-                            readOnly
-                            value={getInstallCommand(
+                          <textarea
+                          rows={10}
+                          readOnly
+                          value={getInstallCommand(
                               selectedIde,
                               apiKey?.key || "",
                               osType,
@@ -395,14 +395,14 @@ export function InstallIdeStep({
                       1
                     </div>
                     <div className="space-y-3 w-full">
-                      <h3 className="font-medium">Run Installation Command</h3>
+                      <h3 className="font-medium">Add MCP Configuration</h3>
                       <div className="text-sm text-muted-foreground space-y-2">
-                        <p>Run this command in your terminal:</p>
+                        <p>Paste this JSON into your IDE’s MCP configuration:</p>
                         <div className="bg-muted rounded-md flex items-center w-full group relative">
-                          <input
-                            type="text"
-                            readOnly
-                            value={getInstallCommand(
+                          <textarea
+                          rows={10}
+                          readOnly
+                          value={getInstallCommand(
                               selectedIde,
                               apiKey?.key || "",
                               osType,
@@ -598,14 +598,14 @@ export function InstallIdeStep({
                       1
                     </div>
                     <div className="space-y-3 w-full">
-                      <h3 className="font-medium">Run Installation Command</h3>
+                      <h3 className="font-medium">Add MCP Configuration</h3>
                       <div className="text-sm text-muted-foreground space-y-2">
-                        <p>Run this command in your terminal:</p>
+                        <p>Paste this JSON into your IDE’s MCP configuration:</p>
                         <div className="bg-muted rounded-md flex items-center w-full group relative">
-                          <input
-                            type="text"
-                            readOnly
-                            value={getInstallCommand(
+                          <textarea
+                          rows={10}
+                          readOnly
+                          value={getInstallCommand(
                               selectedIde,
                               apiKey?.key || "",
                               osType,
@@ -780,7 +780,7 @@ export function InstallIdeStep({
   return (
     <div className="flex flex-col space-y-8 px-4 max-w-[700px] mx-auto w-full">
       <div className="space-y-4 max-w-2xl">
-        <h1 className="text-3xl font-bold tracking-tight">Install HigherBits AI</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Configure HigherBits AI</h1>
         <p className="text-lg text-muted-foreground">
           Follow these steps to install HigherBits AI in{" "}
           {selectedIde === "cursor"

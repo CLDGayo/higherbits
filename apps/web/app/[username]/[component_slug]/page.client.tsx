@@ -1,6 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 "use client"
 
+import { requestCopy } from "@/lib/copy-client"
+
 import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs"
 import { atom, useAtom } from "jotai"
 import { useTheme } from "next-themes"
@@ -566,21 +568,16 @@ export default function ComponentPage({
   }
 
   const handleCopyPrompt = async (ruleId?: number, context?: string) => {
+    const controlsSnapshot = { ...activeControls }
     try {
       // Get the selected rule from the dialog
-      const response = await fetch("/api/prompts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await requestCopy("/api/prompts", {
           prompt_type: selectedPromptType,
           demo_id: demo.id,
           rule_id: ruleId,
           additional_context: context,
-          controls: activeControls,
-        }),
-      })
+          controls: controlsSnapshot,
+        })
 
       if (!response.ok) {
         const errorData = await response.json()

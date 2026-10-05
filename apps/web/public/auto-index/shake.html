@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shake interaction</title><style>
+.hb-shake{font:16px/1.4 system-ui,sans-serif;max-width:320px;margin:24px auto;padding:20px;border:1px solid #d4d4d8;border-radius:12px}
+.hb-shake label{display:block;margin-bottom:8px}.hb-shake input{box-sizing:border-box;width:100%;padding:10px;border:1px solid #a1a1aa;border-radius:6px}
+.hb-shake button{margin-top:12px;padding:10px 16px;border:0;border-radius:6px;background:#27272a;color:white;cursor:pointer}
+.hb-shake [role=status]{min-height:1.5em;margin-top:12px}
+@keyframes hb-shake-error{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.hb-shake-error{animation:hb-shake-error .5s ease-in-out}@media(prefers-reduced-motion:reduce){.hb-shake-error{animation:none}}
+</style></head><body><form class="hb-shake" data-hb-shake>
+<label for="hb-shake-code">Enter verification code</label><input id="hb-shake-code" inputmode="numeric" autocomplete="off" placeholder="Try 1234">
+<button type="submit">Verify</button><div role="status" aria-live="polite"></div>
+</form><script>(function(){var form=document.querySelector('[data-hb-shake]');if(!form)return;var input=form.querySelector('input');var status=form.querySelector('[role=status]');form.addEventListener('submit',function(event){event.preventDefault();if(input.value==='1234'){status.textContent='Verified';return;}status.textContent='Try again';input.value='';form.classList.remove('hb-shake-error');void form.offsetWidth;form.classList.add('hb-shake-error');input.focus();});})();</script></body></html>

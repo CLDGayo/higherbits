@@ -65,6 +65,7 @@ import { useIsAdmin } from "./hooks/use-is-admin"
 import { generateDemoSlug } from "./hooks/use-is-check-slug-available"
 import { useR2Upload } from "./hooks/use-r2-upload"
 import { sourceKey } from "@/lib/r2-paths"
+import { prepareCreatorReview } from "@/lib/creator-review"
 export interface ParsedCodeData {
   dependencies: Record<string, string>
   demoDependencies: Record<string, string>
@@ -536,6 +537,7 @@ export default function PublishComponentForm({
             preview_url: "",
             video_url: "",
             ghl_html_content: null,
+            ghl_source_fingerprint: null,
             embedding: null,
             embedding_oai: null,
             created_at: new Date().toISOString(),
@@ -692,21 +694,7 @@ export default function PublishComponentForm({
           throw error
         }
 
-        if (!data.is_public) {
-          // create entry in submissions table
-          const { error: submissionError } = await client
-            .from("submissions")
-            .insert({
-              component_id: insertedComponent.id,
-              status: "on_review",
-            })
-
-          if (submissionError) {
-            console.error("Error inserting submission:", submissionError)
-            throw submissionError
-          }
-        }
-
+        const submittedDemoIds: number[] = []
         for (const demo of data.demos) {
           const demoIndex = data.demos.indexOf(demo)
           setPublishProgress(
@@ -727,6 +715,7 @@ export default function PublishComponentForm({
             preview_url: "",
             video_url: "",
             ghl_html_content: null,
+            ghl_source_fingerprint: null,
             embedding: null,
             embedding_oai: null,
             created_at: new Date().toISOString(),
@@ -809,6 +798,7 @@ export default function PublishComponentForm({
             .eq("id", insertedDemo.id)
 
           if (updateDemoError) throw updateDemoError
+          submittedDemoIds.push(insertedDemo.id)
 
           if (demo.tags?.length) {
             await addTagsToDemo(
@@ -817,6 +807,22 @@ export default function PublishComponentForm({
               demo.tags.filter((tag) => !!tag.slug) as Tag[],
             )
           }
+        }
+
+        if (!data.is_public) {
+          await prepareCreatorReview(submittedDemoIds, async () => {
+            const { error: submissionError } = await client
+              .from("submissions")
+              .insert({
+                component_id: insertedComponent.id,
+                status: "on_review",
+              })
+
+            if (submissionError) {
+              console.error("Error inserting submission:", submissionError)
+              throw submissionError
+            }
+          })
         }
       }
 

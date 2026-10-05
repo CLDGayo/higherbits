@@ -5,6 +5,7 @@ import { hasUserComponentAccess } from "@/lib/api/server/components"
 import { auth } from "@clerk/nextjs/server"
 import { RESERVED_TOP_LEVEL_SLUGS } from "@/lib/constants"
 import fetchFileTextContent from "@/lib/utils/fetchFileTextContent"
+import { approvedAutoIndexSnapshot } from "@/lib/api/server/auto-index-snapshot"
 
 export default async function InterceptedComponentPage(props: {
   params: Promise<{
@@ -48,6 +49,13 @@ export default async function InterceptedComponentPage(props: {
     }
 
     const { component, demo } = data
+    if (component.registry === "auto-index") {
+      if (!component.is_public) return null
+      let snapshot
+      try { snapshot = await approvedAutoIndexSnapshot(component.id) } catch { return null }
+      component.code = snapshot.code
+      demo.demo_code = snapshot.demoCode
+    }
 
     const [{ data: componentDemos }, hasPurchased] = await Promise.all([
       getComponentDemos(supabaseWithAdminAccess, component.id),
@@ -86,4 +94,3 @@ export default async function InterceptedComponentPage(props: {
     return null
   }
 }
-
