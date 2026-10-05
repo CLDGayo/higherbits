@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest"
 import { performance } from "node:perf_hooks"
-const mocks = vi.hoisted(() => ({ identity: vi.fn(), tier: vi.fn(), prepare: vi.fn(), admit: vi.fn(), ghl: vi.fn(), fingerprint: vi.fn(), clean: vi.fn(), completion: vi.fn(), from: vi.fn(), rpc: vi.fn(), auth: vi.fn() }))
+const mocks = vi.hoisted(() => ({ identity: vi.fn(), tier: vi.fn(), prepare: vi.fn(), admit: vi.fn(), capability: vi.fn(), ghl: vi.fn(), fingerprint: vi.fn(), clean: vi.fn(), completion: vi.fn(), from: vi.fn(), rpc: vi.fn(), auth: vi.fn() }))
 type MockRpcQuery = Promise<unknown> & { abortSignal: (signal: AbortSignal) => MockRpcQuery }
 const abortableRpcResult = (result: unknown) => {
   const query = Promise.resolve(result) as MockRpcQuery
@@ -12,11 +12,13 @@ vi.mock("openai", () => ({ default: class { chat = { completions: { create: mock
 vi.mock("@clerk/nextjs/server", () => ({ auth: mocks.auth }))
 vi.mock("@/lib/api/server/copy-identity", () => ({ copyIdentity: mocks.identity, copyTier: mocks.tier }))
 vi.mock("@/lib/api/server/copy-source", () => ({ prepareCopySource: mocks.prepare }))
+vi.mock("@/lib/api/server/copy-capability", () => ({ issueCopyCapability: mocks.capability }))
 vi.mock("@/lib/ghl-generator", () => ({ generateGhlTemplate: mocks.ghl, computeGhlSourceFingerprint: mocks.fingerprint, cleanGhlHtml: mocks.clean, GHL_GENERATION_DEADLINE_MS: 100_000 }))
 vi.mock("@/lib/api/server/copy-admission", async importOriginal => ({ ...await importOriginal<any>(), admitCopy: mocks.admit }))
 import { POST as source } from "@/app/api/component-source/route"
 import { POST as mcp } from "@/app/api/mcp/component-source/route"
 import { POST as prompt } from "@/app/api/prompts/route"
+import { POST as grant } from "@/app/api/copy-grants/route"
 import { POST as prepareGhlReview } from "@/app/api/sandbox/prepare-ghl-review/route"
 import { POST as editor } from "@/app/api/component-source/editor/route"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
@@ -28,6 +30,7 @@ const notice = {displayText:"Recorded license: MIT License (unverified). Compone
 const request = (body: unknown = { componentId: 1, requestId }) => new Request("http://localhost:56331/api/component-source", { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } })
 beforeEach(() => {
   vi.clearAllMocks(); mocks.identity.mockResolvedValue("canonical"); mocks.tier.mockResolvedValue(false); mocks.admit.mockResolvedValue({ ok: true })
+  mocks.capability.mockResolvedValue({ registryUrl: "https://higherbits.dev/api/r/example/component?cap=opaque" })
   const savedOutputs = new Map<string, string>()
   mocks.rpc.mockImplementation((name: string, args: Record<string, unknown>) => {
     const key = `${args.p_user_id}:${args.p_demo_id}`
@@ -71,6 +74,12 @@ it("editor owner failure releases neither metadata nor source", async () => {
   expect(await response.text()).not.toContain("SOURCE_MARKER");expect(mocks.from).not.toHaveBeenCalled()
 })
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); vi.unstubAllGlobals() })
+it("production CLI commands use the public site origin behind the reverse proxy", async () => {
+  vi.stubEnv("NODE_ENV", "production")
+  const response = await grant(request({ componentId: 1, requestId }))
+  expect(response.status).toBe(200)
+  expect(mocks.capability).toHaveBeenCalledWith("canonical", requestId, expect.anything(), "https://higherbits.dev")
+})
 it("prepared GHL generation requires explicit fenced persistence and performs no legacy database write", async () => {
   vi.stubEnv("OPENAI_API_KEY", "synthetic-key"); vi.stubEnv("RELMIO_AUTH_TOKEN", "")
   const fetchGuard = vi.fn().mockRejectedValue(new Error("unexpected external fetch")); vi.stubGlobal("fetch",fetchGuard)
