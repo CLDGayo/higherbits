@@ -20,6 +20,11 @@ const json = value => `${txt(JSON.stringify(value))}::jsonb`
 const quoted = value => `'${value.replaceAll("'", "''")}'`
 const promptTypes = ['sitebrew', 'v0', 'lovable', 'bolt', 'extended', 'replit', 'magic_patterns', 'claude', 'codex', 'antigravity']
 const assetBase = 'https://higherbits.dev/auto-index'
+const ghlPreview = item => {
+  const png = readFileSync(join(repo, 'apps/web/public/auto-index', `vgpu-${item.slug}.png`))
+  const title = item.title.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;')
+  return `<div class="ghl-component-wrapper"><img alt="${title} static preview" src="data:image/png;base64,${png.toString('base64')}" style="display:block;width:100%;height:auto"></div>`
+}
 if (manifest.repositoryUrl !== 'https://github.com/vercel-labs/vgpu' ||
     manifest.revision !== 'c35762d271fe1a1fc48464a7691d0ce97a18aa7e' ||
     hash(license) !== manifest.licenseSha256 || !Array.isArray(manifest.items) || manifest.items.length !== 25) {
@@ -68,7 +73,7 @@ for (const item of manifest.items) {
   if (!main || saved[item.slug].sourceSha256 !== main.sha256 ||
       saved[item.slug].demoSha256 !== hash(demo) ||
       hash(html) !== item.htmlSha256 || html.length !== item.htmlBytes ||
-      hash(png) !== item.previewSha256 || html.length > 1048576 ||
+      hash(png) !== item.previewSha256 || html.length > 1048576 || Buffer.byteLength(ghlPreview(item)) > 1048576 ||
       html.includes('localhost') || html.includes('/private/tmp/') ||
       Object.keys(saved[item.slug].prompts).sort().join(',') !== promptTypes.sort().join(',') ||
       Object.values(saved[item.slug].prompts).some(value => typeof value !== 'string' || !value)) {
@@ -123,7 +128,7 @@ for (const item of selected) {
   const main = item.files.find(file => file.path === sourcePath)
   const source = readFileSync(join(root, 'source', item.exampleSlug, 'index.tsx'))
   const demo = readFileSync(join(root, 'demos', `${item.slug}.tsx`))
-  const html = readFileSync(join(repo, 'apps/web/public/auto-index', `vgpu-${item.slug}.html`))
+  const ghlHtml = ghlPreview(item)
   const files = item.files.map(file => ({ path: file.path, registry_type: file === main ? 'registry:component' : 'registry:file',
     target: file.target, bytes_hex: readFileSync(join(root, 'source', item.exampleSlug,
       file.path.slice(`apps/docs/examples/${item.exampleSlug}/`.length))).toString('hex') }))
@@ -131,7 +136,7 @@ for (const item of selected) {
   const evidence = { approved: true, scope: 'production', componentSourcePath: sourcePath, dependenciesApproved: true,
     reviewerLabel: review.reviewerLabel, reviewedAt: review.reviewedAt, rationale: review.rationale,
     releaseCommit, manifestSha256, sourceSha256: hash(source), demoSha256: hash(demo),
-    ghlHtmlSha256: hash(html), previewSha256: item.previewSha256, licenseSha256: manifest.licenseSha256,
+    ghlHtmlSha256: hash(ghlHtml), previewSha256: item.previewSha256, licenseSha256: manifest.licenseSha256,
     runtimeAssets: item.runtimeAssets || [],
     detector: 'pinned-vgpu-production-review' }
   const preview = `${assetBase}/vgpu-${item.slug}.png`
@@ -145,7 +150,7 @@ for (const item of selected) {
     `'approved','production_pinned_mit_review',${json(evidence)});`,
     `SELECT id INTO STRICT v_candidate_id FROM public.auto_index_candidates WHERE source_id=v_source_id AND item_key=${quoted(sourcePath)} AND revision=${quoted(manifest.revision)};`,
     `PERFORM public.record_auto_index_candidate_demo(v_candidate_id,${txt(demo)},'higherbits-authored','HigherBits.dev',NULL,NULL,NULL,`,
-    `${quoted('HigherBits-authored wrapper importing the exact pinned VGPU example')},'{}'::jsonb,${txt(html)},`,
+    `${quoted('HigherBits-authored wrapper importing the exact pinned VGPU example')},'{}'::jsonb,${txt(ghlHtml)},`,
     `public.auto_index_ghl_fingerprint(${txt(source)},${txt(demo)}),${json(saved[item.slug].prompts)});`,
   )
   for (const file of item.files) {

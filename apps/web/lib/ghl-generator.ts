@@ -207,7 +207,13 @@ export function cleanGhlHtml(raw: string): string {
     text += "\n" + "</div>".repeat(openDivs - closeDivs)
   }
 
-  return sanitizeGhlHtml(text.trim())
+  const sanitized = sanitizeGhlHtml(text.trim())
+  const $ = load(sanitized, {}, false)
+  if ($("#root").length && !$("#root").html()?.trim()) {
+    $("style").remove()
+    if (!$.root().text().trim() && !$("img, svg, video").length) return ""
+  }
+  return sanitized
 }
 
 export const GHL_TEMPLATE_VERSION = "higherbits-ghl-template-v3"

@@ -17,3 +17,9 @@ for (const fixture of [
     expect(cleanGhlHtml(copied)).toBe(copied)
   })
 }
+
+it("rejects a JavaScript-only preview after scripts are removed", () => {
+  expect(cleanGhlHtml('<style>#root{height:100%}</style><div id="root"></div><script>render()</script>')).toBe("")
+  expect(cleanGhlHtml('<div class="ghl-component-wrapper"><img src="data:image/png;base64,aGVsbG8=" alt="Static preview"></div>'))
+    .toContain('alt="Static preview"')
+})
