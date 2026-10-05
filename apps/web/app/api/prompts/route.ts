@@ -10,6 +10,14 @@ import { prepareCopySource } from "@/lib/api/server/copy-source"
 import { withPromptNotice } from "@/lib/copy-notice"
 import { parse } from "@babel/parser"
 
+const LEGACY_GHL_CUTOFF_MS = Date.parse("2026-10-01T00:00:00Z")
+
+function predatesLegacyGhlCutoff(value: unknown): boolean {
+  if (typeof value !== "string" || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d/.test(value)) return false
+  const timestamp = Date.parse(value)
+  return Number.isFinite(timestamp) && timestamp < LEGACY_GHL_CUTOFF_MS
+}
+
 function alignAutoIndexDemoImport(demoCode: string, slug: string, installImport: string): string {
   let declarations
   try {
@@ -52,12 +60,27 @@ export async function POST(request: Request) {
       const stored = prepared.demo?.ghl_html_content
       const storedFingerprint = prepared.demo?.ghl_source_fingerprint
       const currentFingerprint = computeGhlSourceFingerprint(prepared.source.code, prepared.source.demoCode)
-      if (force_regenerate || typeof stored !== "string" || !stored || storedFingerprint !== currentFingerprint) {
+      // The pre-release cohort predates source fingerprints. Later writes must
+      // supply a matching fingerprint; auto-indexed demos always require one.
+      const legacySavedOutput = prepared.component.registry !== "auto-index" && storedFingerprint == null &&
+        [prepared.component.created_at, prepared.component.updated_at, prepared.demo?.created_at, prepared.demo?.updated_at]
+          .every(predatesLegacyGhlCutoff)
+      if (force_regenerate || typeof stored !== "string" || !stored || (!legacySavedOutput && storedFingerprint !== currentFingerprint)) {
         throw new CopyError(503, "ghl_output_unavailable")
       }
       const html = cleanGhlHtml(stored)
       if (!html) throw new CopyError(503, "ghl_output_unavailable")
       prompt = controls ? applyControlsToGhlHtml(html, controls) : html
+    } else if (prepared.component.registry === "auto-index" && (!controls || Object.keys(controls).length === 0) && !ruleData && !additional_context) {
+      const { data: saved, error } = await (db.from as any)("auto_index_copy_prompts")
+        .select("prompt,source_fingerprint").eq("demo_id", demo_id).eq("prompt_type", prompt_type).maybeSingle()
+      if (error) throw new CopyError(503, "prompt_unavailable")
+      const currentFingerprint = computeGhlSourceFingerprint(prepared.source.code, prepared.source.demoCode)
+      if (force_regenerate || typeof saved?.prompt !== "string" || !saved.prompt ||
+          saved.source_fingerprint !== currentFingerprint || prepared.demo?.ghl_source_fingerprint !== currentFingerprint) {
+        throw new CopyError(503, "prompt_unavailable")
+      }
+      prompt = saved.prompt
     } else {
       const slug = prepared.component.component_slug
       const autoIndexTarget = prepared.component.registry === "auto-index"

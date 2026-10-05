@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType, User } from "@/types/global"
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { Bookmark, Copy, Search, Maximize, Minimize, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
+import { Bookmark, Copy, Search, Maximize, Minimize, ExternalLink, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
@@ -442,6 +442,16 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
               </div>
             )}
 
+            {authorUsername && (
+              <a
+                href={`/${encodeURIComponent(authorUsername)}/${encodeURIComponent(demo.component.component_slug)}/${encodeURIComponent(demo.demo_slug || "default")}`}
+                className="absolute top-14 left-3 z-20 bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 hover:bg-background/90"
+              >
+                <ExternalLink size={14} aria-hidden="true" />
+                Open full page
+              </a>
+            )}
+
             {/* Top Right Dropdown & Fullscreen */}
             <div
               className={cn(
@@ -453,7 +463,6 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                   : "right-3 opacity-0 group-hover:opacity-100"
               )}
             >
-            
             {componentDemos.length > 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

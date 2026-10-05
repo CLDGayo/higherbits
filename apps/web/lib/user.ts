@@ -98,11 +98,22 @@ export async function syncClerkUserToSupabase(userId: string) {
           }),
     }
 
-    const { data: upsertedUser, error } = await supabaseWithAdminAccess
+    let { data: upsertedUser, error } = await supabaseWithAdminAccess
       .from("users")
       .upsert(userData, { onConflict: "id" })
       .select("*")
       .single()
+
+    // A creator's public display handle may be claimed between the lookup and upsert.
+    if (error?.code === "23505" && !existingUser && resolvedUsername !== userId) {
+      userData.username = userId
+      userData.display_username = userId
+      ;({ data: upsertedUser, error } = await supabaseWithAdminAccess
+        .from("users")
+        .upsert(userData, { onConflict: "id" })
+        .select("*")
+        .single())
+    }
 
     if (error) {
       console.error("Error in syncClerkUserToSupabase:", error)

@@ -86,9 +86,20 @@ CREATE TABLE public.auto_index_candidate_demos (
   control_settings jsonb NOT NULL CHECK (jsonb_typeof(control_settings)='object' AND octet_length(control_settings::text)<=16384),
   ghl_html_content text NOT NULL CHECK (length(ghl_html_content)>0 AND octet_length(ghl_html_content)<=1048576),
   ghl_source_fingerprint text NOT NULL CHECK (ghl_source_fingerprint ~ '^[a-f0-9]{64}$'),
+  copy_prompts jsonb NOT NULL CHECK (jsonb_typeof(copy_prompts)='object' AND octet_length(copy_prompts::text)<=8388608),
   created_at timestamptz NOT NULL DEFAULT now(),
   CHECK ((provenance_class='higherbits-authored' AND source_url IS NULL AND source_revision IS NULL AND source_sha256 IS NULL)
       OR (provenance_class<>'higherbits-authored' AND source_url IS NOT NULL AND source_revision IS NOT NULL AND source_sha256 IS NOT NULL))
+);
+
+-- Private pre-rendered copy text. Public demo queries use SELECT *, so never store it on demos.
+CREATE TABLE public.auto_index_copy_prompts (
+  demo_id integer NOT NULL REFERENCES public.demos(id) ON DELETE CASCADE,
+  prompt_type text NOT NULL CHECK (prompt_type IN
+    ('sitebrew','v0','lovable','bolt','extended','replit','magic_patterns','claude','codex','antigravity')),
+  prompt text NOT NULL CHECK (length(prompt)>0 AND octet_length(prompt)<=2097152),
+  source_fingerprint text NOT NULL CHECK (source_fingerprint ~ '^[a-f0-9]{64}$'),
+  PRIMARY KEY (demo_id,prompt_type)
 );
 
 CREATE TABLE public.auto_index_candidate_assets (
@@ -240,28 +251,57 @@ CREATE INDEX sandbox_ghl_review_leases_demo_id_idx
 
 CREATE FUNCTION public.register_auto_index_source(p_kind text,p_canonical_url text,p_owner_label text)
 RETURNS bigint LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
-DECLARE fingerprint text; vendor_id text; vendor_handle text; source_id bigint;
+DECLARE fingerprint text; vendor_id text; vendor_handle text; vendor_suffix text; source_id bigint;
+        github_handle text; clean_label text; vendor_count integer;
 BEGIN
-  IF p_kind NOT IN ('official_registry','custom_manifest') OR
-     p_canonical_url !~ '^https://github[.]com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$' OR
-     length(p_owner_label) NOT BETWEEN 1 AND 200 THEN RAISE EXCEPTION 'invalid source registration'; END IF;
+  IF p_kind IS NULL OR p_kind NOT IN ('official_registry','custom_manifest') OR
+     p_canonical_url IS NULL OR p_canonical_url !~ '^https://github[.]com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$' OR
+     p_owner_label IS NULL OR length(p_owner_label) NOT BETWEEN 1 AND 200 THEN
+    RAISE EXCEPTION 'invalid source registration'; END IF;
+  github_handle:=lower(split_part(p_canonical_url,'/',4));
+  clean_label:=regexp_replace(btrim(p_owner_label),'^Auto-indexed:[[:space:]]*','','i');
+  IF github_handle !~ '^[a-z0-9][a-z0-9-]{0,38}$' OR right(github_handle,1)='-' OR
+     clean_label IS NULL OR length(clean_label) NOT BETWEEN 1 AND 200 THEN
+    RAISE EXCEPTION 'invalid GitHub owner'; END IF;
+  PERFORM pg_catalog.pg_advisory_xact_lock(20260930,pg_catalog.hashtext(github_handle));
+  SELECT min(s.vendor_user_id),count(DISTINCT s.vendor_user_id) INTO vendor_id,vendor_count
+    FROM public.auto_index_sources s
+    WHERE s.canonical_url ~ '^https://github[.]com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$'
+      AND lower(split_part(s.canonical_url,'/',4))=github_handle;
+  IF vendor_count>1 THEN RAISE EXCEPTION 'GitHub owner already has conflicting vendor profiles'; END IF;
   fingerprint:=encode(extensions.digest(convert_to(p_canonical_url,'UTF8'),'sha256'),'hex');
-  vendor_id:='user_autoindex_'||substr(fingerprint,1,20);
-  vendor_handle:='vendor-'||substr(fingerprint,1,20);
-  INSERT INTO public.users(id,email,username,display_username,name,display_name,manually_added,bio)
-  VALUES(vendor_id,'vendor+'||substr(fingerprint,1,20)||'@higherbits.invalid',vendor_handle,vendor_handle,
-         'Auto-indexed: '||p_owner_label,'Auto-indexed: '||p_owner_label,true,
-         'Auto-indexed open-source components. This publisher has not claimed this profile.')
+  IF vendor_id IS NULL THEN vendor_id:='user_autoindex_'||substr(fingerprint,1,20); END IF;
+  vendor_suffix:=substring(vendor_id from '^user_autoindex_([a-f0-9]{20})$');
+  IF vendor_suffix IS NULL THEN RAISE EXCEPTION 'invalid auto-index vendor identity'; END IF;
+  vendor_handle:='vendor-'||vendor_suffix;
+  IF EXISTS (SELECT 1 FROM public.users u WHERE u.id<>vendor_id AND
+     (lower(u.username)=github_handle OR lower(u.display_username)=github_handle)) THEN
+    RAISE EXCEPTION 'GitHub owner handle is already taken'; END IF;
+  INSERT INTO public.users(id,email,username,display_username,name,display_name,manually_added,bio,
+    github_url,image_url,display_image_url)
+  VALUES(vendor_id,'vendor+'||vendor_suffix||'@higherbits.invalid',vendor_handle,github_handle,
+         clean_label,clean_label,true,
+         'Auto-indexed open-source components. This publisher has not claimed this profile.',
+         'https://github.com/'||github_handle,
+         'https://github.com/'||github_handle||'.png','https://github.com/'||github_handle||'.png')
   ON CONFLICT(id) DO NOTHING;
-  IF NOT EXISTS (SELECT 1 FROM public.users WHERE id=vendor_id AND username=vendor_handle AND manually_added
-                 AND email='vendor+'||substr(fingerprint,1,20)||'@higherbits.invalid') THEN
-    RAISE EXCEPTION 'vendor identity collision';
-  END IF;
+  UPDATE public.users u SET display_username=github_handle,
+    name=regexp_replace(u.name,'^Auto-indexed:[[:space:]]*','','i'),
+    display_name=regexp_replace(u.display_name,'^Auto-indexed:[[:space:]]*','','i'),
+    github_url='https://github.com/'||github_handle,
+    image_url=coalesce(nullif(u.image_url,''),'https://github.com/'||github_handle||'.png'),
+    display_image_url=coalesce(nullif(u.display_image_url,''),'https://github.com/'||github_handle||'.png')
+    WHERE u.id=vendor_id AND u.username=vendor_handle AND u.manually_added
+      AND u.email='vendor+'||vendor_suffix||'@higherbits.invalid'
+      AND u.bio='Auto-indexed open-source components. This publisher has not claimed this profile.'
+      AND (u.display_username=vendor_handle OR lower(u.display_username)=github_handle)
+      AND (u.github_url IS NULL OR lower(u.github_url)='https://github.com/'||github_handle);
+  IF NOT FOUND THEN RAISE EXCEPTION 'vendor identity collision'; END IF;
   INSERT INTO public.auto_index_sources(kind,canonical_url,owner_label,vendor_user_id)
-  VALUES(p_kind,p_canonical_url,p_owner_label,vendor_id)
+  VALUES(p_kind,p_canonical_url,clean_label,vendor_id)
   ON CONFLICT(canonical_url) DO NOTHING;
   SELECT id INTO STRICT source_id FROM public.auto_index_sources WHERE canonical_url=p_canonical_url
-    AND kind=p_kind AND owner_label=p_owner_label AND vendor_user_id=vendor_id;
+    AND kind=p_kind AND owner_label=clean_label AND vendor_user_id=vendor_id;
   RETURN source_id;
 END $$;
 
@@ -496,7 +536,7 @@ END $$;
 CREATE FUNCTION public.record_auto_index_candidate_demo(p_candidate_id bigint,p_demo_code text,
   p_provenance_class text,p_author_label text,p_source_url text,p_source_revision text,
   p_source_sha256 text,p_derivation text,p_control_settings jsonb,p_ghl_html_content text,
-  p_ghl_source_fingerprint text)
+  p_ghl_source_fingerprint text,p_copy_prompts jsonb)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
 DECLARE c public.auto_index_candidates; component_source text; expected_fingerprint text; demo_hash bytea; source_hash bytea;
 BEGIN
@@ -507,7 +547,13 @@ BEGIN
      length(p_author_label) NOT BETWEEN 1 AND 200 OR length(p_demo_code)=0 OR octet_length(p_demo_code)>2097152 OR
      length(p_derivation) NOT BETWEEN 1 AND 4000 OR jsonb_typeof(p_control_settings) IS DISTINCT FROM 'object' OR
      octet_length(p_control_settings::text)>16384 OR length(p_ghl_html_content)=0 OR octet_length(p_ghl_html_content)>1048576 OR
-     p_ghl_source_fingerprint !~ '^[a-f0-9]{64}$' THEN RAISE EXCEPTION 'incomplete private demo evidence'; END IF;
+     p_ghl_source_fingerprint !~ '^[a-f0-9]{64}$' OR jsonb_typeof(p_copy_prompts) IS DISTINCT FROM 'object' OR
+     octet_length(p_copy_prompts::text)>8388608 OR
+     (SELECT count(*) FROM jsonb_object_keys(p_copy_prompts))<>10 OR
+     EXISTS (SELECT 1 FROM jsonb_each(p_copy_prompts) prompt WHERE prompt.key NOT IN
+       ('sitebrew','v0','lovable','bolt','extended','replit','magic_patterns','claude','codex','antigravity')
+       OR jsonb_typeof(prompt.value)<>'string' OR length(prompt.value #>> '{}')=0 OR
+       octet_length(prompt.value #>> '{}')>2097152) THEN RAISE EXCEPTION 'incomplete private demo evidence'; END IF;
   IF p_provenance_class='higherbits-authored' THEN
     IF p_source_url IS NOT NULL OR p_source_revision IS NOT NULL OR p_source_sha256 IS NOT NULL THEN RAISE EXCEPTION 'authored demo has upstream locator'; END IF;
     source_hash:=NULL;
@@ -525,16 +571,16 @@ BEGIN
     RAISE EXCEPTION 'original demo source hash mismatch';
   END IF;
   INSERT INTO public.auto_index_candidate_demos(candidate_id,demo_code,demo_sha256,provenance_class,author_label,
-    source_url,source_revision,source_sha256,derivation,control_settings,ghl_html_content,ghl_source_fingerprint)
+    source_url,source_revision,source_sha256,derivation,control_settings,ghl_html_content,ghl_source_fingerprint,copy_prompts)
   VALUES(p_candidate_id,p_demo_code,demo_hash,p_provenance_class,p_author_label,p_source_url,p_source_revision,
-    source_hash,p_derivation,p_control_settings,p_ghl_html_content,p_ghl_source_fingerprint)
+    source_hash,p_derivation,p_control_settings,p_ghl_html_content,p_ghl_source_fingerprint,p_copy_prompts)
   ON CONFLICT(candidate_id) DO NOTHING;
   IF NOT EXISTS (SELECT 1 FROM public.auto_index_candidate_demos d WHERE d.candidate_id=p_candidate_id AND
     d.demo_code=p_demo_code AND d.demo_sha256=demo_hash AND d.provenance_class=p_provenance_class AND
     d.author_label=p_author_label AND d.source_url IS NOT DISTINCT FROM p_source_url AND
     d.source_revision IS NOT DISTINCT FROM p_source_revision AND d.source_sha256 IS NOT DISTINCT FROM source_hash AND
     d.derivation=p_derivation AND d.control_settings=p_control_settings AND d.ghl_html_content=p_ghl_html_content AND
-    d.ghl_source_fingerprint=p_ghl_source_fingerprint) THEN RAISE EXCEPTION 'candidate demo evidence conflict'; END IF;
+    d.ghl_source_fingerprint=p_ghl_source_fingerprint AND d.copy_prompts=p_copy_prompts) THEN RAISE EXCEPTION 'candidate demo evidence conflict'; END IF;
 END $$;
 
 CREATE FUNCTION public.record_auto_index_candidate_asset(p_candidate_id bigint,p_asset_key text,p_asset_role text,
@@ -692,8 +738,15 @@ BEGIN
            lower(c.license_spdx),false) RETURNING id INTO component_id;
     INSERT INTO public.demos(component_id,user_id,demo_code,name,demo_slug,ghl_html_content,ghl_source_fingerprint)
     VALUES(component_id,s.vendor_user_id,demo_artifact.demo_code,p_title,'default',
-           demo_artifact.ghl_html_content,demo_artifact.ghl_source_fingerprint);
+           demo_artifact.ghl_html_content,demo_artifact.ghl_source_fingerprint)
+    RETURNING id INTO active_demo_id;
   END IF;
+  DELETE FROM public.auto_index_copy_prompts WHERE demo_id=active_demo_id;
+  INSERT INTO public.auto_index_copy_prompts(demo_id,prompt_type,prompt,source_fingerprint)
+  SELECT active_demo_id,prompt.key,prompt.value,demo_artifact.ghl_source_fingerprint
+    FROM jsonb_each_text(demo_artifact.copy_prompts) prompt;
+  IF (SELECT count(*) FROM public.auto_index_copy_prompts WHERE demo_id=active_demo_id)<>10 THEN
+    RAISE EXCEPTION 'incomplete auto-index copy prompts'; END IF;
   INSERT INTO public.auto_index_publications(source_id,item_key,component_id,approved_decision_id)
   VALUES(c.source_id,c.item_key,component_id,d.id);
   UPDATE public.components SET is_public=true WHERE id=component_id;
@@ -824,17 +877,20 @@ ALTER TABLE public.auto_index_refresh_runs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_candidates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_candidate_files ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_candidate_demos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.auto_index_copy_prompts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_candidate_assets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_decisions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_publications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sandbox_ghl_review_leases ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.auto_index_sources,public.auto_index_refresh_state,public.auto_index_refresh_runs,public.auto_index_candidates,public.auto_index_candidate_files,public.auto_index_candidate_demos,public.auto_index_candidate_assets,public.auto_index_decisions,public.auto_index_publications FROM PUBLIC,anon,authenticated,service_role;
+REVOKE ALL ON public.auto_index_copy_prompts FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON public.sandbox_ghl_review_leases FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON public.auto_index_publications FROM service_role;
 REVOKE ALL ON SEQUENCE public.auto_index_sources_id_seq,public.auto_index_candidates_id_seq,public.auto_index_decisions_id_seq FROM PUBLIC,anon,authenticated;
 GRANT SELECT,INSERT,UPDATE ON public.auto_index_sources TO service_role;
 GRANT SELECT,INSERT ON public.auto_index_candidates,public.auto_index_candidate_files,public.auto_index_decisions TO service_role;
 GRANT SELECT,INSERT ON public.auto_index_candidate_demos,public.auto_index_candidate_assets TO service_role;
+GRANT SELECT,INSERT,DELETE ON public.auto_index_copy_prompts TO service_role;
 GRANT SELECT ON public.auto_index_publications TO service_role;
 GRANT USAGE ON SEQUENCE public.auto_index_sources_id_seq,public.auto_index_candidates_id_seq,public.auto_index_decisions_id_seq TO service_role;
 REVOKE ALL ON FUNCTION public.auto_index_history_immutable(),public.auto_index_source_guard(),public.auto_index_file_guard(),public.auto_index_decision_guard(),public.auto_index_publication_guard(),public.auto_index_publication_visibility(),public.auto_index_component_visibility_guard() FROM PUBLIC,anon,authenticated;
@@ -844,8 +900,8 @@ REVOKE ALL ON FUNCTION public.begin_auto_index_refresh(bigint,text,text) FROM PU
 GRANT EXECUTE ON FUNCTION public.begin_auto_index_refresh(bigint,text,text) TO service_role;
 REVOKE ALL ON FUNCTION public.record_auto_index_candidate(bigint,text,text,text,text,text,text,jsonb,jsonb,text,text,jsonb) FROM PUBLIC,anon,authenticated;
 GRANT EXECUTE ON FUNCTION public.record_auto_index_candidate(bigint,text,text,text,text,text,text,jsonb,jsonb,text,text,jsonb) TO service_role;
-REVOKE ALL ON FUNCTION public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text) FROM PUBLIC,anon,authenticated;
-GRANT EXECUTE ON FUNCTION public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text) TO service_role;
+REVOKE ALL ON FUNCTION public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text,jsonb) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text,jsonb) TO service_role;
 REVOKE ALL ON FUNCTION public.record_auto_index_candidate_asset(bigint,text,text,text,text,text,text,text,text,text,text,text,text,jsonb) FROM PUBLIC,anon,authenticated;
 GRANT EXECUTE ON FUNCTION public.record_auto_index_candidate_asset(bigint,text,text,text,text,text,text,text,text,text,text,text,text,jsonb) TO service_role;
 REVOKE ALL ON FUNCTION public.auto_index_ghl_fingerprint(text,text),public.auto_index_candidate_provenance_complete(bigint) FROM PUBLIC,anon,authenticated;
@@ -860,4 +916,36 @@ REVOKE ALL ON FUNCTION public.claim_sandbox_ghl_review_lease(text,bigint,text,uu
 GRANT EXECUTE ON FUNCTION public.claim_sandbox_ghl_review_lease(text,bigint,text,uuid,integer),
   public.release_sandbox_ghl_review_lease(text,bigint,text,uuid,bigint),
   public.persist_sandbox_ghl_review_output(text,bigint,text,uuid,bigint,text) TO service_role;
+
+-- The public route accepts either column. Reserve both in one case-insensitive
+-- namespace, including writes from Clerk and profile settings outside auto-index.
+CREATE FUNCTION public.guard_public_user_handles() RETURNS trigger
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
+DECLARE handle text;
+BEGIN
+  IF TG_OP='UPDATE' AND lower(NEW.username) IS NOT DISTINCT FROM lower(OLD.username)
+      AND lower(NEW.display_username) IS NOT DISTINCT FROM lower(OLD.display_username) THEN RETURN NEW; END IF;
+  FOR handle IN SELECT DISTINCT lower(value) FROM unnest(ARRAY[NEW.username,NEW.display_username]) value
+    WHERE value IS NOT NULL AND value<>'' ORDER BY 1 LOOP
+    PERFORM pg_catalog.pg_advisory_xact_lock(20260929,pg_catalog.hashtext(handle));
+    IF EXISTS (SELECT 1 FROM public.users u WHERE u.id<>NEW.id
+      AND (lower(u.username)=handle OR lower(u.display_username)=handle)) THEN
+      RAISE EXCEPTION 'public handle already taken: %',handle USING ERRCODE='23505';
+    END IF;
+  END LOOP;
+  RETURN NEW;
+END $$;
+REVOKE ALL ON FUNCTION public.guard_public_user_handles() FROM PUBLIC,anon,authenticated;
+CREATE TRIGGER users_public_handle_guard BEFORE INSERT OR UPDATE OF username,display_username ON public.users
+FOR EACH ROW EXECUTE FUNCTION public.guard_public_user_handles();
+DO $$
+DECLARE duplicate_handle text;
+BEGIN
+  SELECT handle INTO duplicate_handle FROM (
+    SELECT id,lower(username) AS handle FROM public.users WHERE username IS NOT NULL AND username<>''
+    UNION ALL
+    SELECT id,lower(display_username) FROM public.users WHERE display_username IS NOT NULL AND display_username<>''
+  ) handles GROUP BY handle HAVING count(DISTINCT id)>1 LIMIT 1;
+  IF duplicate_handle IS NOT NULL THEN RAISE EXCEPTION 'existing public handle collision: %',duplicate_handle; END IF;
+END $$;
 COMMIT;

@@ -3352,6 +3352,7 @@ export type Database = {
           p_control_settings: Json
           p_ghl_html_content: string
           p_ghl_source_fingerprint: string
+          p_copy_prompts: Json
         }
         Returns: undefined
       }

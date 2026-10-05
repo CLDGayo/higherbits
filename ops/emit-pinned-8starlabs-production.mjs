@@ -76,6 +76,11 @@ const authoredLicense = readFileSync(join(repo, 'LICENSE'))
 if (hash(authoredLicense) !== '5188d73b997011afd7ab61ee3be917f9f99981abdfa46ddcfadc013ad28b474e') {
   throw new Error('HigherBits authored-demo MIT license differs from reviewed bytes')
 }
+const pinnedPromptsBytes = readFileSync(join(repo, 'ops/phase-e-pinned/8starlabs/copy-prompts.json'))
+const pinnedPromptsSha256 = 'd002e054330eca4222e9575692723aa1081ed0748c32df193c0620fc68cd2db0'
+if (hash(pinnedPromptsBytes) !== pinnedPromptsSha256) throw new Error('pinned copy prompts differ from reviewed bytes')
+const pinnedPrompts = JSON.parse(pinnedPromptsBytes.toString('utf8'))
+const expectedPromptTypes = ['sitebrew','v0','lovable','bolt','extended','replit','magic_patterns','claude','codex','antigravity']
 
 for (const item of items) {
   const { slug, expected } = item
@@ -92,6 +97,13 @@ for (const item of items) {
   for (const key of ['source', 'upstreamDemo', 'demo', 'html', 'css', 'svg']) {
     if (hash(item[key]) !== expected[key]) throw new Error(`${slug} ${key} differs from reviewed bytes`)
   }
+  const saved = pinnedPrompts[slug]
+  if (saved?.sourceSha256 !== expected.source || saved?.demoSha256 !== expected.demo ||
+      Object.keys(saved.prompts ?? {}).sort().join(',') !== [...expectedPromptTypes].sort().join(',') ||
+      Object.values(saved.prompts).some(value => typeof value !== 'string' || !value)) {
+    throw new Error(`${slug} pinned copy prompts differ from source or demo`)
+  }
+  item.copyPrompts = saved.prompts
   const metadataPath = join(capture, slug, 'registry-metadata/public/r', `${slug}.json`)
   if (item.demoProvenance === 'higherbits-authored') {
     const metadata = JSON.parse(readFileSync(metadataPath, 'utf8'))
@@ -112,6 +124,7 @@ for (const item of items) {
 
 const manifest = {
   source: repositoryUrl, revision, licenseSha256: hash(license), authoredLicenseSha256: hash(authoredLicense),
+  copyPromptsSha256: pinnedPromptsSha256,
   items: items.map(({ slug, sourcePath, expected }) => ({ slug, sourcePath, ...expected })),
 }
 const manifestSha256 = hash(Buffer.from(JSON.stringify(manifest)))
@@ -120,8 +133,37 @@ if (mode === '--check' && process.argv.length === 3) {
   console.log(JSON.stringify({ ...manifest, manifestSha256 }, null, 2))
   process.exit(0)
 }
+if (mode === '--emit-local-prompts' && process.argv.length === 3) {
+  const statements = ['BEGIN;',
+    `CREATE TABLE IF NOT EXISTS public.auto_index_copy_prompts (
+      demo_id integer NOT NULL REFERENCES public.demos(id) ON DELETE CASCADE,
+      prompt_type text NOT NULL CHECK (prompt_type IN ('sitebrew','v0','lovable','bolt','extended','replit','magic_patterns','claude','codex','antigravity')),
+      prompt text NOT NULL CHECK (length(prompt)>0 AND octet_length(prompt)<=2097152),
+      source_fingerprint text NOT NULL CHECK (source_fingerprint ~ '^[a-f0-9]{64}$'),
+      PRIMARY KEY(demo_id,prompt_type));`,
+    'ALTER TABLE public.auto_index_copy_prompts ENABLE ROW LEVEL SECURITY;',
+    'REVOKE ALL ON public.auto_index_copy_prompts FROM PUBLIC,anon,authenticated,service_role;',
+    'GRANT SELECT,INSERT,DELETE ON public.auto_index_copy_prompts TO service_role;',
+    'DO $local_prompts$ DECLARE saved_demo_id integer; saved_fingerprint text; BEGIN']
+  for (const item of items) {
+    statements.push('SELECT d.id,d.ghl_source_fingerprint INTO STRICT saved_demo_id,saved_fingerprint FROM public.demos d')
+    statements.push('JOIN public.components c ON c.id=d.component_id')
+    statements.push(`AND c.registry='auto-index' AND c.user_id='user_autoindex_1cdb932f457ab20f9784'`)
+    statements.push(`AND c.component_slug=${quoted(item.slug)} AND d.demo_slug='default'`)
+    statements.push(`AND encode(extensions.digest(convert_to(c.code,'UTF8'),'sha256'),'hex')=${quoted(item.expected.source)}`)
+    statements.push(`AND encode(extensions.digest(convert_to(d.demo_code,'UTF8'),'sha256'),'hex')=${quoted(item.expected.demo)};`)
+    statements.push(`IF saved_fingerprint IS DISTINCT FROM public.auto_index_ghl_fingerprint((SELECT code FROM public.components WHERE id=(SELECT component_id FROM public.demos WHERE id=saved_demo_id)),(SELECT demo_code FROM public.demos WHERE id=saved_demo_id)) THEN RAISE EXCEPTION ${quoted(`${item.slug} local fingerprint mismatch`)}; END IF;`)
+    statements.push('DELETE FROM public.auto_index_copy_prompts WHERE demo_id=saved_demo_id;')
+    statements.push(`INSERT INTO public.auto_index_copy_prompts(demo_id,prompt_type,prompt,source_fingerprint)`)
+    statements.push(`SELECT saved_demo_id,prompt.key,prompt.value,saved_fingerprint FROM jsonb_each_text(${json(item.copyPrompts)}) prompt;`)
+    statements.push(`IF (SELECT count(*) FROM public.auto_index_copy_prompts WHERE demo_id=saved_demo_id)<>10 THEN RAISE EXCEPTION ${quoted(`${item.slug} local prompts incomplete`)}; END IF;`)
+  }
+  statements.push('END $local_prompts$;', 'COMMIT;')
+  console.log(statements.join('\n'))
+  process.exit(0)
+}
 if (mode !== '--emit-sql' || process.argv.length !== 4) {
-  throw new Error('usage: node ops/emit-pinned-8starlabs-production.mjs --check | --emit-sql /path/to/production-review.json')
+  throw new Error('usage: node ops/emit-pinned-8starlabs-production.mjs --check | --emit-local-prompts | --emit-sql /path/to/production-review.json')
 }
 
 const review = JSON.parse(readFileSync(resolve(process.argv[3]), 'utf8'))
@@ -150,7 +192,10 @@ const sections = [
   'BEGIN',
   `  v_source_id := public.register_auto_index_source('official_registry',${quoted(repositoryUrl)},'8StarLabs UI');`,
   `  IF (SELECT opted_out FROM public.auto_index_sources WHERE id=v_source_id) THEN RAISE EXCEPTION '8StarLabs opted out'; END IF;`,
-  `  UPDATE public.users u SET name='8StarLabs UI',display_name='8StarLabs UI',`,
+  `  IF EXISTS (SELECT 1 FROM public.users u WHERE u.id <> 'user_autoindex_1cdb932f457ab20f9784'`,
+  `    AND (lower(u.username)='8starlabs' OR lower(u.display_username)='8starlabs')) THEN`,
+  `    RAISE EXCEPTION '8StarLabs public handle is already taken'; END IF;`,
+  `  UPDATE public.users u SET name='8StarLabs UI',display_name='8StarLabs UI',display_username='8starlabs',`,
   `    image_url='https://avatars.githubusercontent.com/u/237609665?v=4',`,
   `    display_image_url='https://avatars.githubusercontent.com/u/237609665?v=4', github_url='https://github.com/8starlabs'`,
   `    FROM public.auto_index_sources s`,
@@ -158,6 +203,7 @@ const sections = [
   `      AND s.canonical_url=${quoted(repositoryUrl)} AND s.owner_label='8StarLabs UI'`,
   `      AND u.id='user_autoindex_1cdb932f457ab20f9784'`,
   `      AND u.username='vendor-1cdb932f457ab20f9784'`,
+  `      AND u.display_username IN ('vendor-1cdb932f457ab20f9784','8starlabs')`,
   `      AND u.email='vendor+1cdb932f457ab20f9784@higherbits.invalid'`,
   `      AND u.manually_added`,
   `      AND u.bio='Auto-indexed open-source components. This publisher has not claimed this profile.'`,
@@ -193,7 +239,7 @@ for (const item of items) {
   sections.push(`  PERFORM public.record_auto_index_candidate_demo(v_candidate_id,${txt(item.demo)},`)
   sections.push(`    ${quoted(item.demoProvenance)},${quoted(authored ? 'HigherBits.dev' : '8StarLabs UI')},${demoSourceMetadata},`)
   sections.push(`    ${quoted(authored ? 'Independently authored example importing the pinned component' : 'Exact pinned upstream demo')},'{}'::jsonb,`)
-  sections.push(`    ${txt(item.html)},public.auto_index_ghl_fingerprint(${txt(item.source)},${txt(item.demo)}));`)
+  sections.push(`    ${txt(item.html)},public.auto_index_ghl_fingerprint(${txt(item.source)},${txt(item.demo)}),${json(item.copyPrompts)});`)
   sections.push(`  PERFORM public.record_auto_index_candidate_asset(v_candidate_id,${quoted(sourcePath)},`)
   sections.push(`    'component_source','upstream-original',${quoted(repositoryUrl)},${quoted(revision)},${quoted(expected.source)},`)
   sections.push(`    'MIT',${txt(license)},'','Exact pinned source under repository root MIT license',NULL,NULL,NULL);`)
@@ -219,6 +265,14 @@ for (const item of items) {
   sections.push(`      AND d.bundle_html_url=${quoted(`${assetBase}/${slug}.html`)}`)
   sections.push(`      AND encode(extensions.digest(convert_to(c.code,'UTF8'),'sha256'),'hex')=${quoted(expected.source)}`)
   sections.push(`      AND encode(extensions.digest(convert_to(d.demo_code,'UTF8'),'sha256'),'hex')=${quoted(expected.demo)}`)
+  sections.push(`      AND d.ghl_source_fingerprint=public.auto_index_ghl_fingerprint(c.code,d.demo_code)`)
+  sections.push(`      AND (SELECT count(*) FROM public.auto_index_copy_prompts cp WHERE cp.demo_id=d.id`)
+  sections.push(`        AND cp.source_fingerprint=d.ghl_source_fingerprint`)
+  sections.push(`        AND encode(extensions.digest(convert_to(cp.prompt,'UTF8'),'sha256'),'hex')=CASE cp.prompt_type`)
+  for (const [type, prompt] of Object.entries(item.copyPrompts)) {
+    sections.push(`          WHEN ${quoted(type)} THEN ${quoted(hash(Buffer.from(prompt)))}`)
+  }
+  sections.push(`          ELSE NULL END)=10`)
   sections.push(`      AND encode(extensions.digest(convert_to(d.compiled_css,'UTF8'),'sha256'),'hex')=${quoted(expected.css)}) THEN`)
   sections.push(`    RAISE EXCEPTION ${quoted(`${slug} publication verification failed`)}; END IF;`)
 }

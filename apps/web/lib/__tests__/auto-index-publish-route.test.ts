@@ -1,15 +1,15 @@
 import { createHash } from "node:crypto"
 import { beforeEach, expect, it, vi } from "vitest"
 
-const mock = vi.hoisted(() => ({ rpc: vi.fn(), compute: vi.fn(), clean: vi.fn() }))
+const mock = vi.hoisted(() => ({ rpc: vi.fn(), compute: vi.fn(), clean: vi.fn(), candidateDependencies: [] as unknown[] }))
 vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: { rpc: mock.rpc, from(table: string) {
   const original = "export const Pinned = 1;\n"
   const hash = createHash("sha256").update(original).digest("hex")
   const values: Record<string, unknown> = {
     auto_index_decisions: { candidate_id: 9, outcome: "approved" },
     auto_index_candidates: { item_key: "components/pinned.tsx", component_source_path: null,
-      repository_url: "https://github.com/example/pinned", revision: "a".repeat(40), license_spdx: "MIT", license_text: "MIT original\n" },
-    auto_index_candidate_files: [{ path: "components/pinned.tsx", bytes: `\\x${Buffer.from(original).toString("hex")}`, sha256: `\\x${hash}` }],
+      repository_url: "https://github.com/example/pinned", revision: "a".repeat(40), license_spdx: "MIT", license_text: "MIT original\n", dependencies: mock.candidateDependencies },
+    auto_index_candidate_files: [{ path: "components/pinned.tsx", target: "components/auto-index/pinned-component.tsx", bytes: `\\x${Buffer.from(original).toString("hex")}`, sha256: `\\x${hash}` }],
   }
   const query = {
     select: () => query,
@@ -68,6 +68,7 @@ function request(body: unknown, authorization = "Bearer local-test-token") {
 }
 
 beforeEach(() => {
+  mock.candidateDependencies = []
   vi.unstubAllEnvs()
   vi.restoreAllMocks()
   _resetRateLimitStore()
@@ -76,6 +77,14 @@ beforeEach(() => {
   mock.compute.mockReturnValue("f".repeat(64))
   mock.clean.mockReturnValue("<div>sanitized saved output</div>")
   vi.stubEnv("AUTO_INDEX_INTERNAL_TOKEN", "local-test-token")
+})
+
+it("keeps candidates with unresolved registry dependencies private before saving prompts", async () => {
+  mock.candidateDependencies = [{ type: "registry", reference: "creator/helper" }]
+  const response = await POST(request({ items: [validItem] }))
+  expect(response.status).toBe(200)
+  expect(await response.json()).toEqual({ results: [{ decisionId: 19, status: "private" }] })
+  expect(mock.rpc).not.toHaveBeenCalled()
 })
 
 it("E26 fails closed when the internal token is absent or incorrect", async () => {
@@ -103,7 +112,8 @@ it("E26 stages sanitized demo and per-file rights evidence before the idempotent
     "record_auto_index_candidate_demo", "record_auto_index_candidate_asset", "record_auto_index_candidate_asset", "publish_auto_index_candidate",
     "record_auto_index_candidate_demo", "record_auto_index_candidate_asset", "record_auto_index_candidate_asset", "publish_auto_index_candidate",
   ])
-  expect(mock.rpc.mock.calls[0]?.[1]).toMatchObject({ p_demo_code: demoCode, p_ghl_html_content: "<div>sanitized saved output</div>" })
+  expect(mock.rpc.mock.calls[0]?.[1]).toMatchObject({ p_demo_code: demoCode, p_ghl_html_content: "<div>sanitized saved output</div>",
+    p_copy_prompts: expect.objectContaining({ codex: expect.stringContaining("components/auto-index/pinned-component.tsx") }) })
 })
 
 it("E26 retries an identical publish after a partial asset RPC failure", async () => {

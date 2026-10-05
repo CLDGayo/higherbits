@@ -57,6 +57,8 @@ export function UserPageClient({ user, initialTab }: UserPageClientProps) {
   const [mounted, setMounted] = useState(false)
   const [isClaimOpen, setIsClaimOpen] = useState(false)
   const isOwnProfile = mounted && currentUser?.id === user.id
+  const isAutoIndexedProfile = /^vendor-[a-f0-9]{20}$/.test(user.username ?? "") &&
+    user.bio?.startsWith("Auto-indexed open-source components.") === true
 
   useEffect(() => {
     setMounted(true)
@@ -172,7 +174,9 @@ export function UserPageClient({ user, initialTab }: UserPageClientProps) {
                 <div className="flex flex-col w-full">
                   <Alert>
                     <AlertTitle>
-                      This profile was created by HigherBits.dev
+                      {isAutoIndexedProfile
+                        ? "This profile was created and auto-indexed by HigherBits.dev"
+                        : "This profile was created by HigherBits.dev"}
                     </AlertTitle>
                     <AlertDescription>
                       Is this yours?{" "}

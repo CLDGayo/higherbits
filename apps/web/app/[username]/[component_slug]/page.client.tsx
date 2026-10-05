@@ -696,7 +696,9 @@ export default function ComponentPage({
                 />
               </Link>
               <p className="text-[14px] font-medium whitespace-nowrap">
-                {component.name}
+                {component.user.display_name ||
+                  component.user.name ||
+                  component.user.username}
               </p>
             </div>
           </div>

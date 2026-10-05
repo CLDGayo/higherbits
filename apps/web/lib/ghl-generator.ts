@@ -12,7 +12,7 @@ const GHL_ALLOWED_TAGS = new Set([
 ])
 const GHL_REMOVE_SUBTREE_TAGS = new Set([
   "base", "embed", "form", "iframe", "input", "link", "meta", "object", "option", "script", "select", "set", "textarea", "foreignobject",
-  "animate", "animatemotion", "animatetransform",
+  "animate", "animatemotion", "animatetransform", "title",
 ])
 const GHL_SVG_PRESENTATION_URL_ATTRIBUTES = new Set([
   "fill", "filter", "clip-path", "mask", "marker-start", "marker-mid", "marker-end", "stroke", "cursor",

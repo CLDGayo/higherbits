@@ -12,5 +12,4 @@
 
 .codeViewerWrapper {
   height: calc(var(--vh, 1vh) * 100 - 200px);
-  overflow: hidden;
 }

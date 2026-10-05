@@ -123,8 +123,8 @@ export const ComponentCard = React.memo(function ComponentCard({
     display_image_url: "",
   }
   const username =
-    userData?.username ||
     userData?.display_username ||
+    userData?.username ||
     (userData as any)?.name ||
     (userData as any)?.display_name ||
     "user"

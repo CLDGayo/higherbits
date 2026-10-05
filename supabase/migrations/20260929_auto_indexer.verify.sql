@@ -36,12 +36,12 @@ BEGIN
   IF has_function_privilege('authenticated','public.publish_auto_index_candidate(bigint,text,text,text,text)','EXECUTE') OR
      has_function_privilege('authenticated','public.begin_auto_index_refresh(bigint,text,text)','EXECUTE') OR
      has_function_privilege('authenticated','public.delist_auto_index_rejected_license(bigint)','EXECUTE') OR
-     has_function_privilege('authenticated','public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text)','EXECUTE') OR
+     has_function_privilege('authenticated','public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text,jsonb)','EXECUTE') OR
      has_function_privilege('authenticated','public.record_auto_index_candidate_asset(bigint,text,text,text,text,text,text,text,text,text,text,text,text,jsonb)','EXECUTE') OR
      NOT has_function_privilege('service_role','public.publish_auto_index_candidate(bigint,text,text,text,text)','EXECUTE') OR
      NOT has_function_privilege('service_role','public.begin_auto_index_refresh(bigint,text,text)','EXECUTE') OR
      NOT has_function_privilege('service_role','public.delist_auto_index_rejected_license(bigint)','EXECUTE') OR
-     NOT has_function_privilege('service_role','public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text)','EXECUTE') OR
+     NOT has_function_privilege('service_role','public.record_auto_index_candidate_demo(bigint,text,text,text,text,text,text,text,jsonb,text,text,jsonb)','EXECUTE') OR
      NOT has_function_privilege('service_role','public.record_auto_index_candidate_asset(bigint,text,text,text,text,text,text,text,text,text,text,text,text,jsonb)','EXECUTE') THEN
     RAISE EXCEPTION 'incorrect publication function privileges';
   END IF;
@@ -77,7 +77,13 @@ BEGIN
      NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='auto_index_candidate_assets' AND column_name='transform_record') THEN
     RAISE EXCEPTION 'missing structured adapted-asset lineage fields';
   END IF;
-  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='demos' AND column_name='ghl_source_fingerprint') THEN
-    RAISE EXCEPTION 'missing persisted GHL source fingerprint';
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='demos' AND column_name='ghl_source_fingerprint') OR
+     NOT EXISTS (SELECT 1 FROM pg_class WHERE oid='public.auto_index_copy_prompts'::regclass AND relrowsecurity) OR
+     NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='auto_index_candidate_demos' AND column_name='copy_prompts') THEN
+    RAISE EXCEPTION 'missing persisted pre-generated prompt or GHL source fields';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgrelid='public.users'::regclass
+       AND tgname='users_public_handle_guard' AND NOT tgisinternal) THEN
+    RAISE EXCEPTION 'missing public handle guard';
   END IF;
 END $$;

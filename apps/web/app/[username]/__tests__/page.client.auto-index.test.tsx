@@ -53,7 +53,13 @@ it("E26: auto-indexed profile renders unclaimed disclosure and claim action", ()
   render(<UserPageClient user={autoIndexedUser} initialTab="components" />)
 
   expect(screen.getByText(/This publisher has not claimed this profile\./)).toBeTruthy()
-  expect(screen.getByText("This profile was created by HigherBits.dev")).toBeTruthy()
+  expect(screen.getByText("This profile was created and auto-indexed by HigherBits.dev")).toBeTruthy()
   fireEvent.click(screen.getByRole("button", { name: "Claim this profile" }))
   expect(screen.getByRole("dialog").textContent).toContain("Claim report dialog")
+})
+
+it("keeps the existing claim wording for other unclaimed profiles", () => {
+  render(<UserPageClient user={{ ...autoIndexedUser, username: "shadcn" }} initialTab="components" />)
+
+  expect(screen.getByText("This profile was created by HigherBits.dev")).toBeTruthy()
 })

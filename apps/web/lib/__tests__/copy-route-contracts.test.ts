@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest"
 import { performance } from "node:perf_hooks"
-const mocks = vi.hoisted(() => ({ identity: vi.fn(), tier: vi.fn(), prepare: vi.fn(), admit: vi.fn(), ghl: vi.fn(), fingerprint: vi.fn(), completion: vi.fn(), from: vi.fn(), rpc: vi.fn(), auth: vi.fn() }))
+const mocks = vi.hoisted(() => ({ identity: vi.fn(), tier: vi.fn(), prepare: vi.fn(), admit: vi.fn(), ghl: vi.fn(), fingerprint: vi.fn(), clean: vi.fn(), completion: vi.fn(), from: vi.fn(), rpc: vi.fn(), auth: vi.fn() }))
 type MockRpcQuery = Promise<unknown> & { abortSignal: (signal: AbortSignal) => MockRpcQuery }
 const abortableRpcResult = (result: unknown) => {
   const query = Promise.resolve(result) as MockRpcQuery
@@ -12,7 +12,7 @@ vi.mock("openai", () => ({ default: class { chat = { completions: { create: mock
 vi.mock("@clerk/nextjs/server", () => ({ auth: mocks.auth }))
 vi.mock("@/lib/api/server/copy-identity", () => ({ copyIdentity: mocks.identity, copyTier: mocks.tier }))
 vi.mock("@/lib/api/server/copy-source", () => ({ prepareCopySource: mocks.prepare }))
-vi.mock("@/lib/ghl-generator", () => ({ generateGhlTemplate: mocks.ghl, computeGhlSourceFingerprint: mocks.fingerprint, cleanGhlHtml: (value: string) => value, GHL_GENERATION_DEADLINE_MS: 100_000 }))
+vi.mock("@/lib/ghl-generator", () => ({ generateGhlTemplate: mocks.ghl, computeGhlSourceFingerprint: mocks.fingerprint, cleanGhlHtml: mocks.clean, GHL_GENERATION_DEADLINE_MS: 100_000 }))
 vi.mock("@/lib/api/server/copy-admission", async importOriginal => ({ ...await importOriginal<any>(), admitCopy: mocks.admit }))
 import { POST as source } from "@/app/api/component-source/route"
 import { POST as mcp } from "@/app/api/mcp/component-source/route"
@@ -22,6 +22,7 @@ import { POST as editor } from "@/app/api/component-source/editor/route"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 import { PROMPT_TYPES } from "@/types/global"
 import { CopyError } from "@/lib/api/server/copy-admission"
+import { buildAutoIndexPrompts } from "@/lib/auto-index/prepared-prompts"
 const requestId = "b3cf45ce-cf4e-4445-956b-9ef8c296b667"
 const notice = {displayText:"Recorded license: MIT License (unverified). Component profile: @creator. Copyright holder and upstream license text have not been verified by HigherBits.",provenanceClass:"recorded-unverified"}
 const request = (body: unknown = { componentId: 1, requestId }) => new Request("http://localhost:56331/api/component-source", { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } })
@@ -48,6 +49,7 @@ beforeEach(() => {
     return html
   })
   mocks.fingerprint.mockReturnValue("computed-fingerprint")
+  mocks.clean.mockImplementation((value: string) => value)
   mocks.prepare.mockResolvedValue({ targetKey: "1:", closure: [{componentId:1,revision:"digest"}], component: {id:1,user_id:"canonical",component_slug:"fixture"}, source: {code:"SOURCE_MARKER",demoCode:"DEMO_MARKER",notice}, files:[{path:"a.tsx",content:"SOURCE_MARKER"}],dependencies:[],contents:new Map(),notice })
   mocks.auth.mockResolvedValue({userId:"canonical"})
 })
@@ -529,12 +531,62 @@ it("U-GHL-03: GHL copies only fingerprint-matched saved output and never generat
   expect(copied.startsWith("<div>saved fixture</div>")).toBe(true)
   expect(mocks.admit).toHaveBeenCalledTimes(1)
 })
+it("U-GHL-03: legacy saved GHL without a fingerprint remains copyable with controls and notice", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
+  mocks.clean.mockImplementationOnce(actual.cleanGhlHtml)
+  const saved = '<div onclick="alert(1)">settings: { label: "before" }<script>alert(2)</script></div>'
+  mocks.prepare.mockResolvedValue({
+    targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"ui",created_at:"2026-09-25T10:30:52.933Z",updated_at:"2026-09-25T10:30:52.933Z"},
+    demo:{ghl_html_content:saved,ghl_source_fingerprint:null,created_at:"2026-09-25T10:30:54.051Z",updated_at:"2026-09-25T10:30:54.051Z"},
+    source:{code:"current component",demoCode:"current demo"},notice,
+  })
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,controls:{label:"after"},requestId}))
+  expect(response.status).toBe(200)
+  const copied = (await response.json()).prompt as string
+  expect(copied).toContain('"after"')
+  expect(copied).not.toContain("onclick")
+  expect(copied).not.toContain("<script")
+  expect(copied).toContain(`<!--\n${notice.displayText}\n-->`)
+  expect(mocks.admit).toHaveBeenCalledOnce()
+  expect(mocks.ghl).not.toHaveBeenCalled()
+})
+it.each(["created_at", "updated_at"] as const)("U-GHL-03: legacy component %s after cutoff blocks saved output", async field => {
+  mocks.prepare.mockResolvedValue({
+    targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"ui",created_at:"2026-09-25T10:30:52.933Z",updated_at:"2026-09-25T10:30:52.933Z",[field]:"2026-10-02T00:00:00Z"},
+    demo:{ghl_html_content:"<div>saved</div>",ghl_source_fingerprint:null,created_at:"2026-09-25T10:30:54.051Z",updated_at:"2026-09-25T10:30:54.051Z"},
+    source:{code:"component",demoCode:"demo"},notice,
+  })
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
+  expect(response.status).toBe(503)
+  expect(mocks.admit).not.toHaveBeenCalled()
+})
+it.each(["created_at", "updated_at"] as const)("U-GHL-03: legacy demo %s after cutoff blocks saved output", async field => {
+  mocks.prepare.mockResolvedValue({
+    targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"ui",created_at:"2026-09-25T10:30:52.933Z",updated_at:"2026-09-25T10:30:52.933Z"},
+    demo:{ghl_html_content:"<div>saved</div>",ghl_source_fingerprint:null,created_at:"2026-09-25T10:30:54.051Z",updated_at:"2026-09-25T10:30:54.051Z",[field]:"2026-10-02T00:00:00Z"},
+    source:{code:"component",demoCode:"demo"},notice,
+  })
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
+  expect(response.status).toBe(503)
+  expect(mocks.admit).not.toHaveBeenCalled()
+})
 it.each([
   ["missing output", null],
-  ["missing fingerprint", {ghl_html_content:"<div>saved</div>",ghl_source_fingerprint:null}],
   ["stale fingerprint", {ghl_html_content:"<div>saved</div>",ghl_source_fingerprint:"old-fingerprint"}],
 ])("U-GHL-03: %s is unavailable without provider generation", async (_label, demo) => {
-  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[1],component:{component_slug:"fixture"},demo,source:{code:"component",demoCode:"demo"},notice})
+  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"ui"},demo,source:{code:"component",demoCode:"demo"},notice})
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
+  expect(response.status).toBe(503)
+  expect(await response.json()).toEqual({error:"ghl_output_unavailable"})
+  expect(response.headers.get("cache-control")).toBe("private, no-store")
+  expect(mocks.ghl).not.toHaveBeenCalled()
+  expect(mocks.admit).not.toHaveBeenCalled()
+})
+it.each([
+  ["missing fingerprint", {ghl_html_content:"<div>saved</div>",ghl_source_fingerprint:null}],
+  ["stale fingerprint", {ghl_html_content:"<div>saved</div>",ghl_source_fingerprint:"old-fingerprint"}],
+])("U-GHL-03: auto-index %s is unavailable without provider generation", async (_label, demo) => {
+  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"auto-index"},demo,source:{code:"component",demoCode:"demo"},notice})
   const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
   expect(response.status).toBe(503)
   expect(await response.json()).toEqual({error:"ghl_output_unavailable"})
@@ -576,9 +628,15 @@ it.each([
   const originalCode = `export const sourcePath = "components/ui/${slug}.tsx"`
   const originalDemo = `import Component from "${upstreamImport}"; export default Component`
   const target = `components/auto-index/${slug}.tsx`
+  const copyPrompts = buildAutoIndexPrompts({ slug, code: originalCode, demoCode: originalDemo,
+    files: [{path:target,content:originalCode}],dependencies:[],demoFileName:`${slug}-demo.tsx` })
+  const savedQuery = { select: () => savedQuery, eq: () => savedQuery,
+    maybeSingle: async () => ({ data: { prompt: copyPrompts[currentPromptType], source_fingerprint: "computed-fingerprint" }, error: null }) }
+  let currentPromptType: string = ""
+  mocks.from.mockReturnValue(savedQuery)
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[{componentId:1,revision:"digest"}],
-    component:{id:1,component_slug:slug,registry:"auto-index"},demo:{file_name:`${slug}-demo.tsx`},
+    component:{id:1,component_slug:slug,registry:"auto-index"},demo:{file_name:`${slug}-demo.tsx`,ghl_source_fingerprint:"computed-fingerprint"},
     source:{code:originalCode,demoCode:originalDemo,notice},
     files:[
       {path:target,type:"registry:ui",content:originalCode},
@@ -586,7 +644,8 @@ it.each([
     ],dependencies:[],contents:new Map(),notice,
   })
   for (const prompt_type of Object.values(PROMPT_TYPES).filter(type => type !== PROMPT_TYPES.GOHIGHLEVEL)) {
-    const response = await prompt(request({demo_id:2,prompt_type,requestId}))
+    currentPromptType = prompt_type
+    const response = await prompt(request({demo_id:2,prompt_type,controls:{},requestId}))
     expect(response.status).toBe(200)
     const copied = (await response.json()).prompt as string
     expect(copied).toContain(`Install the component at \`${target}\``)
@@ -610,6 +669,38 @@ it("ordinary copied prompts retain their existing component path and demo bytes"
   expect(copied).toContain("components/ui/fixture.tsx")
   expect(copied).toContain(demoCode)
   expect(copied).not.toContain("Install the component at `components/auto-index/")
+})
+it("auto-index default prompt refuses missing or stale precomputed text before admission", async () => {
+  let saved: { prompt?: string; source_fingerprint: string } = { prompt: "REVIEWED_PROMPT", source_fingerprint: "stale" }
+  const savedQuery = { select: () => savedQuery, eq: () => savedQuery,
+    maybeSingle: async () => ({ data: saved, error: null }) }
+  mocks.from.mockReturnValue(savedQuery)
+  const prepared = {
+    targetKey:"1:2",closure:[{componentId:1,revision:"digest"}],
+    component:{id:1,component_slug:"shake",registry:"auto-index"},
+    demo:{ghl_source_fingerprint:"computed-fingerprint"},
+    source:{code:"source",demoCode:"demo",notice},files:[],dependencies:[],contents:new Map(),notice,
+  }
+  mocks.prepare.mockResolvedValue(prepared)
+  let response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,requestId}))
+  expect(response.status).toBe(503)
+  saved = { source_fingerprint: "computed-fingerprint" }
+  response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,requestId}))
+  expect(response.status).toBe(503)
+  expect(mocks.admit).not.toHaveBeenCalled()
+})
+it("auto-index default copy returns the reviewed prompt with attribution and copy admission", async () => {
+  const savedQuery = { select: () => savedQuery, eq: () => savedQuery,
+    maybeSingle: async () => ({ data: { prompt: "REVIEWED_PROMPT", source_fingerprint: "computed-fingerprint" }, error: null }) }
+  mocks.from.mockReturnValue(savedQuery)
+  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[{componentId:1,revision:"digest"}],
+    component:{id:1,component_slug:"shake",registry:"auto-index"},
+    demo:{ghl_source_fingerprint:"computed-fingerprint"},source:{code:"source",demoCode:"demo",notice},
+    files:[],dependencies:[],contents:new Map(),notice})
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,controls:{},requestId}))
+  expect(response.status).toBe(200)
+  expect((await response.json()).prompt).toBe(`REVIEWED_PROMPT\n\n--- Component attribution ---\n${notice.displayText}`)
+  expect(mocks.admit).toHaveBeenCalledTimes(1)
 })
 it("auto-index path alignment leaves user context, CSS, and demo comments untouched", async () => {
   const slug = "shake"
@@ -641,7 +732,7 @@ it("malformed auto-index demo source fails before copy admission", async () => {
     files:[{path:"components/auto-index/shake.tsx",content:"export default function Shake() {}"}],
     dependencies:[],contents:new Map(),notice,
   })
-  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,requestId}))
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,additional_context:"custom",requestId}))
   expect(response.status).toBe(400)
   expect(mocks.admit).not.toHaveBeenCalled()
 })

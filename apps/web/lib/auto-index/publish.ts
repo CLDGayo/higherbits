@@ -1,6 +1,7 @@
 import "server-only"
 import { createHash, timingSafeEqual } from "node:crypto"
 import type { Json } from "@/types/supabase"
+import { buildAutoIndexPrompts } from "./prepared-prompts"
 
 export type AutoIndexPublishInput = {
   approvedDecisionId: number
@@ -149,10 +150,10 @@ export async function publishAutoIndexBatch(items: AutoIndexPublishInput[]): Pro
         continue
       }
       const { data: candidate, error: candidateError } = await supabaseWithAdminAccess.from("auto_index_candidates")
-        .select("item_key,component_source_path,repository_url,revision,license_spdx,license_text")
+        .select("item_key,component_source_path,repository_url,revision,license_spdx,license_text,dependencies")
         .eq("id", decision.candidate_id).maybeSingle()
       const { data: files, error: filesError } = await supabaseWithAdminAccess.from("auto_index_candidate_files")
-        .select("path,bytes,sha256").eq("candidate_id", decision.candidate_id)
+        .select("path,target,bytes,sha256").eq("candidate_id", decision.candidate_id)
       if (candidateError || filesError || !candidate || !files?.length) {
         results.push({ decisionId: item.approvedDecisionId, status: "private" })
         continue
@@ -181,6 +182,20 @@ export async function publishAutoIndexBatch(items: AutoIndexPublishInput[]): Pro
         results.push({ decisionId: item.approvedDecisionId, status: "private" })
         continue
       }
+      // Registry dependencies need a reviewed closure before their prompts can be saved.
+      if (!Array.isArray(candidate.dependencies) || candidate.dependencies.some((entry: any) =>
+        entry?.type !== "npm" || typeof entry.name !== "string" ||
+        !/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/.test(entry.name) ||
+        typeof entry.version !== "string" || !/^[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$/.test(entry.version))) {
+        results.push({ decisionId: item.approvedDecisionId, status: "private" })
+        continue
+      }
+      const npmDependencies = candidate.dependencies.map((entry: any) => `${entry.name}@${entry.version}`)
+      const copyPrompts = buildAutoIndexPrompts({
+        slug: item.slug, code: componentCode, demoCode: item.demo.code, dependencies: npmDependencies,
+        files: files.map(file => ({ path: file.path, ...(file.target ? { target: file.target } : {}),
+          content: new TextDecoder("utf-8", { fatal: true }).decode(Buffer.from(file.bytes.slice(2), "hex")) })),
+      })
       const expectedAssets = new Set([...files.map((file) => file.path), "demo_code"])
       if (item.assets.length !== expectedAssets.size || item.assets.some((asset) => !expectedAssets.has(asset.assetKey))) {
         results.push({ decisionId: item.approvedDecisionId, status: "private" })
@@ -223,7 +238,7 @@ export async function publishAutoIndexBatch(items: AutoIndexPublishInput[]): Pro
         p_source_url: item.demo.sourceUrl, p_source_revision: item.demo.sourceRevision,
         p_source_sha256: item.demo.sourceSha256, p_derivation: item.demo.derivation,
         p_control_settings: item.demo.controlSettings, p_ghl_html_content: ghlHtml,
-        p_ghl_source_fingerprint: fingerprint,
+        p_ghl_source_fingerprint: fingerprint, p_copy_prompts: copyPrompts,
       })
       if (demoError) {
         results.push({ decisionId: item.approvedDecisionId, status: "private" })

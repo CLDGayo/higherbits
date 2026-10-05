@@ -46,6 +46,9 @@ export async function getComponent(
   username: string,
   slug: string,
 ) {
+  const { data: owner, error: ownerError } = await getUserData(supabase, username)
+  if (!owner) return { data: null, error: ownerError }
+
   const { data, error } = await supabase
     .from("components")
     .select(
@@ -55,7 +58,7 @@ export async function getComponent(
     `,
     )
     .eq("component_slug", slug)
-    .eq("user.username", username)
+    .eq("user_id", owner.id)
     .not("user", "is", null)
     .order("downloads_count", { ascending: false })
     .returns<(Component & { user: User } & { tags: Tag[] })[]>()
