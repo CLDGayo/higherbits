@@ -189,6 +189,7 @@ export function ComponentPreviewDialog({
   }, [sendThemeToIframe, sendControlsToIframe])
 
   const { user } = useUser()
+  const canCopyPrompt = accessState === "UNLOCKED" || Boolean(user?.id && demo.component.is_public)
   const supabase = useClerkSupabaseClient()
   const { capture } = useSupabaseAnalytics()
   const [selectedPromptType, setSelectedPromptType] = useAtom(
@@ -270,7 +271,7 @@ export function ComponentPreviewDialog({
   }
 
   const handlePromptAction = async (overridePromptType?: PromptType) => {
-    if (accessState !== "UNLOCKED") {
+    if (!canCopyPrompt) {
       setShowUnlockDialog(true)
       return
     }
@@ -456,7 +457,7 @@ export function ComponentPreviewDialog({
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-center gap-2">
-                {accessState !== "UNLOCKED" ? (
+                {!canCopyPrompt ? (
                   <>
                     <Lock size={16} />
                     <span>Unlock</span>
@@ -495,7 +496,7 @@ export function ComponentPreviewDialog({
               </div>
             </TooltipTrigger>
             <TooltipContent className="flex items-center gap-1.5">
-              {accessState !== "UNLOCKED"
+              {!canCopyPrompt
                 ? "Unlock component"
                 : isPromptLoading
                   ? "Generating prompt..."
@@ -507,11 +508,11 @@ export function ComponentPreviewDialog({
           </Tooltip>
         </Button>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild disabled={isPromptLoading || accessState !== "UNLOCKED"}>
+          <DropdownMenuTrigger asChild disabled={isPromptLoading || !canCopyPrompt}>
             <Button
               variant="ghost"
               size="sm"
-              disabled={isPromptLoading || accessState !== "UNLOCKED"}
+              disabled={isPromptLoading || !canCopyPrompt}
               className="h-full px-2 rounded-l-none hover:bg-muted/50 transition-all disabled:opacity-50"
             >
               <ChevronDown size={14} />
@@ -817,7 +818,7 @@ export function ComponentPreviewDialog({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {accessState !== "UNLOCKED" ? (
+                  {!canCopyPrompt ? (
                     <DropdownMenuItem onClick={() => handlePromptAction()}>
                       <div className="flex items-center gap-2">
                         <Lock size={16} />

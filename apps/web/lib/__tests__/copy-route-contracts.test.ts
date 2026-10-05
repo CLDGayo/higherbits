@@ -701,6 +701,32 @@ it("auto-index default copy returns the reviewed prompt with attribution and cop
   expect(response.status).toBe(200)
   expect((await response.json()).prompt).toBe(`REVIEWED_PROMPT\n\n--- Component attribution ---\n${notice.displayText}`)
   expect(mocks.admit).toHaveBeenCalledTimes(1)
+  expect(mocks.prepare).toHaveBeenCalledWith("canonical", { demoId: 2 }, false, true)
+})
+it("prompt copy still requires a signed-in identity", async () => {
+  mocks.identity.mockRejectedValueOnce(new CopyError(401, "sign_in_required"))
+  const response = await prompt(request({ demo_id: 2, prompt_type: PROMPT_TYPES.GOHIGHLEVEL, requestId }))
+  expect(response.status).toBe(401)
+  expect(mocks.prepare).not.toHaveBeenCalled()
+  expect(mocks.admit).not.toHaveBeenCalled()
+})
+it("auto-index nested source path remains copyable with custom prompt context", async () => {
+  const slug = "fluid"
+  const target = `components/auto-index/vgpu-${slug}/index.tsx`
+  const demoCode = `import Fluid from "@/components/auto-index/vgpu-${slug}"; export default Fluid`
+  mocks.prepare.mockResolvedValue({
+    targetKey: "1:2", closure: [{ componentId: 1, revision: "digest" }],
+    component: { id: 1, component_slug: slug, registry: "auto-index" }, demo: { file_name: "demo.tsx" },
+    source: { code: "export default function Fluid() {}", demoCode, notice },
+    files: [{ path: "registry/fluid.tsx", target, type: "registry:ui", content: "export default function Fluid() {}" }],
+    dependencies: [], contents: new Map(), notice,
+  })
+  const response = await prompt(request({ demo_id: 2, prompt_type: PROMPT_TYPES.CODEX, additional_context: "custom", requestId }))
+  expect(response.status).toBe(200)
+  const copied = (await response.json()).prompt as string
+  expect(copied).toContain(`Install the component at \`${target}\``)
+  expect(copied).toContain(`@/components/auto-index/vgpu-${slug}`)
+  expect(copied).not.toContain(`@/components/auto-index/vgpu-${slug}/index`)
 })
 it("auto-index path alignment leaves user context, CSS, and demo comments untouched", async () => {
   const slug = "shake"

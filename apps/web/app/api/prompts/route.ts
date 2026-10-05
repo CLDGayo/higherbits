@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     if (!Object.values(PROMPT_TYPES).includes(prompt_type) || !Number.isSafeInteger(demo_id)) throw new CopyError(400, "invalid_target")
     if (additional_context != null && (typeof additional_context !== "string" || additional_context.length > 16384)) throw new CopyError(400, "invalid_context")
     if (controls != null && (typeof controls !== "object" || Array.isArray(controls) || JSON.stringify(controls).length > 16384)) throw new CopyError(400, "invalid_controls")
-    const prepared = await prepareCopySource(userId, { demoId: demo_id })
+    const prepared = await prepareCopySource(userId, { demoId: demo_id }, false, true)
     const isPro = await copyTier(userId)
     let prompt: string
     let ruleData: any = null
@@ -84,13 +84,17 @@ export async function POST(request: Request) {
     } else {
       const slug = prepared.component.component_slug
       const autoIndexTarget = prepared.component.registry === "auto-index"
-        ? prepared.files.find(file => (file.target || file.path) === `components/auto-index/${slug}.tsx`)
+        ? prepared.files.find(file => [
+            `components/auto-index/${slug}.tsx`,
+            `components/auto-index/${slug}/index.tsx`,
+            `components/auto-index/vgpu-${slug}/index.tsx`,
+          ].includes(file.target || file.path))
         : undefined
       if (prepared.component.registry === "auto-index" && !autoIndexTarget) throw new CopyError(400, "unsupported_source")
       const code = controls ? applyControlsToCode(prepared.source.code, controls) : prepared.source.code
       let demoCode = controls ? applyControlsToCode(prepared.source.demoCode, controls) : prepared.source.demoCode
       if (autoIndexTarget) {
-        const installImport = `@/components/auto-index/${slug}`
+        const installImport = `@/${(autoIndexTarget.target || autoIndexTarget.path).replace(/(?:\/index)?\.tsx$/, "")}`
         demoCode = alignAutoIndexDemoImport(demoCode, slug, installImport)
       }
       const registryDependencies = Object.fromEntries(prepared.files.map(file => [
@@ -111,7 +115,7 @@ export async function POST(request: Request) {
       })
       if (autoIndexTarget) {
         const installPath = autoIndexTarget.target || autoIndexTarget.path
-        prompt = `Install the component at \`${installPath}\`; the demo imports it as \`@/${installPath.replace(/\.tsx$/, "")}\`.\n\n`
+        prompt = `Install the component at \`${installPath}\`; the demo imports it as \`@/${installPath.replace(/(?:\/index)?\.tsx$/, "")}\`.\n\n`
           + prompt
       }
     }

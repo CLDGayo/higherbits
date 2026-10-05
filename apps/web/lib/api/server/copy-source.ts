@@ -78,7 +78,7 @@ export async function componentBySlug(username: string, slug: string): Promise<a
   if (!data) throw new CopyError(404, "component_not_found")
   return data
 }
-export async function prepareCopySource(userId: string, target: { componentId?: number; demoId?: number }, ownerEditor = false) {
+export async function prepareCopySource(userId: string, target: { componentId?: number; demoId?: number }, ownerEditor = false, publicPrompt = false) {
   let demo: any = null
   if (target.demoId !== undefined) {
     if (!Number.isSafeInteger(target.demoId)) throw new CopyError(400, "invalid_target")
@@ -129,7 +129,7 @@ export async function prepareCopySource(userId: string, target: { componentId?: 
     if (members.has(row.id)) return
     if (depth > 16 || members.size + active.size >= 32) throw new CopyError(400, "dependency_limit")
     if ((!ownerEditor || row.id !== id) && row.is_public !== true) throw new CopyError(404, "component_not_found")
-    if (!await hasUserComponentAccess(userId, row.id)) throw new CopyError(403, "component_not_purchased")
+    if (!publicPrompt && !await hasUserComponentAccess(userId, row.id)) throw new CopyError(403, "component_not_purchased")
     active.add(row.id)
     rows.set(row.id, row)
     if (!SLUG.test(row.component_slug)) throw new CopyError(400, "invalid_target")

@@ -377,6 +377,7 @@ export default function ComponentPage({
 
   const accessState = useComponentAccess(component, hasPurchased)
   const showPaywall = accessState !== "UNLOCKED"
+  const canCopyPrompt = !showPaywall || Boolean(user?.id && component.is_public)
 
   const { data: bookmarked } = useHasUserBookmarkedDemo(
     supabase,
@@ -1014,12 +1015,12 @@ export default function ComponentPage({
             </div>
             <div className="inline-flex -space-x-px divide-x divide-primary-foreground/30 rounded-lg shadow-sm">
               <Button
-                onClick={!showPaywall ? handlePromptAction : undefined}
+                onClick={canCopyPrompt ? handlePromptAction : undefined}
                 className="shadow-none focus-visible:z-10"
-                disabled={showPaywall}
-                variant={showPaywall ? "secondary" : "default"}
+                disabled={!canCopyPrompt}
+                variant={canCopyPrompt ? "default" : "secondary"}
               >
-                {showPaywall ? (
+                {!canCopyPrompt ? (
                   "Unlock to copy prompt"
                 ) : (
                   <div className="flex items-center gap-2">

@@ -35,6 +35,7 @@ it("E21/E23: shared copy source uses approved snapshot and blocks delisted relea
   expect(prepared.files.some(file => file.path.includes("verified-mit"))).toBe(false)
   fixture.autoSnapshot.mockRejectedValue({ status: 404, code: "component_not_found" })
   await expect(prepareCopySource("reader", { componentId: 1 })).rejects.toMatchObject({ status: 404 })
+  await expect(prepareCopySource("reader", { componentId: 1 }, false, true)).rejects.toMatchObject({ status: 404 })
 })
 it("G-DEPENDENCY: raw registries bind bytes and reject nested URLs, path traversal and conflicting targets", async () => {
   fixture.rows.get(1).registry_url = "https://fixtures.invalid/registry.json"
@@ -71,6 +72,16 @@ it("G-DEPENDENCY: authorizes every member and inlines deterministic files", asyn
   await expect(prepareCopySource("reader", { componentId: 1 })).rejects.toMatchObject({ status: 403 })
   fixture.rows.get(2).is_public = false
   await expect(prepareCopySource("reader", { componentId: 1 })).rejects.toMatchObject({ status: 404 })
+})
+it("signed-in prompt copy admits public paid components but still rejects private dependencies", async () => {
+  fixture.rows.set(1, row(1, ["owner/c2"])); fixture.rows.set(2, row(2))
+  fixture.access.mockResolvedValue(false)
+  await expect(prepareCopySource("reader", { componentId: 1 })).rejects.toMatchObject({ status: 403 })
+  expect((await prepareCopySource("reader", { componentId: 1 }, false, true)).closure).toHaveLength(2)
+  fixture.rows.get(2).is_public = false
+  await expect(prepareCopySource("reader", { componentId: 1 }, false, true)).rejects.toMatchObject({ status: 404 })
+  fixture.rows.get(2).is_public = true; fixture.rows.get(1).is_public = false
+  await expect(prepareCopySource("reader", { componentId: 1 }, false, true)).rejects.toMatchObject({ status: 404 })
 })
 it("G-DEPENDENCY: owner editor exemption never admits another private member", async () => {
   fixture.rows.get(1).is_public = false
