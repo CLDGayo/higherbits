@@ -88,10 +88,12 @@ if (process.argv[2] === '--check' && process.argv.length === 3) {
   process.exit(0)
 }
 if (process.argv[2] !== '--emit-sql' || process.argv.length !== 5) {
-  throw new Error('usage: node ops/emit-pinned-vgpu-production.mjs --check | --emit-sql <slug|all> <review.json>')
+  throw new Error('usage: node ops/emit-pinned-vgpu-production.mjs --check | --emit-sql <slug[,slug]|all> <review.json>')
 }
-const selected = process.argv[3] === 'all' ? ready : ready.filter(item => item.slug === process.argv[3])
-if (!selected.length || (process.argv[3] !== 'all' && selected.length !== 1)) throw new Error('unknown or unready VGPU item')
+const requestedSlugs = process.argv[3] === 'all' ? ready.map(item => item.slug) : process.argv[3].split(',')
+const selected = ready.filter(item => requestedSlugs.includes(item.slug))
+if (!selected.length || selected.length !== requestedSlugs.length ||
+    new Set(requestedSlugs).size !== requestedSlugs.length) throw new Error('unknown or unready VGPU item')
 const review = JSON.parse(readFileSync(resolve(process.argv[4]), 'utf8'))
 const releaseCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim()
 const assetUrls = selected.flatMap(item => [
