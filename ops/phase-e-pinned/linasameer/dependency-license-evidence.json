@@ -1,0 +1,5 @@
+{
+  "reviewedAt": "2026-10-07",
+  "purpose": "Confirm the one staged lina.sameer component introduces zero net-new npm dependencies; @radix-ui/react-scroll-area is already installed in apps/web/package.json (^1.2.9, matching the ^1.2.9 range lina.sameer's own package.json uses), and the component's only alias import (@/lib/utils) resolves to the host app's own pre-existing cn() helper.",
+  "packages": {}
+}

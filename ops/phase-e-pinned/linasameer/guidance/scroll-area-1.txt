@@ -1,0 +1,26 @@
+Reviewed component: ScrollArea / ScrollBar (lina.sameer, repo SameerJS6/lina, slug scroll-area-1).
+
+What it does: a drop-in replacement for shadcn/ui's ScrollArea. On non-touch-primary pointers it
+renders the Radix ScrollArea primitive with a custom-styled thin scrollbar/thumb, plus a
+ScrollMask overlay that fades in/out at the top, bottom, left, and right edges in real time based
+on scroll position (computed from scrollTop/scrollLeft/scrollWidth/scrollHeight on scroll, resize,
+and ResizeObserver callbacks). On touch-primary pointers (detected via the bundled
+useTouchPrimary hook, which checks matchMedia("(pointer: coarse)") plus touch capability) it skips
+the Radix primitive entirely and falls back to a plain native-scrolling div, intentionally giving
+up the custom scrollbar/thumb so touch devices keep their own native momentum scrolling and
+system scrollbar affordance.
+
+Why it is safe to stage as-is: single self-contained .tsx file plus one small hook file, both
+pinned verbatim at the exact commit reviewed. Zero remote URLs, embedded images, or fonts in
+either file. Only two dependencies: @radix-ui/react-scroll-area (already installed in this repo at
+^1.2.9, matching the range lina.sameer's own package.json pins) and this component's own bundled
+hook (hooks/use-has-primary-touch.tsx, pinned as a registry:hook file, not substituted). The only
+alias import is @/lib/utils for cn(), confirmed byte-for-byte identical in implementation
+(twMerge(clsx(inputs))) to this host app's own apps/web/lib/utils.ts, so it is aliased to the
+host's existing file rather than pinning a duplicate copy, exactly as already done for Edil-ozi's
+accordion.
+
+Demo wrapper notes: the HigherBits-authored demo renders a fixed-height, fixed-width ScrollArea
+with enough list items to force real overflow (so the top/bottom fade masks and the custom
+scrollbar thumb both have genuine content to react to), mirroring the upstream repo's own README
+usage example in spirit without copying its exact placeholder joke text verbatim.

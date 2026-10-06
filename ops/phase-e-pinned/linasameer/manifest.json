@@ -1,0 +1,35 @@
+{
+  "repositoryUrl": "https://github.com/SameerJS6/lina",
+  "ownerLabel": "lina.sameer",
+  "profileUrl": "https://21st.dev/@lina.sameer",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "9817ee93a5cabc420489ddf56c43408f2d96207d4398b48bf8a33e57175bacc2",
+  "items": [
+    {
+      "slug": "scroll-area-1",
+      "registryName": "scroll-area",
+      "title": "Scroll Area",
+      "description": "An adaptive scroll area with real-time edge fade masks and a custom-styled scrollbar, falling back to native touch scrolling with no custom thumb on touch-primary devices.",
+      "revision": "6c1934820003c6289dd603ea9bceb0de066c8489",
+      "sourcePath": "registry/radix-ui/scroll-area.tsx",
+      "files": [
+        {
+          "path": "registry/radix-ui/scroll-area.tsx",
+          "type": "registry:component",
+          "bytes": 7549,
+          "sha256": "7aec99bf1a6bfd0e6b67031d210d98dfd09ac88d1efc30b7a5493e25eef4a2da"
+        },
+        {
+          "path": "hooks/use-has-primary-touch.tsx",
+          "type": "registry:hook",
+          "bytes": 823,
+          "sha256": "5c7d8f2715dc61c14280b4b35d140438f9bfbb67a4ad8fc17913b9fa529f5aff"
+        }
+      ],
+      "dependencies": {
+        "@radix-ui/react-scroll-area": "^1.2.9"
+      },
+      "aliasImports": ["@/lib/utils"]
+    }
+  ]
+}

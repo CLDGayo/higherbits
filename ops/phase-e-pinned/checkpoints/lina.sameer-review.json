@@ -1,0 +1,82 @@
+{
+  "approved": false,
+  "scope": "candidate",
+  "readyForProduction": true,
+  "pendingExternalCodeReview": false,
+  "repositoryUrl": "https://github.com/SameerJS6/lina",
+  "ownerLabel": "lina.sameer",
+  "profileUrl": "https://21st.dev/@lina.sameer",
+  "sheetRow": 429,
+  "pinnedRevision": "6c1934820003c6289dd603ea9bceb0de066c8489",
+  "licenseSpdx": "MIT",
+  "licenseFile": "LICENSE",
+  "licenseSha256": "9817ee93a5cabc420489ddf56c43408f2d96207d4398b48bf8a33e57175bacc2",
+  "manifestSha256": "c2720c6082da0a4be17570b2dbef7110d5ba54b35569fbbf2d4a509059a22e76",
+  "promptsSha256": "f49adcd31f9d2e9318e14ac7320e9950842c781964d7baac05dbaadcd7dc899b",
+  "dependencyEvidenceSha256": "881a952daa3a0d654a3f12c320afc54a00f0b1a09031b4bb4e66ced62e975251",
+  "verification": {
+    "emitCheck": {
+      "captured": 1,
+      "ready": 1,
+      "pending": []
+    },
+    "ghlVerify": {
+      "scroll-area-1": "OK"
+    },
+    "interactionVerify": {
+      "previewViewportProgrammaticScrollTop": 200,
+      "ghlInitialMaskTopBottom": [
+        false,
+        true
+      ],
+      "ghlAfterScroll200MaskTopBottom": [
+        true,
+        true
+      ],
+      "ghlAfterScrollToBottomMaskTopBottom": [
+        true,
+        false
+      ],
+      "consoleOrPageErrors": 0
+    },
+    "upstreamLiveReverify": "Re-downloaded LICENSE, registry/radix-ui/scroll-area.tsx, hooks/use-has-primary-touch.tsx, and registry/radix-ui/examples/vertical-scroll.tsx directly from https://raw.githubusercontent.com/SameerJS6/lina/6c1934820003c6289dd603ea9bceb0de066c8489/ — all 4 SHA-256 hashes byte-for-byte match the pinned source and LICENSE file (these 4 pinned files pre-dated this session, left by a prior timed-out pass; this session verified them live rather than trusting them, then built every remaining artifact on top). Confirmed via GET /repos/SameerJS6/lina (live HEAD of main, not archived, not a fork, license.spdx_id=MIT) and GET /repos/SameerJS6/lina/commits/main (sha matches the pinned revision exactly) that the pinned commit is the live default-branch HEAD, not a stale or cherry-picked commit. Confirmed via a recursive GitHub Contents-API tree listing (108 entries) that the root LICENSE is the repository's sole license file and applies repo-wide, including both pinned paths.",
+    "previewBuild": {
+      "command": "node ops/build-pinned-linasameer-preview.mjs scroll-area-1 /tmp/hb-lina-radix129",
+      "package": "@radix-ui/react-scroll-area",
+      "version": "1.2.9",
+      "packageManifestSha256": "a5480df970a34dd07f042ee5e6b9b534845e964e2b096e14827f2a9493430ada",
+      "builderSha256": "f55838d858882ba4d4766fa00debead2f173fd691b0f7fdeac8a5d2f6495433b",
+      "bundleHtmlSha256": "e607eae92a91bf3c297f60e42bbb95da1bf27b9cc14224137a0b37399ad67c28",
+      "previewPngSha256": "cba7a2584dbeaa2c27f5c97477e0577a3775ca0348253343675c13a0437f25e7"
+    }
+  },
+  "eligible": {
+    "count": 1,
+    "slugs": [
+      "scroll-area-1"
+    ],
+    "notes": "Single self-contained .tsx file plus one sibling hook file; exact upstream package range ^1.2.9 is installed in apps/web and resolved to 1.2.9 in the committed lockfile. Preview was rebuilt from an isolated package root and records the exact resolved dependency version. Zero remote resources or unreviewed npm dependencies."
+  },
+  "held": {
+    "count": 0,
+    "items": []
+  },
+  "assets": {
+    "scroll-area-1": {
+      "sourceSha256": "7aec99bf1a6bfd0e6b67031d210d98dfd09ac88d1efc30b7a5493e25eef4a2da",
+      "demoSha256": "ea55b3c11d0e3da1baa78c69771a924ff27fd85342744029e76e8e82dae0b33a",
+      "ghlHtmlSha256": "6662a6ea55e380be6409a64c658f9e1e9c59c58fe61da9cac1d6887692f2e389",
+      "bundleHtmlSha256": "e607eae92a91bf3c297f60e42bbb95da1bf27b9cc14224137a0b37399ad67c28",
+      "previewPngSha256": "cba7a2584dbeaa2c27f5c97477e0577a3775ca0348253343675c13a0437f25e7",
+      "promptsSha256": "575ac21470a2c550a21b55b8d185c965205a6ad5f8a63085330cadee4517299f"
+    }
+  },
+  "reviewerLabel": "Independent code-reviewer subagent",
+  "reviewedAt": "2026-10-06T23:23:27.284Z",
+  "rationale": "Independent code review passed on current pinned bytes. The sole row-429 slug (scroll-area-1) is a self-contained, two-file MIT component re-verified live against the pinned GitHub revision. It passes saved-prompt/license readiness, the GHL normalizer, and browser interaction checks with working scroll fades and zero page errors. The standalone preview was rebuilt by the committed builder using an isolated package root; the builder asserts and logs Radix Scroll Area 1.2.9. Production publication is recorded separately against the exact release commit and deployed asset hashes.",
+  "published_count": 0,
+  "held_count": 0,
+  "total_count": 1,
+  "proposedSheetStatus": "1 of 1 lina.sameer row-429 slug (scroll-area-1) independently reviewed and MIT-licensed; ready for production publication, 0 published, 0 held.",
+  "candidateReviewApproved": true
+}

@@ -1,0 +1,159 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-border: #d1d5db;
+      --ghl-bg: #ffffff;
+      --ghl-fg: #18181b;
+      --ghl-muted: #71717a;
+      --ghl-thumb: #d4d4d8;
+      --ghl-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      max-width: 240px;
+      margin: 0 auto;
+      font-family: var(--ghl-font);
+      color: var(--ghl-fg);
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-scroll-area {
+      position: relative;
+      height: 288px;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--ghl-border);
+      border-radius: 6px;
+      background: var(--ghl-bg);
+    }
+    .ghl-scroll-viewport {
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--ghl-thumb) transparent;
+    }
+    .ghl-scroll-viewport::-webkit-scrollbar {
+      width: 10px;
+    }
+    .ghl-scroll-viewport::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .ghl-scroll-viewport::-webkit-scrollbar-thumb {
+      background: var(--ghl-thumb);
+      border-radius: 9999px;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
+    .ghl-scroll-content {
+      padding: 16px;
+    }
+    .ghl-scroll-heading {
+      margin: 0 0 16px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .ghl-scroll-row {
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #e4e4e7;
+    }
+    .ghl-scroll-row:last-child {
+      border-bottom: none;
+    }
+    .ghl-scroll-mask {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .ghl-scroll-mask::before,
+    .ghl-scroll-mask::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 0;
+      opacity: 0;
+      transition: height 0.3s ease, opacity 0.3s ease;
+    }
+    .ghl-scroll-mask::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--ghl-bg), transparent);
+    }
+    .ghl-scroll-mask::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--ghl-bg), transparent);
+    }
+    .ghl-scroll-area[data-mask-top="true"] .ghl-scroll-mask::before {
+      height: 30px;
+      opacity: 1;
+    }
+    .ghl-scroll-area[data-mask-bottom="true"] .ghl-scroll-mask::after {
+      height: 30px;
+      opacity: 1;
+    }
+  </style>
+
+  <div class="ghl-scroll-area" data-mask-top="false" data-mask-bottom="false">
+    <div class="ghl-scroll-viewport">
+      <div class="ghl-scroll-content">
+        <h4 class="ghl-scroll-heading">Entries</h4>
+      </div>
+    </div>
+    <div class="ghl-scroll-mask" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    (() => {
+      function initInstance(root) {
+        var area = root.querySelector(".ghl-scroll-area");
+        var viewport = root.querySelector(".ghl-scroll-viewport");
+        var content = root.querySelector(".ghl-scroll-content");
+        for (var i = 1; i <= 40; i++) {
+          var row = document.createElement("div");
+          row.className = "ghl-scroll-row";
+          row.textContent = "Entry " + (i < 10 ? "0" + i : i);
+          content.appendChild(row);
+        }
+        function check() {
+          var top = viewport.scrollTop;
+          var max = viewport.scrollHeight - viewport.clientHeight;
+          area.setAttribute("data-mask-top", String(top > 0));
+          area.setAttribute("data-mask-bottom", String(top < max - 1));
+        }
+        viewport.addEventListener("scroll", check);
+        window.addEventListener("resize", check);
+        check();
+      }
+      var wrapper = document.currentScript && document.currentScript.closest(".ghl-component-wrapper");
+      if (wrapper) initInstance(wrapper);
+    })();
+  </script>
+</div>
+<!--
+## MIT License
+
+Copyright (c) 2025 Sameer Singh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
