@@ -35,7 +35,8 @@ Run `node ops/verify-pinned-linasameer-ghl.mjs` to re-check the GHL export again
 Run `node ops/verify-pinned-linasameer-interaction.mjs` to re-run the Playwright scroll-interaction
 proof (this session: 0 console/page errors).
 
-Publication emits atomic SQL with `--emit-sql scroll-area-1 <review.json>` after verifying a clean
-release commit and deployed bytes on `higherbits.dev`. **Not run this session** — no production
-database write, no deploy, no Google Sheet update, and no git commit were performed; this stage is
-offline and reproducible only.
+Publication emits atomic SQL with `--emit-sql scroll-area-1 <review.json>` only after a clean
+release commit, an explicit release-review record, and byte-for-byte deployed asset checks on
+`higherbits.dev`. The production SQL write is separate from this capture and must be verified by
+reading back the public component, demo bundle, and all ten saved prompts. Sheet status is recorded
+separately in the canonical `21st creators` ledger.
