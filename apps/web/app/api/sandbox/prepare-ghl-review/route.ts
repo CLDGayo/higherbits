@@ -119,6 +119,7 @@ export async function POST(request: Request) {
           savedGhlHtml: prepared.demo?.ghl_html_content,
           savedFingerprint: prepared.demo?.ghl_source_fingerprint,
           generationSignal,
+          freeModelOnly: true,
           persistOutput,
         })
         if (!html || !outputPersisted) throw new Error("ghl_output_not_persisted")

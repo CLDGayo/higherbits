@@ -20,6 +20,7 @@ export type AutoIndexPublishInput = {
     controlSettings: Record<string, Json>
     savedGhlHtml: string
     savedGhlFingerprint: string
+    savedPromptGuidance: string
   }
   assets: {
     assetKey: string
@@ -51,7 +52,7 @@ export type AutoIndexPublishResult = {
 
 const MAX_BATCH_SIZE = 1
 const ITEM_KEYS = new Set(["approvedDecisionId", "slug", "title", "description", "previewUrl", "demo", "assets"])
-const DEMO_KEYS = new Set(["code", "provenanceClass", "authorLabel", "sourceUrl", "sourceRevision", "sourceSha256", "derivation", "controlSettings", "savedGhlHtml", "savedGhlFingerprint"])
+const DEMO_KEYS = new Set(["code", "provenanceClass", "authorLabel", "sourceUrl", "sourceRevision", "sourceSha256", "derivation", "controlSettings", "savedGhlHtml", "savedGhlFingerprint", "savedPromptGuidance"])
 const ASSET_KEYS = new Set(["assetKey", "assetRole", "provenanceClass", "sourceUrl", "sourceRevision", "assetSha256", "licenseSpdx", "licenseText", "noticeText", "derivation", "sourceAssetKey", "sourceAssetSha256", "transformRecord"])
 
 function hasOnlyKeys(value: Record<string, unknown>, keys: Set<string>) {
@@ -100,7 +101,9 @@ export function parseAutoIndexPublishBatch(value: unknown): AutoIndexPublishInpu
         !rawDemo.controlSettings || typeof rawDemo.controlSettings !== "object" || Array.isArray(rawDemo.controlSettings) ||
         Buffer.byteLength(JSON.stringify(rawDemo.controlSettings)) > 16384 ||
         typeof rawDemo.savedGhlHtml !== "string" || rawDemo.savedGhlHtml.length < 1 || Buffer.byteLength(rawDemo.savedGhlHtml) > 1048576 ||
-        typeof rawDemo.savedGhlFingerprint !== "string" || !/^[a-f0-9]{64}$/.test(rawDemo.savedGhlFingerprint)) return null
+        typeof rawDemo.savedGhlFingerprint !== "string" || !/^[a-f0-9]{64}$/.test(rawDemo.savedGhlFingerprint) ||
+        typeof rawDemo.savedPromptGuidance !== "string" || !rawDemo.savedPromptGuidance.trim() ||
+        rawDemo.savedPromptGuidance.length > 4000) return null
     const parsedAssets: AutoIndexPublishInput["assets"] = []
     for (const rawAsset of assets) {
       if (!rawAsset || typeof rawAsset !== "object" || Array.isArray(rawAsset)) return null
@@ -193,6 +196,7 @@ export async function publishAutoIndexBatch(items: AutoIndexPublishInput[]): Pro
       const npmDependencies = candidate.dependencies.map((entry: any) => `${entry.name}@${entry.version}`)
       const copyPrompts = buildAutoIndexPrompts({
         slug: item.slug, code: componentCode, demoCode: item.demo.code, dependencies: npmDependencies,
+        guidance: item.demo.savedPromptGuidance,
         files: files.map(file => ({ path: file.path, ...(file.target ? { target: file.target } : {}),
           content: new TextDecoder("utf-8", { fatal: true }).decode(Buffer.from(file.bytes.slice(2), "hex")) })),
       })

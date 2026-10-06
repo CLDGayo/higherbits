@@ -82,6 +82,18 @@ it("validates prepared bundles before persistence", async () => {
   expect(fetch).not.toHaveBeenCalled()
 })
 
+it("requires a free OpenRouter model for creator review GHL generation", async () => {
+  vi.stubEnv("OPENAI_API_KEY", "fixture-key")
+  vi.stubEnv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+  vi.stubEnv("OPENAI_MODEL", "paid-model")
+  const persistOutput = vi.fn()
+  await expect(generateGhlTemplate(17, true, {
+    componentCode: "component", demoCode: "demo", freeModelOnly: true, persistOutput,
+  })).rejects.toThrow("free OpenRouter model")
+  expect(persistOutput).not.toHaveBeenCalled()
+  expect(fetch).not.toHaveBeenCalled()
+})
+
 it.each(["already aborted", "aborted during preparation"])("does not save a bundle that is %s", async stage => {
   const controller = new AbortController()
   if (stage === "already aborted") controller.abort()

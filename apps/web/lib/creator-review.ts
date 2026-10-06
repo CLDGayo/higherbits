@@ -8,12 +8,15 @@ export async function prepareCreatorReview<T>(
   }
 
   for (const demoId of demoIds) {
-    const response = await request("/api/sandbox/prepare-ghl-review", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ demoId }),
-    })
-    if (!response.ok) throw new Error("GoHighLevel output could not be saved")
+    for (const [path, errorMessage] of [
+      ["/api/sandbox/prepare-ghl-review", "GoHighLevel output could not be saved"],
+      ["/api/sandbox/prepare-copy-prompts-review", "Copy prompts could not be saved"],
+    ] as const) {
+      const response = await request(path, {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ demoId }),
+      })
+      if (!response.ok) throw new Error(errorMessage)
+    }
   }
 
   return transition()

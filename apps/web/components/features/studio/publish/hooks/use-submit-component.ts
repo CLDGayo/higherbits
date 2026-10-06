@@ -83,14 +83,14 @@ export function assertReviewRetryAllowed(
 }
 
 async function prepareGhlForReview(demoId: number) {
-  const response = await fetch("/api/sandbox/prepare-ghl-review", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    credentials: "same-origin",
-    body: JSON.stringify({ demoId }),
-  })
-  if (!response.ok) {
-    throw new Error("GoHighLevel output could not be saved. Retry before submitting for review.")
+  for (const path of ["/api/sandbox/prepare-ghl-review", "/api/sandbox/prepare-copy-prompts-review"]) {
+    const response = await fetch(path, {
+      method: "POST", headers: { "content-type": "application/json" },
+      credentials: "same-origin", body: JSON.stringify({ demoId }),
+    })
+    if (!response.ok) {
+      throw new Error("Copy outputs could not be saved. Retry before submitting for review.")
+    }
   }
 }
 

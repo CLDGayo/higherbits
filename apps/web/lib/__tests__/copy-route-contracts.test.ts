@@ -14,6 +14,7 @@ vi.mock("@/lib/api/server/copy-identity", () => ({ copyIdentity: mocks.identity,
 vi.mock("@/lib/api/server/copy-source", () => ({ prepareCopySource: mocks.prepare }))
 vi.mock("@/lib/api/server/copy-capability", () => ({ issueCopyCapability: mocks.capability }))
 vi.mock("@/lib/ghl-generator", () => ({ generateGhlTemplate: mocks.ghl, computeGhlSourceFingerprint: mocks.fingerprint, cleanGhlHtml: mocks.clean, GHL_GENERATION_DEADLINE_MS: 100_000 }))
+vi.mock("@/lib/review-copy-prompts", () => ({ computeReviewPromptFingerprint: () => "computed-fingerprint" }))
 vi.mock("@/lib/api/server/copy-admission", async importOriginal => ({ ...await importOriginal<any>(), admitCopy: mocks.admit }))
 import { POST as source } from "@/app/api/component-source/route"
 import { POST as mcp } from "@/app/api/mcp/component-source/route"
@@ -30,7 +31,10 @@ const notice = {displayText:"Recorded license: MIT License (unverified). Compone
 const savedGhl = '<div class="ghl-component-wrapper"><style>.ghl-component-wrapper button{color:red}</style><button type="button">saved fixture</button><script>const settings = { label: "before", count: 1, enabled: false }; const button = document.currentScript.parentElement.querySelector("button"); button.addEventListener("click", () => { button.textContent = settings.label; });</script></div>'
 const request = (body: unknown = { componentId: 1, requestId }) => new Request("http://localhost:56331/api/component-source", { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } })
 beforeEach(() => {
-  vi.clearAllMocks(); mocks.identity.mockResolvedValue("canonical"); mocks.tier.mockResolvedValue(false); mocks.admit.mockResolvedValue({ ok: true })
+  vi.clearAllMocks(); mocks.from.mockReset(); mocks.identity.mockResolvedValue("canonical"); mocks.tier.mockResolvedValue(false); mocks.admit.mockResolvedValue({ ok: true })
+  const missingPromptQuery = { select: () => missingPromptQuery, eq: () => missingPromptQuery,
+    maybeSingle: async () => ({ data: null, error: null }) }
+  mocks.from.mockReturnValue(missingPromptQuery)
   mocks.capability.mockResolvedValue({ registryUrl: "https://higherbits.dev/api/r/example/component?cap=opaque" })
   const savedOutputs = new Map<string, string>()
   mocks.rpc.mockImplementation((name: string, args: Record<string, unknown>) => {
@@ -698,6 +702,10 @@ it("U-GHL-03: force_regenerate fails closed instead of generating during copy", 
 })
 it.each(Object.values(PROMPT_TYPES))("U-GHL-03/U-DEMO-02: %s applies active settings to transient prompt only", async prompt_type => {
   const code = 'const settings = { label: "before", count: 1, enabled: false }; export default settings'
+  if (prompt_type !== PROMPT_TYPES.GOHIGHLEVEL) {
+    const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data: { prompt: code, source_fingerprint: "computed-fingerprint" }, error: null }) }
+    mocks.from.mockReturnValue(query)
+  }
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[1],component:{component_slug:"fixture"},
     demo:{ghl_html_content:savedGhl,ghl_source_fingerprint:"computed-fingerprint"},
@@ -751,6 +759,8 @@ it.each([
 })
 it("ordinary copied prompts retain their existing component path and demo bytes", async () => {
   const demoCode = 'import Component from "@/components/ui/fixture"; export default Component'
+  const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data: { prompt: `components/ui/fixture.tsx\n${demoCode}`, source_fingerprint: "computed-fingerprint" }, error: null }) }
+  mocks.from.mockReturnValue(query)
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[{componentId:1,revision:"digest"}],
     component:{id:1,component_slug:"fixture",registry:"ui"},demo:{file_name:"demo.tsx"},
@@ -797,6 +807,30 @@ it("auto-index default copy returns the reviewed prompt with attribution and cop
   expect(mocks.admit).toHaveBeenCalledTimes(1)
   expect(mocks.prepare).toHaveBeenCalledWith("canonical", { demoId: 2 }, false, true)
 })
+it("copies a saved creator prompt with transient control values without changing its database row", async () => {
+  const saved = { prompt: "const settings = { speed: 1 };", source_fingerprint: "computed-fingerprint" }
+  const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data: saved, error: null }) }
+  mocks.from.mockReturnValue(query)
+  mocks.prepare.mockResolvedValue({ targetKey:"1:2", closure:[{componentId:1,revision:"digest"}],
+    component:{id:1,component_slug:"fixture",registry:"ui"}, demo:{file_name:"demo.tsx"},
+    source:{code:"source",demoCode:"demo",notice}, files:[],dependencies:[],contents:new Map(),notice })
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,controls:{speed:3},requestId}))
+  expect(response.status).toBe(200)
+  const copied = (await response.json()).prompt as string
+  expect(copied).toContain("speed: 3")
+  expect(copied).toContain('"speed": 3')
+  expect(saved.prompt).toBe("const settings = { speed: 1 };")
+})
+it("never rebuilds a missing or stale creator prompt on copy", async () => {
+  mocks.prepare.mockResolvedValue({ targetKey:"1:2", closure:[{componentId:1,revision:"digest"}],
+    component:{id:1,component_slug:"fixture",registry:"ui"}, demo:{file_name:"demo.tsx"},
+    source:{code:"source",demoCode:"demo",notice}, files:[],dependencies:[],contents:new Map(),notice })
+  const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data: { prompt: "stale", source_fingerprint: "old" }, error: null }) }
+  mocks.from.mockReturnValue(query)
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,controls:{speed:3},requestId}))
+  expect(response.status).toBe(503)
+  expect(mocks.admit).not.toHaveBeenCalled()
+})
 it("prompt copy still requires a signed-in identity", async () => {
   mocks.identity.mockRejectedValueOnce(new CopyError(401, "sign_in_required"))
   const response = await prompt(request({ demo_id: 2, prompt_type: PROMPT_TYPES.GOHIGHLEVEL, requestId }))
@@ -808,9 +842,11 @@ it("auto-index nested source path remains copyable with custom prompt context", 
   const slug = "fluid"
   const target = `components/auto-index/vgpu-${slug}/index.tsx`
   const demoCode = `import Fluid from "@/components/auto-index/vgpu-${slug}"; export default Fluid`
+  const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data: { prompt: `Install the component at \`${target}\`\n${demoCode}`, source_fingerprint: "computed-fingerprint" }, error: null }) }
+  mocks.from.mockReturnValue(query)
   mocks.prepare.mockResolvedValue({
     targetKey: "1:2", closure: [{ componentId: 1, revision: "digest" }],
-    component: { id: 1, component_slug: slug, registry: "auto-index" }, demo: { file_name: "demo.tsx" },
+    component: { id: 1, component_slug: slug, registry: "auto-index" }, demo: { file_name: "demo.tsx", ghl_source_fingerprint: "computed-fingerprint" },
     source: { code: "export default function Fluid() {}", demoCode, notice },
     files: [{ path: "registry/fluid.tsx", target, type: "registry:ui", content: "export default function Fluid() {}" }],
     dependencies: [], contents: new Map(), notice,
@@ -828,9 +864,12 @@ it("auto-index path alignment leaves user context, CSS, and demo comments untouc
   const demoCode = `// from "${oldImport}"\nconst example = 'from "${oldImport}"'\nimport Shake from "${oldImport}"; export default Shake`
   const context = "Keep this quoted path for documentation: components/ui/shake.tsx"
   const css = '/* components/ui/shake.tsx is an example in this stylesheet */'
+  const savedPrompt = `${css}\n// from "${oldImport}"\nconst example = 'from "${oldImport}"'\nimport Shake from "@/components/auto-index/shake"`
+  const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data: { prompt: savedPrompt, source_fingerprint: "computed-fingerprint" }, error: null }) }
+  mocks.from.mockReturnValue(query)
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[{componentId:1,revision:"digest"}],
-    component:{id:1,component_slug:slug,registry:"auto-index"},demo:{file_name:"shake-demo.tsx"},
+    component:{id:1,component_slug:slug,registry:"auto-index"},demo:{file_name:"shake-demo.tsx",ghl_source_fingerprint:"computed-fingerprint"},
     source:{code:"export default function Shake() {}",demoCode,notice},
     files:[{path:"components/auto-index/shake.tsx",content:"export default function Shake() {}"}],
     dependencies:[],contents:new Map([[1,{indexCss:css}]]),notice,
@@ -844,7 +883,7 @@ it("auto-index path alignment leaves user context, CSS, and demo comments untouc
   expect(copied).toContain(`const example = 'from "${oldImport}"'`)
   expect(copied).toContain('import Shake from "@/components/auto-index/shake"')
 })
-it("malformed auto-index demo source fails before copy admission", async () => {
+it("missing saved auto-index prompt fails before copy admission", async () => {
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[{componentId:1,revision:"digest"}],
     component:{id:1,component_slug:"shake",registry:"auto-index"},demo:{file_name:"demo.tsx"},
@@ -853,7 +892,7 @@ it("malformed auto-index demo source fails before copy admission", async () => {
     dependencies:[],contents:new Map(),notice,
   })
   const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.CODEX,additional_context:"custom",requestId}))
-  expect(response.status).toBe(400)
+  expect(response.status).toBe(503)
   expect(mocks.admit).not.toHaveBeenCalled()
 })
 it.each([source,mcp])("binds prepared response and canonical server identity to exactly one admission", async handler => {

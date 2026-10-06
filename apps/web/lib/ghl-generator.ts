@@ -288,6 +288,7 @@ export type PreparedGhlSource = {
   savedGhlHtml?: string | null
   savedFingerprint?: string | null
   generationSignal?: AbortSignal
+  freeModelOnly?: boolean
   persistOutput: (html: string, sourceFingerprint: string) => Promise<void>
 }
 
@@ -349,8 +350,14 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
       }
     }
 
-    const relmioToken = process.env.RELMIO_AUTH_TOKEN
-    const apiKey = process.env.OPENAI_API_KEY
+    const freeModelOnly = prepared.freeModelOnly === true
+    const baseURL = freeModelOnly ? process.env.REVIEW_PROMPT_BASE_URL || process.env.OPENAI_BASE_URL : process.env.OPENAI_BASE_URL
+    const modelName = freeModelOnly ? process.env.REVIEW_PROMPT_MODEL || process.env.OPENAI_MODEL : process.env.OPENAI_MODEL
+    const relmioToken = freeModelOnly ? undefined : process.env.RELMIO_AUTH_TOKEN
+    const apiKey = freeModelOnly ? process.env.REVIEW_PROMPT_API_KEY || process.env.OPENAI_API_KEY : process.env.OPENAI_API_KEY
+    if (freeModelOnly && (!/^https:\/\/openrouter\.ai\/api\/v1\/?$/.test(baseURL || "") || !modelName?.endsWith(":free") || !apiKey)) {
+      throw new Error("A configured free OpenRouter model is required for creator review GHL output")
+    }
     if (!relmioToken && (!apiKey || apiKey === "sk-placeholder")) {
       throw new Error("Neither RELMIO_AUTH_TOKEN nor OPENAI_API_KEY is configured in .env.local. Please configure at least one provider.")
     }
@@ -358,14 +365,14 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
     let openai: OpenAI | null = null
     if (apiKey && apiKey !== "sk-placeholder") {
       const defaultHeaders: Record<string, string> = {}
-      if (process.env.OPENAI_BASE_URL?.includes("openrouter.ai")) {
+      if (baseURL?.includes("openrouter.ai")) {
         defaultHeaders["HTTP-Referer"] = process.env.NEXT_PUBLIC_APP_URL || "https://higherbits.dev"
         defaultHeaders["X-Title"] = "HigherBits"
       }
 
       openai = new OpenAI({
         apiKey,
-        baseURL: process.env.OPENAI_BASE_URL || undefined,
+        baseURL: baseURL || undefined,
         defaultHeaders: Object.keys(defaultHeaders).length ? defaultHeaders : undefined,
         timeout: GHL_PROVIDER_TIMEOUT_MS,
       })
@@ -443,7 +450,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
 
     // Option B: OpenAI / OpenRouter API
     if (!rawOutput && openai) {
-      let model = process.env.OPENAI_MODEL || "cohere/north-mini-code:free"
+      let model = modelName || "cohere/north-mini-code:free"
       const configuredMaxTokens = Number(process.env.OPENAI_MAX_TOKENS) || 16384
 
       const executeCompletion = async (targetModel: string, tokens: number) => {
@@ -523,14 +530,14 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
         // 2. If still no output (or output was truncated due to token limit, 402 credits, or 429 rate limit), fallback to verified free OpenRouter models with high token budget
         if (!rawOutput) {
           const fallbackCandidates = [
-            process.env.OPENAI_FALLBACK_MODEL,
+            freeModelOnly ? process.env.REVIEW_PROMPT_FALLBACK_MODEL || process.env.OPENAI_FALLBACK_MODEL : process.env.OPENAI_FALLBACK_MODEL,
             "cohere/north-mini-code:free",
             "nvidia/nemotron-3-super-120b-a12b:free",
             "nvidia/nemotron-3-ultra-550b-a55b:free",
             "google/gemma-4-31b-it:free",
           ].filter(Boolean) as string[]
 
-          const uniqueFallbacks = Array.from(new Set(fallbackCandidates)).filter(m => m !== model)
+          const uniqueFallbacks = Array.from(new Set(fallbackCandidates)).filter(m => m !== model && (!freeModelOnly || m.endsWith(":free")))
 
           for (const fallbackModel of uniqueFallbacks) {
             console.log(`Attempting fallback to free model (${fallbackModel}, max_tokens: 16384)...`)

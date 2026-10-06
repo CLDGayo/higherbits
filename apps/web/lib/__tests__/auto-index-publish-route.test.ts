@@ -45,6 +45,7 @@ const validItem = {
     controlSettings: { settings: { intensity: 0.5 } },
     savedGhlHtml: "<div>private generated source marker</div>",
     savedGhlFingerprint: "f".repeat(64),
+    savedPromptGuidance: "Keep the component's reviewed behavior and accessible controls.",
   },
   assets: [
     { assetKey: "components/pinned.tsx", assetRole: "component_source", provenanceClass: "upstream-original",
@@ -114,6 +115,14 @@ it("E26 stages sanitized demo and per-file rights evidence before the idempotent
   ])
   expect(mock.rpc.mock.calls[0]?.[1]).toMatchObject({ p_demo_code: demoCode, p_ghl_html_content: "<div>sanitized saved output</div>",
     p_copy_prompts: expect.objectContaining({ codex: expect.stringContaining("components/auto-index/pinned-component.tsx") }) })
+  expect(mock.rpc.mock.calls[0]?.[1].p_copy_prompts.codex).toContain(validItem.demo.savedPromptGuidance)
+})
+
+it("requires local Antigravity guidance before auto-index publication", async () => {
+  const incomplete = { ...validItem, demo: { ...validItem.demo, savedPromptGuidance: "" } }
+  const response = await POST(request({ items: [incomplete] }))
+  expect(response.status).toBe(400)
+  expect(mock.rpc).not.toHaveBeenCalled()
 })
 
 it("E26 retries an identical publish after a partial asset RPC failure", async () => {

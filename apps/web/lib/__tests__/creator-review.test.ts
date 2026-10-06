@@ -3,32 +3,41 @@ import { readFile } from "node:fs/promises"
 import { join } from "node:path"
 import { prepareCreatorReview } from "@/lib/creator-review"
 
-it("U-GHL-01: saves GHL for every submitted demo before the review transition", async () => {
+it("saves GHL and every prepared prompt before the review transition", async () => {
   const order: string[] = []
-  const request = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+  const request = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body)) as { demoId: number }
-    order.push(`ghl:${body.demoId}`)
+    order.push(`${String(input).includes("prepare-ghl") ? "ghl" : "prompts"}:${body.demoId}`)
     return new Response(null, { status: 200 })
   })
   const transition = vi.fn(async () => { order.push("submission:on_review"); return "saved" })
 
   await expect(prepareCreatorReview([11, 12], transition, request as typeof fetch)).resolves.toBe("saved")
 
-  expect(order).toEqual(["ghl:11", "ghl:12", "submission:on_review"])
+  expect(order).toEqual(["ghl:11", "prompts:11", "ghl:12", "prompts:12", "submission:on_review"])
   expect(transition).toHaveBeenCalledOnce()
 })
 
 it("U-GHL-01: leaves the version out of review if any demo output fails", async () => {
-  const request = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+  const request = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body)) as { demoId: number }
-    return new Response(null, { status: body.demoId === 12 ? 503 : 200 })
+    return new Response(null, { status: body.demoId === 12 && String(input).includes("prepare-ghl") ? 503 : 200 })
   })
   const transition = vi.fn(async () => "submitted")
 
   await expect(prepareCreatorReview([11, 12, 13], transition, request as typeof fetch))
     .rejects.toThrow("GoHighLevel output could not be saved")
 
-  expect(request).toHaveBeenCalledTimes(2)
+  expect(request).toHaveBeenCalledTimes(3)
+  expect(transition).not.toHaveBeenCalled()
+})
+
+it("keeps a version out of review when free-model prompt preparation fails", async () => {
+  const request = vi.fn(async (input: RequestInfo | URL) =>
+    new Response(null, { status: String(input).includes("prepare-copy-prompts") ? 503 : 200 }))
+  const transition = vi.fn(async () => "submitted")
+  await expect(prepareCreatorReview([11], transition, request as typeof fetch))
+    .rejects.toThrow("Copy prompts could not be saved")
   expect(transition).not.toHaveBeenCalled()
 })
 

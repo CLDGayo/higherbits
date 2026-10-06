@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server"
-import { getComponentInstallPrompt } from "@/lib/prompts"
 import { computeGhlSourceFingerprint, cleanGhlHtml } from "@/lib/ghl-generator"
 import { applyControlsToCode, applyControlsToGhlHtml } from "@/lib/controls-transform"
-import { PROMPT_TYPES, PromptType } from "@/types/global"
+import { PROMPT_TYPES } from "@/types/global"
+import { computeReviewPromptFingerprint } from "@/lib/review-copy-prompts"
 import { supabaseWithAdminAccess as db } from "@/lib/supabase"
 import { admitCopy, COPY_HEADERS, CopyError, copyErrorResponse, copyRequestId } from "@/lib/api/server/copy-admission"
 import { copyIdentity, copyTier } from "@/lib/api/server/copy-identity"
 import { prepareCopySource } from "@/lib/api/server/copy-source"
 import { withPromptNotice } from "@/lib/copy-notice"
-import { parse } from "@babel/parser"
 
 const LEGACY_GHL_CUTOFF_MS = Date.parse("2026-10-01T00:00:00Z")
 
@@ -16,25 +15,6 @@ function predatesLegacyGhlCutoff(value: unknown): boolean {
   if (typeof value !== "string" || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d/.test(value)) return false
   const timestamp = Date.parse(value)
   return Number.isFinite(timestamp) && timestamp < LEGACY_GHL_CUTOFF_MS
-}
-
-function alignAutoIndexDemoImport(demoCode: string, slug: string, installImport: string): string {
-  let declarations
-  try {
-    declarations = parse(demoCode, { sourceType: "module", plugins: ["typescript", "jsx", "decorators-legacy"] }).program.body
-  } catch {
-    throw new CopyError(400, "unsupported_source")
-  }
-  const imports = declarations.flatMap(node => {
-    if (node.type !== "ImportDeclaration") return []
-    const source = node.source.value
-    return (source.startsWith(".") || source.startsWith("@/")) &&
-      source.split("/").at(-1)?.replace(/\.tsx$/, "") === slug ? [node] : []
-  })
-  for (const declaration of imports.reverse()) {
-    demoCode = demoCode.slice(0, declaration.source.start!) + JSON.stringify(installImport) + demoCode.slice(declaration.source.end!)
-  }
-  return demoCode
 }
 
 export async function POST(request: Request) {
@@ -81,53 +61,26 @@ export async function POST(request: Request) {
         throw new CopyError(503, "ghl_output_unavailable")
       }
       if (!prompt) throw new CopyError(503, "ghl_output_unavailable")
-    } else if (prepared.component.registry === "auto-index" && (!controls || Object.keys(controls).length === 0) && !ruleData && !additional_context) {
+    } else {
       const { data: saved, error } = await (db.from as any)("auto_index_copy_prompts")
         .select("prompt,source_fingerprint").eq("demo_id", demo_id).eq("prompt_type", prompt_type).maybeSingle()
       if (error) throw new CopyError(503, "prompt_unavailable")
-      const currentFingerprint = computeGhlSourceFingerprint(prepared.source.code, prepared.source.demoCode)
+      const currentFingerprint = prepared.component.registry === "auto-index"
+        ? computeGhlSourceFingerprint(prepared.source.code, prepared.source.demoCode)
+        : computeReviewPromptFingerprint(prepared)
       if (force_regenerate || typeof saved?.prompt !== "string" || !saved.prompt ||
-          saved.source_fingerprint !== currentFingerprint || prepared.demo?.ghl_source_fingerprint !== currentFingerprint) {
+          saved.source_fingerprint !== currentFingerprint ||
+          (prepared.component.registry === "auto-index" && prepared.demo?.ghl_source_fingerprint !== currentFingerprint)) {
         throw new CopyError(503, "prompt_unavailable")
       }
-      prompt = saved.prompt
-    } else {
-      const slug = prepared.component.component_slug
-      const autoIndexTarget = prepared.component.registry === "auto-index"
-        ? prepared.files.find(file => [
-            `components/auto-index/${slug}.tsx`,
-            `components/auto-index/${slug}/index.tsx`,
-            `components/auto-index/vgpu-${slug}/index.tsx`,
-          ].includes(file.target || file.path))
-        : undefined
-      if (prepared.component.registry === "auto-index" && !autoIndexTarget) throw new CopyError(400, "unsupported_source")
-      const code = controls ? applyControlsToCode(prepared.source.code, controls) : prepared.source.code
-      let demoCode = controls ? applyControlsToCode(prepared.source.demoCode, controls) : prepared.source.demoCode
-      if (autoIndexTarget) {
-        const installImport = `@/${(autoIndexTarget.target || autoIndexTarget.path).replace(/(?:\/index)?\.tsx$/, "")}`
-        demoCode = alignAutoIndexDemoImport(demoCode, slug, installImport)
+      prompt = controls ? applyControlsToCode(saved.prompt, controls) : saved.prompt
+      if (controls && Object.keys(controls).length) {
+        prompt += `\n\n### Active control values\nUse these values in the final implementation; they override defaults in the source above.\n\`\`\`json\n${JSON.stringify(controls, null, 2)}\n\`\`\``
       }
-      const registryDependencies = Object.fromEntries(prepared.files.map(file => [
-        file.path,
-        autoIndexTarget && file.path === `components/${slug}-demo.tsx` ? demoCode : file.content,
-      ]))
-      prompt = getComponentInstallPrompt({
-        promptType: prompt_type as PromptType,
-        codeFileName: slug + ".tsx", demoCodeFileName: prepared.demo?.file_name || "demo.tsx",
-        ...(autoIndexTarget ? { componentInstallPath: autoIndexTarget.target || autoIndexTarget.path } : {}),
-        code, demoCode,
-        npmDependencies: Object.fromEntries(prepared.dependencies.map(name => [name, "latest"])),
-        npmDependenciesOfRegistryDependencies: Object.fromEntries(prepared.dependencies.map(name => [name, "latest"])),
-        registryDependencies,
-        tailwindConfig: prepared.source.tailwindConfig, globalCss: prepared.source.globalCss,
-        indexCss: prepared.contents.get(prepared.component.id)?.indexCss || "", userAdditionalContext: additional_context || "",
-        ...(ruleData ? { promptRule: ruleData } : {}),
-      })
-      if (autoIndexTarget) {
-        const installPath = autoIndexTarget.target || autoIndexTarget.path
-        prompt = `Install the component at \`${installPath}\`; the demo imports it as \`@/${installPath.replace(/(?:\/index)?\.tsx$/, "")}\`.\n\n`
-          + prompt
-      }
+      if (ruleData) prompt += `\n\n### Project rules\n${JSON.stringify({
+        tech_stack: ruleData.tech_stack, theme: ruleData.theme, additional_context: ruleData.additional_context,
+      }, null, 2)}`
+      if (additional_context) prompt += `\n\n### User instructions\n${additional_context}`
     }
     prompt = withPromptNotice(prompt, prepared.notice, prompt_type === PROMPT_TYPES.GOHIGHLEVEL)
     const payload = { prompt, debug: { ruleApplied: !!ruleData, contextApplied: !!additional_context, controlsApplied: !!controls } }

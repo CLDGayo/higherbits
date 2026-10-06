@@ -11,6 +11,7 @@ export type AutoIndexPromptInput = {
   files: { path: string; content: string; target?: string }[]
   dependencies: string[]
   demoFileName?: string
+  guidance?: string
 }
 
 export function alignAutoIndexDemoImport(demoCode: string, slug: string, installImport: string): string {
@@ -45,6 +46,6 @@ export function buildAutoIndexPrompts(input: AutoIndexPromptInput): Record<strin
       npmDependencies, npmDependenciesOfRegistryDependencies: npmDependencies,
       registryDependencies, tailwindConfig: "", globalCss: "", indexCss: "", userAdditionalContext: "",
     })
-    return [type, `Install the component at \`${target}\`; the demo imports it as \`@/${target.replace(/\.tsx$/, "")}\`.\n\n${prompt}`]
+    return [type, `Install the component at \`${target}\`; the demo imports it as \`@/${target.replace(/\.tsx$/, "")}\`.\n\n${prompt}${input.guidance ? `\n\n### Reviewed component details\n${input.guidance}` : ""}`]
   }))
 }
