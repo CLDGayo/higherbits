@@ -11,4 +11,4 @@ Individual numeric input segments allow direct keyboard entry, arrow key increme
 Uses native input elements with dedicated placeholders and keyboard navigation. When used in forms, pair with an accessible label or aria-label for assistive technology.
 
 **Installation Needs**
-Requires React 18+, Tailwind CSS with shadcn theme variables, the timescape npm package (^0.4.1), a shadcn Input primitive, and a standard cn utility function.
+Requires React 18+, Tailwind CSS with shadcn theme variables, the reviewed timescape npm package (exactly 0.4.3), a shadcn Input primitive, and a standard cn utility function. Install with `npm install timescape@0.4.3` rather than an unpinned timescape version.

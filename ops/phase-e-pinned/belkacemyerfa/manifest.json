@@ -33,7 +33,7 @@
         }
       ],
       "dependencies": {
-        "timescape": "^0.4.1",
+        "timescape": "0.4.3",
         "clsx": "^2.1.0",
         "tailwind-merge": "^2.2.1"
       },

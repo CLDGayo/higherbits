@@ -70,9 +70,10 @@ const css = await requireWeb('postcss')([requireWeb('tailwindcss')({
 const body = output.outputFiles[0].text.replaceAll('</script', '<\\/script')
 const title = item.title.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 const sourceLicense = readFileSync(join(root, 'LICENSE'), 'utf8')
-if (sourceLicense.includes('-->')) throw new Error('Source license cannot be embedded safely in an HTML comment')
+const timescapeLicense = readFileSync(join(timescapePkg, 'LICENSE'), 'utf8')
+if ([sourceLicense, timescapeLicense].some(license => license.includes('-->'))) throw new Error('License cannot be embedded safely in an HTML comment')
 
-const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} preview</title><style>:root{--background:0 0% 100%;--foreground:222 47% 11%;--primary:263 84% 58%;--secondary:240 5% 96%;--border:240 6% 84%;--font-inter:Arial,Helvetica,sans-serif;--font-urbanist:Arial,Helvetica,sans-serif;--font-cozy:Arial,Helvetica,sans-serif;--font-fira-code:ui-monospace,monospace;--font-accent:Georgia,serif}html,body,#root{margin:0;min-height:100%;width:100%}body{background:#fff;color:#111827}${css.css}</style></head><body><div id="root"></div><script>${body}</script><!--\nUpstream component: ${manifest.repositoryUrl}/tree/${item.revision}/${item.sourcePath}\n${sourceLicense}\n--></body></html>\n`
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} preview</title><style>:root{--background:0 0% 100%;--foreground:222 47% 11%;--primary:263 84% 58%;--secondary:240 5% 96%;--border:240 6% 84%;--font-inter:Arial,Helvetica,sans-serif;--font-urbanist:Arial,Helvetica,sans-serif;--font-cozy:Arial,Helvetica,sans-serif;--font-fira-code:ui-monospace,monospace;--font-accent:Georgia,serif}html,body,#root{margin:0;min-height:100%;width:100%}body{background:#fff;color:#111827}${css.css}</style></head><body><div id="root"></div><script>${body}</script><!--\nUpstream component: ${manifest.repositoryUrl}/tree/${item.revision}/${item.sourcePath}\n${sourceLicense}\nBundled dependency: timescape@0.4.3\n${timescapeLicense}\n--></body></html>\n`
 
 const targetHtml = join(web, 'public/auto-index', `belkacemyerfa-${slug}.html`)
 const targetPng = join(web, 'public/auto-index', `belkacemyerfa-${slug}.png`)

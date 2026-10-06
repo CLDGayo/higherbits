@@ -187,6 +187,7 @@
             el.addEventListener("input", function () {
               var val = parseInt(el.value.replace(/\D/g, ""), 10);
               var unit = el.getAttribute("data-unit");
+              if (unit === "years" && el.value.replace(/\D/g, "").length < 4) return;
               if (!isNaN(val)) {
                 if (unit === "months" && val >= 1 && val <= 12) state.month = val;
                 if (unit === "days" && val >= 1 && val <= 31) state.day = val;

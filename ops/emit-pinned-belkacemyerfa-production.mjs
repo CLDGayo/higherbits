@@ -76,7 +76,7 @@ function stageItem(item) {
   })
   const main = files[0].bytes
 
-  if (item.dependencies?.timescape && item.dependencies.timescape !== '^0.4.1') {
+  if (item.dependencies?.timescape && item.dependencies.timescape !== '0.4.3') {
     reasons.push('timescape_version_unreviewed')
   }
 

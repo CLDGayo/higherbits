@@ -41,14 +41,17 @@ const helperFiles = Object.fromEntries(item.files.slice(1).map(file => [file.pat
 const codeFileName = item.sourcePath.split('/').at(-1)
 const installPath = `components/auto-index/belkacemyerfa-${slug}/${codeFileName}`
 const promptTypes = Object.values(render.PROMPT_TYPES).filter(type => type !== render.PROMPT_TYPES.GOHIGHLEVEL)
+const pinTimescape = prompt => prompt
+  .replace(/\b((?:npm|pnpm|yarn|bun)\s+(?:i|install|add)\s+)timescape\b(?!@)/g, '$1timescape@0.4.3')
+  .replace(/\btimescape, clsx, tailwind-merge\b/g, 'timescape@0.4.3, clsx, tailwind-merge')
 const saved = Object.fromEntries(promptTypes.map(type => [type,
-  `${render.getComponentInstallPrompt({
+  pinTimescape(`${render.getComponentInstallPrompt({
     promptType: type, codeFileName, componentInstallPath: installPath, demoCodeFileName: 'demo.tsx',
     code: main.toString('utf8'), demoCode: demo.toString('utf8'),
     registryDependencies: helperFiles, npmDependencies: item.dependencies,
     npmDependenciesOfRegistryDependencies: item.dependencies,
     tailwindConfig: '', globalCss: '', indexCss: '', userAdditionalContext: '',
-  })}\n\n### Reviewed component details\n${guidance}`,
+  })}\n\n### Reviewed component details\n${guidance}`),
 ]))
 
 if (promptTypes.length !== 10 || Object.values(saved).some(prompt => !prompt || Buffer.byteLength(prompt) > 2_097_152)) {
