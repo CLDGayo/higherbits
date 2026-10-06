@@ -102,6 +102,7 @@ if [[ "${1:-}" == "--deploy" ]]; then
             cd \"$VPS_DEST\"
             echo \"📦 Installing dependencies...\"
             pnpm install
+            pnpm --filter web exec prisma generate --schema=./prisma/schema.prisma
             
             echo \"🔨 Building project...\"
             rm -rf \"apps/web/$VPS_BUILD_DIST_DIR\"

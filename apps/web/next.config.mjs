@@ -76,7 +76,7 @@ const nextConfig = {
         ...config.resolve.fallback,
         fs: false,
       }
-    } else {
+    } else if (!skipBuildValidation) {
       config.plugins = [...config.plugins, new PrismaPlugin()]
     }
     return config
