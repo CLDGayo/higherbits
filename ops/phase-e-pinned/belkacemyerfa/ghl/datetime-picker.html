@@ -1,0 +1,241 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #ffffff;
+      --ghl-fg: #09090b;
+      --ghl-border: #e4e4e7;
+      --ghl-input-border: #e4e4e7;
+      --ghl-focus-bg: rgba(9, 9, 11, 0.1);
+      --ghl-separator: #9ca3af;
+      --ghl-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      font-family: var(--ghl-font);
+      background: var(--ghl-bg);
+      color: var(--ghl-fg);
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-picker-container {
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      padding: 4px 8px;
+      border: 2px solid var(--ghl-input-border);
+      border-radius: 8px;
+      gap: 4px;
+      background: #ffffff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .ghl-component-wrapper .ghl-segment {
+      padding: 4px 6px;
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+      height: fit-content;
+      border: none;
+      outline: none;
+      user-select: none;
+      border-radius: 4px;
+      min-width: 32px;
+      text-align: center;
+      font-size: 14px;
+      font-family: var(--ghl-font);
+      color: var(--ghl-fg);
+      background: transparent;
+      caret-color: transparent;
+    }
+    .ghl-component-wrapper .ghl-segment:focus {
+      background: var(--ghl-focus-bg);
+      outline: none;
+    }
+    .ghl-component-wrapper .ghl-segment.ghl-year {
+      min-width: 48px;
+    }
+    .ghl-component-wrapper .ghl-segment.ghl-ampm {
+      background: rgba(9, 9, 11, 0.06);
+      cursor: pointer;
+    }
+    .ghl-component-wrapper .ghl-sep {
+      font-size: 12px;
+      color: var(--ghl-separator);
+      user-select: none;
+    }
+    .ghl-component-wrapper .ghl-pipe {
+      font-size: 18px;
+      opacity: 0.3;
+      color: var(--ghl-separator);
+      user-select: none;
+      margin: 0 4px;
+    }
+    .ghl-component-wrapper .ghl-value-display {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #71717a;
+    }
+  </style>
+
+  <div class="ghl-picker-container" role="group" aria-label="Date and time picker">
+    <input type="text" class="ghl-segment ghl-month" data-unit="months" placeholder="MM" maxlength="2" aria-label="Month">
+    <span class="ghl-sep">/</span>
+    <input type="text" class="ghl-segment ghl-day" data-unit="days" placeholder="DD" maxlength="2" aria-label="Day">
+    <span class="ghl-sep">/</span>
+    <input type="text" class="ghl-segment ghl-year" data-unit="years" placeholder="YYYY" maxlength="4" aria-label="Year">
+    
+    <span class="ghl-pipe">|</span>
+    
+    <input type="text" class="ghl-segment ghl-hour" data-unit="hours" placeholder="HH" maxlength="2" aria-label="Hour">
+    <span class="ghl-sep">:</span>
+    <input type="text" class="ghl-segment ghl-minute" data-unit="minutes" placeholder="MM" maxlength="2" aria-label="Minute">
+    <button type="button" class="ghl-segment ghl-ampm" data-unit="ampm" aria-label="AM or PM">AM</button>
+  </div>
+  <div class="ghl-value-display">Selected: <span class="ghl-val-text"></span></div>
+
+  <script>
+    (() => {
+      function initInstance(root) {
+        var now = new Date();
+        var state = {
+          month: now.getMonth() + 1,
+          day: now.getDate(),
+          year: now.getFullYear(),
+          hour: now.getHours() % 12 || 12,
+          minute: now.getMinutes(),
+          ampm: now.getHours() >= 12 ? "PM" : "AM"
+        };
+
+        var monthInput = root.querySelector(".ghl-month");
+        var dayInput = root.querySelector(".ghl-day");
+        var yearInput = root.querySelector(".ghl-year");
+        var hourInput = root.querySelector(".ghl-hour");
+        var minInput = root.querySelector(".ghl-minute");
+        var ampmBtn = root.querySelector(".ghl-ampm");
+        var valText = root.querySelector(".ghl-val-text");
+
+        function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+        function render() {
+          if (monthInput) monthInput.value = pad(state.month);
+          if (dayInput) dayInput.value = pad(state.day);
+          if (yearInput) yearInput.value = state.year;
+          if (hourInput) hourInput.value = pad(state.hour);
+          if (minInput) minInput.value = pad(state.minute);
+          if (ampmBtn) ampmBtn.textContent = state.ampm;
+          if (valText) {
+            valText.textContent = state.year + "-" + pad(state.month) + "-" + pad(state.day) + " " + pad(state.hour) + ":" + pad(state.minute) + " " + state.ampm;
+          }
+        }
+
+        function step(unit, delta) {
+          if (unit === "months") {
+            state.month = ((state.month - 1 + delta + 12) % 12) + 1;
+          } else if (unit === "days") {
+            state.day = ((state.day - 1 + delta + 31) % 31) + 1;
+          } else if (unit === "years") {
+            state.year += delta;
+          } else if (unit === "hours") {
+            state.hour = ((state.hour - 1 + delta + 12) % 12) + 1;
+          } else if (unit === "minutes") {
+            state.minute = (state.minute + delta + 60) % 60;
+          } else if (unit === "ampm") {
+            state.ampm = state.ampm === "AM" ? "PM" : "AM";
+          }
+          render();
+        }
+
+        var inputs = [monthInput, dayInput, yearInput, hourInput, minInput, ampmBtn];
+        inputs.forEach(function (el, idx) {
+          if (!el) return;
+          el.addEventListener("focus", function () {
+            if (el.select) el.select();
+          });
+          el.addEventListener("keydown", function (e) {
+            var unit = el.getAttribute("data-unit");
+            if (e.key === "ArrowUp") {
+              e.preventDefault();
+              step(unit, 1);
+            } else if (e.key === "ArrowDown") {
+              e.preventDefault();
+              step(unit, -1);
+            } else if (e.key === "ArrowRight") {
+              if (idx < inputs.length - 1) {
+                e.preventDefault();
+                inputs[idx + 1].focus();
+              }
+            } else if (e.key === "ArrowLeft") {
+              if (idx > 0) {
+                e.preventDefault();
+                inputs[idx - 1].focus();
+              }
+            } else if (unit === "ampm" && (e.key === "a" || e.key === "A")) {
+              state.ampm = "AM";
+              render();
+            } else if (unit === "ampm" && (e.key === "p" || e.key === "P")) {
+              state.ampm = "PM";
+              render();
+            }
+          });
+          if (el.tagName === "INPUT") {
+            el.addEventListener("input", function () {
+              var val = parseInt(el.value.replace(/\D/g, ""), 10);
+              var unit = el.getAttribute("data-unit");
+              if (!isNaN(val)) {
+                if (unit === "months" && val >= 1 && val <= 12) state.month = val;
+                if (unit === "days" && val >= 1 && val <= 31) state.day = val;
+                if (unit === "years" && val >= 1000) state.year = val;
+                if (unit === "hours" && val >= 1 && val <= 12) state.hour = val;
+                if (unit === "minutes" && val >= 0 && val <= 59) state.minute = val;
+              }
+              if (el.value.length >= el.maxLength && idx < inputs.length - 1) {
+                inputs[idx + 1].focus();
+              }
+              render();
+            });
+          }
+        });
+
+        if (ampmBtn) {
+          ampmBtn.addEventListener("click", function () {
+            step("ampm", 1);
+          });
+        }
+
+        render();
+      }
+
+      var wrapper = document.currentScript && document.currentScript.closest(".ghl-component-wrapper");
+      if (wrapper) initInstance(wrapper);
+    })();
+  </script>
+</div>
+<!--
+## MIT License
+
+Copyright (c) 2024 shadcn extension
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

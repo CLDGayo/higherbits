@@ -1,0 +1,14 @@
+**Appearance**
+The component renders a compact, segmented inline input container (border-2 border-input rounded-md) with separate date and time clusters divided by a vertical separator line. Date segments (MM, DD, YYYY) are separated by slashes, and time segments (HH, MM, AM/PM) are separated by colons, styled with tabular numbers and subtle focus states.
+
+**Behavior**
+Powered by the timescape headless library, each date and time segment behaves as an independent editable unit. The component automatically advances focus across segments as the user types, normalizes numeric ranges, handles 12-hour AM/PM transitions, and synchronizes the full Date object via onChange.
+
+**Controls**
+Individual numeric input segments allow direct keyboard entry, arrow key incrementing/decrementing, and left/right arrow navigation between units.
+
+**Accessibility**
+Uses native input elements with dedicated placeholders and keyboard navigation. When used in forms, pair with an accessible label or aria-label for assistive technology.
+
+**Installation Needs**
+Requires React 18+, Tailwind CSS with shadcn theme variables, the timescape npm package (^0.4.1), a shadcn Input primitive, and a standard cn utility function.

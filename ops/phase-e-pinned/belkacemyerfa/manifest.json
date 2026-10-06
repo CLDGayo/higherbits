@@ -1,0 +1,46 @@
+{
+  "repositoryUrl": "https://github.com/BelkacemYerfa/shadcn-extension",
+  "ownerLabel": "BelkacemYerfa",
+  "profileUrl": "https://21st.dev/@BelkacemYerfa",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "d78a9b2bbefad365fbb7d8c2ee31d192a5407a99a7b30d4d5f3c1852ef643c5a",
+  "items": [
+    {
+      "slug": "datetime-picker",
+      "registryName": "datetime-picker",
+      "title": "Datetime Picker",
+      "description": "An accessible, segmented date and time picker input powered by timescape.",
+      "revision": "d678d7f5493aa480615b4e0200c0255ba92ad8c9",
+      "sourcePath": "registry/default/extension/datetime-picker.tsx",
+      "files": [
+        {
+          "path": "registry/default/extension/datetime-picker.tsx",
+          "type": "registry:component",
+          "bytes": 4964,
+          "sha256": "f63d7ab0293920d1294f729826f64670eecf1af4ef6e0ab9f7f4dc181048ef63"
+        },
+        {
+          "path": "registry/default/ui/input.tsx",
+          "type": "registry:component",
+          "bytes": 799,
+          "sha256": "aacef8933fe99ab553e12a82c874a23c97e2b5602eb6f00018454fa0a8d4f7f2"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 630,
+          "sha256": "3f748c0764c18db5895e2340f6af284e5adade44c2e42071db516d10bb4610cf"
+        }
+      ],
+      "dependencies": {
+        "timescape": "^0.4.1",
+        "clsx": "^2.1.0",
+        "tailwind-merge": "^2.2.1"
+      },
+      "aliasImports": [
+        "@/registry/default/ui/input",
+        "@/lib/utils"
+      ]
+    }
+  ]
+}

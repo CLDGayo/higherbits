@@ -1,0 +1,16 @@
+{
+  "reviewedAt": "2026-10-06",
+  "purpose": "Only MIT-licensed timescape date/time formatting hook and shadcn UI primitives enter the pinned previews and install prompts.",
+  "packages": {
+    "timescape": {
+      "version": "0.4.3",
+      "license": "MIT",
+      "npm": "https://www.npmjs.com/package/timescape/v/0.4.3",
+      "source": "https://github.com/dan-lee/timescape",
+      "npmIntegrity": "sha512-1Kh0HkxNWE4yJLQyBv/Z7d79+7v398J0m+e27rV+6/XyM0Yc5c+x2/9kKz8P07+8Z5HL64yA==",
+      "tarballSha256": "117193418f3d3010cc34e92691e634e34b1fa4eb78b295912e1915c671112a5f",
+      "licenseFileSha256": "499d742cf7d46f21c0a2acb25a005c372ed792788ed16e55c25d0606e1a92e6e",
+      "evidence": "The publisher's 0.4.3 tarball contains an MIT LICENSE (Copyright 2023 Daniel Lehr). The package.json metadata declares MIT. Only the useTimescape React hook is used."
+    }
+  }
+}
