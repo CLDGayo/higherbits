@@ -11,7 +11,7 @@
   "licenseFile": "LICENCE.md",
   "licenseSha256": "57aa0d7ed505b0d5181bde8a33d32cf528c3202b08ca264b905aa3e8d89bb265",
   "manifestSha256": "494a80ee8ab9eb59dbf36d7f3a852298cda3b2250d121c6913babf12b8c88498",
-  "promptsSha256": "0f2394f0ffe26022addba5a822a603bf229ac94b840616ddafc9f797c7499ed0",
+  "promptsSha256": "789c05869ee291ed45cd7cdbf9d1769266b4207260014595e37a4f3446fd33b8",
   "dependencyEvidenceSha256": "d246c3d38dc7569d72ec5173fd3658fa227ecbf485e1c5a94266e43319b86f05",
   "verification": {
     "emitCheck": { "captured": 3, "ready": 3, "pending": [] },
@@ -73,7 +73,7 @@
       "ghlHtmlSha256": "cb36254576a6f702b127fa250e6630b8a7db6eca41441b380aabaa477aa0d461",
       "bundleHtmlSha256": "83e017ae81b4d17fb46c74ac39327a26b37a45de997f95e8eca4b3979b45d0e1",
       "previewPngSha256": "457636e2dc06d550299878114a172754785e6906d2994017dd761dea7934d3d0",
-      "promptsSha256": "48a539dc35c6cd40a4d987a7288a96fa88548d4a2fcb11fc4e6a72b17fdc696f"
+      "promptsSha256": "6b9da9bd5eb34b75ee1969183761cfc03062966f48deda0b49d4e3abb1a2b6bb"
     },
     "drawer": {
       "sourceSha256": "34e3e2c49e896e99ab9f71077f0ce4cad07461850851288e6801d9b6a6301931",
@@ -81,7 +81,7 @@
       "ghlHtmlSha256": "fbfcd84a0c23e0844a7b17d02dff42571b13b2524fb166c1ccfbd70ff04c60af",
       "bundleHtmlSha256": "9bed3aecd52966efae819021ed30a62313af66b8e5767d2ce5c96d9e76ca12d9",
       "previewPngSha256": "f390354c90a02965fff4969f4e84b97b01ed0c0e64bac821e4d74838b0f64582",
-      "promptsSha256": "6739ec75b58feb4c331da9af8572ff71b7a82af92d1476fd839512d5495bb912"
+      "promptsSha256": "0ead2d62fbb17bbbface33666a6cbc32000a503e4f813f215e67ba7ab9fcc6f8"
     },
     "pricing-card": {
       "sourceSha256": "5f4c12881c8d6371cb0d13eaf38c5d7585ce9dad2ae3f25d8a2ea352ab5cac40",
@@ -89,12 +89,12 @@
       "ghlHtmlSha256": "1da292c5fa1bbaaca876aaf71c30fd784d13d8917036d2e46ba6dcedfa7f0b35",
       "bundleHtmlSha256": "5438c2a81e38b5fe339c53261618748d6a8777e6cad8c51dfac191def6ee35ea",
       "previewPngSha256": "7e014773e2a73d63c692c11df65c2166ff95e03013b908dc9de7ebee9ae0526d",
-      "promptsSha256": "2b93f26a2b15a55ff3fcfd174a53ef2230ccb28e4432a0ed86fe447532789035"
+      "promptsSha256": "2bc00c6a630243d6cb83bb9e362a31caee1acfbfbd6eac1cd10d3b515591e1c4"
     }
   },
   "reviewerLabel": "Claude (Sonnet 5), pre-publication candidate pass",
   "reviewedAt": "2026-10-07T05:30:00.000Z",
-  "rationale": "3 of 8 row-24 Edil-ozi slugs (accordion, drawer, pricing-card) are self-contained single-file MIT components with zero net-new npm dependencies; all pass the emit-check readiness gates, GHL DOM/CSS/single-wrapper validation, and live Playwright interaction verification with zero console errors. Upstream source and license were re-verified byte-for-byte against the live pinned GitHub revision in this session. The remaining 5 slugs are held for documented, re-confirmed reasons (multi-variant galleries, hotlinked image rights, missing framework/dependency support). No production database write or deploy has occurred this session; publication is explicitly deferred pending a separate code reviewer's sign-off, per user instruction.",
+  "rationale": "3 of 8 row-24 Edil-ozi slugs (accordion, drawer, pricing-card) are self-contained single-file MIT components with zero net-new npm dependencies; all pass the emit-check readiness gates, GHL DOM/CSS/single-wrapper validation, and live Playwright interaction verification with zero console errors. Upstream source and license were re-verified byte-for-byte against the live pinned GitHub revision in this session. All 30 saved copy prompts (3 slugs x 10 modes) were regenerated to append the exact upstream MIT license text plus an explicit retention instruction, and emit-pinned-edilozi-production.mjs's copy-prompts readiness gate now asserts every saved prompt includes that exact license text (mirroring the existing standalone-preview and GHL-export license checks) so a stale or notice-stripped prompt set fails --check. The remaining 5 slugs are held for documented, re-confirmed reasons (multi-variant galleries, hotlinked image rights, missing framework/dependency support). No production database write or deploy has occurred this session; publication is explicitly deferred pending a separate code reviewer's sign-off, per user instruction.",
   "published_count": 0,
   "held_count": 5,
   "total_count": 8,

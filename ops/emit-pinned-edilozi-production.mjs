@@ -108,7 +108,8 @@ function stageItem(item) {
   const saved = prompts[slug]
   if (!saved || saved.sourceSha256 !== hash(main) || saved.demoSha256 !== (demo && hash(demo)) ||
       Object.keys(saved.prompts || {}).sort().join(',') !== requiredPrompts.join(',') ||
-      Object.values(saved.prompts || {}).some(value => typeof value !== 'string' || !value || Buffer.byteLength(value) > 2097152)) {
+      Object.values(saved.prompts || {}).some(value => typeof value !== 'string' || !value || Buffer.byteLength(value) > 2097152 ||
+        !value.includes(license.toString('utf8').trim()))) {
     reasons.push('copy_prompts_missing_or_stale')
   }
 

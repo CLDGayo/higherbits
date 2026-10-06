@@ -19,6 +19,7 @@ const guidance = readFileSync(join(root, 'guidance', `${slug}.txt`), 'utf8').tri
 if (!guidance || guidance.length > 4000 || guidance.includes('```')) {
   throw new Error('Antigravity guidance is missing or invalid')
 }
+const license = readFileSync(join(root, 'LICENSE'), 'utf8').trim()
 
 const web = join(repo, 'apps/web')
 const requireWeb = createRequire(join(web, 'package.json'))
@@ -48,7 +49,7 @@ const saved = Object.fromEntries(promptTypes.map(type => [type,
     registryDependencies: helperFiles, npmDependencies: item.dependencies,
     npmDependenciesOfRegistryDependencies: item.dependencies,
     tailwindConfig: '', globalCss: '', indexCss: '', userAdditionalContext: '',
-  })}\n\n### Reviewed component details\n${guidance}`,
+  })}\n\n### Reviewed component details\n${guidance}\n\n### Upstream License (MIT) — retain with the component\n${license}\n\nKeep this exact license notice together with the component file(s) wherever you copy them; do not remove or alter it.`,
 ]))
 
 if (promptTypes.length !== 10 || Object.values(saved).some(prompt => !prompt || Buffer.byteLength(prompt) > 2_097_152)) {
