@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import { prepareCopySource } from "@/lib/api/server/copy-source"
-import { generateReviewCopyPrompts } from "@/lib/review-copy-prompts"
+import { computeReviewPromptFingerprint, generateReviewCopyPrompts, reviewSourceSnapshot } from "@/lib/review-copy-prompts"
 import { computeGhlSourceFingerprint } from "@/lib/ghl-generator"
 import { COPY_HEADERS, CopyError } from "@/lib/api/server/copy-admission"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
@@ -15,11 +15,16 @@ export async function POST(request: Request) {
     const prepared = await prepareCopySource(userId, { demoId }, true)
     if (prepared.component.registry === "auto-index") throw new CopyError(403, "owner_required")
     const { prompts, fingerprint } = await generateReviewCopyPrompts(prepared)
+    const fresh = await prepareCopySource(userId, { demoId }, true)
+    if (computeReviewPromptFingerprint(fresh) !== fingerprint) throw new CopyError(409, "source_changed")
     const ghlFingerprint = computeGhlSourceFingerprint(prepared.source.code, prepared.source.demoCode)
     if (prepared.demo?.ghl_source_fingerprint !== ghlFingerprint) throw new CopyError(409, "ghl_output_conflict")
+    const snapshot = reviewSourceSnapshot(prepared)
     const { data, error } = await (supabaseWithAdminAccess.rpc as any)("save_creator_review_copy_prompts", {
       p_user_id: userId, p_demo_id: demoId, p_source_fingerprint: fingerprint,
-      p_ghl_fingerprint: ghlFingerprint, p_prompts: prompts,
+      p_ghl_fingerprint: ghlFingerprint, p_component_updated_at: prepared.component.updated_at,
+      p_demo_updated_at: prepared.demo?.updated_at, p_component_snapshot: snapshot.component,
+      p_demo_snapshot: snapshot.demo, p_prompts: prompts,
     })
     if (error || data !== true) throw new CopyError(503, "prompt_unavailable")
     return NextResponse.json({ saved: true, count: Object.keys(prompts).length }, { headers: COPY_HEADERS })

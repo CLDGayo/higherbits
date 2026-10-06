@@ -1,0 +1,326 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #09090b;
+      background: transparent;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-form-bar {
+      display: flex;
+      width: 100%;
+      max-width: 384px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background-color: #f4f4f5;
+      padding: 4px;
+      position: relative;
+    }
+    .ghl-component-wrapper .ghl-mode-btn {
+      display: flex;
+      flex-shrink: 0;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      overflow: hidden;
+      border-radius: 9999px;
+      background-color: #ffffff;
+      padding: 10px;
+      border: none;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: transform 0.15s cubic-bezier(0.32, 0.72, 0, 1);
+      color: #09090b;
+      outline: none;
+    }
+    .ghl-component-wrapper .ghl-mode-btn:active {
+      transform: scale(0.96);
+    }
+    .ghl-component-wrapper .ghl-mode-btn:focus-visible {
+      box-shadow: 0 0 0 2px #18181b;
+    }
+    .ghl-component-wrapper .ghl-icon-container {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ghl-component-wrapper .ghl-icon-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    .ghl-component-wrapper .ghl-icon-inner svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-icon-animate {
+      animation: ghl-icon-spring 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes ghl-icon-spring {
+      0% {
+        opacity: 0;
+        transform: scale(0.85);
+        filter: blur(3px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+    }
+    .ghl-component-wrapper .ghl-chevron-icon {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      color: #71717a;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-input-wrap {
+      flex: 1 1 0%;
+      position: relative;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+    }
+    .ghl-component-wrapper .ghl-placeholder-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-left: 6px;
+      font-size: 14px;
+      line-height: 20px;
+      color: #71717a;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .ghl-component-wrapper .ghl-placeholder-letter {
+      display: inline-block;
+      opacity: 0;
+      animation: ghl-letter-reveal 0.2s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+    @keyframes ghl-letter-reveal {
+      0% {
+        opacity: 0;
+        transform: translateY(6px);
+        filter: blur(2px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0px);
+      }
+    }
+    .ghl-component-wrapper .ghl-input-field {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      margin: 0;
+      padding: 0 0 0 6px;
+      font-size: 14px;
+      line-height: 20px;
+      color: #09090b;
+      font-family: inherit;
+    }
+    .ghl-component-wrapper .ghl-submit-btn {
+      background-color: #ffffff;
+      padding: 10px 12px;
+      border-radius: 9999px;
+      display: flex;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      color: #09090b;
+      transition: transform 0.15s ease-in-out;
+    }
+    .ghl-component-wrapper .ghl-submit-btn:active {
+      transform: scale(0.95);
+    }
+    .ghl-component-wrapper .ghl-submit-btn:focus-visible {
+      box-shadow: 0 0 0 2px #18181b;
+    }
+    .ghl-component-wrapper .ghl-submit-btn svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+    @media (prefers-color-scheme: dark) {
+      .ghl-component-wrapper {
+        color: #fafafa;
+      }
+      .ghl-component-wrapper .ghl-form-bar {
+        background-color: #27272a;
+      }
+      .ghl-component-wrapper .ghl-mode-btn,
+      .ghl-component-wrapper .ghl-submit-btn {
+        background-color: #09090b;
+        color: #fafafa;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      }
+      .ghl-component-wrapper .ghl-mode-btn:focus-visible,
+      .ghl-component-wrapper .ghl-submit-btn:focus-visible {
+        box-shadow: 0 0 0 2px #fafafa;
+      }
+      .ghl-component-wrapper .ghl-input-field {
+        color: #fafafa;
+      }
+      .ghl-component-wrapper .ghl-placeholder-overlay,
+      .ghl-component-wrapper .ghl-chevron-icon {
+        color: #a1a1aa;
+      }
+    }
+  </style>
+
+  <form class="ghl-form-bar" role="search">
+    <button type="button" class="ghl-mode-btn" aria-label="Switch input mode">
+      <span class="ghl-icon-container">
+        <span class="ghl-icon-inner ghl-icon-animate"></span>
+      </span>
+      <svg class="ghl-chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m7 15 5 5 5-5"></path>
+        <path d="m7 9 5-5 5 5"></path>
+      </svg>
+    </button>
+    <div class="ghl-input-wrap">
+      <div class="ghl-placeholder-overlay" aria-hidden="true"></div>
+      <input type="text" class="ghl-input-field" aria-label="Input field" autocomplete="off">
+    </div>
+    <button type="submit" class="ghl-submit-btn" aria-label="Submit query">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14"></path>
+        <path d="m13 18 6-6-6-6"></path>
+      </svg>
+    </button>
+  </form>
+
+  <script>
+    (function () {
+      var options = [
+        {
+          id: 1,
+          placeholder: "Search anything...",
+          iconSvg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"></path><path d="M19 17v4"></path><path d="M17 19h4"></path></svg>'
+        },
+        {
+          id: 2,
+          placeholder: "Generate Image",
+          iconSvg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg>'
+        }
+      ];
+
+      var roots = document.querySelectorAll('.ghl-component-wrapper');
+
+      roots.forEach(function (root) {
+        if (root.getAttribute('data-ghl-initialized') === 'true') return;
+        root.setAttribute('data-ghl-initialized', 'true');
+
+        var form = root.querySelector('.ghl-form-bar');
+        var modeBtn = root.querySelector('.ghl-mode-btn');
+        var iconSlot = root.querySelector('.ghl-icon-inner');
+        var placeholderOverlay = root.querySelector('.ghl-placeholder-overlay');
+        var inputField = root.querySelector('.ghl-input-field');
+
+        if (!form || !modeBtn || !iconSlot || !placeholderOverlay || !inputField) return;
+
+        var activeIndex = 0;
+
+        function updatePlaceholder(text) {
+          placeholderOverlay.innerHTML = '';
+          var chars = text.split('');
+          for (var i = 0; i < chars.length; i++) {
+            var span = document.createElement('span');
+            span.className = 'ghl-placeholder-letter';
+            span.textContent = chars[i] === ' ' ? '\u00A0' : chars[i];
+            span.style.animationDelay = (i * 0.02) + 's';
+            placeholderOverlay.appendChild(span);
+          }
+        }
+
+        function setOption(index) {
+          activeIndex = index;
+          var config = options[activeIndex];
+
+          iconSlot.classList.remove('ghl-icon-animate');
+          void iconSlot.offsetWidth;
+          iconSlot.innerHTML = config.iconSvg;
+          iconSlot.classList.add('ghl-icon-animate');
+
+          updatePlaceholder(config.placeholder);
+        }
+
+        modeBtn.addEventListener('click', function () {
+          var nextIndex = (activeIndex + 1) % options.length;
+          setOption(nextIndex);
+          inputField.focus();
+        });
+
+        inputField.addEventListener('input', function () {
+          if (inputField.value.trim().length > 0) {
+            placeholderOverlay.style.display = 'none';
+          } else {
+            placeholderOverlay.style.display = 'flex';
+          }
+        });
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+        });
+
+        setOption(0);
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

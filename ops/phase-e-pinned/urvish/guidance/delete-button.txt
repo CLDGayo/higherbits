@@ -1,0 +1,14 @@
+### Appearance
+A rounded pill button morphing between two distinct visual themes. In its idle state, it features a bold red background with centered white text reading "Delete Account". Upon activation, it expands into a soft-pink container displaying red text reading "Cancel Deletion", flanked by a circular red badge containing a white undo icon on the left and a circular red pill with an animated white numerical countdown on the right.
+
+### Behavior
+Clicking triggers fluid layout animations with staggered character transitions. The active state starts an interval countdown ticking down by seconds until zero. Clicking again cancels the action and restores the initial button. Pointer events are locked during transitions to prevent interrupted animations, and tapping provides scale-down feedback.
+
+### Controls
+A single interactive button toggling between starting deletion and canceling it. Visual and animation properties are parameter-driven via DialKit, allowing external tuning of label texts, countdown duration, primary and background hex colors, and bezier transition timing.
+
+### Accessibility
+Rendered as standard native HTML button elements with natural keyboard click and focus support. However, it lacks ARIA live regions for announcing the dynamic countdown to screen readers, and contains no explicit aria-label or status updates for the state change.
+
+### Installation Needs
+Requires a React environment with client directive support and Tailwind CSS styling. Required dependencies are react, motion (motion/react), dialkit, @hugeicons/react, and @hugeicons/core-free-icons.

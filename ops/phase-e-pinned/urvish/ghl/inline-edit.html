@@ -1,0 +1,257 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #ffffff;
+      --ghl-fg: #09090b;
+      --ghl-muted: #71717a;
+      --ghl-card: #ffffff;
+      --ghl-card-subtle: rgba(255, 255, 255, 0.85);
+      --ghl-border: #e4e4e7;
+      --ghl-ring: #18181b;
+      --ghl-primary: #18181b;
+      --ghl-primary-hover: #27272a;
+      --ghl-primary-fg: #fafafa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .ghl-component-wrapper {
+        --ghl-bg: #09090b;
+        --ghl-fg: #fafafa;
+        --ghl-muted: #a1a1aa;
+        --ghl-card: #18181b;
+        --ghl-card-subtle: rgba(24, 24, 27, 0.85);
+        --ghl-border: #27272a;
+        --ghl-ring: #e4e4e7;
+        --ghl-primary: #fafafa;
+        --ghl-primary-hover: #f4f4f5;
+        --ghl-primary-fg: #18181b;
+      }
+    }
+
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+
+    .ghl-component-wrapper .ghl-demo {
+      display: flex;
+      min-height: 320px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      padding: 24px;
+    }
+
+    .ghl-component-wrapper .ghl-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.25rem;
+    }
+
+    .ghl-component-wrapper .ghl-input-card {
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--ghl-border);
+      background-color: var(--ghl-bg);
+      border-radius: 60px;
+      box-shadow: 0 0 2px rgba(9, 9, 11, 0.1);
+      transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ghl-component-wrapper .ghl-input-card.is-editing {
+      border-color: var(--ghl-fg);
+      box-shadow: 0 0 0 2px var(--ghl-bg), 0 0 0 4px var(--ghl-ring);
+    }
+
+    .ghl-component-wrapper .ghl-field {
+      height: 48px;
+      border: 0;
+      box-shadow: none;
+      outline: none;
+      background: transparent;
+      padding: 0 48px 0 16px;
+      font-size: 1rem;
+      line-height: 1.5;
+      width: 100%;
+      min-width: 128px;
+      color: var(--ghl-muted);
+      font-family: inherit;
+      transition: color 0.15s ease;
+    }
+
+    .ghl-component-wrapper .ghl-input-card.is-editing .ghl-field {
+      color: var(--ghl-fg);
+    }
+
+    .ghl-component-wrapper .ghl-field::placeholder {
+      color: var(--ghl-muted);
+      opacity: 0.8;
+    }
+
+    .ghl-component-wrapper .ghl-action-btn {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      width: 40px;
+      border-radius: 9999px;
+      border: 0.5px solid var(--ghl-border);
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      outline: none;
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.15s ease,
+                  color 0.15s ease;
+    }
+
+    .ghl-component-wrapper .ghl-action-btn svg {
+      display: block;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-edit-btn {
+      background-color: var(--ghl-card-subtle);
+      color: var(--ghl-muted);
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    .ghl-component-wrapper .ghl-edit-btn:hover {
+      background-color: var(--ghl-card);
+      color: var(--ghl-fg);
+    }
+
+    .ghl-component-wrapper .ghl-save-btn {
+      background-color: var(--ghl-primary);
+      color: var(--ghl-primary-fg);
+      border-color: transparent;
+      transform: translateY(-50%) translateX(50px);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .ghl-component-wrapper .ghl-save-btn:hover {
+      background-color: var(--ghl-primary-hover);
+    }
+
+    .ghl-component-wrapper .ghl-input-card.is-editing .ghl-edit-btn {
+      transform: translateY(-50%) translateX(50px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-input-card.is-editing .ghl-save-btn {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+
+  <div class="ghl-demo">
+    <div class="ghl-container">
+      <div class="ghl-input-card">
+        <input type="text" class="ghl-field" value="this.urvish" placeholder="username" readonly="" aria-label="Username">
+        <button type="button" class="ghl-action-btn ghl-edit-btn" aria-label="Edit input">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16.474 5.408l2.118 2.118m-.756-3.95a2.996 2.996 0 0 1 4.237 4.237l-12.8 12.8a4.5 4.5 0 0 1-1.874 1.116L4 22l.271-3.399a4.5 4.5 0 0 1 1.116-1.874l12.8-12.8z"></path>
+          </svg>
+        </button>
+        <button type="button" class="ghl-action-btn ghl-save-btn" aria-label="Save input">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var wrapper = document.currentScript && document.currentScript.closest('.ghl-component-wrapper');
+      if (!wrapper || wrapper.getAttribute('data-ghl-initialized') === 'true') return;
+        wrapper.setAttribute('data-ghl-initialized', 'true');
+
+        var card = wrapper.querySelector('.ghl-input-card');
+        var input = wrapper.querySelector('.ghl-field');
+        var editBtn = wrapper.querySelector('.ghl-edit-btn');
+        var saveBtn = wrapper.querySelector('.ghl-save-btn');
+
+        if (!card || !input || !editBtn || !saveBtn) {
+          return;
+        }
+
+        function startEditing() {
+          card.classList.add('is-editing');
+          input.readOnly = false;
+          input.focus();
+          input.select();
+        }
+
+        function stopEditing() {
+          card.classList.remove('is-editing');
+          input.readOnly = true;
+        }
+
+        editBtn.addEventListener('click', function() {
+          startEditing();
+        });
+
+        saveBtn.addEventListener('click', function() {
+          stopEditing();
+        });
+
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            stopEditing();
+            editBtn.focus();
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            stopEditing();
+            editBtn.focus();
+          }
+        });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

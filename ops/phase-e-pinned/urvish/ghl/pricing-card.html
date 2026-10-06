@@ -1,0 +1,632 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --bg: #ffffff;
+      --fg: #09090b;
+      --muted: #f4f4f5;
+      --muted-fg: #71717a;
+      --border: #e4e4e7;
+      --primary: #18181b;
+      --primary-fg: #fafafa;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--fg);
+      background: transparent;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    .ghl-component-wrapper .card-container {
+      width: 100%;
+      max-width: 450px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .ghl-component-wrapper .header-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .ghl-component-wrapper .title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: var(--fg);
+    }
+    .ghl-component-wrapper .cycle-toggle {
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      display: flex;
+      height: 44px;
+      position: relative;
+    }
+    .ghl-component-wrapper .cycle-btn {
+      flex: 1;
+      height: 100%;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--muted-fg);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+    }
+    .ghl-component-wrapper .cycle-btn:hover {
+      color: var(--fg);
+    }
+    .ghl-component-wrapper .cycle-btn.active {
+      color: var(--fg);
+      background: var(--bg);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border);
+    }
+    .ghl-component-wrapper .badge {
+      background: var(--primary);
+      color: var(--primary-fg);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .ghl-component-wrapper .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ghl-component-wrapper .plan-card {
+      border: 1px solid rgba(9, 9, 11, 0.1);
+      border-radius: 14px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      outline: none;
+    }
+    .ghl-component-wrapper .plan-card:focus-visible {
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+    .ghl-component-wrapper .plan-card.selected {
+      border: 2px solid var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    .ghl-component-wrapper .plan-card-body {
+      padding: 20px;
+    }
+    .ghl-component-wrapper .plan-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .ghl-component-wrapper .plan-info-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .ghl-component-wrapper .radio-outer {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(113, 113, 122, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      flex-shrink: 0;
+      transition: border-color 0.25s ease;
+    }
+    .ghl-component-wrapper .plan-card.selected .radio-outer {
+      border-color: var(--primary);
+    }
+    .ghl-component-wrapper .radio-inner {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      transform: scale(0);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ghl-component-wrapper .plan-card.selected .radio-inner {
+      transform: scale(1);
+    }
+    .ghl-component-wrapper .plan-title {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--fg);
+    }
+    .ghl-component-wrapper .plan-desc {
+      font-size: 14px;
+      color: var(--muted-fg);
+      text-transform: lowercase;
+      margin-top: 2px;
+    }
+    .ghl-component-wrapper .plan-price-group {
+      text-align: right;
+    }
+    .ghl-component-wrapper .plan-price {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--fg);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .plan-period {
+      font-size: 12px;
+      color: rgba(113, 113, 122, 0.8);
+      margin-top: 2px;
+    }
+    .ghl-component-wrapper .plan-drawer {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s ease;
+      opacity: 0;
+    }
+    .ghl-component-wrapper .plan-card.selected .plan-drawer {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+    .ghl-component-wrapper .drawer-inner {
+      overflow: hidden;
+    }
+    .ghl-component-wrapper .drawer-content {
+      padding-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .ghl-component-wrapper .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ghl-component-wrapper .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: rgba(9, 9, 11, 0.85);
+    }
+    .ghl-component-wrapper .icon-check {
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .ghl-component-wrapper .divider {
+      height: 1px;
+      background: var(--muted);
+      width: 100%;
+    }
+    .ghl-component-wrapper .user-stepper-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .ghl-component-wrapper .user-profile-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ghl-component-wrapper .avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-fg);
+      flex-shrink: 0;
+    }
+    .ghl-component-wrapper .user-meta {
+      display: flex;
+      flex-direction: column;
+    }
+    .ghl-component-wrapper .user-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--fg);
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .user-subtext {
+      font-size: 13px;
+      color: var(--muted-fg);
+      margin-top: 2px;
+    }
+    .ghl-component-wrapper .stepper-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--muted);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .ghl-component-wrapper .step-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-fg);
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+    }
+    .ghl-component-wrapper .step-btn:hover {
+      background: var(--bg);
+      color: var(--fg);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+    .ghl-component-wrapper .step-btn:active {
+      transform: scale(0.92);
+    }
+    .ghl-component-wrapper .count-display {
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 18px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      color: var(--fg);
+      user-select: none;
+    }
+  </style>
+
+  <div class="card-container">
+    <div class="header-group">
+      <h1 class="title">Select a Plan</h1>
+      <div class="cycle-toggle" role="group" aria-label="Billing Cycle Selector">
+        <button type="button" class="cycle-btn active" data-cycle="monthly" aria-pressed="true">
+          <span>Monthly</span>
+        </button>
+        <button type="button" class="cycle-btn" data-cycle="yearly" aria-pressed="false">
+          <span>Yearly</span>
+          <span class="badge">20% OFF</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="plans-list" role="radiogroup" aria-label="Subscription Plans">
+      <!-- Plus Plan -->
+      <div class="plan-card" data-plan="plus" data-monthly="8.99" data-yearly="6.99" role="radio" aria-checked="false" tabindex="0">
+        <div class="plan-card-body">
+          <div class="plan-main-row">
+            <div class="plan-info-group">
+              <div class="radio-outer" aria-hidden="true">
+                <div class="radio-inner"></div>
+              </div>
+              <div>
+                <h2 class="plan-title">Plus</h2>
+                <p class="plan-desc">solo</p>
+              </div>
+            </div>
+            <div class="plan-price-group">
+              <div class="plan-price">$8.99</div>
+              <div class="plan-period">Month</div>
+            </div>
+          </div>
+          <div class="plan-drawer">
+            <div class="drawer-inner">
+              <div class="drawer-content">
+                <div class="features-list">
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>1TB of Space</span>
+                  </div>
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>30 days of file recovery</span>
+                  </div>
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>256-bit AES and SSL/TLS</span>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="user-stepper-row">
+                  <div class="user-profile-info">
+                    <div class="avatar-circle" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="user-meta">
+                      <span class="user-title">Users</span>
+                      <span class="user-subtext">Starting at 3 users</span>
+                    </div>
+                  </div>
+                  <div class="stepper-controls">
+                    <button type="button" class="step-btn decr-btn" aria-label="Decrease user count">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg>
+                    </button>
+                    <span class="count-display">3</span>
+                    <button type="button" class="step-btn incr-btn" aria-label="Increase user count">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Standard Plan -->
+      <div class="plan-card selected" data-plan="standard" data-monthly="12.99" data-yearly="9.99" role="radio" aria-checked="true" tabindex="0">
+        <div class="plan-card-body">
+          <div class="plan-main-row">
+            <div class="plan-info-group">
+              <div class="radio-outer" aria-hidden="true">
+                <div class="radio-inner"></div>
+              </div>
+              <div>
+                <h2 class="plan-title">Standard</h2>
+                <p class="plan-desc">startup</p>
+              </div>
+            </div>
+            <div class="plan-price-group">
+              <div class="plan-price">$12.99</div>
+              <div class="plan-period">Month</div>
+            </div>
+          </div>
+          <div class="plan-drawer">
+            <div class="drawer-inner">
+              <div class="drawer-content">
+                <div class="features-list">
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>1TB of Space</span>
+                  </div>
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>30 days of file recovery</span>
+                  </div>
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>256-bit AES and SSL/TLS</span>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="user-stepper-row">
+                  <div class="user-profile-info">
+                    <div class="avatar-circle" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="user-meta">
+                      <span class="user-title">Users</span>
+                      <span class="user-subtext">Starting at 3 users</span>
+                    </div>
+                  </div>
+                  <div class="stepper-controls">
+                    <button type="button" class="step-btn decr-btn" aria-label="Decrease user count">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg>
+                    </button>
+                    <span class="count-display">3</span>
+                    <button type="button" class="step-btn incr-btn" aria-label="Increase user count">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced Plan -->
+      <div class="plan-card" data-plan="advanced" data-monthly="24.99" data-yearly="19.99" role="radio" aria-checked="false" tabindex="0">
+        <div class="plan-card-body">
+          <div class="plan-main-row">
+            <div class="plan-info-group">
+              <div class="radio-outer" aria-hidden="true">
+                <div class="radio-inner"></div>
+              </div>
+              <div>
+                <h2 class="plan-title">Advanced</h2>
+                <p class="plan-desc">teams</p>
+              </div>
+            </div>
+            <div class="plan-price-group">
+              <div class="plan-price">$24.99</div>
+              <div class="plan-period">Month</div>
+            </div>
+          </div>
+          <div class="plan-drawer">
+            <div class="drawer-inner">
+              <div class="drawer-content">
+                <div class="features-list">
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>1TB of Space</span>
+                  </div>
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>30 days of file recovery</span>
+                  </div>
+                  <div class="feature-item">
+                    <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span>256-bit AES and SSL/TLS</span>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="user-stepper-row">
+                  <div class="user-profile-info">
+                    <div class="avatar-circle" aria-hidden="true">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <div class="user-meta">
+                      <span class="user-title">Users</span>
+                      <span class="user-subtext">Starting at 3 users</span>
+                    </div>
+                  </div>
+                  <div class="stepper-controls">
+                    <button type="button" class="step-btn decr-btn" aria-label="Decrease user count">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg>
+                    </button>
+                    <span class="count-display">3</span>
+                    <button type="button" class="step-btn incr-btn" aria-label="Increase user count">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var wrappers = document.querySelectorAll('.ghl-component-wrapper');
+      wrappers.forEach(function (root) {
+        if (root.getAttribute('data-ghl-ready') === 'true') return;
+        root.setAttribute('data-ghl-ready', 'true');
+
+        var billingCycle = 'monthly';
+        var selectedPlan = 'standard';
+        var userCount = 3;
+
+        var cycleBtns = root.querySelectorAll('.cycle-btn');
+        var planCards = root.querySelectorAll('.plan-card');
+
+        function render() {
+          cycleBtns.forEach(function (btn) {
+            var cycle = btn.getAttribute('data-cycle');
+            var isActive = cycle === billingCycle;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+          });
+
+          planCards.forEach(function (card) {
+            var planId = card.getAttribute('data-plan');
+            var isSelected = planId === selectedPlan;
+            card.classList.toggle('selected', isSelected);
+            card.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+
+            var priceEl = card.querySelector('.plan-price');
+            var periodEl = card.querySelector('.plan-period');
+            var price = billingCycle === 'monthly'
+              ? card.getAttribute('data-monthly')
+              : card.getAttribute('data-yearly');
+
+            if (priceEl) priceEl.textContent = '$' + parseFloat(price).toFixed(2);
+            if (periodEl) periodEl.textContent = billingCycle === 'monthly' ? 'Month' : 'Year';
+
+            var countDisplay = card.querySelector('.count-display');
+            var userSubtext = card.querySelector('.user-subtext');
+            if (countDisplay) countDisplay.textContent = userCount;
+            if (userSubtext) userSubtext.textContent = 'Starting at ' + userCount + ' users';
+          });
+        }
+
+        cycleBtns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var cycle = btn.getAttribute('data-cycle');
+            if (cycle && cycle !== billingCycle) {
+              billingCycle = cycle;
+              render();
+            }
+          });
+        });
+
+        planCards.forEach(function (card) {
+          var planId = card.getAttribute('data-plan');
+
+          card.addEventListener('click', function (e) {
+            if (e.target.closest('.stepper-controls')) return;
+            if (selectedPlan !== planId) {
+              selectedPlan = planId;
+              render();
+            }
+          });
+
+          card.addEventListener('keydown', function (e) {
+            if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.stepper-controls')) {
+              e.preventDefault();
+              if (selectedPlan !== planId) {
+                selectedPlan = planId;
+                render();
+              }
+            }
+          });
+
+          var decrBtn = card.querySelector('.decr-btn');
+          if (decrBtn) {
+            decrBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              if (userCount > 1) {
+                userCount -= 1;
+                render();
+              }
+            });
+          }
+
+          var incrBtn = card.querySelector('.incr-btn');
+          if (incrBtn) {
+            incrBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              userCount += 1;
+              render();
+            });
+          }
+        });
+
+        render();
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

@@ -1,0 +1,433 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-anchor {
+      position: relative;
+      width: 40px;
+      height: 40px;
+    }
+    .ghl-component-wrapper .ghl-card {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background-color: #ffffff;
+      border: 1px solid #e4e4e7;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      cursor: pointer;
+      transform-origin: top right;
+      transition: width 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                  height 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                  border-radius 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .ghl-component-wrapper .ghl-trigger-btn {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: #71717a;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 2;
+    }
+    .ghl-component-wrapper .ghl-trigger-btn svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-trigger-btn {
+      opacity: 0;
+      transform: scale(0.8);
+      pointer-events: none;
+    }
+    .ghl-component-wrapper .ghl-menu-container {
+      width: 220px;
+      padding: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-menu-container {
+      opacity: 1;
+      pointer-events: auto;
+      transition-delay: 0.08s;
+    }
+    .ghl-component-wrapper .ghl-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ghl-component-wrapper .ghl-menu-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 0;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      color: #71717a;
+      outline: none;
+      user-select: none;
+      font-family: inherit;
+      opacity: 0;
+      transform: translateX(8px);
+      transition: opacity 0.15s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.15s cubic-bezier(0.23, 1, 0.32, 1),
+                  color 0.2s ease-out;
+    }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-menu-item {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-0 { transition-delay: 0.06s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-1 { transition-delay: 0.08s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-2 { transition-delay: 0.10s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-3 { transition-delay: 0.12s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-menu-divider { transition-delay: 0.18s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-5 { transition-delay: 0.16s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-6 { transition-delay: 0.18s; }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-item-7 { transition-delay: 0.20s; }
+    .ghl-component-wrapper .ghl-menu-item:hover,
+    .ghl-component-wrapper .ghl-menu-item.is-active {
+      color: #09090b;
+    }
+    .ghl-component-wrapper .ghl-menu-item.is-logout:hover,
+    .ghl-component-wrapper .ghl-menu-item.is-logout.is-indicated {
+      color: #dc2626;
+    }
+    .ghl-component-wrapper .ghl-indicator-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      background-color: #f4f4f5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      z-index: 1;
+    }
+    .ghl-component-wrapper .ghl-menu-item.is-logout .ghl-indicator-bg {
+      background-color: #fef2f2;
+    }
+    .ghl-component-wrapper .ghl-menu-item.is-indicated .ghl-indicator-bg {
+      opacity: 1;
+    }
+    .ghl-component-wrapper .ghl-indicator-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto 0;
+      width: 3px;
+      height: 20px;
+      border-radius: 9999px;
+      background-color: #09090b;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      z-index: 2;
+    }
+    .ghl-component-wrapper .ghl-menu-item.is-logout .ghl-indicator-bar {
+      background-color: #ef4444;
+    }
+    .ghl-component-wrapper .ghl-menu-item.is-indicated .ghl-indicator-bar {
+      opacity: 1;
+    }
+    .ghl-component-wrapper .ghl-item-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      position: relative;
+      z-index: 3;
+      flex-shrink: 0;
+    }
+    .ghl-component-wrapper .ghl-item-label {
+      position: relative;
+      z-index: 3;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+    .ghl-component-wrapper .ghl-menu-divider {
+      height: 1px;
+      border: none;
+      background-color: #e4e4e7;
+      margin: 6px 0;
+      padding: 0;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .ghl-component-wrapper .ghl-card.is-open .ghl-menu-divider {
+      opacity: 1;
+    }
+  </style>
+
+  <div class="ghl-anchor">
+    <div class="ghl-card" role="region" aria-label="Action Menu">
+      <button type="button" class="ghl-trigger-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M8 12h.01M12 12h.01M16 12h.01" stroke-width="3"></path>
+        </svg>
+      </button>
+
+      <div class="ghl-menu-container">
+        <ul class="ghl-menu-list" role="menu">
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-0 is-active is-indicated" data-id="profile">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="ghl-item-label">Profile</span>
+            </button>
+          </li>
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-1" data-id="upgrade">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                <line x1="2" x2="22" y1="10" y2="10"></line>
+              </svg>
+              <span class="ghl-item-label">Upgrade</span>
+            </button>
+          </li>
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-2" data-id="projects">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path>
+              </svg>
+              <span class="ghl-item-label">Projects</span>
+            </button>
+          </li>
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-3" data-id="documentation">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" x2="8" y1="13" y2="13"></line>
+                <line x1="16" x2="8" y1="17" y2="17"></line>
+              </svg>
+              <span class="ghl-item-label">Documentation</span>
+            </button>
+          </li>
+          <li role="separator" class="ghl-menu-divider"></li>
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-5" data-id="settings">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span class="ghl-item-label">Settings</span>
+            </button>
+          </li>
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-6" data-id="help">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" x2="12.01" y1="17" y2="17"></line>
+              </svg>
+              <span class="ghl-item-label">Get Help</span>
+            </button>
+          </li>
+          <li role="none">
+            <button type="button" role="menuitem" class="ghl-menu-item ghl-item-7 is-logout" data-id="logout">
+              <span class="ghl-indicator-bg"></span>
+              <span class="ghl-indicator-bar"></span>
+              <svg class="ghl-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" x2="9" y1="12" y2="12"></line>
+              </svg>
+              <span class="ghl-item-label">Logout</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var wrappers = document.querySelectorAll('.ghl-component-wrapper');
+      wrappers.forEach(function (wrapper) {
+        if (wrapper.dataset.ghlInitialized) return;
+        wrapper.dataset.ghlInitialized = 'true';
+
+        var card = wrapper.querySelector('.ghl-card');
+        var triggerBtn = wrapper.querySelector('.ghl-trigger-btn');
+        var container = wrapper.querySelector('.ghl-menu-container');
+        var items = wrapper.querySelectorAll('.ghl-menu-item');
+
+        var isOpen = false;
+        var activeItem = 'profile';
+        var hoveredItem = null;
+
+        function renderIndicators() {
+          items.forEach(function (btn) {
+            var id = btn.getAttribute('data-id');
+            var isActive = activeItem === id;
+            var showIndicator = hoveredItem ? hoveredItem === id : isActive;
+
+            if (isActive) {
+              btn.classList.add('is-active');
+            } else {
+              btn.classList.remove('is-active');
+            }
+
+            if (showIndicator) {
+              btn.classList.add('is-indicated');
+            } else {
+              btn.classList.remove('is-indicated');
+            }
+          });
+        }
+
+        function openMenu() {
+          if (isOpen) return;
+          isOpen = true;
+          card.classList.add('is-open');
+          triggerBtn.setAttribute('aria-expanded', 'true');
+          var measuredHeight = Math.max(40, container.scrollHeight);
+          card.style.width = '220px';
+          card.style.height = measuredHeight + 'px';
+          card.style.borderRadius = '14px';
+          renderIndicators();
+        }
+
+        function closeMenu() {
+          if (!isOpen) return;
+          isOpen = false;
+          hoveredItem = null;
+          card.classList.remove('is-open');
+          triggerBtn.setAttribute('aria-expanded', 'false');
+          card.style.width = '40px';
+          card.style.height = '40px';
+          card.style.borderRadius = '12px';
+          renderIndicators();
+        }
+
+        card.addEventListener('click', function (e) {
+          if (!isOpen) {
+            openMenu();
+          }
+        });
+
+        triggerBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (!isOpen) {
+            openMenu();
+          } else {
+            closeMenu();
+          }
+        });
+
+        document.addEventListener('mousedown', function (e) {
+          if (isOpen && !card.contains(e.target)) {
+            closeMenu();
+          }
+        });
+
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && isOpen) {
+            closeMenu();
+            triggerBtn.focus();
+          }
+        });
+
+        items.forEach(function (btn) {
+          var id = btn.getAttribute('data-id');
+
+          btn.addEventListener('mouseenter', function () {
+            hoveredItem = id;
+            renderIndicators();
+          });
+
+          btn.addEventListener('mouseleave', function () {
+            hoveredItem = null;
+            renderIndicators();
+          });
+
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            activeItem = id;
+            renderIndicators();
+            if (id === 'logout') {
+              closeMenu();
+            }
+          });
+        });
+
+        renderIndicators();
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

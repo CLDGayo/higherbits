@@ -1,0 +1,14 @@
+**Appearance**  
+A 440px-wide card with rounded 40px corners displaying an "Active Members" section with a numerical badge, an icon button, and a search field. Member rows display circular avatars, green status dots, names, activity times, and colored pill badges for specific roles (PM, Designer, Data, Creator). A floating bottom card displays a profile icon, title, count, and overlapping stacked avatars.
+
+**Behavior**  
+Clicking the bottom card spring-animates it into an expanded overlay occupying nearly the full container height. A close button collapses it back down. Typing into the search input dynamically filters directory members by name or role, animating list items with staggered spring transitions.
+
+**Controls**  
+An icon add button, a top search input, an interactive bottom card acting as an expansion trigger, an expanded-view search input, and an icon close button.
+
+**Accessibility**  
+Includes semantic heading hierarchy (h2–h4), avatar alt text, and visible focus rings via Base UI primitives. However, the expandable sheet lacks ARIA markup (missing aria-expanded, aria-controls, and dialog roles), the expand trigger is a div rather than a semantic button, and search inputs lack associated label elements.
+
+**Installation Needs**  
+Requires React, Next.js client environment ("use client"), Tailwind CSS, and a cn utility (clsx, tailwind-merge). Dependencies include motion (motion/react), @base-ui/react, class-variance-authority, @hugeicons/react, and @hugeicons/core-free-icons. Requires internal Button and Input wrapper components built on Base UI primitives.

@@ -1,0 +1,17 @@
+**Appearance**  
+A horizontal cluster of pill-shaped discrete tabs featuring 25px rounded corners, secondary background fill, a 2px outline border, and subtle drop shadows. Inactive tabs render strictly as compact icon-only badges. The active tab expands horizontally with wider padding, highlighting both the icon and an uppercase monospace label in the primary text color.
+
+**Behavior**  
+Driven by spring layout transitions. Clicking an unselected tab causes it to expand smoothly to reveal its text with a simultaneous fade and un-blur animation, while the formerly active tab collapses back into an icon-only pill.
+
+**Controls**  
+Mouse or touch click events attached directly to each tab's outer motion container toggle active tab state.
+
+**Accessibility**  
+Lacks standard accessibility semantics. It uses clickable `div` elements instead of native HTML `<button>` elements, omits WAI-ARIA roles (`tablist`, `tab`, `tabpanel`), lacks `aria-selected` states, and includes no keyboard navigation (Tab, Arrow keys, Enter/Space activation) or visible focus rings.
+
+**Installation Needs**  
+- Environment: React client-side runtime supporting the `"use client"` directive (such as Next.js App Router).  
+- Packages: `motion` (imported via `motion/react`).  
+- Utility: A `cn` utility function located at `@/lib/utils` (typically backed by `clsx` and `tailwind-merge`).  
+- Tailwind CSS: Requires theme tokens for `bg-secondary`, `outline-border`, and `text-primary`.

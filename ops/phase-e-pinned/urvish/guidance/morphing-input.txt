@@ -1,0 +1,18 @@
+**Appearance**
+A compact, pill-shaped bar (`max-w-sm`, `rounded-full`, `bg-muted`) containing three elements: a raised, rounded mode button on the left featuring an active icon and a small unfold chevron; a borderless, transparent single-line text input in the middle; and a rounded action button containing a right-pointing arrow icon on the right.
+
+**Behavior**
+Clicking the left button cycles between configurations (Sparkles with "Search anything..." and Album with "Generate Image"). Icon changes animate with spring scale, fade, and blur. The placeholder text animates letter-by-letter with staggered upward translation, fade, and blur. Typing hides the animated placeholder overlay. The right button scales down on tap/click.
+
+**Controls**
+- Left mode toggle button (`motion.button`, `type="button"`) cycling placeholder and icon options.
+- Controlled text input (`InputPrimitive` wrapper) handling keyboard entry.
+- Right action/submit button triggering tap animation.
+
+**Accessibility**
+Uses standard button and input primitives from Base UI. However, both icon-only buttons lack accessible names (`aria-label`), and the animated placeholder is an absolute visual overlay rather than an accessible label or native input `placeholder` attribute.
+
+**Installation Needs**
+- Packages: `react`, `motion/react`, `@hugeicons/react`, `@hugeicons/core-free-icons`, `@base-ui/react`, `clsx`, and `tailwind-merge`.
+- Styling: Tailwind CSS configured with design tokens for `bg-background`, `text-foreground`, `bg-muted`, `text-muted-foreground`, `border-input`, and `ring`.
+- Local files: `lib/utils.ts` (providing the `cn` class merger), `components/ui/input.tsx`, and the component file itself.

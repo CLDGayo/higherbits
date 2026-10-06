@@ -1,0 +1,546 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-primary: #18181b;
+      --ghl-primary-fg: #ffffff;
+      --ghl-foreground: #09090b;
+      --ghl-muted-foreground: #71717a;
+      --ghl-background: #ffffff;
+      --ghl-neutral-100: #f4f4f5;
+      --ghl-neutral-200: #e4e4e7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ghl-foreground);
+      background-color: var(--ghl-background);
+      box-sizing: border-box;
+      width: 100%;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+
+    .ghl-component-wrapper .ghl-demo-root {
+      display: flex;
+      min-height: 320px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      padding: 24px;
+    }
+
+    .ghl-component-wrapper .ghl-testimonial-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 96px;
+      padding-bottom: 96px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .ghl-component-wrapper .ghl-header-section {
+      margin-bottom: 80px;
+      text-align: center;
+    }
+
+    .ghl-component-wrapper .ghl-heading-title {
+      font-size: 1.875rem;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--ghl-foreground);
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    @media (min-width: 768px) {
+      .ghl-component-wrapper .ghl-heading-title {
+        font-size: 2.25rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .ghl-component-wrapper .ghl-heading-title {
+        font-size: 3rem;
+      }
+    }
+
+    .ghl-component-wrapper .ghl-love-badge {
+      position: relative;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 16px;
+      border-radius: 16px;
+      background-color: rgba(24, 24, 27, 0.05);
+      border: 1px solid rgba(24, 24, 27, 0.1);
+      color: var(--ghl-primary);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      vertical-align: middle;
+      user-select: none;
+    }
+
+    .ghl-component-wrapper .ghl-love-badge:hover {
+      background-color: rgba(24, 24, 27, 0.1);
+      border-color: rgba(24, 24, 27, 0.2);
+    }
+
+    .ghl-component-wrapper .ghl-heart-icon {
+      display: inline-block;
+      transform-origin: center center;
+      transform: scale(1);
+    }
+
+    .ghl-component-wrapper .ghl-heart-icon.is-active {
+      animation: ghl-heart-pulse 0.7s ease-in-out infinite;
+    }
+
+    @keyframes ghl-heart-pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .ghl-component-wrapper .ghl-folder-trigger {
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0 0 48px 0;
+      width: 320px;
+      height: 208px;
+      position: relative;
+      cursor: pointer;
+      perspective: 1000px;
+      -webkit-perspective: 1000px;
+      transform-style: preserve-3d;
+      display: block;
+    }
+
+    .ghl-component-wrapper .ghl-folder-trigger:focus-visible {
+      outline: 2px solid var(--ghl-primary);
+      outline-offset: 6px;
+      border-radius: 16px;
+    }
+
+    .ghl-component-wrapper .ghl-folder-back {
+      position: relative;
+      width: 87.5%;
+      margin-left: auto;
+      margin-right: auto;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      border-radius: 12px;
+      overflow: visible;
+      background-color: #EBEBEB;
+      border: 1px solid #D1D1D1;
+    }
+
+    .ghl-component-wrapper .ghl-page-card {
+      position: absolute;
+      top: 8px;
+      width: 128px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      transition-property: transform;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-page-left {
+      z-index: 10;
+      transform: translate3d(-38px, 2px, 0) rotate(-3deg);
+      transition-duration: 0.6s;
+      transition-timing-function: cubic-bezier(0.34, 1.25, 0.64, 1);
+    }
+
+    .ghl-component-wrapper .ghl-page-center {
+      z-index: 20;
+      transform: translate3d(0px, 0px, 0) rotate(0deg);
+      transition-duration: 0.55s;
+      transition-timing-function: cubic-bezier(0.34, 1.25, 0.64, 1);
+    }
+
+    .ghl-component-wrapper .ghl-page-right {
+      z-index: 10;
+      transform: translate3d(42px, 1px, 0) rotate(3.5deg);
+      transition-duration: 0.58s;
+      transition-timing-function: cubic-bezier(0.34, 1.25, 0.64, 1);
+    }
+
+    .ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-page-left {
+      transform: translate3d(-70px, -75px, 0) rotate(-8deg);
+    }
+
+    .ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-page-center {
+      transform: translate3d(2px, -95px, 0) rotate(1deg);
+    }
+
+    .ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-page-right {
+      transform: translate3d(75px, -80px, 0) rotate(9deg);
+    }
+
+    .ghl-component-wrapper .ghl-page-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #ffffff, #F5F5F7);
+      border-radius: 12px;
+      border: 1px solid var(--ghl-neutral-200);
+      padding: 16px;
+    }
+
+    .ghl-component-wrapper .ghl-page-skeleton {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ghl-component-wrapper .ghl-page-bar-full {
+      width: 100%;
+      height: 6px;
+      background-color: var(--ghl-neutral-100);
+      border-radius: 9999px;
+    }
+
+    .ghl-component-wrapper .ghl-page-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .ghl-component-wrapper .ghl-page-bar-half {
+      flex: 1;
+      height: 6px;
+      background-color: var(--ghl-neutral-100);
+      border-radius: 9999px;
+    }
+
+    .ghl-component-wrapper .ghl-folder-flap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      z-index: 30;
+      height: 176px;
+      border-radius: 24px;
+      transform-origin: bottom center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+      transform: rotateX(0deg);
+      transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-folder-flap {
+      transform: rotateX(-35deg);
+    }
+
+    .ghl-component-wrapper .ghl-flap-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ghl-component-wrapper .ghl-flap-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      display: block;
+    }
+
+    .ghl-component-wrapper .ghl-flap-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 32px;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-flap-eyes {
+      display: flex;
+      gap: 44px;
+      margin-bottom: 10px;
+    }
+
+    .ghl-component-wrapper .ghl-flap-eye {
+      width: 10px;
+      height: 10px;
+      background-color: rgba(82, 82, 82, 0.4);
+      border-radius: 9999px;
+    }
+
+    .ghl-component-wrapper .ghl-flap-mouth {
+      width: 36px;
+      height: 4px;
+      background-color: rgba(82, 82, 82, 0.4);
+      border-radius: 9999px;
+    }
+
+    .ghl-component-wrapper .ghl-footer-section {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ghl-component-wrapper .ghl-empty-text {
+      font-size: 1.25rem;
+      color: var(--ghl-foreground);
+      letter-spacing: -0.025em;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .ghl-component-wrapper .ghl-empty-subtext {
+      font-size: 1.125rem;
+      color: var(--ghl-muted-foreground);
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .ghl-component-wrapper .ghl-cta-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      background-color: transparent !important;
+    }
+
+    .ghl-component-wrapper .ghl-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      border: 1px dashed rgba(113, 113, 122, 0.3);
+      background-color: var(--ghl-background);
+      text-decoration: none;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .ghl-component-wrapper .ghl-add-btn:hover {
+      border-color: var(--ghl-primary);
+      background-color: rgba(24, 24, 27, 0.05);
+    }
+
+    .ghl-component-wrapper .ghl-add-icon-wrap {
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      background-color: var(--ghl-primary);
+      color: var(--ghl-primary-fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .ghl-component-wrapper .ghl-add-btn:hover .ghl-add-icon-wrap {
+      transform: scale(1.08);
+    }
+
+    .ghl-component-wrapper .ghl-add-icon-svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 3;
+      display: block;
+    }
+
+    .ghl-component-wrapper .ghl-add-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ghl-foreground);
+      transition: color 0.3s ease;
+    }
+
+    .ghl-component-wrapper .ghl-add-btn:hover .ghl-add-label {
+      color: var(--ghl-primary);
+    }
+  </style>
+
+  <div class="ghl-demo-root">
+    <div class="ghl-testimonial-container">
+      <div class="ghl-header-section">
+        <h2 class="ghl-heading-title">
+          Wall of
+          <span class="ghl-love-badge" role="region" aria-label="Wall of Love badge">
+            Love
+            <span class="ghl-heart-icon" aria-hidden="true">💖</span>
+          </span>
+        </h2>
+      </div>
+
+      <button type="button" class="ghl-folder-trigger" aria-expanded="false" aria-label="Toggle testimonials folder">
+        <div class="ghl-folder-back">
+          <div class="ghl-page-card ghl-page-left" aria-hidden="true">
+            <div class="ghl-page-body">
+              <div class="ghl-page-skeleton">
+                <div class="ghl-page-bar-full"></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ghl-page-card ghl-page-center" aria-hidden="true">
+            <div class="ghl-page-body">
+              <div class="ghl-page-skeleton">
+                <div class="ghl-page-bar-full"></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ghl-page-card ghl-page-right" aria-hidden="true">
+            <div class="ghl-page-body">
+              <div class="ghl-page-skeleton">
+                <div class="ghl-page-bar-full"></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+                <div class="ghl-page-row"><div class="ghl-page-bar-half"></div><div class="ghl-page-bar-half"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ghl-folder-flap">
+          <div class="ghl-flap-inner">
+            <svg class="ghl-flap-svg" viewBox="0 0 235 121" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M104.615 0.350494L33.1297 0.838776C32.7542 0.841362 32.3825 0.881463 32.032 0.918854C31.6754 0.956907 31.3392 0.992086 31.0057 0.992096H31.0047C30.6871 0.99235 30.3673 0.962051 30.0272 0.929596C29.6927 0.897686 29.3384 0.863802 28.9803 0.866119L13.2693 0.967682H13.2527L13.2352 0.969635C13.1239 0.981406 13.0121 0.986674 12.9002 0.986237H9.91388C8.33299 0.958599 6.76052 1.22345 5.27423 1.76651H5.27325C4.33579 2.11246 3.48761 2.66213 2.7879 3.37393L2.49689 3.68839L2.492 3.69424C1.62667 4.73882 1.00023 5.96217 0.656067 7.27725C0.653324 7.28773 0.654065 7.29886 0.652161 7.30948C0.3098 8.62705 0.257231 10.0048 0.499817 11.3446L12.2147 114.399L12.2156 114.411L12.2176 114.423C12.6046 116.568 13.7287 118.508 15.3934 119.902C17.058 121.297 19.1572 122.056 21.3231 122.049V122.05H215.379C217.76 122.02 220.064 121.192 221.926 119.698V119.697C223.657 118.384 224.857 116.485 225.305 114.35L225.307 114.339L235.914 53.3798L235.968 53.1093L235.97 53.0985L235.971 53.0888C236.134 51.8978 236.044 50.685 235.705 49.5321C235.307 48.1669 234.63 46.9005 233.717 45.8144L233.383 45.4296C232.58 44.5553 231.614 43.8449 230.539 43.3398C229.311 42.7628 227.971 42.4685 226.616 42.4774H146.746C144.063 42.4705 141.423 41.8004 139.056 40.5263C136.691 39.2522 134.671 37.4127 133.175 35.1689L113.548 5.05948L113.544 5.05362L113.539 5.04776C112.545 3.65165 111.238 2.51062 109.722 1.72061C108.266 0.886502 106.627 0.422235 104.952 0.365143V0.364166L104.633 0.350494H104.615Z" fill="#F2F2F2" stroke="#D1D1D1" stroke-width="1.5"></path>
+            </svg>
+
+            <div class="ghl-flap-face">
+              <div class="ghl-flap-eyes">
+                <div class="ghl-flap-eye"></div>
+                <div class="ghl-flap-eye"></div>
+              </div>
+              <div class="ghl-flap-mouth"></div>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <div class="ghl-footer-section">
+        <p class="ghl-empty-text">
+          Oops..There are no testimonials <br>
+          <span class="ghl-empty-subtext">
+            Be the first one to add a testimonial
+          </span>
+        </p>
+
+        <div class="ghl-cta-wrap">
+          <a href="https://twitter.com/intent/tweet?text=Recently%20used%20uselayouts.com%20%5Byour%20experience%5D%20by%20%400xUrvish" target="_blank" rel="noopener noreferrer" class="ghl-add-btn">
+            <div class="ghl-add-icon-wrap" aria-hidden="true">
+              <svg class="ghl-add-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
+            </div>
+            <span class="ghl-add-label">Add Testimonial</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var wrapper = document.currentScript && document.currentScript.closest(".ghl-component-wrapper");
+      if (wrapper) {
+        if (wrapper.dataset.ghlInitialized === "true") {
+          return;
+        }
+        wrapper.dataset.ghlInitialized = "true";
+
+        var folderTrigger = wrapper.querySelector(".ghl-folder-trigger");
+        var loveBadge = wrapper.querySelector(".ghl-love-badge");
+        var heartIcon = wrapper.querySelector(".ghl-heart-icon");
+
+        var isOpen = false;
+
+        if (folderTrigger) {
+          folderTrigger.addEventListener("click", function () {
+            isOpen = !isOpen;
+            folderTrigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            folderTrigger.classList.toggle("is-open", isOpen);
+          });
+        }
+
+        if (loveBadge && heartIcon) {
+          loveBadge.addEventListener("mouseenter", function () {
+            heartIcon.classList.add("is-active");
+          });
+
+          loveBadge.addEventListener("mouseleave", function () {
+            heartIcon.classList.remove("is-active");
+          });
+        }
+      }
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

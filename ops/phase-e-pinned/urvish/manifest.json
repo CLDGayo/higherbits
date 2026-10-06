@@ -1,0 +1,805 @@
+{
+  "repositoryUrl": "https://github.com/iurvish/uselayouts",
+  "ownerLabel": "0xUrvish",
+  "profileUrl": "https://21st.dev/@0xUrvish",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "159928ad2fabd3c9b2042f2b36d70ba2d6cd200e5b582a7c8a89ab1ad5eaa6e2",
+  "items": [
+    {
+      "slug": "animated-collection",
+      "registryName": "animated-collection",
+      "title": "Animated Collection",
+      "description": "A collection of items with smooth layout transitions and animations.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/animated-collection.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/animated-collection.tsx",
+          "type": "registry:component",
+          "bytes": 9329,
+          "sha256": "7bff46bcb0a9c50379c9e2cc38a11706d06636a96140d58323d89a633983c062"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "bento-card",
+      "registryName": "bento-card",
+      "title": "Bento Card",
+      "description": "An interactive bento card with animated tabs and workspace preview.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/bento-card.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/bento-card.tsx",
+          "type": "registry:component",
+          "bytes": 17552,
+          "sha256": "f54ac0ad544e35c3a5b2d1efd53ad0f60e5ef4b433e173a179d73532699ae459"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "bottom-menu",
+      "registryName": "bottom-menu",
+      "title": "Bottom Menu",
+      "description": "A floating bottom navigation menu with smooth interactions.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/bottom-menu.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/bottom-menu.tsx",
+          "type": "registry:component",
+          "bytes": 10083,
+          "sha256": "fa5f7834d0d12fa00bfda819fc64d5ce1bcaca5215e83ac3ce8622599711e1c1"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "react-use-measure": "^2.1.7",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "bucket",
+      "registryName": "bucket",
+      "title": "Bucket",
+      "description": "An interactive card component that simulates a bucket where chips are tossed and replaced with smooth physics-inspired animations.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/bucket.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/bucket.tsx",
+          "type": "registry:component",
+          "bytes": 34616,
+          "sha256": "303eb7a2606355de5e291f1cc2ef5f2cb0094e58049e0e00d8d13b266dbd53d5"
+        },
+        {
+          "path": "hooks/use-mobile.ts",
+          "type": "registry:hook",
+          "bytes": 584,
+          "sha256": "464e778a9da49481e3c6dac4f92ff589e01349b33063a74c45435cfeed81e1c0"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "lucide-react": "^0.561.0"
+      },
+      "aliasImports": [
+        "@/hooks/use-mobile"
+      ]
+    },
+    {
+      "slug": "day-picker",
+      "registryName": "day-picker",
+      "title": "Day Picker",
+      "description": "A custom day picker component with smooth animations.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/day-picker.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/day-picker.tsx",
+          "type": "registry:component",
+          "bytes": 8170,
+          "sha256": "0bc97d4eb639f0ff9cba249b517d88066b5424bf3cd867ced18bacd781d4849b"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "delete-button",
+      "registryName": "delete-button",
+      "title": "Delete Button",
+      "description": "A confirmation button with smooth icon transitions.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/delete-button.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/delete-button.tsx",
+          "type": "registry:component",
+          "bytes": 7684,
+          "sha256": "693ce3f55f442f5f9827c224d5fbbd63ab639863cf566428f2d1d479a45029c9"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "dialkit": "^1.4.3",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "discover-button",
+      "registryName": "discover-button",
+      "title": "Discover Button",
+      "description": "An interactive button with expanding discovery state.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/discover-button.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/discover-button.tsx",
+          "type": "registry:component",
+          "bytes": 5969,
+          "sha256": "11466645d3b760693007f70fd0908ffe304ad500f7370f9b4b948c92d77aefe9"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "discrete-tab",
+      "registryName": "discrete-tabs",
+      "title": "Discrete Tabs",
+      "description": "A tab component with discrete sliding animations.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/discrete-tabs.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/discrete-tabs.tsx",
+          "type": "registry:component",
+          "bytes": 6772,
+          "sha256": "96d70de00715864cd5b8aeb0838baa4fb78a563db01eaf2a773807c54d609499"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "dynamic-toolbar",
+      "registryName": "dynamic-toolbar",
+      "title": "Dynamic Toolbar",
+      "description": "A toolbar that adapts its size and layout based on content.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/dynamic-toolbar.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/dynamic-toolbar.tsx",
+          "type": "registry:component",
+          "bytes": 5267,
+          "sha256": "6ea77344eed6ae2e5a35f1387b984b764da5e6a97274756277cf3e3533b3e449"
+        },
+        {
+          "path": "hooks/use-measure.tsx",
+          "type": "registry:hook",
+          "bytes": 651,
+          "sha256": "276118d30f80801dbef1b51f9cb2f9f0dab38b8744ccd9ecd6082d5cf4108673"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/hooks/use-measure"
+      ]
+    },
+    {
+      "slug": "empty-testimonial",
+      "registryName": "empty-testimonial",
+      "title": "Empty Testimonial",
+      "description": "An interactive empty state for testimonials with a playful folder animation.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/empty-testimonial.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/empty-testimonial.tsx",
+          "type": "registry:component",
+          "bytes": 7974,
+          "sha256": "cd1c2521294054b177c635d60d22566f93fafa6b4d50c4aadf6e1ef0583cb229"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "expandable-gallery",
+      "registryName": "expandable-gallery",
+      "title": "Expandable Gallery",
+      "description": "A photo gallery with smooth item expansion.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/expandable-gallery.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/expandable-gallery.tsx",
+          "type": "registry:component",
+          "bytes": 7953,
+          "sha256": "ebfc4bfa254d8941f0e4287c6620aa3e81c2f363875da61812b3ef4072812df8"
+        },
+        {
+          "path": "hooks/use-outside-click.ts",
+          "type": "registry:hook",
+          "bytes": 666,
+          "sha256": "aeafac53d7029d3eca2b3fc6e4be670596a83dc9519c67cd72a304fce1c0c5d6"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 166,
+          "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/hooks/use-outside-click",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "feature-carousel",
+      "registryName": "feature-carousel",
+      "title": "Feature Carousel",
+      "description": "A smooth carousel for showcasing product features.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/feature-carousel.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/feature-carousel.tsx",
+          "type": "registry:component",
+          "bytes": 11646,
+          "sha256": "413132265b58186da1e7aad33d916679321bbfcbf17823573de0cbf87d1dd693"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "fluid-expanding-grid",
+      "registryName": "fluid-expanding-grid",
+      "title": "Fluid Expanding Grid",
+      "description": "A responsive gallery grid that fluidly shifts and expands items using motion layout.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/fluid-expanding-grid.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/fluid-expanding-grid.tsx",
+          "type": "registry:component",
+          "bytes": 6826,
+          "sha256": "d99f5e553c3570dd0ec2f9c31982ddad1da830c820800979d5c01ec58a9f939a"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "folder-interaction",
+      "registryName": "folder-interaction",
+      "title": "Folder Interaction",
+      "description": "A folder management system with drag-and-drop-like feel.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/folder-interaction.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/folder-interaction.tsx",
+          "type": "registry:component",
+          "bytes": 8057,
+          "sha256": "8dafcc1773212bc3d35053eb81f39db042d0b491bd37848919d39577414784f1"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "inline-edit",
+      "registryName": "inline-edit",
+      "title": "Inline Edit",
+      "description": "An input that switches between read and edit modes.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/inline-edit.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/inline-edit.tsx",
+          "type": "registry:component",
+          "bytes": 2990,
+          "sha256": "86f419edd38e714f316656e8a5139b2bb261d00534bad1e8aff3bd6d1f22150f"
+        },
+        {
+          "path": "components/ui/input.tsx",
+          "type": "registry:file",
+          "bytes": 1048,
+          "sha256": "73712bb9c87d27527dea7ddcef0ea4fb11210cfbea215eae337eff720b8304b0"
+        },
+        {
+          "path": "lib/cn.ts",
+          "type": "registry:file",
+          "bytes": 48,
+          "sha256": "d75a12510303cc09ddbbbf0a2694e95eb2fda8acb9f377f703b4981ffdd5b475"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 166,
+          "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "@base-ui/react": "^1.8.0"
+      },
+      "aliasImports": [
+        "@/components/ui/input",
+        "@/lib/cn"
+      ]
+    },
+    {
+      "slug": "list-item",
+      "registryName": "list-item",
+      "title": "List Item",
+      "description": "Interactive list items with hover and focus effects.",
+      "revision": "34687aa079178cecfead91bc8e868ce3ca508277",
+      "sourcePath": "registry/default/example/list-item.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/list-item.tsx",
+          "type": "registry:component",
+          "bytes": 5281,
+          "sha256": "b9d88e48c6b41b094a8dfc86018195b98d9e706bb204c68d2001eb1a08f9309c"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "magnified-bento",
+      "registryName": "magnified-bento",
+      "title": "Magnified Bento",
+      "description": "A bento card component with a draggable magnifying lens effect over scrolling chips.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/magnified-bento.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/magnified-bento.tsx",
+          "type": "registry:component",
+          "bytes": 9236,
+          "sha256": "bc53ea6f9cb4d7728beace61f2462eefb9dd5e0febd01846028c2b89b6ab64f1"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "morphing-input",
+      "registryName": "morphing-input",
+      "title": "Morphing Input",
+      "description": "An input field that morphs between different states.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/morphing-input.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/morphing-input.tsx",
+          "type": "registry:component",
+          "bytes": 4408,
+          "sha256": "07b3d8d0151323905a0ff61eed096af3d411690fd904eb3d336d52ae75a13547"
+        },
+        {
+          "path": "components/ui/input.tsx",
+          "type": "registry:file",
+          "bytes": 1048,
+          "sha256": "73712bb9c87d27527dea7ddcef0ea4fb11210cfbea215eae337eff720b8304b0"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 166,
+          "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "@base-ui/react": "^1.8.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "multi-step-form",
+      "registryName": "multi-step-form",
+      "title": "Multi Step Form",
+      "description": "A dynamic, animated multi-step form with validation.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/multi-step-form.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/multi-step-form.tsx",
+          "type": "registry:component",
+          "bytes": 15371,
+          "sha256": "989df0cee0c94dd3b82754cd11179f64ebda75d6288582f73a6fea45be18e9da"
+        },
+        {
+          "path": "components/ui/badge.tsx",
+          "type": "registry:file",
+          "bytes": 1903,
+          "sha256": "c45c77ad3dce29aa569f1e21fd33cb2baaee74eac30c5d799606483490274212"
+        },
+        {
+          "path": "components/ui/button.tsx",
+          "type": "registry:file",
+          "bytes": 3349,
+          "sha256": "69755ed1748863f1abcc93594285028b089f9db5d7123a1902bf6e40525d996b"
+        },
+        {
+          "path": "components/ui/calendar.tsx",
+          "type": "registry:file",
+          "bytes": 8273,
+          "sha256": "ee4cf6f6c58e19d985c10ed6b6cc21a0f5e3e5ea4763ce2dda5e4f0ef321a06d"
+        },
+        {
+          "path": "components/ui/card.tsx",
+          "type": "registry:file",
+          "bytes": 2556,
+          "sha256": "b9f01ab05d59caa598520458e03e64d18b744a0b63f58847400283e7dfc921ac"
+        },
+        {
+          "path": "components/ui/field.tsx",
+          "type": "registry:file",
+          "bytes": 5929,
+          "sha256": "4afa63497bd887e9b2f329345a1c8823f9d119f6697800ba10e6c6bfe73c3c33"
+        },
+        {
+          "path": "components/ui/input.tsx",
+          "type": "registry:file",
+          "bytes": 1048,
+          "sha256": "73712bb9c87d27527dea7ddcef0ea4fb11210cfbea215eae337eff720b8304b0"
+        },
+        {
+          "path": "components/ui/label.tsx",
+          "type": "registry:file",
+          "bytes": 518,
+          "sha256": "a5d0a6851e53b2c4b95862c21ffffb1562f4aea283ba7324bece353a86bce233"
+        },
+        {
+          "path": "components/ui/popover.tsx",
+          "type": "registry:file",
+          "bytes": 2483,
+          "sha256": "102766e4c30f65063e4242483717e212e36dbb7789586832773f354a863495e5"
+        },
+        {
+          "path": "components/ui/select.tsx",
+          "type": "registry:file",
+          "bytes": 6677,
+          "sha256": "f4047915e2079bceb535e1d0220c6ea2cbb96fcea43785e06f0db4bc63eeec40"
+        },
+        {
+          "path": "components/ui/separator.tsx",
+          "type": "registry:file",
+          "bytes": 601,
+          "sha256": "68fe2eb705a1a196efa9f9bdee9f1b7402f6666bc57ee3c18256bbbba9db0e2a"
+        },
+        {
+          "path": "components/ui/textarea.tsx",
+          "type": "registry:file",
+          "bytes": 850,
+          "sha256": "a8adae06e51d650b9dd48456112468737542cef0962e91903eb795557ec112dd"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 166,
+          "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "date-fns": "^4.1.0",
+        "react-hook-form": "^7.69.0",
+        "@hookform/resolvers": "^5.2.2",
+        "zod": "^4.2.1",
+        "sonner": "^2.0.7",
+        "lucide-react": "^0.561.0",
+        "react-use-measure": "^2.1.7",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "@base-ui/react": "^1.8.0",
+        "class-variance-authority": "^0.7.1",
+        "@hugeicons/react": "1.1.10",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "react-day-picker": "^9.13.0"
+      },
+      "aliasImports": [
+        "@/components/ui/badge",
+        "@/components/ui/button",
+        "@/components/ui/calendar",
+        "@/components/ui/card",
+        "@/components/ui/field",
+        "@/components/ui/input",
+        "@/components/ui/popover",
+        "@/components/ui/select",
+        "@/components/ui/textarea",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "pricing-card",
+      "registryName": "pricing-card",
+      "title": "Pricing Card",
+      "description": "A focused pricing card layout with clear hierarchy.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/pricing-card.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/pricing-card.tsx",
+          "type": "registry:component",
+          "bytes": 11258,
+          "sha256": "53d10981410fe997337ba619510f63536f5932cf0c8ec7ee76e0014f466fa8bb"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "lucide-react": "^0.561.0",
+        "@number-flow/react": "^0.5.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "smooth-dropdown",
+      "registryName": "smooth-dropdown",
+      "title": "Smooth Dropdown",
+      "description": "A dropdown menu with premium layout transitions.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/smooth-dropdown.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/smooth-dropdown.tsx",
+          "type": "registry:component",
+          "bytes": 7520,
+          "sha256": "c8fe6e1afd8a90808bb7940e59fbcaad1631e5cb1ab56fa8723d34110b89d932"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "react-use-measure": "^2.1.7"
+      },
+      "aliasImports": []
+    },
+    {
+      "slug": "stacked-list",
+      "registryName": "stacked-list",
+      "title": "Stacked List",
+      "description": "An expandable list widget with a stacked layout and smooth morphing transitions.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/stacked-list.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/stacked-list.tsx",
+          "type": "registry:component",
+          "bytes": 13195,
+          "sha256": "bc8bcbed7513420074504aaa488d84f283b5709eb68488e5dc870af09bbf92e9"
+        },
+        {
+          "path": "components/ui/button.tsx",
+          "type": "registry:file",
+          "bytes": 3349,
+          "sha256": "69755ed1748863f1abcc93594285028b089f9db5d7123a1902bf6e40525d996b"
+        },
+        {
+          "path": "components/ui/input.tsx",
+          "type": "registry:file",
+          "bytes": 1048,
+          "sha256": "73712bb9c87d27527dea7ddcef0ea4fb11210cfbea215eae337eff720b8304b0"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 166,
+          "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "@base-ui/react": "^1.8.0",
+        "class-variance-authority": "^0.7.1"
+      },
+      "aliasImports": [
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "status-button",
+      "registryName": "status-button",
+      "title": "Status Button",
+      "description": "A button with animated states for idle, loading, and success.",
+      "revision": "9ba0ab042b5ce691dc67ca1ca66d54451e3bd4c8",
+      "sourcePath": "registry/default/example/status-button.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/status-button.tsx",
+          "type": "registry:component",
+          "bytes": 5337,
+          "sha256": "fed584ed572e8f91b31b353f53a32d0a156665f85237d53788e549d8d4829f34"
+        },
+        {
+          "path": "components/ui/button.tsx",
+          "type": "registry:file",
+          "bytes": 3349,
+          "sha256": "69755ed1748863f1abcc93594285028b089f9db5d7123a1902bf6e40525d996b"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "bytes": 166,
+          "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0",
+        "@base-ui/react": "^1.8.0",
+        "class-variance-authority": "^0.7.1"
+      },
+      "aliasImports": [
+        "@/components/ui/button",
+        "@/lib/utils"
+      ]
+    },
+    {
+      "slug": "vertical-tabs",
+      "registryName": "vertical-tabs",
+      "title": "Vertical Tabs",
+      "description": "A vertical tab interaction with smooth content switching.",
+      "revision": "07cc4f4fb8e064643168e6fc8792127af92637f5",
+      "sourcePath": "registry/default/example/vertical-tabs.tsx",
+      "files": [
+        {
+          "path": "registry/default/example/vertical-tabs.tsx",
+          "type": "registry:component",
+          "bytes": 8741,
+          "sha256": "a101520f1ee0651be4669334caf3236d85ba1a68870dec99ccfe86625bf8c344"
+        }
+      ],
+      "dependencies": {
+        "motion": "^12.23.26",
+        "@hugeicons/core-free-icons": "2.0.0",
+        "@hugeicons/react": "1.1.10",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.4.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ]
+    }
+  ]
+}

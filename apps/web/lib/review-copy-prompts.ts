@@ -7,6 +7,13 @@ import type { prepareCopySource } from "@/lib/api/server/copy-source"
 
 type PreparedSource = Awaited<ReturnType<typeof prepareCopySource>>
 const types = Object.values(PROMPT_TYPES).filter(type => type !== PROMPT_TYPES.GOHIGHLEVEL)
+const componentSourceFields = ["component_slug", "code", "demo_code", "registry_url", "tailwind_config_extension", "global_css_extension", "index_css_url", "compiled_css", "dependencies", "direct_registry_dependencies", "demo_direct_registry_dependencies", "demo_dependencies", "license", "registry", "user_id"] as const
+const demoSourceFields = ["demo_code", "demo_dependencies", "demo_direct_registry_dependencies", "compiled_css", "user_id", "component_id"] as const
+
+export function reviewSourceSnapshot(prepared: PreparedSource) {
+  const pick = (row: Record<string, unknown>, keys: readonly string[]) => Object.fromEntries(keys.map(key => [key, row[key] ?? null]))
+  return { component: pick(prepared.component, componentSourceFields), demo: pick(prepared.demo, demoSourceFields) }
+}
 
 export function computeReviewPromptFingerprint(prepared: PreparedSource): string {
   const { component, demo, source, files, dependencies, contents } = prepared
@@ -48,6 +55,12 @@ export async function generateReviewCopyPrompts(prepared: PreparedSource) {
   }
   if (!guidance || guidance.length > 4_000) throw new Error("Free model did not return usable component guidance")
 
+  return buildReviewCopyPrompts(prepared, guidance)
+}
+
+export function buildReviewCopyPrompts(prepared: PreparedSource, guidance: string) {
+  if (!guidance.trim() || guidance.length > 4_000) throw new Error("Component guidance is missing or too large")
+  const source = prepared.source
   const slug = prepared.component.component_slug
   const dependencies = Object.fromEntries(prepared.dependencies.map(name => [name, "latest"]))
   const registryDependencies = Object.fromEntries(prepared.files.map(file => [file.path, file.content]))

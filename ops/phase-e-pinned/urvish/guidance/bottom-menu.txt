@@ -1,0 +1,14 @@
+**Appearance**
+A floating, rounded bottom toolbar featuring a translucent backdrop-blurred container with five icon-only navigation buttons. Active selections reveal an animated popover floating 70px above the bar that dynamically resizes to display distinct layouts: an action list with icons, a search input with quick-filter pills, notification categories, profile options with a red logout button, or a segmented theme switcher.
+
+**Behavior**
+Clicking an icon toggles its respective submenu open or closed, while clicking outside the container automatically dismisses it. Popover transitions animate height, width, scale, opacity, and blur using motion physics driven by dimensions measured from a hidden offscreen clone.
+
+**Controls**
+The component exposes five toolbar toggle buttons, submenu action buttons, a text input with a search icon, and a three-state Theme control (Light, Dark, System) that tracks active state. Submenu buttons other than the theme selector lack attached click handlers.
+
+**Accessibility**
+Uses semantic HTML `<button>` and `<input>` elements but lacks comprehensive ARIA markup. Main navigation buttons omit `aria-label`, `aria-expanded`, and `aria-haspopup` attributes, leaving icon-only controls unannounced to screen readers. No focus trapping or Escape-key handling is implemented, and nav buttons lack explicit focus rings.
+
+**Installation Needs**
+Requires React (marked with "use client"), a Tailwind CSS setup defining standard design tokens (background, border, muted, accent, ring, destructive), and a `cn` class merger utility. External package dependencies are `motion` (or `motion/react`), `react-use-measure`, `@hugeicons/react`, and `@hugeicons/core-free-icons`.

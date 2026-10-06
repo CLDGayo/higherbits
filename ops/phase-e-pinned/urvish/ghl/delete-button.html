@@ -1,0 +1,40 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper{display:flex;align-items:center;justify-content:center;min-height:180px;padding:24px;background:#fff;font-family:Arial,Helvetica,sans-serif;box-sizing:border-box}
+    .ghl-component-wrapper *{box-sizing:border-box}
+    .ghl-component-wrapper .delete-control{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:0;border-radius:999px;padding:12px 20px;background:#fe322a;color:#fff;font:500 14px Arial,Helvetica,sans-serif;cursor:pointer;transition:background .4s ease,transform .2s ease,padding .4s ease}
+    .ghl-component-wrapper .delete-control:active{transform:scale(.95)}
+    .ghl-component-wrapper .delete-control:focus-visible{outline:2px solid #111827;outline-offset:3px}
+    .ghl-component-wrapper .delete-control.cancel{padding:8px 12px;background:#ffedf1;color:#fe322a}
+    .ghl-component-wrapper .undo{display:none;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#fe322a;color:#fff;font-size:20px;line-height:1}
+    .ghl-component-wrapper .cancel .undo,.ghl-component-wrapper .cancel .count{display:inline-flex}
+    .ghl-component-wrapper .count{display:none;align-items:center;justify-content:center;min-width:40px;height:32px;border-radius:999px;padding:0 12px;background:#fe322a;color:#fff;font-weight:600}
+    .ghl-component-wrapper .label{white-space:nowrap;animation:urvish-delete-enter .25s ease-out}
+    @keyframes urvish-delete-enter{from{opacity:0;transform:translateY(9px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
+  </style>
+  <button type="button" class="delete-control" aria-label="Delete Account"><span class="undo" aria-hidden="true">↶</span><span class="label">Delete Account</span><span class="count" aria-live="polite"></span></button>
+  <script>(()=>{const host=document.currentScript.parentElement,button=host.querySelector('.delete-control'),label=host.querySelector('.label'),count=host.querySelector('.count');let deleting=false,remaining=10,timer=null;function draw(){button.classList.toggle('cancel',deleting);label.textContent=deleting?'Cancel Deletion':'Delete Account';button.setAttribute('aria-label',label.textContent);count.textContent=deleting?String(remaining):''}button.addEventListener('click',()=>{if(timer){clearInterval(timer);timer=null}deleting=!deleting;if(deleting){remaining=10;timer=setInterval(()=>{if(remaining>0){remaining--;draw()}else{clearInterval(timer);timer=null}},1000)}draw()});draw()})();</script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

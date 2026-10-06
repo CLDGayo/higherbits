@@ -1,0 +1,14 @@
+**Appearance**
+A rounded, bordered bento card showcasing an uppercase header and subtitle above an embedded mock workspace application window. The preview window contains three decorative window-control dots, a centered workspace label, and a split-pane layout: a left navigation sidebar with icons, labels, and numeric badges, alongside a right pane displaying tab-specific dashboards (analytics gauge, user directory, creation tiles, or file resource rows) with a bottom gradient fade.
+
+**Behavior**
+The outer container lifts slightly on hover with increased shadow. Selecting a sidebar tab smoothly moves a spring-based highlight indicator and side pill. Tab content transitions using entrance and exit blur, fade, and vertical slide animations via Motion. The analytics view includes an animated progress bar.
+
+**Controls**
+Clickable sidebar buttons switch between four tabs (Dashboard, Management, Threads, and Resources). The Threads view features clickable "Create" buttons, while user and resource list items expose hover states and contextual action icons.
+
+**Accessibility**
+Uses semantic HTML button elements for tabs and action triggers. However, it lacks ARIA tab attributes (role="tablist", role="tab", role="tabpanel", aria-selected, aria-controls), employs decorative window dots lacking aria-hidden, utilizes small font sizes down to 8px, and relies on hover-revealed action icons.
+
+**Installation Needs**
+Requires React in client mode ("use client"), Tailwind CSS, Motion (motion/react), Hugeicons packages (@hugeicons/react and @hugeicons/core-free-icons), and a project cn helper function (combining clsx and tailwind-merge).

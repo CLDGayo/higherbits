@@ -1,0 +1,26 @@
+{
+  "reviewedAt": "2026-10-06",
+  "purpose": "Only free Hugeicons icon data and the MIT-licensed React renderer may enter the pinned previews and install prompts.",
+  "packages": {
+    "@hugeicons/react": {
+      "version": "1.1.10",
+      "license": "MIT",
+      "npm": "https://www.npmjs.com/package/@hugeicons/react/v/1.1.10",
+      "source": "https://github.com/hugeicons/hugeicons/tree/main/packages/react",
+      "npmIntegrity": "sha512-9tAsd92yMVVGP+E+d8cM+wc0VnXuYZHNbWQi7TOe8k2neawmhiaFmVFbzyruejhOMa197/LbgvSED32ayUo3ZA==",
+      "tarballSha256": "45192b4957c6d54b00f9e83b310dcac2c9ef22809bededb7a3884d838c444208",
+      "licenseFileSha256": "1658d8213209df7b9b86dfc05d724ede48d00dbc27abc15976ec7adec9601cde",
+      "evidence": "The publisher's 1.1.10 tarball contains an MIT LICENSE.md and a separate PRO-LICENSE.md. The package metadata declares MIT. Only the renderer is used."
+    },
+    "@hugeicons/core-free-icons": {
+      "version": "2.0.0",
+      "license": "MIT",
+      "npm": "https://www.npmjs.com/package/@hugeicons/core-free-icons/v/2.0.0",
+      "source": "https://github.com/hugeicons/hugeicons/tree/main/packages/core-free-icons",
+      "npmIntegrity": "sha512-OSfv5k0iB0yG61dcfK7jcf00AIK8EXyQOgtcNJzSBFvm88n9VOelkxihZHJnNwDUFpO/jZI3vZSVp6i1dmRvJQ==",
+      "tarballSha256": "3ea212de1e79fdfe55a7c3f404ee4aff58d92872150dbb14ea8996dbcaf3f419",
+      "packageJsonSha256": "1777e7db3edd1bf7dd7a8590f7585921eb659db987dfbfa6f21136b17a353645",
+      "evidence": "The publisher's 2.0.0 package metadata declares MIT; the official Hugeicons repository identifies the free icon pack as MIT. No @hugeicons-pro import occurs in the pinned source."
+    }
+  }
+}

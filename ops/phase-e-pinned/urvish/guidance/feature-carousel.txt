@@ -1,0 +1,11 @@
+**Appearance**
+The component presents a split-pane card with heavily rounded corners that shifts from a stacked vertical layout on mobile to a two-column view at wider container sizes. The leading pane is sky-blue with top and bottom fade gradients, housing a vertical list of pill-shaped buttons; the active button turns solid white, while inactive buttons remain translucent outlines. The trailing pane displays a stacked 4:5 image card deck. The active card sits front and center with full color and a dark gradient text overlay, while adjacent cards are scaled down, tilted three degrees, semi-transparent, blurred, and desaturated.
+
+**Behavior & Controls**
+The carousel automatically cycles through ten items every 3000 milliseconds using shortest-path circular transitions. Users can click any pill button to transition immediately to that slide. Hovering over any pill button pauses the auto-play timer; moving the pointer away resumes cycling.
+
+**Accessibility**
+It checks reduced-motion preferences via useReducedMotion to immediately bypass card and chip transition durations. Pills use native HTML button elements equipped with focus-visible outline rings, and images include descriptive alt attributes. However, it lacks ARIA carousel semantics, live-region slide announcements, and arrow-key navigation.
+
+**Installation Needs**
+Requires a React client-side environment, Tailwind CSS with the container queries plugin, a local cn utility (combining clsx and tailwind-merge), and the npm dependencies: motion (or framer-motion), @hugeicons/react, and @hugeicons/core-free-icons.

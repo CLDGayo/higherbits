@@ -1,0 +1,293 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-primary: #18181b;
+      --ghl-primary-fg: #fafafa;
+      --ghl-muted: #f4f4f5;
+      --ghl-muted-fg: #71717a;
+      --ghl-border-muted: #e4e4e7;
+      --ghl-ring-muted: #f4f4f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+      width: 100%;
+      padding: 24px;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .ghl-component-wrapper .ghl-container {
+      position: relative;
+      display: inline-flex;
+      font-family: inherit;
+    }
+
+    .ghl-component-wrapper .ghl-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      min-width: 140px;
+      padding: 0 32px;
+      border-radius: 9999px;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      border: 1px solid transparent;
+      outline: none;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      background-color: var(--ghl-primary);
+      color: var(--ghl-primary-fg);
+      box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.16), 0 4px 4px -2px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(0, 0, 0, 0.12), inset 0 1px 0 0.2px rgba(255, 255, 255, 0.16);
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+    }
+
+    .ghl-component-wrapper .ghl-btn:hover:not(:disabled) {
+      opacity: 0.92;
+    }
+
+    .ghl-component-wrapper .ghl-btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .ghl-component-wrapper .ghl-btn:focus-visible {
+      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.24);
+    }
+
+    .ghl-component-wrapper .ghl-btn:disabled {
+      background-color: var(--ghl-muted);
+      color: var(--ghl-muted-fg);
+      border-color: var(--ghl-border-muted);
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      cursor: not-allowed;
+      opacity: 1;
+    }
+
+    .ghl-component-wrapper .ghl-text-target {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-char {
+      display: inline-block;
+      animation: ghl-pop-in 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+      animation-delay: calc(var(--char-i, 0) * 18ms);
+    }
+
+    @keyframes ghl-pop-in {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    .ghl-component-wrapper .ghl-indicator-slot {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      box-shadow: 0 0 0 3px var(--ghl-ring-muted);
+      opacity: 0;
+      transform: scale(0) translateX(-8px);
+      filter: blur(4px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, filter 0.2s ease, background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .ghl-component-wrapper .ghl-badge[data-state="loading"] {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+      filter: blur(0px);
+      background-color: var(--ghl-muted);
+      color: var(--ghl-muted-fg);
+    }
+
+    .ghl-component-wrapper .ghl-badge[data-state="success"] {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+      filter: blur(0px);
+      background-color: var(--ghl-primary);
+      color: var(--ghl-primary-fg);
+    }
+
+    .ghl-component-wrapper .ghl-icon-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ghl-component-wrapper .ghl-spinner {
+      width: 20px;
+      height: 20px;
+      display: block;
+      animation: ghl-spin 1s linear infinite;
+    }
+
+    @keyframes ghl-spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .ghl-component-wrapper .ghl-check {
+      width: 16px;
+      height: 16px;
+      display: block;
+      animation: ghl-check-pop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+
+    @keyframes ghl-check-pop {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+    }
+  </style>
+
+  <div class="ghl-container">
+    <button type="button" class="ghl-btn" aria-live="polite">
+      <span class="ghl-text-target"></span>
+    </button>
+    <div class="ghl-indicator-slot">
+      <div class="ghl-badge" data-state="idle" aria-hidden="true">
+        <div class="ghl-icon-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var SPINNER_SVG = '<svg class="ghl-spinner" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z" opacity=".4"/><path fill="currentColor" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"/></svg>';
+      var CHECK_SVG = '<svg class="ghl-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
+
+      var wrappers = document.querySelectorAll('.ghl-component-wrapper');
+
+      wrappers.forEach(function (wrapper) {
+        if (wrapper.__ghl_initialized) return;
+        wrapper.__ghl_initialized = true;
+
+        var btn = wrapper.querySelector('.ghl-btn');
+        var textTarget = wrapper.querySelector('.ghl-text-target');
+        var badge = wrapper.querySelector('.ghl-badge');
+        var iconBox = wrapper.querySelector('.ghl-icon-box');
+
+        if (!btn || !textTarget || !badge || !iconBox) return;
+
+        var status = 'idle';
+        var timerId = null;
+
+        function updateChars(word) {
+          textTarget.innerHTML = '';
+          for (var i = 0; i < word.length; i++) {
+            var charSpan = document.createElement('span');
+            charSpan.className = 'ghl-char';
+            charSpan.style.setProperty('--char-i', i);
+            charSpan.textContent = word[i] === ' ' ? '\u00A0' : word[i];
+            textTarget.appendChild(charSpan);
+          }
+        }
+
+        function setStatus(nextStatus) {
+          status = nextStatus;
+          badge.setAttribute('data-state', status);
+
+          if (status === 'idle') {
+            btn.disabled = false;
+            iconBox.innerHTML = '';
+            updateChars('Save');
+          } else if (status === 'loading') {
+            btn.disabled = true;
+            iconBox.innerHTML = SPINNER_SVG;
+            updateChars('Saving');
+
+            timerId = setTimeout(function () {
+              setStatus('success');
+            }, 2500);
+          } else if (status === 'success') {
+            btn.disabled = true;
+            iconBox.innerHTML = CHECK_SVG;
+            updateChars('Saved');
+
+            timerId = setTimeout(function () {
+              setStatus('idle');
+            }, 2000);
+          }
+        }
+
+        btn.addEventListener('click', function () {
+          if (status === 'idle') {
+            clearTimeout(timerId);
+            setStatus('loading');
+          }
+        });
+
+        setStatus('idle');
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

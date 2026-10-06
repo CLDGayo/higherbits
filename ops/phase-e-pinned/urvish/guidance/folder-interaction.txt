@@ -1,0 +1,14 @@
+### Appearance
+A compact dark folder widget (w-80 by h-52) with an inset-shadowed dark base (#18151B). The front pocket flap uses a custom-shaped SVG tab with linear gradient fills and backdrop blur. Inside sit three stacked light lavender-gray document cards featuring rounded corners, subtle drop shadows, and horizontal skeleton lines simulating text.
+
+### Behavior
+Clicking toggles the folder between closed and open states. When opened, the front flap tilts forward (-40 degrees on rotateX from its bottom origin). The three nested document cards spring upward and fan out at staggered angles and offsets (the left card shifts left and rotates -8 degrees, the middle shifts straight up, and the right shifts right and rotates 9 degrees) using spring transitions with bounce and damping.
+
+### Controls
+Driven exclusively by an onClick handler on the outer wrapper div that toggles a local boolean state (isOpen). It contains no discrete action buttons, close controls, or exposed callback props.
+
+### Accessibility
+Lacks assistive technology and keyboard support. The clickable element is an unsemantic div missing role="button", tabIndex, keyboard activation listeners (Enter/Space), focus rings, aria-expanded states, and reduced-motion fallbacks.
+
+### Installation Needs
+Requires a React environment supporting client components ("use client"), Tailwind CSS for sizing and layout utility classes, and the motion package (specifically imports from motion/react) for spring-based transforms and rotations. Browser support for SVG foreignObject backdrop filters is also needed.

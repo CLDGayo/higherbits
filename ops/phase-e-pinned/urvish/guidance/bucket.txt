@@ -1,0 +1,14 @@
+**Appearance**
+A glassmorphic container with an isometric bucket aesthetic constructed from layered SVG paths, multi-stop drop shadows, inner shadows, and clipped backdrop-blur filters. Positioned inside the opening is a floating, pill-shaped card featuring a rounded icon badge, title, and description.
+
+**Behavior**
+The component automatically cycles through four hardcoded feature chips every two seconds using a timer interval. Powered by Motion, each chip animates in from above with an opacity and scale transition, rests in the center, and exits downward. Scale and vertical travel distances adjust dynamically based on a 768px mobile viewport check.
+
+**Controls**
+Completely passive and non-interactive. There are no pause/play toggles, navigation arrows, pagination dots, drag handles, or click listeners.
+
+**Accessibility**
+Unaddressed and non-compliant. Continuous, non-pausable motion without user control violates WCAG 2.2.2. It lacks prefers-reduced-motion handling, decorative SVGs lack aria-hidden attributes, and cycling dynamic text lacks an aria-live region for assistive technologies.
+
+**Installation Needs**
+Requires React 18+, Tailwind CSS configured with semantic theme tokens (such as card, border, foreground, and muted-foreground), the motion/react animation library, @hugeicons/react, and @hugeicons/core-free-icons. It also relies on a custom useIsMobile hook using window.matchMedia. Note that lucide-react is imported in the source file but unused.

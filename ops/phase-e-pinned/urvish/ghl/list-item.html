@@ -1,0 +1,45 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper{display:flex;align-items:center;justify-content:center;min-height:320px;padding:24px;background:#fff;color:#18181b;font-family:Arial,Helvetica,sans-serif;box-sizing:border-box}
+    .ghl-component-wrapper *{box-sizing:border-box}
+    .ghl-component-wrapper .filter-shell{position:relative;display:flex;align-items:center;justify-content:center;min-width:160px;height:80px}
+    .ghl-component-wrapper button{font:inherit;cursor:pointer}
+    .ghl-component-wrapper .filter-trigger,.ghl-component-wrapper .filter-selected{display:grid;place-items:center;width:80px;height:80px;border:1px solid #d4d4d8;border-radius:50%;background:#fff;color:#27272a;font-size:30px}
+    .ghl-component-wrapper .filter-trigger{position:relative;left:10px;z-index:1}
+    .ghl-component-wrapper .filter-selected{position:relative;right:10px;color:#71717a;transition:transform .35s ease}
+    .ghl-component-wrapper .filter-shell.open .filter-selected{transform:translateX(-20px)}
+    .ghl-component-wrapper .filter-panel{position:absolute;z-index:3;top:50%;left:50%;width:288px;padding:6px;border:1px solid #d4d4d8;border-radius:20px;background:#fff;box-shadow:0 14px 32px #0002;transform:translate(-50%,-50%) scale(.9);opacity:0;pointer-events:none;transition:transform .3s ease,opacity .3s ease}
+    .ghl-component-wrapper .filter-shell.open .filter-panel{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
+    .ghl-component-wrapper .filter-option{display:flex;align-items:center;gap:12px;width:100%;min-height:42px;padding:7px 12px;border:0;border-radius:16px;background:transparent;color:#18181b;text-align:left;font-size:17px;text-transform:capitalize}
+    .ghl-component-wrapper .filter-option:hover,.ghl-component-wrapper .filter-option:focus-visible{background:#f4f4f5}
+    .ghl-component-wrapper .filter-option .icon{width:27px;color:#71717a;text-align:center;font-size:21px}
+    .ghl-component-wrapper .filter-option .check{display:grid;place-items:center;width:24px;height:24px;margin-left:auto;border:2px solid #d4d4d8;border-radius:50%;color:transparent;font-size:15px}
+    .ghl-component-wrapper .filter-option[aria-selected="true"] .check{border-color:#18181b;background:#18181b;color:#fff}
+    .ghl-component-wrapper .filter-trigger:focus-visible,.ghl-component-wrapper .filter-option:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+  </style>
+  <div class="filter-shell"><button type="button" class="filter-trigger" aria-label="Open filters" aria-expanded="false">☷</button><div class="filter-selected" aria-label="Selected filter: tasks" role="status">☑</div><div class="filter-panel" role="listbox" aria-label="Filter type"><button class="filter-option" type="button" role="option" data-filter="tasks" data-icon="☑" aria-selected="true"><span class="icon">☑</span>tasks<span class="check">✓</span></button><button class="filter-option" type="button" role="option" data-filter="events" data-icon="⌖" aria-selected="false"><span class="icon">⌖</span>events<span class="check">✓</span></button><button class="filter-option" type="button" role="option" data-filter="reminders" data-icon="♧" aria-selected="false"><span class="icon">♧</span>reminders<span class="check">✓</span></button><button class="filter-option" type="button" role="option" data-filter="appointments" data-icon="▦" aria-selected="false"><span class="icon">▦</span>appointments<span class="check">✓</span></button><button class="filter-option" type="button" role="option" data-filter="meetings" data-icon="◉" aria-selected="false"><span class="icon">◉</span>meetings<span class="check">✓</span></button><button class="filter-option" type="button" role="option" data-filter="celebrations" data-icon="✦" aria-selected="false"><span class="icon">✦</span>celebrations<span class="check">✓</span></button></div></div>
+  <script>(()=>{const host=document.currentScript.parentElement,shell=host.querySelector('.filter-shell'),trigger=host.querySelector('.filter-trigger'),selected=host.querySelector('.filter-selected');function setOpen(open){shell.classList.toggle('open',open);trigger.setAttribute('aria-expanded',String(open));trigger.setAttribute('aria-label',open?'Close filters':'Open filters')}trigger.addEventListener('click',()=>setOpen(!shell.classList.contains('open')));shell.querySelectorAll('.filter-option').forEach(button=>button.addEventListener('click',()=>{shell.querySelectorAll('.filter-option').forEach(option=>option.setAttribute('aria-selected',String(option===button)));selected.textContent=button.dataset.icon;selected.setAttribute('aria-label','Selected filter: '+button.dataset.filter);setOpen(false);trigger.focus()}));host.addEventListener('keydown',event=>{if(event.key==='Escape'&&shell.classList.contains('open')){setOpen(false);trigger.focus()}})})();</script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

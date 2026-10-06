@@ -1,0 +1,9 @@
+**Appearance:** A compact, pill-shaped floating bar (h-14, fully rounded, border, muted background, clipped overflow) holding 24px monochrome icons and circular toggle triggers. Primary items show inbox, messages, paint board, and tags; secondary items show image, archive, two horizontally flipped reloads, and a red delete icon.
+
+**Behavior:** Transitions smoothly between primary and secondary panels via spring animation (stiffness 200, damping 20). It dynamically resizes container width according to DOM bounding measurements while sliding child panels horizontally. Target icons apply a subtle 1px blur when their corresponding panel is inactive. Toggle buttons scale down to 0.9 on tap.
+
+**Controls:** Circular right- and left-arrow buttons toggle the expansion state. Tool buttons display hover background highlights, though individual action handlers are not wired to tool icons.
+
+**Accessibility:** Lacks standard ARIA accessibility features: no toolbar role, aria-expanded states, aria-controls bindings, or accessible button names (the data array labels are never rendered into HTML or aria-labels). Collapsed secondary items are visually hidden via opacity and have pointer events disabled.
+
+**Installation Needs:** Requires React 18+, Motion (motion/react), @hugeicons/react, and @hugeicons/core-free-icons. Requires Tailwind CSS configured with semantic tokens (bg-muted, border-border, bg-accent, bg-background, text-foreground, text-muted-foreground). Needs the bundled useMeasure hook relying on standard browser ResizeObserver APIs and runs under client-side execution ("use client").

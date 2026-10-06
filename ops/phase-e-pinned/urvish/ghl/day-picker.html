@@ -1,0 +1,459 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #ffffff;
+      --ghl-fg: #09090b;
+      --ghl-muted: #f4f4f5;
+      --ghl-muted-fg: #71717a;
+      --ghl-secondary: #e4e4e7;
+      --ghl-primary: #18181b;
+      --ghl-primary-fg: #fafafa;
+      --ghl-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --ghl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      font-family: var(--ghl-font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ghl-fg);
+      line-height: 1.4;
+      overflow: auto;
+    }
+
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+
+    .ghl-component-wrapper button {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .ghl-component-wrapper .ghl-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      border-radius: 24px;
+      background-color: var(--ghl-muted);
+      padding: 6px;
+      max-width: 320px;
+      width: 100%;
+      transition: all 0.35s var(--ghl-ease);
+    }
+
+    .ghl-component-wrapper .ghl-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      min-height: 36px;
+    }
+
+    .ghl-component-wrapper .ghl-frequency-label {
+      padding: 8px 12px;
+      color: var(--ghl-muted-fg);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.35s var(--ghl-ease), opacity 0.35s var(--ghl-ease);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .ghl-component-wrapper .ghl-frequency-label.ghl-blurred {
+      filter: blur(8px);
+      opacity: 0.3;
+    }
+
+    .ghl-component-wrapper .ghl-closed-pill {
+      border-radius: 9999px;
+      width: fit-content;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background-color: var(--ghl-bg);
+      border-radius: 24px;
+      transition: opacity 0.25s var(--ghl-ease), filter 0.25s var(--ghl-ease), transform 0.25s var(--ghl-ease);
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .ghl-component-wrapper .ghl-closed-pill.ghl-hidden {
+      opacity: 0;
+      pointer-events: none;
+      filter: blur(4px);
+      transform: scale(0.96);
+    }
+
+    .ghl-component-wrapper .ghl-closed-value {
+      padding-left: 12px;
+      padding-right: 4px;
+      color: var(--ghl-fg);
+      white-space: nowrap;
+    }
+
+    .ghl-component-wrapper .ghl-closed-icon {
+      color: var(--ghl-muted-fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px 10px 4px;
+    }
+
+    .ghl-component-wrapper .ghl-unfold-icon {
+      transform: rotate(-90deg);
+      display: block;
+    }
+
+    .ghl-component-wrapper .ghl-open-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      filter: blur(4px);
+      transform: scale(0.98);
+      transition: opacity 0.3s var(--ghl-ease), filter 0.3s var(--ghl-ease), transform 0.3s var(--ghl-ease);
+      z-index: 3;
+    }
+
+    .ghl-component-wrapper .ghl-open-overlay.ghl-active {
+      opacity: 1;
+      pointer-events: auto;
+      filter: blur(0px);
+      transform: scale(1);
+    }
+
+    .ghl-component-wrapper .ghl-options-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      background-color: var(--ghl-bg);
+      border-radius: 24px;
+      padding: 0 4px;
+    }
+
+    .ghl-component-wrapper .ghl-option-indicator,
+    .ghl-component-wrapper .ghl-day-indicator {
+      position: absolute;
+      background-color: var(--ghl-secondary);
+      border-radius: 24px;
+      transition: left 0.3s var(--ghl-ease), width 0.3s var(--ghl-ease), top 0.3s var(--ghl-ease), height 0.3s var(--ghl-ease), opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+    }
+
+    .ghl-component-wrapper .ghl-option-btn {
+      padding: 4px 8px;
+      border-radius: 24px;
+      color: var(--ghl-muted-fg);
+      position: relative;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ghl-component-wrapper .ghl-option-btn.ghl-selected {
+      color: var(--ghl-fg);
+    }
+
+    .ghl-component-wrapper .ghl-check-btn {
+      background-color: var(--ghl-primary);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ghl-primary-fg);
+      border-radius: 24px;
+      height: 100%;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+
+    .ghl-component-wrapper .ghl-check-btn:active {
+      transform: scale(0.94);
+    }
+
+    .ghl-component-wrapper .ghl-weekly-days {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--ghl-bg);
+      border-radius: 9999px;
+      padding: 4px 8px;
+      color: var(--ghl-muted-fg);
+      position: relative;
+      overflow: hidden;
+      max-height: 48px;
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0px);
+      transition: max-height 0.35s var(--ghl-ease), opacity 0.3s var(--ghl-ease), transform 0.35s var(--ghl-ease), filter 0.3s var(--ghl-ease), margin 0.35s var(--ghl-ease), padding 0.35s var(--ghl-ease);
+    }
+
+    .ghl-component-wrapper .ghl-weekly-days.ghl-collapsed {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+      filter: blur(8px);
+      padding-top: 0;
+      padding-bottom: 0;
+      margin: 0;
+      pointer-events: none;
+    }
+
+    .ghl-component-wrapper .ghl-day-btn {
+      padding: 4px 8px;
+      border-radius: 24px;
+      position: relative;
+      cursor: pointer;
+      color: var(--ghl-muted-fg);
+      transition: color 0.3s ease;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ghl-component-wrapper .ghl-day-btn.ghl-selected {
+      color: var(--ghl-fg);
+    }
+  </style>
+
+  <div class="ghl-card">
+    <div class="ghl-top-row">
+      <div class="ghl-frequency-label">Frequency</div>
+
+      <button type="button" class="ghl-closed-pill" aria-label="Frequency selector" aria-expanded="false">
+        <span class="ghl-closed-value">Daily</span>
+        <span class="ghl-closed-icon">
+          <svg class="ghl-unfold-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M7 15l5 5 5-5"></path>
+            <path d="M7 9l5-5 5 5"></path>
+          </svg>
+        </span>
+      </button>
+
+      <div class="ghl-open-overlay" aria-hidden="true">
+        <div class="ghl-options-bar" role="radiogroup" aria-label="Frequency option">
+          <div class="ghl-option-indicator" aria-hidden="true"></div>
+          <button type="button" class="ghl-option-btn ghl-selected" data-option="Daily" role="radio" aria-checked="true">
+            <span>Daily</span>
+          </button>
+          <button type="button" class="ghl-option-btn" data-option="Weekly" role="radio" aria-checked="false">
+            <span>Weekly</span>
+          </button>
+          <button type="button" class="ghl-option-btn" data-option="Monthly" role="radio" aria-checked="false">
+            <span>Monthly</span>
+          </button>
+          <button type="button" class="ghl-option-btn" data-option="Yearly" role="radio" aria-checked="false">
+            <span>Yearly</span>
+          </button>
+        </div>
+
+        <button type="button" class="ghl-check-btn" aria-label="Confirm frequency">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="ghl-weekly-days ghl-collapsed" role="radiogroup" aria-label="Day selection" aria-hidden="true">
+      <div class="ghl-day-indicator" aria-hidden="true"></div>
+      <button type="button" class="ghl-day-btn" data-index="0" role="radio" aria-checked="false"><span>Sun</span></button>
+      <button type="button" class="ghl-day-btn ghl-selected" data-index="1" role="radio" aria-checked="true"><span>Mon</span></button>
+      <button type="button" class="ghl-day-btn" data-index="2" role="radio" aria-checked="false"><span>Tue</span></button>
+      <button type="button" class="ghl-day-btn" data-index="3" role="radio" aria-checked="false"><span>Wed</span></button>
+      <button type="button" class="ghl-day-btn" data-index="4" role="radio" aria-checked="false"><span>Thu</span></button>
+      <button type="button" class="ghl-day-btn" data-index="5" role="radio" aria-checked="false"><span>Fri</span></button>
+      <button type="button" class="ghl-day-btn" data-index="6" role="radio" aria-checked="false"><span>Sat</span></button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      function initInstance(wrapper) {
+        var day = 1;
+        var option = "Daily";
+        var isOptionOpen = false;
+        var isSelectorOpen = true;
+
+        var freqLabel = wrapper.querySelector(".ghl-frequency-label");
+        var closedPill = wrapper.querySelector(".ghl-closed-pill");
+        var closedValue = wrapper.querySelector(".ghl-closed-value");
+        var openOverlay = wrapper.querySelector(".ghl-open-overlay");
+        var optionBtns = wrapper.querySelectorAll(".ghl-option-btn");
+        var optionIndicator = wrapper.querySelector(".ghl-option-indicator");
+        var checkBtn = wrapper.querySelector(".ghl-check-btn");
+        var weeklyDays = wrapper.querySelector(".ghl-weekly-days");
+        var dayBtns = wrapper.querySelectorAll(".ghl-day-btn");
+        var dayIndicator = wrapper.querySelector(".ghl-day-indicator");
+
+        function updateIndicators() {
+          var activeOption = wrapper.querySelector(".ghl-option-btn.ghl-selected");
+          if (activeOption && isOptionOpen) {
+            optionIndicator.style.left = activeOption.offsetLeft + "px";
+            optionIndicator.style.top = activeOption.offsetTop + "px";
+            optionIndicator.style.width = activeOption.offsetWidth + "px";
+            optionIndicator.style.height = activeOption.offsetHeight + "px";
+            optionIndicator.style.opacity = "1";
+          } else {
+            optionIndicator.style.opacity = "0";
+          }
+
+          var activeDay = wrapper.querySelector(".ghl-day-btn.ghl-selected");
+          if (activeDay && isSelectorOpen && option === "Weekly") {
+            dayIndicator.style.left = activeDay.offsetLeft + "px";
+            dayIndicator.style.top = activeDay.offsetTop + "px";
+            dayIndicator.style.width = activeDay.offsetWidth + "px";
+            dayIndicator.style.height = activeDay.offsetHeight + "px";
+            dayIndicator.style.opacity = "1";
+          } else {
+            dayIndicator.style.opacity = "0";
+          }
+        }
+
+        function render() {
+          if (option === "Weekly") {
+            closedValue.textContent = "Weekly, " + days[day];
+          } else {
+            closedValue.textContent = option;
+          }
+
+          if (isOptionOpen) {
+            freqLabel.classList.add("ghl-blurred");
+            closedPill.classList.add("ghl-hidden");
+            closedPill.setAttribute("aria-expanded", "true");
+            openOverlay.classList.add("ghl-active");
+            openOverlay.setAttribute("aria-hidden", "false");
+          } else {
+            freqLabel.classList.remove("ghl-blurred");
+            closedPill.classList.remove("ghl-hidden");
+            closedPill.setAttribute("aria-expanded", "false");
+            openOverlay.classList.remove("ghl-active");
+            openOverlay.setAttribute("aria-hidden", "true");
+          }
+
+          optionBtns.forEach(function(btn) {
+            var isCurrent = btn.getAttribute("data-option") === option;
+            btn.classList.toggle("ghl-selected", isCurrent);
+            btn.setAttribute("aria-checked", isCurrent ? "true" : "false");
+          });
+
+          var showWeeklySelector = isSelectorOpen && option === "Weekly";
+          if (showWeeklySelector) {
+            weeklyDays.classList.remove("ghl-collapsed");
+            weeklyDays.setAttribute("aria-hidden", "false");
+          } else {
+            weeklyDays.classList.add("ghl-collapsed");
+            weeklyDays.setAttribute("aria-hidden", "true");
+          }
+
+          dayBtns.forEach(function(btn) {
+            var isCurrent = parseInt(btn.getAttribute("data-index"), 10) === day;
+            btn.classList.toggle("ghl-selected", isCurrent);
+            btn.setAttribute("aria-checked", isCurrent ? "true" : "false");
+          });
+
+          window.requestAnimationFrame(function() {
+            updateIndicators();
+          });
+        }
+
+        closedPill.addEventListener("click", function() {
+          isOptionOpen = true;
+          render();
+        });
+
+        checkBtn.addEventListener("click", function() {
+          isOptionOpen = false;
+          isSelectorOpen = false;
+          render();
+        });
+
+        optionBtns.forEach(function(btn) {
+          btn.addEventListener("click", function() {
+            var selected = btn.getAttribute("data-option");
+            option = selected;
+            isSelectorOpen = true;
+            render();
+          });
+        });
+
+        dayBtns.forEach(function(btn) {
+          btn.addEventListener("click", function() {
+            var selectedIndex = parseInt(btn.getAttribute("data-index"), 10);
+            day = selectedIndex;
+            render();
+          });
+        });
+
+        window.addEventListener("resize", function() {
+          updateIndicators();
+        });
+
+        render();
+      }
+
+      var wrapper = document.currentScript && document.currentScript.closest(".ghl-component-wrapper");
+      if (wrapper) initInstance(wrapper);
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

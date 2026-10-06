@@ -1,0 +1,853 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #0f172a;
+      background-color: rgba(241, 245, 249, 0.4);
+      min-height: 100%;
+      width: 100%;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .msf-card {
+      width: 100%;
+      max-width: 36rem;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: visible;
+    }
+    .ghl-component-wrapper .msf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.5rem 1.5rem 1rem;
+      gap: 1rem;
+    }
+    .ghl-component-wrapper .msf-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .ghl-component-wrapper .msf-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.4;
+    }
+    .ghl-component-wrapper .msf-description {
+      margin: 0;
+      font-size: 0.875rem;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    .ghl-component-wrapper .msf-indicators {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding-top: 0.25rem;
+      flex-shrink: 0;
+    }
+    .ghl-component-wrapper .msf-pill {
+      height: 0.5rem;
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+      background-color: rgba(15, 23, 42, 0.2);
+      width: 0.5rem;
+    }
+    .ghl-component-wrapper .msf-pill.active {
+      width: 2rem;
+      background-color: #0f172a;
+    }
+    .ghl-component-wrapper .msf-content-wrap {
+      padding: 0.5rem 1.5rem 1.5rem;
+      position: relative;
+      overflow: visible;
+      min-height: 280px;
+    }
+    .ghl-component-wrapper .msf-step-view {
+      display: none;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .ghl-component-wrapper .msf-step-view.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .ghl-component-wrapper .msf-field-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .ghl-component-wrapper .msf-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+    .ghl-component-wrapper .msf-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #0f172a;
+      line-height: 1;
+    }
+    .ghl-component-wrapper .msf-input,
+    .ghl-component-wrapper .msf-textarea,
+    .ghl-component-wrapper .msf-select,
+    .ghl-component-wrapper .msf-date-btn {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      background-color: #ffffff;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      color: #0f172a;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .ghl-component-wrapper .msf-input:focus,
+    .ghl-component-wrapper .msf-textarea:focus,
+    .ghl-component-wrapper .msf-select:focus,
+    .ghl-component-wrapper .msf-date-btn:focus {
+      border-color: #0f172a;
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+    .ghl-component-wrapper .msf-textarea {
+      min-height: 6.5rem;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    .ghl-component-wrapper .msf-date-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: left;
+      cursor: pointer;
+      color: #64748b;
+      font-weight: 400;
+    }
+    .ghl-component-wrapper .msf-date-btn.has-value {
+      color: #0f172a;
+    }
+    .ghl-component-wrapper .msf-date-popover {
+      position: absolute;
+      top: calc(100% + 0.35rem);
+      left: 0;
+      z-index: 50;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      width: 17.5rem;
+      display: none;
+    }
+    .ghl-component-wrapper .msf-date-popover.open {
+      display: block;
+    }
+    .ghl-component-wrapper .msf-cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .ghl-component-wrapper .msf-cal-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .ghl-component-wrapper .msf-cal-nav {
+      background: transparent;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.375rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ghl-component-wrapper .msf-cal-nav:hover {
+      background-color: #f1f5f9;
+    }
+    .ghl-component-wrapper .msf-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.25rem;
+      text-align: center;
+    }
+    .ghl-component-wrapper .msf-cal-dayname {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #64748b;
+      padding: 0.25rem 0;
+    }
+    .ghl-component-wrapper .msf-cal-day {
+      font-size: 0.8125rem;
+      padding: 0.375rem 0;
+      border-radius: 0.375rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #0f172a;
+      transition: background-color 0.1s;
+    }
+    .ghl-component-wrapper .msf-cal-day:hover {
+      background-color: #f1f5f9;
+    }
+    .ghl-component-wrapper .msf-cal-day.empty {
+      cursor: default;
+      background: transparent;
+      pointer-events: none;
+    }
+    .ghl-component-wrapper .msf-cal-day.selected {
+      background-color: #0f172a;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .ghl-component-wrapper .msf-grid-cols-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 480px) {
+      .ghl-component-wrapper .msf-grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .ghl-component-wrapper .msf-select-wrapper {
+      position: relative;
+    }
+    .ghl-component-wrapper .msf-select {
+      appearance: none;
+      padding-right: 2rem;
+      cursor: pointer;
+    }
+    .ghl-component-wrapper .msf-select-icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #64748b;
+    }
+    .ghl-component-wrapper .msf-tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .ghl-component-wrapper .msf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .ghl-component-wrapper .msf-badge-close {
+      border: none;
+      background: transparent;
+      padding: 0;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      line-height: 1;
+    }
+    .ghl-component-wrapper .msf-badge-close:hover {
+      color: #ef4444;
+    }
+    .ghl-component-wrapper .msf-mood-container {
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .ghl-component-wrapper .msf-mood-row {
+      display: flex;
+      width: 100%;
+      border-bottom: 1px solid #e2e8f0;
+      background-color: rgba(241, 245, 249, 0.4);
+    }
+    .ghl-component-wrapper .msf-mood-btn {
+      flex: 1;
+      padding: 0.875rem 0.5rem;
+      font-size: 1.75rem;
+      border: none;
+      border-right: 1px solid #e2e8f0;
+      background: transparent;
+      cursor: pointer;
+      filter: grayscale(1);
+      opacity: 0.7;
+      transition: filter 0.2s, background-color 0.2s, opacity 0.2s;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ghl-component-wrapper .msf-mood-btn:last-child {
+      border-right: none;
+    }
+    .ghl-component-wrapper .msf-mood-btn:hover {
+      background-color: #f1f5f9;
+      filter: grayscale(0);
+      opacity: 1;
+    }
+    .ghl-component-wrapper .msf-mood-btn.selected {
+      background-color: rgba(15, 23, 42, 0.08);
+      filter: grayscale(0);
+      opacity: 1;
+    }
+    .ghl-component-wrapper .msf-comment-textarea {
+      width: 100%;
+      min-height: 8.5rem;
+      border: none;
+      padding: 1rem;
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: #0f172a;
+      outline: none;
+      resize: none;
+      background: transparent;
+    }
+    .ghl-component-wrapper .msf-hint {
+      margin: 0.5rem 0 0;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    .ghl-component-wrapper .msf-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      background-color: rgba(248, 250, 252, 0.5);
+      border-bottom-left-radius: 0.75rem;
+      border-bottom-right-radius: 0.75rem;
+    }
+    .ghl-component-wrapper .msf-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.45rem 0.875rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      outline: none;
+      transition: background-color 0.15s, opacity 0.15s, transform 0.1s;
+    }
+    .ghl-component-wrapper .msf-btn:active {
+      transform: scale(0.98);
+    }
+    .ghl-component-wrapper .msf-btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+    .ghl-component-wrapper .msf-btn-primary {
+      background-color: #0f172a;
+      color: #ffffff;
+    }
+    .ghl-component-wrapper .msf-btn-primary:hover {
+      background-color: #1e293b;
+    }
+    .ghl-component-wrapper .msf-btn-secondary {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      border-color: #e2e8f0;
+    }
+    .ghl-component-wrapper .msf-btn-secondary:hover {
+      background-color: #e2e8f0;
+    }
+    .ghl-component-wrapper .msf-toast-box {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      background-color: #020617;
+      color: #f8fafc;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      max-width: 22rem;
+      width: calc(100vw - 3rem);
+      display: none;
+      border: 1px solid #1e293b;
+    }
+    .ghl-component-wrapper .msf-toast-box.show {
+      display: block;
+      animation: msfToastIn 0.2s ease-out;
+    }
+    .ghl-component-wrapper .msf-toast-pre {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.75rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    @keyframes msfToastIn {
+      from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+
+  <div class="msf-card">
+    <div class="msf-header">
+      <div class="msf-title-group">
+        <h2 class="msf-title">Create New Project</h2>
+        <p class="msf-description">Start by providing the essential details for your workspace.</p>
+      </div>
+      <div class="msf-indicators">
+        <div class="msf-pill active" data-step="0"></div>
+        <div class="msf-pill" data-step="1"></div>
+        <div class="msf-pill" data-step="2"></div>
+      </div>
+    </div>
+
+    <div class="msf-content-wrap">
+      <!-- Step 0 -->
+      <div class="msf-step-view active" data-step="0">
+        <div class="msf-field-stack">
+          <div class="msf-field">
+            <label class="msf-label" for="msf-project-name">Project Name</label>
+            <input type="text" class="msf-input" id="msf-project-name" placeholder="e.g Website Design">
+          </div>
+
+          <div class="msf-field">
+            <label class="msf-label">Due Date</label>
+            <button type="button" class="msf-date-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span class="msf-date-label">Pick a date</span>
+            </button>
+            <div class="msf-date-popover">
+              <div class="msf-cal-header">
+                <button type="button" class="msf-cal-nav msf-cal-prev" aria-label="Previous Month">&lt;</button>
+                <span class="msf-cal-title"></span>
+                <button type="button" class="msf-cal-nav msf-cal-next" aria-label="Next Month">&gt;</button>
+              </div>
+              <div class="msf-cal-grid">
+                <div class="msf-cal-dayname">Su</div>
+                <div class="msf-cal-dayname">Mo</div>
+                <div class="msf-cal-dayname">Tu</div>
+                <div class="msf-cal-dayname">We</div>
+                <div class="msf-cal-dayname">Th</div>
+                <div class="msf-cal-dayname">Fr</div>
+                <div class="msf-cal-dayname">Sa</div>
+              </div>
+              <div class="msf-cal-grid msf-cal-days"></div>
+            </div>
+          </div>
+
+          <div class="msf-field">
+            <label class="msf-label" for="msf-description">Description</label>
+            <textarea class="msf-textarea" id="msf-description" placeholder="Describe the project goals and scope..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="msf-step-view" data-step="1">
+        <div class="msf-field-stack">
+          <div class="msf-grid-cols-2">
+            <div class="msf-field">
+              <label class="msf-label" for="msf-team-size">Team Size</label>
+              <div class="msf-select-wrapper">
+                <select class="msf-select" id="msf-team-size">
+                  <option value="">Select team size</option>
+                  <option value="1-5">1-5 Members</option>
+                  <option value="5-10">5-10 Members</option>
+                  <option value="10+">10+ Members</option>
+                </select>
+                <svg class="msf-select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <div class="msf-field">
+              <label class="msf-label" for="msf-priority">Priority</label>
+              <div class="msf-select-wrapper">
+                <select class="msf-select" id="msf-priority">
+                  <option value="">Select priority</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Critical">Critical</option>
+                </select>
+                <svg class="msf-select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="msf-field">
+            <label class="msf-label" for="msf-tag-input">Tags</label>
+            <div class="msf-tags-list"></div>
+            <input type="text" class="msf-input" id="msf-tag-input" placeholder="e.g. Design, Marketing">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="msf-step-view" data-step="2">
+        <div class="msf-field-stack">
+          <div class="msf-mood-container">
+            <div class="msf-mood-row">
+              <button type="button" class="msf-mood-btn" data-mood="anxious" title="Anxious">😰</button>
+              <button type="button" class="msf-mood-btn" data-mood="worried" title="Worried">😟</button>
+              <button type="button" class="msf-mood-btn" data-mood="neutral" title="Neutral">😐</button>
+              <button type="button" class="msf-mood-btn" data-mood="good" title="Good">🙂</button>
+              <button type="button" class="msf-mood-btn" data-mood="excited" title="Excited">🤩</button>
+            </div>
+            <textarea class="msf-comment-textarea" id="msf-comment" placeholder="Add a comment..."></textarea>
+          </div>
+          <p class="msf-hint">Your feedback helps us understand the project kickoff vibe.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="msf-footer">
+      <button type="button" class="msf-btn msf-btn-secondary msf-back-btn" disabled="">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Back</span>
+      </button>
+      <button type="button" class="msf-btn msf-btn-primary msf-next-btn">
+        <span class="msf-next-text">Continue</span>
+        <svg class="msf-next-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="msf-toast-box">
+    <pre class="msf-toast-pre"><code></code></pre>
+  </div>
+
+  <script>
+    (function () {
+      const stepMeta = [
+        {
+          title: "Create New Project",
+          description: "Start by providing the essential details for your workspace."
+        },
+        {
+          title: "Configuration",
+          description: "Define team access and project priority settings."
+        },
+        {
+          title: "Project Kickoff Mood",
+          description: "How confident do you feel about this new project?"
+        }
+      ];
+
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      document.querySelectorAll(".ghl-component-wrapper").forEach(function (wrapper) {
+        let currentStep = 0;
+        let selectedDate = null;
+        let activeCalYear = new Date().getFullYear();
+        let activeCalMonth = new Date().getMonth();
+        let tags = [];
+        let selectedMood = "";
+
+        const titleEl = wrapper.querySelector(".msf-title");
+        const descEl = wrapper.querySelector(".msf-description");
+        const pills = wrapper.querySelectorAll(".msf-pill");
+        const stepViews = wrapper.querySelectorAll(".msf-step-view");
+        const backBtn = wrapper.querySelector(".msf-back-btn");
+        const nextBtn = wrapper.querySelector(".msf-next-btn");
+        const nextText = wrapper.querySelector(".msf-next-text");
+        const nextIcon = wrapper.querySelector(".msf-next-icon");
+
+        const dateBtn = wrapper.querySelector(".msf-date-btn");
+        const dateLabel = wrapper.querySelector(".msf-date-label");
+        const datePopover = wrapper.querySelector(".msf-date-popover");
+        const calTitle = wrapper.querySelector(".msf-cal-title");
+        const calDays = wrapper.querySelector(".msf-cal-days");
+        const calPrev = wrapper.querySelector(".msf-cal-prev");
+        const calNext = wrapper.querySelector(".msf-cal-next");
+
+        const projectNameInput = wrapper.querySelector("#msf-project-name");
+        const descriptionInput = wrapper.querySelector("#msf-description");
+        const teamSizeSelect = wrapper.querySelector("#msf-team-size");
+        const prioritySelect = wrapper.querySelector("#msf-priority");
+        const tagInput = wrapper.querySelector("#msf-tag-input");
+        const tagsList = wrapper.querySelector(".msf-tags-list");
+        const moodBtns = wrapper.querySelectorAll(".msf-mood-btn");
+        const commentInput = wrapper.querySelector("#msf-comment");
+        const toastBox = wrapper.querySelector(".msf-toast-box");
+        const toastCode = wrapper.querySelector(".msf-toast-pre code");
+
+        function updateStepUI() {
+          titleEl.textContent = stepMeta[currentStep].title;
+          descEl.textContent = stepMeta[currentStep].description;
+
+          pills.forEach(function (pill, idx) {
+            if (idx === currentStep) {
+              pill.classList.add("active");
+            } else {
+              pill.classList.remove("active");
+            }
+          });
+
+          stepViews.forEach(function (view, idx) {
+            if (idx === currentStep) {
+              view.classList.add("active");
+            } else {
+              view.classList.remove("active");
+            }
+          });
+
+          backBtn.disabled = currentStep === 0;
+
+          if (currentStep === stepMeta.length - 1) {
+            nextText.textContent = "Finish";
+            nextIcon.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+          } else {
+            nextText.textContent = "Continue";
+            nextIcon.innerHTML = '<polyline points="9 18 15 12 9 6"></polyline>';
+          }
+        }
+
+        function formatDisplayDate(date) {
+          const month = monthNames[date.getMonth()];
+          const day = date.getDate();
+          const year = date.getFullYear();
+          return month + " " + day + ", " + year;
+        }
+
+        function renderCalendar() {
+          calTitle.textContent = monthNames[activeCalMonth] + " " + activeCalYear;
+          calDays.innerHTML = "";
+
+          const firstDayIndex = new Date(activeCalYear, activeCalMonth, 1).getDay();
+          const daysInMonth = new Date(activeCalYear, activeCalMonth + 1, 0).getDate();
+
+          for (let i = 0; i < firstDayIndex; i++) {
+            const blank = document.createElement("div");
+            blank.className = "msf-cal-day empty";
+            calDays.appendChild(blank);
+          }
+
+          for (let d = 1; d <= daysInMonth; d++) {
+            const dayBtn = document.createElement("button");
+            dayBtn.type = "button";
+            dayBtn.className = "msf-cal-day";
+            dayBtn.textContent = d;
+
+            if (
+              selectedDate &&
+              selectedDate.getFullYear() === activeCalYear &&
+              selectedDate.getMonth() === activeCalMonth &&
+              selectedDate.getDate() === d
+            ) {
+              dayBtn.classList.add("selected");
+            }
+
+            dayBtn.addEventListener("click", function () {
+              selectedDate = new Date(activeCalYear, activeCalMonth, d);
+              dateLabel.textContent = formatDisplayDate(selectedDate);
+              dateBtn.classList.add("has-value");
+              datePopover.classList.remove("open");
+              renderCalendar();
+            });
+
+            calDays.appendChild(dayBtn);
+          }
+        }
+
+        dateBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const isOpen = datePopover.classList.contains("open");
+          if (!isOpen) {
+            renderCalendar();
+            datePopover.classList.add("open");
+          } else {
+            datePopover.classList.remove("open");
+          }
+        });
+
+        calPrev.addEventListener("click", function (e) {
+          e.stopPropagation();
+          activeCalMonth--;
+          if (activeCalMonth < 0) {
+            activeCalMonth = 11;
+            activeCalYear--;
+          }
+          renderCalendar();
+        });
+
+        calNext.addEventListener("click", function (e) {
+          e.stopPropagation();
+          activeCalMonth++;
+          if (activeCalMonth > 11) {
+            activeCalMonth = 0;
+            activeCalYear++;
+          }
+          renderCalendar();
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!datePopover.contains(e.target) && !dateBtn.contains(e.target)) {
+            datePopover.classList.remove("open");
+          }
+        });
+
+        function renderTags() {
+          tagsList.innerHTML = "";
+          tags.forEach(function (tag, index) {
+            const badge = document.createElement("span");
+            badge.className = "msf-badge";
+            badge.textContent = tag;
+
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "msf-badge-close";
+            removeBtn.setAttribute("aria-label", "Remove tag " + tag);
+            removeBtn.textContent = "×";
+
+            removeBtn.addEventListener("click", function () {
+              tags.splice(index, 1);
+              renderTags();
+            });
+
+            badge.appendChild(removeBtn);
+            tagsList.appendChild(badge);
+          });
+        }
+
+        tagInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const val = tagInput.value.trim();
+            if (val && !tags.includes(val)) {
+              tags.push(val);
+              renderTags();
+            }
+            tagInput.value = "";
+          }
+        });
+
+        moodBtns.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            const mood = btn.getAttribute("data-mood");
+            if (selectedMood === mood) {
+              selectedMood = "";
+              btn.classList.remove("selected");
+            } else {
+              selectedMood = mood;
+              moodBtns.forEach(function (b) {
+                b.classList.remove("selected");
+              });
+              btn.classList.add("selected");
+            }
+          });
+        });
+
+        let toastTimeout = null;
+        function showToast(data) {
+          toastCode.textContent = JSON.stringify(data, null, 2);
+          toastBox.classList.add("show");
+          if (toastTimeout) clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(function () {
+            toastBox.classList.remove("show");
+          }, 6000);
+        }
+
+        backBtn.addEventListener("click", function () {
+          if (currentStep > 0) {
+            currentStep--;
+            updateStepUI();
+          }
+        });
+
+        nextBtn.addEventListener("click", function () {
+          if (currentStep === stepMeta.length - 1) {
+            const formData = {
+              "project-name": projectNameInput.value,
+              "due-date": selectedDate ? selectedDate.toISOString() : undefined,
+              "description": descriptionInput.value,
+              "team-size": teamSizeSelect.value || null,
+              "priority": prioritySelect.value || null,
+              "tag": tags,
+              "mood": selectedMood,
+              "comment": commentInput.value
+            };
+            showToast(formData);
+            return;
+          }
+
+          if (currentStep < stepMeta.length - 1) {
+            currentStep++;
+            updateStepUI();
+          }
+        });
+
+        updateStepUI();
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

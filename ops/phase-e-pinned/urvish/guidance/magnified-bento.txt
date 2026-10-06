@@ -1,0 +1,14 @@
+**Appearance**
+A bento-style card featuring heavy corner radii, border outline, elevated shadow, and hover lift. The upper preview area displays three horizontal rows of rounded badge pills containing icons and text labels, flanked by edge gradient fades. An overlaid vector magnifying glass sits in the center. Beneath the preview area, a text section displays a bold title and descriptive copy.
+
+**Behavior**
+The tag rows loop indefinitely in alternating horizontal directions via linear marquee animations. Underneath the draggable lens, an synchronized circular clip-path reveals a secondary layer where corresponding badges appear enlarged (scale 125%) with primary-colored borders, icons, and text, creating a live magnification spotlight effect.
+
+**Controls**
+Users can freely drag the magnifying lens within the preview container boundaries using mouse or touch input. The cursor toggles between grab and grabbing states during manipulation. Drag momentum is disabled.
+
+**Accessibility**
+Pointer-dependent with no keyboard navigation for positioning the magnifying lens. Lacks ARIA roles, states, accessible labels, and prefers-reduced-motion adaptations for the continuous marquee loops. The revealed layer is explicitly marked pointer-events-none and unselectable.
+
+**Installation Needs**
+Requires React with client-side execution ("use client"), Tailwind CSS (configured with card, border, muted, and primary color variables), a clsx/tailwind-merge helper function (`cn`), Framer Motion / Motion (`motion/react`), `@hugeicons/react`, and `@hugeicons/core-free-icons`. Path aliases must resolve `@/lib/utils`.

@@ -1,0 +1,14 @@
+**Appearance**
+A responsive two-column presentation section pairing an interactive service list with an image showcase. The left column displays a section title, uppercase category label, and stacked numbered tabs (such as /01) with expandable copy and an animated vertical progress line. The right column renders a rounded, aspect-ratio media container with a bottom gradient overlay and two frosted circular navigation buttons in the bottom-right corner.
+
+**Behavior**
+Autoplays sequentially every five seconds, displaying an active linear height-filling progress bar. Service descriptions animate open and closed using height and opacity transitions, while images transition along the vertical axis with slide animations. Hovering over the gallery pauses autoplay; leaving resumes it. Selecting any tab updates the slide immediately and unpauses playback.
+
+**Controls**
+Users navigate by clicking individual tab rows, clicking the main slide image to advance forward, or clicking the circular bottom-right Previous and Next arrow buttons, which feature an active press-scale effect.
+
+**Accessibility**
+The navigation buttons include explicit aria-label attributes ("Previous" and "Next"), and gallery images provide descriptive alt text matching the service title. Tabs are rendered using native button elements, though they do not include formal ARIA tab roles such as tablist, tab, tabpanel, or aria-selected states.
+
+**Installation Needs**
+Requires a React client environment marked with use client. Necessary packages include motion (imported from motion/react), @hugeicons/react, @hugeicons/core-free-icons, and utility dependencies clsx and tailwind-merge for the cn helper at @/lib/utils. Also requires Tailwind CSS configured with container query support and standard semantic color tokens (background, foreground, muted, border).

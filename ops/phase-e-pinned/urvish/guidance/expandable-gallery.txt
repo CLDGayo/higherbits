@@ -1,0 +1,11 @@
+**Appearance**  
+The component renders an overlapping, offset fan of three rounded image cards positioned above centered heading text and a pill-shaped action button. When expanded, it transitions into a responsive two-to-three column grid displaying all nine square photo cards with rounded corners and thick borders, topped by a left-aligned "Go back" navigation button.
+
+**Behavior & Controls**  
+In the collapsed state, hovering over cards triggers a spring lift and tilt. Clicking any stacked card or clicking the "See all 9" button smoothly expands the layout into the full grid via Motion layout animations. Clicking the "Go back" button or tapping anywhere outside the component container collapses the grid back to the initial stack.
+
+**Accessibility**  
+Images provide descriptive alt text. The "See all" button and "Go back" button use native button elements with explicit text labels and focus-visible rings. However, the clickable gallery cards are implemented as div elements without role="button", tabIndex, or keyboard event handlers for Enter/Space interaction.
+
+**Installation Needs**  
+Requires a React environment supporting client components ("use client") and Tailwind CSS with standard semantic color tokens (background, foreground, muted, accent). Dependencies include motion (motion/react), @hugeicons/react, @hugeicons/core-free-icons, clsx, and tailwind-merge. Also requires two local helper files: the useOutsideClick hook and the cn utility function.

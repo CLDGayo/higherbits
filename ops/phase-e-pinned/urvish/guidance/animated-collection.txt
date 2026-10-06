@@ -1,0 +1,17 @@
+Appearance:
+A gallery widget featuring a "My Collection" heading, item counter, segmented layout switcher, divider, and animated display area. It presents items in three layouts:
+- List: A vertical stack pairing compact rounded-square thumbnails with title, category, and ID text.
+- Cards: A two-column grid featuring prominent square image cards with titles and subtitle metadata below.
+- Pack: An overlapping, centered stack of angled cards (-11° and +9° rotation) paired with a bottom summary caption showing all titles.
+
+Behavior:
+View transitions animate smoothly using spring physics. Individual cards morph between layouts, while text metadata fades and blurs in or out when switching into or out of the pack presentation. The active tab pill smoothly glides across the switch bar.
+
+Controls:
+A rounded segmented tab bar with three clickable buttons: List (playlist icon), Cards (grid view icon), and Pack (layers icon) to switch the active view state.
+
+Accessibility:
+The toggle group utilizes role="tablist" with an aria-label="Collection layout". Individual buttons declare role="tab", dynamic aria-selected attributes, and visible focus rings. Images include descriptive alt attributes sourced from item titles, and counts use tabular numerals.
+
+Installation Needs:
+Requires a React environment supporting client components ("use client"), Tailwind CSS configured with standard utility tokens (foreground, muted, primary, border), motion/react, @hugeicons/react, @hugeicons/core-free-icons, and a local cn utility function (clsx/tailwind-merge).

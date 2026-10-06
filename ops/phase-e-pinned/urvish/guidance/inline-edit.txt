@@ -1,0 +1,12 @@
+**Appearance:** A pill-shaped inline input pill with an embedded trailing circular button. In idle mode, it displays muted text, a subtle box shadow, and a card-toned edit icon. In edit mode, the outer pill gains an offset focus ring, the text shifts to standard foreground color, and the action button turns into a filled primary-colored checkmark.
+
+**Behavior:** Toggles between read-only display and active editing. Clicking the edit icon unlocks the input, focuses it, and auto-selects the existing text. Clicking the checkmark saves the current state and locks the field. Icons slide horizontally using Motion spring transitions.
+
+**Controls:**
+- Trailing circular edit icon trigger that enters edit mode and selects input text.
+- Trailing circular checkmark button that commits changes and exits edit mode.
+- Single-line text input field supporting standard typing when active.
+
+**Accessibility:** The input uses standard read-only states when idle, but the trailing action controls are non-semantic span elements missing button roles, tab indexes, and accessible names (aria-label). Keydown shortcuts (such as Enter to save or Escape to cancel) are not implemented, and native input focus rings are suppressed in favor of custom container ring styles.
+
+**Installation Needs:** Requires React, Tailwind CSS, Motion (motion/react), Hugeicons (@hugeicons/react, @hugeicons/core-free-icons), Base UI (@base-ui/react/input), clsx, and tailwind-merge. Theme configuration must support CSS variables for background, foreground, muted, card, ring, and primary design tokens.

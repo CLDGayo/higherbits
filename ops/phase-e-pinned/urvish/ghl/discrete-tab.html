@@ -1,0 +1,258 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-tab-bg: #18181b;
+      --ghl-tab-border: #27272a;
+      --ghl-tab-hover-bg: #202023;
+      --ghl-tab-hover-border: #3f3f46;
+      --ghl-text-inactive: #a1a1aa;
+      --ghl-text-active: #fafafa;
+      --ghl-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --ghl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+
+    .ghl-component-wrapper .ghl-demo-container {
+      display: flex;
+      min-height: 320px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      padding: 24px;
+      background-color: var(--ghl-bg);
+      border-radius: 12px;
+    }
+
+    .ghl-component-wrapper .ghl-tabs-list {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .ghl-component-wrapper .ghl-tab-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: var(--ghl-tab-bg);
+      border: none;
+      outline: 2px solid var(--ghl-tab-border);
+      outline-offset: 0;
+      color: var(--ghl-text-inactive);
+      cursor: pointer;
+      border-radius: 25px;
+      padding: 12px;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: var(--ghl-shadow);
+      font-family: var(--ghl-font-mono);
+      text-transform: uppercase;
+      line-height: 1;
+      user-select: none;
+      -webkit-user-select: none;
+      text-decoration: none;
+      overflow: hidden;
+      will-change: transform;
+      transition: background-color 75ms ease-out,
+                  outline-color 75ms ease-out,
+                  color 75ms ease-out,
+                  padding 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    .ghl-component-wrapper .ghl-tab-btn:hover:not(.ghl-tab-active) {
+      background-color: var(--ghl-tab-hover-bg);
+      outline-color: var(--ghl-tab-hover-border);
+      color: #e4e4e7;
+    }
+
+    .ghl-component-wrapper .ghl-tab-btn:focus-visible {
+      outline: 2px solid #60a5fa;
+      outline-offset: 2px;
+    }
+
+    .ghl-component-wrapper .ghl-tab-btn.ghl-tab-active {
+      padding: 12px 16px;
+      color: var(--ghl-text-active);
+    }
+
+    .ghl-component-wrapper .ghl-tab-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      color: inherit;
+    }
+
+    .ghl-component-wrapper .ghl-tab-icon svg {
+      display: block;
+      width: 22px;
+      height: 22px;
+    }
+
+    .ghl-component-wrapper .ghl-tab-label-container {
+      display: inline-flex;
+      align-items: center;
+      max-width: 0;
+      opacity: 0;
+      filter: blur(4px);
+      overflow: hidden;
+      margin-left: 0;
+      pointer-events: none;
+      transition: max-width 300ms cubic-bezier(0.215, 0.61, 0.355, 1),
+                  margin-left 300ms cubic-bezier(0.215, 0.61, 0.355, 1),
+                  opacity 200ms cubic-bezier(0.86, 0, 0.07, 1),
+                  filter 200ms cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    .ghl-component-wrapper .ghl-tab-btn.ghl-tab-active .ghl-tab-label-container {
+      max-width: 140px;
+      opacity: 1;
+      filter: blur(0px);
+      margin-left: 6px;
+      pointer-events: auto;
+    }
+
+    .ghl-component-wrapper .ghl-tab-label {
+      font-size: 14px;
+      font-weight: 500;
+      font-family: var(--ghl-font-mono);
+      text-transform: uppercase;
+      white-space: nowrap;
+      letter-spacing: 0.025em;
+    }
+  </style>
+
+  <div class="ghl-demo-container">
+    <div class="ghl-tabs-list" role="group" aria-label="Navigation Tabs">
+      <button type="button" class="ghl-tab-btn ghl-tab-active" aria-pressed="true" tabindex="0">
+        <span class="ghl-tab-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M19 4H5a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm0 2l-6.5 4.47a1 1 0 0 1-1 0L5 6Z"></path>
+          </svg>
+        </span>
+        <span class="ghl-tab-label-container">
+          <span class="ghl-tab-label">Inbox</span>
+        </span>
+      </button>
+
+      <button type="button" class="ghl-tab-btn" aria-pressed="false" tabindex="-1">
+        <span class="ghl-tab-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 20 20" aria-hidden="true">
+            <g fill="currentColor">
+              <path d="M5.25 12a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75H6a.75.75 0 0 1-.75-.75V12ZM6 13.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75V14a.75.75 0 0 0-.75-.75H6ZM7.25 12a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75H8a.75.75 0 0 1-.75-.75V12ZM8 13.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75V14a.75.75 0 0 0-.75-.75H8ZM9.25 10a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75H10a.75.75 0 0 1-.75-.75V10Zm.75 1.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75V12a.75.75 0 0 0-.75-.75H10ZM9.25 14a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75H10a.75.75 0 0 1-.75-.75V14ZM12 9.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75V10a.75.75 0 0 0-.75-.75H12ZM11.25 12a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75H12a.75.75 0 0 1-.75-.75V12Zm.75 1.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75V14a.75.75 0 0 0-.75-.75H12ZM13.25 10a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75H14a.75.75 0 0 1-.75-.75V10Zm.75 1.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75V12a.75.75 0 0 0-.75-.75H14Z"></path>
+              <path fill-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z" clip-rule="evenodd"></path>
+            </g>
+          </svg>
+        </span>
+        <span class="ghl-tab-label-container">
+          <span class="ghl-tab-label">Planner</span>
+        </span>
+      </button>
+
+      <button type="button" class="ghl-tab-btn" aria-pressed="false" tabindex="-1">
+        <span class="ghl-tab-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M17.1 12.6v-1.8A5.4 5.4 0 0 0 13 5.6V3a1 1 0 0 0-2 0v2.4a5.4 5.4 0 0 0-4 5.5v1.8c0 2.4-1.9 3-1.9 4.2c0 .6 0 1.2.5 1.2h13c.5 0 .5-.6.5-1.2c0-1.2-1.9-1.8-1.9-4.2ZM8.8 19a3.5 3.5 0 0 0 6.4 0z"></path>
+          </svg>
+        </span>
+        <span class="ghl-tab-label-container">
+          <span class="ghl-tab-label">Alerts</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      function setupTabs() {
+        var wrappers = document.querySelectorAll('.ghl-component-wrapper');
+        wrappers.forEach(function(wrapper) {
+          if (wrapper.getAttribute('data-ghl-initialized') === 'true') {
+            return;
+          }
+          wrapper.setAttribute('data-ghl-initialized', 'true');
+
+          var tabList = wrapper.querySelector('.ghl-tabs-list');
+          if (!tabList) return;
+
+          var tabs = Array.prototype.slice.call(tabList.querySelectorAll('.ghl-tab-btn'));
+
+          function setActiveTab(targetTab) {
+            tabs.forEach(function(tab) {
+              var isActive = (tab === targetTab);
+              tab.classList.toggle('ghl-tab-active', isActive);
+              tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+              tab.setAttribute('tabindex', isActive ? '0' : '-1');
+            });
+          }
+
+          tabs.forEach(function(tab, index) {
+            tab.addEventListener('click', function() {
+              setActiveTab(tab);
+            });
+
+            tab.addEventListener('keydown', function(event) {
+              var nextIndex = -1;
+              if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                event.preventDefault();
+                nextIndex = (index + 1) % tabs.length;
+              } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                nextIndex = (index - 1 + tabs.length) % tabs.length;
+              } else if (event.key === 'Home') {
+                event.preventDefault();
+                nextIndex = 0;
+              } else if (event.key === 'End') {
+                event.preventDefault();
+                nextIndex = tabs.length - 1;
+              }
+
+              if (nextIndex >= 0) {
+                tabs[nextIndex].focus();
+                setActiveTab(tabs[nextIndex]);
+              }
+            });
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupTabs);
+      } else {
+        setupTabs();
+      }
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

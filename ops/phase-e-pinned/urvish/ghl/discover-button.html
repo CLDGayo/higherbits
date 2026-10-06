@@ -1,0 +1,51 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper{display:flex;align-items:center;justify-content:center;min-height:170px;padding:24px;background:#f8fafc;color:#1f2937;font-family:Arial,Helvetica,sans-serif;box-sizing:border-box}
+    .ghl-component-wrapper *{box-sizing:border-box}
+    .ghl-component-wrapper .discover{display:flex;align-items:center;gap:12px;width:min(100%,600px)}
+    .ghl-component-wrapper button,.ghl-component-wrapper input{font:inherit}
+    .ghl-component-wrapper button{border:0;cursor:pointer}
+    .ghl-component-wrapper .search-shell,.ghl-component-wrapper .tabs{display:flex;align-items:center;height:60px;background:#fff;border-radius:999px;box-shadow:0 10px 24px #0002;overflow:hidden;transition:flex .4s cubic-bezier(.2,.8,.2,1),width .4s cubic-bezier(.2,.8,.2,1)}
+    .ghl-component-wrapper .search-shell{flex:0 0 60px;padding:0 18px;gap:10px;cursor:pointer}
+    .ghl-component-wrapper .search-shell.open{flex:1;cursor:text}
+    .ghl-component-wrapper .search-icon{flex:none;width:23px;height:23px;stroke:#1f2937;stroke-width:2;fill:none}
+    .ghl-component-wrapper .search-shell input{width:0;min-width:0;padding:0;border:0;outline:0;opacity:0;transition:opacity .3s ease,width .4s ease;background:transparent;font-size:18px}
+    .ghl-component-wrapper .search-shell.open input{width:100%;opacity:1}
+    .ghl-component-wrapper .tabs{flex:1;justify-content:center;gap:6px;padding:6px}
+    .ghl-component-wrapper .tabs.search-open{flex:0 0 60px}
+    .ghl-component-wrapper .tab{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;flex:1;padding:12px 15px;border-radius:999px;background:transparent;color:#374151;font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;white-space:nowrap;transition:background .3s,color .3s}
+    .ghl-component-wrapper .tab.active{background:#fef2f2;color:#ef4444}
+    .ghl-component-wrapper .tab[data-tab="favorites"].active{background:#f3f4f6;color:#111827}
+    .ghl-component-wrapper .tab svg{width:20px;height:20px;fill:currentColor}
+    .ghl-component-wrapper .tabs.search-open .tab{display:none}
+    .ghl-component-wrapper .close{display:none;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#fff;color:#1f2937;font-size:30px;line-height:1}
+    .ghl-component-wrapper .tabs.search-open .close{display:flex}
+    .ghl-component-wrapper button:focus-visible,.ghl-component-wrapper input:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+    @media(max-width:540px){.ghl-component-wrapper .discover{flex-direction:column}.ghl-component-wrapper .search-shell,.ghl-component-wrapper .tabs{width:100%;flex:auto}.ghl-component-wrapper .search-shell:not(.open){width:60px;align-self:center}.ghl-component-wrapper .tabs.search-open{width:60px;flex:auto}}
+  </style>
+  <div class="discover"><div class="search-shell" role="button" tabindex="0" aria-label="Open search"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.7"></circle><path d="m16 16 5 5"></path></svg><input type="search" aria-label="Search" placeholder="Search"></div><div class="tabs" role="tablist" aria-label="Discover views"><button class="tab active" data-tab="popular" type="button" role="tab" aria-selected="true"><span aria-hidden="true">♨</span>Popular</button><button class="tab" data-tab="favorites" type="button" role="tab" aria-selected="false"><span aria-hidden="true">♥</span>Favorites</button><button class="close" type="button" aria-label="Close search">×</button></div></div>
+  <script>(()=>{const host=document.currentScript.parentElement,search=host.querySelector('.search-shell'),input=host.querySelector('input'),tabs=host.querySelector('.tabs');function setOpen(open){search.classList.toggle('open',open);tabs.classList.toggle('search-open',open);search.setAttribute('aria-label',open?'Search':'Open search');if(open)input.focus();else input.blur()}search.addEventListener('click',()=>{if(!search.classList.contains('open'))setOpen(true)});search.addEventListener('keydown',event=>{if(!search.classList.contains('open')&&(event.key==='Enter'||event.key===' ')){event.preventDefault();setOpen(true)}});tabs.querySelector('.close').addEventListener('click',()=>setOpen(false));tabs.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{tabs.querySelectorAll('[data-tab]').forEach(tab=>{const active=tab===button;tab.classList.toggle('active',active);tab.setAttribute('aria-selected',String(active))})}))})();</script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

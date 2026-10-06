@@ -1,0 +1,272 @@
+<style>
+.ghl-component-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.ghl-component-wrapper *,
+.ghl-component-wrapper *::before,
+.ghl-component-wrapper *::after {
+  box-sizing: border-box;
+}
+
+.ghl-component-wrapper .ghl-folder-trigger {
+  position: relative;
+  width: 320px;
+  height: 208px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: block;
+  outline: none;
+  perspective: 1000px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.ghl-component-wrapper .ghl-folder-trigger:focus-visible {
+  outline: 2px solid #8B5CF6;
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+.ghl-component-wrapper .ghl-folder-back {
+  position: relative;
+  width: 87.5%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #18151B;
+  box-shadow: 0px 0px 15.7px 16px rgba(79, 73, 85, 0.30) inset;
+  border-radius: 10px;
+}
+
+.ghl-component-wrapper .ghl-folder-page {
+  position: absolute;
+  top: 8px;
+  width: 128px;
+  height: auto;
+  border-radius: 12px;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ghl-component-wrapper .ghl-page-card {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #E8E7F0, #DCDAE8);
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 12px;
+}
+
+@media (min-width: 640px) {
+  .ghl-component-wrapper .ghl-page-card {
+    padding: 16px;
+  }
+}
+
+.ghl-component-wrapper .ghl-page-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+@media (min-width: 640px) {
+  .ghl-component-wrapper .ghl-page-lines {
+    gap: 8px;
+  }
+}
+
+.ghl-component-wrapper .ghl-page-line-top {
+  width: 100%;
+  height: 4px;
+  background: #CFCDE0;
+  border-radius: 9999px;
+}
+
+@media (min-width: 640px) {
+  .ghl-component-wrapper .ghl-page-line-top {
+    height: 6px;
+  }
+}
+
+.ghl-component-wrapper .ghl-page-row {
+  display: flex;
+  gap: 6px;
+}
+
+@media (min-width: 640px) {
+  .ghl-component-wrapper .ghl-page-row {
+    gap: 8px;
+  }
+}
+
+.ghl-component-wrapper .ghl-page-line-sub {
+  flex: 1;
+  height: 4px;
+  background: #CFCDE0;
+  border-radius: 9999px;
+}
+
+@media (min-width: 640px) {
+  .ghl-component-wrapper .ghl-page-line-sub {
+    height: 6px;
+  }
+}
+
+.ghl-component-wrapper .ghl-page-0 {
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translate3d(-38px, 2px, 0) rotate(-3deg);
+  transition: transform 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-page-0 {
+  transform: translate3d(-70px, -55px, 0) rotate(-8deg);
+}
+
+.ghl-component-wrapper .ghl-page-1 {
+  z-index: 20;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translate3d(0px, 0px, 0) rotate(0deg);
+  transition: transform 0.55s cubic-bezier(0.34, 1.35, 0.64, 1);
+}
+
+.ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-page-1 {
+  transform: translate3d(2px, -75px, 0) rotate(1deg);
+}
+
+.ghl-component-wrapper .ghl-page-2 {
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transform: translate3d(42px, 1px, 0) rotate(3.5deg);
+  transition: transform 0.58s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-page-2 {
+  transform: translate3d(75px, -60px, 0) rotate(9deg);
+}
+
+.ghl-component-wrapper .ghl-folder-flap {
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  z-index: 20;
+  height: 176px;
+  border-radius: 24px;
+  transform-origin: bottom center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  transform: rotateX(0deg);
+  transition: transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ghl-component-wrapper .ghl-folder-trigger.is-open .ghl-folder-flap {
+  transform: rotateX(-40deg);
+}
+
+.ghl-component-wrapper .ghl-folder-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+</style>
+
+<div class="ghl-component-wrapper">
+  <button type="button" class="ghl-folder-trigger" aria-expanded="false" aria-label="Toggle folder">
+    <div class="ghl-folder-back">
+      <div class="ghl-folder-page ghl-page-0">
+        <div class="ghl-page-card">
+          <div class="ghl-page-lines">
+            <div class="ghl-page-line-top"></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ghl-folder-page ghl-page-1">
+        <div class="ghl-page-card">
+          <div class="ghl-page-lines">
+            <div class="ghl-page-line-top"></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ghl-folder-page ghl-page-2">
+        <div class="ghl-page-card">
+          <div class="ghl-page-lines">
+            <div class="ghl-page-line-top"></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+            <div class="ghl-page-row"><div class="ghl-page-line-sub"></div><div class="ghl-page-line-sub"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ghl-folder-flap">
+      <svg class="ghl-folder-svg" viewBox="0 0 235 121" fill="none" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M104.615 0.350494L33.1297 0.838776C32.7542 0.841362 32.3825 0.881463 32.032 0.918854C31.6754 0.956907 31.3392 0.992086 31.0057 0.992096H31.0047C30.6871 0.99235 30.3673 0.962051 30.0272 0.929596C29.6927 0.897686 29.3384 0.863802 28.9803 0.866119L13.2693 0.967682H13.2527L13.2352 0.969635C13.1239 0.981406 13.0121 0.986674 12.9002 0.986237H9.91388C8.33299 0.958599 6.76052 1.22345 5.27423 1.76651H5.27325C4.33579 2.11246 3.48761 2.66213 2.7879 3.37393L2.49689 3.68839L2.492 3.69424C1.62667 4.73882 1.00023 5.96217 0.656067 7.27725C0.653324 7.28773 0.654065 7.29886 0.652161 7.30948C0.3098 8.62705 0.257231 10.0048 0.499817 11.3446L12.2147 114.399L12.2156 114.411L12.2176 114.423C12.6046 116.568 13.7287 118.508 15.3934 119.902C17.058 121.297 19.1572 122.056 21.3231 122.049V122.05H215.379C217.76 122.02 220.064 121.192 221.926 119.698V119.697C223.657 118.384 224.857 116.485 225.305 114.35L225.307 114.339L235.914 53.3798L235.968 53.1093L235.97 53.0985L235.971 53.0888C236.134 51.8978 236.044 50.685 235.705 49.5321C235.307 48.1669 234.63 46.9005 233.717 45.8144L233.383 45.4296C232.58 44.5553 231.614 43.8449 230.539 43.3398C229.311 42.7628 227.971 42.4685 226.616 42.4774H146.746C144.063 42.4705 141.423 41.8004 139.056 40.5263C136.691 39.2522 134.671 37.4127 133.175 35.1689L113.548 5.05948L113.544 5.05362L113.539 5.04776C112.545 3.65165 111.238 2.51062 109.722 1.72061C108.266 0.886502 106.627 0.422235 104.952 0.365143V0.364166L104.633 0.350494H104.615Z" fill="#302935" fill-opacity=".88" stroke="#424047" stroke-width=".7"></path>
+        </svg></div></button><script>(()=>{const host=document.currentScript.closest('.ghl-component-wrapper');const trigger=host.querySelector('.ghl-folder-trigger');trigger.addEventListener('click',()=>{const open=trigger.classList.toggle('is-open');trigger.setAttribute('aria-expanded',String(open));trigger.setAttribute('aria-label',open?'Close folder':'Open folder')})})();</script></div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

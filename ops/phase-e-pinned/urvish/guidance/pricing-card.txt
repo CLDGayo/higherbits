@@ -1,0 +1,11 @@
+**Appearance**
+A compact, bordered pricing card with rounded corners and adaptive theme tokens. It features a "Select a Plan" header, a segmented toggle for Monthly and Yearly billing (with a sliding background pill and a "20% OFF" badge), and a stack of three selectable plan cards (Plus, Standard, Advanced). Each plan row displays an animated circular radio dot, title, tier label, and currency-formatted price. The active plan expands downward to reveal a checkmarked feature list, horizontal divider, and user count stepper.
+
+**Behavior & Controls**
+Clicking the billing toggle switches rates and animates the active tab background. Clicking a plan card selects it, triggering a border highlight, radio dot scale animation, and height-expanded feature reveal while collapsing other plans. Prices and user quantities animate numerically via NumberFlow. The stepper controls increment and decrement user seats (minimum 1), stopping event propagation to avoid retriggering plan selection.
+
+**Accessibility**
+Uses interactive button elements for billing options and stepper triggers. However, plan selection relies on non-semantic clickable divs without ARIA roles (such as role="radio" or role="radiogroup"), aria-checked, or aria-expanded attributes. The icon-only minus and plus stepper buttons lack text alternatives or aria-labels for screen readers.
+
+**Installation Needs**
+Requires a React environment supporting the "use client" directive. External packages include motion (motion/react), @number-flow/react, @hugeicons/react, and @hugeicons/core-free-icons. Requires Tailwind CSS configured with semantic design tokens (background, foreground, border, muted, primary, card) and extended border-radius utilities (rounded-4xl).

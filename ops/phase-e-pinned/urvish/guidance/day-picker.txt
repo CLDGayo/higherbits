@@ -1,0 +1,14 @@
+**Appearance**
+The component renders as a compact, rounded card (max-width xs, rounded-3xl) on a muted gray background with shadow. The header row shows a "Frequency" label opposite a rounded badge displaying the current selection (such as "Daily" or "Weekly, Mon") alongside an unfold icon. When opened, frequency options (Daily, Weekly, Monthly, Yearly) expand over the row with a sliding selection pill and a colored checkmark button. When "Weekly" is active and open, an animated secondary row shows weekday chips (Sun through Sat) with a highlighted pill behind the selected day.
+
+**Behavior**
+State changes animate via Motion springs (damping 30, stiffness 400) and shared layout IDs. Clicking the collapsed trigger badge blurs the "Frequency" label and reveals the frequency options. Selecting a frequency updates the state; clicking the checkmark closes the picker. When "Weekly" is active, selecting a weekday updates the day index.
+
+**Controls**
+Interactive elements include the collapsed badge trigger, four frequency option chips, a checkmark confirmation button, and seven weekday chips.
+
+**Accessibility**
+The component uses non-semantic div elements with click handlers instead of native button elements. It lacks keyboard navigation (no tabIndex or Enter/Space triggers), focus rings, and ARIA attributes (such as aria-expanded, aria-selected, or accessible name labels).
+
+**Installation Needs**
+Requires a React client-component environment, Tailwind CSS configured with theme colors (muted, background, secondary, primary, foreground), motion (motion/react), @hugeicons/react, @hugeicons/core-free-icons, and a standard cn helper function using clsx and tailwind-merge.

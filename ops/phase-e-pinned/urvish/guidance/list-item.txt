@@ -1,0 +1,14 @@
+**Appearance**
+A compact dual-pill widget featuring two adjacent circular buttons: a filter icon button and an active selection indicator. When activated, the trigger morphs via layout transition into a floating, 288px-wide rounded card list. Each row displays an icon, capitalized label, and a circular indicator showing a solid primary background with a checkmark when active or an outline when inactive.
+
+**Behavior**
+Activating the filter button smoothly morphs the trigger into the dropdown menu using shared spring layout animations while nudging the selection icon pill. Menu items animate into view with staggered upward spring fades. Selecting a row sets the active filter and automatically dismisses the menu after a 150ms delay.
+
+**Controls**
+Interaction is click-driven via the main filter button to open the menu, and individual row items to choose a category and trigger delayed closure.
+
+**Accessibility**
+Currently lacks standard accessibility support. Interactive controls are built with div containers instead of semantic button, listbox, or menu elements. There are no ARIA attributes (such as aria-expanded, aria-selected, or role designations), no keyboard navigation (Tab or arrow keys), no visible focus outlines, and no escape-key or click-outside dismissal handlers.
+
+**Installation Needs**
+Requires a React environment supporting client components ("use client"). Dependencies include motion/react, clsx, @hugeicons/react, and @hugeicons/core-free-icons. Requires Tailwind CSS configured with standard design tokens for background, foreground, border, card, accent, muted-foreground, primary, and primary-foreground.

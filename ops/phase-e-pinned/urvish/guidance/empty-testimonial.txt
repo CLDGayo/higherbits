@@ -1,0 +1,14 @@
+**Appearance**
+A centered empty-state section containing an `h2` heading ("Wall of Love 💖") with an interactive badge, a stylized gray folder enclosing three skeleton document cards with placeholder lines, status text, and a dashed pill button with a circular plus icon.
+
+**Behavior**
+Hovering the badge triggers a repeating scale pulse animation on the heart emoji. Clicking the folder toggles its open state: the front flap tilts forward 35 degrees on the X-axis while the three internal cards fan upward and outward with staggered spring transitions. Clicking again retracts the flap and cards to their resting positions.
+
+**Controls**
+The folder element functions as an interactive toggle via click. The "Add Testimonial" button is an anchor tag linking to an external Twitter intent URL in a new tab.
+
+**Accessibility**
+The interactive folder is implemented as a non-semantic div lacking keyboard support (`Enter`/`Space`), `tabIndex`, `role="button"`, and `aria-expanded`. The external Twitter link lacks notice that it opens in a new tab, and decorative elements (the folder SVG illustration and skeleton card lines) lack `aria-hidden` attributes.
+
+**Installation Needs**
+Requires a React client-side environment (`"use client"`), Tailwind CSS configured with semantic color tokens (`foreground`, `muted-foreground`, `primary`, `primary-foreground`, `background`), and the npm packages `motion`, `@hugeicons/react`, and `@hugeicons/core-free-icons`. For the component entry, reference [`EmptyTestimonial`](file:///registry/default/example/empty-testimonial.tsx).

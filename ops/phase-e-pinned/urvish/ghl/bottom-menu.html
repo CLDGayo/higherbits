@@ -1,0 +1,27 @@
+<div class="ghl-component-wrapper"><style>
+.ghl-component-wrapper{font-family:Arial,sans-serif;min-height:320px;display:flex;justify-content:center;align-items:center;color:#111827;background:#fff}.ghl-component-wrapper *{box-sizing:border-box}.ghl-component-wrapper .bm{position:relative;display:flex;flex-direction:column;align-items:center}.ghl-component-wrapper .bm-panel{position:absolute;bottom:76px;left:50%;transform:translateX(-50%) translateY(8px) scale(.95);opacity:0;pointer-events:none;min-width:230px;padding:7px;background:rgba(255,255,255,.98);border:1px solid #d1d5db;border-radius:18px;box-shadow:0 12px 30px #0002;transition:opacity .22s,transform .22s;z-index:2}.ghl-component-wrapper .bm-panel.open{opacity:1;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}.ghl-component-wrapper .bm-toolbar{display:flex;gap:4px;padding:4px;border:1px solid #d1d5db;border-radius:18px;background:#fff;box-shadow:0 6px 20px #0001}.ghl-component-wrapper button{font:inherit;cursor:pointer;border:0;background:transparent;color:inherit}.ghl-component-wrapper .bm-toolbar button{width:50px;height:48px;border-radius:14px;font-size:23px;line-height:1}.ghl-component-wrapper button:hover,.ghl-component-wrapper button.active{background:#f1f2f4}.ghl-component-wrapper .bm-panel button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:11px;font-size:14px}.ghl-component-wrapper .bm-panel input{width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:10px;font:inherit}.ghl-component-wrapper .bm-panel .row{display:flex;gap:5px}.ghl-component-wrapper .bm-panel .row button{text-align:center}.ghl-component-wrapper .bm-panel button.selected{background:#eef0f3}.ghl-component-wrapper .bm-status{position:absolute;top:62px;font-size:12px;color:#64748b;white-space:nowrap}
+</style><div class="bm"><div class="bm-panel" aria-live="polite"></div><div class="bm-toolbar" role="toolbar" aria-label="Bottom menu"><button type="button" data-view="home" aria-label="Home" aria-expanded="false">＋</button><button type="button" data-view="search" aria-label="Search" aria-expanded="false">⌕</button><button type="button" data-view="notifications" aria-label="Notifications" aria-expanded="false">♧</button><button type="button" data-view="profile" aria-label="Profile" aria-expanded="false">♙</button><button type="button" data-view="theme" aria-label="Theme" aria-expanded="false">☼</button></div><div class="bm-status" role="status"></div></div><script>(()=>{const host=document.currentScript.parentElement,box=host.querySelector('.bm'),panel=host.querySelector('.bm-panel'),status=host.querySelector('.bm-status');let view='',theme='light';const content={home:'<button data-action="Note">✎ &nbsp; Note</button><button data-action="Voice">◉ &nbsp; Voice</button><button data-action="Screenshot">▣ &nbsp; Screenshot</button>',search:'<input aria-label="Search" placeholder="Search..."><div class="row"><button data-action="Filter">Filter</button><button data-action="Trending">Trending</button></div>',notifications:'<button data-action="Messages">Messages</button><button data-action="System Alerts">System Alerts</button>',profile:'<button data-action="My Account">My Account</button><button data-action="Settings">Settings</button><button data-action="Subscription / Billing">Subscription / Billing</button><hr><button data-action="Logout">Logout</button>',theme:'<div class="row"><button data-theme="light">☼ Light</button><button data-theme="dark">◕ Dark</button><button data-theme="system">▣ System</button></div>'};function draw(){panel.innerHTML=content[view]||'';panel.classList.toggle('open',!!view);host.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===view);b.setAttribute('aria-expanded',String(b.dataset.view===view))});panel.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('selected',b.dataset.theme===theme))}box.addEventListener('click',e=>{const nav=e.target.closest('[data-view]');if(nav){view=view===nav.dataset.view?'':nav.dataset.view;draw();return}const t=e.target.closest('[data-theme]');if(t){theme=t.dataset.theme;status.textContent='Theme: '+theme;draw();return}const a=e.target.closest('[data-action]');if(a){status.textContent=a.dataset.action+' selected';view='';draw()}});document.addEventListener('pointerdown',e=>{if(!box.contains(e.target)&&view){view='';draw()}});draw()})();</script></div>
+
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

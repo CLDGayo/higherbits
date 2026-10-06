@@ -3,7 +3,7 @@ import { beforeEach, expect, it, vi } from "vitest"
 const mocks = vi.hoisted(() => ({ auth: vi.fn(), prepare: vi.fn(), generate: vi.fn(), rpc: vi.fn() }))
 vi.mock("@clerk/nextjs/server", () => ({ auth: mocks.auth }))
 vi.mock("@/lib/api/server/copy-source", () => ({ prepareCopySource: mocks.prepare }))
-vi.mock("@/lib/review-copy-prompts", () => ({ generateReviewCopyPrompts: mocks.generate }))
+vi.mock("@/lib/review-copy-prompts", () => ({ generateReviewCopyPrompts: mocks.generate, computeReviewPromptFingerprint: (source: { fingerprint?: string }) => source.fingerprint || "fingerprint", reviewSourceSnapshot: () => ({ component: { code: "code" }, demo: { demo_code: "demo" } }) }))
 vi.mock("@/lib/ghl-generator", () => ({ computeGhlSourceFingerprint: () => "ghl-fingerprint" }))
 vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: { rpc: mocks.rpc } }))
 import { POST } from "@/app/api/sandbox/prepare-copy-prompts-review/route"
@@ -14,7 +14,7 @@ const request = () => new Request("http://localhost/api/sandbox/prepare-copy-pro
 beforeEach(() => {
   vi.clearAllMocks()
   mocks.auth.mockResolvedValue({ userId: "owner" })
-  mocks.prepare.mockResolvedValue({ component: { registry: "ui" }, demo: { ghl_source_fingerprint: "ghl-fingerprint" }, source: { code: "code", demoCode: "demo" } })
+  mocks.prepare.mockResolvedValue({ component: { registry: "ui", updated_at: "2026-10-06T00:00:00Z" }, demo: { ghl_source_fingerprint: "ghl-fingerprint", updated_at: "2026-10-06T00:00:00Z" }, source: { code: "code", demoCode: "demo" } })
   mocks.generate.mockResolvedValue({ prompts: { codex: "saved" }, fingerprint: "fingerprint" })
   mocks.rpc.mockResolvedValue({ data: true, error: null })
 })
@@ -25,7 +25,9 @@ it("saves pre-generated prompts for the verified owner before review", async () 
   expect(mocks.prepare).toHaveBeenCalledWith("owner", { demoId: 2 }, true)
   expect(mocks.rpc).toHaveBeenCalledWith("save_creator_review_copy_prompts", {
     p_user_id: "owner", p_demo_id: 2, p_source_fingerprint: "fingerprint",
-    p_ghl_fingerprint: "ghl-fingerprint", p_prompts: { codex: "saved" },
+    p_ghl_fingerprint: "ghl-fingerprint", p_component_updated_at: "2026-10-06T00:00:00Z",
+    p_demo_updated_at: "2026-10-06T00:00:00Z", p_component_snapshot: { code: "code" },
+    p_demo_snapshot: { demo_code: "demo" }, p_prompts: { codex: "saved" },
   })
 })
 
@@ -34,5 +36,12 @@ it("does not save when source changed or the free model fails", async () => {
   expect((await POST(request())).status).toBe(409)
   mocks.generate.mockRejectedValueOnce(new Error("quota"))
   expect((await POST(request())).status).toBe(503)
+  expect(mocks.rpc).not.toHaveBeenCalled()
+})
+
+it("does not save when the source closure changes during generation", async () => {
+  mocks.prepare.mockResolvedValueOnce({ component: { registry: "ui" }, demo: { ghl_source_fingerprint: "ghl-fingerprint" }, source: { code: "code", demoCode: "demo" } })
+  mocks.prepare.mockResolvedValueOnce({ fingerprint: "changed" })
+  expect((await POST(request())).status).toBe(409)
   expect(mocks.rpc).not.toHaveBeenCalled()
 })

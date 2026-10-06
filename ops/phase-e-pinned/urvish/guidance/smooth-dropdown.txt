@@ -1,0 +1,14 @@
+**Appearance**
+A compact 40x40px button displaying a centered horizontal more-options icon that smoothly spring-expands from its top-right origin into a 220px-wide popover card. It displays seven icon-labeled items (Profile, Upgrade, Projects, Documentation, Settings, Get Help, and Logout) divided by a horizontal rule. Active and hovered items feature a sliding background highlight and a 3px vertical accent bar, both rendered in red for Logout and neutral tones for other items.
+
+**Behavior**
+Clicking the trigger initiates a spring-based layout animation, fading out the icon while menu items fade and slide into view with staggered delays. Dynamic content height is auto-calculated via resize measurement. Hovering shifts a shared spring indicator across items. Clicking an item sets it as active; clicking Logout or clicking outside the container collapses the menu.
+
+**Controls**
+Controlled entirely via pointer events: click to expand, hover to preview, click on items to select, and outside click to dismiss.
+
+**Accessibility**
+Lacks standard WAI-ARIA menu semantics and keyboard accessibility. It does not provide aria-expanded, aria-haspopup, role="menu", or role="menuitem" attributes. Focus states, arrow key navigation, and Escape-key closure are not implemented; interactions rely on non-button div and li elements.
+
+**Installation Needs**
+Requires React with client-side rendering ("use client"), Tailwind CSS configured with design tokens (such as popover, border, muted, and foreground), and four npm packages: motion (motion/react), react-use-measure, @hugeicons/react, and @hugeicons/core-free-icons.

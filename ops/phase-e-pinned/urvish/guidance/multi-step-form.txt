@@ -1,0 +1,19 @@
+**Appearance**
+A modern, card-contained multi-step form dialog featuring a clean header with step titles, subtitles, and animated pill-style progress indicators. It uses smooth spring-driven horizontal slide transitions and auto-adjusting container heights between steps.
+
+**Controls & Steps**
+- Step 1 (Project Details): Text input for project name, a popover button triggering an interactive monthly calendar picker for due dates, and a project description textarea.
+- Step 2 (Configuration): Dropdown select menus for team size and priority level, plus a text input for creating custom tags rendered as dismissible badge chips.
+- Step 3 (Mood & Feedback): A segmented five-emoji mood selector with grayscale active states paired with an embedded comment textarea.
+- Navigation Footer: Secondary "Back" button (disabled on step one) and primary "Continue"/"Finish" button with chevron and checkmark icons.
+
+**Behavior**
+State and validation are handled by React Hook Form and Zod. Directional slide animations run via Motion with container height tracked by react-use-measure. Submitting the final step triggers a Sonner toast containing formatted JSON form values.
+
+**Accessibility**
+Built with Base UI primitives ensuring semantic structure. Inputs explicitly pair with labels via IDs, field errors render with role="alert", calendar buttons manage focus and keyboard selection, controls expose aria-invalid and aria-disabled states, and emoji controls supply title attributes.
+
+**Installation Needs**
+Tailwind CSS configured with custom utility functions.
+NPM packages: react-hook-form, @hookform/resolvers, zod, motion, react-use-measure, date-fns, react-day-picker, sonner, lucide-react, @hugeicons/react, @hugeicons/core-free-icons, @base-ui/react, class-variance-authority, clsx, tailwind-merge.
+Local UI components: Field, Card, Button, Input, Textarea, Select, Badge, Calendar, Popover, Label, Separator, and cn utility.

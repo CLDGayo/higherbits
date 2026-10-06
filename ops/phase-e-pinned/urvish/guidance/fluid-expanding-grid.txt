@@ -1,0 +1,14 @@
+**Appearance**
+A responsive two-column, two-row gallery (max-width 2xl) displaying image cards with 32px rounded corners, 1px white borders, bottom dark gradients, and bottom-aligned white titles and subtitles. Unexpanded cards display a semi-transparent black overlay and centered image crop; expanded cards remove the dark tint and shift image alignment to 35% from the top.
+
+**Behavior**
+Uses Framer Motion and LayoutGroup with spring transitions. Items are divided across two rows. Clicking an unexpanded card expands it to span both columns (gridColumn: "1 / span 2") in its row while displacing other items into the opposite row. Clicking an item that already spans its row does nothing.
+
+**Controls**
+Interaction is strictly pointer-driven via direct click or tap events on individual card containers. There are no external controls, pagination, close buttons, or toggle switches.
+
+**Accessibility**
+Images provide basic alt text based on item titles. However, the interactive cards are `div` containers rather than semantic buttons, lacking `tabIndex`, keyboard activation listeners (Enter/Space), `role="button"`, and dynamic accessibility states like `aria-expanded`. Text is set to `select-none`.
+
+**Installation Needs**
+Requires a React environment supporting client components (`"use client"`), Framer Motion (`framer-motion`), and Tailwind CSS. It requires a `cn` class merger at `@/lib/utils` (typically wrapping `clsx` and `tailwind-merge`). Using external image URLs (e.g., Unsplash) requires network connectivity or framework image domain configuration.

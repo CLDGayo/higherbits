@@ -1,0 +1,14 @@
+**Appearance**  
+A pill-shaped (rounded-full) button (height 48px, minimum width 140px) displaying per-character spring-animated typography. A circular badge (size-6) overlaps the top-right corner. The button shifts from a solid primary theme in idle state to muted colors during operations. The badge displays a continuously rotating SVG spinner while loading and a Tick02Icon checkmark with primary fill on success.
+
+**Behavior**  
+Clicking initiates an automated timer sequence: it transitions from idle ("Save") to loading ("Saving") for 2,500ms, moves to success ("Saved") for 2,000ms, and then resets to idle. Letter transitions animate individually with blur, scale, and spring physics via Motion's AnimatePresence.
+
+**Controls**  
+A single interactive button element that is disabled (`disabled={status !== "idle"}`) and styled with a not-allowed cursor throughout loading and success phases.
+
+**Accessibility**  
+Constructed with Base UI Button primitives providing standard button semantics and visible focus rings (`focus-visible`). The badge is ignored by cursor actions (`pointer-events-none`). The button programmatically disables during processing, though character-split text lacks explicit `aria-label` fallbacks and dynamic status updates lack `aria-live` region announcements.
+
+**Installation Needs**  
+Requires a client-side React environment with Tailwind CSS configured for primary, muted, and ring utility tokens. Needs the `cn` helper (`clsx` and `tailwind-merge`). Required packages include `motion` (imported from `motion/react`), `@base-ui/react`, `class-variance-authority`, `@hugeicons/react`, and `@hugeicons/core-free-icons`.

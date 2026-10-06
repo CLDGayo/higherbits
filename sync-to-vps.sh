@@ -79,6 +79,7 @@ rsync -avz --delete \
     --exclude='playwright-report' \
     --exclude='.auth' \
     --exclude='dist' \
+    --exclude='.env' \
     --exclude='.env.local' \
     --exclude='.env.deploy' \
     --exclude='.DS_Store' \

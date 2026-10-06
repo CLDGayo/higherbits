@@ -1,0 +1,14 @@
+**Appearance**
+A responsive control group (stacked vertically on mobile, horizontal on desktop) composed of two white, drop-shadowed pill containers. The first container features a dark search icon next to an expandable input field. The second container displays two monospace, uppercase text tabs with icons—Popular (red fire icon and red tinted background) and Favorites (dark gray icon and neutral tinted background)—which transforms into a compact container displaying a dark multiplication sign close button when active.
+
+**Behavior**
+Clicking the search container expands it across available space via spring motion while animating input width, opacity, and blur. Simultaneously, the adjacent container shrinks to a 60px width, blurring and fading out the tabs while revealing the close icon. Clicking the close button reverses this animation. Selecting between tabs smoothly slides an underlying background pill via layout animations.
+
+**Controls**
+Consists of an expandable search container trigger, a standard text input with "Search" placeholder, two clickable tab buttons ("Popular", "Favorites"), and an overlay close button.
+
+**Accessibility**
+Employs semantic HTML `<button>` and `<input>` elements, setting `pointer-events: none` on inactive overlay containers. However, it lacks WAI-ARIA tab semantics (`role="tablist"`, `role="tab"`, `aria-selected`), lacks `aria-expanded` and `aria-controls` on toggles, and provides no programmatic label or `aria-label` for the search input.
+
+**Installation Needs**
+Requires a React environment supporting `"use client"`, Tailwind CSS, `motion` (imported from `motion/react`), `@hugeicons/react`, and `@hugeicons/core-free-icons`.
