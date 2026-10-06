@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getComponentInstallPrompt } from "@/lib/prompts"
 import { computeGhlSourceFingerprint, cleanGhlHtml } from "@/lib/ghl-generator"
-import { applyControlsToCode } from "@/lib/controls-transform"
+import { applyControlsToCode, applyControlsToGhlHtml } from "@/lib/controls-transform"
 import { PROMPT_TYPES, PromptType } from "@/types/global"
 import { supabaseWithAdminAccess as db } from "@/lib/supabase"
 import { admitCopy, COPY_HEADERS, CopyError, copyErrorResponse, copyRequestId } from "@/lib/api/server/copy-admission"
@@ -45,7 +45,14 @@ export async function POST(request: Request) {
     const { prompt_type, demo_id, rule_id, additional_context, force_regenerate, controls } = body
     if (!Object.values(PROMPT_TYPES).includes(prompt_type) || !Number.isSafeInteger(demo_id)) throw new CopyError(400, "invalid_target")
     if (additional_context != null && (typeof additional_context !== "string" || additional_context.length > 16384)) throw new CopyError(400, "invalid_context")
-    if (controls != null && (typeof controls !== "object" || Array.isArray(controls) || JSON.stringify(controls).length > 16384)) throw new CopyError(400, "invalid_controls")
+    if (controls !== undefined && (
+      !controls || typeof controls !== "object" || Array.isArray(controls) ||
+      Buffer.byteLength(JSON.stringify(controls)) > 16384 || Object.keys(controls).length > 50 ||
+      Object.entries(controls).some(([key, value]) =>
+        !/^[a-zA-Z_$][a-zA-Z0-9_$]{0,63}$/.test(key) || ["__proto__", "constructor", "prototype"].includes(key) ||
+        !(typeof value === "boolean" || (typeof value === "string" && value.length <= 500) ||
+          (typeof value === "number" && Number.isFinite(value))))
+    )) throw new CopyError(400, "invalid_controls")
     const prepared = await prepareCopySource(userId, { demoId: demo_id }, false, true)
     const isPro = await copyTier(userId)
     let prompt: string
@@ -68,19 +75,12 @@ export async function POST(request: Request) {
       if (force_regenerate || typeof stored !== "string" || !stored || (!legacySavedOutput && storedFingerprint !== currentFingerprint)) {
         throw new CopyError(503, "ghl_output_unavailable")
       }
-      const slug = prepared.component.component_slug
-      const preview = prepared.demo?.preview_url
-      const pinnedVgpu = prepared.component.registry === "auto-index" &&
-        typeof slug === "string" && /^[a-z0-9][a-z0-9-]+$/.test(slug) &&
-        preview === `https://higherbits.dev/auto-index/vgpu-${slug}.png`
-      const controlToken = controls && Object.keys(controls).length
-        ? Buffer.from(JSON.stringify(controls)).toString("base64url") : ""
-      const src = pinnedVgpu
-        ? `https://higherbits.dev/auto-index/vgpu-${slug}.html`
-        : `https://higherbits.dev/api/ghl-embed/${demo_id}${controlToken ? `?controls=${controlToken}` : ""}`
-      const html = cleanGhlHtml(`<div class="ghl-component-wrapper" style="width:100%;height:65vh;min-height:480px"><iframe src="${src}" title="Interactive component preview"></iframe></div>`)
-      if (!html) throw new CopyError(503, "ghl_output_unavailable")
-      prompt = html
+      try {
+        prompt = cleanGhlHtml(applyControlsToGhlHtml(stored, controls))
+      } catch {
+        throw new CopyError(503, "ghl_output_unavailable")
+      }
+      if (!prompt) throw new CopyError(503, "ghl_output_unavailable")
     } else if (prepared.component.registry === "auto-index" && (!controls || Object.keys(controls).length === 0) && !ruleData && !additional_context) {
       const { data: saved, error } = await (db.from as any)("auto_index_copy_prompts")
         .select("prompt,source_fingerprint").eq("demo_id", demo_id).eq("prompt_type", prompt_type).maybeSingle()

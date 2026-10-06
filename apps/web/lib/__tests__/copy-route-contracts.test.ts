@@ -27,6 +27,7 @@ import { CopyError } from "@/lib/api/server/copy-admission"
 import { buildAutoIndexPrompts } from "@/lib/auto-index/prepared-prompts"
 const requestId = "b3cf45ce-cf4e-4445-956b-9ef8c296b667"
 const notice = {displayText:"Recorded license: MIT License (unverified). Component profile: @creator. Copyright holder and upstream license text have not been verified by HigherBits.",provenanceClass:"recorded-unverified"}
+const savedGhl = '<div class="ghl-component-wrapper"><style>.ghl-component-wrapper button{color:red}</style><button type="button">saved fixture</button><script>const settings = { label: "before", count: 1, enabled: false }; const button = document.currentScript.parentElement.querySelector("button"); button.addEventListener("click", () => { button.textContent = settings.label; });</script></div>'
 const request = (body: unknown = { componentId: 1, requestId }) => new Request("http://localhost:56331/api/component-source", { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } })
 beforeEach(() => {
   vi.clearAllMocks(); mocks.identity.mockResolvedValue("canonical"); mocks.tier.mockResolvedValue(false); mocks.admit.mockResolvedValue({ ok: true })
@@ -199,6 +200,7 @@ it("U-GHL-01: creator review preparation saves current output before review and 
   mocks.prepare.mockResolvedValue({
     demo:{id:2,ghl_html_content:null,ghl_source_fingerprint:null},
     source:{code:"submitted component",demoCode:"submitted demo"},
+    files:[{path:"helper.ts",target:"components/helper.ts",content:"export const label = 'fixture'"}],
   })
   const makeRequest = () => new Request("http://localhost:56331/api/sandbox/prepare-ghl-review", {
     method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({demoId:2}),
@@ -216,7 +218,7 @@ it("U-GHL-01: creator review preparation saves current output before review and 
   expect(mocks.ghl).toHaveBeenCalledTimes(1)
   expect(first.status).toBe(200)
   expect(await first.json()).toEqual({saved:true,reused:false,fingerprint:"computed-fingerprint"})
-  expect(mocks.ghl).toHaveBeenCalledWith(2,true,expect.objectContaining({componentCode:"submitted component",demoCode:"submitted demo"}))
+  expect(mocks.ghl).toHaveBeenCalledWith(2,true,expect.objectContaining({componentCode:"submitted component",demoCode:"submitted demo",supportingFiles:{"components/helper.ts":"export const label = 'fixture'"}}))
   expect(mocks.prepare).toHaveBeenCalledWith("canonical",{demoId:2},true)
   expect(mocks.rpc).toHaveBeenCalledWith("claim_sandbox_ghl_review_lease",expect.objectContaining({p_user_id:"canonical",p_demo_id:2,p_input_fingerprint:"computed-fingerprint"}))
   expect(mocks.rpc).toHaveBeenCalledWith("check_rate_limit",{p_user_id:"canonical",p_endpoint:"sandbox_prepare_ghl_review",p_limit:5,p_window_seconds:60})
@@ -244,6 +246,29 @@ it("U-GHL-01: creator review preparation saves current output before review and 
   expect(mocks.rpc).toHaveBeenCalledOnce()
   expect(mocks.rpc).toHaveBeenCalledWith("claim_sandbox_ghl_review_lease",expect.objectContaining({p_user_id:"canonical",p_demo_id:2,p_input_fingerprint:"computed-fingerprint"}))
   expect(mocks.rpc).not.toHaveBeenCalledWith("check_rate_limit",expect.anything())
+})
+it.each([
+  ["hosted iframe", {ghl_html_content:'<iframe src="https://higherbits.dev/api/ghl-embed/2"></iframe>',ghl_source_fingerprint:"computed-fingerprint"}],
+  ["screenshot", {ghl_html_content:'<div><img src="data:image/png;base64,AA=="></div>',ghl_source_fingerprint:"computed-fingerprint"}],
+  ["empty export", {ghl_html_content:" ",ghl_source_fingerprint:"computed-fingerprint"}],
+  ["missing snapshot", undefined],
+  ["missing output", {ghl_html_content:null,ghl_source_fingerprint:"computed-fingerprint"}],
+  ["stale snapshot", {ghl_html_content:savedGhl,ghl_source_fingerprint:"older-fingerprint"}],
+])("U-GHL-01: a saved lease with %s is unavailable without generating", async (_label, demo) => {
+  const actual = await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
+  mocks.clean.mockImplementation(actual.cleanGhlHtml)
+  mocks.prepare.mockResolvedValue({demo,source:{code:"submitted component",demoCode:"submitted demo"}})
+  mocks.rpc.mockImplementation(() => abortableRpcResult({data:{status:"saved"},error:null}))
+  const response = await prepareGhlReview(new Request("http://localhost/api/sandbox/prepare-ghl-review", {
+    method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({demoId:2}),
+  }))
+  expect(response.status).toBe(503)
+  expect(await response.json()).toEqual({error:"ghl_output_unavailable"})
+  expect(mocks.rpc).toHaveBeenCalledOnce()
+  expect(mocks.rpc).toHaveBeenCalledWith("claim_sandbox_ghl_review_lease",expect.anything())
+  expect(mocks.ghl).not.toHaveBeenCalled()
+  expect(mocks.completion).not.toHaveBeenCalled()
+  expect(mocks.from).not.toHaveBeenCalled()
 })
 it.each([
   ["quota denial",{data:false,error:null},429,"rate_limited"],
@@ -461,15 +486,15 @@ it("U-GHL-01: provider or persistence failure keeps review preparation unavailab
   expect(await response.json()).toEqual({error:"ghl_output_unavailable"})
   expect(response.headers.get("cache-control")).toBe("private, no-store")
 })
-it("E24: GHL output is inert before persistence and copy", async () => {
+it("E24: display-only GHL sanitization removes executable content", async () => {
   const actual = await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
-  const sanitized = actual.cleanGhlHtml(`<div class="safe" onclick="steal()"><a href="javascript:steal()">link</a><img src="javascript:steal()" onerror="steal()"><iframe src="https://evil.invalid"></iframe><form><input></form><script>window.steal()</script><style>@import url(https://evil.invalid/x.css); .safe{color:red}</style></div>`)
+  const sanitized = actual.sanitizeGhlHtml(`<div class="safe" onclick="steal()"><a href="javascript:steal()">link</a><img src="javascript:steal()" onerror="steal()"><iframe src="https://evil.invalid"></iframe><form><input></form><script>window.steal()</script><style>@import url(https://evil.invalid/x.css); .safe{color:red}</style></div>`)
   expect(sanitized).toContain('<div class="safe">')
   expect(sanitized).toContain(".safe{color:red}")
   expect(sanitized).not.toMatch(/<script|<iframe|<form|<input|onclick=|onerror=|javascript:|evil\.invalid|window\.steal/i)
-  expect(actual.cleanGhlHtml(sanitized)).toBe(sanitized)
+  expect(actual.sanitizeGhlHtml(sanitized)).toBe(sanitized)
 })
-it("E-GHL-NO-TRACKING: generated, saved, and copied GHL HTML has no remote resource loads", async () => {
+it("E-GHL-NO-TRACKING: display sanitization removes remote resources; generated exports reject them", async () => {
   vi.stubEnv("OPENAI_API_KEY", "synthetic-only-provider-key"); vi.stubEnv("RELMIO_AUTH_TOKEN", "")
   const fetchGuard=vi.fn().mockRejectedValue(new Error("unexpected network access")); vi.stubGlobal("fetch",fetchGuard)
   const persistOutput=vi.fn().mockResolvedValue(undefined)
@@ -488,7 +513,7 @@ it("E-GHL-NO-TRACKING: generated, saved, and copied GHL HTML has no remote resou
   }))
   const safeSvgMarkup=svgUrlAttributes.map(attribute=>`<rect ${attribute}="url(#shape)" data-case="safe-${attribute}"/>`).join("")
   const plainSvgMarkup=svgUrlAttributes.map(attribute=>`<rect ${attribute}="currentColor" data-case="plain-${attribute}"/>`).join("")
-  mocks.completion.mockResolvedValue({choices:[{finish_reason:"stop",message:{content:`<div class="ghl-component-wrapper">
+  const unsafeHtml = `<div class="ghl-component-wrapper">
     <svg xmlns="http://www.w3.org/2000/svg">${unsafeSvgMarkup.map(item=>item.markup).join("")}${safeSvgMarkup}${plainSvgMarkup}</svg>
     <script src="https://cdn.invalid/tracker.js"></script>
     <link rel="preconnect" href="https://fonts.invalid">
@@ -498,11 +523,13 @@ it("E-GHL-NO-TRACKING: generated, saved, and copied GHL HTML has no remote resou
     <div style="background-image:url(https://images.invalid/css-pixel.png);clip-path:url(#shape)"></div>
     <style>@import url(https://styles.invalid/import.css); .remote{background-image:url('//images.invalid/bg.png')} .local{clip-path:url(#shape)}</style>
     <img src="data:image/png;base64,AA==">
-  </div>`}}]})
+  </div>`
+  mocks.completion.mockResolvedValue({choices:[{finish_reason:"stop",message:{content:unsafeHtml}}]})
   const actual=await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
   const source={componentCode:"synthetic component",demoCode:"synthetic demo",persistOutput}
-  const savedHtml=await actual.generateGhlTemplate(2,true,source)
-  expect(persistOutput).toHaveBeenCalledWith(savedHtml,actual.computeGhlSourceFingerprint(source.componentCode,source.demoCode))
+  await expect(actual.generateGhlTemplate(2,true,source)).rejects.toThrow(/self-contained|external|unsupported/i)
+  expect(persistOutput).not.toHaveBeenCalled()
+  const savedHtml=actual.sanitizeGhlHtml(unsafeHtml)
   const withoutSvgNamespace=(html:string)=>html.replace(/\s+xmlns="https?:\/\/[^\"]*"/gi,"")
   expect(withoutSvgNamespace(savedHtml)).not.toMatch(/(?:https?:)?\/\/|\.invalid|@import|fonts\.googleapis|cdn\.tailwind/i)
   expect(savedHtml).toContain('xmlns="http://www.w3.org/2000/svg"')
@@ -518,33 +545,29 @@ it("E-GHL-NO-TRACKING: generated, saved, and copied GHL HTML has no remote resou
   expect(savedHtml).toContain('src="data:image/png;base64,AA=="')
   expect(savedHtml).toContain("url(#shape)")
 
-  mocks.fingerprint.mockReturnValue(actual.computeGhlSourceFingerprint(source.componentCode,source.demoCode))
-  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[1],component:{component_slug:"fixture"},demo:{ghl_html_content:savedHtml,ghl_source_fingerprint:actual.computeGhlSourceFingerprint(source.componentCode,source.demoCode)},source,notice})
-  const copiedResponse=await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
-  expect(copiedResponse.status).toBe(200)
-  const copied=(await copiedResponse.json()).prompt
-  expect(copied).toContain('src="https://higherbits.dev/api/ghl-embed/2"')
-  expect(copied).not.toContain(savedHtml)
-  expect(copied).not.toMatch(/\.invalid|@import|fonts\.googleapis|cdn\.tailwind/i)
   expect(fetchGuard).not.toHaveBeenCalled()
   expect(mocks.from).not.toHaveBeenCalled()
 })
-it("U-GHL-03: GHL copies only fingerprint-matched saved output and never generates on click", async () => {
-  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[1],component:{component_slug:"fixture"},demo:{ghl_html_content:"<div>saved fixture</div>",ghl_source_fingerprint:"computed-fingerprint"},source:{code:"prepared component",demoCode:"prepared demo"},notice})
+it.each(["ui", "auto-index"])("U-GHL-03: %s copies executable saved output and never generates on click", async registry => {
+  const actual = await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
+  mocks.clean.mockImplementationOnce(actual.cleanGhlHtml)
+  mocks.prepare.mockResolvedValue({targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry},demo:{ghl_html_content:savedGhl,ghl_source_fingerprint:"computed-fingerprint",preview_url:"https://higherbits.dev/auto-index/vgpu-fixture.png"},source:{code:"prepared component",demoCode:"prepared demo"},notice})
   const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
   expect(response.status).toBe(200)
   expect(mocks.fingerprint).toHaveBeenCalledWith("prepared component","prepared demo")
   expect(mocks.ghl).not.toHaveBeenCalled()
   const copied=(await response.json()).prompt
   expect(copied).toContain(`<!--\n${notice.displayText}\n-->`)
-  expect(copied).toContain('src="https://higherbits.dev/api/ghl-embed/2"')
-  expect(copied).not.toContain("<div>saved fixture</div>")
+  expect(copied).toContain(actual.cleanGhlHtml(savedGhl))
+  expect(copied).toContain('button.addEventListener("click"')
+  expect(copied).not.toMatch(/<iframe|ghl-embed|vgpu-fixture/)
+  expect(mocks.from).not.toHaveBeenCalled()
   expect(mocks.admit).toHaveBeenCalledTimes(1)
 })
 it("U-GHL-03: legacy saved GHL without a fingerprint remains copyable with controls and notice", async () => {
   const actual = await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
   mocks.clean.mockImplementationOnce(actual.cleanGhlHtml)
-  const saved = '<div onclick="alert(1)">settings: { label: "before" }<script>alert(2)</script></div>'
+  const saved = savedGhl
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"ui",created_at:"2026-09-25T10:30:52.933Z",updated_at:"2026-09-25T10:30:52.933Z"},
     demo:{ghl_html_content:saved,ghl_source_fingerprint:null,created_at:"2026-09-25T10:30:54.051Z",updated_at:"2026-09-25T10:30:54.051Z"},
@@ -553,13 +576,73 @@ it("U-GHL-03: legacy saved GHL without a fingerprint remains copyable with contr
   const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,controls:{label:"after"},requestId}))
   expect(response.status).toBe(200)
   const copied = (await response.json()).prompt as string
-  const token = copied.match(/\?controls=([A-Za-z0-9_-]+)/)?.[1]
-  expect(JSON.parse(Buffer.from(token!, "base64url").toString("utf8"))).toEqual({ label: "after" })
-  expect(copied).not.toContain("onclick")
-  expect(copied).not.toContain("<script")
+  expect(copied).toContain('label: "after"')
+  expect(copied).toContain('<style>.ghl-component-wrapper button{color:red}</style>')
+  expect(copied).toContain('button.addEventListener("click"')
+  expect(copied).not.toMatch(/<iframe|label: "before"/)
   expect(copied).toContain(`<!--\n${notice.displayText}\n-->`)
   expect(mocks.admit).toHaveBeenCalledOnce()
   expect(mocks.ghl).not.toHaveBeenCalled()
+})
+it.each([
+  ["null", null],
+  ["array", []],
+  ["string", "label"],
+  ["number", 1],
+  ["boolean", true],
+  ["nested object", {label:{value:"after"}}],
+  ["nested array", {label:["after"]}],
+  ["null value", {label:null}],
+  ["unsafe identifier", {"label.*":"after"}],
+  ["oversized identifier", {["x".repeat(65)]:true}],
+  ["prototype key", Object.fromEntries([["__proto__", true]])],
+  ["constructor key", {constructor:true}],
+  ["prototype property", {prototype:true}],
+  ["oversized string", {label:"x".repeat(501)}],
+  ["too many entries", Object.fromEntries(Array.from({length:51},(_,index)=>[`setting${index}`,true]))],
+  ["oversized UTF-8 payload", Object.fromEntries(Array.from({length:17},(_,index)=>[`setting${index}`,"é".repeat(500)]))],
+])("GHL controls reject %s before preparing or admitting a copy", async (_label, controls) => {
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,controls,requestId}))
+  expect(response.status).toBe(400)
+  expect(await response.json()).toEqual({error:"invalid_controls"})
+  expect(mocks.prepare).not.toHaveBeenCalled()
+  expect(mocks.admit).not.toHaveBeenCalled()
+  expect(mocks.ghl).not.toHaveBeenCalled()
+  expect(mocks.from).not.toHaveBeenCalled()
+})
+it("GHL controls reject a JSON number outside the finite number range", async () => {
+  const response = await prompt(new Request("http://localhost/api/prompts", {
+    method:"POST", headers:{"content-type":"application/json"},
+    body:`{"demo_id":2,"prompt_type":${JSON.stringify(PROMPT_TYPES.GOHIGHLEVEL)},"requestId":"${requestId}","controls":{"count":1e400}}`,
+  }))
+  expect(response.status).toBe(400)
+  expect(await response.json()).toEqual({error:"invalid_controls"})
+  expect(mocks.prepare).not.toHaveBeenCalled()
+  expect(mocks.admit).not.toHaveBeenCalled()
+  expect(mocks.ghl).not.toHaveBeenCalled()
+})
+it.each([
+  ["hosted iframe", '<iframe src="https://higherbits.dev/api/ghl-embed/2"></iframe>'],
+  ["pinned hosted iframe", '<iframe src="https://higherbits.dev/auto-index/vgpu-fixture.html"></iframe>'],
+  ["remote screenshot", '<div class="ghl-component-wrapper"><img src="https://higherbits.dev/auto-index/vgpu-fixture.png"></div>'],
+  ["inline screenshot", '<div class="ghl-component-wrapper"><img src="data:image/png;base64,AA=="></div>'],
+  ["remote dependency", '<div>fixture</div><script src="https://cdn.invalid/runtime.js"></script>'],
+  ["truncated script", '<div>fixture</div><script>function broken(</script>'],
+])("U-GHL-03: saved %s is unavailable without generation or admission", async (_label, stored) => {
+  const actual = await vi.importActual<typeof import("@/lib/ghl-generator")>("@/lib/ghl-generator")
+  mocks.clean.mockImplementationOnce(actual.cleanGhlHtml)
+  mocks.prepare.mockResolvedValue({
+    targetKey:"1:2",closure:[1],component:{component_slug:"fixture",registry:"auto-index"},
+    demo:{ghl_html_content:stored,ghl_source_fingerprint:"computed-fingerprint",preview_url:"https://higherbits.dev/auto-index/vgpu-fixture.png"},
+    source:{code:"component",demoCode:"demo"},notice,
+  })
+  const response = await prompt(request({demo_id:2,prompt_type:PROMPT_TYPES.GOHIGHLEVEL,requestId}))
+  expect(response.status).toBe(503)
+  expect(await response.json()).toEqual({error:"ghl_output_unavailable"})
+  expect(response.headers.get("cache-control")).toBe("private, no-store")
+  expect(mocks.admit).not.toHaveBeenCalled()
+  expect(mocks.ghl).not.toHaveBeenCalled()
+  expect(mocks.from).not.toHaveBeenCalled()
 })
 it.each(["created_at", "updated_at"] as const)("U-GHL-03: legacy component %s after cutoff blocks saved output", async field => {
   mocks.prepare.mockResolvedValue({
@@ -617,20 +700,15 @@ it.each(Object.values(PROMPT_TYPES))("U-GHL-03/U-DEMO-02: %s applies active sett
   const code = 'const settings = { label: "before", count: 1, enabled: false }; export default settings'
   mocks.prepare.mockResolvedValue({
     targetKey:"1:2",closure:[1],component:{component_slug:"fixture"},
-    demo:{ghl_html_content:code,ghl_source_fingerprint:"computed-fingerprint"},
+    demo:{ghl_html_content:savedGhl,ghl_source_fingerprint:"computed-fingerprint"},
     source:{code,demoCode:code},files:[{path:"fixture.tsx",content:code}],dependencies:[],contents:new Map(),notice,
   })
   const response = await prompt(request({demo_id:2,prompt_type,controls:{label:"after",count:9,enabled:true},requestId}))
   expect(response.status).toBe(200)
   const copied = (await response.json()).prompt as string
-  if (prompt_type === PROMPT_TYPES.GOHIGHLEVEL) {
-    const token = copied.match(/\?controls=([A-Za-z0-9_-]+)/)?.[1]
-    expect(JSON.parse(Buffer.from(token!, "base64url").toString("utf8"))).toEqual({ label: "after", count: 9, enabled: true })
-  } else {
-    expect(copied).toContain('"after"')
-    expect(copied).toContain("9")
-    expect(copied).toContain("true")
-  }
+  expect(copied).toContain('"after"')
+  expect(copied).toContain("9")
+  expect(copied).toContain("true")
   expect(mocks.ghl).not.toHaveBeenCalled()
   expect(mocks.admit).toHaveBeenCalledTimes(1)
   expect(code).toBe('const settings = { label: "before", count: 1, enabled: false }; export default settings')

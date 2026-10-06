@@ -2,6 +2,8 @@ import { createHash } from "node:crypto"
 import OpenAI from "openai"
 import endent from "endent"
 import { load } from "cheerio"
+import { parse } from "@babel/parser"
+import { prepareBundledGhlHtml } from "@/lib/ghl-bundle-export"
 
 const GHL_ALLOWED_TAGS = new Set([
   "a", "article", "aside", "b", "blockquote", "br", "button", "canvas", "code", "dd", "del", "details", "div", "dl", "dt", "em",
@@ -54,7 +56,7 @@ function hasOnlyLocalSvgUrlReferences(value: string): boolean {
   return (sanitizeGhlCss(value).match(/url\s*\(/gi)?.length ?? 0) === urlCount
 }
 
-/** Sanitizes generated markup before persistence or copy; it is never executed in the app. */
+/** Restrictive display-only sanitizer. Do not use this to prepare executable GHL exports. */
 export function sanitizeGhlHtml(markup: string): string {
   const $ = load(markup, {}, false)
   for (const element of $.root().find("*").toArray()) {
@@ -102,124 +104,134 @@ export function sanitizeGhlHtml(markup: string): string {
   return $.root().html()?.trim() ?? ""
 }
 
+function isInlineResource(value: string): boolean {
+  return /^#[a-zA-Z0-9_.:-]{1,128}$/.test(value) ||
+    /^data:(?:image\/(?:png|jpeg|gif|webp|avif)|font\/(?:woff2?|ttf|otf));base64,[a-z0-9+/=]+$/i.test(value)
+}
+
+function validateExportCss(value: string): void {
+  const decoded = value.replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\\([0-9a-f]{1,6})\s?|\\([^\r\n])/gi, (_match, hex, escaped) =>
+      hex ? String.fromCodePoint(Math.min(Number.parseInt(hex, 16) || 0xfffd, 0x10ffff)) : escaped)
+  const resources = [...decoded.matchAll(/url\s*\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi)]
+  if (/@import\b|(?:-webkit-)?image-set\s*\(/i.test(decoded) ||
+      resources.length !== (decoded.match(/url\s*\(/gi)?.length ?? 0) ||
+      resources.some(match => !isInlineResource(String(match[1] ?? match[2] ?? match[3]).trim()))) {
+    throw new Error("GHL export must be self-contained; external CSS resources are unsupported")
+  }
+}
+
+/** Syntax/dependency checks only: this does not certify JavaScript as safe to execute. */
+function validateExportScript(code: string, module = false, handler = false): ReturnType<typeof parse> {
+  let ast: ReturnType<typeof parse>
+  try {
+    ast = parse(code, { sourceType: module ? "module" : "script", allowReturnOutsideFunction: handler })
+  } catch {
+    throw new Error("GHL export contains malformed or truncated JavaScript")
+  }
+  const loaders = new Set(["fetch", "XMLHttpRequest", "WebSocket", "EventSource", "Worker", "SharedWorker", "importScripts", "sendBeacon", "require", "eval", "Function"])
+  const visit = (value: unknown): void => {
+    if (!value || typeof value !== "object") return
+    if (Array.isArray(value)) { value.forEach(visit); return }
+    const node = value as Record<string, unknown>
+    if (["Import", "ImportExpression", "ImportDeclaration", "ExportAllDeclaration"].includes(String(node.type)) ||
+        (node.type === "ExportNamedDeclaration" && node.source)) {
+      throw new Error("GHL export must be self-contained; external module loaders are unsupported")
+    }
+    if (node.type === "CallExpression" || node.type === "NewExpression" || node.type === "OptionalCallExpression") {
+      const callee = node.callee as { type?: string; name?: string; computed?: boolean; property?: { name?: string; value?: string } }
+      const name = callee.type === "Identifier" ? callee.name : callee.computed ? callee.property?.value : callee.property?.name
+      const args = node.arguments as Array<{ type?: string; value?: string }>
+      if (loaders.has(name ?? "") || (name === "createElement" && args[0]?.type === "StringLiteral" &&
+          ["script", "link", "iframe", "object", "embed"].includes(args[0].value?.toLowerCase() ?? ""))) {
+        throw new Error("GHL export must be self-contained; runtime resource loaders are unsupported")
+      }
+    }
+    Object.values(node).forEach(visit)
+  }
+  visit(ast.program)
+  return ast
+}
+
 /**
- * Robustly clean and extract raw embeddable HTML from model output.
- * Strips markdown code blocks, surrounding prose, and accidental document wrappers (<!DOCTYPE>, <html>, <body>).
+ * Normalizes and validates executable GHL source for copying/persistence.
+ * The result is source text, never safe HTML for the parent app's innerHTML.
+ * Script syntax/dependency validation is not a security sandbox or a runtime guarantee.
  */
 export function cleanGhlHtml(raw: string): string {
+  if (Buffer.byteLength(raw || "") > GHL_MAX_OUTPUT_BYTES) {
+    throw new Error("GHL generated output exceeds the supported byte limit")
+  }
   let text = (raw || "").trim()
+  if (!text) return ""
+  const fenced = text.match(/^```(?:html|xml)?\s*([\s\S]*?)\s*```$/i)
+  if (fenced) text = fenced[1]!.trim()
+  if (!/<[a-z][a-z0-9-]*\b/i.test(text)) return ""
 
-  if (!text || (!text.includes("<div") && !text.includes("<button") && !text.includes("<section") && !text.includes("<style") && !text.includes("<script"))) {
-    return ""
+  // Fragment parsing drops document wrappers without touching JavaScript string literals.
+  const $ = load(text, { sourceCodeLocationInfo: true }, false)
+  if ($("iframe, object, embed, base, link, meta[http-equiv]").length) {
+    throw new Error("GHL export must be self-contained HTML; hosted embeds and external resources are unsupported")
   }
-
-  // 1. Extract content from markdown code blocks if present
-  const codeBlockMatch = text.match(/```(?:html|xml)?\s*([\s\S]*?)\s*```/i)
-  if (codeBlockMatch && codeBlockMatch[1]) {
-    text = codeBlockMatch[1].trim()
-  } else {
-    // Strip leading fence (e.g. ```html) and trailing fence (```) even if trailing fence was omitted
-    text = text.replace(/^```[a-zA-Z0-9_-]*\s*/i, "").replace(/\s*```\s*$/i, "").trim()
+  $("meta").remove()
+  $("title").filter((_index, element) => $(element).closest("svg").length === 0).remove()
+  const executableScripts = $("script").toArray().filter(script =>
+    ["", "module", "text/javascript", "application/javascript"].includes((script.attribs.type ?? "").trim().toLowerCase()))
+  if (executableScripts.length > 1) {
+    throw new Error("GHL export must combine executable JavaScript into one instance-scoped script; cross-script globals are unsupported")
   }
-
-  // 2. If the model accidentally outputted full document tags (<!DOCTYPE html>, <html>, <head>, <body>),
-  // extract and concatenate head content + body content to make it a valid embedded snippet
-  if (/<!DOCTYPE/i.test(text) || /<html/i.test(text) || /<body/i.test(text)) {
-    const headMatch = text.match(/<head[^>]*>([\s\S]*?)<\/head>/i)
-    const bodyMatch = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
-
-    if (bodyMatch && bodyMatch[1]) {
-      const headContent = headMatch && headMatch[1] ? headMatch[1].trim() : ""
-      const bodyContent = bodyMatch[1].trim()
-      text = headContent ? `${headContent}\n${bodyContent}` : bodyContent
-    } else {
-      text = text
-        .replace(/<!DOCTYPE[^>]*>/gi, "")
-        .replace(/<\/?(?:html|head|body)[^>]*>/gi, "")
-        .trim()
+  for (const element of $.root().find("*").toArray()) {
+    const node = $(element)
+    const tag = element.tagName.toLowerCase()
+    if (tag === "script" || tag === "style") {
+      const location = (element as typeof element & { sourceCodeLocation?: { endTag?: unknown } }).sourceCodeLocation
+      if (!location?.endTag) throw new Error(`GHL export contains an unclosed ${tag} tag`)
+    }
+    if (tag === "style") validateExportCss(node.text())
+    if (tag === "script") {
+      if ("src" in element.attribs) throw new Error("GHL export cannot load external scripts")
+      const type = (element.attribs.type ?? "").trim().toLowerCase()
+      if (["", "module", "text/javascript", "application/javascript"].includes(type)) {
+        const code = node.text()
+        const ast = validateExportScript(code, type === "module")
+        const statement = ast.program.body[0]
+        const isIife = ast.program.body.length === 1 && statement?.type === "ExpressionStatement" &&
+          statement.expression.type === "CallExpression" &&
+          ["ArrowFunctionExpression", "FunctionExpression"].includes(statement.expression.callee.type)
+        // Keep the original code/directives intact. The arrow preserves top-level `this`
+        // and currentScript while keeping declarations local to this pasted instance.
+        if (type !== "module" && ast.program.body.length && !isIife) node.text(`(() => {\n${code}\n})();`)
+      } else if (!["application/json", "application/ld+json", "x-shader/x-vertex", "x-shader/x-fragment"].includes(type)) {
+        throw new Error("GHL export contains an unsupported script type")
+      }
+    }
+    for (const [name, value] of Object.entries(element.attribs)) {
+      const attribute = name.toLowerCase()
+      if (attribute.startsWith("on")) {
+        validateExportScript(value, false, true)
+        if (executableScripts.length) {
+          throw new Error("GHL export must bind events inside its instance script; inline handlers cannot depend on script globals")
+        }
+      }
+      if (attribute === "style" || GHL_SVG_PRESENTATION_URL_ATTRIBUTES.has(attribute)) validateExportCss(value)
+      if (["src", "poster", "background", "xlink:href"].includes(attribute) ||
+          (attribute === "href" && tag !== "a")) {
+        if (!isInlineResource(value)) throw new Error("GHL export cannot load external resources")
+      }
+      if (["srcset", "srcdoc", "ping"].includes(attribute) ||
+          (["href", "action", "formaction"].includes(attribute) && /^\s*(?:javascript|vbscript):/i.test(value))) {
+        throw new Error("GHL export contains an unsupported resource or executable URL")
+      }
     }
   }
-
-  // 3. Auto-heal any high-specificity button resets (replace with zero-specificity :where)
-  text = text.replace(
-    /\.ghl-component-wrapper\s+button,\s*\.ghl-component-wrapper\s+\[role=["']?button["']?\]\s*\{[^}]*background:\s*transparent[^}]*padding:\s*0[^}]*\}/gi,
-    `:where(.ghl-component-wrapper) :where(button, [role="button"]) {
-    cursor: pointer;
-    background-color: transparent;
-    background-image: none;
-    border-style: solid;
-    border-width: 0;
-    padding: 0;
-    color: inherit;
-  }`
-  )
-
-  // 4b. Inject Shadcn semantic fallback utilities into style block so unmapped tokens never break layout
-  if (!text.includes(".ghl-component-wrapper .bg-primary") && !text.includes(":where(.ghl-component-wrapper) .bg-primary") && text.includes("</style>")) {
-    const shadcnFallbacks = `
-    /* Shadcn Semantic Fallbacks for GoHighLevel */
-    :where(.ghl-component-wrapper) .bg-primary { background-color: #f4f4f5 !important; color: #09090b !important; }
-    :where(.ghl-component-wrapper) .text-primary-foreground { color: #09090b !important; }
-    :where(.ghl-component-wrapper) .bg-secondary { background-color: rgba(24, 24, 27, 0.8) !important; color: #e4e4e7 !important; }
-    :where(.ghl-component-wrapper) .text-secondary-foreground { color: #f4f4f5 !important; }
-    :where(.ghl-component-wrapper) .border-border { border-color: rgba(63, 63, 70, 0.6) !important; }
-    :where(.ghl-component-wrapper) .text-muted-foreground { color: #a1a1aa !important; }
-    `
-    text = text.replace("</style>", `${shadcnFallbacks}\n  </style>`)
+  const visible = $.root().clone()
+  visible.find("script, style").remove()
+  if (visible.find("img").length && !visible.text().trim() && !visible.find("svg, canvas, input, button, select, textarea").length) {
+    throw new Error("GHL export cannot substitute a screenshot for the component")
   }
-
-  // 5. Ensure .ghl-component-wrapper has isolation: isolate to protect stacking context
-  if (text.includes(".ghl-component-wrapper {") && !text.includes("isolation: isolate;")) {
-    text = text.replace(".ghl-component-wrapper {", ".ghl-component-wrapper {\n    isolation: isolate;")
-  }
-
-  // 6. Ensure font-family Inter is protected on the component wrapper and all children
-  if (text.includes(".ghl-component-wrapper {") && !text.includes("font-family: 'Inter'") && !text.includes('font-family: "Inter"')) {
-    text = text.replace(
-      ".ghl-component-wrapper {",
-      `.ghl-component-wrapper, .ghl-component-wrapper * {
-    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-  }
-  .ghl-component-wrapper {`
-    )
-  }
-
-  // 7. Strip accidental/awkward split-screen viewport bleed blocks that cut across the hero (e.g. w-[100vw], -right-[50vw], -left-[50vw])
-  text = text.replace(/<div[^>]*?(?:w-\[100vw\]|-right-\[50vw\]|-left-\[50vw\])[^>]*?>\s*(?:<\/div>)?/gi, "")
-
-  // 8. Auto-heal unquoted inline string arguments in event handlers (e.g. new CustomEvent(fluid-trigger-burst) or window.open(https://...))
-  text = text.replace(/new\s+CustomEvent\(\s*([a-zA-Z0-9_-]+)\s*\)/g, "new CustomEvent('$1')")
-  text = text.replace(/window\.open\(\s*(https?:\/\/[^\s,)'"]+)\s*,\s*([_a-zA-Z0-9]+)\s*\)/g, "window.open('$1', '$2')")
-  text = text.replace(/window\.open\(\s*(https?:\/\/[^\s,)'"]+)\s*\)/g, "window.open('$1')")
-
-  // 9. Strip React ref leaks in vanilla script (e.g. updateKeywordsRef.current = ...)
-  text = text.replace(/[a-zA-Z0-9_$]+Ref\.current\s*=\s*([^;]+);/g, "/* ref assignment stripped */")
-
-  // 9b. Auto-heal any corrupted pressure FBO declarations
-  text = text.replace(
-    /let\s+pressure\s*=\s*[\d.]+\s*,\s*simRes\.height\s*,/g,
-    "let pressure = createDoubleFBO(simRes.width, simRes.height,",
-  )
-
-  // 10. Auto-heal missing closing tags if accidentally omitted
-  const openScripts = (text.match(/<script\b/gi) || []).length
-  const closeScripts = (text.match(/<\/script>/gi) || []).length
-  if (openScripts > closeScripts) {
-    text += "\n</script>"
-  }
-  const openDivs = (text.match(/<div\b/gi) || []).length
-  const closeDivs = (text.match(/<\/div>/gi) || []).length
-  if (openDivs > closeDivs) {
-    text += "\n" + "</div>".repeat(openDivs - closeDivs)
-  }
-
-  const sanitized = sanitizeGhlHtml(text.trim())
-  const $ = load(sanitized, {}, false)
-  if ($("#root").length && !$("#root").html()?.trim()) {
-    $("style").remove()
-    if (!$.root().text().trim() && !$("img, svg, video").length) return ""
-  }
-  return sanitized
+  const output = $.root().html()?.trim() ?? ""
+  if (Buffer.byteLength(output) > GHL_MAX_OUTPUT_BYTES) throw new Error("GHL export exceeds the supported byte limit")
+  return output
 }
 
 export const GHL_TEMPLATE_VERSION = "higherbits-ghl-template-v3"
@@ -271,6 +283,8 @@ export function computeGhlSourceFingerprint(componentCode: string, demoCode: str
 export type PreparedGhlSource = {
   componentCode: string
   demoCode: string
+  supportingFiles?: Record<string, string>
+  bundledHtml?: string
   savedGhlHtml?: string | null
   savedFingerprint?: string | null
   generationSignal?: AbortSignal
@@ -285,13 +299,54 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
         typeof prepared.persistOutput !== "function") {
       throw new Error("Authorized source and fenced output persistence are required")
     }
-    if (Buffer.byteLength(prepared.componentCode) + Buffer.byteLength(prepared.demoCode) > GHL_MAX_INPUT_BYTES) {
+    if ((prepared.bundledHtml !== undefined && typeof prepared.bundledHtml !== "string") ||
+        (prepared.supportingFiles !== undefined && (!prepared.supportingFiles || typeof prepared.supportingFiles !== "object" ||
+          Array.isArray(prepared.supportingFiles) || Object.values(prepared.supportingFiles).some(value => typeof value !== "string")))) {
+      throw new Error("GHL supporting files and bundle must be resolved text")
+    }
+    const supportingFiles = Object.entries(prepared.supportingFiles ?? {})
+    const inputBytes = Buffer.byteLength(prepared.componentCode) + Buffer.byteLength(prepared.demoCode) +
+      Buffer.byteLength(prepared.bundledHtml ?? "") +
+      supportingFiles.reduce((total, [path, content]) => total + Buffer.byteLength(path) + Buffer.byteLength(content), 0)
+    if (inputBytes > GHL_MAX_INPUT_BYTES) {
       throw new Error("GHL generation input exceeds the supported byte limit")
     }
+    const generationDeadline = prepared.generationSignal ?? AbortSignal.timeout(GHL_GENERATION_DEADLINE_MS)
+    const checkDeadline = () => {
+      if (generationDeadline.aborted) throw new Error("GHL generation deadline exceeded")
+    }
+    checkDeadline()
     const sourceFingerprint = computeGhlSourceFingerprint(prepared.componentCode, prepared.demoCode)
-    if (!forceRegenerate && prepared.savedFingerprint === sourceFingerprint && prepared.savedGhlHtml) {
-      const saved = cleanGhlHtml(prepared.savedGhlHtml)
-      if (saved) return saved
+    if (prepared.bundledHtml !== undefined) {
+      if (Buffer.byteLength(prepared.bundledHtml) > GHL_MAX_OUTPUT_BYTES) {
+        throw new Error("GHL bundled output exceeds the supported byte limit")
+      }
+      const html = cleanGhlHtml(prepareBundledGhlHtml(prepared.bundledHtml))
+      if (!html) throw new Error("GHL bundle returned an empty response")
+      checkDeadline()
+      await prepared.persistOutput(html, sourceFingerprint)
+      return html
+    }
+    const sourceNeedsScript = /\b(?:useState|useReducer|useEffect|useLayoutEffect|requestAnimationFrame|addEventListener)\s*\(|\bon(?:Click|Change|Input|Submit|Pointer\w*|Mouse\w*)\s*=/.test(
+      [prepared.componentCode, prepared.demoCode, ...supportingFiles.map(([, content]) => content)].join("\n"),
+    )
+    const validateOutput = (raw: string) => {
+      const html = cleanGhlHtml(raw)
+      const $ = load(html, {}, false)
+      if (sourceNeedsScript && !$("script").toArray().some(script =>
+        ["", "module", "text/javascript", "application/javascript"].includes((script.attribs.type ?? "").trim().toLowerCase()) && $(script).text().trim())) {
+        throw new Error("GHL output omitted the JavaScript required by the interactive source")
+      }
+      return html
+    }
+    // v3 identifies only component/demo text, so supporting-file changes cannot reuse its cache.
+    if (!forceRegenerate && !supportingFiles.length && prepared.savedFingerprint === sourceFingerprint && prepared.savedGhlHtml) {
+      try {
+        const saved = validateOutput(prepared.savedGhlHtml)
+        if (saved) return saved
+      } catch {
+        // Regeneration is already authorized; obsolete cached substitutes are not reusable exports.
+      }
     }
 
     const relmioToken = process.env.RELMIO_AUTH_TOKEN
@@ -319,95 +374,19 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
     // Callers provide the exact authorized snapshot; never re-fetch source locators here.
     const componentCode = prepared.componentCode
     const demoCode = prepared.demoCode
-    const generationDeadline = prepared.generationSignal ?? AbortSignal.timeout(GHL_GENERATION_DEADLINE_MS)
-    if (generationDeadline.aborted) throw new Error("GHL generation deadline exceeded")
+    checkDeadline()
 
-    // 2. Construct the system prompt
     const systemInstruction = endent`
-      You are an expert Frontend Developer who specializes in transpiling modern React components into vanilla HTML, JavaScript, and Tailwind CSS for GoHighLevel (GHL) Custom HTML blocks.
-
-      Your task is to take a React component (and its demo usage) and output a clean, single-file HTML snippet that can be directly pasted into a GoHighLevel Custom HTML element.
-
-      CRITICAL RULES:
-      1. OUTPUT FORMAT:
-      - Output ONLY the raw embeddable HTML snippet.
-      - DO NOT wrap the output in Markdown code blocks (NO \`\`\`html and NO \`\`\`).
-      - DO NOT include <!DOCTYPE html>, <html>, <head>, or <body> tags. This is an embedded snippet for an existing page.
-
-      2. FONTS & SCRIPTS:
-      - Use system font stacks and inline CSS only. Never include remote fonts, scripts, stylesheets, images, or other resources.
-
-      3. SCOPED STYLES & ZERO-SPECIFICITY RESETS:
-      Include a <style> block with CSS variables, keyframe animations, and reset:
-      <style>
-        .ghl-component-wrapper,
-        .ghl-component-wrapper * {
-          font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-        }
-        .ghl-component-wrapper {
-          position: relative;
-          width: 100%;
-          box-sizing: border-box;
-          isolation: isolate;
-        }
-        :where(.ghl-component-wrapper) :where(*, *::before, *::after) {
-          box-sizing: border-box;
-        }
-        :where(.ghl-component-wrapper) :where(button, [role="button"]) {
-          cursor: pointer;
-          background-color: transparent;
-          border-width: 0;
-          padding: 0;
-          color: inherit;
-        }
-      </style>
-
-      4. WRAPPER CONTAINER & BACKGROUNDS:
-      Wrap the entire component markup inside:
-      <div class="ghl-component-wrapper w-full">
-      - NEVER add artificial borders, rounded corners, padding, or shadow to this outer wrapper.
-      - Preserve the component's internal styling, background colors (e.g. dark bg-[#030712] or light bg-white), text colors, padding, and layout completely intact.
-      - NO SPLIT-SCREEN VIEWPORT BLOCKS: Do NOT include awkward, off-center viewport-bleed background blocks (e.g. w-[100vw], -right-[50vw], -left-[50vw]).
-
-      5. ICONS & SVGS:
-      - Convert all React SVG icon components (Lucide icons, custom SVG components) into inline <svg> elements.
-      - Keep their width, height, viewBox, stroke, fill, and className attributes intact.
-
-      6. SHADCN & SEMANTIC DESIGN TOKEN TRANSLATION:
-      React components frequently rely on Shadcn UI / Tailwind CSS semantic design tokens. Since standard GoHighLevel pages lack Shadcn root CSS variables, you MUST translate these semantic tokens into exact, high-fidelity Tailwind utility classes:
-      - Primary Button / CTA (\`bg-primary text-primary-foreground\`):
-        * On dark themes (e.g. \`bg-[#030712]\`, \`bg-zinc-950\`, \`bg-black\`): Translate to an ultra-clean, high-contrast off-white pill: \`bg-[#f4f4f5] text-zinc-900 font-semibold shadow-lg hover:bg-white\`.
-        * On light themes: Translate to \`bg-zinc-900 text-white font-semibold shadow-sm hover:bg-zinc-800\`.
-        * STRICT PROHIBITION: NEVER substitute generic Bootstrap/Tailwind \`bg-blue-600\` or \`bg-indigo-600\` unless that specific color was explicitly written in the source React component!
-      - Secondary / Outline Button (\`bg-secondary text-secondary-foreground border border-border\`):
-        * On dark themes: Translate to \`bg-[#18181b]/80 border border-zinc-700/60 text-zinc-200 font-medium backdrop-blur-sm hover:bg-zinc-800/80\`.
-        * On light themes: Translate to \`bg-zinc-100 border border-zinc-200 text-zinc-800 font-medium hover:bg-zinc-200\`.
-      - Muted text (\`text-muted-foreground\`): Translate to \`text-zinc-400\` (dark) or \`text-zinc-500\` (light).
-      - Maintain rounded pill geometry (\`rounded-full\`) and comfortable spacing (\`px-6 py-2.5\`) so buttons remain sleek and refined.
-
-      7. CANVAS, SHADERS & FLUID DYNAMICS (NEGATIVE SPACE & FIDELITY):
-      When converting WebGL fluid dynamics, generative canvas shaders, or particle systems:
-      - PRESERVE PRISTINE NEGATIVE SPACE:
-        * Simulations must breathe against a deep, clean background void (e.g. \`#030712\` or \`#000000\`).
-        * Calibrate dissipation rates (\`DENSITY_DISSIPATION\`, \`VELOCITY_DISSIPATION\` around 0.98 to 0.992) so color ribbons and vortex swirls linger luxuriously for 4–7 seconds before dissolving completely into the dark void.
-        * FORBIDDEN: NEVER set dissipation to near 1.0 (e.g. 0.999+) or inject continuous high-frequency \`Math.random()\` splat intervals that turn the canvas into an opaque rainbow soup/fog.
-      - BUFFER & FBO SIZING ORDER:
-        * ALWAYS call \`resizeCanvas()\` and establish true canvas pixel dimensions BEFORE allocating WebGL Framebuffers (FBOs) or Double-FBOs. Querying canvas width/height before resizing leads to default 300x150 buffers, destroying visual clarity.
-      - TONE MAPPING & VELVETY BLEND:
-        * For fluid simulations, apply Reinhard tone mapping (\`color / (color + 1.0)\`) or soft luminance clamps in the display shader so luminous emerald, cyan, and violet ribbons blend like silk without blowing out into harsh clipped white or muddy neon blobs.
-
-      8. INTERACTIVITY & JAVASCRIPT:
-      - Convert React interactive state and animations (spotlights, mouse tracking, ripples, magnetic cursor pull, tabs, dropdowns, accordions, mobile navigation menu toggle, WebGL/canvas) into clean Vanilla JavaScript inside a <script> block at the bottom.
-      - PURE VANILLA JAVASCRIPT ONLY:
-        * NEVER output React hooks (\`useRef\`, \`useState\`, \`useEffect\`, \`useCallback\`) or \`.current\` property accesses in the vanilla script.
-        * NEVER leave undeclared variables (like \`isDark\`, \`props\`, \`ref\`). All identifiers must be explicitly declared (\`const\`, \`let\`, \`var\`).
-        * STRICT INLINE ATTRIBUTE QUOTING: In inline HTML handlers (e.g. onclick="..."), all string parameters MUST be wrapped in quotes: onclick="window.dispatchEvent(new CustomEvent('fluid-trigger-burst'))", onclick="window.open('https://example.com', '_blank')". NEVER emit unquoted strings.
-        * BOUNDING CLIENT RECT FOR POINTERS: For canvases, interactive cards, and cursor tracking, always calculate normalized UV coordinates using element.getBoundingClientRect(): (e.clientX - rect.left) / (rect.width || 1) and (e.clientY - rect.top) / (rect.height || 1). NEVER use raw e.clientX / window.innerWidth.
-        * THEME COMPLIANCE: If the component is dark-themed by default (e.g. bg-[#030712]), default the JS configuration to dark mode. GoHighLevel pages typically do NOT have a \`dark\` class on <html> or <body>.
-      - For tabs, accordions, or hidden menus, toggle the \`hidden\` class or style display property dynamically on click.
-
-      9. COMPLETION GUARANTEE:
-      - You MUST generate the ENTIRE component completely from top to bottom. Never cut off or truncate. Every tag opened must be closed.
+      Convert the supplied React component, demo, and supporting files into one complete, pasteable GoHighLevel Custom HTML snippet.
+      Return raw HTML with inline CSS and JavaScript only, without Markdown fences or document wrappers.
+      Preserve the original layout, colors, typography, animations, controls, and interactive behavior. Implement React state and event handlers in complete vanilla JavaScript; retain necessary scripts and form controls.
+      Use native buttons, inputs, and labels for interactive controls. Keep keyboard operation and ARIA state in sync with the rendered state; never make a non-focusable div the only way to activate a control.
+      Compile every Tailwind utility and semantic design token into actual CSS. Do not rely on Tailwind, React, fonts, scripts, stylesheets, or other resources from a CDN or external loader.
+      Use a .ghl-component-wrapper root and scope styles, selectors, and event handling to that component. Do not reset or mutate the host page's html/body or global styles. Support multiple pasted instances.
+      Put executable JavaScript in one instance-local IIFE inside its root. Capture document.currentScript.parentElement synchronously, use local DOM queries and addEventListener, and avoid cross-script globals and inline event attributes.
+      Include inline SVG icons and self-contained assets. Never substitute an iframe, hosted preview, screenshot, or static image for the component.
+      Preserve supplied shader/simulation logic exactly where possible. Do not guess missing shader code or replace a simulation with a decorative imitation; if essential source is missing, return no HTML.
+      Keep MIT and other required attribution/license comments. Finish every script and tag; do not emit placeholders or truncated code.
     `
 
     const userMessage = endent`
@@ -422,6 +401,9 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
       \`\`\`tsx
       ${demoCode}
       \`\`\`
+
+      Supporting Files (resolve local imports from these exact sources):
+      ${JSON.stringify(Object.fromEntries(supportingFiles))}
     `
 
     let rawOutput = ""
@@ -465,6 +447,7 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
       const configuredMaxTokens = Number(process.env.OPENAI_MAX_TOKENS) || 16384
 
       const executeCompletion = async (targetModel: string, tokens: number) => {
+        checkDeadline()
         console.log(`Calling OpenAI/OpenRouter API (${targetModel}, max_tokens: ${tokens}) to generate GHL template for demo ${demoId}...`)
         
         const extraBody: Record<string, any> = {}
@@ -571,16 +554,17 @@ export async function generateGhlTemplate(demoId: number, forceRegenerate: boole
     if (Buffer.byteLength(rawOutput) > GHL_MAX_OUTPUT_BYTES) {
       throw new Error("GHL generated output exceeds the supported byte limit")
     }
-    const ghlHtml = cleanGhlHtml(rawOutput)
+    const ghlHtml = validateOutput(rawOutput)
 
     if (!ghlHtml) {
       throw new Error("AI returned an empty response.")
     }
     if (Buffer.byteLength(ghlHtml) > GHL_MAX_OUTPUT_BYTES) {
-      throw new Error("GHL sanitized output exceeds the supported byte limit")
+      throw new Error("GHL export exceeds the supported byte limit")
     }
 
     // 4. Save to database
+    checkDeadline()
     console.log(`Saving generated GHL HTML to demo ${demoId}...`)
     await prepared.persistOutput(ghlHtml, sourceFingerprint)
 

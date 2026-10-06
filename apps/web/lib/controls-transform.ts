@@ -3,6 +3,10 @@
  * Safe to import in both Server Components / API Route Handlers and Client Components.
  */
 
+import { parse } from "@babel/parser"
+import { traverseFast, type Node } from "@babel/types"
+import { load } from "cheerio/slim"
+
 const PRIMITIVE_LITERAL_PATTERN =
   "(?:-?(?:0x[0-9a-fA-F]+|\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?)|true|false|null|undefined|\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*'|\\`(?:[^\\`\\\\]|\\\\.)*\\`)"
 
@@ -83,57 +87,77 @@ export function applyControlsToCode(
 
 export function applyControlsToGhlHtml(
   html: string,
-  controls?: Record<string, any> | null,
+  controls?: Record<string, unknown> | null,
 ): string {
-  if (!html || !controls || typeof controls !== "object") {
+  if (!html || !controls || typeof controls !== "object" || Array.isArray(controls)) {
     return html
   }
 
-  let updated = html
-  // Cap entries to prevent excessive processing
-  const entries = Object.entries(controls).slice(0, 50)
-
-  for (const [key, rawVal] of entries) {
-    if (rawVal === undefined || rawVal === null) continue
+  const values = new Map<string, string>()
+  for (const [key, rawVal] of Object.entries(controls).slice(0, 50)) {
     if (!isValidControlKey(key)) continue
+    if (typeof rawVal !== "string" && typeof rawVal !== "boolean" &&
+        !(typeof rawVal === "number" && Number.isFinite(rawVal))) continue
 
-    // Escape < and > in string literals so that string controls cannot break out of inline <script> tags
-    const valStr =
-      typeof rawVal === "string"
-        ? JSON.stringify(rawVal.slice(0, 500))
-            .replace(/</g, "\\u003c")
-            .replace(/>/g, "\\u003e")
-        : String(rawVal).slice(0, 50)
-
+    const value = JSON.stringify(typeof rawVal === "string" ? rawVal.slice(0, 500) : rawVal)
+      .replace(/</g, "\\u003c")
+      .replace(/>/g, "\\u003e")
     const constantKey = key.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase()
+    values.set(key, value)
+    values.set(constantKey, value)
+  }
+  if (!values.size) return html
 
-    // 1. CONSTANT_CASE in config object (e.g. CURL: 28, SPLAT_RADIUS: 0.28)
-    const constRegex = new RegExp(
-      "(\\b" + constantKey + "\\s*:\\s*)" +
-        PRIMITIVE_LITERAL_PATTERN +
-        "(?=\\s*[,;\\n}])",
-      "g",
-    )
-    updated = updated.replace(constRegex, (m, p1) => p1 + valStr)
+  // Retain support for callers passing a standalone JavaScript snippet.
+  const script = replaceScriptControls(html, values)
+  if (script !== null) return script
 
-    // 2. camelCase in config object (e.g. curl: 28, splatRadius: 0.28)
-    const camelRegex = new RegExp(
-      "(\\b" + key + "\\s*:\\s*)" +
-        PRIMITIVE_LITERAL_PATTERN +
-        "(?=\\s*[,;\\n}])",
-      "g",
-    )
-    updated = updated.replace(camelRegex, (m, p1) => p1 + valStr)
+  // Source indices preserve the original markup instead of reserializing it.
+  const $ = load(html, { xml: { xmlMode: false, withStartIndices: true, withEndIndices: true } }, false)
+  let updated = html
+  for (const element of $("script").toArray().reverse()) {
+    const type = (element.attribs.type || "").trim().toLowerCase()
+    if (element.attribs.src !== undefined || !/^(?:|module|(?:text|application)\/(?:java|ecma)script)$/.test(type)) continue
+    const start = element.children[0]?.startIndex
+    const end = element.children.at(-1)?.endIndex
+    if (start == null || end == null) continue
+    const replacement = replaceScriptControls(html.slice(start, end + 1), values)
+    if (replacement !== null) updated = updated.slice(0, start) + replacement + updated.slice(end + 1)
+  }
+  return updated
+}
 
-    // 3. Variable assignments: let curl = 30 / const CURL = 30 (only primitive literals)
-    const varRegex = new RegExp(
-      "(\\b(?:let|const|var)\\s+(?:" + key + "|" + constantKey + ")\\s*=\\s*)" +
-        PRIMITIVE_LITERAL_PATTERN +
-        "(?=\\s*[,;\\n])",
-      "g",
-    )
-    updated = updated.replace(varRegex, (m, p1) => p1 + valStr)
+function replaceScriptControls(script: string, values: Map<string, string>): string | null {
+  let ast: ReturnType<typeof parse>
+  try {
+    ast = parse(script, { sourceType: "unambiguous" })
+  } catch {
+    return null
   }
 
+  const edits: { start: number; end: number; value: string }[] = []
+  traverseFast(ast, node => {
+    let key: string | undefined
+    let value: Node | null | undefined
+    if (node.type === "VariableDeclarator" && node.id.type === "Identifier") {
+      key = node.id.name
+      value = node.init
+    } else if (node.type === "ObjectProperty" && !node.computed) {
+      key = node.key.type === "Identifier" ? node.key.name : node.key.type === "StringLiteral" ? node.key.value : undefined
+      value = node.value
+    }
+    const replacement = key === undefined ? undefined : values.get(key)
+    if (replacement === undefined || !value || value.start == null || value.end == null) return
+    const primitive = ["StringLiteral", "NumericLiteral", "BooleanLiteral", "NullLiteral"].includes(value.type) ||
+      (value.type === "Identifier" && value.name === "undefined") ||
+      (value.type === "TemplateLiteral" && value.expressions.length === 0) ||
+      (value.type === "UnaryExpression" && ["-", "+"].includes(value.operator) && value.argument.type === "NumericLiteral")
+    if (primitive) edits.push({ start: value.start, end: value.end, value: replacement })
+  })
+
+  let updated = script
+  for (const edit of edits.sort((a, b) => b.start - a.start)) {
+    updated = updated.slice(0, edit.start) + edit.value + updated.slice(edit.end)
+  }
   return updated
 }

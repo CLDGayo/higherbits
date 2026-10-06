@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto"
 import { performance } from "node:perf_hooks"
 import { NextResponse } from "next/server"
 import { prepareCopySource } from "@/lib/api/server/copy-source"
-import { computeGhlSourceFingerprint, generateGhlTemplate, GHL_GENERATION_DEADLINE_MS } from "@/lib/ghl-generator"
+import { cleanGhlHtml, computeGhlSourceFingerprint, generateGhlTemplate, GHL_GENERATION_DEADLINE_MS } from "@/lib/ghl-generator"
 import { COPY_HEADERS, CopyError } from "@/lib/api/server/copy-admission"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 
@@ -51,6 +51,10 @@ export async function POST(request: Request) {
     if (lease.status === "forbidden") throw new CopyError(403, "owner_required")
     if (lease.status === "conflict") throw new CopyError(409, "ghl_output_conflict")
     if (lease.status === "saved") {
+      const savedHtml = prepared.demo?.ghl_html_content
+      if (prepared.demo?.ghl_source_fingerprint !== fingerprint || typeof savedHtml !== "string" || !cleanGhlHtml(savedHtml)) {
+        throw new CopyError(503, "ghl_output_unavailable")
+      }
       return NextResponse.json({ saved: true, fingerprint, reused: true }, { headers: COPY_HEADERS })
     }
     if (lease.status === "pending") {
@@ -111,6 +115,7 @@ export async function POST(request: Request) {
         const html = await generateGhlTemplate(demoId, true, {
           componentCode: prepared.source.code,
           demoCode: prepared.source.demoCode,
+          supportingFiles: Object.fromEntries((prepared.files ?? []).map(file => [file.target || file.path, file.content])),
           savedGhlHtml: prepared.demo?.ghl_html_content,
           savedFingerprint: prepared.demo?.ghl_source_fingerprint,
           generationSignal,
