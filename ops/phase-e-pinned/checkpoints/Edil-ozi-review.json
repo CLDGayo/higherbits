@@ -1,0 +1,102 @@
+{
+  "approved": false,
+  "scope": "candidate",
+  "readyForProduction": true,
+  "pendingExternalCodeReview": true,
+  "repositoryUrl": "https://github.com/Edil-ozi/edil-ozi",
+  "ownerLabel": "Edil-ozi",
+  "profileUrl": "https://21st.dev/@Edil-ozi",
+  "pinnedRevision": "a2263dc28ff897bfd5688a5e7999bce31036f350",
+  "licenseSpdx": "MIT",
+  "licenseFile": "LICENCE.md",
+  "licenseSha256": "57aa0d7ed505b0d5181bde8a33d32cf528c3202b08ca264b905aa3e8d89bb265",
+  "manifestSha256": "494a80ee8ab9eb59dbf36d7f3a852298cda3b2250d121c6913babf12b8c88498",
+  "promptsSha256": "0f2394f0ffe26022addba5a822a603bf229ac94b840616ddafc9f797c7499ed0",
+  "dependencyEvidenceSha256": "d246c3d38dc7569d72ec5173fd3658fa227ecbf485e1c5a94266e43319b86f05",
+  "verification": {
+    "emitCheck": { "captured": 3, "ready": 3, "pending": [] },
+    "ghlVerify": { "accordion": "OK", "drawer": "OK", "pricing-card": "OK" },
+    "interactionVerify": {
+      "accordionPreviewExpandedAfterClick": true,
+      "accordionGhlExpandedAfterClick": true,
+      "drawerPreviewVisibleAfterClick": true,
+      "drawerGhlVisibleAfterClick": true,
+      "pricingCardGhlButtonTextAfterClick": "Selected!",
+      "consoleOrPageErrors": 0
+    },
+    "upstreamLiveReverify": "Re-downloaded all 3 staged .tsx files and LICENCE.md directly from https://raw.githubusercontent.com/Edil-ozi/edil-ozi/a2263dc28ff897bfd5688a5e7999bce31036f350/ — all 4 SHA-256 hashes byte-for-byte match the pinned manifest and LICENSE file. Confirmed via the GitHub Contents API that LICENCE.md is the repository's sole license file (root-level, applies repo-wide)."
+  },
+  "eligible": {
+    "count": 3,
+    "slugs": ["accordion", "drawer", "pricing-card"],
+    "notes": "Each is a single self-contained .tsx file depending only on react/react-dom; accordion additionally resolves @/lib/utils to the host app's own pre-existing cn() helper (same twMerge(clsx(...)) implementation, confirmed by direct read of apps/web/lib/utils.ts — not substituted Edil-ozi code). Zero net-new npm dependencies (dependency-license-evidence.json packages: {})."
+  },
+  "held": {
+    "count": 5,
+    "items": [
+      {
+        "slug": "custom-checkbox",
+        "upstreamFile": "registry/components/edil-ozi/checkboxes.tsx",
+        "reason": "multi_variant_gallery_not_single_component",
+        "detail": "Upstream file is a Checkboxes showcase gallery of 4 unrelated checkbox variants depending on @/components/card-wrapper and @/hooks/useCopyToClipboard (neither pinned); no 1:1 source file isolates a single reusable component matching the 21st.dev slug without authoring unlisted content. Re-confirmed live against the pinned revision."
+      },
+      {
+        "slug": "toggle",
+        "upstreamFile": "registry/components/edil-ozi/toggle-inputs.tsx",
+        "reason": "multi_variant_gallery_not_single_component",
+        "detail": "Same gallery pattern as custom-checkbox: ToggleInputs renders 2 variants via the same CardWrapper/useCopyToClipboard helpers. Re-confirmed live against the pinned revision."
+      },
+      {
+        "slug": "infinite-scroll",
+        "upstreamFile": "registry/components/edil-ozi/infinite-scroll.tsx",
+        "reason": "hotlinked_third_party_images_unverified_rights",
+        "detail": "Hardcodes 6 images.unsplash.com URLs with no bundled rights-cleared images, and also depends on the lenis npm package (not installed in this repo). Re-confirmed live against the pinned revision."
+      },
+      {
+        "slug": "horizontal-scroll-carousel",
+        "upstreamFile": "registry/components/edil-ozi/horizontal-scroll.tsx",
+        "reason": "framework_coupled_no_bundled_images",
+        "detail": "Depends on next/image, framer-motion (not installed), and a custom useLenis hook; takes an images: string[] prop with no bundled images of its own to rights-clear, and cannot render inside a self-contained GHL export. Re-confirmed live against the pinned revision (upstream filename is horizontal-scroll.tsx, not horizontal-scroll-carousel.tsx; slug mapping confirmed against 21st.dev listing for this author)."
+      },
+      {
+        "slug": "scroll-velocity",
+        "upstreamFile": "registry/components/edil-ozi/scroll-velocity.tsx",
+        "reason": "net_new_dependency_and_poor_isolated_preview_fit",
+        "detail": "Clean source but requires adding framer-motion (not currently installed anywhere in this repo) and is driven by whole-page scroll velocity, a poor fit for an isolated single-component static preview. Deferred rather than rushed. Re-confirmed live against the pinned revision."
+      }
+    ]
+  },
+  "assets": {
+    "accordion": {
+      "sourceSha256": "da2abea820c4bf51f618a2d79c9c769ce96266804d5a587269d9cce18dab2014",
+      "demoSha256": "2a0d56b27c5799c9e517efca9e198feac1dcffe49f8ba6807b2fdf19ff2ab413",
+      "ghlHtmlSha256": "cb36254576a6f702b127fa250e6630b8a7db6eca41441b380aabaa477aa0d461",
+      "bundleHtmlSha256": "83e017ae81b4d17fb46c74ac39327a26b37a45de997f95e8eca4b3979b45d0e1",
+      "previewPngSha256": "457636e2dc06d550299878114a172754785e6906d2994017dd761dea7934d3d0",
+      "promptsSha256": "48a539dc35c6cd40a4d987a7288a96fa88548d4a2fcb11fc4e6a72b17fdc696f"
+    },
+    "drawer": {
+      "sourceSha256": "34e3e2c49e896e99ab9f71077f0ce4cad07461850851288e6801d9b6a6301931",
+      "demoSha256": "1d83553d52be5d5bbe64cf01dff006bdd041177684b9e07b3135cd2439c774cc",
+      "ghlHtmlSha256": "fbfcd84a0c23e0844a7b17d02dff42571b13b2524fb166c1ccfbd70ff04c60af",
+      "bundleHtmlSha256": "9bed3aecd52966efae819021ed30a62313af66b8e5767d2ce5c96d9e76ca12d9",
+      "previewPngSha256": "f390354c90a02965fff4969f4e84b97b01ed0c0e64bac821e4d74838b0f64582",
+      "promptsSha256": "6739ec75b58feb4c331da9af8572ff71b7a82af92d1476fd839512d5495bb912"
+    },
+    "pricing-card": {
+      "sourceSha256": "5f4c12881c8d6371cb0d13eaf38c5d7585ce9dad2ae3f25d8a2ea352ab5cac40",
+      "demoSha256": "5332627ddcf281826c67968c2e8249d3141f3aacc1d4ada52a354450b43bb957",
+      "ghlHtmlSha256": "1da292c5fa1bbaaca876aaf71c30fd784d13d8917036d2e46ba6dcedfa7f0b35",
+      "bundleHtmlSha256": "5438c2a81e38b5fe339c53261618748d6a8777e6cad8c51dfac191def6ee35ea",
+      "previewPngSha256": "7e014773e2a73d63c692c11df65c2166ff95e03013b908dc9de7ebee9ae0526d",
+      "promptsSha256": "2b93f26a2b15a55ff3fcfd174a53ef2230ccb28e4432a0ed86fe447532789035"
+    }
+  },
+  "reviewerLabel": "Claude (Sonnet 5), pre-publication candidate pass",
+  "reviewedAt": "2026-10-07T05:30:00.000Z",
+  "rationale": "3 of 8 row-24 Edil-ozi slugs (accordion, drawer, pricing-card) are self-contained single-file MIT components with zero net-new npm dependencies; all pass the emit-check readiness gates, GHL DOM/CSS/single-wrapper validation, and live Playwright interaction verification with zero console errors. Upstream source and license were re-verified byte-for-byte against the live pinned GitHub revision in this session. The remaining 5 slugs are held for documented, re-confirmed reasons (multi-variant galleries, hotlinked image rights, missing framework/dependency support). No production database write or deploy has occurred this session; publication is explicitly deferred pending a separate code reviewer's sign-off, per user instruction.",
+  "published_count": 0,
+  "held_count": 5,
+  "total_count": 8,
+  "proposedSheetStatus": "3 of 8 Edil-ozi row-24 slugs verified MIT-licensed and publication-ready pending external code review (accordion, drawer, pricing-card); 0 published. 5 held: custom-checkbox, toggle (multi-variant galleries, no 1:1 source), infinite-scroll (hotlinked unsplash + lenis dep), horizontal-scroll-carousel (next/image + framer-motion + no bundled images), scroll-velocity (framer-motion not installed, poor isolated-preview fit)."
+}

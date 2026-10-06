@@ -1,0 +1,14 @@
+**Appearance**
+A vertically stacked list of bordered items; each summary row shows a chevron that rotates 180 degrees when its item is open, with a smooth height transition revealing the details panel below it.
+
+**Behavior**
+Height-based expand/collapse driven by measuring the summary and details element heights with refs and animating a wrapping container's `height` style. Supports independent multi-open items (default) or single-open-at-a-time via the `multiple` prop on `Accordion`.
+
+**Controls**
+Each `AccordionSummary` is a native `<button>` toggled by click; no keyboard shortcuts beyond native button focus/Enter/Space activation.
+
+**Accessibility**
+Uses a real `<button>` for the toggle control, so it is keyboard-focusable and activates on Enter/Space by default. No `aria-expanded`/`aria-controls` wiring is present upstream; add those attributes if stricter screen-reader support is required.
+
+**Installation Needs**
+Requires React 18+ and a standard `cn` utility (clsx + tailwind-merge) at `@/lib/utils`. No other npm dependencies.

@@ -1,0 +1,14 @@
+**Appearance**
+A single rounded, bordered gradient card (slate-700 to slate-800) with a heading, description, large price, optional strikethrough original price, a diagonal discount ribbon, a call-to-action button, and a bulleted feature list with checkmark icons.
+
+**Behavior**
+Pure presentational component: computes a discounted price from `price` and `discount` (percent off) and renders it; no internal state. A slight hover scale-up is applied on medium+ viewports.
+
+**Controls**
+The call-to-action button fires the consumer-supplied `onClick` handler; there is no other interactivity.
+
+**Accessibility**
+Uses a semantic `<button>` for the call-to-action and a `<ul>`/`<li>` list for features. No `aria-label` is set on the decorative checkmark SVGs (they are `aria-hidden` by default browser behavior since they carry no label), which is acceptable for decorative icons paired with visible text.
+
+**Installation Needs**
+Requires React 18+ only. No other npm dependencies.

@@ -1,0 +1,14 @@
+**Appearance**
+A full-height (or full-width, for top/bottom anchors) panel that slides in from the chosen edge (left/right/top/bottom) over a semi-transparent backdrop covering the whole viewport.
+
+**Behavior**
+Rendered through `createPortal` directly into `document.body` so it always sits above page content regardless of where it is mounted. Opening sets local visibility state on a timer-delayed close (200ms) so the slide-out transition can finish before unmount. Clicking the backdrop or pressing Escape closes it.
+
+**Controls**
+Fully controlled via the `open`/`setOpen` props passed in by the consumer; the component itself has no internal open/close trigger.
+
+**Accessibility**
+No `role="dialog"`/focus-trap/`aria-modal` wiring is present upstream. Escape-to-close is implemented. Add dialog semantics and focus management if used for a true modal workflow.
+
+**Installation Needs**
+Requires React 18+ (`react-dom`'s `createPortal`). No other npm dependencies.

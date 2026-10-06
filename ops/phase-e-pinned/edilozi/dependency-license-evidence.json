@@ -1,0 +1,5 @@
+{
+  "reviewedAt": "2026-10-07",
+  "purpose": "Confirm the three staged Edil-ozi components introduce zero new third-party npm dependencies; only the host app's existing React/react-dom and its pre-existing @/lib/utils cn() helper are used.",
+  "packages": {}
+}

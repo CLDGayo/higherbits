@@ -1,0 +1,63 @@
+{
+  "repositoryUrl": "https://github.com/Edil-ozi/edil-ozi",
+  "ownerLabel": "Edil-ozi",
+  "profileUrl": "https://21st.dev/@Edil-ozi",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "57aa0d7ed505b0d5181bde8a33d32cf528c3202b08ca264b905aa3e8d89bb265",
+  "items": [
+    {
+      "slug": "accordion",
+      "registryName": "accordion",
+      "title": "Accordion",
+      "description": "An accessible, animated accordion built from composable Accordion/AccordionItem/AccordionSummary/AccordionDetails primitives.",
+      "revision": "a2263dc28ff897bfd5688a5e7999bce31036f350",
+      "sourcePath": "registry/components/edil-ozi/accordion.tsx",
+      "files": [
+        {
+          "path": "registry/components/edil-ozi/accordion.tsx",
+          "type": "registry:component",
+          "bytes": 4649,
+          "sha256": "da2abea820c4bf51f618a2d79c9c769ce96266804d5a587269d9cce18dab2014"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": ["@/lib/utils"]
+    },
+    {
+      "slug": "drawer",
+      "registryName": "drawer",
+      "title": "Drawer",
+      "description": "A portal-based slide-in drawer panel with left/right/top/bottom anchors and escape-to-close support.",
+      "revision": "a2263dc28ff897bfd5688a5e7999bce31036f350",
+      "sourcePath": "registry/components/edil-ozi/drawer.tsx",
+      "files": [
+        {
+          "path": "registry/components/edil-ozi/drawer.tsx",
+          "type": "registry:component",
+          "bytes": 2051,
+          "sha256": "34e3e2c49e896e99ab9f71077f0ce4cad07461850851288e6801d9b6a6301931"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": []
+    },
+    {
+      "slug": "pricing-card",
+      "registryName": "pricing-card",
+      "title": "Pricing Card",
+      "description": "A single pricing tier card with optional discount badge, feature list, and call-to-action button.",
+      "revision": "a2263dc28ff897bfd5688a5e7999bce31036f350",
+      "sourcePath": "registry/components/edil-ozi/pricing-card.tsx",
+      "files": [
+        {
+          "path": "registry/components/edil-ozi/pricing-card.tsx",
+          "type": "registry:component",
+          "bytes": 3065,
+          "sha256": "5f4c12881c8d6371cb0d13eaf38c5d7585ce9dad2ae3f25d8a2ea352ab5cac40"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": []
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      font-family: var(--ghl-font);
+      overflow: hidden;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-open-btn {
+      border-radius: 6px;
+      background: #1e293b;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+    }
+    .ghl-component-wrapper .ghl-open-btn:hover {
+      background: #334155;
+    }
+    .ghl-component-wrapper .ghl-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      background: rgba(24, 24, 27, 0.5);
+      transition: opacity 0.2s ease;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .ghl-component-wrapper .ghl-backdrop[data-visible="true"] {
+      opacity: 1;
+      visibility: visible;
+    }
+    .ghl-component-wrapper .ghl-drawer-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 101;
+      height: 100%;
+      width: 240px;
+      background: #ffffff;
+      box-shadow: -4px 0 16px rgba(0, 0, 0, 0.15);
+      padding: 24px;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+    }
+    .ghl-component-wrapper .ghl-drawer-panel[data-visible="true"] {
+      transform: translateX(0);
+    }
+    .ghl-component-wrapper .ghl-drawer-panel h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .ghl-component-wrapper .ghl-drawer-panel p {
+      margin: 0;
+      font-size: 13px;
+      color: #71717a;
+    }
+  </style>
+
+  <button type="button" class="ghl-open-btn">Open drawer</button>
+  <div class="ghl-backdrop" data-visible="false"></div>
+  <div class="ghl-drawer-panel" data-visible="false">
+    <h3>Drawer panel</h3>
+    <p>Press Escape or click outside to close.</p>
+  </div>
+
+  <script>
+    (() => {
+      function initInstance(root) {
+        var openBtn = root.querySelector(".ghl-open-btn");
+        var backdrop = root.querySelector(".ghl-backdrop");
+        var panel = root.querySelector(".ghl-drawer-panel");
+
+        function close() {
+          backdrop.setAttribute("data-visible", "false");
+          panel.setAttribute("data-visible", "false");
+        }
+        function open() {
+          backdrop.setAttribute("data-visible", "true");
+          panel.setAttribute("data-visible", "true");
+        }
+
+        openBtn.addEventListener("click", open);
+        backdrop.addEventListener("click", close);
+        document.addEventListener("keydown", function (event) {
+          if (event.code === "Escape") close();
+        });
+      }
+      var wrapper = document.currentScript && document.currentScript.closest(".ghl-component-wrapper");
+      if (wrapper) initInstance(wrapper);
+    })();
+  </script>
+</div>
+<!--
+## MIT License
+
+Copyright (c) Edil Ozi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
