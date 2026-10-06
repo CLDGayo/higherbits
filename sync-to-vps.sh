@@ -96,7 +96,7 @@ if [[ "${1:-}" == "--deploy" ]]; then
     # Run commands on the VPS via SSH to install dependencies, build, and restart the app
     ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=120 "$VPS_USER@$VPS_HOST" "
         set -e
-        chown -R higherbits:higherbits \"$VPS_DEST\"
+        chown -R higherbits:higherbits \"\$(readlink -f \"$VPS_DEST\")\"
         su - higherbits -c '
             set -e
             cd \"$VPS_DEST\"
