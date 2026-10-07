@@ -50,7 +50,7 @@ export async function approvedAutoIndexSnapshot(componentId: number): Promise<Ap
   for (const entry of candidate.dependencies) {
     if (!entry || typeof entry !== "object" || Array.isArray(entry)) sourceUnavailable()
     if (entry.type === "npm" && typeof entry.name === "string" && typeof entry.version === "string" &&
-        /^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/.test(entry.name) && /^[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$/.test(entry.version)) {
+        /^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/.test(entry.name) && /^(?:\^|~)?[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$/.test(entry.version)) {
       npmDependencies.push(`${entry.name}@${entry.version}`)
     } else if (entry.type === "registry" && typeof entry.reference === "string" &&
         /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(entry.reference)) registryDependencies.push(entry.reference)

@@ -47,6 +47,24 @@ it("E21: releases exact approved bytes with distinct original LICENSE and NOTICE
   expect(snapshot.npmDependencies).toEqual(["react@19.2.0"])
 })
 
+it("E21: accepts pinned npm semver ranges from approved registry manifests", async () => {
+  fixture.tables.get("auto_index_candidates")![0]!.dependencies = [
+    { type: "npm", name: "@radix-ui/react-scroll-area", version: "^1.2.9" },
+  ]
+
+  const snapshot = await approvedAutoIndexSnapshot(42)
+
+  expect(snapshot.npmDependencies).toEqual(["@radix-ui/react-scroll-area@^1.2.9"])
+})
+
+it("E21: rejects unsupported npm dependency specifiers", async () => {
+  fixture.tables.get("auto_index_candidates")![0]!.dependencies = [
+    { type: "npm", name: "react", version: "file:../../unsafe" },
+  ]
+
+  await expect(approvedAutoIndexSnapshot(42)).rejects.toMatchObject({ status: 503 })
+})
+
 it("E23: delist and opt-out block a new source read", async () => {
   fixture.tables.get("auto_index_publications")![0].delisted_at = new Date().toISOString()
   await expect(approvedAutoIndexSnapshot(42)).rejects.toMatchObject({ status: 404 })
