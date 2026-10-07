@@ -46,8 +46,14 @@ function validateGhl(value) {
   try {
     const document = new JSDOM(value).window.document
     for (const style of document.querySelectorAll('style')) parseCss(style.textContent || '')
+    const wrappers = document.body.querySelectorAll('.ghl-component-wrapper')
+    const wrapper = wrappers[0]
+    const containsLicenseComment = node => {
+      if (node.nodeType === 8 && node.textContent.includes('MIT License')) return true
+      return [...node.childNodes].some(containsLicenseComment)
+    }
     return cleanGhlHtml(value) === value.trim() && value.includes(license.toString('utf8').trim()) &&
-      document.body.querySelectorAll('.ghl-component-wrapper').length === 1 &&
+      wrappers.length === 1 && !containsLicenseComment(wrapper) &&
       !document.querySelector('iframe,script[src],link[rel="stylesheet"],img[src]')
   } catch { return false }
 }

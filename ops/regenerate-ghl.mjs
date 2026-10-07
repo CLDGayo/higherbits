@@ -17,12 +17,13 @@ requireWeb('dotenv').config({ path: envFile })
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) throw new Error('Supabase configuration is unavailable')
 
 const args = new Set(process.argv.slice(2))
-if ([...args].some(arg => !['--stage', '--publish', '--agy'].includes(arg) &&
+if ([...args].some(arg => !['--stage', '--publish', '--agy', '--reviewed-auto-index'].includes(arg) &&
     !arg.startsWith('--ids=') && !arg.startsWith('--concurrency=') && !arg.startsWith('--local-dir='))) throw new Error('Unknown argument')
 const mode = args.has('--stage') && !args.has('--publish') ? 'stage' : args.has('--publish') && !args.has('--stage') ? 'publish' : null
 if (!mode) throw new Error('Select exactly one of --stage or --publish')
 const localDir = process.argv.find(arg => arg.startsWith('--local-dir='))?.slice(12)
 if (localDir && (mode !== 'stage' || !isAbsolute(localDir) || args.has('--agy'))) throw new Error('Local output directory requires --stage and an absolute path')
+if (args.has('--reviewed-auto-index') && (!localDir || mode !== 'stage')) throw new Error('--reviewed-auto-index requires --stage and --local-dir')
 const idsArg = process.argv.find(arg => arg.startsWith('--ids='))?.slice(6)
 if (idsArg === '') throw new Error('--ids requires at least one demo id')
 const ids = idsArg ? new Set(idsArg.split(',').map(Number)) : null
@@ -112,7 +113,9 @@ async function listPublished() {
 async function stageOne({ component, demo }) {
   const label = `${demo.id}:${component.component_slug}`
   try {
-    if (localDir && component.registry === 'auto-index') throw new Error('Local reviewed outputs are limited to manual components')
+    if (localDir && component.registry === 'auto-index' && !args.has('--reviewed-auto-index')) {
+      throw new Error('Auto-index local outputs require explicit --reviewed-auto-index')
+    }
     const approved = component.registry === 'auto-index'
       ? await runner.prepareCopySource(component.user_id, { demoId: demo.id }, true) : null
     const componentCode = approved ? approved.source.code : await readSource(component.code)
@@ -144,7 +147,7 @@ async function stageOne({ component, demo }) {
     let output
     let reusedExisting = false
     let localReviewed = false
-    if (!bundledHtml && component.registry === 'auto-index' &&
+    if (!localDir && !bundledHtml && component.registry === 'auto-index' &&
         demo.ghl_source_fingerprint === fingerprint && demo.ghl_html_content) {
       try { output = runner.cleanGhlHtml(demo.ghl_html_content); reusedExisting = Boolean(output) } catch { /* regeneration below */ }
     }

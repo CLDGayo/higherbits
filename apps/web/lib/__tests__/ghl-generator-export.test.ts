@@ -63,6 +63,11 @@ it.each([
   expect(() => cleanGhlHtml(`<div>${markup}</div>`)).toThrow(/globals/)
 })
 
+it("rejects truncated markup before tolerant HTML parsing can repair it", () => {
+  const truncated = '<div class="ghl-component-wrapper"><div class="row"><div class="ghl-tag-reveal"><'
+  expect(() => cleanGhlHtml(truncated)).toThrow(/malformed or truncated HTML/)
+})
+
 it("prepares and persists the supplied bundle with the shared fingerprint and no provider", async () => {
   const persistOutput = vi.fn().mockResolvedValue(undefined)
   const source = { componentCode: "component", demoCode: "demo", bundledHtml: "supplied bundle", persistOutput }
@@ -80,6 +85,17 @@ it("validates prepared bundles before persistence", async () => {
     .rejects.toThrow(/self-contained/)
   expect(persistOutput).not.toHaveBeenCalled()
   expect(fetch).not.toHaveBeenCalled()
+})
+
+it("rejects truncated provider HTML before persistence", async () => {
+  vi.stubEnv("RELMIO_AUTH_TOKEN", "test-token")
+  vi.mocked(fetch).mockResolvedValue(new Response(JSON.stringify({
+    output: '<div class="ghl-component-wrapper"><div class="row"><',
+  })))
+  const persistOutput = vi.fn()
+  await expect(generateGhlTemplate(17, true, { componentCode: "component", demoCode: "demo", persistOutput }))
+    .rejects.toThrow(/malformed or truncated HTML/)
+  expect(persistOutput).not.toHaveBeenCalled()
 })
 
 it("requires a free OpenRouter model for creator review GHL generation", async () => {

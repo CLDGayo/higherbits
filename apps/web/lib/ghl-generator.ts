@@ -169,7 +169,16 @@ export function cleanGhlHtml(raw: string): string {
   if (!/<[a-z][a-z0-9-]*\b/i.test(text)) return ""
 
   // Fragment parsing drops document wrappers without touching JavaScript string literals.
-  const $ = load(text, { sourceCodeLocationInfo: true }, false)
+  const parseErrors: string[] = []
+  const $ = load(text, {
+    sourceCodeLocationInfo: true,
+    onParseError: error => parseErrors.push(error.code),
+  }, false)
+  if (parseErrors.some(code => code.startsWith("eof-") || code === "end-tag-without-matching-open-element") ||
+      $.root().find("div").toArray().some(element =>
+        !(element as typeof element & { sourceCodeLocation?: { endTag?: unknown } }).sourceCodeLocation?.endTag)) {
+    throw new Error("GHL export contains malformed or truncated HTML")
+  }
   if ($("iframe, object, embed, base, link, meta[http-equiv]").length) {
     throw new Error("GHL export must be self-contained HTML; hosted embeds and external resources are unsupported")
   }
