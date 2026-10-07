@@ -20,11 +20,41 @@ const mockState = {
 
 vi.mock("jotai", () => ({
   useAtom: (atom: any) => {
-    if (atom === librariesSearchAtom) return [mockState.search, (v: any) => { mockState.search = v }]
-    if (atom === librariesCategoryAtom) return [mockState.category, (v: any) => { mockState.category = v }]
-    if (atom === librariesScopeAtom) return [mockState.scope, (v: any) => { mockState.scope = v }]
-    if (atom === librariesSortAtom) return [mockState.sort, (v: any) => { mockState.sort = v }]
-    if (atom === librariesViewModeAtom) return [mockState.viewMode, (v: any) => { mockState.viewMode = v }]
+    if (atom === librariesSearchAtom)
+      return [
+        mockState.search,
+        (v: any) => {
+          mockState.search = v
+        },
+      ]
+    if (atom === librariesCategoryAtom)
+      return [
+        mockState.category,
+        (v: any) => {
+          mockState.category = v
+        },
+      ]
+    if (atom === librariesScopeAtom)
+      return [
+        mockState.scope,
+        (v: any) => {
+          mockState.scope = v
+        },
+      ]
+    if (atom === librariesSortAtom)
+      return [
+        mockState.sort,
+        (v: any) => {
+          mockState.sort = v
+        },
+      ]
+    if (atom === librariesViewModeAtom)
+      return [
+        mockState.viewMode,
+        (v: any) => {
+          mockState.viewMode = v
+        },
+      ]
     return ["", vi.fn()]
   },
   atom: (v: unknown) => v,
@@ -32,7 +62,11 @@ vi.mock("jotai", () => ({
 
 import { LibrariesList } from "../libraries-list"
 import { LibraryCard } from "../library-card"
-import { LIBRARIES_DATA } from "@/lib/data/libraries-data"
+import {
+  LIBRARIES_DATA,
+  LIBRARY_CATEGORIES,
+  LIBRARY_SCOPE_COUNTS,
+} from "@/lib/data/libraries-data"
 
 describe("LibrariesList", () => {
   beforeEach(() => {
@@ -46,7 +80,9 @@ describe("LibrariesList", () => {
   it("renders the heading and library items count", () => {
     render(<LibrariesList />)
     expect(screen.getByText("UI Component Libraries")).toBeDefined()
-    expect(screen.getByText(String(LIBRARIES_DATA.length))).toBeDefined()
+    expect(
+      screen.getByText(String(LIBRARY_SCOPE_COUNTS.higherbits)),
+    ).toBeDefined()
   })
 
   it("renders library cards with names and authors", () => {
@@ -68,6 +104,62 @@ describe("LibrariesList", () => {
     render(<LibrariesList />)
     expect(screen.getByText("Aceternity UI")).toBeDefined()
     expect(screen.queryByText("Kokonut UI")).toBeNull()
+  })
+
+  it("filters the displayed libraries when a category is selected", () => {
+    const higherBitsLibraries = LIBRARIES_DATA.filter(
+      (library) => library.scope === "higherbits",
+    )
+    const category = LIBRARY_CATEGORIES.find(
+      ({ slug }) =>
+        higherBitsLibraries.some((library) =>
+          library.categories.includes(slug),
+        ) &&
+        higherBitsLibraries.some(
+          (library) => !library.categories.includes(slug),
+        ),
+    )!
+    const included = higherBitsLibraries.find((library) =>
+      library.categories.includes(category.slug),
+    )!
+    const excluded = higherBitsLibraries.find(
+      (library) => !library.categories.includes(category.slug),
+    )!
+    mockState.category = category.slug
+
+    render(<LibrariesList />)
+
+    expect(screen.getByText(`${category.name} Libraries`)).toBeDefined()
+    expect(screen.getByText(included.name)).toBeDefined()
+    expect(screen.queryByText(excluded.name)).toBeNull()
+  })
+
+  it("keeps category filtering within the selected shadcn directory scope", () => {
+    mockState.scope = "shadcn"
+    const category = LIBRARY_CATEGORIES.find(({ slug }) =>
+      LIBRARIES_DATA.some((library) => library.categories.includes(slug)),
+    )!
+    const higherBitsLibrary = LIBRARIES_DATA.find((library) =>
+      library.categories.includes(category.slug),
+    )!
+    const shadcnLibrary = {
+      ...higherBitsLibrary,
+      id: "shadcn-scope-fixture",
+      name: "Shadcn Scope Fixture",
+      scope: "shadcn" as const,
+    }
+    const originalLength = LIBRARIES_DATA.length
+    LIBRARIES_DATA.push(shadcnLibrary)
+    mockState.category = category.slug
+
+    try {
+      render(<LibrariesList />)
+
+      expect(screen.getByText(shadcnLibrary.name)).toBeDefined()
+      expect(screen.queryByText(higherBitsLibrary.name)).toBeNull()
+    } finally {
+      LIBRARIES_DATA.length = originalLength
+    }
   })
 
   it("shows empty state when no matches found", () => {

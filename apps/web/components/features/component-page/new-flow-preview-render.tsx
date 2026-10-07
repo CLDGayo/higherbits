@@ -67,6 +67,29 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
     }
   }, [activeControls])
 
+  const centerPreviewContent = useCallback(() => {
+    try {
+      const previewDocument = iframeRef.current?.contentDocument
+      if (
+        !previewDocument?.head ||
+        previewDocument.getElementById("higherbits-preview-centering")
+      ) {
+        return
+      }
+
+      const style = previewDocument.createElement("style")
+      style.id = "higherbits-preview-centering"
+      style.textContent = `
+        html, body, #root, #__next { width: 100%; height: 100%; min-height: 100%; margin: 0; }
+        #root, #__next { display: flex !important; align-items: safe center !important; justify-content: safe center !important; }
+        #root > div, #__next > div { display: flex !important; align-items: safe center !important; justify-content: safe center !important; min-height: 100%; }
+      `
+      previewDocument.head.appendChild(style)
+    } catch {
+      // Cross-origin bundle iframes cannot be adjusted by the parent page.
+    }
+  }, [])
+
   useEffect(() => {
     sendThemeToIframe()
   }, [sendThemeToIframe])
@@ -114,6 +137,7 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
           className="w-full h-full border-0"
           onLoad={() => {
             setIsLoading(false)
+            centerPreviewContent()
             sendThemeToIframe()
             sendControlsToIframe()
           }}

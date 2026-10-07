@@ -1,4 +1,23 @@
 import { PrismaClient } from "@/prisma/client"
+import { existsSync } from "node:fs"
+import { join } from "node:path"
+
+// Prisma's Next bundle can resolve its engine relative to a duplicated
+// `apps/web` path on the VPS. Point it at the generated Debian engine in the
+// app's traced Prisma output; keep explicit deployment overrides intact.
+if (
+  process.platform === "linux" &&
+  process.env.NODE_ENV === "production" &&
+  !process.env.PRISMA_QUERY_ENGINE_LIBRARY
+) {
+  const queryEnginePath = join(
+    process.cwd(),
+    "prisma/client/libquery_engine-debian-openssl-3.0.x.so.node",
+  )
+  if (existsSync(queryEnginePath)) {
+    process.env.PRISMA_QUERY_ENGINE_LIBRARY = queryEnginePath
+  }
+}
 
 /**
  * A single PrismaClient per process, not per module instance.

@@ -74,7 +74,7 @@ async function main() {
     
     const finalDirectRegistryDependencies = [...directRegistryDependencies]
 
-    const { defaultGlobalCss } = await import("../lib/sandpack")
+    const { defaultGlobalCss, withPreviewViewportCss } = await import("../lib/sandpack")
 
     let codeContent = component.code || ""
     if (codeContent.startsWith("http")) {
@@ -94,21 +94,7 @@ async function main() {
 
     const files: Record<string, string> = {
       [`/components/ui/${component.component_slug}.tsx`]: codeContent,
-      "/globals.css": defaultGlobalCss + `
-        /* Ensure component container uses full width and height with centering */
-        html, body, #root {
-          margin: 0;
-          padding: 0;
-          min-height: 100vh;
-        }
-        #root {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2rem;
-          background-color: transparent !important;
-        }
-      `,
+      "/globals.css": withPreviewViewportCss(defaultGlobalCss),
       "/theme.ts": `if (typeof window !== "undefined" && window.location.search.includes("dark=true")) { document.documentElement.classList.add("dark"); }`,
       "/lib/utils.ts": `import { clsx, type ClassValue } from "clsx"\nimport { twMerge } from "tailwind-merge"\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs))\n}`,
       "/next-themes.tsx": `import * as React from "react";\nexport const ThemeProvider = (props: any) => <>{props.children}</>;\nexport const useTheme = () => ({ theme: "light", setTheme: () => {} });`,

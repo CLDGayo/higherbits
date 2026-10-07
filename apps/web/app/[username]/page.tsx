@@ -11,6 +11,99 @@ const getCachedUser = async (username: string) => {
   return user
 }
 
+async function getUserProfileStats(userId: string, manuallyAdded: boolean) {
+  let isAutoIndexedProfile: boolean | null = manuallyAdded ? null : false
+  try {
+    if (manuallyAdded) {
+      const { data, error } = await supabaseWithAdminAccess
+        .from("components")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("registry", "auto-index")
+        .limit(1)
+      if (error) throw error
+      isAutoIndexedProfile = Boolean(data?.length)
+    }
+
+    const pageSize = 1000
+    const componentIds: number[] = []
+    let lastComponentId: number | null = null
+    for (;;) {
+      let query = supabaseWithAdminAccess
+        .from("components")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("is_public", true)
+        .order("id", { ascending: true })
+        .limit(pageSize)
+      if (lastComponentId !== null) query = query.gt("id", lastComponentId)
+      const { data, error } = await query
+      if (error) throw error
+      const rows = data ?? []
+      componentIds.push(...rows.map(({ id }) => id))
+      lastComponentId = rows.at(-1)?.id ?? lastComponentId
+      if (rows.length < pageSize) break
+    }
+    if (!componentIds.length) {
+      return { views: 0, bookmarks: 0, isAutoIndexedProfile }
+    }
+
+    const viewsResults = await Promise.all(
+      Array.from({ length: Math.ceil(componentIds.length / 500) }, (_, index) =>
+        supabaseWithAdminAccess
+          .from("component_analytics")
+          .select("*", { count: "exact", head: true })
+          .in(
+            "component_id",
+            componentIds.slice(index * 500, (index + 1) * 500),
+          )
+          .eq("activity_type", "component_view"),
+      ),
+    )
+    const failedViews = viewsResults.find(({ error }) => error)?.error
+    if (failedViews) throw failedViews
+
+    let bookmarks = 0
+    for (let idsOffset = 0; idsOffset < componentIds.length; idsOffset += 500) {
+      const ids = componentIds.slice(idsOffset, idsOffset + 500)
+      let lastDemoId: number | null = null
+      for (;;) {
+        let query = supabaseWithAdminAccess
+          .from("demos")
+          .select("id, bookmarks_count")
+          .in("component_id", ids)
+          .order("id", { ascending: true })
+          .limit(pageSize)
+        if (lastDemoId !== null) query = query.gt("id", lastDemoId)
+        const { data, error } = await query
+        if (error) throw error
+        const rows = data ?? []
+        bookmarks += rows.reduce(
+          (sum, demo) => sum + (demo.bookmarks_count ?? 0),
+          0,
+        )
+        lastDemoId = rows.at(-1)?.id ?? lastDemoId
+        if (rows.length < pageSize) break
+      }
+    }
+
+    return {
+      views: viewsResults.reduce((sum, result) => sum + (result.count ?? 0), 0),
+      bookmarks,
+      isAutoIndexedProfile,
+    }
+  } catch (error) {
+    console.error("Error fetching public profile stats:", error)
+    return { views: null, bookmarks: null, isAutoIndexedProfile }
+  }
+}
+
+const getCachedUserProfileStats = unstable_cache(
+  getUserProfileStats,
+  ["user-profile-stats"],
+  { revalidate: 60 },
+)
+
 async function getUser(username: string) {
   return getCachedUser(username)
 }
@@ -77,12 +170,17 @@ export default async function UserProfile(props: {
   if (!user || !user.username) {
     redirect("/")
   }
+  const profileStats = await getCachedUserProfileStats(
+    user.id,
+    user.manually_added === true,
+  )
 
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-1">
         <UserPageClient
           user={user}
+          profileStats={profileStats}
           initialTab={searchParams.tab || "components"}
         />
       </div>

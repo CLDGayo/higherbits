@@ -26,25 +26,30 @@ export interface LibraryCategoryMeta {
   icon: string
 }
 
+// `count` below is a placeholder, overwritten immediately after LIBRARIES_DATA
+// is defined (end of this file) with the real tally from that data. The
+// original hand-typed numbers had drifted badly from the actual catalog (e.g.
+// "ai" claimed 7 while dozens of entries below carry that category), which is
+// exactly the "invented count" the libraries page must not show.
 export const LIBRARY_CATEGORIES: LibraryCategoryMeta[] = [
-  { slug: "design-system", name: "Design system", count: 69, icon: "design-system" },
-  { slug: "marketing", name: "Marketing UI", count: 26, icon: "marketing" },
-  { slug: "ai", name: "AI blocks", count: 7, icon: "ai" },
-  { slug: "forms", name: "Forms", count: 26, icon: "forms" },
-  { slug: "motion", name: "Motion", count: 41, icon: "motion" },
-  { slug: "charts", name: "Charts", count: 5, icon: "charts" },
-  { slug: "icons", name: "Icons", count: 16, icon: "icons" },
-  { slug: "ecommerce", name: "Ecommerce UI", count: 1, icon: "ecommerce" },
-  { slug: "auth", name: "Auth", count: 1, icon: "auth" },
-  { slug: "text-editor", name: "Text editor", count: 1, icon: "text-editor" },
-  { slug: "video", name: "Video", count: 3, icon: "video" },
-  { slug: "audio", name: "Audio", count: 1, icon: "audio" },
-  { slug: "loaders", name: "Loaders", count: 2, icon: "loaders" },
-  { slug: "three-d", name: "3D", count: 2, icon: "three-d" },
-  { slug: "docs", name: "Docs UI", count: 1, icon: "docs" },
-  { slug: "terminal", name: "Terminal UI", count: 1, icon: "terminal" },
-  { slug: "react-native", name: "React Native", count: 1, icon: "react-native" },
-  { slug: "general", name: "General", count: 5, icon: "general" },
+  { slug: "design-system", name: "Design system", count: 0, icon: "design-system" },
+  { slug: "marketing", name: "Marketing UI", count: 0, icon: "marketing" },
+  { slug: "ai", name: "AI blocks", count: 0, icon: "ai" },
+  { slug: "forms", name: "Forms", count: 0, icon: "forms" },
+  { slug: "motion", name: "Motion", count: 0, icon: "motion" },
+  { slug: "charts", name: "Charts", count: 0, icon: "charts" },
+  { slug: "icons", name: "Icons", count: 0, icon: "icons" },
+  { slug: "ecommerce", name: "Ecommerce UI", count: 0, icon: "ecommerce" },
+  { slug: "auth", name: "Auth", count: 0, icon: "auth" },
+  { slug: "text-editor", name: "Text editor", count: 0, icon: "text-editor" },
+  { slug: "video", name: "Video", count: 0, icon: "video" },
+  { slug: "audio", name: "Audio", count: 0, icon: "audio" },
+  { slug: "loaders", name: "Loaders", count: 0, icon: "loaders" },
+  { slug: "three-d", name: "3D", count: 0, icon: "three-d" },
+  { slug: "docs", name: "Docs UI", count: 0, icon: "docs" },
+  { slug: "terminal", name: "Terminal UI", count: 0, icon: "terminal" },
+  { slug: "react-native", name: "React Native", count: 0, icon: "react-native" },
+  { slug: "general", name: "General", count: 0, icon: "general" },
 ]
 
 export const LIBRARIES_DATA: LibraryItem[] = [
@@ -2987,3 +2992,22 @@ export const LIBRARIES_DATA: LibraryItem[] = [
     "scope": "higherbits"
   }
 ]
+
+// Real tallies from LIBRARIES_DATA, replacing the hand-typed placeholders
+// above so the sidebar's category counts can never diverge from what clicking
+// that category actually filters to.
+for (const category of LIBRARY_CATEGORIES) {
+  category.count = LIBRARIES_DATA.filter((lib) =>
+    lib.categories.includes(category.slug),
+  ).length
+}
+
+/** Real per-scope totals, for the sidebar's "On HigherBits" / "shadcn directory" counts. */
+export const LIBRARY_SCOPE_COUNTS: Record<LibraryItem["scope"], number> =
+  LIBRARIES_DATA.reduce(
+    (acc, lib) => {
+      acc[lib.scope] = (acc[lib.scope] ?? 0) + 1
+      return acc
+    },
+    { higherbits: 0, shadcn: 0 } as Record<LibraryItem["scope"], number>,
+  )

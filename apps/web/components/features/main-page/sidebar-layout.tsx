@@ -16,7 +16,11 @@ import {
   librariesSortAtom,
   librariesViewModeAtom,
 } from "@/lib/atoms"
-import { LIBRARY_CATEGORIES } from "@/lib/data/libraries-data"
+import {
+  LIBRARIES_DATA,
+  LIBRARY_CATEGORIES,
+  LIBRARY_SCOPE_COUNTS,
+} from "@/lib/data/libraries-data"
 import {
   categories as defaultCategories,
   magicNavItem,
@@ -153,7 +157,9 @@ export function MainSidebar() {
     !isLibraryRoute &&
     (pathname.startsWith("/s/") ||
       urlTab === "components" ||
-      (currentSection === "components" && activeTab === "components"))
+      urlTab === "authors" ||
+      (currentSection === "components" &&
+        (activeTab === "components" || activeTab === "authors")))
 
   const [sidebarView, setSidebarView] = React.useState<
     "main" | "components" | "libraries"
@@ -400,7 +406,7 @@ export function MainSidebar() {
               </div>
             </div>
 
-            {/* Scope selection: On HigherBits (139) / shadcn directory (308) */}
+            {/* Scope selection with totals derived from the displayed library catalog. */}
             <div className="px-2 pb-1 flex flex-col gap-0.5">
               <button
                 type="button"
@@ -418,7 +424,7 @@ export function MainSidebar() {
                 <Boxes className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
                 <span>On HigherBits</span>
                 <span className="ml-auto text-xs tabular-nums text-muted-foreground/70">
-                  139
+                  {LIBRARY_SCOPE_COUNTS.higherbits}
                 </span>
               </button>
 
@@ -437,7 +443,7 @@ export function MainSidebar() {
                 <Globe className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
                 <span>shadcn directory</span>
                 <span className="ml-auto text-xs tabular-nums text-muted-foreground/70">
-                  308
+                  {LIBRARY_SCOPE_COUNTS.shadcn}
                 </span>
               </button>
             </div>
@@ -482,14 +488,17 @@ export function MainSidebar() {
               </p>
               <div className="flex flex-col gap-0.5">
                 {LIBRARY_CATEGORIES.map((cat) => {
-                  const isCatActive =
-                    librariesCategory === cat.slug && librariesScope === "higherbits"
+                  const isCatActive = librariesCategory === cat.slug
+                  const categoryCount = LIBRARIES_DATA.filter(
+                    (library) =>
+                      library.scope === librariesScope &&
+                      library.categories.includes(cat.slug),
+                  ).length
                   return (
                     <button
                       key={cat.slug}
                       type="button"
                       onClick={() => {
-                        setLibrariesScope("higherbits")
                         setLibrariesCategory(
                           isCatActive ? "all" : cat.slug,
                         )
@@ -506,7 +515,7 @@ export function MainSidebar() {
                       </span>
                       <span className="truncate">{cat.name}</span>
                       <span className="ml-auto pl-2 text-[11px] tabular-nums text-muted-foreground/70">
-                        {cat.count}
+                        {categoryCount}
                       </span>
                     </button>
                   )

@@ -31,10 +31,7 @@ async function main() {
     .from("demos")
     .select("*, component:components(*)")
 
-  if (slugFilter) {
-    // Wait, Supabase foreign table filtering in select is complicated. Let's just fetch all demos missing a bundle, and filter later.
-    query = query.is("bundle_html_url", null)
-  } else if (!compileAll) {
+  if (!compileAll) {
     query = query.is("bundle_html_url", null)
   }
 
@@ -55,7 +52,7 @@ async function main() {
     ? demos.filter(d => (d.component as any)?.component_slug === slugFilter)
     : demos;
 
-  console.log(`Found \${targetDemos.length} demos to compile.`)
+  console.log(`Found ${targetDemos.length} demos to compile.`)
 
   const { prepareBundle, fetchBundle } = await import("../lib/bundler")
 
@@ -63,7 +60,7 @@ async function main() {
     const component = demo.component as any
     if (!component) continue
     
-    console.log(`Processing demo \${demo.id} for \${component.component_slug}...`)
+    console.log(`Processing demo ${demo.id} for ${component.component_slug}...`)
 
     let npmDependencies: Record<string, string> = {}
     if (Array.isArray(component.dependencies)) {
@@ -83,7 +80,7 @@ async function main() {
     
     const finalDirectRegistryDependencies = [...directRegistryDependencies]
 
-    const { defaultGlobalCss } = await import("../lib/sandpack")
+    const { defaultGlobalCss, withPreviewViewportCss } = await import("../lib/sandpack")
 
     // USE DEMO CODE instead of COMPONENT CODE for the App
     let codeContent = demo.demo_code || ""
@@ -115,22 +112,8 @@ async function main() {
     compCodeContent = compCodeContent.replace(/@\/registry\/[^\/]+\/(ui|hooks)\//g, "@/components/$1/").replace(/@\/registry\/[^\/]+\/lib\//g, "@/lib/");
 
     const files: Record<string, string> = {
-      [`/components/ui/\${component.component_slug}.tsx`]: compCodeContent,
-      "/globals.css": defaultGlobalCss + `
-        /* Ensure component container uses full width and height with centering */
-        html, body, #root {
-          margin: 0;
-          padding: 0;
-          min-height: 100vh;
-        }
-        #root {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2rem;
-          background-color: transparent !important;
-        }
-      `,
+      [`/components/ui/${component.component_slug}.tsx`]: compCodeContent,
+      "/globals.css": withPreviewViewportCss(defaultGlobalCss),
       "/theme.ts": `if (typeof window !== "undefined" && window.location.search.includes("dark=true")) { document.documentElement.classList.add("dark"); }`,
       "/lib/utils.ts": `import { clsx, type ClassValue } from "clsx"\nimport { twMerge } from "tailwind-merge"\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs))\n}`,
       "/next-themes.tsx": `import * as React from "react";\nexport const ThemeProvider = (props: any) => <>{props.children}</>;\nexport const useTheme = () => ({ theme: "light", setTheme: () => {} });`,
@@ -293,7 +276,7 @@ export default function FallbackDemo() {
     })
 
     const bundleResult = await fetchBundle({
-      id: component.id,
+      id: demo.id,
       prepared,
     })
 
@@ -307,16 +290,17 @@ export default function FallbackDemo() {
         .from("demos")
         .update({
           bundle_html_url: bundleResult.html,
+          bundle_hash: prepared.hash,
         })
         .eq("id", demo.id)
 
       if (updateError) {
-        console.error(`Error updating demo \${demo.id}:`, updateError)
+        console.error(`Error updating demo ${demo.id}:`, updateError)
       } else {
-        console.log(`Successfully compiled and updated demo \${demo.id} for \${component.component_slug}`)
+        console.log(`Successfully compiled and updated demo ${demo.id} for ${component.component_slug}`)
       }
     } else {
-      console.log(`[Dry Run] Would have updated demo \${demo.id} for \${component.component_slug} with URL: \${bundleResult.html}`)
+      console.log(`[Dry Run] Would have updated demo ${demo.id} for ${component.component_slug} with URL: ${bundleResult.html}`)
     }
   }
 }

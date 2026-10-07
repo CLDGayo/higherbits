@@ -25,6 +25,7 @@ import {
   SITE_DESCRIPTION,
   BASE_KEYWORDS,
 } from "@/lib/constants"
+import { LIBRARIES_DATA } from "@/lib/data/libraries-data"
 export const dynamic = "force-dynamic"
 
 
@@ -66,8 +67,7 @@ export const generateMetadata = async ({
 
   if (tab === "libraries") {
     const librariesTitle = `UI Component Libraries & Registries | ${SITE_NAME}`
-    const librariesDescription =
-      "Explore 130+ production-ready component libraries, UI kits, and registries for React, Tailwind CSS, and shadcn/ui."
+    const librariesDescription = `Explore ${LIBRARIES_DATA.length} production-ready component libraries, UI kits, and registries for React, Tailwind CSS, and shadcn/ui.`
 
     return {
       title: { absolute: librariesTitle },

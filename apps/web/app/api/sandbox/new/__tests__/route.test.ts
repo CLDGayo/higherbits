@@ -274,6 +274,22 @@ describe("POST /api/sandbox/new — credit-burn guards", () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.unstubAllEnvs()
+  })
+
+  it("returns a clear 503 before database or SDK work when CodeSandbox is not configured", async () => {
+    vi.stubEnv("CSB_API_KEY", " ")
+
+    const response = await POST(makeRequest())
+
+    expect(response.status).toBe(503)
+    await expect(response.json()).resolves.toEqual({
+      error: "Sandbox editing is temporarily unavailable.",
+      code: "CODESANDBOX_NOT_CONFIGURED",
+    })
+    expect(rpcMock).not.toHaveBeenCalled()
+    expect(reuseLookup.called).toBe(0)
+    expect(sdk.sandbox.create).not.toHaveBeenCalled()
   })
 
   it("passes vmTier, the lowered hibernation timeout, and disabled automatic wakeup to sandbox.create()", async () => {

@@ -25,7 +25,7 @@ export const userTabAtom = atomWithStorage<UserComponentsTab>(
   "components",
 )
 
-function useUserComponentsCounts(userId: string) {
+export function useUserComponentsCounts(userId: string) {
   const supabase = useClerkSupabaseClient()
   return useQuery({
     queryKey: ["user-components-counts", userId],

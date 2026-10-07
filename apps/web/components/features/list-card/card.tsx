@@ -57,7 +57,6 @@ type LeaderboardDemoWithComponent = DemoWithComponent & {
 export const ComponentCard = React.memo(function ComponentCard({
   demo,
   isLoading,
-  hideUser,
   onClick,
   onCtrlClick,
   hideVotes,
@@ -485,55 +484,56 @@ export const ComponentCard = React.memo(function ComponentCard({
           {/* Card metadata (creator avatar, component name, stats) */}
           <div
             data-testid="card-meta-layer"
-            className="flex space-x-3 items-center"
-          >
-            {!hideUser && (
-              <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
-                <UserAvatar
-                  src={
-                    (demo as any).user?.display_image_url ||
-                    (demo as any).user?.image_url ||
-                    (demo as any).user?.imageUrl ||
-                    userData?.display_image_url ||
-                    userData?.image_url ||
-                    (userData as any)?.imageUrl ||
-                    "/placeholder.svg"
-                  }
-                  alt={
-                    (demo as any).user?.display_name ||
-                    (demo as any).user?.name ||
-                    (demo as any).user?.fullName ||
-                    userData?.display_name ||
-                    userData?.name ||
-                    ""
-                  }
-                  size={32}
-                  user={(demo as any).user || userData}
-                  isClickable
-                />
-              </div>
+            className={cn(
+              "flex space-x-3 items-center transition-opacity duration-300",
+              !isTouch &&
+                "opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 group-has-[[data-state=open]]/card:opacity-100 group-data-[state=open]/cardroot:opacity-100",
             )}
+          >
+            <div className="relative z-20" onClick={(e) => e.stopPropagation()}>
+              <UserAvatar
+                src={
+                  (demo as any).user?.display_image_url ||
+                  (demo as any).user?.image_url ||
+                  (demo as any).user?.imageUrl ||
+                  userData?.display_image_url ||
+                  userData?.image_url ||
+                  (userData as any)?.imageUrl ||
+                  "/placeholder.svg"
+                }
+                alt={
+                  (demo as any).user?.display_name ||
+                  (demo as any).user?.name ||
+                  (demo as any).user?.fullName ||
+                  userData?.display_name ||
+                  userData?.name ||
+                  ""
+                }
+                size={32}
+                user={(demo as any).user || userData}
+                isClickable
+              />
+            </div>
             <div className="flex items-center justify-between flex-grow min-w-0">
               <div className="block min-w-0 flex-1 mr-3">
                 <div className="flex flex-col min-w-0">
-                  <h2 className="text-sm font-medium text-foreground truncate">
+                  <h2
+                    className="text-sm font-medium text-foreground truncate"
+                    title={componentName}
+                  >
                     {isDemo ? demo.component?.name : demo.name}
                   </h2>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                {viewCount > 0 && (
-                  <div className="flex items-center text-xs text-muted-foreground whitespace-nowrap shrink-0 gap-1">
-                    <Eye size={14} />
-                    <span>{formatNumber(viewCount)}</span>
-                  </div>
-                )}
-                {bookmarksCount > 0 && (
-                  <div className="flex items-center text-xs text-muted-foreground whitespace-nowrap shrink-0 gap-1">
-                    <Bookmark size={14} className="text-muted-foreground" />
-                    <span>{formatNumber(bookmarksCount)}</span>
-                  </div>
-                )}
+                <div className="flex items-center text-xs text-muted-foreground whitespace-nowrap shrink-0 gap-1">
+                  <Eye size={14} />
+                  <span>{formatNumber(viewCount)}</span>
+                </div>
+                <div className="flex items-center text-xs text-muted-foreground whitespace-nowrap shrink-0 gap-1">
+                  <Bookmark size={14} className="text-muted-foreground" />
+                  <span>{formatNumber(bookmarksCount)}</span>
+                </div>
               </div>
             </div>
           </div>

@@ -33,10 +33,9 @@ export function LibrariesList({ className }: LibrariesListProps) {
   const filteredLibraries = useMemo(() => {
     let result = [...LIBRARIES_DATA]
 
-    // Filter by scope
-    if (selectedScope === "higherbits") {
-      result = result.filter((item) => item.scope === "higherbits")
-    }
+    // Keep each catalog scope isolated. If shadcn data is absent, show an empty
+    // result instead of leaking the HigherBits entries into that scope.
+    result = result.filter((item) => item.scope === selectedScope)
 
     // Filter by category
     if (selectedCategory && selectedCategory !== "all") {
@@ -107,7 +106,8 @@ export function LibrariesList({ className }: LibrariesListProps) {
             </span>
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Production-ready component libraries, UI kits, and blocks for React and Tailwind CSS.
+            Production-ready component libraries, UI kits, and blocks for React
+            and Tailwind CSS.
           </p>
         </div>
 
@@ -161,21 +161,13 @@ export function LibrariesList({ className }: LibrariesListProps) {
         viewMode === "grid" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredLibraries.map((library) => (
-              <LibraryCard
-                key={library.id}
-                library={library}
-                viewMode="grid"
-              />
+              <LibraryCard key={library.id} library={library} viewMode="grid" />
             ))}
           </div>
         ) : (
           <div className="flex flex-col gap-2.5">
             {filteredLibraries.map((library) => (
-              <LibraryCard
-                key={library.id}
-                library={library}
-                viewMode="list"
-              />
+              <LibraryCard key={library.id} library={library} viewMode="list" />
             ))}
           </div>
         )
@@ -185,7 +177,8 @@ export function LibrariesList({ className }: LibrariesListProps) {
             No libraries found
           </p>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-            We couldn&apos;t find any libraries matching your criteria. Try adjusting your search query or clearing selected categories.
+            We couldn&apos;t find any libraries matching your criteria. Try
+            adjusting your search query or clearing selected categories.
           </p>
           <button
             type="button"

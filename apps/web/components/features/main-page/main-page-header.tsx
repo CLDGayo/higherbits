@@ -26,7 +26,7 @@ const tabLabels = {
   components: "Components",
   templates: "Templates",
   categories: "Categories",
-  authors: "Design Engineers",
+  authors: "Authors",
   pro: "Premium Stores",
   collections: "Collections",
   bundles: "Bundles",
@@ -165,7 +165,7 @@ export function ComponentsHeader({
                   value="authors"
                   className="relative after:absolute after:inset-x-0 after:bottom-0 after:-mb-2 after:h-0.5 hover:bg-accent hover:text-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:after:bg-foreground data-[state=active]:hover:bg-accent data-[state=inactive]:text-foreground/70"
                 >
-                  Design Engineers
+                  Authors
                 </TabsTrigger>
                 <TabsTrigger
                   value="pro"

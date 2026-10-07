@@ -131,6 +131,26 @@ describe("POST /api/sandbox/connect", () => {
 
     expect(response.status).not.toBe(500)
   })
+
+  it("returns a clear 503 when CodeSandbox is not configured", async () => {
+    vi.stubEnv("CSB_API_KEY", "")
+    singleMock.mockClear()
+    sdk.sandbox.start.mockClear()
+
+    try {
+      const response = await POST(makeRequest({ shortSandboxId: SHORT_ID }))
+
+      expect(response.status).toBe(503)
+      await expect(response.json()).resolves.toEqual({
+        error: "Sandbox editing is temporarily unavailable.",
+        code: "CODESANDBOX_NOT_CONFIGURED",
+      })
+      expect(singleMock).not.toHaveBeenCalled()
+      expect(sdk.sandbox.start).not.toHaveBeenCalled()
+    } finally {
+      vi.unstubAllEnvs()
+    }
+  })
 })
 
 describe("POST /api/sandbox/connect — Phase 1 telemetry", () => {

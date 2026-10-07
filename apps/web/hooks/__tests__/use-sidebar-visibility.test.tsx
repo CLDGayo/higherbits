@@ -34,4 +34,28 @@ describe("useSidebarVisibility", () => {
 
     expect(getByText("true")).toBeDefined()
   })
+
+  it("shows the shared sidebar on creator profile routes", () => {
+    route.pathname = "/8starlabs"
+    const { getByText } = render(<Visibility />)
+
+    expect(getByText("true")).toBeDefined()
+  })
+
+  it("does not show the sidebar on a static single-segment route", () => {
+    route.pathname = "/pricing"
+    const { getByText } = render(<Visibility />)
+
+    expect(getByText("false")).toBeDefined()
+  })
+
+  it.each(["/privacy", "/refunds", "/terms"])(
+    "does not show the sidebar on the static route %s",
+    (pathname) => {
+      route.pathname = pathname
+      const { getByText } = render(<Visibility />)
+
+      expect(getByText("false")).toBeDefined()
+    },
+  )
 })

@@ -8,6 +8,7 @@ function previewFiles(
   componentSlug: string,
   demoCode: string,
   registry = "auto-index",
+  customGlobalCss?: string,
 ) {
   return generate({
     demoComponentNames: [],
@@ -17,6 +18,7 @@ function previewFiles(
     demoCode,
     theme: "light",
     css: "",
+    customGlobalCss,
   })
 }
 
@@ -24,6 +26,55 @@ describe.each([
   ["Sandpack", generateSandpackFiles],
   ["bundle", generateBundleFiles],
 ] as const)("auto-index %s demo imports", (_mode, generate) => {
+  it("centers short demos while keeping full-size previews viewport-sized", () => {
+    const files = previewFiles(
+      generate,
+      "bucket",
+      "export default () => null",
+    )
+    const globalCss = files["/globals.css"]
+
+    expect(globalCss).toContain("html,\nbody,\n#__next,\n#root {")
+    expect(globalCss).toContain("#__next,\n#root {")
+    expect(globalCss).toContain("width: 100%;")
+    expect(globalCss).toContain("height: 100%;")
+    expect(globalCss).toContain("min-height: 100vh;")
+    expect(globalCss).toContain("align-items: safe center;")
+    expect(globalCss).toContain("justify-content: safe center;")
+    const viewportCss = globalCss.slice(
+      globalCss.lastIndexOf("html,\nbody,\n#__next,\n#root {"),
+    )
+    expect(viewportCss).not.toMatch(/padding\s*:/)
+    expect(files["/node_modules/next/document.js"]).toContain('id="__next"')
+  })
+
+  it("appends viewport sizing after custom global CSS", () => {
+    const customGlobalCss =
+      "/* custom preview styles */\n#root { height: auto; }\n#__next { height: auto; }"
+    const files = previewFiles(
+      generate,
+      "bucket",
+      "export default () => null",
+      "auto-index",
+      customGlobalCss,
+    )
+    const globalCss = files["/globals.css"]
+
+    expect(globalCss.indexOf(customGlobalCss)).toBeGreaterThanOrEqual(0)
+    expect(globalCss.lastIndexOf("html,\nbody,\n#__next,\n#root {")).toBeGreaterThan(
+      globalCss.indexOf(customGlobalCss),
+    )
+    expect(globalCss.lastIndexOf("#__next,\n#root {")).toBeGreaterThan(
+      globalCss.indexOf(customGlobalCss),
+    )
+    expect(globalCss).toContain("align-items: safe center;")
+    const viewportCss = globalCss.slice(
+      globalCss.lastIndexOf("html,\nbody,\n#__next,\n#root {"),
+    )
+    expect(viewportCss).not.toMatch(/padding\s*:/)
+    expect(files["/node_modules/next/document.js"]).toContain('id="__next"')
+  })
+
   it.each([
     ["shake", 'import Shake from "../blocks/shake";', "./components/auto-index/shake"],
     [

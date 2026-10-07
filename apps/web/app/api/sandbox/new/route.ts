@@ -50,6 +50,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    if (!process.env.CSB_API_KEY?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Sandbox editing is temporarily unavailable.",
+          code: "CODESANDBOX_NOT_CONFIGURED",
+        },
+        { status: 503 },
+      )
+    }
+
     const { isAdmin } = await checkIsAdmin(userId)
 
     if (isAdmin && req.body) {

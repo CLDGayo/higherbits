@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Eye, Download } from "lucide-react"
+import { Bookmark, Eye, Download } from "lucide-react"
 import { motion } from "motion/react"
 import { ComponentVideoPreview } from "../list-card/card-video"
 import { Database } from "@/types/supabase"
@@ -18,6 +18,7 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
   const totalUsages = Number(author.total_usages) || 0
   const totalDownloads = Number(author.total_downloads) || 0
   const topComponents = (author.top_components || []) as DemoWithComponent[]
+  const authorUsername = author.display_username || author.username || "user"
 
   return (
     <div className="block p-[1px]">
@@ -59,7 +60,7 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex flex-col gap-1.5">
                   <h2 className="text-2xl font-medium tracking-tight text-foreground group-hover/author:text-primary transition-colors">
                     {author.display_name || author.name || author.username}
@@ -69,7 +70,7 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                       `@${author.display_username || author.username}`}
                   </p>
                 </div>
-                
+
                 <div className="flex items-center gap-5 mt-2">
                   <div className="flex items-center gap-2 text-foreground/60">
                     <Eye className="w-4 h-4" />
@@ -94,9 +95,15 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
               {/* Fade masks for scroll area */}
               <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background/50 to-transparent z-10 pointer-events-none opacity-0 lg:opacity-100" />
               <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-              
+
               <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mb-4 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pt-2">
-                {topComponents.map((demo, index) => (
+                {topComponents.map((demo, index) => {
+                  const componentUser = demo.component?.user
+                  const componentUsername =
+                    componentUser?.display_username ||
+                    componentUser?.username ||
+                    authorUsername
+                  return (
                   <motion.div
                     key={demo.id}
                     className="snap-start shrink-0"
@@ -109,7 +116,7 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                     }}
                   >
                     <Link
-                      href={`/${demo.component.user?.display_username || demo.component.user?.username}/${demo.component?.component_slug}/${demo.demo_slug || "default"}`}
+                      href={`/${componentUsername}/${demo.component?.component_slug || "component"}/${demo.demo_slug || "default"}`}
                       className="block group/card relative w-[240px] sm:w-[260px] active:scale-[0.98] transition-transform duration-200 ease-out"
                     >
                       <div className="relative aspect-[4/3] rounded-xl shadow-base overflow-hidden ring-1 ring-white/10 group-hover/card:ring-white/20 transition-all duration-300">
@@ -131,20 +138,54 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                             />
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none opacity-100 group-hover/card:opacity-0 transition-opacity duration-300 z-20">
-                          <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-1">
-                            <h3 className="text-white font-medium text-sm line-clamp-1 drop-shadow-sm">
-                              {demo.component?.name}
-                            </h3>
-                            <p className="text-white/80 text-xs font-medium">
-                              {(demo.view_count || 0).toLocaleString()} views
-                            </p>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent pointer-events-none opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-300 z-20">
+                          <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2">
+                            <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full bg-black/50 ring-1 ring-white/30 flex items-center justify-center text-[10px] font-medium text-white">
+                              {componentUser?.display_image_url ||
+                              componentUser?.image_url ? (
+                                <Image
+                                  src={
+                                    componentUser?.display_image_url ||
+                                    componentUser?.image_url ||
+                                    ""
+                                  }
+                                  alt=""
+                                  width={28}
+                                  height={28}
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                (componentUser?.display_name ||
+                                  componentUser?.name ||
+                                  componentUser?.username ||
+                                  author.display_name ||
+                                  author.name ||
+                                  author.username ||
+                                  "?")[0]?.toUpperCase()
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-white font-medium text-sm line-clamp-1 drop-shadow-sm">
+                                {demo.component?.name || demo.name}
+                              </h3>
+                              <div className="mt-1 flex items-center gap-3 text-white/85 text-[11px] font-medium">
+                                <span className="flex items-center gap-1">
+                                  <Eye className="h-3 w-3" />
+                                  {(demo.view_count || 0).toLocaleString()}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Bookmark className="h-3 w-3" />
+                                  {(demo.bookmarks_count || 0).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </Link>
                   </motion.div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           )}

@@ -27,7 +27,7 @@ interface UserItemsListProps {
   isOwnProfile: boolean
 }
 
-function useUserPublishedDemos(userId: string) {
+export function useUserPublishedDemos(userId: string) {
   const supabase = useClerkSupabaseClient()
   return useQuery({
     queryKey: ["user-published-demos", userId],

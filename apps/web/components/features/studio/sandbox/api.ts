@@ -30,14 +30,19 @@ export const connectToSandbox = async (
         try {
           const body = await res.json()
           if (body?.error) errorMsg = body.error
-          if (body?.code === "WORKSPACE_FROZEN") {
+          if (
+            body?.code === "WORKSPACE_FROZEN" ||
+            body?.code === "CODESANDBOX_NOT_CONFIGURED"
+          ) {
             isNonRetryable = true
           }
         } catch {
           // not JSON
         }
 
-        const err = new Error(errorMsg)
+        const err = Object.assign(new Error(errorMsg), {
+          nonRetryable: isNonRetryable,
+        })
         if (isNonRetryable) {
           console.error(
             `Non-retryable sandbox connection error (${res.status}):`,
@@ -55,6 +60,7 @@ export const connectToSandbox = async (
         error?.message?.includes?.("frozen") ||
         error?.message?.includes?.("spending limit")
       const isNonRetryable =
+        error?.nonRetryable ||
         isFrozen ||
         error?.message?.includes?.("400") ||
         error?.message?.includes?.("401") ||
@@ -68,7 +74,10 @@ export const connectToSandbox = async (
 
       retries--
       if (retries === 0) {
-        console.error("Failed to load existing sandbox (no retries left):", error)
+        console.error(
+          "Failed to load existing sandbox (no retries left):",
+          error,
+        )
         throw error
       }
       console.error(

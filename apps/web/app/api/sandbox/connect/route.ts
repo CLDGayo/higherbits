@@ -48,6 +48,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!process.env.CSB_API_KEY?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Sandbox editing is temporarily unavailable.",
+          code: "CODESANDBOX_NOT_CONFIGURED",
+        },
+        { status: 503 },
+      )
+    }
+
     const sandboxId = ShortUUID().toUUID(shortSandboxId)
     telemetrySandboxId = sandboxId
 

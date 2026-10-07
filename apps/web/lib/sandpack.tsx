@@ -409,6 +409,40 @@ a {
 }
 `
 
+const previewViewportCss = `
+html,
+body,
+#__next,
+#root {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+}
+html,
+body {
+  margin: 0;
+}
+#__next,
+#root {
+  display: flex;
+  align-items: safe center;
+  justify-content: safe center;
+  box-sizing: border-box;
+  background-color: transparent !important;
+}
+#__next > div,
+#root > div {
+  display: flex;
+  align-items: safe center;
+  justify-content: safe center;
+  min-height: 100%;
+}
+`
+
+export function withPreviewViewportCss(globalCss: string = defaultGlobalCss) {
+  return `${globalCss}\n${previewViewportCss}`
+}
+
 function resolveAutoIndexDemoImports(
   demoCode: string,
   componentSlug: string,
@@ -979,7 +1013,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 `,
-    "/globals.css": customGlobalCss ?? defaultGlobalCss,
+    "/globals.css": withPreviewViewportCss(customGlobalCss ?? defaultGlobalCss),
     "/tailwind.config.js": customTailwindConfig ?? defaultTailwindConfig,
     "/tsconfig.json": JSON.stringify(
       {
@@ -1593,7 +1627,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 `,
-    "/globals.css": customGlobalCss ?? defaultGlobalCss,
+    "/globals.css": withPreviewViewportCss(customGlobalCss ?? defaultGlobalCss),
     "/tailwind.config.js": customTailwindConfig ?? defaultTailwindConfig,
     "/tsconfig.json": JSON.stringify(
       {

@@ -20,6 +20,7 @@ type LinkPreviewProps = {
   height?: number
   quality?: number
   layout?: string
+  previewAlt?: string
   objectFit?: "fill" | "contain" | "cover" | "none" | "scale-down"
 } & (
   | { isStatic: true; imageSrc: string }
@@ -34,6 +35,7 @@ export const LinkPreview = ({
   height = 125,
   quality = 50,
   layout = "fixed",
+  previewAlt = "preview image",
   objectFit = "cover",
   isStatic = false,
   imageSrc = "",
@@ -58,12 +60,6 @@ export const LinkPreview = ({
 
   const [isOpen, setOpen] = React.useState(false)
 
-  const [isMounted, setIsMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
   const springConfig = { stiffness: 100, damping: 15 }
   const x = useMotionValue(0)
 
@@ -78,29 +74,6 @@ export const LinkPreview = ({
 
   return (
     <>
-      {/*
-        A <span>, not a <div>, and that is not cosmetic. This component is
-        designed to sit inline in prose - `our-story` puts several inside a
-        <p> - and a <div> there is invalid HTML that React reports as a
-        hydration error ("<div> cannot be a descendant of <p>"). The wrapper
-        exists only to hold a hidden preload image and has no layout role, so
-        an inline element does the same job legally.
-      */}
-      {isMounted ? (
-        <span className="hidden">
-          <Image
-            src={src}
-            width={width}
-            height={height}
-            quality={quality}
-            priority={true}
-            alt=""
-            aria-hidden="true"
-            style={{ objectFit }}
-          />
-        </span>
-      ) : null}
-
       <HoverCardPrimitive.Root
         openDelay={50}
         closeDelay={100}
@@ -108,15 +81,15 @@ export const LinkPreview = ({
           setOpen(open)
         }}
       >
-        <HoverCardPrimitive.Trigger
-          onMouseMove={handleMouseMove}
-          asChild
-        >
+        <HoverCardPrimitive.Trigger onMouseMove={handleMouseMove} asChild>
           <Link
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn("text-black dark:text-white cursor-pointer hover:underline", className)}
+            className={cn(
+              "text-black dark:text-white cursor-pointer hover:underline",
+              className,
+            )}
           >
             {children}
           </Link>
@@ -160,9 +133,8 @@ export const LinkPreview = ({
                     width={width}
                     height={height}
                     quality={quality}
-                    priority={true}
                     className="rounded-lg"
-                    alt="preview image"
+                    alt={previewAlt}
                     style={{ objectFit }}
                   />
                 </Link>

@@ -129,6 +129,19 @@ describe("Card Hover — no downward translation clipping at rest", () => {
     expect(host!.contains(meta!)).toBe(true)
   })
 
+  it("keeps the component name available in hover metadata", () => {
+    const { meta } = mountCard()
+    const title = meta!.querySelector("h2")
+
+    expect(title?.textContent).toBe("Test Card")
+    expect(title?.getAttribute("title")).toBe("Test Card")
+    expect(meta!.className).toContain("opacity-0")
+    expect(meta!.className).toContain("group-hover/card:opacity-100")
+    expect(meta!.className).toContain("group-focus-within/card:opacity-100")
+    expect(meta!.querySelector(".relative.z-20")).not.toBeNull()
+    expect(meta!.textContent).toContain("0")
+  })
+
   it("names the ContextMenuTrigger ancestor group/cardroot", () => {
     const { host } = mountCard()
     const cardroot = host!.closest(".group\\/cardroot")
