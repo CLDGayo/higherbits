@@ -14,7 +14,7 @@ import AutoIndexedView from "../AutoIndexedView"
 
 const row = {
   componentId: 41, demoId: 42, componentName: "Pinned component", componentSlug: "pinned",
-  previewUrl: null, sourceLabel: "GitHub", sourceUrl: "https://github.com/example/pinned",
+  previewUrl: "https://higherbits.dev/preview/pinned.png", bundleHtmlUrl: "https://higherbits.dev/preview/pinned.html", sourceLabel: "GitHub", sourceUrl: "https://github.com/example/pinned",
   sourceId: "example/pinned", ownerId: "placeholder-1", ownerUsername: "placeholder",
   ownerDisplayName: "Indexed publisher", publishedAt: "2026-09-01T00:00:00Z", claimedAt: null,
 }
@@ -38,6 +38,15 @@ it("loads public indexed rows separately, without submission mutation controls, 
   expect(screen.queryByText("Delete Component")).toBeNull()
   fireEvent.click(screen.getByRole("button", { name: "Next" }))
   await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalledWith("/api/admin/auto-index?limit=25&offset=25", expect.any(Object)))
+})
+
+it("opens a sandboxed live preview when an admin clicks the component thumbnail", async () => {
+  mount()
+  fireEvent.click(await screen.findByRole("button", { name: "Preview Pinned component" }))
+  const frame = await screen.findByTitle("Pinned component preview")
+  expect(frame.getAttribute("src")).toBe("https://higherbits.dev/preview/pinned.html")
+  expect(frame.getAttribute("sandbox")).toBe("allow-scripts")
+  expect(screen.getByRole("link", { name: "Open static thumbnail" }).getAttribute("href")).toBe(row.previewUrl)
 })
 
 it("requires an identified claimant, verification note, and explicit acknowledgment before transfer", async () => {

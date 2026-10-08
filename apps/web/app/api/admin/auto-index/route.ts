@@ -32,5 +32,33 @@ export async function GET(request: Request) {
     p_limit: limit, p_offset: offset,
   } as never)
   if (error) return NextResponse.json({ error: "claim_list_unavailable" }, { status: 503 })
-  return NextResponse.json(data)
+
+  const result = data as {
+    items?: Array<{ componentId: number; demoId: number; [key: string]: unknown }>
+    [key: string]: unknown
+  } | null
+  const items = Array.isArray(result?.items) ? result.items : []
+  const demoBundleUrls = new Map<number, string | null>()
+  const componentBundleUrls = new Map<number, string | null>()
+
+  if (items.length > 0) {
+    const [demosResult, componentsResult] = await Promise.all([
+      supabaseAdmin.from("demos").select("id,bundle_html_url").in("id", items.map((item) => item.demoId)),
+      supabaseAdmin.from("components").select("id,bundle_html_url").in("id", items.map((item) => item.componentId)),
+    ])
+
+    if (demosResult.error) console.error("Could not load auto-index demo preview bundles:", demosResult.error)
+    else for (const demo of demosResult.data ?? []) demoBundleUrls.set(demo.id, demo.bundle_html_url)
+
+    if (componentsResult.error) console.error("Could not load auto-index component preview bundles:", componentsResult.error)
+    else for (const component of componentsResult.data ?? []) componentBundleUrls.set(component.id, component.bundle_html_url)
+  }
+
+  return NextResponse.json({
+    ...result,
+    items: items.map((item) => ({
+      ...item,
+      bundleHtmlUrl: demoBundleUrls.get(item.demoId) ?? componentBundleUrls.get(item.componentId) ?? null,
+    })),
+  })
 }

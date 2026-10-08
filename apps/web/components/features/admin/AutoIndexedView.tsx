@@ -18,6 +18,7 @@ type AutoIndexedItem = {
   componentName: string
   componentSlug: string
   previewUrl: string | null
+  bundleHtmlUrl: string | null
   sourceLabel: string | null
   sourceUrl: string | null
   sourceId: number | string | null
@@ -37,6 +38,7 @@ export default function AutoIndexedView() {
   const [data, setData] = useState<Page>({ items: [], total: 0 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [preview, setPreview] = useState<AutoIndexedItem | null>(null)
   const [claim, setClaim] = useState<AutoIndexedItem | null>(null)
   const [search, debouncedSearch, setSearch] = useDebouncedState("", 400)
   const [selectedUser, setSelectedUser] = useState<{ id: string; username: string | null; display_username: string | null } | null>(null)
@@ -116,7 +118,22 @@ export default function AutoIndexedView() {
             </TableRow></TableHeader>
             <TableBody>{data.items.map((item) => (
               <TableRow key={item.componentId}>
-                <TableCell>{item.previewUrl && <img src={item.previewUrl} alt="" className="h-12 w-20 rounded object-cover" />}</TableCell>
+                <TableCell>
+                  {item.previewUrl || item.bundleHtmlUrl ? (
+                    <button
+                      type="button"
+                      aria-label={`Preview ${item.componentName}`}
+                      onClick={() => setPreview(item)}
+                      className="block h-12 w-20 overflow-hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <img
+                        src={item.previewUrl || "/placeholder.svg"}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ) : "—"}
+                </TableCell>
                 <TableCell><a className="font-medium underline" href={`/${item.ownerUsername}/${item.componentSlug}`} target="_blank" rel="noopener noreferrer">{item.componentName}</a><div className="text-xs text-muted-foreground">Component #{item.componentId} · Demo #{item.demoId}</div></TableCell>
                 <TableCell>{item.sourceUrl ? <a className="underline" href={item.sourceUrl} target="_blank" rel="noopener noreferrer">{item.sourceLabel || "Source"}</a> : item.sourceLabel || "—"}<div className="text-xs text-muted-foreground">{item.sourceId || ""}</div></TableCell>
                 <TableCell>{item.ownerDisplayName || item.ownerUsername}<div className="text-xs text-muted-foreground">@{item.ownerUsername} · {item.ownerId}</div></TableCell>
@@ -138,6 +155,38 @@ export default function AutoIndexedView() {
           <Button variant="outline" size="sm" onClick={() => setPage((value) => value + 1)} disabled={loading || page * limit >= data.total}>Next</Button>
         </div>
       </div>
+      <Dialog open={!!preview} onOpenChange={(open) => { if (!open) setPreview(null) }}>
+        <DialogContent className="flex h-[85vh] max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-6xl flex-col gap-3 p-4">
+          <DialogHeader className="pr-8">
+            <DialogTitle>{preview?.componentName}</DialogTitle>
+            <DialogDescription>Live preview of this auto-indexed component.</DialogDescription>
+          </DialogHeader>
+          <div className="min-h-0 flex-1 overflow-hidden rounded-md border bg-background">
+            {preview?.bundleHtmlUrl ? (
+              <div className="flex h-full flex-col">
+                <iframe
+                  title={`${preview.componentName} preview`}
+                  src={preview.bundleHtmlUrl}
+                  sandbox="allow-scripts"
+                  referrerPolicy="no-referrer"
+                  allowFullScreen
+                  className="min-h-0 flex-1 border-0"
+                />
+                {preview.previewUrl && (
+                  <a href={preview.previewUrl} target="_blank" rel="noopener noreferrer" className="flex shrink-0 items-center gap-3 border-t p-2 text-xs text-muted-foreground hover:text-foreground">
+                    <img src={preview.previewUrl} alt="" className="h-12 w-20 rounded object-cover" />
+                    Open static thumbnail
+                  </a>
+                )}
+              </div>
+            ) : preview?.previewUrl ? (
+              <img src={preview.previewUrl} alt={`${preview.componentName} preview`} className="h-full w-full object-contain" />
+            ) : (
+              <p className="flex h-full items-center justify-center text-sm text-muted-foreground">No preview is available.</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
       <Dialog open={!!claim} onOpenChange={(open) => { if (!open && !submitting) closeClaim() }}>
         <DialogContent>
           <DialogHeader>
