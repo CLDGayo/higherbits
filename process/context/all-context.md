@@ -1,6 +1,6 @@
 # HigherBits.dev - All Context
 
-Last updated: 2026-07-17
+Last updated: 2026-10-09
 
 Root context entrypoint for the repo. Use for (1) quick routing to the right context pack, (2) broad architecture + repo understanding. Start here before loading deeper context files.
 
@@ -11,33 +11,58 @@ Every agent (Orchestrator, Claude, Codex, Antigravity, and ALL RIPER-5 subagents
 
 ## Project Identity (read first)
 
-**CURRENT STATE CORRECTION (2026-07-13, supersedes the paragraphs immediately below):**
-`apps/web` is NOT the small 5-9-component curated storefront described in the rest of this
-section anymore. Following the `21st-promotion` (2026-07-09) and `higherbits-full-port` programs,
-`apps/web` is the **full 21st.dev-derived application port** — marketplace, creator studio, Magic
-MCP onboarding/console, contest, collections, pricing, and publish/draft flows all live and wired.
-The registry/Qdrant-driven curated catalog described below is one surface within this larger app,
-not the whole product. Brand identity is fully **HigherBits.dev** ("Higher Bits Labs Inc." in
-legal/footer copy) — the `higherbits-cozy-rebrand` program (completed 2026-07-13, see
-`process/features/higherbits-cozy-rebrand/completed/higherbits-cozy-rebrand_12-07-26/`) fixed the
-double/missing-logo bug, swept all residual "21st" brand strings from `apps/web`/`apps/backend`
-shipped code, and restyled the app to a **cozy claymorphism visual system**: pastel lavender/cream
-("cozy daylight") + a dark "cozy dusk" theme, puffy 20-28px-radius cards with dual soft shadows,
-a reusable CSS-only `.texture-cushion` grain/texture utility, pill buttons, and Quicksand-family
-rounded typography — applied across header/sidebar/footer/landing/pricing/component-card surfaces.
-**Monetization readiness (Lemon Squeezy, as of 2026-07-13):** legal/policy pages are live (`/terms`,
-`/privacy`, `/refunds`, linked from the footer); `ops/seed-placeholder-components.mjs` seeded 8
-components into the live DB; `/api/platform/stats` returns real (non-mocked) platform stats. Stripe
-checkout code paths described later in this file are effectively dead/unconfigured pending a Lemon
-Squeezy integration (blocked on user-supplied LS account credentials — see
-`process/features/higherbits-cozy-rebrand/backlog/`). Studio publish flow additionally needs a
-`CSB_API_KEY` (CodeSandbox) that is not yet provisioned.
+**CURRENT STATE SNAPSHOT (2026-10-09 — supersedes the July 2026 "CURRENT STATE CORRECTION" /
+SUPERSEDED paragraphs this replaces; checked read-only against workspace HEAD `e59a0c47` and
+GitHub `origin/main` at `a15f7a4f` — the local checkout is ~30 commits behind `origin/main` and
+carries uncommitted changes, per `git status`):**
 
-> **[SUPERSEDED 2026-07-29 — `supabase-interconnect` Phase 06, E2b.]** The "pending a Lemon Squeezy
-> integration (blocked on user-supplied LS account credentials)" clause immediately above is
-> **obsolete**. Lemon Squeezy checkout is BUILT and LIVE (11 real files; see §385-413 and the
-> corrected bullet in `## Open Questions / Outstanding Work`). Stripe being dead/unconfigured is
-> still accurate. `CSB_API_KEY` is still genuinely outstanding.
+This update refreshes the public product description and landing-page notes, and corrects earlier
+README claims about direct CLI installation that were not supported by the production check.
+
+On the public production site, HigherBits.dev is an open-source **marketplace/library for
+shadcn/ui-convention React components, templates, and UI blocks** for developers and agencies.
+Visitors can browse component examples, inspect source, and use page-level copy/prompt controls.
+The source contains a shadcn-compatible registry endpoint, but a direct production registry
+request returned `401 invalid_capability` during the read-only review; `npx higherbits add` also
+does not resolve to a published npm package. Do not document either CLI install as a working
+production flow without re-verifying it.
+
+**Live homepage (`apps/web/app/page.tsx`, bare `/`):** server-renders a marketing landing tree via
+`LandingPageLayout` (`apps/web/components/ui/landing-page-layout.tsx`) — a left-aligned hero
+headlined "Production UI for developers and agencies" (`apps/web/components/ui/hero-visual.tsx`),
+two catalogue carousel rows, a "Copy the prompt. Paste it anywhere" band
+(`apps/web/components/ui/copy-prompt-section.tsx`), a browsable grid capped at
+`CATALOGUE_GRID_LIMIT = 24` of the live pool with a "Browse all N components" link
+(`apps/web/components/ui/component-catalogue.tsx`), an authors band, an agents CTA, and FAQ.
+`?tab=` query params (`home`, `templates`, `libraries`, …) route to other catalogue views on the
+same page; `/templates` 308-redirects to `/?tab=templates`.
+
+**Verified prompt-tool support (code-confirmed, not just README claims):**
+`apps/web/components/ui/works-with-strip.tsx` renders real marks for **Claude, Codex, Antigravity,
+and GoHighLevel**, sourced from `lib/prompts.tsx`'s `PROMPT_TYPES` and `lib/ghl-generator.ts`.
+`copy-prompt-section.tsx`'s three paste-target cards (Claude Code / Go High Level / Lovable) are
+explicitly documented in-file as illustrations of the paste target, not live screenshots — the
+GHL card's one verified-real detail is the `corePlugins: { preflight: false }` Tailwind-CDN line
+`ghl-generator.ts` actually emits. The previous README also claimed Cursor, v0, Bolt.new, Replit,
+Magic Patterns, and sitebrew.ai support; these are omitted from the refreshed README pending
+independent verification.
+
+**Creator publishing/studio route families exist and are wired:** `apps/web/app/studio/` and
+`apps/web/app/publish/` route directories are present on disk; the public component-detail route
+is `/{username}/{component_slug}` (`apps/web/app/[username]/[component_slug]/page.tsx`); shadcn-
+compatible registry handling is implemented in
+`apps/web/app/api/r/[username]/[component_slug]/route.ts`. It serves registry JSON (files, deps,
+cssVars) and gates paid components behind a Clerk-JWT `api_key` check (`isComponentPaid` /
+`hasUserComponentAccess`). The direct production request noted above returned `401`; avoid
+presenting CLI installation as a currently working production feature until retested.
+
+**Caveat:** route and grid presence confirms that surfaces exist in source; it does not prove every
+integration or payment flow works end-to-end in production. Creator Studio and Publish require
+sign-in. The public dashboard API returned an error for a missing database RPC during review, and
+the registry direct-install check returned `401 invalid_capability`. Homepage component/author
+counts reflect live data at request time rather than a fixed catalog size. Treat the July-2026
+program notes and dated bullets under `## Open Questions / Outstanding Work` as historical until
+their backend claims are re-verified against production.
 
 **Original historical description (pre-full-port, retained for registry/Qdrant-catalog subsystem accuracy — the paragraphs below describe the registry-driven curated catalog subsystem, which still exists inside the larger app):**
 
