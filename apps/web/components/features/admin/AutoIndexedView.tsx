@@ -176,7 +176,7 @@ export default function AutoIndexedView() {
             {previewHtmlUrl ? (
               <div className="flex h-full flex-col">
                 <iframe
-                  title={`${preview.componentName} preview`}
+                  title={`${preview?.componentName ?? "Component"} preview`}
                   src={previewHtmlUrl}
                   sandbox="allow-scripts"
                   referrerPolicy="no-referrer"
