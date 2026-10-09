@@ -75,6 +75,7 @@ rsync -avz --delete \
     --exclude='.next*' \
     --exclude='.pnpm-store' \
     --exclude='.turbo' \
+    --exclude='graphify-out' \
     --exclude='test-results*' \
     --exclude='playwright-report' \
     --exclude='.auth' \
