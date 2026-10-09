@@ -11,9 +11,9 @@ import type { DemoWithComponent } from "@/types/global"
  * The grid used to render the WHOLE pool (51 items at time of writing), which
  * made it by far the largest contributor to `/`'s height: at ~350px a card plus
  * `gap-y-10`, 17 rows of it carried the page to 10670 CSS against a reference
- * capture that ends at 6290 and has no catalogue section at all. 24 is 8 clean
- * rows at `lg`, 12 at `md` — enough to read as a library rather than as one
- * more carousel row's worth (the two rows above already show 12 each), while
+ * capture that ends at 6290 and has no catalogue section at all. 24 is 5 clean
+ * rows at `xl`, 8 at `lg`, 12 at `md` — enough to read as a library rather
+ * than as one more carousel row's worth (the two rows above already show 12 each), while
  * cutting roughly 3,500px of scroll.
  *
  * The cap is applied HERE and not in `getCatalogueChipPool()`: the same pool
@@ -94,7 +94,7 @@ export function ComponentCatalogue({
           </div>
         )}
       </div>
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-6 gap-y-10">
         {shown.map((demo) => (
           <li key={demo.id}>
             <ComponentCard demo={demo} />
