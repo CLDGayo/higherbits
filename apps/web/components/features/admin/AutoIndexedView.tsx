@@ -183,7 +183,7 @@ export default function AutoIndexedView() {
                   allowFullScreen
                   className="min-h-0 flex-1 border-0"
                 />
-                {preview.previewUrl && (
+                {preview?.previewUrl && (
                   <a href={preview.previewUrl} target="_blank" rel="noopener noreferrer" className="flex shrink-0 items-center gap-3 border-t p-2 text-xs text-muted-foreground hover:text-foreground">
                     <img src={preview.previewUrl} alt="" className="h-12 w-20 rounded object-cover" />
                     Open static thumbnail
