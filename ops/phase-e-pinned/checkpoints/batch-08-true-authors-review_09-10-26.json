@@ -1,0 +1,789 @@
+{
+  "batch": "08",
+  "batch_range": "glasscn through hsuanyi-chou (sequential batch of 10 TRUE rows starting at row 293 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T23:02:52.766Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 126,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 126
+  },
+  "authors": [
+    {
+      "row": 293,
+      "handle": "glasscn",
+      "name": "glasscn",
+      "profile_url": "https://21st.dev/@glasscn",
+      "repository_url": "https://github.com/kostyniuk/glasscn-components",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "highlight-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kostyniuk/glasscn-components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "liquid-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kostyniuk/glasscn-components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "liquid-watch",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kostyniuk/glasscn-components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 296,
+      "handle": "gooseui",
+      "name": "gooseui",
+      "profile_url": "https://21st.dev/@gooseui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "border-beam",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://gooseui.pro)."
+        },
+        {
+          "slug": "features-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://gooseui.pro)."
+        },
+        {
+          "slug": "typography",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://gooseui.pro)."
+        }
+      ]
+    },
+    {
+      "row": 299,
+      "handle": "gpt-vis",
+      "name": "gpt-vis",
+      "profile_url": "https://21st.dev/@gpt-vis",
+      "repository_url": "https://github.com/antvis/GPT-Vis",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 4,
+      "total_count": 4,
+      "blocked_items": [
+        {
+          "slug": "column",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (antvis/GPT-Vis), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "funnel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (antvis/GPT-Vis), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "gpt-vis",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (antvis/GPT-Vis), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pie",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (antvis/GPT-Vis), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 302,
+      "handle": "grootstudio",
+      "name": "grootstudio",
+      "profile_url": "https://21st.dev/@grootstudio",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "blurred-marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://grootstudio.dev)."
+        },
+        {
+          "slug": "cursor-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://grootstudio.dev)."
+        },
+        {
+          "slug": "gradient-text-fill",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://grootstudio.dev)."
+        },
+        {
+          "slug": "logo-marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://grootstudio.dev)."
+        },
+        {
+          "slug": "text-frame",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://grootstudio.dev)."
+        }
+      ]
+    },
+    {
+      "row": 315,
+      "handle": "hari",
+      "name": "Hari Lamichhane",
+      "profile_url": "https://21st.dev/@hari",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "card-comment",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://animata.design/)."
+        },
+        {
+          "slug": "flower-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://animata.design/)."
+        },
+        {
+          "slug": "reveal-images",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://animata.design/)."
+        },
+        {
+          "slug": "scheduler",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://animata.design/)."
+        },
+        {
+          "slug": "transaction-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://animata.design/)."
+        }
+      ]
+    },
+    {
+      "row": 318,
+      "handle": "haydenbleasel",
+      "name": "Hayden Bleasel",
+      "profile_url": "https://21st.dev/@haydenbleasel",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 28,
+      "total_count": 28,
+      "blocked_items": [
+        {
+          "slug": "ai-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "announcement",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "banner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "calendar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "color-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "dialog-stack",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "dropzone",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "gantt",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "image-crop",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "image-zoom",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "kanban",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "pill",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "rating",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "relative-time",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "sandbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "snippet",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "status",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "stories-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "data-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "tags",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "theme-switcher",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "ticker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "tree",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "video-player",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub account lead identified (https://github.com/haydenbleasel) but no mapped component source repository or license lead for these items."
+        }
+      ]
+    },
+    {
+      "row": 322,
+      "handle": "hero_ui",
+      "name": "Hero Ui",
+      "profile_url": "https://21st.dev/@hero_ui",
+      "repository_url": "https://github.com/heroui-inc/heroui",
+      "license_spdx": "Apache-2.0",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 64,
+      "total_count": 64,
+      "blocked_items": [
+        {
+          "slug": "heroui-avatar",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-badge",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-breadcrumbs",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-checkbox",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-chip",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-color-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-color-swatch",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-color-swatch-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-combo-box",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-date-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-date-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-date-range-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-description",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-disclosure",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-accordion",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-alert",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-alert-dialog",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-autocomplete",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-button-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-calendar",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-checkbox-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-close-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-color-area",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-color-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-color-slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-disclosure-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-drawer",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-dropdown",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-error-message",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-field-error",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-fieldset",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-form",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-input-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-input-otp",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-label",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-list-box",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-number-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-radio-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-scroll-shadow",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-search-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-select",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-separator",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-switch",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-table",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-tag-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-time-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-toggle-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-toolbar",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-typography",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-meter",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-progress-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-range-calendar",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "skeleton",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-spinner",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-text-area",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "the-pagination",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-toggle-button-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        },
+        {
+          "slug": "heroui-tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Upstream repository identified (heroui-inc/heroui), but component source is not yet staged in pinned candidate inventory; requires pinned source closure, Tailwind v3 compatibility remediation, authored demo wrappers (5 items lack upstream stories), 10 copy prompts per item, GHL export, and deployed preview assets."
+        }
+      ]
+    },
+    {
+      "row": 323,
+      "handle": "heygaia",
+      "name": "heygaia",
+      "profile_url": "https://21st.dev/@heygaia",
+      "repository_url": "https://github.com/theexperiencecompany/gaia-ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 11,
+      "total_count": 11,
+      "blocked_items": [
+        {
+          "slug": "bar-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "knowledge-graph",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "line-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "nested-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pie-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pricing-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "radar-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "raised-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scatter-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tool-calls-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "wave-spinner",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (theexperiencecompany/gaia-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 330,
+      "handle": "honestui",
+      "name": "honestui",
+      "profile_url": "https://21st.dev/@honestui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub organization lead identified (https://github.com/honestui) but no mapped component source repository or license lead for these items."
+        },
+        {
+          "slug": "chromatic-text-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; GitHub organization lead identified (https://github.com/honestui) but no mapped component source repository or license lead for these items."
+        }
+      ]
+    },
+    {
+      "row": 331,
+      "handle": "hsuanyi-chou",
+      "name": "Ryan.Chou-ggl",
+      "profile_url": "https://21st.dev/@hsuanyi-chou",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "multiple-selector",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    }
+  ]
+}

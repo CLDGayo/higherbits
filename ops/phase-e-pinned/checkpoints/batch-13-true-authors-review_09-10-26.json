@@ -1,0 +1,1648 @@
+{
+  "batch": "13",
+  "batch_range": "openstatusHQ through prebuiltui (sequential batch of 10 live-ledger TRUE authors starting at row 547 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T00:26:37.808Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 248,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 248,
+    "published_ids": []
+  },
+  "authors": [
+    {
+      "row": 547,
+      "handle": "openstatusHQ",
+      "name": "OpenStatus",
+      "profile_url": "https://21st.dev/@openstatusHQ",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "datetime-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Organization profile and website leads only (https://github.com/openstatusHQ, https://www.openstatus.dev/); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "status-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Organization profile and website leads only (https://github.com/openstatusHQ, https://www.openstatus.dev/); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "status-calendar",
+          "reason": "unmapped_source_repository",
+          "detail": "Organization profile and website leads only (https://github.com/openstatusHQ, https://www.openstatus.dev/); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 548,
+      "handle": "originui",
+      "name": "Origin UI",
+      "profile_url": "https://21st.dev/@originui",
+      "repository_url": "https://github.com/cosscom/coss",
+      "license_spdx": "AGPL-3.0",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 44,
+      "total_count": 44,
+      "blocked_items": [
+        {
+          "slug": "accordion",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "alert-dialog",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "avatar",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "breadcrumb",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "button",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "calendar-rac",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "calendar",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "checkbox",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "command",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "compact-pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "datefield-rac",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "dialog",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "dropdown-menu",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "hero-pill",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "image-crop",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "input",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "input-with-inner-tags",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "input-with-tags",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "joined-pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "label",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "multiselect",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "navigation-bar",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "navigation-menu-4",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "navigation-menu",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "newsletter-section",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "numbered-pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "text-pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "popover",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "radio-group",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "select",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "select-native",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "simple-pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "slider",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "stepper",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "table",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "tabs",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "textarea",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "tree",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "use-character-limit",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "use-image-upload",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "use-pagination",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        },
+        {
+          "slug": "use-slider-with-input",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository (cosscom/coss, redirected from origin-space/originui) is licensed under AGPL-3.0; fails permissive license safeguard.",
+          "next_required_evidence": "Permissive re-licensing (MIT/Apache-2.0/BSD) by creator or explicit dual-licensing grant before ingestion."
+        }
+      ]
+    },
+    {
+      "row": 550,
+      "handle": "osmosupply",
+      "name": "osmosupply",
+      "profile_url": "https://21st.dev/@osmosupply",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "draw-random-underline",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://www.osmo.supply/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "looping-words-with-gsap",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://www.osmo.supply/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "parallax-scrolling",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://www.osmo.supply/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 551,
+      "handle": "oui",
+      "name": "oui",
+      "profile_url": "https://21st.dev/@oui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "oui-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "oui-keyboard",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "oui-number-field",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "oui-popover",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "oui-select",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "oui-text-area",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "oui-text-field",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and demo site leads only (https://github.com/mw10013, https://oui.mw10013.workers.dev); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 556,
+      "handle": "pacekit",
+      "name": "pacekit",
+      "profile_url": "https://21st.dev/@pacekit",
+      "repository_url": "https://github.com/paceui/gsap",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 10,
+      "total_count": 10,
+      "blocked_items": [
+        {
+          "slug": "ai-response-writer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-suggestions",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "bouncing-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "form-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "form-select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "github-star-counter",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "gradient-shadow",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mouse-wave-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "scramble-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "squash-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from pacekit/gsap), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/pacekit/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 557,
+      "handle": "paceui",
+      "name": "Pace UI",
+      "profile_url": "https://21st.dev/@paceui",
+      "repository_url": "https://github.com/paceui/gsap",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 12,
+      "total_count": 12,
+      "blocked_items": [
+        {
+          "slug": "dot-flow",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "dot-loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "draw-line-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "flip-reveal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "form-switch",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "form-textarea",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "layered-stack",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "liquid-cursor",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "liquid-glass",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reveal-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "spring-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "text-fall-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (paceui/gsap, redirected from paceui/paceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/paceui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 560,
+      "handle": "paper-design",
+      "name": "Paper Shaders",
+      "profile_url": "https://21st.dev/@paper-design",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 121,
+      "total_count": 121,
+      "blocked_items": [
+        {
+          "slug": "color-panels",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "color-panels-glass",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "color-panels-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "color-panels-opening",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dithering",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dithering-bugs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dithering-ripple",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dithering-sine-wave",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dithering-swirl",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dithering-warp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-grid-tree-line",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-grid-triangles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-grid-wallpaper",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-orbit",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-orbit-bubbles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-orbit-hallucinatory",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-orbit-shine",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fluted-glass",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fluted-glass-abstract",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fluted-glass-folds",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fluted-glass-waves",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gem-smoke",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gem-smoke-circle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gem-smoke-daisy",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gem-smoke-diamond",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gem-smoke-metaballs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "god-rays",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "god-rays-ether",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "god-rays-linear",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "god-rays-warp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grain-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grain-gradient-blob",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grain-gradient-dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grain-gradient-ripple",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grain-gradient-truchet",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grain-gradient-wave",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-cmyk",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-cmyk-drops",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-cmyk-newspaper",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-cmyk-vintage",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-dots-led-screen",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-dots-mosaic",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "halftone-dots-round-and-square",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "heatmap",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "heatmap-sepia",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-dithering",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-dithering-natural",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-dithering-noise",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-dithering-retro",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "liquid-metal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "liquid-metal-backdrop",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "liquid-metal-noir",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "liquid-metal-stripes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "mesh-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "mesh-gradient-beach",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "mesh-gradient-ink",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "mesh-gradient-purple",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "metaballs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "metaballs-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "metaballs-ink-drops",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "metaballs-solar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "neuro-noise",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "neuro-noise-bloodstream",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "neuro-noise-ghost",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "neuro-noise-sensation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "paper-texture",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "paper-texture-abstract",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "paper-texture-cardboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "paper-texture-details",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "perlin-noise",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "perlin-noise-moss",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "perlin-noise-nintendo-water",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "perlin-noise-worms",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pulsing-border",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pulsing-border-circle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pulsing-border-northern-lights",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pulsing-border-solid-line",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "simplex-noise",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "simplex-noise-bubblegum",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "simplex-noise-first-contact",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "simplex-noise-spots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "smoke-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "smoke-ring-cloud",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "smoke-ring-line",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "smoke-ring-solar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spiral",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spiral-droplet",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spiral-jungle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spiral-swirl",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-mesh-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-mesh-gradient-1960s",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-mesh-gradient-sea",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-mesh-gradient-sunset",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-radial-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-radial-gradient-cross-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-radial-gradient-lo-fi",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "static-radial-gradient-radial",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "swirl",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "swirl-007",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "swirl-candy",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "swirl-opening",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "voronoi",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "voronoi-bubbles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "voronoi-cells",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "voronoi-lights",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp-cauldron-pot",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp-kelp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp-live-ink",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp-nectar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp-passion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "water",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "water-abstract",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "water-slow-mo",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "water-streaming",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "paper-waves",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "waves-groovy",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "waves-ride-the-wave",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "waves-tangled-up",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 562,
+      "handle": "pate1kiran",
+      "name": "pate1kiran",
+      "profile_url": "https://21st.dev/@pate1kiran",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "daybreak-text-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "progressive-blur-modal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "code-pen-home-skeuomorphism-in-the-dark-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 578,
+      "handle": "platejs",
+      "name": "platejs",
+      "profile_url": "https://21st.dev/@platejs",
+      "repository_url": "https://github.com/udecode/plate",
+      "license_spdx": "NOASSERTION",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 22,
+      "total_count": 22,
+      "blocked_items": [
+        {
+          "slug": "basic-marks-base-kit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "blockquote-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "block-selection",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "caption",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "code-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "cursor-overlay",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "editor",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "heading-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "highlight-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "inline-combobox",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "kbd-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "link-base-kit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "link-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "block-list",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "math-base-kit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "media-audio-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "media-file-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "resize-handle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "table-base-kit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tag-node",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "toc-base-kit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "toggle-base-kit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified (udecode/plate) with root license lead NOASSERTION due to multi-package conditional licensing terms, and component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, per-package license clarification, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Package-level permissive license verification (MIT/Apache-2.0), byte-for-byte revision pin in ops/phase-e-pinned/platejs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 584,
+      "handle": "prebuiltui",
+      "name": "prebuiltui",
+      "profile_url": "https://21st.dev/@prebuiltui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 23,
+      "total_count": 23,
+      "blocked_items": [
+        {
+          "slug": "about",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "autocomplete",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "avatar-square",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "badge-tag",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-ui",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "checkbox-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "combobox",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cookies",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dropdown-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "faq-sections",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-sections",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "form-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-gallery",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "login-form",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "newsletter",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pricing-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "success-toast-notification",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonial",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "toggle-switch",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://prebuiltui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

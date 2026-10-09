@@ -1,0 +1,710 @@
+{
+  "batch": "10",
+  "batch_range": "kaif-ui through llaxmi (sequential batch of 10 live-ledger TRUE authors starting at row 392 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T08:50:00.000Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 1,
+    "authors_blocked": 9,
+    "total_sheet_items_evaluated": 88,
+    "total_published_items": 1,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 1,
+    "total_blocked_items": 87,
+    "published_ids": [
+      179
+    ]
+  },
+  "authors": [
+    {
+      "row": 392,
+      "handle": "kaif-ui",
+      "name": "Kaif UI",
+      "profile_url": "https://21st.dev/@kaif-ui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "cicular-navigation-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kaif-ui.vercel.app/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "emoji-nav",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kaif-ui.vercel.app/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinite-slider-horizontal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kaif-ui.vercel.app/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "macbook-keyboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kaif-ui.vercel.app/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pendulum-component",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kaif-ui.vercel.app/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 410,
+      "handle": "kokonutd",
+      "name": "Kokonut Baffier",
+      "profile_url": "https://21st.dev/@kokonutd",
+      "repository_url": "https://github.com/kokonut-labs/kokonutui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 55,
+      "total_count": 55,
+      "blocked_items": [
+        {
+          "slug": "action-search-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "activity-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-input-with-file",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-input-with-loading",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-input-with-search",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-input-with-suggestions",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-loading",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-text-loading",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-voice-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animated-ai-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "apple-activity-ring",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "avatar-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "background-circles",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "background-paths",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "beams-background",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "bento-grid",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "button-colorful",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "button-shiny",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "carousel-cards",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "chat-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "color-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "faq",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "faq-with-categories",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "glitch-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hand-writing-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hero-fashion",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hold-and-release-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "interactive-checkout",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "magnetize-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "matrix-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "modal-pricing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "numeric-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "particle-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "password-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pricing-cards",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pricing-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pricing-table",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "profile-dropdown",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "shape-landing-hero",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "sliced-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "smooth-drawer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "social-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "swoosh-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tag-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "team-invitation",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "text-rewind",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "type-writer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "use-auto-resize-textarea",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "use-file-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "use-tags",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "v0-ai-chat",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "wave-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "x-gradient-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (kokonut-labs/kokonutui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/kokonutd/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 412,
+      "handle": "kristen17",
+      "name": "kristen17",
+      "profile_url": "https://21st.dev/@kristen17",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "course-design-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "message-design-card-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "rounded-box",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 416,
+      "handle": "kvnkld",
+      "name": "Kevin",
+      "profile_url": "https://21st.dev/@kvnkld",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 17,
+      "total_count": 17,
+      "blocked_items": [
+        {
+          "slug": "task-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "ai-agent-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "comparison-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "data-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "file-diff",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-generation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "inline-citations",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "orbs-helix",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "orbs-lens",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "orbs-morph",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "orbs-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "streaming-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-response",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "thinking-reasoning",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "thinking-state",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "web-search",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://kevn.co/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 424,
+      "handle": "lensblocks",
+      "name": "lensblocks",
+      "profile_url": "https://21st.dev/@lensblocks",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "account-list-item",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://lensblocks.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "paginated-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://lensblocks.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 427,
+      "handle": "lepikhinb",
+      "name": "Boris Lepikhin",
+      "profile_url": "https://21st.dev/@lepikhinb",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "sparkles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://lunarui.dev/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 428,
+      "handle": "limeplay",
+      "name": "limeplay",
+      "profile_url": "https://21st.dev/@limeplay",
+      "repository_url": "https://github.com/WINOFFRG/limeplay",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "media-provider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (WINOFFRG/limeplay), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/limeplay/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "player-layout",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (WINOFFRG/limeplay), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/limeplay/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 429,
+      "handle": "lina.sameer",
+      "name": "lina.sameer",
+      "profile_url": "https://21st.dev/@lina.sameer",
+      "repository_url": "https://github.com/SameerJS6/lina",
+      "license_spdx": "MIT",
+      "manifest_sha256": "c2720c6082da0a4be17570b2dbef7110d5ba54b35569fbbf2d4a509059a22e76",
+      "prompts_sha256": "f49adcd31f9d2e9318e14ac7320e9950842c781964d7baac05dbaadcd7dc899b",
+      "dependency_evidence_sha256": "881a952daa3a0d654a3f12c320afc54a00f0b1a09031b4bb4e66ced62e975251",
+      "license_sha256": "9817ee93a5cabc420489ddf56c43408f2d96207d4398b48bf8a33e57175bacc2",
+      "status": "published",
+      "published_count": 1,
+      "blocked_count": 0,
+      "total_count": 1,
+      "published_slugs": [
+        "scroll-area-1"
+      ],
+      "already_present_slugs": [
+        "scroll-area-1"
+      ],
+      "newly_published_slugs": [],
+      "published_ids": [
+        179
+      ],
+      "published_items": [
+        {
+          "id": 179,
+          "slug": "scroll-area-1",
+          "name": "Scroll Area",
+          "source_id": 8,
+          "item_key": "registry/radix-ui/scroll-area.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/linasameer-scroll-area-1.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/linasameer-scroll-area-1.html",
+          "is_public": true,
+          "published_at": "2026-10-06T23:32:15.866869+00:00"
+        }
+      ],
+      "blocked_items": []
+    },
+    {
+      "row": 430,
+      "handle": "liveblocks",
+      "name": "liveblocks",
+      "profile_url": "https://21st.dev/@liveblocks",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "emoji-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 431,
+      "handle": "llaxmi",
+      "name": "Laxmi Lamichhane",
+      "profile_url": "https://21st.dev/@llaxmi",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "tilt-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.laxmilamichhane.com.np/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

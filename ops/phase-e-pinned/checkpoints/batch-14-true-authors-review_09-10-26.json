@@ -1,0 +1,1648 @@
+{
+  "batch": "14",
+  "batch_range": "preetsuthar17 through satoriui (sequential batch of 10 live-ledger TRUE authors starting at row 586 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T00:38:52.746Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 248,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 248,
+    "published_ids": []
+  },
+  "authors": [
+    {
+      "row": 586,
+      "handle": "preetsuthar17",
+      "name": "Preet Suthar",
+      "profile_url": "https://21st.dev/@preetsuthar17",
+      "repository_url": "https://github.com/preetsuthar17/hextaui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 119,
+      "total_count": 119,
+      "blocked_items": [
+        {
+          "slug": "3d-image-carousel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "accordion",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "accordion-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-chat-history",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-chat-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-error-handler",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-model-selector",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-prompt-templates",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-thinking",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-thinking-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "ai-usage-quota",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animated-counter",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animated-dock",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animated-tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animated-underline",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "api-settings",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "appearance-settings",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "auth-account-delete",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "auth-change-password",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "auth-email-change",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "auth-verify-email",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "avatar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "avatar-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "basic-data-table",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "billing-invoice-details",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "billing-plan-selector",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "billing-upgrade-prompt",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "blurred-stagger-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "brand-scoller",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "breadcrumb",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "calender",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "card-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "cartoonish-sign-in-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "checkbox",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "checkout-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "chip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "citations",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "clean-minimal-sign-in",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "command-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "contact-support-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "cursor",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "draggable-list",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "drawer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "dropdown-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "expandable-tabs-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "faq-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "file-upload",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "full-screen-signup",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "general-settings",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "gradient-tracing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hero-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hero-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hero-2-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hover-link-preview",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "infinite-text-marquee",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "input-otp",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "kbd",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "label",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "magic-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "menubar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "message-input-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "messaging-conversation",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "messaging-people-list",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "modern-stunning-sign-in",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mouse-following-eyes",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "native-select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "navbar-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "newsletter-signup",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "notification-settings",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pagination",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "particles",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "password-reset-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "password-strength-meter",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "password-update-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "phone-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "post-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pricing-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "privacy-data-setting",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "profile-settings",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "progress",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "radio",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "resizable",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "responsive-masonry-layout",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "scroll-area",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "selector-chips",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "separator",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "shining-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "shining-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "sidebar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "sign-up-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "signup-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "skeleton",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "spotlight-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "switch",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "system-status-block",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "task-filters",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "task-progress",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "team-invite",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "team-notifications",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "team-permissions-matrix",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "testimonial-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "textarea",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "time-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "timeline",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "toggle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "toolbar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tree",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tree-view",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "typewriter-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "video-player",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "waitlist-form-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (preetsuthar17/hextaui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/preetsuthar17/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 593,
+      "handle": "pulkitxm",
+      "name": "pulkitxm",
+      "profile_url": "https://21st.dev/@pulkitxm",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "aurora-background",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cursor-spotlight",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fluid-cursor-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "handwriting-svg",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "horizontal-scroll-gallery",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinite-circular-scroll",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "line-draw-svg",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "lqip-image",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "not-found-page",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "parallax-image",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "party-popper",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "scroll-linked-video-scrubber",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stagger-reveal-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal portfolio leads only (https://github.com/pulkitxm, https://www.pulkit.page); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 608,
+      "handle": "reaviz",
+      "name": "REAVIZ",
+      "profile_url": "https://21st.dev/@reaviz",
+      "repository_url": "https://github.com/reaviz/reaviz",
+      "license_spdx": "Apache-2.0",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "area-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "area-chart-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "area-chart-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "areachart-multiseries",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "area-chart-xs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "funnel-chart-big",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "heat-map-xl",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hexagon-map",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "incident-bar-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "incident-report-large",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "incident-report-middle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "layered-chart-xl",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "stacked-diverging-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (reaviz/reaviz), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reaviz/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 610,
+      "handle": "redpangilinan",
+      "name": "redpangilinan",
+      "profile_url": "https://21st.dev/@redpangilinan",
+      "repository_url": "https://github.com/redpangilinan/credenza",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "credenza",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (redpangilinan/credenza), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/redpangilinan/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 613,
+      "handle": "reshaped",
+      "name": "reshaped",
+      "profile_url": "https://21st.dev/@reshaped",
+      "repository_url": "https://github.com/reshaped-ui/reshaped",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 37,
+      "total_count": 37,
+      "blocked_items": [
+        {
+          "slug": "perlin-noise",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-alert",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-autocomplete",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-avatar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-badge",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-breadcrumbs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-calendar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-carousel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-checkbox",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-context-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-divider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-dropdown-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-file-upload",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-link",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-menu-item",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-number-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-pagination",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-pin-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-popover",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-progress-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-progress-indicator",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-radio",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-switch",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-table",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-text-area",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-text-field",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-toast",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-toggle-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-toggle-button-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "reshaped-tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (reshaped-ui/reshaped), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/reshaped/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 614,
+      "handle": "retroui",
+      "name": "retroui",
+      "profile_url": "https://21st.dev/@retroui",
+      "repository_url": "https://github.com/ariflogs/retroui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 10,
+      "total_count": 10,
+      "blocked_items": [
+        {
+          "slug": "area-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "badge",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "bar-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "line-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "menu-style-default",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "popover",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "switch-style-disabled",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "table",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "toggle-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ariflogs/retroui redirected to neobrutalism/neobrutalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/retroui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 616,
+      "handle": "reuno-ui",
+      "name": "reuno-ui",
+      "profile_url": "https://21st.dev/@reuno-ui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 42,
+      "total_count": 42,
+      "blocked_items": [
+        {
+          "slug": "ai-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper99",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animated-number",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "apple-play-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-paper-shaders",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-plus",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bg-gredient",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "blue-meshy-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper39",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "card-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper89",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "countdown-number",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "count-down-numbers",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "crypto-dashboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "css-link",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "expanded-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper64",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper67",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper49",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "joblisting-component",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "loop-animation-hook",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "mouse-follow-animations",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "music-toggle-btn",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pagination",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pearl-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "popover-form",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "progressive-blur",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "skiper87",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "shader-svg",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "share-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "shuffle-number",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slide-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "smooth-caret-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "special-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stacked-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "svg-clip-path-mask",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "svg-follow-scroll",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-roll-navigation",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-scroll-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "theme-toggle-buttons",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://skiper-ui.com/); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 619,
+      "handle": "ridemountainpig",
+      "name": "flightcn",
+      "profile_url": "https://21st.dev/@ridemountainpig",
+      "repository_url": "https://github.com/ridemountainpig/flightcn",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "departures-board",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ridemountainpig/flightcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/ridemountainpig/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "flightcn-flight-airport",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ridemountainpig/flightcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/ridemountainpig/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "flightcn-flight-multi-route",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ridemountainpig/flightcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/ridemountainpig/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "flightcn-flight-routes",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ridemountainpig/flightcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/ridemountainpig/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "flightcn-satellite-orbit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (ridemountainpig/flightcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/ridemountainpig/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 632,
+      "handle": "rudrodip",
+      "name": "rds_agi",
+      "profile_url": "https://21st.dev/@rudrodip",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "async-select",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile and personal website leads only (https://github.com/rudrodip, https://rdsx.dev/); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 648,
+      "handle": "satoriui",
+      "name": "satoriui",
+      "profile_url": "https://21st.dev/@satoriui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "beacon-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dotted-modern",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "flip-clock",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "keyboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "kinetic-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slide-up-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "typewriter-loop",
+          "reason": "unmapped_source_repository",
+          "detail": "Website lead only (https://satoriui.site); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

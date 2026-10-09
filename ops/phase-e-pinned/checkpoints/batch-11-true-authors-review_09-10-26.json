@@ -1,0 +1,1246 @@
+{
+  "batch": "11",
+  "batch_range": "loading-ui through mona_biasia (sequential batch of 10 live-ledger TRUE authors starting at row 433 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T00:06:52.146Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 181,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 181,
+    "published_ids": []
+  },
+  "authors": [
+    {
+      "row": 433,
+      "handle": "loading-ui",
+      "name": "loading-ui",
+      "profile_url": "https://21st.dev/@loading-ui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 39,
+      "total_count": 39,
+      "blocked_items": [
+        {
+          "slug": "accordion-loader",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "analyzing-image",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "arc",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bars",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bobbing-dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bouncing-dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "classic",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "comet-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "concentric-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "conveyor-loop",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dash-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "diamond",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dots-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dual-arc",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fade-arc",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinity",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinity-square-snake",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinity-track",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "morphing-infinity",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "orbit-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pulse-dot",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "quarter-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "ripple",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "satellite-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spiral",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spokes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "square-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "square-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "square-snake",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "swirling",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "symmetric-wave",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "terminal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-blink",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "triple-dot-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "twin-orbit",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "typing",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "wandering-eyes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "wave",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://loading-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 437,
+      "handle": "lucasbassetti",
+      "name": "Lucas Bassetti",
+      "profile_url": "https://21st.dev/@lucasbassetti",
+      "repository_url": "https://github.com/LucasBassetti/godui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "animated-tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (LucasBassetti/godui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/lucasbassetti/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "bento-grid",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (LucasBassetti/godui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/lucasbassetti/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "magic-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (LucasBassetti/godui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/lucasbassetti/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mask-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (LucasBassetti/godui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/lucasbassetti/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "multi-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (LucasBassetti/godui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/lucasbassetti/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "progress-fold-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (LucasBassetti/godui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/lucasbassetti/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 439,
+      "handle": "lukacho",
+      "name": "lukacho/ui",
+      "profile_url": "https://21st.dev/@lukacho",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "copy-to-clipboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/profile lead only (https://github.com/lukahukur); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "custom-cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/profile lead only (https://github.com/lukahukur); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "figma-cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/profile lead only (https://github.com/lukahukur); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-swiper",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/profile lead only (https://github.com/lukahukur); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/profile lead only (https://github.com/lukahukur); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tiles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/profile lead only (https://github.com/lukahukur); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 440,
+      "handle": "luv-jeri",
+      "name": "luv-jeri",
+      "profile_url": "https://21st.dev/@luv-jeri",
+      "repository_url": "https://github.com/luv-jeri/cojeev-ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "dither-sculpture",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (luv-jeri/cojeev-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/luv-jeri/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "infinite-spiral",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (luv-jeri/cojeev-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/luv-jeri/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pixel-swap",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (luv-jeri/cojeev-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/luv-jeri/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 450,
+      "handle": "manuarora700",
+      "name": "Manu Arora",
+      "profile_url": "https://21st.dev/@manuarora700",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 88,
+      "total_count": 88,
+      "blocked_items": [
+        {
+          "slug": "3d-card-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "3d-globe",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "3d-marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animated-modal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animated-testimonials",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animated-tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "aurora-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-beams",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-beams-with-collision",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-boxes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-gradient-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ripple-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bento-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "canvas-reveal-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "canvas-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "card-spotlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "card-stack",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cloud-shader",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "colourful-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "comet-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "compare",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "container-scroll-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "container-text-flip",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "diagram-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "direction-aware-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "draggable-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "encrypted-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "evervault-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-block-animated-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-section-with-card-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-section-with-hover-effects",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "file-upload",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "flip-words",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "floating-dock",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "focus-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "following-pointer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "framer-motion-switch",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "glare-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "glowing-background-stars-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "glowing-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "glowing-stars",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gooey-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-highlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-parallax",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hover-border-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinite-moving-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "keyboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "lamp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "layout-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "lens",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "link-preview",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "meteors",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "moving-border",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "navbar-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "parallax-scroll",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "placeholders-and-vanish-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pointer-highlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pulse-beams",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "radar-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "resizable-navbar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "shooting-stars",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sidebar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sparkles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spotlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "squiggly-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "squiggly-underline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stars-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sticky-banner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sticky-scroll-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "svg-mask-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-flipping-board",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-generate-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-hover-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-reveal-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "timeline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tracing-beam",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "typewriter-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "vortex",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "wavy-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "world-map",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://aceternity.com/?ref=serafim); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 452,
+      "handle": "mapcn",
+      "name": "Anmoldeep Singh",
+      "profile_url": "https://21st.dev/@mapcn",
+      "repository_url": "https://github.com/AnmolSaini16/mapcn",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 11,
+      "total_count": 11,
+      "blocked_items": [
+        {
+          "slug": "mapcn-custom-layer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-layer-markers",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "map",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-map-arc",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-map-controls",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-map-marker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-map-popup",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-marker-content",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-marker-label",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-marker-popup",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mapcn-marker-tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (AnmolSaini16/mapcn), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mapcn/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 468,
+      "handle": "meghtrix",
+      "name": "meghtrix",
+      "profile_url": "https://21st.dev/@meghtrix",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "background-components",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-gradient-glow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gradient-backgrounds",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gradient-blur-bg",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grid-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "radial-glow-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 476,
+      "handle": "micka_design",
+      "name": "Micka Touillaud",
+      "profile_url": "https://21st.dev/@micka_design",
+      "repository_url": "https://github.com/mickadesign/fluid-functionalism",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 15,
+      "total_count": 15,
+      "blocked_items": [
+        {
+          "slug": "switch",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "checkbox-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "table",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "accordion",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tabs-base",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tabs-subtle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "badge-fluid-functionalism",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "dialog",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "color-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "radio-group-base",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "sidebar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "thinking-steps",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (mickadesign/fluid-functionalism), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/micka_design/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 477,
+      "handle": "mikolajdobrucki",
+      "name": "Mikolaj Dobrucki",
+      "profile_url": "https://21st.dev/@mikolajdobrucki",
+      "repository_url": "https://github.com/launch-ui/launch-ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "cta-with-glow",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (launch-ui/launch-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mikolajdobrucki/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "cta-with-rectangle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (launch-ui/launch-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mikolajdobrucki/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "hero-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (launch-ui/launch-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mikolajdobrucki/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "mockup",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (launch-ui/launch-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mikolajdobrucki/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pricing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (launch-ui/launch-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mikolajdobrucki/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "screenshot",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (launch-ui/launch-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mikolajdobrucki/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 490,
+      "handle": "mona_biasia",
+      "name": "Mona",
+      "profile_url": "https://21st.dev/@mona_biasia",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "gradient-shimmer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

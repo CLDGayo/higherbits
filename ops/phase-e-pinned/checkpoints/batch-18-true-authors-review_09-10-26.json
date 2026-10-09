@@ -1,0 +1,835 @@
+{
+  "batch": "18",
+  "batch_range": "utilcn through yadwinder (sequential batch of 10 live-ledger TRUE authors starting at row 754 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T01:35:13.255Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 1,
+    "authors_blocked": 9,
+    "total_sheet_items_evaluated": 71,
+    "total_published_items": 25,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 25,
+    "total_blocked_items": 46,
+    "published_ids": [
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157
+    ]
+  },
+  "authors": [
+    {
+      "row": 754,
+      "handle": "utilcn",
+      "name": "",
+      "profile_url": "https://21st.dev/@utilcn",
+      "repository_url": null,
+      "website_url": "https://utilcn.dev",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "upload-multiple-files",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial/project website lead only (https://utilcn.dev); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 756,
+      "handle": "uvcanvas",
+      "name": "uvcanvas",
+      "profile_url": "https://21st.dev/@uvcanvas",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "xenon-component",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile and handle name lead only (https://21st.dev/@uvcanvas); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 759,
+      "handle": "vercel-crawled",
+      "name": "Vercel",
+      "profile_url": "https://21st.dev/@vercel-crawled",
+      "repository_url": "https://github.com/vercel",
+      "website_url": "https://vercel.com/",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 14,
+      "total_count": 14,
+      "blocked_items": [
+        {
+          "slug": "actions",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "announcement",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "artifact",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "conversation",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "environment-variables",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "controls",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "inline-citation",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "loader",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "message",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "sources",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "speech-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "suggestion",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        },
+        {
+          "slug": "task",
+          "reason": "unmapped_source_repository",
+          "detail": "Generic organization profile lead only (https://github.com/vercel); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. Apache-2.0/MIT) and component file paths."
+        }
+      ]
+    },
+    {
+      "row": 760,
+      "handle": "vgpu",
+      "name": "VGPU",
+      "profile_url": "https://21st.dev/@vgpu",
+      "repository_url": "https://github.com/vercel-labs/vgpu",
+      "website_url": "https://vgpu.sh",
+      "license_spdx": "MIT",
+      "revision": "c35762d271fe1a1fc48464a7691d0ce97a18aa7e",
+      "manifest_sha256": "af8d902a8fcdf409b10f6729049cb5e7f50bec45983b5f73b176756cad5c48ab",
+      "prompts_sha256": "6c1490ded9df41f192b33d1b3d3235c998b998af6e96beb872ec9d424bc9781a",
+      "demos_sha256": "a94a4eab8d55bfd12007ea250f4472584162f181abcfc55ff19cea8f73c2aa11",
+      "license_sha256": "779258e329008bdb9330e6c1daad644ff867f164d11c4cc4404350479f3e92ee",
+      "status": "published",
+      "published_count": 25,
+      "blocked_count": 0,
+      "total_count": 25,
+      "published_slugs": [
+        "fluid",
+        "adaptive-quality",
+        "agent-radiance-cascades",
+        "air-painting",
+        "anti-aliasing",
+        "batch-rendering",
+        "black-hole",
+        "clipping",
+        "earth",
+        "environment-map",
+        "fft-ocean",
+        "fft-ocean-surface",
+        "glass-fractal",
+        "gradient-shader-background",
+        "instanced-rendering",
+        "mnist-classifier",
+        "nextjs-flare",
+        "optimized-black-hole",
+        "particle-orbit",
+        "radiance-cascades",
+        "raymarched-fractal",
+        "three-tsl",
+        "transmission",
+        "triangle-led-front",
+        "tsl-exports"
+      ],
+      "already_present_slugs": [
+        "fluid",
+        "adaptive-quality",
+        "agent-radiance-cascades",
+        "air-painting",
+        "anti-aliasing",
+        "batch-rendering",
+        "black-hole",
+        "clipping",
+        "earth",
+        "environment-map",
+        "fft-ocean",
+        "fft-ocean-surface",
+        "glass-fractal",
+        "gradient-shader-background",
+        "instanced-rendering",
+        "mnist-classifier",
+        "nextjs-flare",
+        "optimized-black-hole",
+        "particle-orbit",
+        "radiance-cascades",
+        "raymarched-fractal",
+        "three-tsl",
+        "transmission",
+        "triangle-led-front",
+        "tsl-exports"
+      ],
+      "newly_published_slugs": [],
+      "published_ids": [
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157
+      ],
+      "published_items": [
+        {
+          "id": 133,
+          "slug": "fluid",
+          "name": "Interactive Fluid",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/fluid/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-fluid.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-fluid.html",
+          "is_public": true,
+          "published_at": "2026-10-05T13:55:15.081507+00:00"
+        },
+        {
+          "id": 134,
+          "slug": "adaptive-quality",
+          "name": "Adaptive Quality",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/adaptive-quality/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-adaptive-quality.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-adaptive-quality.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 135,
+          "slug": "agent-radiance-cascades",
+          "name": "Agent Radiance Cascades",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/agent-radiance-cascades/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-agent-radiance-cascades.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-agent-radiance-cascades.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 136,
+          "slug": "air-painting",
+          "name": "Air Painting",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/air-painting/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-air-painting.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-air-painting.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 137,
+          "slug": "anti-aliasing",
+          "name": "Anti-Aliasing",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/anti-aliasing/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-anti-aliasing.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-anti-aliasing.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 138,
+          "slug": "batch-rendering",
+          "name": "Batch Rendering",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/batch-rendering/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-batch-rendering.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-batch-rendering.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 139,
+          "slug": "black-hole",
+          "name": "Black Hole",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/black-hole/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-black-hole.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-black-hole.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 140,
+          "slug": "clipping",
+          "name": "Clipping",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/clipping/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-clipping.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-clipping.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 141,
+          "slug": "earth",
+          "name": "Earth",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/earth/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-earth.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-earth.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 142,
+          "slug": "environment-map",
+          "name": "Environment Map",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/environment-map/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-environment-map.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-environment-map.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 143,
+          "slug": "fft-ocean",
+          "name": "Particles ocean",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/fft-ocean/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-fft-ocean.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-fft-ocean.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 144,
+          "slug": "fft-ocean-surface",
+          "name": "FFT ocean surface",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/fft-ocean-surface/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-fft-ocean-surface.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-fft-ocean-surface.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 145,
+          "slug": "glass-fractal",
+          "name": "Glass Fractal",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/glass-fractal/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-glass-fractal.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-glass-fractal.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 146,
+          "slug": "gradient-shader-background",
+          "name": "Simple Gradient",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/gradient/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-gradient-shader-background.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-gradient-shader-background.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 147,
+          "slug": "instanced-rendering",
+          "name": "Instanced Rendering",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/instanced-rendering/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-instanced-rendering.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-instanced-rendering.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 148,
+          "slug": "mnist-classifier",
+          "name": "MNIST Classifier",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/mnist-classifier/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-mnist-classifier.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-mnist-classifier.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 149,
+          "slug": "nextjs-flare",
+          "name": "Next.js Flare",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/nextjs-flare/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-nextjs-flare.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-nextjs-flare.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 150,
+          "slug": "optimized-black-hole",
+          "name": "Optimized Black Hole",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/optimized-black-hole/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-optimized-black-hole.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-optimized-black-hole.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 151,
+          "slug": "particle-orbit",
+          "name": "Particle Orbit",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/particle-orbit/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-particle-orbit.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-particle-orbit.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 152,
+          "slug": "radiance-cascades",
+          "name": "Radiance Cascades",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/radiance-cascades/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-radiance-cascades.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-radiance-cascades.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 153,
+          "slug": "raymarched-fractal",
+          "name": "Raymarched fractal",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/raymarched-fractal/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-raymarched-fractal.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-raymarched-fractal.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 154,
+          "slug": "three-tsl",
+          "name": "Lava material",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/three-tsl/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-three-tsl.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-three-tsl.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 155,
+          "slug": "transmission",
+          "name": "Transmission",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/transmission/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-transmission.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-transmission.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 156,
+          "slug": "triangle-led-front",
+          "name": "Triangle LED Hero",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/triangle-led-front/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-triangle-led-front.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-triangle-led-front.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        },
+        {
+          "id": 157,
+          "slug": "tsl-exports",
+          "name": "Three.js WGSL modules",
+          "source_id": 3,
+          "item_key": "apps/docs/examples/tsl-exports/index.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/vgpu-tsl-exports.png",
+          "bundle_html_url": "https://higherbits.dev/auto-index/vgpu-tsl-exports.html",
+          "is_public": true,
+          "published_at": "2026-10-05T14:05:28.370543+00:00"
+        }
+      ],
+      "blocked_items": []
+    },
+    {
+      "row": 761,
+      "handle": "victorwelander",
+      "name": "Victor Welander",
+      "profile_url": "https://21st.dev/@victorwelander",
+      "repository_url": "https://github.com/victorwelander",
+      "website_url": "https://www.victorwelander.com/",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 4,
+      "total_count": 4,
+      "blocked_items": [
+        {
+          "slug": "expandable-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile link only (https://github.com/victorwelander) and personal portfolio lead (https://www.victorwelander.com/); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. MIT/Apache-2.0) and component file paths."
+        },
+        {
+          "slug": "gooey-text-morphing",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile link only (https://github.com/victorwelander) and personal portfolio lead (https://www.victorwelander.com/); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. MIT/Apache-2.0) and component file paths."
+        },
+        {
+          "slug": "nested-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile link only (https://github.com/victorwelander) and personal portfolio lead (https://www.victorwelander.com/); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. MIT/Apache-2.0) and component file paths."
+        },
+        {
+          "slug": "upgrade-banner",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile link only (https://github.com/victorwelander) and personal portfolio lead (https://www.victorwelander.com/); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. MIT/Apache-2.0) and component file paths."
+        }
+      ]
+    },
+    {
+      "row": 770,
+      "handle": "voxlet-ui",
+      "name": "Voxlet UI",
+      "profile_url": "https://21st.dev/@voxlet-ui",
+      "repository_url": "https://github.com/voxletlabs/voxlet-ui",
+      "website_url": "voxlet-ui.vercel.app",
+      "license_spdx": "NOASSERTION",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 4,
+      "total_count": 4,
+      "blocked_items": [
+        {
+          "slug": "button-download",
+          "reason": "unverified_license_and_uncaptured_source",
+          "detail": "Repository lead identified (voxletlabs/voxlet-ui), but GitHub root license scan returned NOASSERTION (unverified permissive license); source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/voxlet-ui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "flip-coin-button",
+          "reason": "unverified_license_and_uncaptured_source",
+          "detail": "Repository lead identified (voxletlabs/voxlet-ui), but GitHub root license scan returned NOASSERTION (unverified permissive license); source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/voxlet-ui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "magic-wand",
+          "reason": "unverified_license_and_uncaptured_source",
+          "detail": "Repository lead identified (voxletlabs/voxlet-ui), but GitHub root license scan returned NOASSERTION (unverified permissive license); source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/voxlet-ui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "space-box",
+          "reason": "unverified_license_and_uncaptured_source",
+          "detail": "Repository lead identified (voxletlabs/voxlet-ui), but GitHub root license scan returned NOASSERTION (unverified permissive license); source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/voxlet-ui/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 779,
+      "handle": "whyte25",
+      "name": "",
+      "profile_url": "https://21st.dev/@whyte25",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "animated-review-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@whyte25); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "floating-elements",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@whyte25); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 781,
+      "handle": "witharc",
+      "name": "",
+      "profile_url": "https://21st.dev/@witharc",
+      "repository_url": null,
+      "website_url": "https://witharc.co",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "logo-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial product/studio website lead only (https://witharc.co); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 784,
+      "handle": "xordev",
+      "name": "xordev",
+      "profile_url": "https://21st.dev/@xordev",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 15,
+      "total_count": 15,
+      "blocked_items": [
+        {
+          "slug": "atc-shader",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cathedral",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fireflies-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "geode",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gigabit",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hive",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "lab",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "lanterns",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "launch",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "neutrino",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "nucleus",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "phosphor-30",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "radial-shader",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "raidal-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "starship-shader",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and handle name lead only (https://21st.dev/@xordev); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 786,
+      "handle": "yadwinder",
+      "name": "Yadwinder Singh",
+      "profile_url": "https://21st.dev/@yadwinder",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 4,
+      "total_count": 4,
+      "blocked_items": [
+        {
+          "slug": "bottom-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and author name lead only (https://21st.dev/@yadwinder); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "ios-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and author name lead only (https://21st.dev/@yadwinder); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "toast-save",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and author name lead only (https://21st.dev/@yadwinder); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "vercel-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile and author name lead only (https://21st.dev/@yadwinder); no mapped creator-owned repository link or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

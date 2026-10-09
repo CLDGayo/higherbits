@@ -1,0 +1,594 @@
+{
+  "batch": "03",
+  "batch_range": "abui through anshuman008 (sequential batch of 10 TRUE rows starting at row 52 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T22:15:00.000Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 87,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 87
+  },
+  "authors": [
+    {
+      "row": 52,
+      "handle": "abui",
+      "name": "abui",
+      "profile_url": "https://21st.dev/@abui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "animated-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "scroll-reveal-content-a",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "timeline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 54,
+      "handle": "abxlfazl__",
+      "name": "abxlfazl__",
+      "profile_url": "https://21st.dev/@abxlfazl__",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "animated-tab-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 59,
+      "handle": "adrielzimbril",
+      "name": "adrielzimbril",
+      "profile_url": "https://21st.dev/@adrielzimbril",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "avatar-extended",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "orb-bloop",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "block-dither-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "doodle-callout",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "generating-orb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "gradient-file-upload",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "handle-reel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "kanban",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "mesh-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "block-sign-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "thinking-orb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "user-presence-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "voice-chat-widget",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 64,
+      "handle": "aicanvas",
+      "name": "aicanvas",
+      "profile_url": "https://21st.dev/@aicanvas",
+      "repository_url": "https://github.com/aicanvas-me/aicanvas",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "blind-pull-toggle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but component source 'blind-pull-toggle' is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "expanding-tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but component source 'expanding-tabs' is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "glass-search-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but component source 'glass-search-bar' is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "magnetic-logo-cluster",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but component source 'magnetic-logo-cluster' is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "runway-loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but component source 'runway-loader' is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "andromeda-search-field",
+          "reason": "missing_upstream_component",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but slug 'andromeda-search-field' does not exist in upstream components-workspace and is not staged in pinned candidate inventory."
+        },
+        {
+          "slug": "stack-tower",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (aicanvas-me/aicanvas), but component source 'stack-tower' is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 68,
+      "handle": "airbnb-visx",
+      "name": "Airbnb",
+      "profile_url": "https://21st.dev/@airbnb-visx",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 29,
+      "total_count": 29,
+      "blocked_items": [
+        {
+          "slug": "annotation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "axis",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "bar-group-vertical",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "bar-stac",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "bar-stack",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "brush",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "chords",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "curves",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "delaunay-triangulation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "drag-and-draw",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "finance-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "glyphs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "gradients",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "heatmaps",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "legends",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "linktypes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "patterns",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "pie-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "radar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "radial-lines",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "split-line-path",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "streamgraph",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "threshold",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "toggle-nav",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "treemap-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "voronoi",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "word-cloud",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "zoom",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 73,
+      "handle": "alain00",
+      "name": "alain00",
+      "profile_url": "https://21st.dev/@alain00",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 4,
+      "total_count": 4,
+      "blocked_items": [
+        {
+          "slug": "group-chat",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "password-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "presence-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "user-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 84,
+      "handle": "amitgajare2",
+      "name": "amitgajare2",
+      "profile_url": "https://21st.dev/@amitgajare2",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "option-wheel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "proximity-sidebar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 87,
+      "handle": "anelkabag",
+      "name": "anelkabag",
+      "profile_url": "https://21st.dev/@anelkabag",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "cta-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "footer-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "chat-app1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "hero4",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "faq1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "footer1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "navbar2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 88,
+      "handle": "animbits",
+      "name": "animbits",
+      "profile_url": "https://21st.dev/@animbits",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 19,
+      "total_count": 19,
+      "blocked_items": [
+        {
+          "slug": "loaders-bars",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-blur-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-dia",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-fade-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-gooey-blobs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "image-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "specials-linear-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-liquid-progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "specials-magnetic-drawer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-morphing",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-orbit",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-pulse",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-skeleton",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-slide-up",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "loaders-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-split-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-svg-text-draw",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-highlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "text-word-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 94,
+      "handle": "anshuman008",
+      "name": "Anshuman",
+      "profile_url": "https://21st.dev/@anshuman008",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "faq-chat-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    }
+  ]
+}

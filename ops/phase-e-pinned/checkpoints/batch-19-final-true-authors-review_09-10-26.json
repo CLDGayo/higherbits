@@ -1,0 +1,116 @@
+{
+  "batch": "19",
+  "batch_range": "yashsehgal through zanwei (final sequential batch of 2 live-ledger TRUE authors starting at row 789 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T01:45:24.371Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 2,
+    "authors_with_published_items": 0,
+    "authors_blocked": 2,
+    "total_sheet_items_evaluated": 11,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 11,
+    "published_ids": []
+  },
+  "authors": [
+    {
+      "row": 789,
+      "handle": "yashsehgal",
+      "name": "Yash Sehgal",
+      "profile_url": "https://21st.dev/@yashsehgal",
+      "repository_url": "https://github.com/yashsehgal",
+      "website_url": "https://www.yashsehgal.com/",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "3d-button",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile link only (https://github.com/yashsehgal) and personal portfolio website lead (https://www.yashsehgal.com/); no mapped component repository, file paths, or verified permissive license lead.",
+          "next_required_evidence": "Component repository mapping with verified permissive license (e.g. MIT/Apache-2.0) and component file paths."
+        }
+      ]
+    },
+    {
+      "row": 798,
+      "handle": "zanwei",
+      "name": "zanwei",
+      "profile_url": "https://21st.dev/@zanwei",
+      "repository_url": "https://github.com/zanwei/zanweis-playground",
+      "website_url": "https://github.com",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 10,
+      "total_count": 10,
+      "blocked_items": [
+        {
+          "slug": "ball-model-picker",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "chatgpt-model-selector",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "claude-model-selector",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "dot-matrix-camera",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "gradient-shimmer",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "liquid-connector",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "model-picker",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "shared-element-transition-dialog",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "status-indicator",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (production already contains an un-namespaced status-indicator [id: 129] from 8starlabs, but zanwei's implementation is un-namespaced, unlicensed, and uncaptured).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "table-of-content",
+          "reason": "unlicensed_source_repository",
+          "detail": "Upstream repository zanwei/zanweis-playground contains no LICENSE file (GitHub root license scan returned null) and no permissive license is asserted; fails license gate and source is not staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Verified permissive license (MIT/Apache-2.0) in upstream repository, byte-for-byte revision pin in ops/phase-e-pinned/zanwei/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    }
+  ]
+}

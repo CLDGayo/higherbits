@@ -1,0 +1,844 @@
+{
+  "batch": "09",
+  "batch_range": "hyggemethat through jshguo (sequential batch of 10 TRUE rows starting at row 335 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T23:38:33.289191+00:00",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 137,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 137
+  },
+  "authors": [
+    {
+      "row": 335,
+      "handle": "hyggemethat",
+      "name": "hyggemethat",
+      "profile_url": "https://21st.dev/@hyggemethat",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "tinder-like-swipe",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 337,
+      "handle": "iamsatish4564",
+      "name": "iamsatish4564",
+      "profile_url": "https://21st.dev/@iamsatish4564",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "animated-profile-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "curtain-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "eclipse-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "micro-expander",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "morph-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "portfolio-and-image-gallery",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "prime-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 341,
+      "handle": "inference-sh",
+      "name": "inference-sh",
+      "profile_url": "https://21st.dev/@inference-sh",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.inference.sh)."
+        },
+        {
+          "slug": "sidebar-light",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.inference.sh)."
+        },
+        {
+          "slug": "table-of-contents",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.inference.sh)."
+        },
+        {
+          "slug": "virtualize",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.inference.sh)."
+        },
+        {
+          "slug": "youtube-embed",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.inference.sh)."
+        },
+        {
+          "slug": "zoomable-image",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.inference.sh)."
+        }
+      ]
+    },
+    {
+      "row": 343,
+      "handle": "intentui",
+      "name": "Intent UI",
+      "profile_url": "https://21st.dev/@intentui",
+      "repository_url": "https://github.com/irsyadadl/intentui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 25,
+      "total_count": 25,
+      "blocked_items": [
+        {
+          "slug": "bar-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "choice-box",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "color-area",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "color-slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "container",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "disclosure-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "field",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-trigger",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-trigger-13",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "heading",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "keyboard",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "leaderboard",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "list-box",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pie-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "progress-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "progress-circle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "radar-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "radial-chart",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "radio",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "separator",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tag-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toggle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toggle-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "use-clipboard",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (irsyadadl/intentui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 358,
+      "handle": "jakobhoeg",
+      "name": "Jakob Hoeg M\u00f8rk",
+      "profile_url": "https://21st.dev/@jakobhoeg",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        },
+        {
+          "slug": "chat-bubble",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        },
+        {
+          "slug": "chat-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        },
+        {
+          "slug": "chat-message-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        },
+        {
+          "slug": "expandable-chat",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        },
+        {
+          "slug": "message-loading",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        },
+        {
+          "slug": "use-auto-scroll",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no verified mapped creator-owned source repository or license lead in checkpoint registry (website lead only https://www.jakobhoeg.dev/)."
+        }
+      ]
+    },
+    {
+      "row": 366,
+      "handle": "jh3yy_deleted",
+      "name": "jh3yy_deleted",
+      "profile_url": "https://21st.dev/@jh3yy_deleted",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "impossible-checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Deleted creator profile on 21st.dev; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "you-can-scroll",
+          "reason": "unmapped_source_repository",
+          "detail": "Deleted creator profile on 21st.dev; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 372,
+      "handle": "johuniq",
+      "name": "johuniq",
+      "profile_url": "https://21st.dev/@johuniq",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "ai-prompt-box",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "animated-theme-toggle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "date-wheel-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "joly-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "liquid-metal-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 375,
+      "handle": "jolbol1",
+      "name": "James Shopland",
+      "profile_url": "https://21st.dev/@jolbol1",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 50,
+      "total_count": 50,
+      "blocked_items": [
+        {
+          "slug": "breadcrumbs",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "button-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "button",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "calendar",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "checkbox-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "color",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "combobox",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "datefield",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "date-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "date-range-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "dialog-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "dropzone",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "file-trigger-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "file-trigger",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "field",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "grid-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "link",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "list-box-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "list-box",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "menu-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "meter",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "numberfield",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "popover-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "popover",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "radio-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "range-calendar",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "searchfield",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "select-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "select",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "slider",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "switch-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "switch",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "table-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "table",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "tag-group-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "tag-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "textfield",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "timefield",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "toggle-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "toggle",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "toggle-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "toolbar",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "tree-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        },
+        {
+          "slug": "tree",
+          "reason": "unmapped_source_repository",
+          "detail": "Account and website leads only (https://github.com/jolbol1, https://www.jollyui.dev/); no exact component repository/license mapped in root license checkpoint for these items."
+        }
+      ]
+    },
+    {
+      "row": 379,
+      "handle": "joyco",
+      "name": "joyco",
+      "profile_url": "https://21st.dev/@joyco",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 11,
+      "total_count": 11,
+      "blocked_items": [
+        {
+          "slug": "action-hint",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "chat",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "file-dropzone",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "hls-video-player",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "image-sequence",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "infinite-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "mobile-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "snake-game",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "space-invaders",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "spritesheet-sequencer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        },
+        {
+          "slug": "typewriter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://joyco.studio)."
+        }
+      ]
+    },
+    {
+      "row": 380,
+      "handle": "jshguo",
+      "name": "jshguo",
+      "profile_url": "https://21st.dev/@jshguo",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 23,
+      "total_count": 23,
+      "blocked_items": [
+        {
+          "slug": "accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "avatar-variants-interfacesds",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-dropdown-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-hover-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-input-otp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-collapsible",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-select",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-skeleton",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-slider",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-switch",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        },
+        {
+          "slug": "interfaces-textarea",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (catalog library entry 'Interfaces DS' lacks external repository and license mapping)."
+        }
+      ]
+    }
+  ]
+}

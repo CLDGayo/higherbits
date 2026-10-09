@@ -1,0 +1,716 @@
+{
+  "batch": "16",
+  "batch_range": "solaceui through tigerabrodi (sequential batch of 10 live-ledger TRUE authors starting at row 691 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T01:07:52.381Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 91,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 91,
+    "published_ids": []
+  },
+  "authors": [
+    {
+      "row": 691,
+      "handle": "solaceui",
+      "name": "Solace UI",
+      "profile_url": "https://21st.dev/@solaceui",
+      "repository_url": null,
+      "website_url": "https://www.solaceui.com",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 16,
+      "total_count": 16,
+      "blocked_items": [
+        {
+          "slug": "footer-section-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "auth-section-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "auth-section-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "auth-section-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chat-messages-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-section-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-section-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-section-5",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-section-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-section-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "navbar-section-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "phone-mockups-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonial-section-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonial-section-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonial-section-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonial-section-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://www.solaceui.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 693,
+      "handle": "sona-ui",
+      "name": "sona-ui",
+      "profile_url": "https://21st.dev/@sona-ui",
+      "repository_url": null,
+      "website_url": "https://sona-ui.vercel.app",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "stagger-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://sona-ui.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 694,
+      "handle": "soralabs",
+      "name": "Sora Labs",
+      "profile_url": "https://21st.dev/@soralabs",
+      "repository_url": "https://github.com/Axyl1410",
+      "website_url": "https://ui.soralabs.io.vn",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 17,
+      "total_count": 17,
+      "blocked_items": [
+        {
+          "slug": "base-alert-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "base-dropdown-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cursor-bubble",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "custom-cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dia-text-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dock-nav",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dual-wipe-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "number-flow",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pixelated-image-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "scroll-gallery",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "section-cta",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-reveal-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-reveal-mask",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-roll",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-scramble",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-underline",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "typer",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/Axyl1410) and demo deployment lead (https://ui.soralabs.io.vn); no mapped component library repository root or verified permissive open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 702,
+      "handle": "strlrd-29",
+      "name": "Ghribi Ouassim",
+      "profile_url": "https://21st.dev/@strlrd-29",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 9,
+      "total_count": 9,
+      "blocked_items": [
+        {
+          "slug": "use-boolean",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-copy-to-clipboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-counter",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-debounce-callback",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-interval",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-isomorphic-layout-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-timeout",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-toggle",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "use-unmount",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Ghribi Ouassim); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 706,
+      "handle": "supabase",
+      "name": "Supabase",
+      "profile_url": "https://21st.dev/@supabase",
+      "repository_url": "https://github.com/supabase/supabase",
+      "website_url": "https://supabase-design-system.vercel.app/design-system",
+      "license_spdx": "Apache-2.0",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "badge",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (supabase/supabase; packages/ui-patterns/), but Supabase design-system component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets; existing production badge ID 26 is owned by user_shadcn).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/supabase/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "oauth-consent-react",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under Apache-2.0 (supabase/supabase; packages/ui-patterns/), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/supabase/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 709,
+      "handle": "tailwind-admin",
+      "name": "Tailwind Admin",
+      "profile_url": "https://21st.dev/@tailwind-admin",
+      "repository_url": null,
+      "website_url": "https://tailwind-admin.com",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 9,
+      "total_count": 9,
+      "blocked_items": [
+        {
+          "slug": "action-tracking-motion",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animate-table-motion",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "current-year-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-loader-motion",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "elastic-slider-motion",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "projects-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "revenue-updates-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "signup-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "task-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial admin template and dashboard portal lead only (https://tailwind-admin.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 718,
+      "handle": "terrae",
+      "name": "terrae",
+      "profile_url": "https://21st.dev/@terrae",
+      "repository_url": "https://github.com/alamenai/terrae",
+      "website_url": "https://terrae.dev",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "controls",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (alamenai/terrae), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/terrae/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 720,
+      "handle": "thegridcn",
+      "name": "thegridcn",
+      "profile_url": "https://21st.dev/@thegridcn",
+      "repository_url": null,
+      "website_url": "https://thegridcn.com",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 21,
+      "total_count": 21,
+      "blocked_items": [
+        {
+          "slug": "grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "avatar-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "beam-marker",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "breadcrumb-nav",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "crt-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cta-banner",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "data-stream",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dropdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "energy-meter",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grid-floor",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "grid-scan-overlay",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "thegridcn-pagination",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "progress-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "terminal",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonial-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "timeline-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stepper",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uplink-header",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "video-player",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "video-progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "waveform",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone domain website lead only (https://thegridcn.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 724,
+      "handle": "theshanelevine",
+      "name": "Shane Levine",
+      "profile_url": "https://21st.dev/@theshanelevine",
+      "repository_url": null,
+      "website_url": "https://beautiful-ui-five.vercel.app",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "approval-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chat",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "search",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "context-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "diff-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "filter-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "loading-state",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "recommendation-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "records-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sidebar-nav",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "streaming-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "thinking",
+          "reason": "unmapped_source_repository",
+          "detail": "Vercel demo deployment lead only (https://beautiful-ui-five.vercel.app); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 731,
+      "handle": "tigerabrodi",
+      "name": "Tiger Abrodi",
+      "profile_url": "https://21st.dev/@tigerabrodi",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "input-with-feedback",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Tiger Abrodi); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "smart-textbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (Tiger Abrodi); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

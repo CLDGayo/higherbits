@@ -1,0 +1,564 @@
+{
+  "batch": "06",
+  "batch_range": "daniel__designs through dubinc (sequential batch of 10 TRUE rows starting at row 195 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T22:46:45.030Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 81,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 81
+  },
+  "authors": [
+    {
+      "row": 195,
+      "handle": "daniel__designs",
+      "name": "Daniel",
+      "profile_url": "https://21st.dev/@daniel__designs",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "3d-ascii-model-viewer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "gradient-shader-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 197,
+      "handle": "danielpetho",
+      "name": "Daniel Petho",
+      "profile_url": "https://21st.dev/@danielpetho",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 35,
+      "total_count": 35,
+      "blocked_items": [
+        {
+          "slug": "css-box",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "animated-gradient-with-svg",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "box-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "breathing-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "elastic-line",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "image-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "letter-3d-swap",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "letter-swap",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "marquee-along-svg-path",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "basic-number-ticker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "parallax-floating",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "pixel-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "random-letter-swap",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "scramble-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "scramble-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "scroll-and-swap-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "stacking-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "text-along-path",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "text-cursor-proximity",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "text-highlighter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "text-rotate",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "typewriter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "underline-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "underline-to-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "use-debounced-dimensions",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "use-elastic-line-events",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "use-mouse-position",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "use-mouse-position-ref",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "use-mouse-vector",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "use-screen-size",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "variable-font-and-cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "variable-font-cursor-proximity",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "variable-font-hover-by-letter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "variable-font-hover-by-random-letter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        },
+        {
+          "slug": "vertical-cut-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://fancycomponents.dev)."
+        }
+      ]
+    },
+    {
+      "row": 213,
+      "handle": "deltacomponents",
+      "name": "deltacomponents",
+      "profile_url": "https://21st.dev/@deltacomponents",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 8,
+      "total_count": 8,
+      "blocked_items": [
+        {
+          "slug": "admin-inset-layout",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "admonition",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "auth-form",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "basic-dropdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "modal-drop",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "mp3-player",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "product-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        },
+        {
+          "slug": "scramble-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://deltacomponents.dev)."
+        }
+      ]
+    },
+    {
+      "row": 215,
+      "handle": "dennysdionigi",
+      "name": "dennysdionigi",
+      "profile_url": "https://21st.dev/@dennysdionigi",
+      "repository_url": "https://github.com/DennysDionigi",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "apple-liquid-glass-switcher",
+          "reason": "unmapped_source_repository",
+          "detail": "User profile URL lead only (DennysDionigi); no mapped component source repository or verified license lead for apple-liquid-glass-switcher."
+        }
+      ]
+    },
+    {
+      "row": 221,
+      "handle": "devongovett",
+      "name": "devongovett",
+      "profile_url": "https://21st.dev/@devongovett",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "react-aria-emoji-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 229,
+      "handle": "dialkit",
+      "name": "Josh Puckett",
+      "profile_url": "https://21st.dev/@dialkit",
+      "repository_url": "https://github.com/joshpuckett/dialkit",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "dialkit",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (joshpuckett/dialkit), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 231,
+      "handle": "diceui",
+      "name": "Dice UI",
+      "profile_url": "https://21st.dev/@diceui",
+      "repository_url": "https://github.com/sadmann7/diceui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 19,
+      "total_count": 19,
+      "blocked_items": [
+        {
+          "slug": "avatar-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "banner",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "circular-progress",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "compare-slider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "composition",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hitbox",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "kanban",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "marquee",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "mention",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pending",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroller",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-spy",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "selection-toolbar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "sortable",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "stack",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "status",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "swap",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "timeline",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "visually-hidden-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (sadmann7/diceui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 241,
+      "handle": "dqnamo",
+      "name": "dqnamo",
+      "profile_url": "https://21st.dev/@dqnamo",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 11,
+      "total_count": 11,
+      "blocked_items": [
+        {
+          "slug": "agent-dock",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "animated-banner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "signature",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "animated-sparkline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "dynamic-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "game-of-life-loader",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "iridescent-foil",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "logo-trace-loader",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "model-selector",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "scramble-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "scroll-fade-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 242,
+      "handle": "drdruide",
+      "name": "Eric",
+      "profile_url": "https://21st.dev/@drdruide",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "destructive-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 245,
+      "handle": "dubinc",
+      "name": "Dub.co",
+      "profile_url": "https://21st.dev/@dubinc",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "banner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://dub.co/)."
+        },
+        {
+          "slug": "sidebar-news",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://dub.co/)."
+        }
+      ]
+    }
+  ]
+}

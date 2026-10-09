@@ -1,0 +1,483 @@
+{
+  "batch": "02",
+  "batch_range": "Edil-ozi through SubframeApp (sequential batch of 10 TRUE rows starting at row 24 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T22:05:00.000Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 1,
+    "authors_blocked": 9,
+    "total_sheet_items_evaluated": 65,
+    "total_published_items": 3,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 3,
+    "total_blocked_items": 62
+  },
+  "authors": [
+    {
+      "row": 24,
+      "handle": "Edil-ozi",
+      "name": "Edil Ozi",
+      "profile_url": "https://21st.dev/@Edil-ozi",
+      "repository_url": "https://github.com/Edil-ozi/edil-ozi",
+      "license_spdx": "MIT",
+      "manifest_sha256": "494a80ee8ab9eb59dbf36d7f3a852298cda3b2250d121c6913babf12b8c88498",
+      "prompts_sha256": "789c05869ee291ed45cd7cdbf9d1769266b4207260014595e37a4f3446fd33b8",
+      "dependency_evidence_sha256": "d246c3d38dc7569d72ec5173fd3658fa227ecbf485e1c5a94266e43319b86f05",
+      "status": "partially_published",
+      "published_count": 3,
+      "blocked_count": 5,
+      "total_count": 8,
+      "published_slugs": [
+        "accordion",
+        "drawer",
+        "pricing-card"
+      ],
+      "already_present_slugs": [
+        "accordion",
+        "drawer",
+        "pricing-card"
+      ],
+      "newly_published_slugs": [],
+      "blocked_items": [
+        {
+          "slug": "custom-checkbox",
+          "reason": "multi_variant_gallery_not_single_component",
+          "detail": "Upstream file registry/components/edil-ozi/checkboxes.tsx is a showcase gallery of 4 checkbox variants with unpinned helpers; no 1:1 single reusable component."
+        },
+        {
+          "slug": "toggle",
+          "reason": "multi_variant_gallery_not_single_component",
+          "detail": "Upstream file registry/components/edil-ozi/toggle-inputs.tsx is a multi-variant showcase gallery; no 1:1 single reusable component."
+        },
+        {
+          "slug": "infinite-scroll",
+          "reason": "hotlinked_third_party_images_unverified_rights",
+          "detail": "Hardcodes 6 images.unsplash.com URLs without verified rights, and depends on uninstalled lenis package."
+        },
+        {
+          "slug": "horizontal-scroll-carousel",
+          "reason": "framework_coupled_no_bundled_images",
+          "detail": "Depends on next/image and useLenis with unbundled images: string[] prop; cannot render in self-contained GHL export."
+        },
+        {
+          "slug": "scroll-velocity",
+          "reason": "net_new_dependency_and_poor_isolated_preview_fit",
+          "detail": "Requires uninstalled framer-motion and full-page scroll velocity; poor fit for isolated preview."
+        }
+      ]
+    },
+    {
+      "row": 26,
+      "handle": "ElevenLabs-crawled",
+      "name": "ElevenLabs",
+      "profile_url": "https://21st.dev/@ElevenLabs-crawled",
+      "repository_url": "https://github.com/elevenlabs/ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 8,
+      "total_count": 8,
+      "blocked_items": [
+        {
+          "slug": "audio-player",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bar-visualizer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "live-waveform",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "orb",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "response",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "shimmering-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "voice-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "waveform",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT, but component source is not yet staged in pinned candidate inventory (missing demo wrapper, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 27,
+      "handle": "JurreHoutkamp",
+      "name": "JurreHoutkamp",
+      "profile_url": "https://21st.dev/@JurreHoutkamp",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "hover-zoom",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "text-glow-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "tilt-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 28,
+      "handle": "KarrixLee",
+      "name": "KarrixLee",
+      "profile_url": "https://21st.dev/@KarrixLee",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "info-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "unsave-popup",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 30,
+      "handle": "LegionWebDev",
+      "name": "Legion Dev",
+      "profile_url": "https://21st.dev/@LegionWebDev",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 16,
+      "total_count": 16,
+      "blocked_items": [
+        {
+          "slug": "allocation-echarts-sankey-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "area-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "bar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "cache-tiers-echarts-radial-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "cpu-architecture",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "database-with-rest-api",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "echarts-sankey-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "grid-bar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "hover-trace-bar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "legion-web-dev",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "line-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "monospace-bar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "pie-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "pipeline-echarts-sankey-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "radar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 34,
+      "handle": "OrcDev",
+      "name": "OrcDev",
+      "profile_url": "https://21st.dev/@OrcDev",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "8bit-menubar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 35,
+      "handle": "RayMethula",
+      "name": "Ray Methula",
+      "profile_url": "https://21st.dev/@RayMethula",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "brands",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "footer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "testimonial-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 36,
+      "handle": "Shatlyk1011",
+      "name": "Shatlyk1011",
+      "profile_url": "https://21st.dev/@Shatlyk1011",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 14,
+      "total_count": 14,
+      "blocked_items": [
+        {
+          "slug": "3d-marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "animated-dropdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "button-colorful",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "fancy-text-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "gradient-borders-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "hover-border-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "interactive-hover-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "link-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "motion-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "shimmer-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "shiny-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "social-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "team-member-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "typing-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 37,
+      "handle": "Smit-Prajapati",
+      "name": "Smit Prajapati",
+      "profile_url": "https://21st.dev/@Smit-Prajapati",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "glass-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 38,
+      "handle": "SubframeApp",
+      "name": "SubframeApp",
+      "profile_url": "https://21st.dev/@SubframeApp",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 9,
+      "total_count": 9,
+      "blocked_items": [
+        {
+          "slug": "accordion-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "area-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "avatar-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "calendar-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "checkbox-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "checkbox-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "checkbox-group-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        },
+        {
+          "slug": "context-menu-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped item source repository or license lead."
+        }
+      ]
+    }
+  ]
+}

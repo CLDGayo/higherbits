@@ -1,0 +1,1447 @@
+{
+  "batch": "12",
+  "batch_range": "motiondotdev through oeneco (sequential batch of 10 live-ledger TRUE authors starting at row 494 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T00:16:14.841Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 1,
+    "authors_blocked": 9,
+    "total_sheet_items_evaluated": 211,
+    "total_published_items": 1,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 1,
+    "total_blocked_items": 210,
+    "published_ids": [
+      181
+    ]
+  },
+  "authors": [
+    {
+      "row": 494,
+      "handle": "motiondotdev",
+      "name": "Motion",
+      "profile_url": "https://21st.dev/@motiondotdev",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 81,
+      "total_count": 81,
+      "blocked_items": [
+        {
+          "slug": "motion-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-add-to-basket",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-along-path",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-animate-presence-modes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-apple-intelligence",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-aspect-ratio",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-bobble-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-bounce-easing",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-card-stack",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-color-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-confetti",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-conic-gradient-pointer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-context-menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-copy-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-create-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-custom-content",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-floating-target",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-follow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-hover-follow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-magnetic",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-multifollow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-cursor-trail-velocity",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-dots-morph-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-drag",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-drag-lock-direction",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-container",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-enter-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-exit-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-fill-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-floating-action-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-follow-pointer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-footer-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-hold-to-confirm",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-collision-hover-events-only",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-html-content",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-image-reveal-slider",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-infinite-loading",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-ios-pointer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-ios-slider",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-keyframes",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-keyframes-wildcards",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-layout-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-line-graph",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-circle-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-jumping-dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-line-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-progress-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-pulse-dots",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-loading-ripple",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-material-design-ripple",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-reorder-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-multi-state-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-number-counter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-hero-stagger",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-path-drawing",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-path-morphing",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-reorder-items",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-rolling-text-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-rotate",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scramble-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scramble-text-hover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-hide-header",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-horizontal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-linked",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-linked-with-spring",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-triggered",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-word-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-shared-layout-animation",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-skeleton-shimmer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-use-animation-frame",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-split-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-state-updates",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-svg-viewbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-tilt-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-scroll-track-element",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-transition",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-typewriter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-use-presence-data",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "motion-variants",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://motion.dev); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 496,
+      "handle": "mrhyddenn",
+      "name": "mrhyddenn",
+      "profile_url": "https://21st.dev/@mrhyddenn",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "hover-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 507,
+      "handle": "mvp_Subha",
+      "name": "mvp_Subha",
+      "profile_url": "https://21st.dev/@mvp_Subha",
+      "repository_url": "https://github.com/subhadeeproy3902/mvpblocks",
+      "license_spdx": "BSD-3-Clause",
+      "license_sha256": "e8bb7d5b6b726bf3b9b3b24f19a5df6f72ed533a56b3e40a5cc9e94a060cbe42",
+      "prompts_sha256": "c46e5beac8b7db97d3c03811164c3b89d96c417981af0d81a49ad8ba44963097",
+      "status": "partially_published",
+      "published_count": 1,
+      "blocked_count": 5,
+      "total_count": 6,
+      "published_slugs": [
+        "pulsating-loader"
+      ],
+      "already_present_slugs": [
+        "pulsating-loader"
+      ],
+      "newly_published_slugs": [],
+      "published_ids": [
+        181
+      ],
+      "published_items": [
+        {
+          "id": 181,
+          "slug": "pulsating-loader",
+          "name": "Pulsating Loader",
+          "source_id": 11,
+          "item_key": "components/mvpblocks/basics/loaders/pulsating-loader.tsx",
+          "preview_url": "https://higherbits.dev/auto-index/mvpblocks-pulsating-loader.svg",
+          "bundle_html_url": "https://higherbits.dev/auto-index/mvpblocks-pulsating-loader.html",
+          "is_public": true,
+          "published_at": "2026-10-07T18:51:45.458151+00:00"
+        }
+      ],
+      "blocked_items": [
+        {
+          "slug": "button-github",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under BSD-3-Clause (subhadeeproy3902/mvpblocks), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mvpblocks/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "button-hover",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under BSD-3-Clause (subhadeeproy3902/mvpblocks), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mvpblocks/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "footer-column",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under BSD-3-Clause (subhadeeproy3902/mvpblocks), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mvpblocks/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "loader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under BSD-3-Clause (subhadeeproy3902/mvpblocks), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mvpblocks/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "terms-conditions",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under BSD-3-Clause (subhadeeproy3902/mvpblocks), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/mvpblocks/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 512,
+      "handle": "nayan_radadiya6",
+      "name": "nayan_radadiya6",
+      "profile_url": "https://21st.dev/@nayan_radadiya6",
+      "repository_url": "https://github.com/NayanDevLab/shadcn-extras",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "first-place-leaderboard",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (NayanDevLab/shadcn-extras), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/nayan_radadiya6/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "timeline-rail",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (NayanDevLab/shadcn-extras), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/nayan_radadiya6/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 517,
+      "handle": "nevsky118",
+      "name": "nevsky118",
+      "profile_url": "https://21st.dev/@nevsky118",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "footer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "not-found",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 520,
+      "handle": "nexus-ui",
+      "name": "nexus-ui",
+      "profile_url": "https://21st.dev/@nexus-ui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 30,
+      "total_count": 30,
+      "blocked_items": [
+        {
+          "slug": "animated-countdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animated-select-headline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "ask-nexus-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "beam-sweep-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chain-of-thought",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chat-messages",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cinematic-card-deck",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cinematic-logo-cloud",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "circular-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "forge-ai-command-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hover-highlight-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "images-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "image-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "infinite-moving-cards",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dot-grid-hero",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "interactive-globe-explorer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "starfield-hero",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "terminal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "logo-clouds",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "nebula-cta-glow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "orbit-footer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "shader-flow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "shooting-stars-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "signup-form",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sparkles",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "suggestions",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-reveal-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "thread",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "typewriter-effect",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "vector-tilt-scene",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://www.nexus-ui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 524,
+      "handle": "nikolas-sapa",
+      "name": "nikolas-sapa",
+      "profile_url": "https://21st.dev/@nikolas-sapa",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 76,
+      "total_count": 76,
+      "blocked_items": [
+        {
+          "slug": "transition-ascii-dissolve",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "ascii-globe-spin",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-nodal-lines",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-area-aurora",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "auxin-canal",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-dither",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-flow",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-force-chains",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-plasma",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-voronoi-walls",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-ascii-wake",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-gradient-shader",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bitplane-cascade",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "blade-stop",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "border-chrome-ring",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "breadcrumb-fold",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cambium-lay",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-bar-halftone",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-donut-halftone",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-radar-dither",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "confirm-dial-align",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "countdown-vapor-digits",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dye-whorl",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "empty-state-braille-orbit",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "empty-state-mezzotint",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "equation-kidney-cam",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "faq-answer-depth-gutter",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "flamegraph-ascii-frames",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "floret-pack",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "heatmap-calendar-tide",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-ascii-eclipse",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-ascii-rainfall",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-ascii-reaction-front",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-ascii-schlieren",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-ascii-tunnel",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-burin-hatch",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-dipole-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-long-exposure",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-oscilloscope",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-particles-webgl",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-recursive-type",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-string-envelope",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-text-ring-funnel",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hover-card-dwell",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "loader-pendulum-sync",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pole-shy",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "post-list-ascii-index",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "roller-break-reduce",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "running-belay",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "scroll-caliper",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "scrubber-film-strip",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "seal-roll",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slider-range-shear",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tabs-slack-cable",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "specie-clip",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "split-pane-weighted",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "status-metaball-merge",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tabs-carriage",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "termite-ventilation-shafts",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "terrain-erosion-carve",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-ascii-cascade",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-card-flick",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-ligature-melt",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-prism-split",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "timeline-changelog-wave",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "toast-gravity-stack",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "toc-minimap-mercury",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tree-box-drawing",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tree-hinge-fold",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tree-root-trace",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "background-truchet-weave",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "truncation-word-count",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slider-vernier",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-vortex-street",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "waveform-ascii-scrub",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "weld-pool",
+          "reason": "unmapped_source_repository",
+          "detail": "Profile/website lead only (https://github.com/nikolas-sapa, https://design.helpmarq.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 534,
+      "handle": "nyxbui",
+      "name": "Nyxb UI",
+      "profile_url": "https://21st.dev/@nyxbui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "globe",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stepper",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "timeline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "video-modal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "warp-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 536,
+      "handle": "odysseyui",
+      "name": "odysseyui",
+      "profile_url": "https://21st.dev/@odysseyui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "components-primitives-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "components-buttons-github-stars",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "components-preloaders-greetings",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "primitives-buttons-liquid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "components-pricings-pricing-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "components-ai-thought-chain",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "components-texts-typewriter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name/website lead only (https://odysseyui.com); no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 537,
+      "handle": "oeneco",
+      "name": "John",
+      "profile_url": "https://21st.dev/@oeneco",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "dynamic-frame-layout",
+          "reason": "unmapped_source_repository",
+          "detail": "Name lead only; no mapped creator-owned source repository or license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

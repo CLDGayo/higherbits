@@ -1,0 +1,2194 @@
+{
+  "batch": "07",
+  "batch_range": "edwinvakayil through fuma-nama (sequential batch of 10 TRUE rows starting at row 249 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T22:55:10.139Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 407,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 407
+  },
+  "authors": [
+    {
+      "row": 249,
+      "handle": "edwinvakayil",
+      "name": "Edwin Vakayil",
+      "profile_url": "https://21st.dev/@edwinvakayil",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 51,
+      "total_count": 51,
+      "blocked_items": [
+        {
+          "slug": "ai-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "alert",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "b-alert-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "bento-builder",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "breadcrumbs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "charts",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "checkbox-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "b-collapsible",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "r-collapsible",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "color-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "combobox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "b-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "dia-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "r-dropdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "faq-pro",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "favicon-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "file-tree",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "icon-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "infinite-ribbon",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "morph-texts",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "new-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "new-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "new-calendar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "new-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "new-checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "new-hover-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "one-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "one-alert-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "one-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "one-toogle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "origin-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "b-popover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "r-popover",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "r-progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "radiogroup",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "rolling-digits",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "r-select",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "shimmer-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "status-dot",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "r-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "text-inertia",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "the-button-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "the-checkbox-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "the-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "theme-toggle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "the-typewriter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "thinking-indicator",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "toggle-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        },
+        {
+          "slug": "verified-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://iconiqui.com)."
+        }
+      ]
+    },
+    {
+      "row": 250,
+      "handle": "efferd",
+      "name": "Efferd",
+      "profile_url": "https://21st.dev/@efferd",
+      "repository_url": "https://github.com/shabanhr/efferd-ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 117,
+      "total_count": 117,
+      "blocked_items": [
+        {
+          "slug": "app-store-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "auth-divider",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "auth-modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "auth-page",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "avatar-uploader",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "background-patterns",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bento-pricing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bg-pattern",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bg-patterns",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "blogs-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "blog-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "testimonials-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "circular-progress",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "comments",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dashboard-4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "contact-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "contact-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "contact-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "contact-page",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "contact-5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "copy-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "create-workspace-modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "cta-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "cta-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "cta-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "cta-4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "cta-5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dashboard",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "decor-icon",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dialog",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "discord-icon",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dotted-surface",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "drawer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "efferd-dashboard-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "facebook-icon",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "falling-pattern",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "faqs-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "faqs-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "faqs-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "faqs-4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "faq-5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "features-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "features-4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "features-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "figma-icon",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "floating-header",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "footer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "footer-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "footer-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "footer-section-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "form-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "form-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "form-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "google-icon",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "gradient-background",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "gradient-balls",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "gradient-dots",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "grid-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "grid-feature-cards",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "header-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "header-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "header-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "header-with-scroll-effect",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "header-with-search",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "illuminated-hero",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "image-gallery",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "testimonials-6",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "integrations-4-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "integrations-5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "invite-member-modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "lazy-image",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "logo-cloud-5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "logo-cloud",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "logo-cloud-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "logo-cloud-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "logo-cloud-4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "menu-toggle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "menu-toggle-icon",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "minimal-auth-page",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "minimal-footer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "not-found-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "not-found-page-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "one-plan-pricing-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "one-plan-pricing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pattern-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pixel-transition",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "popover",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pricing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pricing-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pricing-4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "search-modal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "shining-skeleton",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "footer-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "simple-header",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "single-plan-pricing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "single-plan-pricing-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "single-pricing-card-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "smart-popover",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "sonner",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "spinner-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "spinner",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "testimonials-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "sticky-footer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "team-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "team-3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "testimonials-columns-1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "testimonials-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "testimonials-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "text-disperse",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toggle-theme",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "use-scroll",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "wave-path",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "workspaces",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "zoom-parallax",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (shabanhr/efferd-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 252,
+      "handle": "eldoraui",
+      "name": "Eldora UI",
+      "profile_url": "https://21st.dev/@eldoraui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 2,
+      "total_count": 2,
+      "blocked_items": [
+        {
+          "slug": "map",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://eldoraui.site)."
+        },
+        {
+          "slug": "ipad",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://eldoraui.site)."
+        }
+      ]
+    },
+    {
+      "row": 262,
+      "handle": "evilrabbit",
+      "name": "evilrabbit",
+      "profile_url": "https://21st.dev/@evilrabbit",
+      "repository_url": "https://github.com/evilrabbit/lifeline",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "lifeline",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (evilrabbit/lifeline), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 263,
+      "handle": "extend",
+      "name": "Extend",
+      "profile_url": "https://21st.dev/@extend",
+      "repository_url": "https://github.com/extend-hq/ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "autocomplete",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bounding-box-citations",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "document-color-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "command",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dialog",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "layout-blocks",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pdf-viewer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "popover",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "separator",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "spinner",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 264,
+      "handle": "extend-hq",
+      "name": "extend-hq",
+      "profile_url": "https://21st.dev/@extend-hq",
+      "repository_url": "https://github.com/extend-hq/ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 12,
+      "total_count": 12,
+      "blocked_items": [
+        {
+          "slug": "button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "csv-viewer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "xlsx-viewer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-system",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-thumbnail",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-upload",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-upload-2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pdf-viewer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-area",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (extend-hq/ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 275,
+      "handle": "felipemenezes098",
+      "name": "felipemenezes098",
+      "profile_url": "https://21st.dev/@felipemenezes098",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 178,
+      "total_count": 178,
+      "blocked_items": [
+        {
+          "slug": "tabs-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "comment-thread-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "item-19",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "dashboard-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "spot-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "empty-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "accordion-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "pagination-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tabs-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "breadcrumb-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "breadcrumb-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "cta-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-rules-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-fields-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-15",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "command-06",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "pagination-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-a-plan-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-20",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-recipes-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "content-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "content-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "content-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-recipes-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "breadcrumb-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "scene-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-row-selection",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "delete-account-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "notifications-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "breadcrumb-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-fields-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "dropdown-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-advanced-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-rules-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "banner-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "item-24",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "accordion-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-19",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "payment-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "collapsible-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "feature-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "feature-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "feature-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "item-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "flexnative-breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "flexnative-select",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "flexnative-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "flexnative-tabs-more",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "flexnative-tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "content-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "notifications-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "dropdown-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "content-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "item-with-icon",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "badge-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tabs-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tabs-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "comment-thread-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "settings-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "pagination-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "dialog-16",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-advanced-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "item-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "accordion-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tooltip-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-06",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "banner-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "spot-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-recipes-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "empty-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "notifications-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "spot-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-rules-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-rules-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "one-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "one-clipboard",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "pagination-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "sign-in-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-rules-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "payment-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "share-access-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-17",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-15",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "item-18",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tabs-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "card-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "verify-identity-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-fields-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "share-access-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "switch-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "reset-password-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "reset-password-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "spot-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "payment-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "scroll-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-06",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-fields-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-06",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "settings-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "settings-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "share-access-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "collapsible-05",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-16",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-recipes-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-recipes-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "sign-in-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-fields-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tsf-fields-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "two-factor-setup-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "content-06",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-08",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "hero-06",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "select-a-plan-5",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "banner-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "switch-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-row-actions",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "table-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tabs-07",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "badge-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "checkbox-13",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "dropdown-19",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-fields-03",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "skeleton-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "rhf-fields-02",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "the-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "the-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "the-item-one",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "dropdown-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "tooltip-09",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        },
+        {
+          "slug": "banner-04",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://ui.flexnative.com)."
+        }
+      ]
+    },
+    {
+      "row": 276,
+      "handle": "filipz",
+      "name": "filipz",
+      "profile_url": "https://21st.dev/@filipz",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 5,
+      "total_count": 5,
+      "blocked_items": [
+        {
+          "slug": "circle-animations-collection",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.filipzrnzevic.com/)."
+        },
+        {
+          "slug": "circle-animations-collection-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.filipzrnzevic.com/)."
+        },
+        {
+          "slug": "explorations-with-gsap-and-scroll-trigger",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.filipzrnzevic.com/)."
+        },
+        {
+          "slug": "menu-animations",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.filipzrnzevic.com/)."
+        },
+        {
+          "slug": "set-of-animations-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.filipzrnzevic.com/)."
+        }
+      ]
+    },
+    {
+      "row": 279,
+      "handle": "framecn",
+      "name": "framecn",
+      "profile_url": "https://21st.dev/@framecn",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 21,
+      "total_count": 21,
+      "blocked_items": [
+        {
+          "slug": "ai-generate-overlay",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "animated-bar-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "animated-line-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "blur-out-up",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "bounding-box-selector",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "chromatic-aberration-wipe",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "cursor-flow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "dashboard-populate",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "glass-code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "imessage-chat-flow",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "logo-enter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "mesh-gradient-bg",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "message-bubble",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "shader-dithering",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "simulated-cursor",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "stepper",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "strikethrough-replace",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "terminal-to-browser-deploy",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "top-down-letters",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "tracking-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        },
+        {
+          "slug": "zoom-through-transition",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://www.framecn.dev)."
+        }
+      ]
+    },
+    {
+      "row": 281,
+      "handle": "fuma-nama",
+      "name": "Fuma Nama",
+      "profile_url": "https://21st.dev/@fuma-nama",
+      "repository_url": "https://github.com/fuma-nama/fumadocs",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "accordion",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "banner",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "inline-toc",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "root-toggle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "type-table",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "zoomable-image",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (fuma-nama/fumadocs), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    }
+  ]
+}

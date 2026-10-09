@@ -1,0 +1,1524 @@
+{
+  "batch": "05",
+  "batch_range": "builduilabs through cult-ui (sequential batch of 10 TRUE rows starting at row 160 of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T22:39:20.873Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 273,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 273
+  },
+  "authors": [
+    {
+      "row": 160,
+      "handle": "builduilabs",
+      "name": "Build UI",
+      "profile_url": "https://21st.dev/@builduilabs",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "animated-counter",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://buildui.com/)."
+        },
+        {
+          "slug": "animated-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://buildui.com/)."
+        },
+        {
+          "slug": "animated-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://buildui.com/)."
+        },
+        {
+          "slug": "filesystem-item",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://buildui.com/)."
+        },
+        {
+          "slug": "ios-animated-switch",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://buildui.com/)."
+        },
+        {
+          "slug": "slider",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://buildui.com/)."
+        }
+      ]
+    },
+    {
+      "row": 162,
+      "handle": "bundui",
+      "name": "Bundui.io",
+      "profile_url": "https://21st.dev/@bundui",
+      "repository_url": "https://github.com/bundui/components",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 74,
+      "total_count": 74,
+      "blocked_items": [
+        {
+          "slug": "dropdown-menu9",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu11",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "animated-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "attachment1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "attachment-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "carousel4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "badge11",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "item1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bubble4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bubble6",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bubble5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-area6",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "count-animation",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "alert9",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "badge9",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu7",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "empty5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "slider13",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "faq1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "file-upload3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "fireworks-show",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "floating-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "floating-paths",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "fluid-particles-background",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "geometric",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "grouped-chat-bubbles",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu10",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "image-comparison",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "item7",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "magnetic-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "marquee-effect",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "newsletter1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-area4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "empty8",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast6",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pagination6",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pagination8",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pagination9",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "table1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "table11",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "promo-section",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "badge10",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dropdown-menu8",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-area3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-area2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "scroll-progress-bar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "navigation-menu4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "signin-form1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "slider3",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "slider4",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "switch8",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "sliding-number",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast7",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast10",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast8",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast2",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "spinner8",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "stars",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "progress7",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "switch10",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "textarea-with-error",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "textarea5",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "textarea1",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "text-gradient-scroll",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tilt-effect",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "toast11",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "slider12",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "wavy",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (bundui/components), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    },
+    {
+      "row": 163,
+      "handle": "campsite",
+      "name": "Campsite",
+      "profile_url": "https://21st.dev/@campsite",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "dark-theme",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "system-theme",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        },
+        {
+          "slug": "theme-toggle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 168,
+      "handle": "chamaac",
+      "name": "chamaac",
+      "profile_url": "https://21st.dev/@chamaac",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "dancing-letters",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "electric-mist",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "gif-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "grid-bloom",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "how-it-works",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "light-speed",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "liquid-chrome",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "nebula",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "shimmer-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "synthesis",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "text-loop",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "water-caustic",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        },
+        {
+          "slug": "waves",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://chamaac.com)."
+        }
+      ]
+    },
+    {
+      "row": 183,
+      "handle": "componentry",
+      "name": "componentry",
+      "profile_url": "https://21st.dev/@componentry",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 27,
+      "total_count": 27,
+      "blocked_items": [
+        {
+          "slug": "animated-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "auth-modal",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "circuit-board",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "collection-surfer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "dithered-logo",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "dither-prism-hero",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "eye-tracking",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "gradient-hero-01",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "hero-geometric",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "hyper-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "image-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "infinite-image-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "liquid-glass-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "magnetic-dock",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "magnet-lines",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "particle-galaxy",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "pixel-canvas",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "pixel-image-trail",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "scroll-choreography",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "silk-aurora",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "spectral-ribbon",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "split-flap-display",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "testimonial-marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "text-morph",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "text-repel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "webgl-liquid",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        },
+        {
+          "slug": "wheel-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://componentry.fun)."
+        }
+      ]
+    },
+    {
+      "row": 184,
+      "handle": "contentbit",
+      "name": "contentbit",
+      "profile_url": "https://21st.dev/@contentbit",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "pros-cons",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://contentbit.dev)."
+        }
+      ]
+    },
+    {
+      "row": 185,
+      "handle": "corr",
+      "name": "corr",
+      "profile_url": "https://21st.dev/@corr",
+      "repository_url": "https://github.com/lcorrigan704",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 13,
+      "total_count": 13,
+      "blocked_items": [
+        {
+          "slug": "animated-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "area-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "audit-log",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "composed-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "key-value-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "metric-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "notice-alert",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "pie-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "presence-fade",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "screen-size-guard",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "scroll-blur",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "status-pill",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        },
+        {
+          "slug": "stepper",
+          "reason": "unmapped_source_repository",
+          "detail": "Upstream GitHub reference is an unmapped user profile (lcorrigan704) with no designated component repository; no verified repository or root license lead."
+        }
+      ]
+    },
+    {
+      "row": 186,
+      "handle": "coss.com",
+      "name": "coss",
+      "profile_url": "https://21st.dev/@coss.com",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 75,
+      "total_count": 75,
+      "blocked_items": [
+        {
+          "slug": "coss-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-group-16",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "alert",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "alert-dialog",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "async-autocomplete",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "coss-autocomplete",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "coss-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "coss-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-badge-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-otp-field-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "coss-breadcrumb",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-breadcrumb-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-breadcrumb-7",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "coss-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "calendar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-calendar-17",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-calendar-7",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-calendar-25",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-calendar-16",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "checkbox-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "collapsible",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-slider-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "combobox",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-context-menu-5",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-combobox-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "drawer",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-badge-18",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-table-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-table-8",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "form",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "frame",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-slider-14",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "input-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "input-otp",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "loading-button-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-card-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-otp-field-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "menu",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-meter-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "number-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-slider-21",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-textarea-8",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-otp-field-9",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "otp-field-separator",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-otp-field-7",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-number-field-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-progress-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-navigation-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-textarea-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-textarea-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-table-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-separator-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-drawer-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "slider",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-slider-23",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-combobox-20",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "switch",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "table",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "tabs-count-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "textarea",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-textarea-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-textarea-15",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "toggle",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "toolbar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-tabs-9",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-group-15",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-skeleton-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-switch-9",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        },
+        {
+          "slug": "p-calendar-12",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://coss.com/ui)."
+        }
+      ]
+    },
+    {
+      "row": 190,
+      "handle": "cubby-ui",
+      "name": "cubby-ui",
+      "profile_url": "https://21st.dev/@cubby-ui",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 9,
+      "total_count": 9,
+      "blocked_items": [
+        {
+          "slug": "autocomplete",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "code-block",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "copy-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "date-range-picker",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "fancy-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "otp-field",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "timeline",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "toolbar",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        },
+        {
+          "slug": "tree",
+          "reason": "unmapped_source_repository",
+          "detail": "Name leads only; no mapped creator-owned source repository or license lead (website lead only https://cubby-ui.dev)."
+        }
+      ]
+    },
+    {
+      "row": 191,
+      "handle": "cult-ui",
+      "name": "cult/ui",
+      "profile_url": "https://21st.dev/@cult-ui",
+      "repository_url": "https://github.com/nolly-studio/cult-ui",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 52,
+      "total_count": 52,
+      "blocked_items": [
+        {
+          "slug": "3d-carousel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "ai-blob-warp",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bg-animated-fractal-dot-grid",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bg-image-texture",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "bg-animated-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "collab-toolbar",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "color-picker",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "copy-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "distorted-glass",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dock",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "dynamic-island",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "edge-blur",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "expandable",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "family-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "family-drawer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "feature-carousel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "floating-panel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "folded-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "glass-effect",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "grid-beam",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-dropzone",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-notification",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-segmented",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-select",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-switch",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-tabs",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "halo-toggle-group",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-color-panel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-dithering",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-heatmap",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-liquid-metal",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "hero-static-radial-gradient",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "kanban-board",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "lightboard",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "logo-carousel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "morph-surface",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "organic-card-small",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pixel-heading-word",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "pixel-paragraph-words",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "popover-form",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "prompt-composer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "shift-card",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "side-panel-video",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "svg-shapes",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "svg-shapes-animated",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "tabs-illustration-vercel",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "texture-button",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "timer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "typewriter",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "use-toast",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "vote-tally",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        },
+        {
+          "slug": "youtube-video-player",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT license (nolly-studio/cult-ui), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, demo wrappers, copy prompts, GHL export, and deployed preview assets)."
+        }
+      ]
+    }
+  ]
+}

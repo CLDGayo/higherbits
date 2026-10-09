@@ -1,0 +1,1862 @@
+{
+  "batch": "17",
+  "batch_range": "tinkerers-labs through user_xn1cklas (sequential batch of 10 live-ledger TRUE authors starting at row 732 of 21st creators sheet)",
+  "reviewed_at": "2026-10-09T01:16:07.424Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 0,
+    "authors_blocked": 10,
+    "total_sheet_items_evaluated": 282,
+    "total_published_items": 0,
+    "total_newly_published_items": 0,
+    "total_already_present_items": 0,
+    "total_blocked_items": 282,
+    "published_ids": []
+  },
+  "authors": [
+    {
+      "row": 732,
+      "handle": "tinkerers-labs",
+      "name": "Tinkerers Labs",
+      "profile_url": "https://21st.dev/@tinkerers-labs",
+      "repository_url": "https://github.com/Tinkerers-Labs/mischief-ui",
+      "website_url": "https://ui.tinkererslabs.com",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 7,
+      "total_count": 7,
+      "blocked_items": [
+        {
+          "slug": "burst",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "csv-viewer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "file-tree",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "image-grid",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "message",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "prompt-input",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "streaming-text",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (Tinkerers-Labs/mischief-ui; registry manifests match component inventory), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/tinkerers-labs/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 734,
+      "handle": "tom_ui",
+      "name": "tom",
+      "profile_url": "https://21st.dev/@tom_ui",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 26,
+      "total_count": 26,
+      "blocked_items": [
+        {
+          "slug": "animated-checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "animated-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bars-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "blur-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "copy-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "exploding-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "fallback-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "flow-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "gradient-wave-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "highlighted-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "kbd",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "label-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "perspective-book",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "pop-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "qr-code",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "randomized-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "rich-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "shimmer-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slide-up-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "special-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-marquee",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tilt-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tweet",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "words-stagger",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (tom; https://21st.dev/@tom_ui); no mapped creator-owned component source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 736,
+      "handle": "tommyjepsen",
+      "name": "Tommy Jepsen",
+      "profile_url": "https://21st.dev/@tommyjepsen",
+      "repository_url": "https://github.com/tommyjepsen",
+      "website_url": "https://www.tommyjepsen.com/",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 18,
+      "total_count": 18,
+      "blocked_items": [
+        {
+          "slug": "animated-hero",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "blog-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "blog-section-with-rich-preview",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "call-to-action",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "cases-with-infinite-scroll",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "faq-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-section-with-bento-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-with-advantages",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-with-image",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-with-image-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-with-image-comparison",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "header",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-with-group-of-images-text-and-two-buttons",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-with-image-text-and-two-buttons",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-with-text-and-two-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stats-section",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "stats-section-with-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "testimonials",
+          "reason": "unmapped_source_repository",
+          "detail": "Personal GitHub user profile lead (https://github.com/tommyjepsen) and personal website lead (https://www.tommyjepsen.com/); no mapped component library repository or verified permissive open-source license lead for ledger components.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 738,
+      "handle": "tool-ui",
+      "name": "tool-ui",
+      "profile_url": "https://21st.dev/@tool-ui",
+      "repository_url": null,
+      "website_url": "https://tool-ui.com",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 6,
+      "total_count": 6,
+      "blocked_items": [
+        {
+          "slug": "approval-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone landing page lead (https://tool-ui.com, redirecting to assistant-ui); no mapped creator-owned component source repository or verified open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "citation",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone landing page lead (https://tool-ui.com, redirecting to assistant-ui); no mapped creator-owned component source repository or verified open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "item-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone landing page lead (https://tool-ui.com, redirecting to assistant-ui); no mapped creator-owned component source repository or verified open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "message-draft",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone landing page lead (https://tool-ui.com, redirecting to assistant-ui); no mapped creator-owned component source repository or verified open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "progress-tracker",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone landing page lead (https://tool-ui.com, redirecting to assistant-ui); no mapped creator-owned component source repository or verified open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "terminal",
+          "reason": "unmapped_source_repository",
+          "detail": "Standalone landing page lead (https://tool-ui.com, redirecting to assistant-ui); no mapped creator-owned component source repository or verified open-source license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 740,
+      "handle": "trophyso",
+      "name": "trophyso",
+      "profile_url": "https://21st.dev/@trophyso",
+      "repository_url": "https://github.com/trophyso",
+      "website_url": "https://trophy.so",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 9,
+      "total_count": 9,
+      "blocked_items": [
+        {
+          "slug": "achievement-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "achievement-card",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "achievement-list",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "achievement-unlocked",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "leaderboard-card",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "leaderboard-podium",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "leaderboard-rankings",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "points-chart",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "streak-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "SaaS organization lead (https://github.com/trophyso); animation repository is unlicensed and no mapped component library repository exists with verified permissive open-source license for gamification UI elements.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 742,
+      "handle": "uiable",
+      "name": "uiable",
+      "profile_url": "https://21st.dev/@uiable",
+      "repository_url": null,
+      "website_url": "https://uiable.com",
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 168,
+      "total_count": 168,
+      "blocked_items": [
+        {
+          "slug": "accordion-active-bg",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "accordion-custom",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "accordion-multiple",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature-27",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-action",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-dialog-basic",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-dialog-lock",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-dialog-small",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-light-danger",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-solid-info",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-footer-20",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-animated-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-footer-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-hero-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "app-feature-grid",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-hero-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "attachment-states",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "attachment-vertical",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "avatar-counter-indicator",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "badge-solid-danger",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-example-legend",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-example-tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "spinner-bars-scale",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "small-hero-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bubble-collapsible",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-animated",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-group-dropdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-group-input",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-group-popover",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-spinner-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "calendar-basic",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "calendar-presets",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "calendar-right-navigation",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-skeleton-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "card-tabs",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-area",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-pie",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "chart-tooltip",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "bubble-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "checkbox-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "checkbox-indeterminate",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "checkbox-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "checkbox-todo-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "badge-closable",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-coming-soon-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "component-search",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-contact-19",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-contact-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-contact-18",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-contact-20",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-content-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "context-menu-destructive",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-copy",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-spinner-border-danger",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "date-picker-disabled",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "dialog-scrollable-content",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-disabled",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "toggle-disabled",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "drawer-sides",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "empty-background",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "empty-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "empty-no-search-result",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-content-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-faq-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-faq-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-faq-6",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-faq-8",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature-8",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "field-checkbox",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "field-radio",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "field-responsive",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-bento-5",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature-32",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-7",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "forgot-password-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-hero-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hover-card-image-preview",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hover-card-link-preview",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-breadcrumb-icon",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-charts-11",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-spinner-growing-info",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-typography-inline-code",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-form",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-group-dropdown",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-group-icon",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-group-inline-start",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-group-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-otp-alphanumeric",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-otp-controlled",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-otp-form",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "input-otp-separator",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "item-icon",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "item-image",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "kbd-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "kbd-function-keys",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "kbd-input-group",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "label-disabled",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-breadcrumb-link",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "liquid-glass",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "list-group-badge",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "list-group-custom-content",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "list-group-links",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-login-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "marker-links",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "marker-separator",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "marker-status",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-hero",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "menubar-compact",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "message-attachment",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "message-header-footer",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "message-scroller",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "feature-24-milestone-timeline",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "button-outline",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-outlined-danger",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "alert-outlined-primary",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-breadcrumb-page-header",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "badge-pill-primary",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-portfolio-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-portfolio-2",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-portfolio-9",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-sonner-position",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-pricing-18",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "content-16",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-process-9",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-content-15",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-team-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "progress-height",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "questionnaire",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "radio-group-box",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "radio-group-list",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "radio-group-sizes",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "label-required",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "footer-10",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-content-9",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "search-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "select-multi",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-sidebar-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "sidebar-5",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slider-price-range",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "slider-range",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-typography-small",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-content-4",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-feature-30",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-statistics-1",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-statistics-5",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "progress-striped-primary",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-spinner-border-success",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "switch-color-options",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-skeleton-table",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "table-status",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "table-users",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tabs-line",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-team-3",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-team-7",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "text-highlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-skeleton-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "toggle-group-animated-toolbar",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "hero-17",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tooltip-status",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "tree-view",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "uiable-spinner-border-warning",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "block-portfolio-8",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "welcome-banner",
+          "reason": "unmapped_source_repository",
+          "detail": "Commercial landing page and UI component library website lead only (https://uiable.com); no mapped creator-owned open-source repository or verified permissive license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 743,
+      "handle": "uicapsule",
+      "name": "uicapsule",
+      "profile_url": "https://21st.dev/@uicapsule",
+      "repository_url": "https://github.com/kyh/uicapsule",
+      "website_url": "https://uicapsule.com",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 11,
+      "total_count": 11,
+      "blocked_items": [
+        {
+          "slug": "ascii-renderer",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "background-pixel-stars",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "background-shapes",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "chibi-plants",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "formation",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "geometric-orb",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "gradient-orb",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "infinite-grid",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "screenshot-capture",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "spinner-pixel-grid",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "voice-dictator",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (kyh/uicapsule), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/uicapsule/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 747,
+      "handle": "unlumen",
+      "name": "unlumen",
+      "profile_url": "https://21st.dev/@unlumen",
+      "repository_url": "https://github.com/leovvx/unlumen-ui-docs",
+      "website_url": "https://ui.unlumen.com",
+      "license_spdx": "MIT",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 30,
+      "total_count": 30,
+      "blocked_items": [
+        {
+          "slug": "animate-count",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "primitives-animate-files",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animate-digits",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "sidebar-001",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "animate-text-input-typing",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "aurora-bars",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "aurora-blur",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "clipped-circle",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "count-up",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "cursor",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "cursor-image-trail",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "expand-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "file-tree",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "floating-tooltip",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "github-graph",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "glow",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "highlight",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "horizontal-depth-fade",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "matrix",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "matrix-image",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "motion-navigation-menu",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "primitives-animate-pinned-list",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "pixel-liquid-bg",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "scroll-progress",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "scroll-reveal-image",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "side-by-side-slide",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "primitives-animate-spring",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "tag",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "vertical-marquee",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        },
+        {
+          "slug": "video-ambient",
+          "reason": "uncaptured_source_item",
+          "detail": "Source repository identified under MIT (leovvx/unlumen-ui-docs; public component registry & docs for unlumen UI), but component source is not yet staged in pinned candidate inventory (missing byte-for-byte revision pin, isolated demo wrappers, copy prompts, clean GHL export, and deployed preview assets).",
+          "next_required_evidence": "Byte-for-byte revision pin in ops/phase-e-pinned/unlumen/, isolated build preview, clean GHL export, 10 standardized copy prompts, and deployed asset hashes."
+        }
+      ]
+    },
+    {
+      "row": 751,
+      "handle": "user_hardp",
+      "name": "user_hardp",
+      "profile_url": "https://21st.dev/@user_hardp",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 3,
+      "total_count": 3,
+      "blocked_items": [
+        {
+          "slug": "suggestive-search",
+          "reason": "unmapped_source_repository",
+          "detail": "Unverified handle lead (user_hardp returns 404 on GitHub); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "switch-button",
+          "reason": "unmapped_source_repository",
+          "detail": "Unverified handle lead (user_hardp returns 404 on GitHub); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "user-avatars",
+          "reason": "unmapped_source_repository",
+          "detail": "Unverified handle lead (user_hardp returns 404 on GitHub); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    },
+    {
+      "row": 752,
+      "handle": "user_xn1cklas",
+      "name": "user_xn1cklas",
+      "profile_url": "https://21st.dev/@user_xn1cklas",
+      "repository_url": null,
+      "website_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 4,
+      "total_count": 4,
+      "blocked_items": [
+        {
+          "slug": "news-search",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (https://21st.dev/@user_xn1cklas); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "public-stats",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (https://21st.dev/@user_xn1cklas); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "qr-code-generator",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (https://21st.dev/@user_xn1cklas); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        },
+        {
+          "slug": "weather-card",
+          "reason": "unmapped_source_repository",
+          "detail": "Creator profile lead only (https://21st.dev/@user_xn1cklas); no mapped creator-owned component source repository or verified license lead.",
+          "next_required_evidence": "Creator-owned repository link with verified permissive license (e.g. MIT/Apache-2.0)."
+        }
+      ]
+    }
+  ]
+}

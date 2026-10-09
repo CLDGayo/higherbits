@@ -1,0 +1,219 @@
+{
+  "batch": "01",
+  "batch_range": "0xUrvish through Daniela_Muntyan (first 10 TRUE rows of 21st creators sheet)",
+  "reviewed_at": "2026-10-08T21:55:00.000Z",
+  "reviewer_label": "Antigravity Ingestion Engine",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_published_items": 3,
+    "authors_blocked": 7,
+    "total_sheet_items_evaluated": 65,
+    "total_published_items": 20,
+    "total_blocked_items": 45
+  },
+  "authors": [
+    {
+      "row": 5,
+      "handle": "0xUrvish",
+      "name": "0xUrvish",
+      "profile_url": "https://21st.dev/@0xUrvish",
+      "repository_url": "https://github.com/iurvish/uselayouts",
+      "license_spdx": "MIT",
+      "manifest_sha256": "174fdb935fa794adc37d41085c0ca107fd92c2cac367c1e1fc20e574e127707a",
+      "prompts_sha256": "50cd1495b2b068094f7c519f2684cdf1b250c1faffd46e18d7b7e4b3dd284a43",
+      "dependency_evidence_sha256": "e2afdba78a78c9ba1628cc611f24856718659ed8ff5875dbd76957e6c16033c7",
+      "status": "partially_published",
+      "published_count": 18,
+      "blocked_count": 6,
+      "total_count": 24,
+      "published_slugs": [
+        "bento-card", "bottom-menu", "bucket", "day-picker", "delete-button",
+        "discover-button", "discrete-tab", "dynamic-toolbar", "empty-testimonial",
+        "folder-interaction", "inline-edit", "list-item", "magnified-bento",
+        "morphing-input", "multi-step-form", "pricing-card", "smooth-dropdown", "status-button"
+      ],
+      "blocked_items": [
+        { "slug": "animated-collection", "reason": "remote_resource_rights_unverified", "detail": "Source references third-party remote images without license evidence; preview held in private-previews/" },
+        { "slug": "expandable-gallery", "reason": "remote_resource_rights_unverified", "detail": "Source references third-party remote images without license evidence; preview held in private-previews/" },
+        { "slug": "feature-carousel", "reason": "remote_resource_rights_unverified", "detail": "Source references third-party remote images without license evidence; preview held in private-previews/" },
+        { "slug": "fluid-expanding-grid", "reason": "remote_resource_rights_unverified", "detail": "Source references third-party remote images without license evidence; preview held in private-previews/" },
+        { "slug": "stacked-list", "reason": "remote_resource_rights_unverified", "detail": "Source references third-party remote images without license evidence; preview held in private-previews/" },
+        { "slug": "vertical-tabs", "reason": "remote_resource_rights_unverified", "detail": "Source references third-party remote images without license evidence; preview held in private-previews/" }
+      ]
+    },
+    {
+      "row": 9,
+      "handle": "40973894",
+      "name": "40973894",
+      "profile_url": "https://21st.dev/@40973894",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        { "slug": "siri-wave", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." }
+      ]
+    },
+    {
+      "row": 11,
+      "handle": "8starlabs",
+      "name": "8StarLabs",
+      "profile_url": "https://21st.dev/@8starlabs",
+      "repository_url": "https://github.com/8starlabs/ui",
+      "license_spdx": "MIT",
+      "manifest_sha256": "31d6bcca44fb319c0c69d18b92d1c9d6bcdaa590f6e59125d40bfb33cf1a1f53",
+      "license_sha256": "392075473ac3a5da2de1035e5dd31e7079518eb0af322e6bed332ed0d7f277f0",
+      "copy_prompts_sha256": "d002e054330eca4222e9575692723aa1081ed0748c32df193c0620fc68cd2db0",
+      "status": "partially_published",
+      "published_count": 1,
+      "blocked_count": 1,
+      "total_count": 2,
+      "published_slugs": ["partition-bar"],
+      "vendor_additional_published_slugs": ["shake", "status-indicator", "timeline"],
+      "blocked_items": [
+        { "slug": "open-in-chat", "reason": "uncaptured_source_item", "detail": "No pinned upstream source capture in candidate inventory." }
+      ]
+    },
+    {
+      "row": 15,
+      "handle": "Adurotimi",
+      "name": "Dolphin",
+      "profile_url": "https://21st.dev/@Adurotimi",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        { "slug": "save-button", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." }
+      ]
+    },
+    {
+      "row": 18,
+      "handle": "Alwurts",
+      "name": "Alwurts",
+      "profile_url": "https://21st.dev/@Alwurts",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 8,
+      "total_count": 8,
+      "blocked_items": [
+        { "slug": "chat-input", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "chat-suggestions", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "editable-handle", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "jsx-renderer", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "model-selector", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "status-edge", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "tool", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "tool-invocation", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." }
+      ]
+    },
+    {
+      "row": 19,
+      "handle": "Astryxdesign",
+      "name": "Astryx",
+      "profile_url": "https://21st.dev/@Astryxdesign",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 10,
+      "total_count": 10,
+      "blocked_items": [
+        { "slug": "astryx-aspect-ratio", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-avatar", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-avatar-group", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-badge", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-banner", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-blockquote", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-breadcrumbs", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-button", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-button-group", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." },
+        { "slug": "astryx-toggle-button", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." }
+      ]
+    },
+    {
+      "row": 20,
+      "handle": "BelkacemYerfa",
+      "name": "Yerfa Belkacem",
+      "profile_url": "https://21st.dev/@BelkacemYerfa",
+      "repository_url": "https://github.com/BelkacemYerfa/shadcn-extension",
+      "license_spdx": "MIT",
+      "manifest_sha256": "f242a97e794b0d7de6776b9fd6796b25f74d34c347c2ae49ead9a14182a0619b",
+      "prompts_sha256": "ada7e58ef1c52fb9d3f366215545fa91c1c4456f117c2929e43d2eaa394aa8dd",
+      "dependency_evidence_sha256": "fdb64c49c89babd17e93aa14a2e1b11f988aa872a70a37793eef2f8ab7e87d7d",
+      "status": "published",
+      "published_count": 1,
+      "blocked_count": 0,
+      "total_count": 1,
+      "published_slugs": ["datetime-picker"],
+      "blocked_items": []
+    },
+    {
+      "row": 21,
+      "handle": "Codehagen",
+      "name": "Prism UI",
+      "profile_url": "https://21st.dev/@Codehagen",
+      "repository_url": "https://github.com/Codehagen/Prismui",
+      "license_spdx": "AGPL-3.0",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 16,
+      "total_count": 16,
+      "blocked_items": [
+        { "slug": "action-button", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "button-group", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "button-group-with-icons", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "display-cards", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "expandable-card", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "floating-action-panel", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "hero", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "hero-badge", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "icons", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "logo-carousel", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "open-source", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "popover", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "previous-next-button-group", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "pricing", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "timeline", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." },
+        { "slug": "use-expandable", "reason": "license_incompatible_copyleft", "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard." }
+      ]
+    },
+    {
+      "row": 22,
+      "handle": "DanielWhit21874",
+      "name": "DanielWhit21874",
+      "profile_url": "https://21st.dev/@DanielWhit21874",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        { "slug": "slot-text", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." }
+      ]
+    },
+    {
+      "row": 23,
+      "handle": "Daniela_Muntyan",
+      "name": "Daniela Muntyan",
+      "profile_url": "https://21st.dev/@Daniela_Muntyan",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        { "slug": "shader-clock", "reason": "unmapped_source_repository", "detail": "Name leads only; no mapped item source repository or license lead." }
+      ]
+    }
+  ]
+}
