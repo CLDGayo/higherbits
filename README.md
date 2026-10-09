@@ -2,7 +2,7 @@
 
 # 🚀 HigherBits.dev
 
-**Production UI Component Registry & Marketplace for Developers, Designers, and Agencies**
+**Production UI for developers and agencies**
 
 [![Website](https://img.shields.io/badge/Website-higherbits.dev-6366f1?style=for-the-badge&logo=globe)](https://higherbits.dev)
 [![GitHub Stars](https://img.shields.io/github/stars/CLDGayo/higherbits?style=for-the-badge&logo=github&color=f59e0b)](https://github.com/CLDGayo/higherbits)
@@ -12,7 +12,7 @@
 
 <br />
 
-<img src="./Images/HigherBits.dev.png" alt="HigherBits.dev Preview Banner" width="100%" />
+<img src="./apps/web/public/og-image.png" alt="HigherBits.dev — Production UI for developers and agencies" width="100%" />
 
 </div>
 
@@ -20,54 +20,32 @@
 
 ## 🌟 What is HigherBits.dev?
 
-**[HigherBits.dev](https://higherbits.dev)** is an open-source community registry and marketplace for **production-ready React UI components**, templates, themes, ASCII art, gradients, and shaders.
+**[HigherBits.dev](https://higherbits.dev)** is a marketplace and creator platform for production-ready **shadcn/ui React components, templates, and UI blocks**. Developers and agencies can browse examples, inspect source, and bring components into their projects or AI-assisted workflows.
 
-Inspired by the component philosophy of [shadcn/ui](https://ui.shadcn.com/) and built for modern design engineers and vibe coders, HigherBits eliminates generic "AI slop" by providing distinctive, polished, and accessible UI blocks powered by **React 19**, **Next.js 15**, **Tailwind CSS**, and **Radix UI**.
+The site's current promise is **"Production UI for developers and agencies."** The live homepage describes its audience as developers, agencies, and technical virtual assistants.
 
-Beyond standard copy-paste, HigherBits is engineered with a **Multi-Format AI Prompt Engine** that transforms React components on-the-fly into self-contained widgets for **GoHighLevel**, as well as optimized system prompts for **Claude**, **Cursor**, **Codex**, **Antigravity**, **v0**, **Bolt.new**, and **Lovable**.
+Built around the copy-and-adapt approach of [shadcn/ui](https://ui.shadcn.com/), HigherBits pairs ready-to-edit React and Tailwind source with prompts for coding agents and builders.
 
 ---
 
 ## ✨ Key Features
 
-- ⚡ **Production-Ready Component Registry**: Copy-paste React components with zero runtime dependencies on HigherBits. Accessible, responsive, and styled with Tailwind CSS variables.
-- 🔄 **Multi-Platform AI Prompt Engine**: One-click prompt copying tailored for your AI workflow:
-  - **GoHighLevel (GHL)**: Generates self-contained HTML/CSS/JS with embedded Tailwind runtime and scoped resets, engineered for GHL custom code blocks.
-  - **Claude, Cursor, Codex & Antigravity**: Structured prompts containing component logic, dependencies, and styles ready for your AI agent.
-  - **v0 by Vercel, Bolt.new, Lovable, Replit, Magic Patterns & sitebrew.ai**: Specially tuned prompts for each visual builder.
-- 🎨 **Creator Studio**: A comprehensive authoring suite where creators can build, preview, manage, and publish:
-  - **Components**: Live sandbox editor with support for multiple demos.
-  - **Themes**: Design token palettes and theme definitions.
-  - **Templates**: Full-page marketing and funnel layouts.
-  - **Libraries**: Curated collections of related components.
-  - **ASCII Art, Gradients & WebGL/Three.js Shaders**: Creative visual building blocks.
-- 💻 **Interactive Sandpack Preview**: Real-time interactive sandboxes for testing components, switching dark/light themes, and inspecting source code before copying.
-- 📦 **CLI Integration**: Install components directly into your project:
-  \`\`\`bash
-  npx higherbits add <component-slug>
-  # or via shadcn CLI:
-  npx shadcn@latest add "https://higherbits.dev/r/<author>/<component-slug>"
-  \`\`\`
-- 💰 **Monetization & Bundles**: Creators can monetize their craft with bundle sales and subscriptions powered by Stripe and Lemon Squeezy.
+- ⚡ **Component library**: Browse and search a changing catalog of React components, inspect examples and source, and copy what you need.
+- 🧱 **Templates and UI blocks**: Explore reusable page layouts alongside individual components.
+- 🤖 **Copyable prompts**: The site demonstrates workflows for Claude Code, Codex, Antigravity, and GoHighLevel.
+- 🎨 **Creator tools**: Signed-in creators can use `/publish` and `/studio` to work with components, templates, libraries, themes, ASCII art, gradients, and shaders.
+- 👤 **Creator discovery**: Browse creator profiles, collections, and curated libraries.
+- 📦 **Project handoff**: Use each component page's preview, source, and copy/prompt controls. A shadcn-compatible registry endpoint is present, though direct production CLI installation was not verified in this review.
+
+## Current site
+
+The homepage opens with a left-aligned **"Production UI for developers and agencies"** hero, global search, and links to Components and Templates. In light mode, it uses pale lavender surfaces, a soft purple glow, and rounded purple calls to action; a dark theme is also available. Below the hero are live component rows, a prompt-copy demonstration, the catalogue, creator and agent sections, and FAQs. Catalogue counts change with the live data, so this README does not hard-code one.
 
 ---
 
-## ⚡ Quick Install
+## Use a component
 
-Found a component you love on [HigherBits.dev](https://higherbits.dev)? Install it directly into your project with a single command:
-
-\`\`\`bash
-# Using HigherBits CLI
-npx higherbits add <component-slug>
-
-# Or using shadcn CLI
-npx shadcn@latest add "https://higherbits.dev/r/<author>/<component-slug>"
-\`\`\`
-
-This will automatically:
-- Download the component and its sub-components into your `/components/ui` directory.
-- Configure any required Tailwind extensions in your config.
-- Install necessary npm packages (e.g. Radix primitives, Lucide icons, Framer Motion).
+Open a component on [HigherBits.dev](https://higherbits.dev), inspect its preview and source, then use the page's copy or prompt controls to bring it into your project. The repository includes a shadcn-compatible registry endpoint; check the live component page for the currently available handoff options.
 
 ---
 
@@ -84,10 +62,6 @@ HigherBits is architected as a high-performance modern monorepo:
 | **Sandbox & Code** | [@codesandbox/sandpack-react](https://sandpack.codesandbox.io/), [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
 | **Database & ORM** | [Supabase](https://supabase.com/) (PostgreSQL, Row Level Security, Realtime), [Prisma ORM](https://www.prisma.io/) |
 | **Authentication** | [Clerk](https://clerk.com/) (User management, session handling, OAuth) |
-| **Asset Storage** | [Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/) & AWS S3 presigned storage for code, previews, and videos |
-| **AI Synthesis** | [OpenRouter](https://openrouter.ai/) & LLM endpoints for on-demand GHL template generation |
-| **Analytics** | [Amplitude](https://amplitude.com/) analytics and session recording |
-| **Deployment** | Self-hosted Linux VPS, [PM2](https://pm2.keymetrics.io/), Nginx reverse proxy with automated sync pipeline |
 
 ---
 
@@ -97,62 +71,30 @@ HigherBits is architected as a high-performance modern monorepo:
 
 - **Node.js**: `>= 18.0.0`
 - **pnpm**: `>= 8.0.0` (`npm install -g pnpm`)
-- Accounts for **Supabase**, **Clerk**, and **Cloudflare R2** (for full cloud backend features)
+- **Supabase** and **Clerk** credentials for the connected app features; optional integrations need their own credentials.
 
 ### 1. Clone the Repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/CLDGayo/higherbits.git
 cd higherbits
-\`\`\`
+```
 
 ### 2. Install Dependencies
 
-\`\`\`bash
+```bash
 pnpm install
-\`\`\`
+```
 
 ### 3. Configure Environment Variables
 
-Create `.env.local` inside `apps/web/`:
-
-\`\`\`bash
-cp apps/web/.env.example apps/web/.env.local
-\`\`\`
-
-Fill in your environment credentials:
-
-\`\`\`env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-CLERK_WEBHOOK_SECRET=whsec_...
-
-# Cloudflare R2 / S3 Storage
-NEXT_PUBLIC_CDN_URL=https://your-cdn-domain.com
-R2_ACCESS_KEY_ID=your-r2-access-key
-R2_SECRET_ACCESS_KEY=your-r2-secret-key
-NEXT_PUBLIC_R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
-
-# OpenRouter / OpenAI (for GHL prompt generation)
-OPENAI_API_KEY=sk-or-v1-...
-OPENAI_BASE_URL=https://openrouter.ai/api/v1
-OPENAI_MODEL=minimax/minimax-m3
-
-# Application URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-\`\`\`
+Create `apps/web/.env.local` with the Supabase and Clerk values required by your setup. Optional integration variables are listed in the repository-root [`.env.example`](./.env.example). This repository does not currently include an `apps/web/.env.example` template.
 
 ### 4. Run Development Server
 
-\`\`\`bash
+```bash
 pnpm dev
-\`\`\`
+```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -160,7 +102,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🧪 Testing & Quality Verification
 
-\`\`\`bash
+```bash
 # Run unit tests across packages
 pnpm --filter web test
 
@@ -172,7 +114,7 @@ pnpm lint
 
 # Build production assets
 pnpm build
-\`\`\`
+```
 
 ---
 
