@@ -31,6 +31,16 @@ type AutoIndexedItem = {
 
 type Page = { items: AutoIndexedItem[]; total: number }
 
+function getAutoIndexHtmlPreviewUrl(previewUrl: string | null | undefined) {
+  if (!previewUrl) return null
+  try {
+    const match = new URL(previewUrl, window.location.origin).pathname.match(/^\/auto-index\/([A-Za-z0-9_-]+)\.png$/i)
+    return match ? `/auto-index/${match[1]}.html` : null
+  } catch {
+    return null
+  }
+}
+
 export default function AutoIndexedView() {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(25)
@@ -68,6 +78,7 @@ export default function AutoIndexedView() {
   })
 
   const eligibleUsers = users.filter((user) => !user.manually_added && /^user_[A-Za-z0-9]+$/.test(user.id))
+  const previewHtmlUrl = preview?.bundleHtmlUrl || getAutoIndexHtmlPreviewUrl(preview?.previewUrl)
 
   const closeClaim = () => {
     setClaim(null)
@@ -162,11 +173,11 @@ export default function AutoIndexedView() {
             <DialogDescription>Live preview of this auto-indexed component.</DialogDescription>
           </DialogHeader>
           <div className="min-h-0 flex-1 overflow-hidden rounded-md border bg-background">
-            {preview?.bundleHtmlUrl ? (
+            {previewHtmlUrl ? (
               <div className="flex h-full flex-col">
                 <iframe
                   title={`${preview.componentName} preview`}
-                  src={preview.bundleHtmlUrl}
+                  src={previewHtmlUrl}
                   sandbox="allow-scripts"
                   referrerPolicy="no-referrer"
                   allowFullScreen

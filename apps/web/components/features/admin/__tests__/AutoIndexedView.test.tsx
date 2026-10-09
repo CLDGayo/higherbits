@@ -2,7 +2,7 @@
 import React from "react"
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { afterEach, beforeEach, expect, it, vi } from "vitest"
+import { afterEach, expect, it, vi } from "vitest"
 
 vi.mock("@/hooks/use-debounced-state", () => ({ useDebouncedState: (initial: string) => {
   const [value, setValue] = React.useState(initial)
@@ -19,16 +19,14 @@ const row = {
   ownerDisplayName: "Indexed publisher", publishedAt: "2026-09-01T00:00:00Z", claimedAt: null,
 }
 
-function mount() {
+function mount(items: (typeof row)[] = [row]) {
+  vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+    if (url.includes("offset=25")) return { ok: true, json: async () => ({ items: [], total: 26 }) }
+    return { ok: true, json: async () => ({ items, total: 26 }) }
+  }))
   return render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><AutoIndexedView /></QueryClientProvider>)
 }
 
-beforeEach(() => {
-  vi.stubGlobal("fetch", vi.fn(async (url: string) => {
-    if (url.includes("offset=25")) return { ok: true, json: async () => ({ items: [], total: 26 }) }
-    return { ok: true, json: async () => ({ items: [row], total: 26 }) }
-  }))
-})
 afterEach(() => vi.unstubAllGlobals())
 
 it("loads public indexed rows separately, without submission mutation controls, and pages on the server", async () => {
@@ -47,6 +45,19 @@ it("opens a sandboxed live preview when an admin clicks the component thumbnail"
   expect(frame.getAttribute("src")).toBe("https://higherbits.dev/preview/pinned.html")
   expect(frame.getAttribute("sandbox")).toBe("allow-scripts")
   expect(screen.getByRole("link", { name: "Open static thumbnail" }).getAttribute("href")).toBe(row.previewUrl)
+})
+
+it("derives a sandboxed same-origin auto-index preview from its PNG thumbnail", async () => {
+  const autoIndexedRow = {
+    ...row,
+    previewUrl: "https://higherbits.dev/auto-index/urvish-magnified-bento.png",
+    bundleHtmlUrl: null,
+  }
+  mount([autoIndexedRow])
+  fireEvent.click(await screen.findByRole("button", { name: "Preview Pinned component" }))
+  const frame = await screen.findByTitle("Pinned component preview")
+  expect(frame.getAttribute("src")).toBe("/auto-index/urvish-magnified-bento.html")
+  expect(frame.getAttribute("sandbox")).toBe("allow-scripts")
 })
 
 it("requires an identified claimant, verification note, and explicit acknowledgment before transfer", async () => {
