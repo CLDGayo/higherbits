@@ -49,8 +49,8 @@ export const CATALOGUE_GRID_LIMIT = 24
  * components are server-rendered here, not all 51. The pool arrives sorted by
  * `likes_count` descending, so the cap keeps the most-liked — though every
  * `likes_count` is currently 0, which makes that ordering degenerate and the
- * kept 24 effectively the oldest 24. The "browse all" link below is the route
- * to the rest, and `/?tab=home` renders the full set.
+ * kept 24 effectively the oldest 24. The header's "browse all" link is the
+ * route to the rest, and `/?tab=home` renders the full set.
  *
  * `preview_url` is `NOT NULL`-filtered by the query, so every card here has an
  * image. The images are plain `<img loading="lazy">` (not `next/image`), so the
@@ -71,14 +71,28 @@ export function ComponentCatalogue({
 
   return (
     <div data-testid="component-catalogue">
-      <div className="flex flex-col items-center justify-center text-center gap-4 mb-16">
-        <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-          Browse the component library
-        </h2>
-        <p className="text-muted-foreground text-lg md:text-xl max-w-2xl">
-          Production-ready shadcn/ui components, templates and UI blocks —
-          copy the source into your project and ship.
-        </p>
+      <div className="flex flex-col items-start md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col gap-3">
+          <span className="text-sm font-semibold tracking-wider text-muted-foreground uppercase">
+            BROWSE · PREVIEW · COPY
+          </span>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
+            Browse the component library
+          </h2>
+          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl text-balance">
+            Production-ready shadcn/ui components, templates and UI blocks —
+            copy the source into your project and ship.
+          </p>
+        </div>
+        {components.length > shown.length && (
+          <div className="shrink-0">
+            <Button asChild size="lg" variant="outline" className="h-11 px-[26px]">
+              <Link href="/?tab=home">
+                Browse all {components.length} components
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
         {shown.map((demo) => (
@@ -87,15 +101,6 @@ export function ComponentCatalogue({
           </li>
         ))}
       </ul>
-      {components.length > shown.length && (
-        <div className="flex justify-center mt-16">
-          <Button asChild size="lg" variant="outline" className="h-11 px-[26px]">
-            <Link href="/?tab=home">
-              Browse all {components.length} components
-            </Link>
-          </Button>
-        </div>
-      )}
     </div>
   )
 }
