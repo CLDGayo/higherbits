@@ -1,210 +1,120 @@
 <div align="center">
 
-# 🚀 HigherBits.dev
+# [HigherBits.dev](https://higherbits.dev)
 
-**Production UI Component Registry & Marketplace for Developers, Designers, and Agencies**
+**Production UI for developers and agencies.** Browse React components, templates, and UI blocks built for shadcn/ui-based projects — inspect the source, then copy it into your own.
 
-[![Website](https://img.shields.io/badge/Website-higherbits.dev-6366f1?style=for-the-badge&logo=globe)](https://higherbits.dev)
-[![GitHub Stars](https://img.shields.io/github/stars/CLDGayo/higherbits?style=for-the-badge&logo=github&color=f59e0b)](https://github.com/CLDGayo/higherbits)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/vWqmFjPMU4)
-[![X/Twitter](https://img.shields.io/badge/X%2FTwitter-@CLDGayo-black?logo=x&logoColor=white&style=for-the-badge)](https://x.com/CLDGayo)
-[![License: MIT](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](./LICENSE)
+[![Live site](https://img.shields.io/badge/higherbits.dev-live-7c3aed)](https://higherbits.dev)
+[![License: MIT](https://img.shields.io/badge/license-MIT-emerald)](./LICENSE)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/vWqmFjPMU4)
 
-<br />
-
-<img src="./Images/HigherBits.dev.png" alt="HigherBits.dev Preview Banner" width="100%" />
+[Explore components](https://higherbits.dev) · [Templates](https://higherbits.dev/?tab=templates) · [Run locally](#run-it-locally) · [Contributing](#contributing--support)
 
 </div>
 
----
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme/homepage-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset=".github/assets/readme/homepage-light.png">
+  <img src=".github/assets/readme/homepage-light.png" alt="HigherBits.dev homepage hero and the first component carousel row" width="100%">
+</picture>
 
-## 🌟 What is HigherBits.dev?
-
-**[HigherBits.dev](https://higherbits.dev)** is an open-source community registry and marketplace for **production-ready React UI components**, templates, themes, ASCII art, gradients, and shaders.
-
-Inspired by the component philosophy of [shadcn/ui](https://ui.shadcn.com/) and built for modern design engineers and vibe coders, HigherBits eliminates generic "AI slop" by providing distinctive, polished, and accessible UI blocks powered by **React 19**, **Next.js 15**, **Tailwind CSS**, and **Radix UI**.
-
-Beyond standard copy-paste, HigherBits is engineered with a **Multi-Format AI Prompt Engine** that transforms React components on-the-fly into self-contained widgets for **GoHighLevel**, as well as optimized system prompts for **Claude**, **Cursor**, **Codex**, **Antigravity**, **v0**, **Bolt.new**, and **Lovable**.
+<p align="center"><sub>The homepage hero and first carousel row, captured 2026-10-09.</sub></p>
 
 ---
 
-## ✨ Key Features
+## What you can do
 
-- ⚡ **Production-Ready Component Registry**: Copy-paste React components with zero runtime dependencies on HigherBits. Accessible, responsive, and styled with Tailwind CSS variables.
-- 🔄 **Multi-Platform AI Prompt Engine**: One-click prompt copying tailored for your AI workflow:
-  - **GoHighLevel (GHL)**: Generates self-contained HTML/CSS/JS with embedded Tailwind runtime and scoped resets, engineered for GHL custom code blocks.
-  - **Claude, Cursor, Codex & Antigravity**: Structured prompts containing component logic, dependencies, and styles ready for your AI agent.
-  - **v0 by Vercel, Bolt.new, Lovable, Replit, Magic Patterns & sitebrew.ai**: Specially tuned prompts for each visual builder.
-- 🎨 **Creator Studio**: A comprehensive authoring suite where creators can build, preview, manage, and publish:
-  - **Components**: Live sandbox editor with support for multiple demos.
-  - **Themes**: Design token palettes and theme definitions.
-  - **Templates**: Full-page marketing and funnel layouts.
-  - **Libraries**: Curated collections of related components.
-  - **ASCII Art, Gradients & WebGL/Three.js Shaders**: Creative visual building blocks.
-- 💻 **Interactive Sandpack Preview**: Real-time interactive sandboxes for testing components, switching dark/light themes, and inspecting source code before copying.
-- 📦 **CLI Integration**: Install components directly into your project:
-  \`\`\`bash
-  npx higherbits add <component-slug>
-  # or via shadcn CLI:
-  npx shadcn@latest add "https://higherbits.dev/r/<author>/<component-slug>"
-  \`\`\`
-- 💰 **Monetization & Bundles**: Creators can monetize their craft with bundle sales and subscriptions powered by Stripe and Lemon Squeezy.
+- **Find a starting point.** Explore React components, templates, and UI blocks through image and video previews.
+- **Inspect before you use.** Open a component to try its live preview and read its source alongside it.
+- **Bring it into your workflow.** Copy source or a prompt for Claude Code, Codex, Antigravity, or GoHighLevel. Copy actions require sign-in and component access; available prompt targets vary by component.
+- **Share your work.** Creator Studio provides tools to create and manage components, templates, themes, and shaders. [Open Studio](https://higherbits.dev/studio) or [publish a component](https://higherbits.dev/publish) after signing in.
+- **Choose your view.** Browse the site in light or dark mode, with preview controls for supported components.
+
+### Browse → preview → copy
+
+1. **Browse** the [live library](https://higherbits.dev) and choose a component.
+2. **Preview** its behavior and inspect the source files.
+3. **Copy and use** the source or an available prompt after signing in, then adapt it to your project.
+
+> CLI installation is currently unavailable in the production check (2026-10-09): the registry returned `401 invalid_capability`, and no public `higherbits` npm package was found. Use the site's copy controls.
 
 ---
 
-## ⚡ Quick Install
+## Product tour
 
-Found a component you love on [HigherBits.dev](https://higherbits.dev)? Install it directly into your project with a single command:
+<img src=".github/assets/readme/component-library.png" alt="HigherBits.dev catalogue grid with component preview images" width="100%">
 
-\`\`\`bash
-# Using HigherBits CLI
-npx higherbits add <component-slug>
+<p align="center"><sub>Browsing the catalogue — preview images make it easy to scan for what you need.</sub></p>
 
-# Or using shadcn CLI
-npx shadcn@latest add "https://higherbits.dev/r/<author>/<component-slug>"
-\`\`\`
+<img src=".github/assets/readme/component-detail.png" alt="One HigherBits.dev component page showing a live preview, the source tab, and copy/prompt controls" width="100%">
 
-This will automatically:
-- Download the component and its sub-components into your `/components/ui` directory.
-- Configure any required Tailwind extensions in your config.
-- Install necessary npm packages (e.g. Radix primitives, Lucide icons, Framer Motion).
+<p align="center"><sub>Component preview and source, side by side — inspect the implementation before copying it.</sub></p>
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+## Run it locally
 
-HigherBits is architected as a high-performance modern monorepo:
+This is the monorepo behind higherbits.dev — useful if you want to contribute to the app itself. If you just want a component, use the live site; you don't need to clone anything.
 
-| Layer | Technologies |
-|---|---|
-| **Framework** | [Next.js 15](https://nextjs.org/) (App Router, Server Actions, Turbopack) & [React 19](https://react.dev/) |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) (Strict type safety) |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) with CSS variables, [Radix UI](https://www.radix-ui.com/) primitives |
-| **Icons & Motion** | [Lucide React](https://lucide.dev/), [Motion / Framer Motion](https://motion.dev/), [NumberFlow](https://number-flow.barvian.me/) |
-| **Sandbox & Code** | [@codesandbox/sandpack-react](https://sandpack.codesandbox.io/), [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
-| **Database & ORM** | [Supabase](https://supabase.com/) (PostgreSQL, Row Level Security, Realtime), [Prisma ORM](https://www.prisma.io/) |
-| **Authentication** | [Clerk](https://clerk.com/) (User management, session handling, OAuth) |
-| **Asset Storage** | [Cloudflare R2](https://www.cloudflare.com/developer-platform/r2/) & AWS S3 presigned storage for code, previews, and videos |
-| **AI Synthesis** | [OpenRouter](https://openrouter.ai/) & LLM endpoints for on-demand GHL template generation |
-| **Analytics** | [Amplitude](https://amplitude.com/) analytics and session recording |
-| **Deployment** | Self-hosted Linux VPS, [PM2](https://pm2.keymetrics.io/), Nginx reverse proxy with automated sync pipeline |
+**Requirements:** Node.js 22.18+ on the 22.x line or Node.js 24.11+, and [pnpm](https://pnpm.io) 8.15.6 (the version pinned in `packageManager`).
 
----
-
-## 🚀 Getting Started (Local Development)
-
-### Prerequisites
-
-- **Node.js**: `>= 18.0.0`
-- **pnpm**: `>= 8.0.0` (`npm install -g pnpm`)
-- Accounts for **Supabase**, **Clerk**, and **Cloudflare R2** (for full cloud backend features)
-
-### 1. Clone the Repository
-
-\`\`\`bash
+```bash
 git clone https://github.com/CLDGayo/higherbits.git
 cd higherbits
-\`\`\`
-
-### 2. Install Dependencies
-
-\`\`\`bash
 pnpm install
-\`\`\`
+```
 
-### 3. Configure Environment Variables
+The app (`apps/web`) needs its own env file at `apps/web/.env.local` — there's no checked-in `.env.example` for it yet, so create one with at least:
 
-Create `.env.local` inside `apps/web/`:
+```bash
+# Supabase (database + auth helpers)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-\`\`\`bash
-cp apps/web/.env.example apps/web/.env.local
-\`\`\`
+# Clerk (sign-in)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+```
 
-Fill in your environment credentials:
+The web app requires configured Supabase and Clerk projects. Supabase must already have the application schema and data; adding keys does not provision the database. The root [`.env.example`](./.env.example) lists additional integration variables, but is not a complete web-app template. A fresh, credentialed setup has not been verified end to end.
 
-\`\`\`env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+```bash
+pnpm --filter web dev
+```
 
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-CLERK_WEBHOOK_SECRET=whsec_...
+Then open [http://localhost:3000](http://localhost:3000).
 
-# Cloudflare R2 / S3 Storage
-NEXT_PUBLIC_CDN_URL=https://your-cdn-domain.com
-R2_ACCESS_KEY_ID=your-r2-access-key
-R2_SECRET_ACCESS_KEY=your-r2-secret-key
-NEXT_PUBLIC_R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
+To run all workspaces with `pnpm dev`, also install [Bun](https://bun.sh). The `apps/backend` service handles CSS/Tailwind bundling; the command above starts only the web app.
 
-# OpenRouter / OpenAI (for GHL prompt generation)
-OPENAI_API_KEY=sk-or-v1-...
-OPENAI_BASE_URL=https://openrouter.ai/api/v1
-OPENAI_MODEL=minimax/minimax-m3
-
-# Application URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-\`\`\`
-
-### 4. Run Development Server
-
-\`\`\`bash
-pnpm dev
-\`\`\`
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 🧪 Testing & Quality Verification
-
-\`\`\`bash
-# Run unit tests across packages
-pnpm --filter web test
-
-# Run TypeScript typechecks
-pnpm --filter web typecheck
-
-# Run linter
+```bash
+pnpm --filter web test        # unit tests (vitest)
+pnpm --filter web typecheck   # tsc --noEmit
 pnpm lint
-
-# Build production assets
 pnpm build
-\`\`\`
+```
 
 ---
 
-## 🛠️ Creator Guidelines: Publishing on HigherBits
+## Project map
 
-Creators can share their UI components, themes, templates, and shaders directly via the [HigherBits Publish Portal](https://higherbits.dev/publish) or within the **Creator Studio** (`/studio`).
+| Path | Purpose |
+| --- | --- |
+| [`apps/web`](./apps/web) | Next.js 15 + React 19 web application |
+| [`apps/backend`](./apps/backend) | Bun service for CSS/Tailwind bundling |
+| [`packages/ui`](./packages/ui) | Shared `@repo/ui` primitives |
+| [`packages/ai`](./packages/ai) | `@higherbits-dev/cli` MCP server package |
 
-### Lifecycle of a Component:
-1. **Initial Review** (`on_review`): Accessible via direct URL while awaiting review.
-2. **Published** (`posted`): Approved and displayed on your public creator profile.
-3. **Featured** (`featured`): Showcased on the homepage and highlighted in category carousels.
-
-### Quality Standards:
-- **Separation of Concerns**: Keep component logic (`code.tsx`) clean and separate from demo/presentation logic (`demos/default/code.demo.tsx`).
-- **Theming & Color Contrast**: Rely on CSS variables (e.g. `hsl(var(--background))`, `hsl(var(--foreground))`) and ensure full light/dark mode support.
-- **Accessibility**: Support keyboard navigation, ARIA roles, and high-contrast color ratios.
-- **Type Safety**: Write pure TypeScript with well-defined prop interfaces and meaningful default values.
+**Stack:** TypeScript, Tailwind CSS, Radix UI, Supabase (Postgres + Prisma), Clerk auth, Turborepo + pnpm workspaces.
 
 ---
 
-## 👥 Community & Connect
+## Contributing & support
 
-- 🌐 **Platform**: [higherbits.dev](https://higherbits.dev)
-- 📖 **Our Story**: [higherbits.dev/our-story](https://higherbits.dev/our-story)
-- 💬 **Discord**: [Join our Discord Community](https://discord.gg/vWqmFjPMU4)
-- 🐦 **X (Twitter)**: [@CLDGayo](https://x.com/CLDGayo)
-- 🐙 **GitHub**: [github.com/CLDGayo/higherbits](https://github.com/CLDGayo/higherbits)
+Found something to fix or add? Open an issue or a pull request — describe the change, run `pnpm --filter web test`, `pnpm --filter web typecheck`, and `pnpm lint` before pushing, and we'll take it from there. Found a security issue? Please follow [SECURITY.md](./SECURITY.md) instead of opening a public issue.
 
----
+[Discord](https://discord.gg/vWqmFjPMU4) · [GitHub Issues](https://github.com/CLDGayo/higherbits/issues) · [support@higherbits.dev](mailto:support@higherbits.dev)
 
-## 📄 License
+## License
 
-HigherBits is licensed under the [MIT License](./LICENSE).
-
-Built with ❤️ by [Clarence Lloyd Gayo](https://x.com/CLDGayo) and the HigherBits community.
+[MIT](./LICENSE)
