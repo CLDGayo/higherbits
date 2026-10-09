@@ -11,10 +11,11 @@ import type { DemoWithComponent } from "@/types/global"
  * The grid used to render the WHOLE pool (51 items at time of writing), which
  * made it by far the largest contributor to `/`'s height: at ~350px a card plus
  * `gap-y-10`, 17 rows of it carried the page to 10670 CSS against a reference
- * capture that ends at 6290 and has no catalogue section at all. 24 is 5 clean
- * rows at `xl`, 8 at `lg`, 12 at `md` — enough to read as a library rather
- * than as one more carousel row's worth (the two rows above already show 12 each), while
- * cutting roughly 3,500px of scroll.
+ * capture that ends at 6290 and has no catalogue section at all. 24 is four
+ * full rows plus four cards at `xl` (5 cols), eight full rows at `lg` (3
+ * cols), twelve full rows at `md` (2 cols) — enough to read as a library
+ * rather than as one more carousel row's worth (the two rows above already
+ * show 12 each), while cutting roughly 3,500px of scroll.
  *
  * The cap is applied HERE and not in `getCatalogueChipPool()`: the same pool
  * feeds Row 1 and Row 2's chip strips, which need the full set so a tag chip
