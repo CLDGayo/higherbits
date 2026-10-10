@@ -1,0 +1,22 @@
+<div class="ghl-component-wrapper" role="region" aria-label="Sankey chart">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b; }
+    .ghl-card { width: min(100%, 540px); background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  </style>
+  <div class="ghl-card">
+    <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Sankey User Flow</h4>
+    <p style="margin: 4px 0 16px; font-size: 12px; color: #71717a;">Session navigation paths from landing to conversion</p>
+    <svg viewBox="0 0 500 180" style="width: 100%; height: auto;">
+      <path d="M 50 40 C 200 40, 200 60, 350 60 L 350 90 C 200 90, 200 70, 50 70 Z" fill="#3b82f6" fill-opacity="0.25" />
+      <path d="M 50 90 C 200 90, 200 130, 350 130 L 350 160 C 200 160, 200 120, 50 120 Z" fill="#10b981" fill-opacity="0.25" />
+      <rect x="30" y="30" width="16" height="50" rx="3" fill="#3b82f6" />
+      <text x="55" y="45" font-size="11" font-weight="500" fill="#374151">Organic (60%)</text>
+      <rect x="30" y="90" width="16" height="40" rx="3" fill="#10b981" />
+      <text x="55" y="105" font-size="11" font-weight="500" fill="#374151">Direct (40%)</text>
+      <rect x="350" y="50" width="16" height="50" rx="3" fill="#6366f1" />
+      <text x="375" y="65" font-size="11" font-weight="500" fill="#374151">Dashboard</text>
+      <rect x="350" y="120" width="16" height="50" rx="3" fill="#f59e0b" />
+      <text x="375" y="135" font-size="11" font-weight="500" fill="#374151">Docs</text>
+    </svg>
+  </div>
+</div>

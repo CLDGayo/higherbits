@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>brijr - pricing-section</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div class="ghl-component-wrapper" role="region" aria-label="Pricing table">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b; }
+    .ghl-pricing { width: min(100%, 680px); background: #fff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 36px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    .ghl-p-head { text-align: center; margin-bottom: 28px; }
+    .ghl-p-title { font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+    .ghl-p-sub { font-size: 12px; color: #71717a; margin: 0; }
+    .ghl-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .ghl-tier { border: 1px solid #e4e4e7; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .ghl-tier-pop { border-color: #6366f1; background: #faf5ff; }
+    .ghl-price { font-size: 22px; font-weight: 800; margin: 10px 0 6px; }
+    .ghl-tier-btn { margin-top: 20px; width: 100%; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid #e4e4e7; background: #f4f4f5; cursor: pointer; }
+    .ghl-tier-pop .ghl-tier-btn { background: #4f46e5; color: #fff; border: none; }
+  </style>
+  <div class="ghl-pricing">
+    <div class="ghl-p-head">
+      <h3 class="ghl-p-title">Simple, predictable pricing</h3>
+      <p class="ghl-p-sub">Pick the plan that fits your development stage.</p>
+    </div>
+    <div class="ghl-tiers">
+      <div class="ghl-tier">
+        <div><strong style="font-size: 13px;">Starter</strong><div class="ghl-price">$0</div><p style="font-size: 11px; color: #71717a; margin: 0;">For hobby projects</p></div>
+        <button class="ghl-tier-btn">Start Free</button>
+      </div>
+      <div class="ghl-tier ghl-tier-pop">
+        <div><strong style="font-size: 13px; color: #4338ca;">Pro</strong><div class="ghl-price">$29</div><p style="font-size: 11px; color: #71717a; margin: 0;">For growing teams</p></div>
+        <button class="ghl-tier-btn">Upgrade</button>
+      </div>
+      <div class="ghl-tier">
+        <div><strong style="font-size: 13px;">Enterprise</strong><div class="ghl-price">$99</div><p style="font-size: 11px; color: #71717a; margin: 0;">For scale</p></div>
+        <button class="ghl-tier-btn">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+{
+  "repositoryUrl": "https://github.com/brijr/components",
+  "ownerLabel": "brijr",
+  "profileUrl": "https://21st.dev/@brijr",
+  "licenseSpdx": null,
+  "licenseSha256": "f185da27d87082febcbadd0552d8545cf3294ad6bab9f155330162fdc4ff8a43",
+  "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+  "copyPromptsSha256": "7f66e60ce5a98a2d05f5443c69cb2d5c36909a3779b9217756a9c95da0fd51cd",
+  "items": [
+    {
+      "slug": "accordion-1",
+      "registryName": "accordion-1",
+      "title": "Accordion",
+      "description": "Accessible, collapsible FAQ section built with Radix UI and Tailwind CSS.",
+      "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+      "sourcePath": "components/ui/accordion.tsx",
+      "files": [
+        {
+          "path": "components/ui/accordion.tsx",
+          "type": "registry:component",
+          "bytes": 1991,
+          "sha256": "1cc98c2ab5106d8d476f1da4aa8dd535198a8113513b2c918938ea76d90bbbc9"
+        }
+      ],
+      "dependencies": {
+        "@radix-ui/react-accordion": "^1.1.2",
+        "lucide-react": "^0.368.0"
+      },
+      "aliasImports": [
+        "@/components/craft",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ],
+      "demoSha256": "5b0c9e0a009dc82b65ded270a55de604f746ab3885006144134ba42109b020f7",
+      "ghlSha256": "3c43e7f26790a0bba74a9977ba9bc0c32b6b8df6a11ee35199397c7dd1b0fc03",
+      "previewSha256": "cf07badc7652d6f0ca62627fab4695a96caf53d676f6e45490b68cbf047e72c4"
+    },
+    {
+      "slug": "call-to-action-1",
+      "registryName": "call-to-action-1",
+      "title": "Call to Action",
+      "description": "High-conversion banner with bold typography, supportive text, and responsive action buttons.",
+      "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+      "sourcePath": "components/ctas/cta-one.tsx",
+      "files": [
+        {
+          "path": "components/ctas/cta-one.tsx",
+          "type": "registry:component",
+          "bytes": 1015,
+          "sha256": "e292a17fb4cdb3b6f70d4ef17eb0c3e0d065520c3a9101c2d7cc2d93592a4ea7"
+        },
+        {
+          "path": "components/craft.tsx",
+          "type": "registry:component",
+          "bytes": 9107,
+          "sha256": "66266b859e26d65cc9a6da50dec6bdadd5497fd3d73b631a085c85b4b0603686"
+        },
+        {
+          "path": "components/ui/button.tsx",
+          "type": "registry:component",
+          "bytes": 1901,
+          "sha256": "415ccc47cf69a2a87db699cc6da7f1fdcb799a1f40dab3a6220d91ac8da8abbe"
+        }
+      ],
+      "dependencies": {
+        "react-wrap-balancer": "^1.1.0"
+      },
+      "aliasImports": [
+        "@/components/craft",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ],
+      "demoSha256": "3f3456c1f4fad97a70e4c3090cbdae08b57b6dd8632287b6f77c8c29d6f9de45",
+      "ghlSha256": "c59a5d207b0f5d1af34834d7ba9a7a5a4f685396562813d1b3e79bad627a314e",
+      "previewSha256": "12a932a6a08bffc7e613a1cc2ffcdebccea7f5bff16901fb3bcb271c216b0498"
+    },
+    {
+      "slug": "feature-modern",
+      "registryName": "feature-modern",
+      "title": "Feature Modern",
+      "description": "Modern feature grid section with structured card layout and benefits callouts.",
+      "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+      "sourcePath": "components/features/feature-one.tsx",
+      "files": [
+        {
+          "path": "components/features/feature-one.tsx",
+          "type": "registry:component",
+          "bytes": 2014,
+          "sha256": "f0159073ea25a142426122de57ec34729336105df12039bc5ae0ed7136acce51"
+        },
+        {
+          "path": "components/craft.tsx",
+          "type": "registry:component",
+          "bytes": 9107,
+          "sha256": "66266b859e26d65cc9a6da50dec6bdadd5497fd3d73b631a085c85b4b0603686"
+        }
+      ],
+      "dependencies": {
+        "react-wrap-balancer": "^1.1.0"
+      },
+      "aliasImports": [
+        "@/components/craft",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ],
+      "demoSha256": "8e22b26ea8bd065c7d93bded1a8d95233a3ffbb672dcecc9ae1f9c9bb8f7800c",
+      "ghlSha256": "9a6e713fb1542c5b7feeaf10a115f500f71dd1a04d9109f5e2f6e6fd82116fc6",
+      "previewSha256": "f380b37ac6103936d7afc1124ef89ec9725e0219265899d1d7b8638764bd87b5"
+    },
+    {
+      "slug": "hero-modern",
+      "registryName": "hero-modern",
+      "title": "Hero Modern",
+      "description": "Hero section with badge callout, headline, supportive copy, and action buttons.",
+      "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+      "sourcePath": "components/heros/hero-one.tsx",
+      "files": [
+        {
+          "path": "components/heros/hero-one.tsx",
+          "type": "registry:component",
+          "bytes": 1757,
+          "sha256": "5a9ce3754629ca1048ee720adf85dedff05da9c950bf926f68ad25d2f72fdcb8"
+        },
+        {
+          "path": "components/craft.tsx",
+          "type": "registry:component",
+          "bytes": 9107,
+          "sha256": "66266b859e26d65cc9a6da50dec6bdadd5497fd3d73b631a085c85b4b0603686"
+        },
+        {
+          "path": "components/ui/button.tsx",
+          "type": "registry:component",
+          "bytes": 1901,
+          "sha256": "415ccc47cf69a2a87db699cc6da7f1fdcb799a1f40dab3a6220d91ac8da8abbe"
+        }
+      ],
+      "dependencies": {
+        "react-wrap-balancer": "^1.1.0"
+      },
+      "aliasImports": [
+        "@/components/craft",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ],
+      "demoSha256": "598d3360cffffe2d745cd2d10732a8853ab5a502723f1ff7abf25841637a2ec2",
+      "ghlSha256": "04a1b00a647c7eb052ff5885fc9e515cc267bb5b5773dee5fc38334fef0637c7",
+      "previewSha256": "2bfbcf82d8c8e4dd30b8327b2c8c2797e267d2821223541058d3ca7d42a0dfcb"
+    },
+    {
+      "slug": "pricing-section",
+      "registryName": "pricing-section",
+      "title": "Pricing Section",
+      "description": "Three-tier pricing table featuring plan highlights, monthly rates, and primary subscription triggers.",
+      "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+      "sourcePath": "components/pricing/pricing-one.tsx",
+      "files": [
+        {
+          "path": "components/pricing/pricing-one.tsx",
+          "type": "registry:component",
+          "bytes": 2886,
+          "sha256": "deca6af1c83a571f7c3c3b3ab5d7636d05307d2994c93a8c975780d2d1f6ba08"
+        },
+        {
+          "path": "components/craft.tsx",
+          "type": "registry:component",
+          "bytes": 9107,
+          "sha256": "66266b859e26d65cc9a6da50dec6bdadd5497fd3d73b631a085c85b4b0603686"
+        },
+        {
+          "path": "components/ui/button.tsx",
+          "type": "registry:component",
+          "bytes": 1901,
+          "sha256": "415ccc47cf69a2a87db699cc6da7f1fdcb799a1f40dab3a6220d91ac8da8abbe"
+        },
+        {
+          "path": "components/ui/badge.tsx",
+          "type": "registry:component",
+          "bytes": 1128,
+          "sha256": "db977d821af56ae3fb7952182d9c0a076a10c75c38bc2d2b000827e720423d32"
+        }
+      ],
+      "dependencies": {
+        "react-wrap-balancer": "^1.1.0"
+      },
+      "aliasImports": [
+        "@/components/craft",
+        "@/components/ui/button",
+        "@/lib/utils"
+      ],
+      "demoSha256": "15c65f53f6af1a10a5e28bc974c474df43bcb35947241e24e87fe355ea0d6e02",
+      "ghlSha256": "41f7ee178465ab650b0570d1546250f8ec2e172dddbcdec0dede090ad7bdb666",
+      "previewSha256": "0a7008ad24c88a89cce8ea254cac1bbefed74d03098b274b187ddc6269347d7b"
+    }
+  ],
+  "eligibilityProvenance": "21st.dev auto-index=true roster eligibility signal; upstream repository contains no explicit root LICENSE file"
+}

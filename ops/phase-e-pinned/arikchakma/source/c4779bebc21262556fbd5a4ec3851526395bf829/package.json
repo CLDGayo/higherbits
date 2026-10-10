@@ -1,0 +1,22 @@
+{
+  "name": "ui",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "format:check": "oxfmt --check",
+    "format:write": "oxfmt",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix --fix-suggestions --fix-dangerously",
+    "release:cromia": "pnpm --filter cromia release",
+    "release:unit-field": "pnpm --filter unit-field release",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.37.0",
+    "oxlint": "^1.52.0",
+    "turbo": "^2.5.4"
+  },
+  "packageManager": "pnpm@10.32.0"
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>bklitai - candlestick-chart</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div class="ghl-component-wrapper" role="region" aria-label="Candlestick chart">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b; }
+    .ghl-card { width: min(100%, 520px); background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  </style>
+  <div class="ghl-card">
+    <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Market Price Action</h4>
+    <p style="margin: 4px 0 16px; font-size: 12px; color: #71717a;">OHLC Candlesticks with high/low wicks</p>
+    <svg viewBox="0 0 450 160" style="width: 100%; height: auto;">
+      <g><line x1="40" y1="20" x2="40" y2="140" stroke="#10b981" stroke-width="1.5"/><rect x="28" y="40" width="24" height="60" fill="#10b981" rx="2"/></g>
+      <g><line x1="110" y1="15" x2="110" y2="135" stroke="#10b981" stroke-width="1.5"/><rect x="98" y="30" width="24" height="50" fill="#10b981" rx="2"/></g>
+      <g><line x1="180" y1="30" x2="180" y2="150" stroke="#ef4444" stroke-width="1.5"/><rect x="168" y="55" width="24" height="45" fill="#ef4444" rx="2"/></g>
+      <g><line x1="250" y1="40" x2="250" y2="160" stroke="#ef4444" stroke-width="1.5"/><rect x="238" y="70" width="24" height="55" fill="#ef4444" rx="2"/></g>
+      <g><line x1="320" y1="10" x2="320" y2="140" stroke="#10b981" stroke-width="1.5"/><rect x="308" y="30" width="24" height="70" fill="#10b981" rx="2"/></g>
+      <g><line x1="390" y1="15" x2="390" y2="130" stroke="#10b981" stroke-width="1.5"/><rect x="378" y="35" width="24" height="60" fill="#10b981" rx="2"/></g>
+    </svg>
+  </div>
+</div>
+
+</body>
+</html>

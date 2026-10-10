@@ -1,0 +1,64 @@
+<div class="ghl-component-wrapper" role="region" aria-label="Cromia swatches">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%;
+      min-height: 480px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      background: #fafafa;
+      font: 14px/1.5 system-ui, -apple-system, sans-serif;
+      color: #09090b;
+    }
+    .ghl-swatch-box {
+      width: min(100%, 360px);
+      background: #fff;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .ghl-swatch-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #71717a;
+      text-transform: uppercase;
+    }
+    .ghl-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .ghl-swatch-item {
+      height: 42px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+  <div class="ghl-swatch-box">
+    <div class="ghl-swatch-header">
+      <span>Color Swatches</span>
+      <span style="font-family: monospace;">#2563EB</span>
+    </div>
+    <div class="ghl-grid">
+      <div class="ghl-swatch-item" style="background: #0f172a;"></div>
+      <div class="ghl-swatch-item" style="background: #18181b;"></div>
+      <div class="ghl-swatch-item" style="background: #171717;"></div>
+      <div class="ghl-swatch-item" style="background: #dc2626;"></div>
+      <div class="ghl-swatch-item" style="background: #ea580c;"></div>
+      <div class="ghl-swatch-item" style="background: #d97706;"></div>
+      <div class="ghl-swatch-item" style="background: #059669;"></div>
+      <div class="ghl-swatch-item" style="background: #0891b2;"></div>
+      <div class="ghl-swatch-item" style="background: #2563eb; outline: 2px solid #000;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #fff;"></span></div>
+      <div class="ghl-swatch-item" style="background: #4f46e5;"></div>
+      <div class="ghl-swatch-item" style="background: #7c3aed;"></div>
+      <div class="ghl-swatch-item" style="background: #c026d3;"></div>
+    </div>
+  </div>
+</div>

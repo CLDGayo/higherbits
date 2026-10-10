@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>bklitai - bar-chart</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div class="ghl-component-wrapper" role="region" aria-label="Bar chart">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b; }
+    .ghl-card { width: min(100%, 520px); background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .ghl-bars { display: flex; align-items: flex-end; justify-content: space-between; height: 180px; gap: 12px; margin-top: 20px; }
+    .ghl-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .ghl-bar { width: 100%; border-radius: 6px 6px 0 0; background: #4f46e5; }
+    .ghl-lbl { font-size: 11px; color: #71717a; font-weight: 500; }
+  </style>
+  <div class="ghl-card">
+    <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Daily Conversions</h4>
+    <p style="margin: 4px 0 0; font-size: 12px; color: #71717a;">Metric counts across the current week</p>
+    <div class="ghl-bars">
+      <div class="ghl-col"><div class="ghl-bar" style="height: 90px;"></div><span class="ghl-lbl">Mon</span></div>
+      <div class="ghl-col"><div class="ghl-bar" style="height: 120px;"></div><span class="ghl-lbl">Tue</span></div>
+      <div class="ghl-col"><div class="ghl-bar" style="height: 60px;"></div><span class="ghl-lbl">Wed</span></div>
+      <div class="ghl-col"><div class="ghl-bar" style="height: 140px;"></div><span class="ghl-lbl">Thu</span></div>
+      <div class="ghl-col"><div class="ghl-bar" style="height: 110px;"></div><span class="ghl-lbl">Fri</span></div>
+      <div class="ghl-col"><div class="ghl-bar" style="height: 45px;"></div><span class="ghl-lbl">Sat</span></div>
+      <div class="ghl-col"><div class="ghl-bar" style="height: 70px;"></div><span class="ghl-lbl">Sun</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

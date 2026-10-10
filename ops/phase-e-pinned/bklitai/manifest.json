@@ -1,0 +1,249 @@
+{
+  "repositoryUrl": "https://github.com/bklit/bklit-ui",
+  "ownerLabel": "bklitai",
+  "profileUrl": "https://21st.dev/@bklitai",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "16be6cbd42d38503150a67e508a94aacf5a216ec91074cac82513b0cb0bab259",
+  "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+  "copyPromptsSha256": "ed36963342b07ccaf31847138b41bfd418978ee38af1fcb5c0f0e5039df20258",
+  "items": [
+    {
+      "slug": "area-chart",
+      "registryName": "area-chart",
+      "title": "Area Chart",
+      "description": "Responsive area chart with gradient shading, curved paths, and interactive data points.",
+      "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+      "sourcePath": "packages/ui/src/charts/area-chart.tsx",
+      "files": [
+        {
+          "path": "packages/ui/src/charts/area-chart.tsx",
+          "type": "registry:component",
+          "bytes": 7901,
+          "sha256": "41e71f6389b6cd1bc68ce0b59c1d5ab4c152215a1b65d06fe51ef5899c12fd0a"
+        },
+        {
+          "path": "packages/ui/src/charts/area-chart-loading.tsx",
+          "type": "registry:component",
+          "bytes": 3626,
+          "sha256": "f5338b2034e5972d7504817b9cfd10dc2ecbbdeb272ae057a186d4d258de808a"
+        },
+        {
+          "path": "packages/ui/src/charts/grid.tsx",
+          "type": "registry:component",
+          "bytes": 11312,
+          "sha256": "f2ad9cd94ba3b2df6cd4b15d6a7ea7bff4b2e577a5a18e820e3eb1684956717c"
+        },
+        {
+          "path": "packages/ui/src/charts/x-axis.tsx",
+          "type": "registry:component",
+          "bytes": 16354,
+          "sha256": "1ffbac7e1c381305c07c0022e148a9fccee98a67a9c46d569671e0e574f06d5f"
+        },
+        {
+          "path": "packages/ui/src/charts/y-axis.tsx",
+          "type": "registry:component",
+          "bytes": 4921,
+          "sha256": "036735b344f439f932d466460ed5b649070b0723cf6de8e92b9d4f98217e8837"
+        },
+        {
+          "path": "packages/ui/src/charts/tooltip/chart-tooltip.tsx",
+          "type": "registry:component",
+          "bytes": 13197,
+          "sha256": "85f47eb4fd599979d9fe917b606c2658632d65eb210d0a1882d2f1f169ff576e"
+        }
+      ],
+      "dependencies": {
+        "@visx/shape": "4.0.0",
+        "@visx/scale": "4.0.0",
+        "@visx/gradient": "4.0.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ],
+      "demoSha256": "bfe8f2a430c443f497a966e8669a183dc5920ec35a0c8947252f4dc02b93e17a",
+      "ghlSha256": "f266e152c6d338c40203872532ed8c03e273ee9963369b2aec34e79a950f1180",
+      "previewSha256": "62d13c80e21378bd569c5486b83016832100f27e2ed96ac49a05ff9ba6b1fc9d"
+    },
+    {
+      "slug": "bar-chart",
+      "registryName": "bar-chart",
+      "title": "Bar Chart",
+      "description": "Categorical vertical and horizontal bar chart with rounded caps and metric labels.",
+      "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+      "sourcePath": "packages/ui/src/charts/bar-chart.tsx",
+      "files": [
+        {
+          "path": "packages/ui/src/charts/bar-chart.tsx",
+          "type": "registry:component",
+          "bytes": 22243,
+          "sha256": "252a46d22fcff1c1396f164abe6264b434f9392baa4294fdb4c2fb2b2af7d37f"
+        },
+        {
+          "path": "packages/ui/src/charts/bar-chart-loading.tsx",
+          "type": "registry:component",
+          "bytes": 940,
+          "sha256": "865783afebeb72fb930b9635144818b550af95fa6080470325b6b2dc66f299d8"
+        },
+        {
+          "path": "packages/ui/src/charts/grid.tsx",
+          "type": "registry:component",
+          "bytes": 11312,
+          "sha256": "f2ad9cd94ba3b2df6cd4b15d6a7ea7bff4b2e577a5a18e820e3eb1684956717c"
+        },
+        {
+          "path": "packages/ui/src/charts/x-axis.tsx",
+          "type": "registry:component",
+          "bytes": 16354,
+          "sha256": "1ffbac7e1c381305c07c0022e148a9fccee98a67a9c46d569671e0e574f06d5f"
+        },
+        {
+          "path": "packages/ui/src/charts/y-axis.tsx",
+          "type": "registry:component",
+          "bytes": 4921,
+          "sha256": "036735b344f439f932d466460ed5b649070b0723cf6de8e92b9d4f98217e8837"
+        }
+      ],
+      "dependencies": {
+        "@visx/shape": "4.0.0",
+        "@visx/scale": "4.0.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ],
+      "demoSha256": "60935ef6f83a7d46f7acf9ad9b594de8bfb493eec6e8559007375468203bd35a",
+      "ghlSha256": "a96ca9511e747ee4379697eecfdb324751059ada54af2d1ffe66e86b67a7a2a1",
+      "previewSha256": "409f664a684fb3c0f4b73e91869598276d7878e962001b0164fbba5c3fa073ab"
+    },
+    {
+      "slug": "candlestick-chart",
+      "registryName": "candlestick-chart",
+      "title": "Candlestick Chart",
+      "description": "Financial OHLC candlestick chart with high/low wicks and bullish/bearish color coding.",
+      "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+      "sourcePath": "packages/ui/src/charts/candlestick-chart.tsx",
+      "files": [
+        {
+          "path": "packages/ui/src/charts/candlestick-chart.tsx",
+          "type": "registry:component",
+          "bytes": 11768,
+          "sha256": "9f1404ea5ea30a2ebc4687f78f8668ecfca860ff155c5b041a6619918365be19"
+        },
+        {
+          "path": "packages/ui/src/charts/grid.tsx",
+          "type": "registry:component",
+          "bytes": 11312,
+          "sha256": "f2ad9cd94ba3b2df6cd4b15d6a7ea7bff4b2e577a5a18e820e3eb1684956717c"
+        },
+        {
+          "path": "packages/ui/src/charts/x-axis.tsx",
+          "type": "registry:component",
+          "bytes": 16354,
+          "sha256": "1ffbac7e1c381305c07c0022e148a9fccee98a67a9c46d569671e0e574f06d5f"
+        },
+        {
+          "path": "packages/ui/src/charts/y-axis.tsx",
+          "type": "registry:component",
+          "bytes": 4921,
+          "sha256": "036735b344f439f932d466460ed5b649070b0723cf6de8e92b9d4f98217e8837"
+        }
+      ],
+      "dependencies": {
+        "@visx/shape": "4.0.0",
+        "@visx/scale": "4.0.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ],
+      "demoSha256": "8c15e858744b4e472941abd1827bdd1323c443e962fd6091e793cf32a1a360cd",
+      "ghlSha256": "4f6501f2d0da81276383ed516d5c0267bca0e77d88d531f779aa5057a23b0819",
+      "previewSha256": "eb022ef0af37ab983243721dc5160503190fe933a492023ef46369fce5e47a5f"
+    },
+    {
+      "slug": "funnel-chart",
+      "registryName": "funnel-chart",
+      "title": "Funnel Chart",
+      "description": "Conversion funnel stages visualization highlighting step volume and drop-off rates.",
+      "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+      "sourcePath": "packages/ui/src/charts/funnel-chart.tsx",
+      "files": [
+        {
+          "path": "packages/ui/src/charts/funnel-chart.tsx",
+          "type": "registry:component",
+          "bytes": 32191,
+          "sha256": "2f1f5688542b3c525c9e8dce1435bdbe4e71c82e0a6cdb371934d8bb1bd60d27"
+        },
+        {
+          "path": "packages/ui/src/charts/legend/legend.tsx",
+          "type": "registry:component",
+          "bytes": 2597,
+          "sha256": "5ed7c89bb9fa5169c44633dc3f34b88adec45b777d8ccc37bd9a91f75ae4029b"
+        }
+      ],
+      "dependencies": {
+        "@visx/scale": "4.0.0"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ],
+      "demoSha256": "9e996f936fe5b9792870ec02b44f22aca73ca4f7db941a0dd909dcea63d16836",
+      "ghlSha256": "e90557750daf63a35ab57bf0cbac4b2103fd4c09d14f80dd998dc7bb2291282c",
+      "previewSha256": "deba20f188a70e4dd927edc9a2c34ddb47504837361972ba06931490dabd7c1d"
+    },
+    {
+      "slug": "sankey-chart",
+      "registryName": "sankey-chart",
+      "title": "Sankey Chart",
+      "description": "Interactive flow diagram mapping source-to-target transitions with weighted bezier links.",
+      "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+      "sourcePath": "packages/ui/src/charts/sankey/sankey-chart.tsx",
+      "files": [
+        {
+          "path": "packages/ui/src/charts/sankey/sankey-chart.tsx",
+          "type": "registry:component",
+          "bytes": 7221,
+          "sha256": "36d668a32b372d90666d8dce214f27f60050f45d1c4166db2570308d89ec60d2"
+        },
+        {
+          "path": "packages/ui/src/charts/sankey/sankey-context.tsx",
+          "type": "registry:component",
+          "bytes": 2720,
+          "sha256": "b627559020594d453a29eac0cd92baef128698013e192195f591519322238493"
+        },
+        {
+          "path": "packages/ui/src/charts/sankey/sankey-link.tsx",
+          "type": "registry:component",
+          "bytes": 9792,
+          "sha256": "3490040783f0ac9d4ba2f538bc62491d8b8c03d9d61b0d79a2ce14a35be7dce5"
+        },
+        {
+          "path": "packages/ui/src/charts/sankey/sankey-node.tsx",
+          "type": "registry:component",
+          "bytes": 11594,
+          "sha256": "19a23055364682eb8051c6bb9e261f0b8e540294d3efb679fc3c4f33a5691952"
+        },
+        {
+          "path": "packages/ui/src/charts/sankey/sankey-tooltip.tsx",
+          "type": "registry:component",
+          "bytes": 4322,
+          "sha256": "a5f127dba026745be0475485d591e7c8c145953b875bdd74ebbae645a10f1089"
+        },
+        {
+          "path": "packages/ui/src/charts/sankey/index.ts",
+          "type": "registry:component",
+          "bytes": 536,
+          "sha256": "5a75d9c471b00a2200a991289a8bcadbcb53c7ab03c70fa87d1d4977cd8047f6"
+        }
+      ],
+      "dependencies": {
+        "@visx/sankey": "4.0.0",
+        "d3-sankey": "0.12.3"
+      },
+      "aliasImports": [
+        "@/lib/utils"
+      ],
+      "demoSha256": "5ec1d2e085be76d2757250255e74b15ce14a3748972d77312c20bb187844aa01",
+      "ghlSha256": "e57d8a24015a8b24a67f657703ae13e41a89e3e78820e26a7fa31a9f373a863d",
+      "previewSha256": "5d6250dc6a59004e44b1163c127546c6049ca21f54898425ac5259002ae1fce4"
+    }
+  ]
+}

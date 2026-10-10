@@ -1,0 +1,34 @@
+{
+  "reviewedAt": "2026-10-11",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for brijr Batch 04 components.",
+  "source": {
+    "repositoryUrl": "https://github.com/brijr/components",
+    "revision": "cfa5dd1c8b8340d5222a15093dbe95e5e8fa9c98",
+    "licenseSpdx": null,
+    "licensePath": "LICENSE (provenance note recorded)",
+    "eligibilityProvenance": "21st.dev auto-index=true roster signal; upstream repository contains no explicit root LICENSE file"
+  },
+  "dependencies": [
+    {
+      "name": "@radix-ui/react-accordion",
+      "version": "^1.1.2",
+      "licenseSpdx": "MIT",
+      "role": "Accordion accessible primitive."
+    },
+    {
+      "name": "react-wrap-balancer",
+      "version": "^1.1.0",
+      "licenseSpdx": "MIT",
+      "role": "Balanced text wrapping utility."
+    },
+    {
+      "name": "lucide-react",
+      "version": "^0.368.0",
+      "licenseSpdx": "ISC",
+      "role": "Icons."
+    }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}

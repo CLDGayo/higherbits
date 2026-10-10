@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>bklitai - area-chart</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div class="ghl-component-wrapper" role="region" aria-label="Area chart">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b;
+    }
+    .ghl-card { width: min(100%, 520px); background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .ghl-title { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+    .ghl-sub { font-size: 12px; color: #71717a; margin: 0 0 16px; }
+  </style>
+  <div class="ghl-card">
+    <h4 class="ghl-title">Monthly Revenue</h4>
+    <p class="ghl-sub">Continuous area trend with gradient shading</p>
+    <svg viewBox="0 0 500 200" style="width: 100%; height: auto;">
+      <defs>
+        <linearGradient id="ghlAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+      <path d="M 20 180 Q 100 130 180 110 T 340 70 T 480 30 L 480 190 L 20 190 Z" fill="url(#ghlAreaGrad)" />
+      <path d="M 20 180 Q 100 130 180 110 T 340 70 T 480 30" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" />
+    </svg>
+  </div>
+</div>
+
+</body>
+</html>

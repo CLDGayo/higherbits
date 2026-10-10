@@ -1,0 +1,64 @@
+<div class="ghl-component-wrapper" role="region" aria-label="Unit field component">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%;
+      min-height: 480px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      background: #fafafa;
+      font: 14px/1.5 system-ui, -apple-system, sans-serif;
+      color: #09090b;
+    }
+    .ghl-card {
+      width: min(100%, 320px);
+      background: #fff;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .ghl-label { font-size: 12px; font-weight: 500; color: #71717a; margin-bottom: 8px; display: block; }
+    .ghl-input-group {
+      display: flex;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+      background: #f4f4f5;
+      overflow: hidden;
+    }
+    .ghl-scrub {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #a1a1aa;
+      cursor: ew-resize;
+      user-select: none;
+    }
+    .ghl-val {
+      flex: 1;
+      padding: 8px 0;
+      font-size: 14px;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+    .ghl-unit {
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #71717a;
+      border-left: 1px solid #e4e4e7;
+      background: transparent;
+    }
+  </style>
+  <div class="ghl-card">
+    <label class="ghl-label">Element Width</label>
+    <div class="ghl-input-group">
+      <div class="ghl-scrub">W</div>
+      <input class="ghl-val" type="text" value="320" readonly>
+      <div class="ghl-unit">px</div>
+    </div>
+  </div>
+</div>

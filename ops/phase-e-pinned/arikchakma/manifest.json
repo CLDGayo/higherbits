@@ -1,0 +1,224 @@
+{
+  "repositoryUrl": "https://github.com/arikchakma/ui",
+  "ownerLabel": "arikchakma",
+  "profileUrl": "https://21st.dev/@arikchakma",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "0487df6b2311dec28da7388cbac26bf50d35c06a4c98a2d133cd99945f0fc7cc",
+  "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+  "copyPromptsSha256": "5d46d17bf7faeca7c04b518d75af20a47e7bfa88248bf19f14293fa0063a998a",
+  "items": [
+    {
+      "slug": "cromia-channels",
+      "registryName": "cromia-channels",
+      "title": "Cromia Channels",
+      "description": "Individual editable hue, saturation, brightness, and alpha sliders built with Cromia headless color picker primitives.",
+      "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+      "sourcePath": "packages/cromia/src/components/color-picker-channel-slider.tsx",
+      "files": [
+        {
+          "path": "packages/cromia/src/components/color-picker-channel-slider.tsx",
+          "type": "registry:component",
+          "bytes": 4054,
+          "sha256": "792b68dad82e761c491aacf0c5e7586efbab869b97a6f6b064457ad68635a57b"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-channel-slider-context.ts",
+          "type": "registry:component",
+          "bytes": 942,
+          "sha256": "1c5ac648bbb9fd1a7057d5f492d61a13df4113162da758a05eba946888bc8c4d"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-channel-slider-thumb.tsx",
+          "type": "registry:component",
+          "bytes": 2973,
+          "sha256": "6a27b11773072ddd2b606fb0695ed9f80256d3cb0f28164a56febd245c200864"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-channel-slider-track.tsx",
+          "type": "registry:component",
+          "bytes": 1180,
+          "sha256": "de794acd949b3e76602511ba55b506bb905d851245f8cf790add0284b061cb4b"
+        },
+        {
+          "path": "packages/cromia/src/utils/channel-slider.ts",
+          "type": "registry:component",
+          "bytes": 2794,
+          "sha256": "0a937e62704c1336902ec3c9341ae4be3e816abdd734281437c38fd6f38f8365"
+        },
+        {
+          "path": "packages/cromia/src/utils/channels.ts",
+          "type": "registry:component",
+          "bytes": 951,
+          "sha256": "271ad70984d7f86de1e0a0c3f5392e05bf35700d532f242ff15eb7318f9eda02"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": [],
+      "demoSha256": "1696a64611c173e3071a5a962760babd0eabfd67ceb46c1ff090b0e293404acd",
+      "ghlSha256": "5e2520b7c0847ab3fdbfbea11263ba570b2ceb07fd0f5847b8ef0fa3d3830913",
+      "previewSha256": "6dfe32daa50a2d4bbf0ebef514df48447aed80d2dacddbaeebbb523a73d10067"
+    },
+    {
+      "slug": "cromia-color-picker",
+      "registryName": "cromia-color-picker",
+      "title": "Cromia Color Picker",
+      "description": "Headless Cromia color picker featuring a 2D saturation/brightness area, hue channel slider, swatch selection, and numeric color inputs.",
+      "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+      "sourcePath": "packages/cromia/src/components/color-picker.tsx",
+      "files": [
+        {
+          "path": "packages/cromia/src/components/color-picker.tsx",
+          "type": "registry:component",
+          "bytes": 824,
+          "sha256": "d3779726f91630aa3c43fefb5751d8f1b90824a629b3ae46b92dd3f3e330c313"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-root.tsx",
+          "type": "registry:component",
+          "bytes": 3243,
+          "sha256": "495e50340f58d4cd536abea100bff8ddfed177e281be52806f861cf450078b00"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-root-context.ts",
+          "type": "registry:component",
+          "bytes": 875,
+          "sha256": "24bb7c29929477348b5a9ccd6551d2bbda9809dcd2f71ec14e759c75828c67a0"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-area.tsx",
+          "type": "registry:component",
+          "bytes": 2455,
+          "sha256": "5c9df06ad6c6fb6f1c9a810652c6f0a2b0675e4ad003cf65f5b35c414839c6a4"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-area-background.tsx",
+          "type": "registry:component",
+          "bytes": 1133,
+          "sha256": "5e9ba17a6ad71eb520acbe34a902011f7e345861eb0c78db273d5fc2611158df"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-area-thumb.tsx",
+          "type": "registry:component",
+          "bytes": 2058,
+          "sha256": "61e40291bf45c57e189a9e33afb4b59167f9587e2d598fc67c276effde5f009d"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-input.tsx",
+          "type": "registry:component",
+          "bytes": 6764,
+          "sha256": "ed029622507c7a6ecbffbeab1f85e8cd9727ce3bbdc2149667afa9742e220250"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": [],
+      "demoSha256": "b955297ffa9d408dec8b748d26e9d988dc1c895d2aa2629d3c0d83876d381200",
+      "ghlSha256": "76b3b580b49736c6797cd6e7ce62bcdb5cbeb13c266efae294e28f5502326ce9",
+      "previewSha256": "67a42700d9a76794370ed1e1b5d075941d6cdb89ec2dad93eb2c911614d8837d"
+    },
+    {
+      "slug": "cromia-compact",
+      "registryName": "cromia-compact",
+      "title": "Cromia Compact",
+      "description": "Compact trigger and dropdown popover preview for Cromia color picker.",
+      "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+      "sourcePath": "packages/cromia/src/components/color-picker.tsx",
+      "files": [
+        {
+          "path": "packages/cromia/src/components/color-picker.tsx",
+          "type": "registry:component",
+          "bytes": 824,
+          "sha256": "d3779726f91630aa3c43fefb5751d8f1b90824a629b3ae46b92dd3f3e330c313"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-root.tsx",
+          "type": "registry:component",
+          "bytes": 3243,
+          "sha256": "495e50340f58d4cd536abea100bff8ddfed177e281be52806f861cf450078b00"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-swatch.tsx",
+          "type": "registry:component",
+          "bytes": 1548,
+          "sha256": "c7f007d1e598094d32543edf5e0f802d354f223891c2972f190ea5770cf5e931"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": [],
+      "demoSha256": "54edd07b3a996bfd0af3a49a6dafa21d58d8accaeb956f9d4809462a5d4b5be2",
+      "ghlSha256": "1d2d03581a477ca8dda0279adae7ca194c5c08828989b86c49fdd262a3980457",
+      "previewSha256": "d845a42c18b37398806f9e1e68865682a5d54233cecc7cf47e960ad7e58e6b4d"
+    },
+    {
+      "slug": "cromia-swatches",
+      "registryName": "cromia-swatches",
+      "title": "Cromia Swatches",
+      "description": "Palette swatch group with selectable color chips and active state indicators.",
+      "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+      "sourcePath": "packages/cromia/src/components/color-picker-swatch-group.tsx",
+      "files": [
+        {
+          "path": "packages/cromia/src/components/color-picker-swatch-group.tsx",
+          "type": "registry:component",
+          "bytes": 720,
+          "sha256": "c7c53127e81e7b126368146c4205ef44e3cbc23603d920408f62beb169d4325f"
+        },
+        {
+          "path": "packages/cromia/src/components/color-picker-swatch.tsx",
+          "type": "registry:component",
+          "bytes": 1548,
+          "sha256": "c7f007d1e598094d32543edf5e0f802d354f223891c2972f190ea5770cf5e931"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": [],
+      "demoSha256": "b56e3fb7eefc3073113c94fb0c83236c62e9195d77bfeb3025695fe4917d9889",
+      "ghlSha256": "6dfe1ca9a7e195dadaefa743105803d83c0606be608c4a8a95ffb00f563a216c",
+      "previewSha256": "0f419fc65a8176388cb91213c99cd51156b69b3ede4cb75fe9d328dfd3df4b5b"
+    },
+    {
+      "slug": "unit-field",
+      "registryName": "unit-field",
+      "title": "Unit Field",
+      "description": "Drag-to-scrub and direct-input numeric field with unit parsing and formatting.",
+      "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+      "sourcePath": "packages/unit-field/src/components/unit-field.tsx",
+      "files": [
+        {
+          "path": "packages/unit-field/src/components/unit-field.tsx",
+          "type": "registry:component",
+          "bytes": 193,
+          "sha256": "e993c53984417bd8a6be68eeb6e22a92624f4fdffe6bd7f638bda2aa5bde65dc"
+        },
+        {
+          "path": "packages/unit-field/src/components/unit-field-root.tsx",
+          "type": "registry:component",
+          "bytes": 4182,
+          "sha256": "7d2b228661670387f88c5e2d7b19162c7e579f8533a5683f923e0a264221484c"
+        },
+        {
+          "path": "packages/unit-field/src/components/unit-field-context.ts",
+          "type": "registry:component",
+          "bytes": 1310,
+          "sha256": "5756494b28cf3e36f5d954532f655c8ae5589e87fb3a73da5be1792698553667"
+        },
+        {
+          "path": "packages/unit-field/src/components/unit-field-drag-area.tsx",
+          "type": "registry:component",
+          "bytes": 4720,
+          "sha256": "e51095b0c6d825d49e8b76b1ca8d6d53c964be396677f984aca661882f83d1e0"
+        },
+        {
+          "path": "packages/unit-field/src/components/unit-field-input.tsx",
+          "type": "registry:component",
+          "bytes": 4494,
+          "sha256": "e032dd011496a2b32cad7713c26a5244be9a42da94d9c16bb412971cb994253f"
+        }
+      ],
+      "dependencies": {},
+      "aliasImports": [],
+      "demoSha256": "b05a060fd4f3cee74655ed781032c801e342483a98fe996ec6396af1e55775b6",
+      "ghlSha256": "74ed17febc31bf946eb4b9d2f3de43f87b8167f6ed7cb57c7d8c5c81c2afe312",
+      "previewSha256": "cf8d9f082e80a389bfd8ec5e986a21cb1658b26f1f31fda72aa1bade1456121a"
+    }
+  ]
+}

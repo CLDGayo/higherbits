@@ -1,0 +1,21 @@
+{
+  "reviewedAt": "2026-10-11",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for arikchakma Batch 04 components.",
+  "source": {
+    "repositoryUrl": "https://github.com/arikchakma/ui",
+    "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
+    "licenseSpdx": "MIT",
+    "licensePath": "LICENSE"
+  },
+  "dependencies": [
+    {
+      "name": "react",
+      "version": "^18.0.0 || ^19.0.0",
+      "licenseSpdx": "MIT",
+      "role": "Peer runtime dependency for UI primitives."
+    }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}

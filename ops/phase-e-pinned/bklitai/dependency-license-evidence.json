@@ -1,0 +1,45 @@
+{
+  "reviewedAt": "2026-10-11",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for bklitai Batch 04 components.",
+  "source": {
+    "repositoryUrl": "https://github.com/bklit/bklit-ui",
+    "revision": "f7b3bd2999a5c993863f9cc5523c9cf60b9f3bc2",
+    "licenseSpdx": "MIT",
+    "licensePath": "LICENSE"
+  },
+  "dependencies": [
+    {
+      "name": "@visx/shape",
+      "version": "4.0.0",
+      "licenseSpdx": "MIT",
+      "role": "SVG visualization primitives."
+    },
+    {
+      "name": "@visx/scale",
+      "version": "4.0.0",
+      "licenseSpdx": "MIT",
+      "role": "D3-compatible linear, band, and time scales."
+    },
+    {
+      "name": "@visx/gradient",
+      "version": "4.0.0",
+      "licenseSpdx": "MIT",
+      "role": "Linear and radial gradient defs."
+    },
+    {
+      "name": "@visx/sankey",
+      "version": "4.0.0",
+      "licenseSpdx": "MIT",
+      "role": "Sankey graph layout computation."
+    },
+    {
+      "name": "clsx",
+      "version": "^2.1.1",
+      "licenseSpdx": "MIT",
+      "role": "Utility for conditionally constructing class strings."
+    }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}
