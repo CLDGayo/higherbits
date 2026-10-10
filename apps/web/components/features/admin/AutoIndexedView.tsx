@@ -327,7 +327,7 @@ export default function AutoIndexedView() {
           <DialogHeader><DialogTitle>Edit demo information</DialogTitle><DialogDescription>Update the demo label and URL slug for {demo?.componentName}.</DialogDescription></DialogHeader>
           <div className="space-y-3">
             <div><label htmlFor="auto-index-demo-name" className="text-sm font-medium">Demo name</label><Input id="auto-index-demo-name" value={demoName} onChange={(event) => setDemoName(event.target.value)} maxLength={160} /></div>
-            <div><label htmlFor="auto-index-demo-slug" className="text-sm font-medium">Demo slug</label><Input id="auto-index-demo-slug" value={demoSlug} onChange={(event) => setDemoSlug(event.target.value)} maxLength={80} pattern="[a-z0-9][a-z0-9-]*" /></div>
+            <div><label htmlFor="auto-index-demo-slug" className="text-sm font-medium">Demo slug</label><Input id="auto-index-demo-slug" value={demoSlug} onChange={(event) => setDemoSlug(event.target.value)} maxLength={80} pattern="[a-z0-9]([a-z0-9]|-)*" /></div>
           </div>
           <DialogFooter><Button variant="outline" onClick={() => setDemo(null)} disabled={savingDemo}>Cancel</Button><Button onClick={saveDemo} disabled={savingDemo || !demoName.trim() || !/^[a-z0-9][a-z0-9-]{0,79}$/.test(demoSlug)}>{savingDemo ? "Saving…" : "Save changes"}</Button></DialogFooter>
         </DialogContent>
