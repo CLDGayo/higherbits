@@ -4,9 +4,9 @@ Use this workflow for every new 21st.dev auto-indexed creator or component. The 
 
 ## 1. Select and pin the source
 
-- Read the current `auto-index=true` rows and component slugs from the connected 21st Creators sheet. Treat the flag as the operator-approved eligibility signal, then verify the actual source for every component.
+- Read the current `auto-index=true` rows and component slugs from the connected 21st Creators sheet. Treat `true` as the user's approved selection and evidence that 21st.dev's MIT-or-equivalent eligibility gate passed; retain the source row/link as provenance instead of re-litigating that gate for every item.
 - Map each component to its exact upstream repository, immutable commit, and source path. Do not guess a repository, path, or author mapping. Check whether each component is already live so reruns remain idempotent.
-- Capture the exact license text and its path at that revision. Verify the license covers the component; inspect direct/transitive dependency licenses separately. If the sheet and pinned source conflict, or the license scope is unclear, hold that item and record the evidence needed to resolve it.
+- Record the pinned source's license text/path when available, and inspect direct/transitive dependencies and bundled third-party assets separately. Hold only on concrete contrary evidence (such as a restrictive source license or unverified third-party asset), and record the reason; a missing license file alone does not override the 21st.dev curation signal.
 - Save the exact source closure (including local helpers) under `ops/phase-e-pinned/<creator>/source/`, preserving relative paths. Record byte lengths and SHA-256 hashes in the manifest.
 
 ## 2. Prepare the complete artifact packet
