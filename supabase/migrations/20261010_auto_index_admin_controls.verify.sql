@@ -21,7 +21,7 @@ BEGIN
      NOT (SELECT prosecdef FROM pg_proc WHERE oid='public.admin_update_auto_index_state(integer,text,text,boolean,boolean)'::regprocedure) THEN
     RAISE EXCEPTION 'auto-index admin RPCs must be security definer';
   END IF;
-  IF position('COALESCE(D.BUNDLE_HTML_URL, C.BUNDLE_HTML_URL)' IN upper(pg_get_functiondef('public.list_auto_index_admin_items(integer,integer,text)'::regprocedure)))=0 THEN
+  IF pg_get_functiondef('public.list_auto_index_admin_items(integer,integer,text)'::regprocedure) !~* 'coalesce\([[:space:]]*d\.bundle_html_url[[:space:]]*,[[:space:]]*c\.bundle_html_url[[:space:]]*\)' THEN
     RAISE EXCEPTION 'auto-index preview must fall back to the component bundle';
   END IF;
 END $$;
