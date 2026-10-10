@@ -28,6 +28,8 @@ in both places automatically.
 
 See `process/context/all-context.md` for project-specific coding preferences and conventions.
 
+For every future 21st.dev auto-index ingestion, follow [`ops/phase-e-pinned/INGESTION_SOP.md`](ops/phase-e-pinned/INGESTION_SOP.md). It records the VGPU-style source, artifact, readiness, reviewer, publication, and ledger-reconciliation gates; do not bypass authenticated reviewer provenance.
+
 ## RIPER-5 Spec-Driven Development System
 
 This project uses RIPER-5 methodology for systematic, spec-driven development. RIPER-5
