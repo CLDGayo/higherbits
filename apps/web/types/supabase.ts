@@ -9,6 +9,7 @@ export type Json =
 // Phase E migration tables. Keep these explicit until the next full local type regeneration.
 type AutoIndexTable<Row> = { Row: Row; Insert: Partial<Row>; Update: Partial<Row>; Relationships: [] }
 type AutoIndexTables = {
+  auto_index_admin_state: AutoIndexTable<{ component_id: number; status: string | null; archived_at: string | null; updated_by: string; updated_at: string }>
   auto_index_publications: AutoIndexTable<{ source_id: number; item_key: string; component_id: number; approved_decision_id: number; delisted_decision_id: number | null; delisted_at: string | null; superseded_at: string | null; published_at: string }>
   auto_index_sources: AutoIndexTable<{ id: number; kind: string; canonical_url: string; owner_label: string; vendor_user_id: string; opted_out: boolean; created_at: string }>
   auto_index_decisions: AutoIndexTable<{ id: number; candidate_id: number; outcome: string; reason_code: string; evidence: Json; detector: string | null; decided_at: string }>
@@ -2784,6 +2785,20 @@ export type Database = {
       }
     }
     Functions: {
+      admin_update_auto_index_state: {
+        Args: {
+          p_component_id: number
+          p_admin_user_id: string
+          p_status?: string | null
+          p_is_public?: boolean | null
+          p_archive?: boolean
+        }
+        Returns: undefined
+      }
+      list_auto_index_admin_items: {
+        Args: { p_limit: number; p_offset: number; p_status: string }
+        Returns: Json
+      }
       // ─────────────────────────────────────────────────────────────────────
       // HAND-ADDED — NOT FROM `supabase gen types`
       //
