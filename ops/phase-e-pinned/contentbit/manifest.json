@@ -1,0 +1,36 @@
+{
+  "repositoryUrl": "https://github.com/agonist/contentbit",
+  "ownerLabel": "contentbit",
+  "profileUrl": "https://21st.dev/@contentbit",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "1d180aca434ae354d374e8a141b775c446a0a2ee6bed329941af28395c8d6092",
+  "revision": "71b5face90bd9dd5a4ef401879dfc810ff832ad1",
+  "copyPromptsSha256": "1debf271a00bfc35135fea58517dec4195192be5286e7e87077f49373128a436",
+  "items": [
+    {
+      "slug": "pros-cons",
+      "registryName": "pros-cons",
+      "title": "Pros and Cons",
+      "description": "A paired advantages and disadvantages component with responsive pros and cons cards.",
+      "revision": "71b5face90bd9dd5a4ef401879dfc810ff832ad1",
+      "sourcePath": "registry/src/blocks/pros-cons.tsx",
+      "files": [
+        {
+          "path": "registry/src/blocks/pros-cons.tsx",
+          "type": "registry:component",
+          "bytes": 1830,
+          "sha256": "e290c64a41f6c6bddcc2f2ed2d915cfb727793dd2628a14581c0bcdeb8702b5c"
+        }
+      ],
+      "dependencies": {
+        "@contentbit/react": "0.6.1",
+        "@contentbit/blocks": "0.6.1",
+        "lucide-react": "0.475.0"
+      },
+      "aliasImports": [],
+      "demoSha256": "bde40de4c233fb6aa57ed60758206d3134ad6c49f0d3c7d0e38fbe20f15ff315",
+      "ghlSha256": "e5e78d887821163342e3171757049af404c22fe03f5a6b0c5a67d434042ffb44",
+      "previewSha256": "d9cfa98d444fd31d45d95ad934d2259ab7a63d9be73a3312516a0eb1b1b05909"
+    }
+  ]
+}

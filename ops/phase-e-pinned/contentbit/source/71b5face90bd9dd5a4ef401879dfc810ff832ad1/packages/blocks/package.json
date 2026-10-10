@@ -1,0 +1,47 @@
+{
+  "name": "@contentbit/blocks",
+  "version": "0.6.1",
+  "description": "The generic block pack for Content Blocks: callout, steps, comparison, tabs, faq, and more.",
+  "keywords": [
+    "components",
+    "content-blocks",
+    "llm",
+    "markdown"
+  ],
+  "homepage": "https://contentbit.dev",
+  "bugs": "https://github.com/agonist/contentbit/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agonist/contentbit.git",
+    "directory": "packages/blocks"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "node ../../scripts/require-pnpm-publish.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@contentbit/core": "workspace:*",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  }
+}

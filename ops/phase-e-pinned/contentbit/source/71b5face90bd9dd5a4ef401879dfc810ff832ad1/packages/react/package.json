@@ -1,0 +1,57 @@
+{
+  "name": "@contentbit/react",
+  "version": "0.6.1",
+  "description": "Headless React renderer for validated Contentbit documents.",
+  "keywords": [
+    "content-blocks",
+    "headless",
+    "markdown",
+    "react",
+    "renderer"
+  ],
+  "homepage": "https://contentbit.dev",
+  "bugs": "https://github.com/agonist/contentbit/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agonist/contentbit.git",
+    "directory": "packages/react"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "node ../../scripts/require-pnpm-publish.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@contentbit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@contentbit/blocks": "workspace:*",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "happy-dom": "^20.3.7",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17",
+    "zod": "^4.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

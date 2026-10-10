@@ -1,0 +1,117 @@
+'use client'
+
+import type {
+  BlockData,
+  BlockDefinition,
+  BlockName,
+  BlockProps,
+  BlockPropsOf,
+  ContentNode,
+  ProcessedDocumentNode,
+  ValidatedBlockNode,
+} from '@contentbit/core'
+import type { ComponentType, ReactNode } from 'react'
+
+import { isValidatedBlock } from '@contentbit/core'
+import { Fragment } from 'react'
+
+// Bundlers statically replace process.env.NODE_ENV; this keeps tsc happy
+// without pulling Node types into a browser-facing package.
+declare const process: { env: { NODE_ENV?: string } }
+
+// Warn once per block name in development when a valid block has no component.
+const warned = new Set<string>()
+function warnMissingComponent(name: string): void {
+  if (typeof process === 'undefined' || process.env.NODE_ENV === 'production' || warned.has(name))
+    return
+  warned.add(name)
+  console.warn(
+    `[contentbit] no component registered for block "${name}" — rendering the raw-body fallback. ` +
+      'Pass it via the `components` prop.',
+  )
+}
+
+export interface BlockRenderContext {
+  renderMarkdown(md: string): ReactNode
+  renderNodes(nodes: ContentNode[]): ReactNode
+}
+
+export interface BlockComponentProps<
+  TData = unknown,
+  TProps extends BlockProps = BlockProps,
+  TName extends string = string,
+> {
+  node: ValidatedBlockNode<TData, TProps, TName>
+  ctx: BlockRenderContext
+}
+
+export type BlockComponent = ComponentType<BlockComponentProps>
+
+export type BlockComponentFor<TDefinition extends BlockDefinition> = ComponentType<
+  BlockComponentProps<BlockData<TDefinition>, BlockPropsOf<TDefinition>, BlockName<TDefinition>>
+>
+
+export type BlockComponentsFor<TDefinitions extends ReadonlyArray<BlockDefinition>> = {
+  [TDefinition in TDefinitions[number] as BlockName<TDefinition>]?: BlockComponentFor<TDefinition>
+}
+
+/** Preserve a block definition's inferred name, props, and data in its React adapter. */
+export function defineBlockComponent<TDefinition extends BlockDefinition>(
+  _definition: TDefinition,
+  component: BlockComponentFor<TDefinition>,
+): BlockComponentFor<TDefinition> {
+  return component
+}
+
+/** Check component keys against a block pack and return a renderer-ready map. */
+export function defineBlockComponents<const TDefinitions extends ReadonlyArray<BlockDefinition>>(
+  _definitions: TDefinitions,
+  components: BlockComponentsFor<TDefinitions>,
+): Record<string, BlockComponent> {
+  return components as unknown as Record<string, BlockComponent>
+}
+
+export interface ContentBlocksProps {
+  /** A processed document; invalid blocks flow through `fallback`. */
+  document: ProcessedDocumentNode
+  /** Per-block components, keyed by block name. */
+  components?: Record<string, BlockComponent>
+  /** Host markdown renderer for prose segments. Default: paragraphs of plain text. */
+  renderMarkdown?: (md: string) => ReactNode
+  /** Rendered for blocks that failed validation. Default: escaped body paragraphs. */
+  fallback?: ComponentType<{ name: string; body: string }>
+}
+
+function DefaultMarkdown({ md }: { md: string }): ReactNode {
+  return md
+    .trim()
+    .split(/\n{2,}/)
+    .map((p, i) => <p key={i}>{p}</p>)
+}
+
+function DefaultFallback({ body }: { name: string; body: string }): ReactNode {
+  return <DefaultMarkdown md={body} />
+}
+
+export function ContentBlocks(props: ContentBlocksProps): ReactNode {
+  const components = props.components ?? {}
+  const renderMarkdown = props.renderMarkdown ?? ((md: string) => <DefaultMarkdown md={md} />)
+  const Fallback = props.fallback ?? DefaultFallback
+
+  const ctx: BlockRenderContext = {
+    renderMarkdown,
+    renderNodes(nodes) {
+      return nodes.map((node, i) => {
+        if (node.type === 'markdown')
+          return <Fragment key={i}>{renderMarkdown(node.value)}</Fragment>
+        const Component = components[node.name]
+        if (Component && isValidatedBlock(node)) {
+          return <Component key={i} node={node} ctx={ctx} />
+        }
+        if (!Component && isValidatedBlock(node)) warnMissingComponent(node.name)
+        return <Fallback key={i} name={node.name} body={node.body} />
+      })
+    },
+  }
+  return <>{ctx.renderNodes(props.document.children)}</>
+}

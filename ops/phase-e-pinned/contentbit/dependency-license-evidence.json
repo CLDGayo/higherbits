@@ -1,0 +1,21 @@
+{
+  "reviewedAt": "2026-10-10",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for Contentbit pros-cons.",
+  "source": {
+    "repositoryUrl": "https://github.com/agonist/contentbit",
+    "revision": "71b5face90bd9dd5a4ef401879dfc810ff832ad1",
+    "path": "registry/src/blocks/pros-cons.tsx",
+    "licenseSpdx": "MIT",
+    "licensePath": "LICENSE"
+  },
+  "dependencies": [
+    { "name": "@contentbit/react", "version": "0.6.1", "licenseSpdx": "MIT", "role": "Block rendering adapter; React 19 peer dependency." },
+    { "name": "@contentbit/blocks", "version": "0.6.1", "licenseSpdx": "MIT", "role": "Pros/Cons schema and splitProsCons helper." },
+    { "name": "@contentbit/core", "version": "0.6.1", "licenseSpdx": "MIT", "role": "Transitive registry block types and helpers." },
+    { "name": "lucide-react", "version": "0.475.0", "licenseSpdx": "ISC", "role": "Check and X source icons; not bundled in the standalone HTML export." },
+    { "name": "zod", "version": "4.4.3", "licenseSpdx": "MIT", "role": "Locked transitive dependency of @contentbit/blocks and @contentbit/core." }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}

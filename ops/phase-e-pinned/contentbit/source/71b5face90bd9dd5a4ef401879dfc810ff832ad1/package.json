@@ -1,0 +1,24 @@
+{
+  "name": "contentbit-monorepo",
+  "private": true,
+  "scripts": {
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "lint": "oxlint",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
+    "version:sync": "node scripts/sync-version.mjs",
+    "version:packages": "changeset version && pnpm version:sync",
+    "version:check": "node scripts/check-versions.mjs",
+    "pack:check": "node scripts/check-packed-manifests.mjs",
+    "changeset": "changeset",
+    "release": "pnpm version:check && pnpm build && pnpm pack:check && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "@contentbit/project": "workspace:*",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0"
+  },
+  "packageManager": "pnpm@11.5.0"
+}

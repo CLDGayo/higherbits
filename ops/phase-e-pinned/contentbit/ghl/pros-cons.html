@@ -1,0 +1,107 @@
+<div class="ghl-component-wrapper" role="region" aria-label="Pros and cons comparison">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%;
+      min-height: min(100vh, 720px);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      color: #18181b;
+      background: #fff;
+      font: 14px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after { box-sizing: border-box; }
+    .ghl-component-wrapper .ghl-pros-cons {
+      width: min(100%, 880px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+    }
+    .ghl-component-wrapper .ghl-card {
+      overflow: hidden;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .ghl-component-wrapper .ghl-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #e4e4e7;
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .ghl-component-wrapper .ghl-pros .ghl-heading { color: #047857; background: #ecfdf5; }
+    .ghl-component-wrapper .ghl-cons .ghl-heading { color: #be123c; background: #fff1f2; }
+    .ghl-component-wrapper .ghl-heading-mark { font-size: 15px; font-weight: 800; line-height: 1; }
+    .ghl-component-wrapper .ghl-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 16px;
+      list-style: none;
+    }
+    .ghl-component-wrapper .ghl-list li { display: flex; align-items: flex-start; gap: 10px; }
+    .ghl-component-wrapper .ghl-mark { flex: none; margin-top: 2px; font-weight: 700; }
+    .ghl-component-wrapper .ghl-pros .ghl-mark { color: #059669; }
+    .ghl-component-wrapper .ghl-cons .ghl-mark { color: #e11d48; }
+    .ghl-component-wrapper .ghl-copy { min-width: 0; }
+    .ghl-component-wrapper .ghl-copy p { margin: 0; }
+    @media (max-width: 560px) {
+      .ghl-component-wrapper { padding: 16px; }
+      .ghl-component-wrapper .ghl-pros-cons { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <section class="ghl-pros-cons">
+    <article class="ghl-card ghl-pros">
+      <header class="ghl-heading"><span class="ghl-heading-mark" aria-hidden="true">✓</span><span>Pros</span></header>
+      <ul class="ghl-list">
+        <li><span class="ghl-mark" aria-hidden="true">✓</span><div class="ghl-copy">Clear component boundaries</div></li>
+        <li><span class="ghl-mark" aria-hidden="true">✓</span><div class="ghl-copy">Responsive two-column layout</div></li>
+        <li><span class="ghl-mark" aria-hidden="true">✓</span><div class="ghl-copy">Accessible labels and icons</div></li>
+      </ul>
+    </article>
+    <article class="ghl-card ghl-cons">
+      <header class="ghl-heading"><span class="ghl-heading-mark" aria-hidden="true">×</span><span>Cons</span></header>
+      <ul class="ghl-list">
+        <li><span class="ghl-mark" aria-hidden="true">×</span><div class="ghl-copy">Requires a React runtime</div></li>
+        <li><span class="ghl-mark" aria-hidden="true">×</span><div class="ghl-copy">Typography follows the host theme</div></li>
+        <li><span class="ghl-mark" aria-hidden="true">×</span><div class="ghl-copy">Long lists increase card height</div></li>
+      </ul>
+    </article>
+  </section>
+</div>
+<!-- Based on registry/src/blocks/pros-cons.tsx from contentbit/contentbit at 71b5face90bd9dd5a4ef401879dfc810ff832ad1. MIT License; see the accompanying LICENSE file. -->
+
+<!--
+MIT License
+
+Copyright (c) 2026 contentbit
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

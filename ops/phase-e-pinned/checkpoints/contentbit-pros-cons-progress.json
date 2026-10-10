@@ -1,0 +1,60 @@
+{
+  "checkpoint_type": "component-ingestion-progress",
+  "batch": "05",
+  "author": {
+    "sheet_row": 184,
+    "handle": "contentbit",
+    "profile_url": "https://21st.dev/@contentbit"
+  },
+  "component": "pros-cons",
+  "source": {
+    "repository_url": "https://github.com/agonist/contentbit",
+    "revision": "71b5face90bd9dd5a4ef401879dfc810ff832ad1",
+    "source_path": "registry/src/blocks/pros-cons.tsx",
+    "source_sha256": "e290c64a41f6c6bddcc2f2ed2d915cfb727793dd2628a14581c0bcdeb8702b5c",
+    "license_spdx": "MIT",
+    "license_sha256": "1d180aca434ae354d374e8a141b775c446a0a2ee6bed329941af28395c8d6092"
+  },
+  "artifacts": {
+    "demo_sha256": "bde40de4c233fb6aa57ed60758206d3134ad6c49f0d3c7d0e38fbe20f15ff315",
+    "ghl_sha256": "e5e78d887821163342e3171757049af404c22fe03f5a6b0c5a67d434042ffb44",
+    "preview_png_sha256": "d9cfa98d444fd31d45d95ad934d2259ab7a63d9be73a3312516a0eb1b1b05909",
+    "copy_prompts_sha256": "1debf271a00bfc35135fea58517dec4195192be5286e7e87077f49373128a436",
+    "copy_prompt_count": 10,
+    "copy_prompt_platforms": [
+      "antigravity",
+      "bolt",
+      "claude",
+      "codex",
+      "extended",
+      "lovable",
+      "magic_patterns",
+      "replit",
+      "sitebrew",
+      "v0"
+    ]
+  },
+  "artifact_qa": {
+    "antigravity_findings_addressed": [
+      "Embedded the full MIT license text in the GHL export.",
+      "Changed all ten prompts to describe the plain-text behavior implemented by the shipped demo."
+    ],
+    "deterministic_hash_assertions": "passed",
+    "visual_render": "unchanged; only prompt text and HTML license comment changed"
+  },
+  "production_readback": {
+    "project_ref": "ewktoowpuemgbaaxxbdq",
+    "checked_at": "2026-10-10T15:20:03.588Z",
+    "candidates_table": "present",
+    "review_provenance_table": "absent",
+    "candidate_metadata_table": "absent",
+    "auto_index_stage_login_role": "absent",
+    "auto_index_reviewer_login_role": "absent"
+  },
+  "publication": {
+    "status": "not_staged",
+    "reason": "Production is missing the required reviewer-provenance schema and dedicated stage/reviewer login roles. No SQL write or review decision was made.",
+    "published_component_id": null,
+    "sheet_updated": false
+  }
+}
