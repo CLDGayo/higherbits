@@ -1,4 +1,5 @@
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
 import type { DemoWithComponent } from "@/types/global"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
@@ -218,7 +219,7 @@ export async function getCachedFeaturedExample(): Promise<FeaturedExample | null
       pro_preview_image_url, component_id, created_at,
       user:users!demos_user_id_fkey (${PUBLIC_USER_COLUMNS}),
       component:components!inner (
-        id, name, component_slug, user_id, is_public, likes_count, code,
+        id, name, component_slug, user_id, is_public, likes_count, code, registry,
         user:users!components_user_id_fkey (${PUBLIC_USER_COLUMNS})
       )
     `,
@@ -231,7 +232,15 @@ export async function getCachedFeaturedExample(): Promise<FeaturedExample | null
     return null
   }
 
-  const candidates = ((data ?? []) as unknown[]).map((demo) => ({
+  const rows = (data ?? []) as unknown[]
+  const indexedIds = [...new Set(rows
+    .map((demo: any) => demo.component?.registry === "auto-index" ? demo.component_id : null)
+    .filter((id): id is number => Number.isSafeInteger(id)))]
+  const admittedIds = await currentApprovedAutoIndexComponentIds(indexedIds)
+
+  const candidates = rows.filter((demo: any) =>
+    demo.component?.registry !== "auto-index" || admittedIds.has(demo.component_id),
+  ).map((demo) => ({
     ...(demo as DemoWithComponent),
     tags: [],
   })) as DemoWithComponent[]

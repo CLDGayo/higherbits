@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { CategoryCard } from "./category-card"
 import { CategoryCardSkeleton } from "@/components/ui/skeletons"
 import { categories } from "@/lib/navigation"
-import { useClerkSupabaseClient } from "@/lib/clerk"
+import { getPublicCategoryPreviews } from "@/app/actions/public-catalogue"
 
 interface CategoriesListProps {
   className?: string
@@ -19,8 +19,6 @@ export function CategoriesList({
   filter = "all",
   skeletonCount = 40,
 }: CategoriesListProps) {
-  const supabase = useClerkSupabaseClient()
-
   const allDemoIds = useMemo(() => {
     return categories
       .flatMap((category) => category.items.map((item) => item.demoId))
@@ -30,14 +28,7 @@ export function CategoriesList({
   const { data: categoriesData, isLoading } = useQuery({
     queryKey: ["categories-previews"],
     queryFn: async () => {
-      const { data: categoryPreviews, error } = await supabase.rpc(
-        "get_section_previews",
-        {
-          p_demo_ids: allDemoIds,
-        },
-      )
-
-      if (error) throw error
+      const categoryPreviews = await getPublicCategoryPreviews(allDemoIds)
 
       const categoriesWithPreviews = categories
         .flatMap((category) =>

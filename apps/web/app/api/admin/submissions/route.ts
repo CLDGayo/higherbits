@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "1000")
     const offset = parseInt(searchParams.get("offset") || "0")
 
-    const { data, error } = await supabaseAdmin.rpc("get_demos_submissions", {
+    const { data, error } = await supabaseAdmin.rpc("get_admin_demos_submissions", {
       p_sort_by: "date",
       p_offset: offset,
       p_limit: limit,

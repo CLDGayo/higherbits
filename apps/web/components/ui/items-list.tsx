@@ -17,6 +17,7 @@ import { useUser } from "@clerk/nextjs"
 import { ComponentCard } from "../features/list-card/card"
 import { tagPageSearchAtom } from "../features/tag-page/tag-page-header"
 import { ComponentCardSkeleton } from "./skeletons"
+import { getPublicCollectionDemos } from "@/app/actions/public-catalogue"
 
 type AdminLikedDemo =
   Database["public"]["Functions"]["get_admin_liked_demos_v1"]["Returns"][number]
@@ -461,7 +462,6 @@ export function ComponentsList({
         sortBy: props.sortBy,
       })
 
-      const supabase = useClerkSupabaseClient()
       const collectionQuery = useQuery({
         queryKey: [
           "collection-components",
@@ -478,31 +478,15 @@ export function ComponentsList({
               p_limit: 1000,
             },
           )
-          const { data: components, error } = await supabase.rpc(
-            "get_collection_components_v1",
-            {
-              p_collection_id: props.collectionId,
-              p_sort_by: props.sortBy,
-              p_offset: 0,
-              p_limit: 1000,
-            },
+          const { data: components, total_count } = await getPublicCollectionDemos(
+            props.collectionId,
+            props.sortBy,
           )
-
-          if (error) {
-            console.error("[ComponentsList] Error fetching components:", error)
-            throw error
-          }
-
-          console.log("[ComponentsList] Raw components data:", components)
-          const transformedData = (components || []).map(transformDemoResult)
-          console.log(
-            "[ComponentsList] Transformed components:",
-            transformedData,
-          )
+          const transformedData = components.map(transformDemoResult)
 
           return {
             data: transformedData,
-            total_count: components?.length ?? 0,
+            total_count,
           }
         },
         initialData: initialData

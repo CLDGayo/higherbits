@@ -1,8 +1,10 @@
 import { createHash } from "node:crypto"
 import { beforeEach, expect, it, vi } from "vitest"
 
-const fixture = vi.hoisted(() => ({ tables: new Map<string, any[]>(), failure: "" }))
-vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: { from(table: string) {
+const fixture = vi.hoisted(() => ({ tables: new Map<string, any[]>(), failure: "", currentApproval: true }))
+vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: {
+  rpc: async () => ({ data: fixture.failure === "approval" ? null : fixture.currentApproval, error: fixture.failure === "approval" ? {} : null }),
+  from(table: string) {
   const filters: Record<string, unknown> = {}
   const query = {
     select: () => query,
@@ -22,6 +24,7 @@ const original = "export const Pinned = 1;\n"
 const demoCode = "export const Demo = () => <div>approved</div>;\n"
 beforeEach(() => {
   fixture.failure = ""
+  fixture.currentApproval = true
   fixture.tables = new Map(Object.entries({
     auto_index_publications: [{ component_id: 42, source_id: 7, item_key: "pinned", approved_decision_id: 11, delisted_at: null, superseded_at: null }],
     auto_index_sources: [{ id: 7, opted_out: false }],
@@ -45,6 +48,14 @@ it("E21: releases exact approved bytes with distinct original LICENSE and NOTICE
   expect(snapshot.files[1]?.target).toMatch(/^higherbits\/licenses\/42-[a-f0-9]{64}\.LICENSE$/)
   expect(snapshot.files[2]?.target).toMatch(/^higherbits\/licenses\/42-[a-f0-9]{64}\.NOTICE$/)
   expect(snapshot.npmDependencies).toEqual(["react@19.2.0"])
+})
+
+it("E21: requires a current linked human review before reading public source bytes", async () => {
+  fixture.currentApproval = false
+  await expect(approvedAutoIndexSnapshot(42)).rejects.toMatchObject({ status: 404 })
+  fixture.currentApproval = true
+  fixture.failure = "approval"
+  await expect(approvedAutoIndexSnapshot(42)).rejects.toMatchObject({ status: 503 })
 })
 
 it("E21: accepts pinned npm semver ranges from approved registry manifests", async () => {

@@ -5,6 +5,7 @@ import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { validateRouteParams } from "@/lib/utils/validateRouteParams"
 import { unstable_cache } from "next/cache"
 import { redirect } from "next/navigation"
+import type { ReactElement } from "react"
 import { UserPageClient } from "./page.client"
 const getCachedUser = async (username: string) => {
   const { data: user } = await getUserData(supabaseWithAdminAccess, username)
@@ -14,24 +15,14 @@ const getCachedUser = async (username: string) => {
 async function getUserProfileStats(userId: string, manuallyAdded: boolean) {
   let isAutoIndexedProfile: boolean | null = manuallyAdded ? null : false
   try {
-    if (manuallyAdded) {
-      const { data, error } = await supabaseWithAdminAccess
-        .from("components")
-        .select("id")
-        .eq("user_id", userId)
-        .eq("registry", "auto-index")
-        .limit(1)
-      if (error) throw error
-      isAutoIndexedProfile = Boolean(data?.length)
-    }
-
+    let hasApprovedAutoIndexedComponent = false
     const pageSize = 1000
     const componentIds: number[] = []
     let lastComponentId: number | null = null
     for (;;) {
       let query = supabaseWithAdminAccess
         .from("components")
-        .select("id")
+        .select("id,registry")
         .eq("user_id", userId)
         .eq("is_public", true)
         .order("id", { ascending: true })
@@ -40,10 +31,23 @@ async function getUserProfileStats(userId: string, manuallyAdded: boolean) {
       const { data, error } = await query
       if (error) throw error
       const rows = data ?? []
-      componentIds.push(...rows.map(({ id }) => id))
+      componentIds.push(...rows.filter(({ registry }) => registry !== "auto-index").map(({ id }) => id))
+      const indexedIds = rows.filter(({ registry }) => registry === "auto-index").map(({ id }) => id)
+      if (indexedIds.length) {
+        const { data: admittedIds, error: admissionError } = await supabaseWithAdminAccess.rpc(
+          "auto_index_components_with_current_approval",
+          { p_component_ids: indexedIds },
+        )
+        // Hide unreviewed indexed rows without suppressing ordinary profile totals.
+        if (!admissionError && Array.isArray(admittedIds)) {
+          componentIds.push(...admittedIds)
+          hasApprovedAutoIndexedComponent ||= admittedIds.length > 0
+        }
+      }
       lastComponentId = rows.at(-1)?.id ?? lastComponentId
       if (rows.length < pageSize) break
     }
+    if (manuallyAdded) isAutoIndexedProfile = hasApprovedAutoIndexedComponent
     if (!componentIds.length) {
       return { views: 0, bookmarks: 0, isAutoIndexedProfile }
     }
@@ -158,7 +162,7 @@ export const generateMetadata = async (props: {
 export default async function UserProfile(props: {
   params: Promise<{ username: string }>
   searchParams: Promise<{ tab?: string }>
-}) {
+}): Promise<ReactElement> {
   const searchParams = await props.searchParams
   const params = await props.params
   if (!validateRouteParams(params)) {

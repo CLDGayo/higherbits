@@ -38,7 +38,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -52,10 +52,15 @@ AS $$
     to_jsonb(cu.*) AS component_user_data
   FROM public.demos d
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users du ON du.id = d.user_id
-  JOIN public.users cu ON cu.id = c.user_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
   WHERE (d.user_id = p_user_id OR c.user_id = p_user_id)
-    AND (COALESCE(p_include_private, false) OR c.is_public = true)
+    AND (c.is_public = true OR (
+      COALESCE(p_include_private, false)
+      AND p_user_id = public.requesting_user_id()
+      AND c.user_id = p_user_id
+    ))
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ORDER BY d.updated_at DESC;
 $$;
 
@@ -82,7 +87,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -103,11 +108,11 @@ AS $$
          ELSE NULL END AS bundle_url,
     NOT c.is_public AS is_private,
     s.status::text AS submission_status,
-    s.moderators_feedback
+    COALESCE(CASE WHEN c.user_id = public.requesting_user_id() THEN s.moderators_feedback END, '')
   FROM public.demos d
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users du ON du.id = d.user_id
-  JOIN public.users cu ON cu.id = c.user_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
   LEFT JOIN public.submissions s ON s.component_id = c.id
   LEFT JOIN LATERAL (
     SELECT count(*) AS views
@@ -115,7 +120,12 @@ AS $$
     WHERE ca.component_id = c.id
       AND ca.activity_type = 'component_view'
   ) v ON true
-  WHERE d.user_id = p_user_id OR c.user_id = p_user_id
+  WHERE (d.user_id = p_user_id OR c.user_id = p_user_id)
+    AND (
+      c.is_public = true
+      OR (c.user_id = p_user_id AND p_user_id = public.requesting_user_id())
+    )
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ORDER BY d.updated_at DESC;
 $$;
 
@@ -124,7 +134,7 @@ RETURNS jsonb
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT jsonb_build_object(
     'published_count', (
@@ -132,6 +142,7 @@ AS $$
       FROM public.components c
       WHERE c.user_id = p_user_id
         AND c.is_public = true
+        AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
     ),
     'demos_count', (
       SELECT count(*)
@@ -140,6 +151,7 @@ AS $$
       WHERE d.user_id = p_user_id
         AND c.user_id <> p_user_id
         AND c.is_public = true
+        AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
     ),
     'liked_count', (
       SELECT count(*)
@@ -148,6 +160,7 @@ AS $$
       JOIN public.components c ON c.id = d.component_id
       WHERE db.user_id = p_user_id
         AND c.is_public = true
+        AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
     )
   );
 $$;
@@ -156,6 +169,8 @@ CREATE OR REPLACE FUNCTION public.get_user_state(user_id_param text)
 RETURNS jsonb
 LANGUAGE plpgsql
 STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog, public
 AS $$
 DECLARE
   profile_json jsonb;
@@ -175,9 +190,11 @@ BEGIN
            COALESCE(sum(c.downloads_count), 0)::bigint AS total_downloads
     FROM public.components c
     WHERE c.user_id = u.id
+      AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ) stats ON true
   LEFT JOIN public.users_to_plans utp ON utp.user_id = u.id
-  WHERE u.id = user_id_param;
+  WHERE u.id = user_id_param
+    AND u.id = public.requesting_user_id();
 
   IF profile_json IS NULL THEN
     RETURN NULL;
@@ -221,7 +238,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -236,10 +253,15 @@ AS $$
   FROM public.demo_bookmarks db
   JOIN public.demos d      ON d.id = db.demo_id
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users du     ON du.id = d.user_id
-  JOIN public.users cu     ON cu.id = c.user_id
+  JOIN public.public_profiles du     ON du.id = d.user_id
+  JOIN public.public_profiles cu     ON cu.id = c.user_id
   WHERE db.user_id = p_user_id
-    AND (p_include_private OR c.is_public = true)
+    AND (c.is_public = true OR (
+      p_include_private
+      AND p_user_id = public.requesting_user_id()
+      AND c.user_id = p_user_id
+    ))
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ORDER BY db.bookmarked_at DESC NULLS LAST, d.id DESC;
 $$;
 
@@ -257,7 +279,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
 WITH analytics AS (
   SELECT
@@ -269,6 +291,15 @@ WITH analytics AS (
   FROM public.component_analytics ca
   JOIN public.components c ON c.id = ca.component_id
   WHERE c.user_id = p_user_id
+    AND (
+      p_user_id = public.requesting_user_id()
+      OR EXISTS (
+        SELECT 1 FROM public.users requester
+        WHERE requester.id = public.requesting_user_id()
+          AND requester.is_admin = true
+      )
+    )
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   GROUP BY 1
 ),
 mcp AS (
@@ -277,6 +308,14 @@ mcp AS (
     count(*) AS mcp_usages
   FROM public.mcp_component_usage mcu
   WHERE mcu.author_id = p_user_id
+    AND (
+      p_user_id = public.requesting_user_id()
+      OR EXISTS (
+        SELECT 1 FROM public.users requester
+        WHERE requester.id = public.requesting_user_id()
+          AND requester.is_admin = true
+      )
+    )
     AND mcu.created_at IS NOT NULL
   GROUP BY 1
 ),
@@ -335,7 +374,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -355,15 +394,19 @@ AS $$
          ELSE NULL END AS bundle_url
   FROM public.demos d
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users du ON du.id = d.user_id
-  JOIN public.users cu ON cu.id = c.user_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
   LEFT JOIN LATERAL (
     SELECT count(*) AS views
     FROM public.component_analytics ca
     WHERE ca.component_id = c.id
       AND ca.activity_type = 'component_view'
   ) v ON true
-  WHERE (COALESCE(p_include_private, false) OR c.is_public = true)
+  WHERE (
+      c.is_public = true
+      OR (COALESCE(p_include_private, false) AND c.user_id = public.requesting_user_id())
+    )
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
     AND (
       p_tag_slug IS NULL
       OR EXISTS (
@@ -410,7 +453,87 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
+AS $$
+  SELECT
+    d.id,
+    d.name,
+    d.preview_url,
+    d.video_url,
+    d.updated_at,
+    d.demo_slug,
+    to_jsonb(c.*)  AS component_data,
+    to_jsonb(du.*) AS user_data,
+    to_jsonb(cu.*) AS component_user_data,
+    count(*) OVER () AS total_count,
+    COALESCE(v.views, 0)::bigint AS view_count,
+    COALESCE(d.bookmarks_count, 0)::bigint AS bookmarks_count,
+    CASE WHEN d.bundle_html_url IS NOT NULL
+         THEN jsonb_build_object('html', d.bundle_html_url)
+         ELSE NULL END AS bundle_url,
+    s.status::text AS submission_status,
+    ''::text AS moderators_feedback
+  FROM public.demos d
+  JOIN public.components c ON c.id = d.component_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
+  JOIN public.submissions s ON s.component_id = c.id
+  LEFT JOIN LATERAL (
+    SELECT count(*) AS views
+    FROM public.component_analytics ca
+    WHERE ca.component_id = c.id
+      AND ca.activity_type = 'component_view'
+  ) v ON true
+  WHERE (
+      p_tag_slug IS NULL
+      OR EXISTS (
+        SELECT 1
+        FROM public.demo_tags dt
+        JOIN public.tags t ON t.id = dt.tag_id
+        WHERE dt.demo_id = d.id AND t.slug = p_tag_slug
+      )
+    )
+    AND c.is_public = true
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
+  ORDER BY
+    CASE WHEN p_sort_by = 'downloads' THEN c.downloads_count END DESC NULLS LAST,
+    CASE WHEN p_sort_by = 'likes'     THEN c.likes_count END DESC NULLS LAST,
+    d.created_at DESC,
+    d.id DESC
+  OFFSET COALESCE(p_offset, 0)
+  LIMIT COALESCE(p_limit, 40);
+$$;
+
+-- Clerk-admin API only; EXECUTE is granted to service_role after the route
+-- verifies the Clerk identity against public.users.is_admin.
+CREATE OR REPLACE FUNCTION public.get_admin_demos_submissions(
+  p_sort_by text,
+  p_offset integer,
+  p_limit integer,
+  p_tag_slug text DEFAULT NULL,
+  p_include_private boolean DEFAULT false
+)
+RETURNS TABLE (
+  id integer,
+  name text,
+  preview_url text,
+  video_url text,
+  updated_at timestamptz,
+  demo_slug text,
+  component_data jsonb,
+  user_data jsonb,
+  component_user_data jsonb,
+  total_count bigint,
+  view_count bigint,
+  bookmarks_count bigint,
+  bundle_url jsonb,
+  submission_status text,
+  moderators_feedback text
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -432,8 +555,8 @@ AS $$
     s.moderators_feedback
   FROM public.demos d
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users du ON du.id = d.user_id
-  JOIN public.users cu ON cu.id = c.user_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
   JOIN public.submissions s ON s.component_id = c.id
   LEFT JOIN LATERAL (
     SELECT count(*) AS views
@@ -450,6 +573,7 @@ AS $$
         WHERE dt.demo_id = d.id AND t.slug = p_tag_slug
       )
     )
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ORDER BY
     CASE WHEN p_sort_by = 'downloads' THEN c.downloads_count END DESC NULLS LAST,
     CASE WHEN p_sort_by = 'likes'     THEN c.likes_count END DESC NULLS LAST,
@@ -481,7 +605,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -502,9 +626,19 @@ AS $$
   FROM public.component_likes cl
   JOIN public.components c ON c.id = cl.component_id
   JOIN public.demos d ON d.component_id = c.id
-  JOIN public.users du ON du.id = d.user_id
-  JOIN public.users cu ON cu.id = c.user_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
   WHERE cl.user_id = p_user_id
+    AND (
+      p_user_id = public.requesting_user_id()
+      OR EXISTS (
+        SELECT 1 FROM public.users requester
+        WHERE requester.id = public.requesting_user_id()
+          AND requester.is_admin = true
+      )
+    )
+    AND c.is_public = true
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ORDER BY cl.liked_at DESC NULLS LAST, d.id DESC
   LIMIT COALESCE(p_limit, 50);
 $$;
@@ -530,7 +664,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     c.id,
@@ -544,6 +678,12 @@ AS $$
         JOIN public.components comp ON comp.id = ctc2.component_id
         WHERE ctc2.collection_id = c.id
           AND comp.preview_url IS NOT NULL
+          AND (comp.is_public = true OR (
+            NOT c.is_public AND p_include_private
+            AND c.user_id = public.requesting_user_id()
+            AND comp.user_id = c.user_id
+          ))
+          AND (comp.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(comp.id))
         ORDER BY ctc2.created_at ASC
         LIMIT 1
       )
@@ -556,12 +696,22 @@ AS $$
     COALESCE(cc.cnt, 0)::bigint AS components_count,
     to_jsonb(u.*) AS user_data
   FROM public.collections c
-  JOIN public.users u ON u.id = c.user_id
-  LEFT JOIN (
-    SELECT ctc.collection_id, count(*) AS cnt
+  JOIN public.public_profiles u ON u.id = c.user_id
+  LEFT JOIN LATERAL (
+    SELECT count(*) AS cnt
     FROM public.components_to_collections ctc
-    GROUP BY ctc.collection_id
-  ) cc ON cc.collection_id = c.id
+    JOIN public.components comp ON comp.id = ctc.component_id
+    WHERE ctc.collection_id = c.id
+      AND (
+        comp.is_public = true
+        OR (
+          COALESCE(p_include_private, false)
+          AND c.user_id = public.requesting_user_id()
+          AND comp.user_id = c.user_id
+        )
+      )
+      AND (comp.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(comp.id))
+  ) cc ON true
   WHERE c.is_public = true
      OR (p_include_private AND c.user_id = public.requesting_user_id())
   ORDER BY c.created_at DESC, c.id
@@ -780,7 +930,7 @@ RETURNS TABLE (
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public
+SET search_path = pg_catalog, public
 AS $$
   SELECT
     d.id,
@@ -812,8 +962,8 @@ AS $$
   FROM public.demo_hunt_scores s
   JOIN public.demos d ON d.id = s.demo_id
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users du ON du.id = d.user_id
-  JOIN public.users cu ON cu.id = c.user_id
+  JOIN public.public_profiles du ON du.id = d.user_id
+  JOIN public.public_profiles cu ON cu.id = c.user_id
   LEFT JOIN LATERAL (
     SELECT jsonb_agg(jsonb_build_object('id', t.id, 'name', t.name, 'slug', t.slug)) AS tags
     FROM public.demo_tags dt
@@ -821,6 +971,8 @@ AS $$
     WHERE dt.demo_id = d.id
   ) tg ON true
   WHERE s.round_id = p_round_id
+    AND c.is_public = true
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
   ORDER BY COALESCE(s.final_score, 0) DESC, d.id;
 $$;
 

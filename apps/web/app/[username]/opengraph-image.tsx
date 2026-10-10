@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
 
 export const runtime = "edge"
 export const alt = "User Profile"
@@ -29,6 +30,8 @@ export default async function Image({
       bio,
       components!components_user_id_fkey(
         id,
+        registry,
+        is_public,
         downloads_count,
         mv_component_analytics!component_analytics_component_id_fkey(
           activity_type,
@@ -63,14 +66,26 @@ export default async function Image({
     )
   }
 
+  const components = userData.components ?? []
+  const approvedAutoIndexIds = await currentApprovedAutoIndexComponentIds(
+    components
+      .filter((component) => component.registry === "auto-index" && component.is_public)
+      .map((component) => component.id),
+  )
+  const visibleComponents = components.filter(
+    (component) =>
+      component.is_public &&
+      (component.registry !== "auto-index" || approvedAutoIndexIds.has(component.id)),
+  )
+
   const totalDownloads =
-    userData.components?.reduce(
+    visibleComponents.reduce(
       (sum, comp) => sum + (comp.downloads_count || 0),
       0,
     ) ?? 0
 
   const totalUsages =
-    userData.components?.reduce((sum, comp) => {
+    visibleComponents.reduce((sum, comp) => {
       const analytics = comp.mv_component_analytics || []
       const promptCopyCount =
         analytics.find((a) => a.activity_type === "component_prompt_copy")
@@ -83,7 +98,7 @@ export default async function Image({
     }, 0) || 0
 
   const totalViews =
-    userData.components?.reduce((sum, comp) => {
+    visibleComponents.reduce((sum, comp) => {
       const analytics = comp.mv_component_analytics || []
       const viewCount =
         analytics.find((a) => a.activity_type === "component_view")?.count ?? 0

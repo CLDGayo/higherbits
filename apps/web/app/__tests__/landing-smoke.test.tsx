@@ -134,7 +134,7 @@ const DEMOS_FIXTURE = Array.from({ length: 14 }, (_, index) => {
  *
  * DELIBERATELY carries NO `component_count` field: `users` has no such column
  * and the production code never reads one. The count is DERIVED from a separate
- * `.from("components").eq("user_id", ...)` query (see `app/actions/authors.ts:53-68`
+ * `.from("components").in("user_id", ...)` query (see `lib/landing-authors.ts`)
  * and `lib/landing-authors.ts`), so a static field here would be inert and the
  * assertion resting on it decorative.
  */
@@ -170,14 +170,14 @@ const AUTHORS_FIXTURE = [
 
 /**
  * Per-user component rows, keyed by the SAME ids `AUTHORS_FIXTURE` uses, so
- * `eq("user_id", <author id>)` resolves to the intended slice. Sized so the
+ * `in("user_id", author ids)` resolves to the intended rows. Sized so the
  * derived counts genuinely differ: 5 / exactly 1 / 0. The 1 is what exercises
  * the singular caption through the real computation path; the 0 is what
  * exercises the `component_count > 0` filter.
  */
-const COMPONENTS_BY_USER: Record<string, { id: number; downloads_count: number }[]> = {
-  user_a: [1, 2, 3, 4, 5].map((id) => ({ id, downloads_count: 0 })),
-  user_b: [{ id: 6, downloads_count: 0 }],
+const COMPONENTS_BY_USER: Record<string, { id: number }[]> = {
+  user_a: [1, 2, 3, 4, 5].map((id) => ({ id })),
+  user_b: [{ id: 6 }],
   user_c: [],
 }
 
@@ -189,9 +189,20 @@ vi.mock("@/lib/supabase", () => {
     // CATALOGUE_FIXTURE to the authors query and every author would derive the
     // same count — the derived-count assertion would prove nothing.
     let componentsUserFilter: string | null = null
+    let includedComponentUserIds: string[] | null = null
     let includedComponentIds: number[] | null = null
     const rows = () => {
       if (table === "users") return AUTHORS_FIXTURE
+      if (table === "components" && includedComponentUserIds !== null) {
+        return includedComponentUserIds.flatMap((userId) =>
+          (COMPONENTS_BY_USER[userId] ?? []).map(({ id }) => ({
+            id,
+            user_id: userId,
+            registry: "catalogue",
+            is_public: true,
+          })),
+        )
+      }
       if (table === "components" && componentsUserFilter !== null) {
         return COMPONENTS_BY_USER[componentsUserFilter] ?? []
       }
@@ -214,6 +225,9 @@ vi.mock("@/lib/supabase", () => {
       order: () => builder,
       range: () => builder,
       in: (column: string, values: unknown) => {
+        if (table === "components" && column === "user_id" && Array.isArray(values)) {
+          includedComponentUserIds = values.map(String)
+        }
         if (column === "component_id" && Array.isArray(values)) {
           includedComponentIds = values.map(Number)
         }

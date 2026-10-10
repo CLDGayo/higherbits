@@ -3,6 +3,7 @@
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { Database } from "@/types/supabase"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
 
 type DatabaseAuthor =
   Database["public"]["Functions"]["get_active_authors_with_top_components"]["Returns"][0]
@@ -21,14 +22,40 @@ export async function getActiveAuthorsAction(offset: number, limit: number) {
     }
 
     if (usersData && usersData.length > 0) {
+      const { data: publicComponents } = await supabaseWithAdminAccess
+        .from("components")
+        .select("id, user_id, registry, is_public, downloads_count")
+        .in("user_id", usersData.map(({ id }) => id))
+        .eq("is_public", true)
+
+      const componentRows = publicComponents ?? []
+      const approvedIds = await currentApprovedAutoIndexComponentIds(
+        componentRows
+          .filter((component) => component.registry === "auto-index")
+          .map((component) => component.id),
+      )
+      const visibleComponentsByUser = new Map<string, typeof componentRows>()
+      for (const component of componentRows) {
+        if (component.registry === "auto-index" && !approvedIds.has(component.id)) continue
+        const rows = visibleComponentsByUser.get(component.user_id) ?? []
+        rows.push(component)
+        visibleComponentsByUser.set(component.user_id, rows)
+      }
+
       const authors = await Promise.all(
         usersData.map(async (u: any) => {
-          // Fetch demos for this user to get view_count and top components
-          const { data: demosData } = await supabaseWithAdminAccess
-            .from("demos")
-            .select("*, component:components (*)")
-            .eq("user_id", u.id)
-            .limit(3)
+          const visibleComponents = visibleComponentsByUser.get(u.id) ?? []
+          const componentIds = visibleComponents.map((component) => component.id)
+
+          // Top demos and aggregate statistics use the same public, admitted set.
+          const { data: demosData } = componentIds.length
+            ? await supabaseWithAdminAccess
+                .from("demos")
+                .select("*, component:components (*)")
+                .in("component_id", componentIds)
+                .order("created_at", { ascending: false })
+                .limit(3)
+            : { data: [] }
 
           let totalViews = 0
           let topComponents: any[] = []
@@ -52,22 +79,13 @@ export async function getActiveAuthorsAction(offset: number, limit: number) {
             }))
           }
 
-          // Fetch components to get downloads_count and collect their IDs to fetch analytics
-          const { data: componentsData } = await supabaseWithAdminAccess
-            .from("components")
-            .select("id, downloads_count")
-            .eq("user_id", u.id)
-
           let totalDownloads = 0
           let totalUsages = 0
-          let componentIds: number[] = []
-          
-          if (componentsData) {
-            totalDownloads = componentsData.reduce(
-              (acc: number, curr: any) => acc + (Number(curr.downloads_count) || 0),
+          if (visibleComponents.length) {
+            totalDownloads = visibleComponents.reduce(
+              (acc, curr) => acc + (Number(curr.downloads_count) || 0),
               0,
             )
-            componentIds = componentsData.map((c: any) => c.id)
           }
 
           // Fetch views and usages from component_analytics

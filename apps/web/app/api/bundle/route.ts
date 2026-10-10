@@ -3,6 +3,7 @@ import { prepareBundle, fetchBundle } from "@/lib/bundler"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
+import { approvedAutoIndexSnapshot } from "@/lib/api/server/auto-index-snapshot"
 
 export async function POST(request: Request) {
   try {
@@ -44,6 +45,22 @@ export async function POST(request: Request) {
         { error: "Error fetching demo", details: demoError },
         { status: 500 },
       )
+    }
+
+    const selectedComponent = Array.isArray(demo?.component)
+      ? demo.component[0]
+      : demo?.component
+    if (selectedComponent?.registry === "auto-index") {
+      if (!selectedComponent.is_public) {
+        return NextResponse.json({ error: "Demo not found" }, { status: 404 })
+      }
+      try {
+        // Cached bundle HTML is a public source surface too. Verify the exact
+        // current review/fingerprint before returning or rebuilding it.
+        await approvedAutoIndexSnapshot(selectedComponent.id)
+      } catch {
+        return NextResponse.json({ error: "Demo not found" }, { status: 404 })
+      }
     }
 
     const prepared = await prepareBundle({

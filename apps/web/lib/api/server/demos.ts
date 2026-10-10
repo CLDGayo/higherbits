@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import "server-only"
 import { hasUserComponentAccess } from "./components"
+import { currentApprovedAutoIndexComponentIds } from "./auto-index-admission"
 
 export const hasUserPurchasedDemo = async (
   userId: string | null,
@@ -52,5 +53,12 @@ export const getDemos = async (search?: string) => {
     },
   })
 
-  return demos
+  const indexedIds = [...new Set(demos
+    .filter((demo) => demo.components?.registry === "auto-index")
+    .map((demo) => demo.component_id))]
+  if (!indexedIds.length) return demos
+  const admitted = await currentApprovedAutoIndexComponentIds(indexedIds)
+  return demos.filter((demo) =>
+    demo.components?.registry !== "auto-index" || admitted.has(demo.component_id),
+  )
 }

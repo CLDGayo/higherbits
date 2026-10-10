@@ -54,6 +54,7 @@ import { CategoryPreviewImage } from "@/components/features/categories/category-
 import { CategoryVideoPreview } from "@/components/features/categories/category-video-preview"
 import { sidebarOpenAtom } from "@/components/features/main-page/main-layout"
 import { PUBLIC_USER_COLUMNS, type PublicUser } from "@/lib/user-select"
+import { getPublicCategoryPreviews } from "@/app/actions/public-catalogue"
 
 const commandSearchQueryAtom = atomWithStorage("commandMenuSearch", "")
 
@@ -243,15 +244,8 @@ export function CommandMenu() {
     queryFn: async () => {
       if (!selectedCategory?.demoId) return null
 
-      const { data: preview, error } = await supabase.rpc(
-        "get_section_previews",
-        {
-          p_demo_ids: [selectedCategory.demoId],
-        },
-      )
-
-      if (error) throw error
-      return preview?.[0] || null
+      const previews = await getPublicCategoryPreviews([selectedCategory.demoId])
+      return previews[0] || null
     },
     enabled: !!selectedCategory?.demoId,
   })

@@ -1,11 +1,12 @@
 import { beforeEach, expect, it, vi } from "vitest"
 
-const state = vi.hoisted(() => ({ public: true, status: "posted" }))
+const state = vi.hoisted(() => ({ public: true, status: "posted", registry: "ui", approved: true, approvalError: false }))
 vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: {
+  rpc: async () => ({ data: state.approved, error: state.approvalError ? {} : null }),
   from(table: string) {
     const data = table === "demos"
       ? { component_id: 7, ghl_html_content: '<div>Earth<script>const sun = 0;</script></div>' }
-      : table === "components" ? { is_public: state.public, registry: "ui" }
+      : table === "components" ? { is_public: state.public, registry: state.registry }
       : { status: state.status }
     const query = { select: () => query, eq: () => query, maybeSingle: async () => ({ data, error: null }) }
     return query
@@ -14,7 +15,7 @@ vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: {
 
 import { GET } from "@/app/api/ghl-embed/[demoId]/route"
 
-beforeEach(() => { state.public = true; state.status = "posted" })
+beforeEach(() => { state.public = true; state.status = "posted"; state.registry = "ui"; state.approved = true; state.approvalError = false })
 
 it("serves approved runtime code only in an isolated frame and applies controls", async () => {
   const token = Buffer.from(JSON.stringify({ sun: 25 })).toString("base64url")
@@ -30,6 +31,17 @@ it("does not expose private or unreviewed demos", async () => {
   expect((await GET(new Request("https://higherbits.dev/api/ghl-embed/8"),
     { params: Promise.resolve({ demoId: "8" }) })).status).toBe(404)
   state.public = true; state.status = "on_review"
+  expect((await GET(new Request("https://higherbits.dev/api/ghl-embed/8"),
+    { params: Promise.resolve({ demoId: "8" }) })).status).toBe(404)
+})
+
+it("requires current reviewer provenance before serving auto-index HTML", async () => {
+  state.registry = "auto-index"
+  state.approved = false
+  expect((await GET(new Request("https://higherbits.dev/api/ghl-embed/8"),
+    { params: Promise.resolve({ demoId: "8" }) })).status).toBe(404)
+  state.approved = true
+  state.approvalError = true
   expect((await GET(new Request("https://higherbits.dev/api/ghl-embed/8"),
     { params: Promise.resolve({ demoId: "8" }) })).status).toBe(404)
 })

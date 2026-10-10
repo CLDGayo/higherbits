@@ -133,37 +133,8 @@ if (mode === '--check' && process.argv.length === 3) {
   console.log(JSON.stringify({ ...manifest, manifestSha256 }, null, 2))
   process.exit(0)
 }
-if (mode === '--emit-local-prompts' && process.argv.length === 3) {
-  const statements = ['BEGIN;',
-    `CREATE TABLE IF NOT EXISTS public.auto_index_copy_prompts (
-      demo_id integer NOT NULL REFERENCES public.demos(id) ON DELETE CASCADE,
-      prompt_type text NOT NULL CHECK (prompt_type IN ('sitebrew','v0','lovable','bolt','extended','replit','magic_patterns','claude','codex','antigravity')),
-      prompt text NOT NULL CHECK (length(prompt)>0 AND octet_length(prompt)<=2097152),
-      source_fingerprint text NOT NULL CHECK (source_fingerprint ~ '^[a-f0-9]{64}$'),
-      PRIMARY KEY(demo_id,prompt_type));`,
-    'ALTER TABLE public.auto_index_copy_prompts ENABLE ROW LEVEL SECURITY;',
-    'REVOKE ALL ON public.auto_index_copy_prompts FROM PUBLIC,anon,authenticated,service_role;',
-    'GRANT SELECT,INSERT,DELETE ON public.auto_index_copy_prompts TO service_role;',
-    'DO $local_prompts$ DECLARE saved_demo_id integer; saved_fingerprint text; BEGIN']
-  for (const item of items) {
-    statements.push('SELECT d.id,d.ghl_source_fingerprint INTO STRICT saved_demo_id,saved_fingerprint FROM public.demos d')
-    statements.push('JOIN public.components c ON c.id=d.component_id')
-    statements.push(`AND c.registry='auto-index' AND c.user_id='user_autoindex_1cdb932f457ab20f9784'`)
-    statements.push(`AND c.component_slug=${quoted(item.slug)} AND d.demo_slug='default'`)
-    statements.push(`AND encode(extensions.digest(convert_to(c.code,'UTF8'),'sha256'),'hex')=${quoted(item.expected.source)}`)
-    statements.push(`AND encode(extensions.digest(convert_to(d.demo_code,'UTF8'),'sha256'),'hex')=${quoted(item.expected.demo)};`)
-    statements.push(`IF saved_fingerprint IS DISTINCT FROM public.auto_index_ghl_fingerprint((SELECT code FROM public.components WHERE id=(SELECT component_id FROM public.demos WHERE id=saved_demo_id)),(SELECT demo_code FROM public.demos WHERE id=saved_demo_id)) THEN RAISE EXCEPTION ${quoted(`${item.slug} local fingerprint mismatch`)}; END IF;`)
-    statements.push('DELETE FROM public.auto_index_copy_prompts WHERE demo_id=saved_demo_id;')
-    statements.push(`INSERT INTO public.auto_index_copy_prompts(demo_id,prompt_type,prompt,source_fingerprint)`)
-    statements.push(`SELECT saved_demo_id,prompt.key,prompt.value,saved_fingerprint FROM jsonb_each_text(${json(item.copyPrompts)}) prompt;`)
-    statements.push(`IF (SELECT count(*) FROM public.auto_index_copy_prompts WHERE demo_id=saved_demo_id)<>10 THEN RAISE EXCEPTION ${quoted(`${item.slug} local prompts incomplete`)}; END IF;`)
-  }
-  statements.push('END $local_prompts$;', 'COMMIT;')
-  console.log(statements.join('\n'))
-  process.exit(0)
-}
 if (mode !== '--emit-sql' || process.argv.length !== 4) {
-  throw new Error('usage: node ops/emit-pinned-8starlabs-production.mjs --check | --emit-local-prompts | --emit-sql /path/to/production-review.json')
+  throw new Error('usage: node ops/emit-pinned-8starlabs-production.mjs --check | --emit-sql /path/to/production-review.json')
 }
 
 const review = JSON.parse(readFileSync(resolve(process.argv[3]), 'utf8'))
@@ -186,37 +157,19 @@ const sections = [
   `-- Reviewed manifest SHA-256: ${review.manifestSha256}`,
   `-- Release commit: ${review.releaseCommit}`,
   'BEGIN;',
-  'SET LOCAL ROLE service_role;',
+  '-- Must connect directly as auto_index_stage; never assume a role in this script.',
   'DO $batch$',
   'DECLARE v_source_id bigint; v_candidate_id bigint; v_decision_id bigint; v_component_id integer;',
   'BEGIN',
+  `  IF session_user <> 'auto_index_stage' OR current_user <> 'auto_index_stage' THEN RAISE EXCEPTION 'direct auto_index_stage login required'; END IF;`,
   `  v_source_id := public.register_auto_index_source('official_registry',${quoted(repositoryUrl)},'8StarLabs UI');`,
   `  IF (SELECT opted_out FROM public.auto_index_sources WHERE id=v_source_id) THEN RAISE EXCEPTION '8StarLabs opted out'; END IF;`,
-  `  IF EXISTS (SELECT 1 FROM public.users u WHERE u.id <> 'user_autoindex_1cdb932f457ab20f9784'`,
-  `    AND (lower(u.username)='8starlabs' OR lower(u.display_username)='8starlabs')) THEN`,
-  `    RAISE EXCEPTION '8StarLabs public handle is already taken'; END IF;`,
-  `  UPDATE public.users u SET name='8StarLabs UI',display_name='8StarLabs UI',display_username='8starlabs',`,
-  `    image_url='https://avatars.githubusercontent.com/u/237609665?v=4',`,
-  `    display_image_url='https://avatars.githubusercontent.com/u/237609665?v=4', github_url='https://github.com/8starlabs'`,
-  `    FROM public.auto_index_sources s`,
-  `    WHERE s.id=v_source_id AND s.vendor_user_id=u.id AND s.kind='official_registry'`,
-  `      AND s.canonical_url=${quoted(repositoryUrl)} AND s.owner_label='8StarLabs UI'`,
-  `      AND u.id='user_autoindex_1cdb932f457ab20f9784'`,
-  `      AND u.username='vendor-1cdb932f457ab20f9784'`,
-  `      AND u.display_username IN ('vendor-1cdb932f457ab20f9784','8starlabs')`,
-  `      AND u.email='vendor+1cdb932f457ab20f9784@higherbits.invalid'`,
-  `      AND u.manually_added`,
-  `      AND u.bio='Auto-indexed open-source components. This publisher has not claimed this profile.'`,
-  `      AND u.name IN ('Auto-indexed: 8StarLabs UI','8StarLabs UI')`,
-  `      AND u.display_name IN ('Auto-indexed: 8StarLabs UI','8StarLabs UI');`,
-  `  IF NOT FOUND THEN RAISE EXCEPTION '8StarLabs vendor profile missing auto-index disclosure'; END IF;`,
 ]
 
 for (const item of items) {
   const { slug, expected, sourcePath, upstreamDemoPath } = item
   const evidence = {
-    approved: true, scope: 'production', componentSourcePath: sourcePath, dependenciesApproved: true,
-    reviewerLabel: review.reviewerLabel, reviewedAt: review.reviewedAt, rationale: review.rationale,
+    scope: 'production', componentSourcePath: sourcePath, dependenciesApproved: true,
     releaseCommit: review.releaseCommit, manifestSha256: review.manifestSha256,
     sourceSha256: expected.source, upstreamDemoSha256: expected.upstreamDemo,
     demoSha256: expected.demo, ghlHtmlSha256: expected.html, previewSha256: expected.svg,
@@ -233,7 +186,7 @@ for (const item of items) {
   sections.push(`  -- ${item.title}: ${sourcePath}`)
   sections.push(`  v_decision_id := public.record_auto_index_candidate(v_source_id,${quoted(sourcePath)},${quoted(revision)},`)
   sections.push(`    ${quoted(repositoryUrl)},'MIT',${txt(license)},NULL,${json(item.dependencies)},${json(file)},`)
-  sections.push(`    'approved','production_pinned_mit_review',${json(evidence)});`)
+  sections.push(`    'qualified','production_source_qualified',${json(evidence)});`)
   sections.push(`  SELECT id INTO STRICT v_candidate_id FROM public.auto_index_candidates`)
   sections.push(`    WHERE source_id=v_source_id AND item_key=${quoted(sourcePath)} AND revision=${quoted(revision)};`)
   sections.push(`  PERFORM public.record_auto_index_candidate_demo(v_candidate_id,${txt(item.demo)},`)
@@ -249,37 +202,14 @@ for (const item of items) {
   sections.push(`    ${quoted(authored ? 'HigherBits-authored example under HigherBits MIT' : 'Exact pinned upstream demo under repository root MIT')},NULL,NULL,NULL);`)
   sections.push(`  IF NOT public.auto_index_candidate_provenance_complete(v_candidate_id) THEN`)
   sections.push(`    RAISE EXCEPTION ${quoted(`${slug} provenance incomplete`)}; END IF;`)
-  sections.push(`  v_component_id := public.publish_auto_index_candidate(v_decision_id,${quoted(slug)},`)
-  sections.push(`    ${quoted(item.title)},${quoted(item.description)},${quoted(`${assetBase}/${slug}.svg`)});`)
-  sections.push(`  UPDATE public.components SET preview_url=${quoted(`${assetBase}/${slug}.svg`)},`)
-  sections.push(`    dependencies=${json(authored ? { 'class-variance-authority': '0.7.1' } : {})}`)
-  sections.push(`    WHERE id=v_component_id AND registry='auto-index';`)
-  sections.push(`  UPDATE public.demos SET preview_url=${quoted(`${assetBase}/${slug}.svg`)},`)
-  sections.push(`    bundle_html_url=${quoted(`${assetBase}/${slug}.html`)},compiled_css=${txt(item.css)}`)
-  sections.push(`    WHERE component_id=v_component_id AND demo_slug='default';`)
-  sections.push(`  IF NOT EXISTS (SELECT 1 FROM public.auto_index_publications p`)
-  sections.push(`    JOIN public.components c ON c.id=p.component_id JOIN public.demos d ON d.component_id=c.id AND d.demo_slug='default'`)
-  sections.push(`    WHERE p.source_id=v_source_id AND p.item_key=${quoted(sourcePath)} AND p.component_id=v_component_id`)
-  sections.push(`      AND p.delisted_at IS NULL AND p.superseded_at IS NULL AND c.is_public`)
-  sections.push(`      AND c.preview_url=${quoted(`${assetBase}/${slug}.svg`)} AND d.preview_url=c.preview_url`)
-  sections.push(`      AND d.bundle_html_url=${quoted(`${assetBase}/${slug}.html`)}`)
-  sections.push(`      AND encode(extensions.digest(convert_to(c.code,'UTF8'),'sha256'),'hex')=${quoted(expected.source)}`)
-  sections.push(`      AND encode(extensions.digest(convert_to(d.demo_code,'UTF8'),'sha256'),'hex')=${quoted(expected.demo)}`)
-  sections.push(`      AND d.ghl_source_fingerprint=public.auto_index_ghl_fingerprint(c.code,d.demo_code)`)
-  sections.push(`      AND (SELECT count(*) FROM public.auto_index_copy_prompts cp WHERE cp.demo_id=d.id`)
-  sections.push(`        AND cp.source_fingerprint=d.ghl_source_fingerprint`)
-  sections.push(`        AND encode(extensions.digest(convert_to(cp.prompt,'UTF8'),'sha256'),'hex')=CASE cp.prompt_type`)
-  for (const [type, prompt] of Object.entries(item.copyPrompts)) {
-    sections.push(`          WHEN ${quoted(type)} THEN ${quoted(hash(Buffer.from(prompt)))}`)
-  }
-  sections.push(`          ELSE NULL END)=10`)
-  sections.push(`      AND encode(extensions.digest(convert_to(d.compiled_css,'UTF8'),'sha256'),'hex')=${quoted(expected.css)}) THEN`)
-  sections.push(`    RAISE EXCEPTION ${quoted(`${slug} publication verification failed`)}; END IF;`)
+  sections.push(`  PERFORM public.stage_auto_index_candidate_publication_metadata(v_candidate_id,${quoted(slug)},${quoted(slug)},`)
+  sections.push(`    ${quoted(item.title)},${quoted(item.description)},${json(authored ? { 'class-variance-authority': '0.7.1' } : {})},`)
+  sections.push(`    ${quoted(`${assetBase}/${slug}.svg`)},${quoted(`${assetBase}/${slug}.svg`)},`)
+  sections.push(`    ${quoted(`${assetBase}/${slug}.html`)},${txt(item.css)});`)
 }
 sections.push('END $batch$;', 'COMMIT;',
-  'SELECT c.component_slug,c.id AS component_id,d.id AS demo_id,c.is_public,c.preview_url,d.bundle_html_url',
-  'FROM public.auto_index_publications p JOIN public.components c ON c.id=p.component_id',
-  "JOIN public.demos d ON d.component_id=c.id AND d.demo_slug='default'",
-  `WHERE p.source_id=(SELECT id FROM public.auto_index_sources WHERE canonical_url=${quoted(repositoryUrl)})`,
-  'AND p.delisted_at IS NULL AND p.superseded_at IS NULL ORDER BY c.component_slug;')
+  `SELECT c.id AS candidate_id,c.item_key,c.revision,d.outcome`,
+  `FROM public.auto_index_candidates c JOIN public.auto_index_sources s ON s.id=c.source_id`,
+  `JOIN public.auto_index_decisions d ON d.candidate_id=c.id AND d.outcome='qualified'`,
+  `WHERE s.canonical_url=${quoted(repositoryUrl)} ORDER BY c.id;`)
 console.log(sections.join('\n'))

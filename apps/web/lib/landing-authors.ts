@@ -1,5 +1,6 @@
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
 
 /**
  * One author tile's worth of data for the landing "Built by real design
@@ -52,29 +53,35 @@ export async function getCachedLandingAuthors(): Promise<LandingAuthor[]> {
 
   if (!usersData || usersData.length === 0) return []
 
-  const authors = await Promise.all(
-    (usersData as any[]).map(async (u: any) => {
-      const { data: componentsData } = await supabaseWithAdminAccess
-        .from("components")
-        .select("id, downloads_count")
-        .eq("user_id", u.id)
+  const { data: componentRows } = await supabaseWithAdminAccess
+    .from("components")
+    .select("id, user_id, registry, is_public")
+    .in("user_id", usersData.map(({ id }) => id))
+    .eq("is_public", true)
 
-      const componentIds: number[] = componentsData
-        ? (componentsData as any[]).map((c: any) => c.id)
-        : []
-
-      return {
-        id: u.id,
-        username: u.username || u.display_username || "",
-        display_username: u.display_username || u.username || "",
-        name: u.name || u.display_name || "",
-        display_name: u.display_name || u.name || "",
-        image_url: u.image_url || u.display_image_url || "",
-        display_image_url: u.display_image_url || u.image_url || "",
-        component_count: componentIds.length,
-      } satisfies LandingAuthor
-    }),
+  const rows = componentRows ?? []
+  const approvedIds = await currentApprovedAutoIndexComponentIds(
+    rows.filter(({ registry }) => registry === "auto-index").map(({ id }) => id),
   )
+  const componentCountByUser = new Map<string, number>()
+  for (const component of rows) {
+    if (component.registry === "auto-index" && !approvedIds.has(component.id)) continue
+    componentCountByUser.set(
+      component.user_id,
+      (componentCountByUser.get(component.user_id) ?? 0) + 1,
+    )
+  }
+
+  const authors = (usersData as any[]).map((u: any) => ({
+    id: u.id,
+    username: u.username || u.display_username || "",
+    display_username: u.display_username || u.username || "",
+    name: u.name || u.display_name || "",
+    display_name: u.display_name || u.name || "",
+    image_url: u.image_url || u.display_image_url || "",
+    display_image_url: u.display_image_url || u.image_url || "",
+    component_count: componentCountByUser.get(u.id) ?? 0,
+  } satisfies LandingAuthor))
 
   return authors
     .filter((author) => author.component_count > 0)

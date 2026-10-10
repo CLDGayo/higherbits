@@ -42,20 +42,41 @@
 
 BEGIN;
 
+-- Provenance-aware public reads depend on the additive auto-index review
+-- contract. Refuse to restore browser grants until its narrowly scoped RLS
+-- helper exists, rather than reopening the historical permissive SELECT path.
+DO $$
+BEGIN
+  IF to_regprocedure('public.auto_index_component_public_select_allowed(bigint)') IS NULL THEN
+    RAISE EXCEPTION 'apply and verify reviewer-provenance migration before restoring authenticated grants';
+  END IF;
+END $$;
+REVOKE ALL ON FUNCTION public.auto_index_component_public_select_allowed(bigint) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.auto_index_component_public_select_allowed(bigint) TO authenticated;
+
 -- 0) PostgREST needs schema usage + sequence usage, or INSERTs fail even with
 --    table grants ("permission denied for sequence components_id_seq").
 GRANT USAGE ON SCHEMA public TO authenticated;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+-- These internal sequence IDs must remain unavailable to browser-authenticated
+-- clients even when the broad compatibility grant above is restored.
+REVOKE ALL ON SEQUENCE public.auto_index_review_provenance_id_seq,
+  public.auto_index_decisions_id_seq FROM authenticated;
 
 -- =====================================================================
 -- components  — owner: user_id (text, Clerk id); visibility flag: is_public
 -- =====================================================================
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.components TO authenticated;
+REVOKE SELECT ON public.components FROM PUBLIC, anon;
 
 DROP POLICY IF EXISTS "components_select" ON public.components;
 CREATE POLICY "components_select" ON public.components
   FOR SELECT TO authenticated
   USING (is_public = true OR user_id = auth.jwt()->>'sub');
+DROP POLICY IF EXISTS auto_index_public_provenance_guard ON public.components;
+CREATE POLICY auto_index_public_provenance_guard ON public.components AS RESTRICTIVE
+  FOR SELECT TO authenticated
+  USING (user_id=auth.jwt()->>'sub' OR public.auto_index_component_public_select_allowed(id));
 
 DROP POLICY IF EXISTS "components_insert_own" ON public.components;
 CREATE POLICY "components_insert_own" ON public.components
@@ -77,6 +98,7 @@ CREATE POLICY "components_delete_own" ON public.components
 -- demos  — owner: user_id; also linked to a component
 -- =====================================================================
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.demos TO authenticated;
+REVOKE SELECT ON public.demos FROM PUBLIC, anon;
 
 DROP POLICY IF EXISTS "demos_select" ON public.demos;
 CREATE POLICY "demos_select" ON public.demos
@@ -85,6 +107,10 @@ CREATE POLICY "demos_select" ON public.demos
     user_id = auth.jwt()->>'sub'
     OR component_id IN (SELECT id FROM public.components WHERE is_public = true)
   );
+DROP POLICY IF EXISTS auto_index_public_provenance_guard ON public.demos;
+CREATE POLICY auto_index_public_provenance_guard ON public.demos AS RESTRICTIVE
+  FOR SELECT TO authenticated
+  USING (user_id=auth.jwt()->>'sub' OR public.auto_index_component_public_select_allowed(component_id));
 
 DROP POLICY IF EXISTS "demos_insert_own" ON public.demos;
 CREATE POLICY "demos_insert_own" ON public.demos

@@ -87,7 +87,7 @@ CREATE OR REPLACE FUNCTION public.match_embeddings_with_details(
   user_data jsonb,
   usage_data jsonb
 )
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, public
     AS $$
   SELECT
     d.id::bigint,
@@ -106,8 +106,9 @@ CREATE OR REPLACE FUNCTION public.match_embeddings_with_details(
   FROM public.usage_embeddings ue
   JOIN public.demos d ON d.id = ue.item_id AND ue.item_type = 'demo'
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users u ON u.id = d.user_id
+  JOIN public.public_profiles u ON u.id = d.user_id
   WHERE c.is_public = TRUE
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
     AND 1 - (ue.embedding <=> query_embedding) > match_threshold
   ORDER BY ue.embedding <=> query_embedding
   LIMIT match_count;
@@ -130,7 +131,7 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_v2(
   user_data jsonb,
   usage_data jsonb
 )
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, public
     AS $$
   SELECT * FROM public.match_embeddings_with_details(query_embedding, match_threshold, 20);
 $$;
@@ -153,7 +154,7 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_extended(
   user_data jsonb,
   usage_data jsonb
 )
-    LANGUAGE sql STABLE
+    LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, public
     AS $$
   SELECT
     d.id::bigint,
@@ -173,8 +174,9 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_extended(
   FROM public.usage_embeddings ue
   JOIN public.demos d ON d.id = ue.item_id AND ue.item_type = 'demo'
   JOIN public.components c ON c.id = d.component_id
-  JOIN public.users u ON u.id = d.user_id
+  JOIN public.public_profiles u ON u.id = d.user_id
   WHERE c.is_public = TRUE
+    AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
     AND 1 - (ue.embedding <=> query_embedding) > match_threshold
   ORDER BY ue.embedding <=> query_embedding
   LIMIT 20;

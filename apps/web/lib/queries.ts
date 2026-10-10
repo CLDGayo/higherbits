@@ -421,6 +421,17 @@ export async function getComponentDemos(
     return { data: null, error }
   }
 
+  const component = data?.[0]?.component
+  if (component?.registry === "auto-index") {
+    const { data: admittedIds, error: admissionError } = await supabase.rpc(
+      "auto_index_components_with_current_approval",
+      { p_component_ids: [componentId] },
+    )
+    if (admissionError || !Array.isArray(admittedIds) || !admittedIds.includes(componentId)) {
+      return { data: [], error: null }
+    }
+  }
+
   const transformedData = data?.map((demo: any) => ({
     ...demo,
     tags: demo.tags.map((tagRelation: any) => tagRelation.tag),

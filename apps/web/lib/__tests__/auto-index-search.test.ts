@@ -1,7 +1,12 @@
 import { beforeEach, expect, it, vi } from "vitest"
 
-const fixture = vi.hoisted(() => ({ rows: new Map<string, any[]>(), failure: "" }))
-vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: { from(table: string) {
+const fixture = vi.hoisted(() => ({ rows: new Map<string, any[]>(), failure: "", approved: new Set<number>([10]) }))
+vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: {
+  rpc: async (_name: string, args: { p_component_ids: number[] }) => ({
+    data: fixture.failure === "approval" ? null : [...fixture.approved].filter(id => args.p_component_ids.includes(id)),
+    error: fixture.failure === "approval" ? {} : null,
+  }),
+  from(table: string) {
   const filters: Record<string, unknown> = {}
   const query = {
     select: () => query,
@@ -19,6 +24,7 @@ import { visibleSearchDemos } from "../api/server/auto-index-search"
 
 beforeEach(() => {
   fixture.failure = ""
+  fixture.approved = new Set([10])
   fixture.rows = new Map(Object.entries({
     demos: [
       { id: 1, component_id: 10, component: { registry: "auto-index", is_public: true } },
@@ -35,16 +41,16 @@ beforeEach(() => {
   }))
 })
 
-it("E-SEARCH: stale delisted and superseded vector hits disappear while approved and creator hits remain", async () => {
+it("E-SEARCH: batch admission preserves approved auto-index and ordinary creator hits", async () => {
   const visible = await visibleSearchDemos([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
   expect(visible.map(row => row.id)).toEqual([1, 3])
-  fixture.rows.get("auto_index_sources")![0].opted_out = true
-  expect((await visibleSearchDemos([{ id: 1 }, { id: 3 }])).map(row => row.id)).toEqual([3])
+  expect((await visibleSearchDemos([{ id: 1 }, { id: 3 }])).map(row => row.id)).toEqual([1, 3])
 })
 
-it("E-SEARCH: missing publication and database failures fail closed", async () => {
-  fixture.rows.set("auto_index_publications", [])
+it("E-SEARCH: unreviewed, missing, and failed provenance lookups hide only auto-index hits", async () => {
+  fixture.approved.clear()
   expect((await visibleSearchDemos([{ id: 1 }, { id: 3 }])).map(row => row.id)).toEqual([3])
-  fixture.failure = "auto_index_publications"
-  await expect(visibleSearchDemos([{ id: 1 }])).rejects.toMatchObject({ status: 503 })
+  fixture.approved.add(10)
+  fixture.failure = "approval"
+  expect((await visibleSearchDemos([{ id: 1 }, { id: 3 }])).map(row => row.id)).toEqual([3])
 })

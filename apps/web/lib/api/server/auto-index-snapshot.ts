@@ -19,6 +19,11 @@ function sourceUnavailable(): never { throw new CopyError(503, "source_unavailab
 
 /** Read only the immutable candidate selected by an active, approved publication. */
 export async function approvedAutoIndexSnapshot(componentId: number): Promise<ApprovedAutoIndexSnapshot> {
+  const { data: currentApproval, error: approvalError } = await db.rpc("auto_index_component_has_current_approval", {
+    p_component_id: componentId,
+  })
+  if (approvalError) sourceUnavailable()
+  if (currentApproval !== true) throw new CopyError(404, "component_not_found")
   const { data: publication, error: publicationError } = await db.from("auto_index_publications")
     .select("source_id,item_key,approved_decision_id,delisted_at,superseded_at")
     .eq("component_id", componentId).maybeSingle()

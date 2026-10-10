@@ -1,4 +1,5 @@
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
 import type { DemoWithComponent } from "@/types/global"
 import { PUBLIC_USER_COLUMNS } from "@/lib/user-select"
 
@@ -111,6 +112,17 @@ function flattenTags(rows: any[] | null): DemoWithComponent[] {
   }))
 }
 
+async function filterUnreviewedAutoIndexRows(rows: DemoWithComponent[]): Promise<DemoWithComponent[]> {
+  const componentIds = [...new Set(rows
+    .filter((row) => row.component?.registry === "auto-index")
+    .map((row) => row.component_id)
+    .filter((id): id is number => Number.isSafeInteger(id)))]
+  if (!componentIds.length) return rows
+  const admittedIds = await currentApprovedAutoIndexComponentIds(componentIds)
+  return rows.filter((row) => row.component?.registry !== "auto-index" ||
+    (row.component_id != null && admittedIds.has(row.component_id)))
+}
+
 /**
  * Row 1 — "Most Loved". Fetches the full public candidate pool (~51 rows today,
  * no pagination concern), sorts `likes_count desc, id asc` in JS, slices.
@@ -132,9 +144,8 @@ export async function getMostLovedRow(): Promise<DemoWithComponent[]> {
     return []
   }
 
-  const filtered = flattenTags(data as any[]).filter(
-    (demo) => !isPrimitiveShadcnDemo(demo),
-  )
+  const filtered = (await filterUnreviewedAutoIndexRows(flattenTags(data as any[])))
+    .filter((demo) => !isPrimitiveShadcnDemo(demo))
 
   return sortByLikesDesc(filtered).slice(0, LANDING_ROW_SIZE)
 }
@@ -158,18 +169,16 @@ export async function getNewestRow(excludeIds: number[]): Promise<DemoWithCompon
     .not("preview_url", "is", null)
     .not("id", "in", buildExclusionList(excludeIds))
     .order("created_at", { ascending: false })
-    .limit(LANDING_ROW_SIZE)
 
   if (error) {
     console.error("[landing] newest row query failed:", error)
     return []
   }
 
-  const filtered = flattenTags(data as any[]).filter(
-    (demo) => !isPrimitiveShadcnDemo(demo),
-  )
+  const filtered = (await filterUnreviewedAutoIndexRows(flattenTags(data as any[])))
+    .filter((demo) => !isPrimitiveShadcnDemo(demo))
 
-  return filtered
+  return filtered.slice(0, LANDING_ROW_SIZE)
 }
 
 export interface LandingCatalogueRows {
@@ -218,9 +227,8 @@ export async function getCatalogueChipPool(): Promise<DemoWithComponent[]> {
     return []
   }
 
-  const filtered = flattenTags(data as any[]).filter(
-    (demo) => !isPrimitiveShadcnDemo(demo),
-  )
+  const filtered = (await filterUnreviewedAutoIndexRows(flattenTags(data as any[])))
+    .filter((demo) => !isPrimitiveShadcnDemo(demo))
 
   return sortByLikesDesc(filtered)
 }

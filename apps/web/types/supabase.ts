@@ -2784,6 +2784,29 @@ export type Database = {
       }
     }
     Functions: {
+      auto_index_component_has_current_approval: {
+        Args: { p_component_id: number }
+        Returns: boolean
+      }
+      auto_index_components_with_current_approval: {
+        Args: { p_component_ids: number[] }
+        Returns: number[]
+      }
+      stage_auto_index_candidate_publication_metadata: {
+        Args: {
+          p_candidate_id: number
+          p_component_slug: string
+          p_preview_asset_slug: string
+          p_title: string
+          p_description: string
+          p_component_dependencies: Record<string, string>
+          p_component_preview_url: string
+          p_demo_preview_url: string
+          p_bundle_html_url: string
+          p_compiled_css: string | null
+        }
+        Returns: undefined
+      }
       // ─────────────────────────────────────────────────────────────────────
       // HAND-ADDED — NOT FROM `supabase gen types`
       //
@@ -2954,6 +2977,32 @@ export type Database = {
         }[]
       }
       get_demos_submissions: {
+        Args: {
+          p_sort_by: string
+          p_offset: number
+          p_limit: number
+          p_tag_slug?: string
+          p_include_private?: boolean
+        }
+        Returns: {
+          id: number
+          name: string
+          preview_url: string
+          video_url: string
+          updated_at: string
+          demo_slug: string
+          component_data: Json
+          user_data: Json
+          component_user_data: Json
+          total_count: number
+          view_count: number
+          bookmarks_count: number
+          bundle_url: Json
+          submission_status: string
+          moderators_feedback: string
+        }[]
+      }
+      get_admin_demos_submissions: {
         Args: {
           p_sort_by: string
           p_offset: number

@@ -15,6 +15,12 @@ export async function GET(request: Request, context: { params: Promise<{ demoId:
       (component.registry !== "auto-index" && !["posted", "featured"].includes(submission?.status ?? "")) ||
       !demo.ghl_html_content ||
       Buffer.byteLength(demo.ghl_html_content) > 1_048_576) return new Response(null, { status: 404 })
+  if (component.registry === "auto-index") {
+    const { data: currentApproval, error: approvalError } = await db.rpc("auto_index_component_has_current_approval", {
+      p_component_id: demo.component_id,
+    })
+    if (approvalError || currentApproval !== true) return new Response(null, { status: 404 })
+  }
   const token = new URL(request.url).searchParams.get("controls")
   let controls: Record<string, unknown> | undefined
   if (token) {

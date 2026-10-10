@@ -2,7 +2,6 @@
 
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { DesignEngineerCardSkeleton } from "@/components/ui/skeletons"
-import { useClerkSupabaseClient } from "@/lib/clerk"
 import { DesignEngineerCard } from "./design-engineer-card"
 import { Database } from "@/types/supabase"
 import { getActiveAuthorsAction } from "@/app/actions/authors"
@@ -22,39 +21,12 @@ export function DesignEngineersList({
   className,
   initialData,
 }: DesignEngineersListProps) {
-  const supabaseWithAdminAccess = useClerkSupabaseClient()
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   const { data, isLoading, isError, isFetching, hasNextPage, fetchNextPage } =
     useInfiniteQuery({
       queryKey: ["active-authors"],
       queryFn: async ({ pageParam = 0 }) => {
-        try {
-          const { data, error } = await supabaseWithAdminAccess.rpc(
-            "get_active_authors_with_top_components",
-            {
-              p_offset: Number(pageParam) * 10,
-              p_limit: 10,
-            },
-          )
-
-          if (!error && data && data.length > 0) {
-            return {
-              data: data,
-              total_count: data[0]?.total_count ?? data.length,
-            }
-          }
-          if (error) {
-            console.warn(
-              "get_active_authors_with_top_components RPC failed, falling back to server action:",
-              error,
-            )
-          }
-        } catch (err) {
-          console.warn("RPC call threw error, falling back to server action:", err)
-        }
-
-        // Fallback: Use server action to bypass RLS
         const offset = Number(pageParam) * 10
         try {
           const result = await getActiveAuthorsAction(offset, 10)

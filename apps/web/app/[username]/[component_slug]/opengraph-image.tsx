@@ -2,6 +2,7 @@
 import { ImageResponse } from "next/og"
 import { getComponentWithDemoForOG } from "@/lib/queries"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
 
 export const runtime = "edge"
 export const alt = "Component"
@@ -26,7 +27,16 @@ export default async function Image({
     "default",
   )
 
-  if (!result.data) {
+  const approvedAutoIndexIds = result.data?.component.registry === "auto-index"
+    ? await currentApprovedAutoIndexComponentIds([result.data.component.id])
+    : new Set<number>()
+
+  if (
+    !result.data ||
+    !result.data.component.is_public ||
+    (result.data.component.registry === "auto-index" &&
+      !approvedAutoIndexIds.has(result.data.component.id))
+  ) {
     return new ImageResponse(
       (
         <div

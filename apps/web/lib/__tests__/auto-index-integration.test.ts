@@ -15,11 +15,14 @@ const fixture = vi.hoisted(() => ({
   ],
   sources: [{ id: 41, opted_out: false }],
   failureTable: "",
+  approvedComponentIds: [91],
   invoke: vi.fn(),
+  approvalRpc: vi.fn(),
 }))
 
 vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: {
   functions: { invoke: fixture.invoke },
+  rpc: fixture.approvalRpc,
   from(table: string) {
     const filters: Record<string, unknown> = {}
     const query = {
@@ -49,6 +52,15 @@ import { POST as mcpSearch } from "@/app/api/search-mcp/route"
 beforeEach(() => {
   fixture.failureTable = ""
   fixture.invoke.mockReset().mockResolvedValue({ data: fixture.hits, error: null })
+  fixture.approvalRpc.mockReset().mockImplementation((_name: string, args: { p_component_ids: number[] }) => {
+    if (fixture.failureTable === "approval") {
+      return Promise.resolve({ data: null, error: { message: "PRIVATE_FIXTURE_DATABASE_BODY" } })
+    }
+    return Promise.resolve({
+      data: args.p_component_ids.filter(id => fixture.approvedComponentIds.includes(id)),
+      error: null,
+    })
+  })
 })
 
 const request = (path: string) => new Request(`http://localhost${path}`, {
@@ -61,7 +73,7 @@ it.each([
   ["E-SEARCH /api/search", search, "ai-search-oai", "/api/search"],
   ["E-SEARCH /api/magic-search", magicSearch, "search-embeddings", "/api/magic-search"],
   ["E-SEARCH /api/search-mcp", mcpSearch, "ai-search-oai", "/api/search-mcp"],
-] as const)("%s keeps approved and creator hits, drops stale delisted hits", async (_name, handler, functionName, path) => {
+] as const)("%s keeps currently approved and creator hits, drops unapproved indexed hits", async (_name, handler, functionName, path) => {
   const response = await handler(request(path))
   expect(response.status).toBe(200)
   expect(await response.json()).toMatchObject({ results: [
@@ -73,14 +85,17 @@ it.each([
   } })
 })
 
-it.each([search, magicSearch, mcpSearch])("E24: search upstream and database failures redact private bodies", async handler => {
+it.each([search, magicSearch, mcpSearch])("E24: upstream failure is unavailable; admission failure hides indexed hits", async handler => {
   fixture.invoke.mockResolvedValueOnce({ data: null, error: { message: "PRIVATE_FIXTURE_UPSTREAM_BODY" } })
   const upstreamFailure = await handler(request("/api/search"))
   expect(upstreamFailure.status).toBe(503)
   expect(await upstreamFailure.text()).not.toContain("PRIVATE_FIXTURE_UPSTREAM_BODY")
 
-  fixture.failureTable = "auto_index_publications"
+  fixture.failureTable = "approval"
   const databaseFailure = await handler(request("/api/search"))
-  expect(databaseFailure.status).toBe(503)
-  expect(await databaseFailure.text()).not.toContain("PRIVATE_FIXTURE_DATABASE_BODY")
+  expect(databaseFailure.status).toBe(200)
+  expect(await databaseFailure.clone().text()).not.toContain("PRIVATE_FIXTURE_DATABASE_BODY")
+  expect(await databaseFailure.json()).toMatchObject({ results: [
+    { id: 903, component_id: 93 },
+  ], metadata: { pagination: { total: 1 } } })
 })

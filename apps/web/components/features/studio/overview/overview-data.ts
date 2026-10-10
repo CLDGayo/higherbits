@@ -1,6 +1,9 @@
 import "server-only"
 
+import { auth } from "@clerk/nextjs/server"
+import { createClient } from "@supabase/supabase-js"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
+import type { Database } from "@/types/supabase"
 
 import { WINDOW_DAYS, type DailyEarningsRow } from "./windowing"
 
@@ -136,15 +139,37 @@ export interface StudioOverviewData {
 export const TOP_COMPONENTS_LIMIT = 5
 
 export async function getStudioOverviewData(
-  userId: string,
+  requestedUserId: string,
 ): Promise<StudioOverviewData> {
-  const [dailyResult, bookmarks, topComponents] = await Promise.all([
-    supabaseWithAdminAccess.rpc("get_daily_user_earnings_v2", {
-      p_user_id: userId,
-    }),
-    getBookmarkWindows(userId),
-    getTopComponents(userId, TOP_COMPONENTS_LIMIT),
+  const { userId, getToken } = await auth()
+  if (!userId || userId !== requestedUserId) {
+    return {
+      daily: null,
+      bookmarks: { current: null, previous: null },
+      topComponents: null,
+    }
+  }
+
+  const [bookmarks, topComponents] = await Promise.all([
+    getBookmarkWindows(requestedUserId),
+    getTopComponents(requestedUserId, TOP_COMPONENTS_LIMIT),
   ])
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_KEY
+  const supabaseJwt = await getToken({ template: "supabase" })
+  if (!supabaseUrl || !supabaseAnonKey || !supabaseJwt) {
+    console.error("Missing authenticated Supabase context for studio analytics")
+    return { daily: null, bookmarks, topComponents }
+  }
+
+  const callerSupabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+    global: { headers: { Authorization: `Bearer ${supabaseJwt}` } },
+  })
+  const dailyResult = await callerSupabase.rpc("get_daily_user_earnings_v2", {
+    p_user_id: requestedUserId,
+  })
 
   if (dailyResult.error) {
     console.error(

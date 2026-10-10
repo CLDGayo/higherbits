@@ -78,6 +78,19 @@ GRANT SELECT ON public.public_profiles TO anon, authenticated;
 -- Step B3c-ii: joins public_profiles (not public.users) so cross-user
 -- registry dependencies resolve instead of silently returning 0 rows.
 -- security_invoker stays ON for this view — only its joined relation changed.
+-- This narrow definer view exposes only IDs for rows that are public and pass
+-- the current immutable review/fingerprint/opt-out gate. It lets invoker views
+-- enforce the gate without granting callers EXECUTE on the approval RPC.
+CREATE OR REPLACE VIEW public.auto_index_public_component_ids
+WITH (security_invoker = off) AS
+SELECT c.id
+FROM public.components c
+WHERE c.is_public = true
+  AND c.registry = 'auto-index'
+  AND public.auto_index_component_has_current_approval(c.id);
+REVOKE ALL ON public.auto_index_public_component_ids FROM PUBLIC, anon, authenticated;
+GRANT SELECT ON public.auto_index_public_component_ids TO anon, authenticated, service_role;
+
 CREATE OR REPLACE VIEW public.components_with_username
 WITH (security_invoker = on) AS
 SELECT
@@ -106,7 +119,10 @@ SELECT
   u.username,
   c.video_url
 FROM public.components c
-JOIN public.public_profiles u ON u.id = c.user_id;
+JOIN public.public_profiles u ON u.id = c.user_id
+WHERE c.is_public = true
+  AND (c.registry IS DISTINCT FROM 'auto-index' OR c.id IN
+    (SELECT approved.id FROM public.auto_index_public_component_ids approved));
 
 -- Used by: lib/queries.server.ts (registry dependency tree resolution).
 -- One row per (source component -> dependency component) closure edge,
@@ -155,7 +171,13 @@ FROM public.component_dependencies_closure cl
 JOIN public.components src ON src.id = cl.component_id
 JOIN public.public_profiles su ON su.id = src.user_id
 JOIN public.components dep ON dep.id = cl.dependency_component_id
-JOIN public.public_profiles du ON du.id = dep.user_id;
+JOIN public.public_profiles du ON du.id = dep.user_id
+WHERE src.is_public = true
+  AND dep.is_public = true
+  AND (src.registry IS DISTINCT FROM 'auto-index' OR src.id IN
+    (SELECT approved.id FROM public.auto_index_public_component_ids approved))
+  AND (dep.registry IS DISTINCT FROM 'auto-index' OR dep.id IN
+    (SELECT approved.id FROM public.auto_index_public_component_ids approved));
 
 -- Used by: lib/queries.ts getRoundSubmissions (admin leaderboard).
 -- Per-demo per-round hunt standings. has_voted resolves against the
@@ -208,4 +230,7 @@ FROM public.demo_hunt_scores s
 JOIN public.demos d ON d.id = s.demo_id
 JOIN public.components c ON c.id = d.component_id
 JOIN public.public_profiles cu ON cu.id = c.user_id
-JOIN public.public_profiles du ON du.id = d.user_id;
+JOIN public.public_profiles du ON du.id = d.user_id
+WHERE c.is_public = true
+  AND (c.registry IS DISTINCT FROM 'auto-index' OR c.id IN
+    (SELECT approved.id FROM public.auto_index_public_component_ids approved));

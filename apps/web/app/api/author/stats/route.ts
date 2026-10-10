@@ -1,8 +1,11 @@
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { checkIsAdmin } from "@/lib/admin"
 import { auth } from "@clerk/nextjs/server"
+import { createClient } from "@supabase/supabase-js"
 import { addDays, format } from "date-fns"
 import { NextRequest, NextResponse } from "next/server"
+import { currentApprovedAutoIndexComponentIds } from "@/lib/api/server/auto-index-admission"
+import type { Database } from "@/types/supabase"
 
 type PayoutRate = {
   active_from: string
@@ -116,7 +119,7 @@ const getPayoutRatesByDates = (
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth()
+    const { userId, getToken } = await auth()
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -137,8 +140,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_KEY
+    const supabaseJwt = await getToken({ template: "supabase" })
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseJwt) {
+      console.error("Missing authenticated Supabase context for author statistics")
+      return NextResponse.json(
+        { error: "Author statistics are temporarily unavailable" },
+        { status: 503 },
+      )
+    }
+
+    // This owner/admin-scoped RPC must see the requester's verified Clerk JWT.
+    // Never call it with the service-role client: doing so drops the caller
+    // identity that the database uses to authorize the requested author.
+    const callerSupabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+      global: { headers: { Authorization: `Bearer ${supabaseJwt}` } },
+    })
     const { data: payoutStats, error: payoutError } =
-      await supabaseWithAdminAccess.rpc("get_daily_user_earnings_v2", {
+      await callerSupabase.rpc("get_daily_user_earnings_v2", {
         p_user_id: targetUserId,
       })
 
@@ -195,23 +216,37 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { count: publishedComponentsCount, error: componentsError } =
-      await supabaseWithAdminAccess
+    const publicComponents: Array<{ id: number; registry: string | null }> = []
+    let lastComponentId: number | null = null
+    for (;;) {
+      let query = supabaseWithAdminAccess
         .from("components")
-        .select("id", { count: "exact", head: true })
+        .select("id, registry")
         .eq("user_id", targetUserId)
         .eq("is_public", true)
-
-    if (componentsError) {
-      console.error("Error counting published components:", componentsError)
-      return NextResponse.json(
-        { error: "Failed to count published components" },
-        { status: 500 },
-      )
+        .order("id", { ascending: true })
+        .limit(1000)
+      if (lastComponentId !== null) query = query.gt("id", lastComponentId)
+      const { data, error } = await query
+      if (error) {
+        console.error("Error counting published components:", error)
+        return NextResponse.json({ error: "Failed to count published components" }, { status: 500 })
+      }
+      const rows = data ?? []
+      publicComponents.push(...rows)
+      if (rows.length < 1000) break
+      lastComponentId = rows.at(-1)?.id ?? lastComponentId
     }
+    const indexedIds = publicComponents
+      .filter(({ registry }) => registry === "auto-index")
+      .map(({ id }) => id)
+    const admittedIds = await currentApprovedAutoIndexComponentIds(indexedIds)
+    const publishedComponentsCount = publicComponents.filter(
+      ({ id, registry }) => registry !== "auto-index" || admittedIds.has(id),
+    ).length
 
     const responseData = {
-      published_components: publishedComponentsCount || 0,
+      published_components: publishedComponentsCount,
       payoutStats: payoutStatsExpanded,
       payouts,
     }

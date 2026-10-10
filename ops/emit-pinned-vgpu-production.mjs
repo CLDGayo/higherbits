@@ -117,8 +117,9 @@ const statements = [
   '-- Pinned VGPU examples; every item is promoted in one transaction.',
   `-- Manifest SHA-256: ${manifestSha256}`,
   `-- Release commit: ${releaseCommit}`,
-  'BEGIN;', "SET LOCAL lock_timeout='5s';", "SET LOCAL ROLE service_role;",
-  'DO $items$ DECLARE v_source_id bigint; v_candidate_id bigint; v_decision_id bigint; v_component_id integer; BEGIN',
+  'BEGIN;', "SET LOCAL lock_timeout='5s';", '-- Must connect directly as auto_index_stage; never assume a role in this script.',
+  'DO $items$ DECLARE v_source_id bigint; v_candidate_id bigint; v_decision_id bigint; BEGIN',
+  `IF session_user <> 'auto_index_stage' OR current_user <> 'auto_index_stage' THEN RAISE EXCEPTION 'direct auto_index_stage login required'; END IF;`,
   `v_source_id := public.register_auto_index_source('custom_manifest',${quoted(manifest.repositoryUrl)},'VGPU');`,
   `IF (SELECT opted_out FROM public.auto_index_sources WHERE id=v_source_id) THEN RAISE EXCEPTION 'VGPU opted out'; END IF;`,
 ]
@@ -132,21 +133,17 @@ for (const item of selected) {
     target: file.target, bytes_hex: readFileSync(join(root, 'source', item.exampleSlug,
       file.path.slice(`apps/docs/examples/${item.exampleSlug}/`.length))).toString('hex') }))
   const dependencies = Object.entries(item.dependencies).map(([name, version]) => ({ type: 'npm', name, version }))
-  const evidence = { approved: true, scope: 'production', componentSourcePath: sourcePath, dependenciesApproved: true,
-    reviewerLabel: review.reviewerLabel, reviewedAt: review.reviewedAt, rationale: review.rationale,
+  const evidence = { scope: 'production', componentSourcePath: sourcePath, dependenciesApproved: true,
     releaseCommit, manifestSha256, sourceSha256: hash(source), demoSha256: hash(demo),
     ghlHtmlSha256: hash(ghlHtml), previewSha256: item.previewSha256, licenseSha256: manifest.licenseSha256,
     runtimeAssets: item.runtimeAssets || [],
     detector: 'pinned-vgpu-production-review' }
   const preview = `${assetBase}/vgpu-${item.slug}.png`
   const bundle = `${assetBase}/vgpu-${item.slug}.html`
-  const savedPromptHashes = Object.entries(saved[item.slug].prompts).map(([type, prompt]) =>
-    `WHEN ${quoted(type)} THEN ${quoted(hash(Buffer.from(prompt)))}`
-  ).join(' ')
   statements.push(
     `v_decision_id := public.record_auto_index_candidate(v_source_id,${quoted(sourcePath)},${quoted(manifest.revision)},`,
     `${quoted(manifest.repositoryUrl)},'MIT',${txt(license)},NULL,${json(dependencies)},${json(files)},`,
-    `'approved','production_pinned_mit_review',${json(evidence)});`,
+    `'qualified','production_source_qualified',${json(evidence)});`,
     `SELECT id INTO STRICT v_candidate_id FROM public.auto_index_candidates WHERE source_id=v_source_id AND item_key=${quoted(sourcePath)} AND revision=${quoted(manifest.revision)};`,
     `PERFORM public.record_auto_index_candidate_demo(v_candidate_id,${txt(demo)},'higherbits-authored','HigherBits.dev',NULL,NULL,NULL,`,
     `${quoted('HigherBits-authored wrapper importing the exact pinned VGPU example')},'{}'::jsonb,${txt(ghlHtml)},`,
@@ -162,21 +159,14 @@ for (const item of selected) {
     `NULL,NULL,${quoted(hash(demo))},'MIT',${txt(authoredLicense)},'',`,
     `${quoted('HigherBits-authored example wrapper under HigherBits MIT license')},NULL,NULL,NULL);`,
     `IF NOT public.auto_index_candidate_provenance_complete(v_candidate_id) THEN RAISE EXCEPTION 'VGPU provenance incomplete: ${item.slug}'; END IF;`,
-    `v_component_id := public.publish_auto_index_candidate(v_decision_id,${quoted(item.slug)},${quoted(item.title)},${quoted(item.description)},${quoted(preview)});`,
-    `UPDATE public.components SET preview_url=${quoted(preview)},dependencies=${json(item.dependencies)} WHERE id=v_component_id AND registry='auto-index';`,
-    `UPDATE public.demos SET preview_url=${quoted(preview)},bundle_html_url=${quoted(bundle)} WHERE component_id=v_component_id AND demo_slug='default';`,
-    `IF NOT EXISTS (SELECT 1 FROM public.auto_index_publications p JOIN public.components c ON c.id=p.component_id`,
-    `JOIN public.demos d ON d.component_id=c.id AND d.demo_slug='default' WHERE p.source_id=v_source_id`,
-    `AND p.item_key=${quoted(sourcePath)} AND p.component_id=v_component_id AND p.delisted_at IS NULL AND p.superseded_at IS NULL`,
-    `AND c.is_public AND c.preview_url=${quoted(preview)} AND d.bundle_html_url=${quoted(bundle)}`,
-    `AND encode(extensions.digest(convert_to(c.code,'UTF8'),'sha256'),'hex')=${quoted(hash(source))}`,
-    `AND encode(extensions.digest(convert_to(d.demo_code,'UTF8'),'sha256'),'hex')=${quoted(hash(demo))}`,
-    `AND d.ghl_source_fingerprint=public.auto_index_ghl_fingerprint(c.code,d.demo_code)`,
-    `AND (SELECT count(*) FROM public.auto_index_copy_prompts cp WHERE cp.demo_id=d.id AND cp.source_fingerprint=d.ghl_source_fingerprint`,
-    `AND encode(extensions.digest(convert_to(cp.prompt,'UTF8'),'sha256'),'hex')=CASE cp.prompt_type ${savedPromptHashes} ELSE NULL END)=10)`,
-    `THEN RAISE EXCEPTION 'VGPU publication verification failed: ${item.slug}'; END IF;`,
+    `PERFORM public.stage_auto_index_candidate_publication_metadata(v_candidate_id,${quoted(item.slug)},${quoted(`vgpu-${item.slug}`)},`,
+    `${quoted(item.title)},${quoted(item.description)},${json(item.dependencies)},${quoted(preview)},${quoted(preview)},`,
+    `${quoted(bundle)},NULL);`,
   )
 }
 statements.push('END $items$;', 'COMMIT;',
-  `SELECT count(*) AS active_vgpu_components FROM public.auto_index_publications p JOIN public.auto_index_sources s ON s.id=p.source_id JOIN public.components c ON c.id=p.component_id WHERE s.canonical_url=${quoted(manifest.repositoryUrl)} AND p.delisted_at IS NULL AND p.superseded_at IS NULL AND c.is_public;`)
+  `SELECT c.id AS candidate_id,c.item_key,c.revision,d.outcome`,
+  `FROM public.auto_index_candidates c JOIN public.auto_index_sources s ON s.id=c.source_id`,
+  `JOIN public.auto_index_decisions d ON d.candidate_id=c.id AND d.outcome='qualified'`,
+  `WHERE s.canonical_url=${quoted(manifest.repositoryUrl)} ORDER BY c.id;`)
 console.log(statements.join('\n'))
