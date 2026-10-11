@@ -178,6 +178,10 @@ export const ComponentCard = React.memo(function ComponentCard({
       : ("pro_preview_image_url" in demo && demo.pro_preview_image_url)
         ? demo.pro_preview_image_url
         : "/placeholder.svg"
+  const previewImageUrl = previewUrl.replace(
+    /(\/auto-index\/[^?#]+)\.html(?=[?#]|$)/i,
+    "$1.png",
+  )
 
   const lightPreviewUrl = isShadcn
     ? `/thumbnails/${componentSlug}-light.png`
@@ -363,7 +367,7 @@ export const ComponentCard = React.memo(function ComponentCard({
               <div className="relative w-full h-full rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                 <div className="absolute inset-0">
                   <ComponentPreviewImage
-                    src={previewUrl}
+                    src={previewImageUrl}
                     lightSrc={lightPreviewUrl}
                     alt={componentName}
                     fallbackSrc="/placeholder.svg"
