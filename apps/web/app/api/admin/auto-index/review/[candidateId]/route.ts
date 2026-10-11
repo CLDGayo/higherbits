@@ -48,25 +48,7 @@ export async function POST(request: Request, context: RouteContext) {
   if (admin.status !== 200) return json({ error: admin.status === 503 ? "review_unavailable" : "unauthorized" }, admin.status)
   const candidateId = await candidateIdFrom(context)
   if (candidateId === null) return json({ error: "invalid_candidate_id" }, 400)
-  if (!isCanonicalSameOriginRequest(request.headers, SITE_URL)) {
-    const origin = request.headers.get("origin")
-    const referer = request.headers.get("referer")
-    let refererMatches = false
-    try {
-      refererMatches = !!referer && new URL(referer).origin === SITE_URL
-    } catch {}
-    return json({
-      error: "origin_denied",
-      diagnostics: {
-        originPresent: origin !== null,
-        originMatches: origin === SITE_URL,
-        refererPresent: referer !== null,
-        refererMatches,
-        fetchSitePresent: request.headers.has("sec-fetch-site"),
-        fetchSiteSameOrigin: request.headers.get("sec-fetch-site") === "same-origin",
-      },
-    }, 403)
-  }
+  if (!isCanonicalSameOriginRequest(request.headers, SITE_URL)) return json({ error: "origin_denied" }, 403)
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
     return json({ error: "invalid_request" }, 415)
   }
