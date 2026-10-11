@@ -151,7 +151,7 @@ export function LandingPageLayout({
         <CopyPromptSection featured={featured} />
       </LandingSection>
 
-      <LandingSection className="bg-muted/30">
+      <LandingSection className="bg-muted/30" innerClassName="xl:max-w-screen-2xl">
         {/* Same pool the two carousel rows above draw from — the grid is the
             unsliced, non-scrolling view of it. Previously this section had its
             own `components`-table query returning a preview-less 4-field shape;
