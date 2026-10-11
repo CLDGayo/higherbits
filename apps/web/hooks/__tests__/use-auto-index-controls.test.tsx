@@ -244,5 +244,6 @@ describe("sandboxed auto-index preview lifecycle", () => {
     await waitFor(() => expect(view.result.current.unavailableReason).toContain("unavailable"))
     expect(view.result.current.activeControls.speed).toBe(2)
     expect(view.result.current.hasControls).toBe(true)
+    expect(view.result.current.useInjectedPreviewDocument).toBe(false)
   })
 })

@@ -709,7 +709,7 @@ export function ComponentPreviewDialog({
                 <iframe
                   ref={iframeRef}
                   sandbox="allow-scripts"
-                  src={editor.isAutoIndex && editor.previewDocument ? undefined : `${bundleUrl}?theme=${previewTheme}${
+                  src={editor.useInjectedPreviewDocument ? undefined : `${bundleUrl}?theme=${previewTheme}${
                     previewTheme === "dark" ? "&dark=true" : ""
                   }`}
                   srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}

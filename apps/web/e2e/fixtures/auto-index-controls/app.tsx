@@ -14,7 +14,7 @@ function Preview() {
         <option value="controls-fixture">Deterministic React component</option>
         <option value="edilozi-accordion">Ingested accordion</option>
       </select></label>
-      <iframe key={bundle} ref={iframeRef} title="Component preview" sandbox="allow-scripts" src={controls.isAutoIndex && controls.previewDocument ? undefined : `/auto-index/${bundle}.html`} srcDoc={controls.isAutoIndex ? controls.previewDocument ?? undefined : undefined} onLoad={controls.onFrameLoad} style={controls.previewStyle} />
+      <iframe key={bundle} ref={iframeRef} title="Component preview" sandbox="allow-scripts" src={controls.useInjectedPreviewDocument ? undefined : `/auto-index/${bundle}.html`} srcDoc={controls.isAutoIndex ? controls.previewDocument ?? undefined : undefined} onLoad={controls.onFrameLoad} style={controls.previewStyle} />
       <output data-testid="control-state" hidden>{JSON.stringify(controls.activeControls)}</output>
     </section>
     <aside>

@@ -190,7 +190,7 @@ export default function AutoIndexedView() {
                   ref={previewIframeRef}
                   title={`${preview?.componentName ?? "Component"} preview`}
                   sandbox="allow-scripts"
-                  src={editor.isAutoIndex && editor.previewDocument ? undefined : previewHtmlUrl}
+                  src={editor.useInjectedPreviewDocument ? undefined : previewHtmlUrl}
                   srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
                   style={editor.previewStyle}
                   referrerPolicy="no-referrer"

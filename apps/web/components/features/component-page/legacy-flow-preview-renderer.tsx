@@ -201,7 +201,7 @@ export function LegacyFlowPreviewRenderer({
         <iframe
           ref={iframeRef}
           sandbox={editor.isAutoIndex ? "allow-scripts" : undefined}
-          src={editor.isAutoIndex && editor.previewDocument ? undefined : (isDarkTheme ? `${urls.html}?dark=true` : urls.html)}
+          src={editor.useInjectedPreviewDocument ? undefined : (isDarkTheme ? `${urls.html}?dark=true` : urls.html)}
           srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
           className="w-full h-full"
           onLoad={() => { setContentLoading(false); editor.onFrameLoad() }}
