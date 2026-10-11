@@ -101,10 +101,21 @@ export function prepareAutoIndexGhlHtml(raw: string): string {
         if (object?.type === "Identifier" && object.name === "document") {
           const name = property.name ?? property.value ?? ""
           if (["querySelector", "querySelectorAll"].includes(name)) reject()
-          if (["body", "documentElement"].includes(name)) {
-            const outerProperty = parent?.property as {name?: string} | undefined
-            if (parent?.type !== "MemberExpression" || parent.object !== node || !["scrollLeft", "scrollTop"].includes(outerProperty?.name ?? "")) reject()
-            replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexMount"})
+          if (name === "documentElement" && parent && parent.type === "MemberExpression" && parent.object === node) {
+            const dimension = (parent.property as {name?: string})?.name
+            if (dimension === "clientWidth" || dimension === "clientHeight") {
+              replacements.push({start:parent.start as number,end:parent.end as number,text:dimension === "clientWidth" ? "window.innerWidth" : "window.innerHeight"})
+            } else replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexMount"})
+          } else if (name === "body") replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexMount"})
+          else if (name === "documentElement") replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexMount"})
+          if (name === "head") replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexShadow"})
+          if (name === "startViewTransition") replacements.push({start:node.start as number,end:node.end as number,text:"undefined"})
+          if (name === "getAnimations") {
+            const args = parent?.arguments as unknown[] | undefined
+            const start = parent?.start
+            const end = parent?.end
+            if (parent?.type !== "CallExpression" || parent?.callee !== node || args?.length || typeof start !== "number" || typeof end !== "number") reject()
+            replacements.push({start: start as number,end: end as number,text:"__hbAutoIndexMount.getAnimations()"})
           }
         }
       }
