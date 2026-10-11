@@ -382,7 +382,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
               <iframe
                 ref={iframeRef}
                 sandbox="allow-scripts"
-                src={editor.isAutoIndex && editor.previewDocument ? undefined : `${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
+                src={editor.useInjectedPreviewDocument ? undefined : `${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
                 srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
                 title="Component preview"
                 style={editor.previewStyle}

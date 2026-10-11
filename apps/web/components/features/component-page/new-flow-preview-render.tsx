@@ -119,7 +119,7 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
         <iframe
           ref={iframeRef}
           sandbox={editor.isAutoIndex ? "allow-scripts" : undefined}
-          src={editor.isAutoIndex && editor.previewDocument ? undefined : `${bundleUrl}?theme=${resolvedTheme}`}
+          src={editor.useInjectedPreviewDocument ? undefined : `${bundleUrl}?theme=${resolvedTheme}`}
           srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
           title="Component preview"
           style={editor.previewStyle}

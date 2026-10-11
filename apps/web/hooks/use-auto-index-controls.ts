@@ -107,6 +107,7 @@ export function useAutoIndexControls({
   const [selectedTarget, setSelectedTarget] = useState("component")
   const [previewSize, setPreviewSize] = useState<PreviewSize>("desktop")
   const [unavailableReason, setUnavailableReason] = useState<string>()
+  const [bundleFetchFailedIdentity, setBundleFetchFailedIdentity] = useState<string | null>(null)
   const bridgeNonce = useRef("")
   const bridgePort = useRef<MessagePort | null>(null)
   const loadedPreviewDocument = useRef<string | null>(null)
@@ -150,6 +151,7 @@ export function useAutoIndexControls({
     setSelectedTarget("component")
     setPreviewSize("desktop")
     setUnavailableReason(undefined)
+    setBundleFetchFailedIdentity(null)
     setPreviewDocument(null)
     setFrameReady(false)
     loadedPreviewDocument.current = null
@@ -157,7 +159,10 @@ export function useAutoIndexControls({
   }, [identity, enabled])
 
   useEffect(() => {
-    if (!enabled || !localBundleUrl) return
+    if (!enabled || !localBundleUrl) {
+      if (!enabled) setBundleFetchFailedIdentity(null)
+      return
+    }
     const controller = new AbortController()
     const nonce = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`
     bridgeNonce.current = nonce
@@ -175,7 +180,10 @@ export function useAutoIndexControls({
       baseUrl.pathname = baseUrl.pathname.slice(0, baseUrl.pathname.lastIndexOf("/") + 1)
       setPreviewDocument(createAutoIndexPreviewDocument(html, nonce, baseUrl.href, POPULAR_GOOGLE_FONT_FAMILIES, AUTO_INDEX_ANIMATION_PRESETS))
     }).catch(() => {
-      if (!controller.signal.aborted) setUnavailableReason("Extra controls are unavailable for this preview. Reload the preview to try again.")
+      if (!controller.signal.aborted) {
+        setBundleFetchFailedIdentity(identity)
+        setUnavailableReason("Extra controls are unavailable for this preview. Reload the preview to try again.")
+      }
     })
     return () => controller.abort()
   }, [enabled, localBundleUrl, identity])
@@ -308,6 +316,7 @@ export function useAutoIndexControls({
     autoControls,
     unavailableReason,
     isAutoIndex,
+    useInjectedPreviewDocument: isAutoIndex && (!enabled || bundleFetchFailedIdentity !== identity),
     previewDocument,
     hasControls: controls.length > 0 || Boolean(profile?.targets.length) || Boolean(unavailableReason),
     previewStyle: { width: previewSize === "mobile" ? "375px" : previewSize === "tablet" ? "768px" : "100%", maxWidth: "100%", marginInline: "auto" },

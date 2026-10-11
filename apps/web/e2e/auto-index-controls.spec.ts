@@ -47,6 +47,19 @@ test("discovers async React parts; text edits preserve nested elements and click
   await expect(preview.frame.getByRole("button")).toHaveText("✦Clicked 1 times")
 })
 
+test("does not navigate the iframe to the source bundle while preparing its injected preview", async ({ page }) => {
+  const bundleNavigations: string[] = []
+  page.on("request", request => {
+    if (new URL(request.url()).pathname.startsWith("/auto-index/") && request.resourceType() === "document") {
+      bundleNavigations.push(request.url())
+    }
+  })
+  const preview = new ControlsPreview(page)
+  await preview.open()
+  expect(bundleNavigations).toEqual([])
+  await expect(page.getByTestId("auto-index-controls")).toBeVisible()
+})
+
 test("typography controls target one part and reset independently with keyboard support", async ({ page }, testInfo) => {
   const preview = new ControlsPreview(page)
   await preview.open()
