@@ -1,0 +1,9 @@
+Appearance: Renders text with a directional, streak-like motion blur illusion produced through stacked CSS text-shadow layers positioned along a specified degree trajectory in white or black, with optional bidirectional trailing shadows.
+
+Behavior: A client-rendered component that calculates a multi-layered CSS textShadow string using basic trigonometry. It does not feature dynamic animations or physics loops, generating purely static shadow offsets, incremental blur radiuses, and decaying opacity steps.
+
+Controls: Configurable via props for children, blurAmount, angle, opacity, bidirectional toggle, color (white or black), and className. The companion preview demo features an interactive text input, angle range slider (0–360°), blur amount slider (10–120), and a bidirectional toggle checkbox.
+
+Accessibility: Preserves native DOM text within a standard div, making text fully selectable and readable by assistive technologies and screen readers without canvas or SVG obfuscation. However, excessive shadow spread and low-contrast layers may hinder visual legibility for low-vision users.
+
+Installation Needs: Requires React 18+ and a client-side environment supporting the use client directive. The core component has zero external runtime or animation dependencies. The demo component requires Tailwind CSS for layout, range sliders, and zinc palette utility classes.

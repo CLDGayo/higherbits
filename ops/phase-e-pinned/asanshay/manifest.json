@@ -1,18 +1,18 @@
 {
-  "repositoryUrl": "https://ds.asanshay.com",
-  "ownerLabel": "asanshay",
+  "repositoryUrl": "https://github.com/SuperAce100/design-system",
+  "ownerLabel": "Asanshay Gupta",
   "profileUrl": "https://21st.dev/@asanshay",
-  "licenseSpdx": null,
-  "licenseSha256": "b15e586dc0113e8bf51fe713a1e56eca2ee4b2492eaecde67c1943803fb9623d",
-  "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
-  "copyPromptsSha256": "6ed6d5770388e1dfe18c3eb698e69d27f60f9f175ebabff5d2d5c4573183d3d0",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "318b839e2282033c49f68f706d2c992e8a8529ae907a92551327b37a93a25d3f",
+  "revision": "98bc52dfad29943811163402af9fc22e4399e839",
+  "copyPromptsSha256": "7ad603667adb47d01f993944c0833cf1bfb832c430b1e7c1c9c0b7141befb2be",
   "items": [
     {
       "slug": "chat-message",
       "registryName": "chat-message",
       "title": "Chat Message",
       "description": "A chat message component compatible with the Vercel AI SDK including markdown support, copying, etc.",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/chat-message/chat-message.tsx",
       "files": [
         {
@@ -57,7 +57,7 @@
       ],
       "aliasImports": [],
       "demoSha256": "c98d34dc6ca224c12dc54fea4c05226a1831a230582f44972d7dbcfabd851968",
-      "ghlSha256": "fd4ec4693fc91456e030f512e70fdb5f0b837d7ceb0127cf59fbf8fa9b088fa3",
+      "ghlSha256": "b4ca70cab28bb9c57c6a5bb8d95a7c855a8177556751a1a0a3e6db10fadde70e",
       "previewSha256": "b8edb78aa029e486d33c6ef500390b13cde4d94d913c6a64663793244768956d"
     },
     {
@@ -65,7 +65,7 @@
       "registryName": "chat-reasoning",
       "title": "Chat Reasoning",
       "description": "A chat reasoning component for a nice chatbot experience. Ready for useChat().",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/chat-reasoning/chat-reasoning.tsx",
       "files": [
         {
@@ -80,7 +80,7 @@
       ],
       "aliasImports": [],
       "demoSha256": "83cf545444cab6c4b93420b419feba3e36365fa2812525934f19adc8dd12132e",
-      "ghlSha256": "bc9ff504116443d2c3019ddd5112b55ddbccf44482c3e69689ad3c91a53ced43",
+      "ghlSha256": "6d0843b641b11973df73a04aea1e0c10fb83aee0094e432fa4a55f22e1bd2cd7",
       "previewSha256": "f57f67ab7d65c551173e25317e0a5ba51a88bd9e641e276fae79e40055b071ad"
     },
     {
@@ -88,7 +88,7 @@
       "registryName": "chat-tool",
       "title": "Chat Tool",
       "description": "A chat tool component that displays tool calls and their results.",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/chat-tool/chat-tool.tsx",
       "files": [
         {
@@ -105,7 +105,7 @@
       ],
       "aliasImports": [],
       "demoSha256": "2ae408a537d1d2e672eb661558fad5df598a82422aa35eea0d605c6cf5ef4dba",
-      "ghlSha256": "e844708fec7a2b02428ca72eaf8b1ae2af1f21950e56666072a3953e5f60b3eb",
+      "ghlSha256": "93d1cfd75a021b930e4494231e235206752a842dd29e69222bf6e745c8200162",
       "previewSha256": "6c7aab306ca745c235e984c27d41d322bad52a807715b885de9ce7ee1e534700"
     },
     {
@@ -113,7 +113,7 @@
       "registryName": "motion-blur-text",
       "title": "Motion Blur Text",
       "description": "A cool motion blur text effect.",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/motion-blur-text/motion-blur-text.tsx",
       "files": [
         {
@@ -126,7 +126,7 @@
       "dependencies": [],
       "aliasImports": [],
       "demoSha256": "322c3c352bb8281322955076cdcb771f4693a2316b4b715a014064f9e7364702",
-      "ghlSha256": "2cadf2a2e6139ec38086bf4a0240e1c7d61bdc208ad06cfd34a1a5af62ffeb50",
+      "ghlSha256": "1d691d43e6b14a81845dc830686788f2607f4702bf27f87ee1b61585679a7806",
       "previewSha256": "ee378e053a002578b3934abdf8f040bd4fb7e4a7417c98c80bfd25f455c863f3"
     },
     {
@@ -134,7 +134,7 @@
       "registryName": "page-header",
       "title": "Page Header",
       "description": "A clean page header so your pages look consistent.",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/page-header/page-header.tsx",
       "files": [
         {
@@ -147,7 +147,7 @@
       "dependencies": [],
       "aliasImports": [],
       "demoSha256": "7cfc06a6c0d0ba51dbc6564d116afefd0c6fa4a4aeb0eb9789a5670cdb59374b",
-      "ghlSha256": "a46dbf5429f353435c670c85a39d917b7ac7ef15d373a4d4e7d0cac873f119c1",
+      "ghlSha256": "0940a3b7d1eb7ee82958de8c13253440064bfee061e397ef6e8bbb4af3320ac6",
       "previewSha256": "26f3e332b246348460ab6b7baf677b782e377c243ff738f055798ca5dff25dec"
     },
     {
@@ -155,7 +155,7 @@
       "registryName": "reveal",
       "title": "Reveal",
       "description": "A simple wrapper that reveals content when it scrolls into view.",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/reveal/reveal.tsx",
       "files": [
         {
@@ -170,7 +170,7 @@
       ],
       "aliasImports": [],
       "demoSha256": "439f2b921d1db722cc325faa2e0069f93644393145314a8498b07f154fc19243",
-      "ghlSha256": "14623fceccde438890c7c204fa6bd670299cef34eba2ccaf643f3c0e5bf91914",
+      "ghlSha256": "e35fe6f80a2047fdcbf1b28c4c88ff876beca2654a2c2f516d9fe36e87e59187",
       "previewSha256": "cfa4bd24957f0f2b84fafe6c6b0c5575384c380b023e7154891d1aa9e26df0c1"
     },
     {
@@ -178,7 +178,7 @@
       "registryName": "loader",
       "title": "Loader",
       "description": "Custom WebGL shader loaders with 3 shapes (sphere, swirl, ripple) × 3 styles (plain, blur, dither).",
-      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "revision": "98bc52dfad29943811163402af9fc22e4399e839",
       "sourcePath": "registry/new-york/blocks/loader/loader.tsx",
       "files": [
         {
@@ -233,9 +233,11 @@
       "dependencies": [],
       "aliasImports": [],
       "demoSha256": "92eb8ff1eb0e9cf56a5c0f06676908545bbfffb052e7926e46e654a7483c8cd3",
-      "ghlSha256": "242148e4e43a84e7c93e3b63592b08ff1b2d61fcd95c9d0abbc2e2388f3bf582",
+      "ghlSha256": "58847d072a49a49f011fe0bebec5b702c4c29679fd865ffadba3e48670800c19",
       "previewSha256": "c5c370cfb6b9e5eea639f0a450c43c1c52593a15b352bd58d1f1a057bdfbf517"
     }
   ],
-  "eligibilityProvenance": "21st.dev auto-index=true roster eligibility signal; pinned from official public shadcn registry endpoints https://ds.asanshay.com/r/<slug>.json; upstream registry defines component schemas without a separate standalone root license file"
+  "eligibilityProvenance": "21st.dev auto-index=true roster eligibility accepted per user instruction; registry capture from https://ds.asanshay.com/r/<slug>.json; all captured source bytes independently matched https://github.com/SuperAce100/design-system at immutable commit 98bc52dfad29943811163402af9fc22e4399e839; upstream repository has no root LICENSE file; license basis is the user-confirmed MIT-or-equivalent eligibility signal.",
+  "sourceCaptureSha256": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+  "licenseBasis": "User-confirmed 21st.dev auto-index=true eligibility; the platform gate requires MIT-or-equivalent licensing. Exact upstream SPDX terms were not independently identified because the upstream repository has no root LICENSE file."
 }

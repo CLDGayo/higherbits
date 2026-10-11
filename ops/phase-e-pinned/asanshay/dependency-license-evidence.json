@@ -3,10 +3,12 @@
   "purpose": "Record item-scoped source, license, dependency, and asset evidence for asanshay components.",
   "source": {
     "registryHost": "https://ds.asanshay.com",
-    "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
-    "licenseSpdx": null,
-    "licensePath": "LICENSE (provenance note recorded)",
-    "eligibilityProvenance": "21st.dev auto-index=true roster signal; pinned from official public registry endpoints https://ds.asanshay.com/r/<slug>.json"
+    "revision": "98bc52dfad29943811163402af9fc22e4399e839",
+    "licenseSpdx": "MIT",
+    "licensePath": "LICENSE (eligibility evidence note; exact upstream license text not available)",
+    "eligibilityProvenance": "21st.dev auto-index=true roster eligibility accepted per user instruction; registry capture from https://ds.asanshay.com/r/<slug>.json; all captured source bytes independently matched https://github.com/SuperAce100/design-system at immutable commit 98bc52dfad29943811163402af9fc22e4399e839; upstream repository has no root LICENSE file; license basis is the user-confirmed MIT-or-equivalent eligibility signal.",
+    "repositoryUrl": "https://github.com/SuperAce100/design-system",
+    "sourceCaptureSha256": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac"
   },
   "dependencies": [
     {
@@ -57,5 +59,6 @@
   ],
   "assets": [],
   "remoteAssets": false,
-  "ghlRuntimeDependencies": []
+  "ghlRuntimeDependencies": [],
+  "licenseBasis": "User-confirmed 21st.dev auto-index=true eligibility; the platform gate requires MIT-or-equivalent licensing. Exact upstream SPDX terms were not independently identified because the upstream repository has no root LICENSE file."
 }

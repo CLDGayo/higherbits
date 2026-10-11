@@ -10,16 +10,13 @@ This packet covers the 7 items for `asanshay` in the 21st Creators sheet (`auto-
 - `loader`
 
 ## Source Pinning
-Source artifacts are pinned directly from official public shadcn registry endpoints at `https://ds.asanshay.com/r/<slug>.json`.
-The aggregate 64-character hexadecimal SHA-256 content hash of all pinned source files is used as the candidate revision:
-`7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac`
-(The database revision column accepts 40 to 64 character hex revisions; no git commit is manufactured).
+Source artifacts were captured from official shadcn registry endpoints at `https://ds.asanshay.com/r/<slug>.json` and independently matched byte-for-byte to the official source repository `https://github.com/SuperAce100/design-system` at immutable commit `98bc52dfad29943811163402af9fc22e4399e839`. That commit is the candidate revision. The content-capture directory retains its separate SHA-256 identifier `7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac`.
 
 ## Licensing Provenance
-The upstream registry endpoints return standard shadcn registry items without a separate standalone root LICENSE file. In accordance with user explicit instructions, inclusion is based on the user-confirmed 21st.dev `auto-index=true` roster eligibility provenance. No synthetic MIT terms, copyright owners, or SPDX grants are manufactured (`licenseSpdx: null`).
+The upstream repository has no root LICENSE file. The user confirmed that every 21st Creators row marked auto-index=true passed 21st.dev’s MIT-or-equivalent eligibility gate. For HigherBits’ current schema, the packet records MIT as the compatible classification. The adjacent LICENSE file is an evidence note, not verbatim legal terms; it does not invent a copyright holder or reproduce an unavailable license.
 
 ## Packet Structure
-- `source/7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac/`: All 17 unique original source files with exact relative paths.
+- `source/7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac/`: All 17 unique original source files with exact relative paths, verified against the pinned GitHub commit above.
 - `registry-responses/`: Raw JSON responses from `https://ds.asanshay.com/r/<slug>.json`.
 - `demos/`: HigherBits demo wrappers for each component.
 - `ghl/`: Standalone GoHighLevel HTML exports with provenance comments and zero remote assets.

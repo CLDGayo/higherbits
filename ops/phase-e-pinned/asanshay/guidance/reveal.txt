@@ -1,0 +1,14 @@
+**Appearance:**
+The Reveal component wraps child elements, displaying them as they enter the viewport. The demo showcases this within a rounded, bordered container featuring a three-column grid of zinc-toned feature cards with numbered badges, titles, and body text supporting both light and dark themes.
+
+**Behavior:**
+When scrolled into view by at least 20%, it triggers a one-time entrance animation lasting 0.6 seconds with an ease-out curve. Content starts hidden at 0 opacity, translated downward by 40 pixels, and blurred by 10 pixels, smoothly resolving to full opacity, zero translation, and zero blur. Sequential items stagger by 0.15 seconds per index increment.
+
+**Controls:**
+Component props include children (the elements to render), an optional className (for styling overrides), and an optional index number (defaulting to 0) used to multiply animation delay. The demo includes an interactive Replay Animation button that updates a key state to re-trigger animations.
+
+**Accessibility:**
+The component renders a standard HTML div without custom ARIA roles or built-in reduced-motion handling. Children retain standard DOM readability for assistive technologies. The demo replay control uses a native accessible button element.
+
+**Installation Needs:**
+Requires React with TypeScript, the Motion library (specifically importing from motion/react), Tailwind CSS, and a local class-merging utility function (cn) located at @/lib/utils (typically implemented with clsx and tailwind-merge).

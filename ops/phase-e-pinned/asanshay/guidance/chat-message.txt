@@ -1,0 +1,14 @@
+**Appearance**
+User messages align right with rounded corners, supporting default (tinted background), raised (gradient, border, shadow), or title header variants. Assistant messages align left in rounded muted containers with vertical timeline connectors for reasoning steps. Content renders formatted markdown typography, styled tables, and bordered or flat syntax-highlighted code blocks.
+
+**Behavior**
+User messages aggregate text parts into a single bubble. Assistant messages inspect message parts, routing initial reasoning or tool steps into a collapsible accordion while rendering trailing text and tool parts sequentially. Code blocks highlight syntax dynamically according to the active light or dark theme and execute clipboard copies with timed checkmark transitions.
+
+**Controls**
+Interactive elements include the collapsible reasoning accordion trigger, clickable markdown links opening new browser tabs, and a copy button positioned in code block headers.
+
+**Accessibility**
+User message containers define role="user". The code copy button provides dynamic aria-labels ("Copy to clipboard" / "Copied") alongside screen-reader-only fallback spans. Interactive buttons and Radix-based accordion triggers provide keyboard navigation, disable state handling, and focus-visible rings.
+
+**Installation Needs**
+Requires React, Tailwind CSS, class-variance-authority, clsx, and tailwind-merge. External packages include the Vercel AI SDK (`ai`), lucide-react, react-markdown, remark-gfm, react-syntax-highlighter, next-themes, and @radix-ui/react-slot. It depends on local design system components (Accordion, Button, ChatTool, ChatReasoning, Markdown, CodeBlock) and Tailwind color tokens (primary, muted, border, card, destructive).

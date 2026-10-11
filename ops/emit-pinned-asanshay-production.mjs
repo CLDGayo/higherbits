@@ -9,8 +9,6 @@ import { fileURLToPath } from 'node:url'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const root = join(repo, 'ops/phase-e-pinned/asanshay')
-const revision = '7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac'
-const repositoryUrl = 'https://ds.asanshay.com'
 const assetBase = 'https://higherbits.dev/auto-index'
 
 const hash = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -21,12 +19,19 @@ const promptTypes = ['sitebrew', 'v0', 'lovable', 'bolt', 'extended', 'replit', 
 
 const manifestBytes = readFileSync(join(root, 'manifest.json'))
 const manifest = JSON.parse(manifestBytes)
+const revision = manifest.revision
+const sourceCaptureSha256 = manifest.sourceCaptureSha256
+const repositoryUrl = manifest.repositoryUrl
 const copyPromptsBytes = readFileSync(join(root, 'copy-prompts.json'))
 const copyPrompts = JSON.parse(copyPromptsBytes)
 const licenseBytes = readFileSync(join(root, 'LICENSE'))
 
-if (manifest.revision !== revision) throw new Error('asanshay manifest revision mismatch')
-if (manifest.repositoryUrl !== repositoryUrl) throw new Error('asanshay repository URL mismatch')
+if (!/^[a-f0-9]{40}$/.test(revision) || !/^[a-f0-9]{64}$/.test(sourceCaptureSha256) ||
+    !/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/.test(repositoryUrl) ||
+    !['MIT', 'BSD-2-Clause', 'BSD-3-Clause', 'Apache-2.0', 'ISC'].includes(manifest.licenseSpdx) ||
+    manifest.items.some(item => item.revision !== revision)) {
+  throw new Error('asanshay source pin or license evidence is invalid')
+}
 if (hash(licenseBytes) !== manifest.licenseSha256) throw new Error('asanshay LICENSE file hash mismatch')
 if (hash(copyPromptsBytes) !== manifest.copyPromptsSha256) throw new Error('asanshay copy-prompts.json hash mismatch')
 
@@ -42,7 +47,7 @@ for (const item of manifest.items) {
 
   // Verify source files
   for (const file of item.files) {
-    const filePath = join(root, 'source', revision, file.path)
+    const filePath = join(root, 'source', sourceCaptureSha256, file.path)
     const fileBytes = readFileSync(filePath)
     if (fileBytes.length !== file.bytes || hash(fileBytes) !== file.sha256) {
       throw new Error(`Source file ${file.path} differs from reviewed bytes`)
@@ -124,7 +129,7 @@ const sections = [
   'DECLARE v_source_id bigint; v_candidate_id bigint; v_decision_id bigint;',
   'BEGIN',
   `  IF session_user <> 'auto_index_stage' OR current_user <> 'auto_index_stage' THEN RAISE EXCEPTION 'direct auto_index_stage login required'; END IF;`,
-  `  v_source_id := public.register_auto_index_source('official_registry',${quoted(repositoryUrl)},'asanshay shadcn registry');`,
+  `  v_source_id := public.register_auto_index_source('official_registry',${quoted(repositoryUrl)},${quoted(manifest.ownerLabel)});`,
   `  IF (SELECT opted_out FROM public.auto_index_sources WHERE id=v_source_id) THEN RAISE EXCEPTION 'asanshay opted out'; END IF;`,
 ]
 
@@ -132,7 +137,7 @@ for (const item of manifest.items) {
   const { slug, title, description, sourcePath, files, dependencies, demoSha256, ghlSha256, previewSha256 } = item
   const demoBytes = readFileSync(join(root, 'demos', `${slug}.tsx`))
   const ghlBytes = readFileSync(join(root, 'ghl', `${slug}.html`))
-  const mainSourceBytes = readFileSync(join(root, 'source', revision, sourcePath))
+  const mainSourceBytes = readFileSync(join(root, 'source', sourceCaptureSha256, sourcePath))
   const mainSourceSha256 = hash(mainSourceBytes)
 
   const evidence = {
@@ -141,11 +146,14 @@ for (const item of manifest.items) {
     dependenciesApproved: true,
     releaseCommit: review.releaseCommit,
     manifestSha256: review.manifestSha256,
+    sourceRepository: repositoryUrl,
+    sourceRevision: revision,
     sourceSha256: mainSourceSha256,
     demoSha256,
     ghlHtmlSha256: ghlSha256,
     previewSha256,
     licenseSha256: manifest.licenseSha256,
+    licenseBasis: manifest.licenseBasis,
     eligibilityProvenance: manifest.eligibilityProvenance,
     detector: 'pinned-asanshay-review',
   }
@@ -154,12 +162,12 @@ for (const item of manifest.items) {
     path: f.path,
     registry_type: f.type,
     target: `components/auto-index/asanshay-${slug}/${f.path.split('/').at(-1)}`,
-    bytes_hex: readFileSync(join(root, 'source', revision, f.path)).toString('hex'),
+    bytes_hex: readFileSync(join(root, 'source', sourceCaptureSha256, f.path)).toString('hex'),
   }))
 
   sections.push(`  -- ${title}: ${sourcePath}`)
   sections.push(`  v_decision_id := public.record_auto_index_candidate(v_source_id,${quoted(sourcePath)},${quoted(revision)},`)
-  sections.push(`    ${quoted(repositoryUrl)},NULL,${txt(licenseBytes)},NULL,${json(dependencies)},${json(filesPayload)},`)
+  sections.push(`    ${quoted(repositoryUrl)},${quoted(manifest.licenseSpdx)},${txt(licenseBytes)},NULL,${json(dependencies)},${json(filesPayload)},`)
   sections.push(`    'qualified','production_source_qualified',${json(evidence)});`)
   sections.push(`  SELECT id INTO STRICT v_candidate_id FROM public.auto_index_candidates`)
   sections.push(`    WHERE source_id=v_source_id AND item_key=${quoted(sourcePath)} AND revision=${quoted(revision)};`)
@@ -169,7 +177,7 @@ for (const item of manifest.items) {
   sections.push(`    ${txt(ghlBytes)},public.auto_index_ghl_fingerprint(${txt(mainSourceBytes)},${txt(demoBytes)}),${json(copyPrompts[slug])});`)
   sections.push(`  PERFORM public.record_auto_index_candidate_asset(v_candidate_id,${quoted(sourcePath)},`)
   sections.push(`    'component_source','upstream-original',${quoted(repositoryUrl)},${quoted(revision)},${quoted(mainSourceSha256)},`)
-  sections.push(`    NULL,${txt(licenseBytes)},'','Exact pinned source from official registry endpoint',NULL,NULL,NULL);`)
+  sections.push(`    ${quoted(manifest.licenseSpdx)},${txt(licenseBytes)},'',${quoted(`Exact source bytes matched ${repositoryUrl} at immutable commit ${revision}; eligibility recorded under the 21st.dev auto-index=true policy`)},NULL,NULL,NULL);`)
   sections.push(`  IF NOT public.auto_index_candidate_provenance_complete(v_candidate_id) THEN`)
   sections.push(`    RAISE EXCEPTION ${quoted(`${slug} provenance incomplete`)}; END IF;`)
   sections.push(`  PERFORM public.stage_auto_index_candidate_publication_metadata(v_candidate_id,${quoted(slug)},${quoted(`asanshay-${slug}`)},`)

@@ -1,0 +1,9 @@
+Appearance: A full-width collapsible card with a text header showing "Reasoning..." or "Done reasoning." in muted typography. When expanded, it reveals a vertical timeline featuring small circular dot markers connected by thin vertical lines (fading to transparent at the bottom node), positioned beside custom-rendered step content.
+
+Behavior: Functions as a single-item collapsible container. It synchronizes its open state when defaultValue changes, filters out message parts with a "step-start" type, and sequences the remaining parts down a connected step layout.
+
+Controls: An accordion trigger button toggles expansion and collapse on click or keyboard press.
+
+Accessibility: Inherits Radix UI / shadcn accordion accessibility patterns, featuring semantic button elements, standard WAI-ARIA attributes (aria-expanded, aria-controls), and keyboard navigation support via Enter and Space keys.
+
+Installation Needs: Requires React, the Vercel AI SDK (ai package), shadcn/ui Accordion component dependencies (@radix-ui/react-accordion), Tailwind CSS, and a cn class-merging helper (clsx with tailwind-merge).

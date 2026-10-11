@@ -1,0 +1,14 @@
+Appearance:
+PageHeader renders a full-width header with bottom-aligned elements and horizontal padding. On the left, a semibold, tight-tracking h1 title is stacked above an optional small, muted-foreground description paragraph. The title renders at 4xl font size when a description is present and 5xl when standalone. An aligned container on the far right holds optional custom content.
+
+Behavior:
+The component is a layout container that statically positions title, copy, and actions across a flex row. Its only dynamic logic conditionally scales down the heading font size from 5xl to 4xl when a description string is supplied. The root header also includes a CSS transition-all class.
+
+Controls:
+PageHeader includes no internal interactive controls or state. Interactive elements (such as action buttons, links, or badges) must be passed externally through the optional children slot.
+
+Accessibility:
+Implements semantic landmark structuring using a native header container and an h1 page title for screen readers. The description is rendered as standard paragraph text. Slotted interactive elements manage their own focus and ARIA attributes independently.
+
+Installation Needs:
+Requires React (or a platform-equivalent JSX runtime), Tailwind CSS configured with the project's color palette (including muted-foreground), and a class-merging utility function (typically combining clsx and tailwind-merge) exported as cn from @/lib/utils.

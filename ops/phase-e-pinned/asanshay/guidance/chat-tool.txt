@@ -1,0 +1,7 @@
+ChatTool renders a compact, rounded card with an accordion header showing an AI tool invocation. The header displays status icons alongside a state label and tool name: a spinning Loader2 while running, a green Check upon completion, a red AlertCircle on failure, and a Wrench during streaming. When expanded, it reveals vertically stacked, preformatted code blocks for input arguments, output results, and a highlighted destructive banner for error text.
+
+Behavior & Controls: A single collapsible trigger toggles the inspection panel open or closed. The component extracts tool names from dynamic or typed message parts, converts string or object payloads into formatted JSON strings, and dynamically displays only available inputs, outputs, or error states.
+
+Accessibility: Leveraging Radix UI Accordion semantics via shadcn/ui, the trigger is an accessible button supporting full keyboard navigation (Space, Enter, and Arrow keys) with ARIA expansion attributes (aria-expanded, aria-controls). Visual states combine colored icons with descriptive text labels ("Using", "Used", "Failed to use") for screen-reader and low-vision clarity.
+
+Installation Needs: Requires React, Tailwind CSS, the Vercel AI SDK (ai package), Lucide React (Wrench, Loader2, Check, AlertCircle), shadcn/ui Accordion primitives (Accordion, AccordionItem, AccordionTrigger, AccordionContent), and a cn class-merging helper (clsx and tailwind-merge).

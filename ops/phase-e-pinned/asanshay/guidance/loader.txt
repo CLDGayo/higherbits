@@ -1,0 +1,14 @@
+**Appearance:**  
+A circular, overflow-hidden container displaying WebGL shader animations. It renders three geometric shapes (sphere, swirl, ripple) in three visual variants: plain (solid), blur (soft), or dither (pixelated). It offers preset sizes of 48×48 (sm), 80×80 (default), and 120×120 (lg), supports custom pixel dimensions, and accepts custom foreground and background colors.
+
+**Behavior:**  
+Runs continuous fragment shader animations through a mount component at a configurable speed multiplier. When colors use CSS variables, it tracks DOM mutations (watching class, style, and data-theme on document elements) and prefers-color-scheme changes to dynamically synchronize shader uniforms during theme toggles.
+
+**Controls:**  
+Configurable through typed React props: shape ("sphere", "swirl", "ripple"), variant ("plain", "blur", "dither"), size ("sm", "default", "lg"), custom width, custom height, speed, color, colorBack, and all standard HTMLDivElement attributes.
+
+**Accessibility:**  
+The component includes no default ARIA roles, labels, or live regions, rendering only a generic div with a data-slot="loader" attribute. Assistive technology support (such as role="status", aria-live, or aria-label) must be provided manually by passing standard HTML attributes.
+
+**Installation Needs:**  
+Requires React, a client-side execution environment ("use client"), Tailwind CSS classes, and a className merger utility (cn from @/lib/utils). It strictly depends on two local sibling modules: ./shader-mount (providing ShaderMount) and ./shaders (providing plainFragmentShader, blurFragmentShader, ditherFragmentShader, and hexToRgba).

@@ -163,9 +163,9 @@ export const getComponentInstallPrompt = ({
   demoCodeFileName: string
   code: string
   demoCode: string
-  npmDependencies: Record<string, string>
+  npmDependencies: Record<string, string> | string[]
   registryDependencies: Record<string, string>
-  npmDependenciesOfRegistryDependencies: Record<string, string>
+  npmDependenciesOfRegistryDependencies: Record<string, string> | string[]
   tailwindConfig?: string
   globalCss?: string
   promptRule?: PromptRule
@@ -177,9 +177,12 @@ export const getComponentInstallPrompt = ({
   const componentPath = componentInstallPath || `components/ui/${componentFileName}`
   const componentAliasPath = componentInstallPath ? `@/${componentInstallPath}` : `@components/ui/${componentFileName}`
 
+  const depNames = (deps?: Record<string, string> | string[]) =>
+    Array.isArray(deps) ? deps : Object.keys(deps || {})
+
   const allDependencies = uniq([
-    ...Object.keys(npmDependencies || {}),
-    ...Object.keys(npmDependenciesOfRegistryDependencies || {}),
+    ...depNames(npmDependencies),
+    ...depNames(npmDependenciesOfRegistryDependencies),
   ]).filter(Boolean)
 
   const renderRegistryDeps = (heading: string = "### Registry Dependencies (Helper Components):") => {
