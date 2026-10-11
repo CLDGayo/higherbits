@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "captured_at": "2026-10-11T00:52:12Z",
+  "captured_at": "2026-10-11T10:52:51Z",
   "batch": "04",
   "source": {
     "spreadsheet_id": "1FHIXbjLyy5pIKtA2I35Y8DFFT6fED2bSrFOoHjjL988",
@@ -16,7 +16,7 @@
     "held_components_in_sheet": 73,
     "production_readback_verified": false,
     "production_write_attempted": false,
-    "reviewer_authenticated": false
+    "reviewer_authenticated": true
   },
   "authors": [
     {
@@ -77,7 +77,7 @@
       "sheet_ids": [],
       "packet": "ops/phase-e-pinned/asanshay",
       "packet_check": "READY",
-      "decision": "Seven items pass the emitter's offline integrity check; production staging still requires an authenticated reviewer and rotated database credentials."
+      "decision": "Seven items pass the emitter's offline integrity check. Their 14 preview assets are committed at 04642d08 and pushed to the feature branch, but production still serves 2c6a274 with zero Asanshay assets; do not stage until the exact HTTPS bytes are deployed and verified."
     },
     {
       "row": 140,
@@ -122,9 +122,9 @@
     }
   ],
   "production_gate": {
-    "user_reported_database_password_rotated": false,
-    "higherbits_admin_ui": "Access denied in the available session.",
-    "action": "No production SQL, staging, or publishing attempted. Resume after password rotation/secrets update and authenticated admin access."
+    "user_reported_database_password_rotated": true,
+    "higherbits_admin_ui": "Authenticated admin UI is accessible; production auto-index queue currently has no pending candidates.",
+    "action": "No production SQL, staging, or publishing attempted. The live release checkout is dirty and contains untracked files, including unrelated preview assets; preserve it and wait for a safe deploy window. Its current release has zero Asanshay preview assets, so staging remains blocked until exact HTTPS byte verification passes."
   },
   "reviewer_label": null,
   "reviewed_at": null
