@@ -1,0 +1,50 @@
+{
+  "creator": "amitgajare2",
+  "ownerLabel": "Amitgajare2",
+  "name": "Amit Gajare",
+  "sheetRow": 84,
+  "profileUrl": "https://21st.dev/@amitgajare2",
+  "website": "https://ariseui.vercel.app",
+  "repositoryUrl": "https://github.com/Amitgajare2/ariseui",
+  "revision": "490e5fe1d4518c7e72f6f96b8c4b1b37586b793f",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "716d70d55e3637a03b3dc532c34a61cea09f17a01a496f431cb043a096152ed9",
+  "copyPromptsSha256": "cd8e17d8c1555e101e2bdc0d0578416c7dcdcf507d4047bbb79aa28e17094cad",
+  "evaluationStatus": "partially_ready",
+  "items": [
+    {
+      "slug": "option-wheel",
+      "title": "Option Wheel",
+      "revision": "490e5fe1d4518c7e72f6f96b8c4b1b37586b793f",
+      "sourcePath": "components/ui/option-wheel.tsx",
+      "status": "ready",
+      "files": [
+        {
+          "path": "components/ui/option-wheel.tsx",
+          "type": "registry:ui",
+          "bytes": 10291,
+          "sha256": "81cbc93569110414f447e137df885393737791f8ce562f71b28853b4d3e3b257"
+        }
+      ],
+      "demoSha256": "fa7f7c227e1549da941eb3aa3121b5e089a7d3c70775f6202ccc47c902a96792",
+      "ghlSha256": "2355d696f877d8c8b8284cdb0a7c99e0e99d23d934f2411970e8ffa1d2f9e617",
+      "previewSha256": "fbd3516fe702a7b9c3ea2ccb836a318e294169c6da74922b17f851ffa8ca7acb"
+    }
+  ],
+  "heldItems": [
+    {
+      "slug": "code-block",
+      "title": "Code Block",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled prism-react-renderer package; lacks HigherBits demo wrapper and GHL export."
+    },
+    {
+      "slug": "proximity-sidebar",
+      "title": "Proximity Sidebar",
+      "status": "held",
+      "reason": "runtime_coupling_and_full_page_motion",
+      "detail": "Requires full-page proximity tracking and motion; lacks HigherBits demo wrapper and GHL export."
+    }
+  ]
+}

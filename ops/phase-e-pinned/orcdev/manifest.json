@@ -1,0 +1,41 @@
+{
+  "creator": "OrcDev",
+  "ownerLabel": "TheOrcDev",
+  "name": "OrcDev",
+  "sheetRow": 34,
+  "profileUrl": "https://21st.dev/@OrcDev",
+  "repositoryUrl": "https://github.com/TheOrcDev/8bitcn-ui",
+  "revision": "da3c0722b110d7bb99a7b7d7e2ee53251f2151e1",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "1f7c401e999345dc159be2023cb7587d72e044f3e736b378dff8828a7060c31e",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uncaptured_source_item",
+  "holdDetail": "Upstream repository identified under MIT (TheOrcDev/8bitcn-ui), source captured, but component requires custom retro.css stylesheet and radix menubar primitives, and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+  "items": [
+    {
+      "slug": "8bit-menubar",
+      "title": "8bit Menubar",
+      "revision": "da3c0722b110d7bb99a7b7d7e2ee53251f2151e1",
+      "sourcePath": "components/ui/8bit/menubar.tsx",
+      "bytes": 12371,
+      "sha256": "31e8abc0c267981dd94d3e14466715c238ac850aed98eb325b76a7e209243582",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component source captured under MIT, but requires custom retro.css and radix menubar primitives; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "components/ui/8bit/menubar.tsx",
+          "type": "registry:ui",
+          "bytes": 12371,
+          "sha256": "31e8abc0c267981dd94d3e14466715c238ac850aed98eb325b76a7e209243582"
+        },
+        {
+          "path": "components/ui/8bit/styles/retro.css",
+          "type": "registry:file",
+          "bytes": 306,
+          "sha256": "0e96902b74184e53ac5fbb806b8ef077bdd781357b3e47e83628a8c66842c010"
+        }
+      ]
+    }
+  ]
+}

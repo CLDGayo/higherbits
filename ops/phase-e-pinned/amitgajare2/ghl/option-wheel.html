@@ -1,0 +1,195 @@
+<div class="ghl-component-wrapper" role="region" aria-label="Option Wheel Selection Component">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%;
+      height: 420px;
+      position: relative;
+      background: #09090b;
+      color: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      border-radius: 12px;
+      border: 1px solid #27272a;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-wheel-root {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      height: 340px;
+      overflow: hidden;
+      user-select: none;
+      touch-action: none;
+      outline: none;
+      cursor: grab;
+    }
+    .ghl-wheel-root:active {
+      cursor: grabbing;
+    }
+    .ghl-wheel-item {
+      position: absolute;
+      top: 50%;
+      left: 80px;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 2.25rem;
+      transform-origin: left center;
+      transition: color 0.15s ease;
+      will-change: transform, opacity, filter;
+      line-height: 1;
+      font-weight: 300;
+    }
+    .ghl-wheel-item[aria-selected="true"] {
+      font-weight: 600;
+    }
+  </style>
+
+  <div class="ghl-wheel-root" role="listbox" tabindex="0" aria-label="Music Genre Selection Wheel">
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="0">Ambient</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="1">House</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="2">Techno</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="true" data-index="3">Jazz</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="4">Lo-Fi</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="5">Synthwave</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="6">Trance</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="7">Funk</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="8">Disco</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="9">Hip-Hop</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="10">Chillwave</div>
+    <div class="ghl-wheel-item" role="option" aria-selected="false" data-index="11">Drum &amp; Bass</div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.currentScript && document.currentScript.closest(".ghl-component-wrapper");
+      if (!root) return;
+      const wheel = root.querySelector(".ghl-wheel-root");
+      const items = Array.from(root.querySelectorAll(".ghl-wheel-item"));
+      let current = 3;
+      let target = 3;
+      let rafId = null;
+      let lastTime = performance.now();
+      const count = items.length;
+      const rowH = 48;
+      const tiltRad = (6 * Math.PI) / 180;
+      const R = rowH / tiltRad;
+
+      function render() {
+        for (let i = 0; i < count; i++) {
+          const el = items[i];
+          const d = i - current;
+          const dist = Math.abs(d);
+          const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, d * tiltRad));
+          const y = R * Math.sin(ang);
+          const x = -R * (1 - Math.cos(ang));
+          const rot = (ang * 180) / Math.PI;
+          el.style.transform = "translate(" + x.toFixed(2) + "px, calc(" + y.toFixed(2) + "px - 50%)) rotate(" + rot.toFixed(3) + "deg)";
+          el.style.opacity = Math.max(0.12, 1 - dist * 0.28).toFixed(3);
+          el.style.color = dist < 0.5 ? "#ffffff" : "#71717a";
+          el.setAttribute("aria-selected", dist < 0.5 ? "true" : "false");
+          el.style.filter = dist > 0.5 ? "blur(" + Math.min(dist * 1.5, 4).toFixed(1) + "px)" : "none";
+        }
+      }
+
+      function loop(now) {
+        const dt = Math.min((now - lastTime) / 1000, 0.05);
+        lastTime = now;
+        const k = 1 - Math.exp(-dt / 0.16);
+        current = current + (target - current) * k;
+        if (Math.abs(target - current) < 0.002) {
+          current = target;
+          render();
+          rafId = null;
+          return;
+        }
+        render();
+        rafId = requestAnimationFrame(loop);
+      }
+
+      function setTarget(idx) {
+        target = Math.max(0, Math.min(count - 1, idx));
+        if (!rafId) {
+          lastTime = performance.now();
+          rafId = requestAnimationFrame(loop);
+        }
+      }
+
+      render();
+
+      wheel.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        setTarget(Math.round(target) + (e.deltaY > 0 ? 1 : -1));
+      }, { passive: false });
+
+      let startY = 0;
+      let startTarget = 0;
+      let dragging = false;
+
+      wheel.addEventListener("pointerdown", (e) => {
+        dragging = true;
+        startY = e.clientY;
+        startTarget = target;
+        wheel.setPointerCapture(e.pointerId);
+      });
+
+      wheel.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const dy = e.clientY - startY;
+        setTarget(startTarget - dy / rowH);
+      });
+
+      wheel.addEventListener("pointerup", (e) => {
+        if (!dragging) return;
+        dragging = false;
+        setTarget(Math.round(target));
+      });
+
+      wheel.addEventListener("pointercancel", () => {
+        dragging = false;
+        setTarget(Math.round(target));
+      });
+
+      items.forEach((item, idx) => {
+        item.addEventListener("click", () => {
+          setTarget(idx);
+        });
+      });
+
+      wheel.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") { e.preventDefault(); setTarget(Math.round(target) - 1); }
+        if (e.key === "ArrowDown") { e.preventDefault(); setTarget(Math.round(target) + 1); }
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2026 Amit Gajare
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

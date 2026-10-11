@@ -1,0 +1,361 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-card-bg: #18181b;
+      --ghl-card-border: #27272a;
+      --ghl-text: #fafafa;
+      --ghl-muted: #a1a1aa;
+      --ghl-accent: #3b82f6;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      padding: 32px 16px;
+      background-color: var(--ghl-bg);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ghl-component-wrapper .ghl-stack-trigger {
+      position: relative;
+      width: 260px;
+      height: 280px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+      outline: none;
+    }
+    .ghl-component-wrapper .ghl-stack-card {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 220px;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--ghl-card-border);
+      background: var(--ghl-card-bg);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+    .ghl-component-wrapper .ghl-stack-card svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-card-1 {
+      transform: rotate(-14deg) translate(-20px, 0);
+      z-index: 10;
+    }
+    .ghl-component-wrapper .ghl-card-2 {
+      transform: rotate(-3deg) translate(0, -6px);
+      z-index: 20;
+    }
+    .ghl-component-wrapper .ghl-card-3 {
+      transform: rotate(12deg) translate(22px, 6px);
+      z-index: 30;
+    }
+    .ghl-component-wrapper .ghl-stack-trigger:hover .ghl-card-1 {
+      transform: rotate(-20deg) translate(-36px, -4px);
+    }
+    .ghl-component-wrapper .ghl-stack-trigger:hover .ghl-card-2 {
+      transform: rotate(-3deg) translate(0, -18px);
+    }
+    .ghl-component-wrapper .ghl-stack-trigger:hover .ghl-card-3 {
+      transform: rotate(18deg) translate(36px, 4px);
+    }
+    .ghl-component-wrapper .ghl-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ghl-muted);
+      background: #18181b;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1px solid var(--ghl-card-border);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    /* Expanded overlay modal */
+    .ghl-component-wrapper .ghl-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .ghl-component-wrapper .ghl-overlay.active {
+      display: flex;
+    }
+    .ghl-component-wrapper .ghl-modal-content {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .ghl-component-wrapper .ghl-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ghl-component-wrapper .ghl-modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ghl-text);
+    }
+    .ghl-component-wrapper .ghl-close-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid var(--ghl-card-border);
+      background: #18181b;
+      color: var(--ghl-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-close-btn:hover {
+      color: var(--ghl-text);
+      background: #27272a;
+    }
+    .ghl-component-wrapper .ghl-view-screen {
+      width: 100%;
+      height: 260px;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .ghl-component-wrapper .ghl-view-screen svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ghl-component-wrapper .ghl-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--ghl-card-border);
+      background: #18181b;
+      color: var(--ghl-text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-nav-btn:hover {
+      background: #27272a;
+    }
+    .ghl-component-wrapper .ghl-nav-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .ghl-component-wrapper .ghl-counter {
+      font-size: 13px;
+      color: var(--ghl-muted);
+      font-weight: 500;
+    }
+  </style>
+
+  <div class="ghl-container">
+    <button type="button" class="ghl-stack-trigger" aria-label="Expand photo gallery">
+      <div class="ghl-stack-card ghl-card-1">
+        <svg viewBox="0 0 220 180" preserveAspectRatio="xMidYMid slice">
+          <rect width="220" height="180" fill="#0f172a"></rect>
+          <rect x="30" y="30" width="160" height="100" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"></rect>
+          <circle cx="110" cy="80" r="24" fill="#0284c7"></circle>
+          <rect x="70" y="140" width="80" height="8" rx="4" fill="#475569"></rect>
+        </svg>
+      </div>
+      <div class="ghl-stack-card ghl-card-2">
+        <svg viewBox="0 0 220 180" preserveAspectRatio="xMidYMid slice">
+          <rect width="220" height="180" fill="#1e1b4b"></rect>
+          <circle cx="110" cy="80" r="50" fill="#6366f1" opacity="0.6"></circle>
+          <circle cx="140" cy="100" r="35" fill="#a855f7" opacity="0.7"></circle>
+          <path d="M40,140 Q110,60 180,140" fill="none" stroke="#e0e7ff" stroke-width="3"></path>
+        </svg>
+      </div>
+      <div class="ghl-stack-card ghl-card-3">
+        <svg viewBox="0 0 220 180" preserveAspectRatio="xMidYMid slice">
+          <rect width="220" height="180" fill="#18181b"></rect>
+          <rect x="25" y="30" width="170" height="110" rx="8" fill="#27272a" stroke="#10b981" stroke-width="2"></rect>
+          <line x1="45" y1="60" x2="110" y2="60" stroke="#10b981" stroke-width="3" stroke-linecap="round"></line>
+          <line x1="45" y1="80" x2="140" y2="80" stroke="#a1a1aa" stroke-width="3" stroke-linecap="round"></line>
+          <line x1="45" y1="100" x2="90" y2="100" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"></line>
+        </svg>
+      </div>
+    </button>
+    <div class="ghl-hint">Click gallery to expand</div>
+
+    <div class="ghl-overlay" role="dialog" aria-modal="true" aria-label="Expanded Gallery View">
+      <div class="ghl-modal-content">
+        <div class="ghl-modal-header">
+          <span class="ghl-modal-title" id="ghl-gallery-title">Technology setup</span>
+          <button type="button" class="ghl-close-btn" aria-label="Close gallery">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="ghl-view-screen" id="ghl-view-stage">
+          <!-- Slide SVG rendered dynamically -->
+        </div>
+
+        <div class="ghl-nav-bar">
+          <button type="button" class="ghl-nav-btn" id="ghl-gallery-prev" aria-label="Previous photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Prev
+          </button>
+          <span class="ghl-counter" id="ghl-gallery-counter">1 / 7</span>
+          <button type="button" class="ghl-nav-btn" id="ghl-gallery-next" aria-label="Next photo">
+            Next
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const wrapper = document.querySelector('.ghl-component-wrapper');
+      if (!wrapper) return;
+
+      const trigger = wrapper.querySelector('.ghl-stack-trigger');
+      const overlay = wrapper.querySelector('.ghl-overlay');
+      const closeBtn = wrapper.querySelector('.ghl-close-btn');
+      const prevBtn = wrapper.querySelector('#ghl-gallery-prev');
+      const nextBtn = wrapper.querySelector('#ghl-gallery-next');
+      const titleEl = wrapper.querySelector('#ghl-gallery-title');
+      const counterEl = wrapper.querySelector('#ghl-gallery-counter');
+      const stageEl = wrapper.querySelector('#ghl-view-stage');
+
+      const slides = [
+        {
+          title: 'Technology setup',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#0f172a"/><rect x="70" y="40" width="300" height="150" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/><circle cx="220" cy="115" r="36" fill="#0284c7"/><rect x="160" y="200" width="120" height="12" rx="6" fill="#475569"/></svg>'
+        },
+        {
+          title: 'Design research',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#1e1b4b"/><circle cx="180" cy="120" r="70" fill="#6366f1" opacity="0.6"/><circle cx="260" cy="140" r="55" fill="#a855f7" opacity="0.7"/><path d="M80,210 Q220,90 360,210" fill="none" stroke="#e0e7ff" stroke-width="4"/></svg>'
+        },
+        {
+          title: 'Code and development',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#18181b"/><rect x="50" y="35" width="340" height="180" rx="10" fill="#27272a" stroke="#10b981" stroke-width="2"/><line x1="90" y1="80" x2="200" y2="80" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><line x1="90" y1="110" x2="280" y2="110" stroke="#a1a1aa" stroke-width="4" stroke-linecap="round"/><line x1="90" y1="140" x2="160" y2="140" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/><line x1="90" y1="170" x2="240" y2="170" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/></svg>'
+        },
+        {
+          title: 'Dashboard interface',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#111827"/><rect x="60" y="40" width="140" height="75" rx="8" fill="#1f2937" stroke="#4f46e5" stroke-width="1.5"/><rect x="220" y="40" width="160" height="75" rx="8" fill="#1f2937" stroke="#ec4899" stroke-width="1.5"/><rect x="60" y="130" width="320" height="85" rx="8" fill="#1f2937" stroke="#10b981" stroke-width="1.5"/></svg>'
+        },
+        {
+          title: 'Product design',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#2e1065"/><polygon points="220,40 320,180 120,180" fill="#7c3aed" opacity="0.8"/><circle cx="220" cy="140" r="40" fill="#f43f5e" opacity="0.75"/><rect x="180" y="190" width="80" height="10" rx="5" fill="#cbd5e1"/></svg>'
+        },
+        {
+          title: 'Laptop on desk',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#172554"/><rect x="80" y="50" width="280" height="140" rx="8" fill="#1e3a8a" stroke="#93c5fd" stroke-width="2"/><polygon points="40,210 400,210 360,195 80,195" fill="#64748b"/></svg>'
+        },
+        {
+          title: 'Team collaboration',
+          svg: '<svg viewBox="0 0 440 260" preserveAspectRatio="xMidYMid slice"><rect width="440" height="260" fill="#064e3b"/><circle cx="160" cy="110" r="35" fill="#059669"/><circle cx="280" cy="110" r="35" fill="#10b981"/><path d="M120,190 Q220,130 320,190" fill="none" stroke="#a7f3d0" stroke-width="5" stroke-linecap="round"/></svg>'
+        }
+      ];
+
+      let currentIndex = 0;
+
+      function renderSlide(index) {
+        currentIndex = (index + slides.length) % slides.length;
+        const current = slides[currentIndex];
+        titleEl.textContent = current.title;
+        counterEl.textContent = (currentIndex + 1) + ' / ' + slides.length;
+        stageEl.innerHTML = current.svg;
+      }
+
+      function openModal() {
+        renderSlide(0);
+        overlay.classList.add('active');
+      }
+
+      function closeModal() {
+        overlay.classList.remove('active');
+      }
+
+      if (trigger) trigger.addEventListener('click', openModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (prevBtn) prevBtn.addEventListener('click', () => renderSlide(currentIndex - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => renderSlide(currentIndex + 1));
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!overlay.classList.contains('active')) return;
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowLeft') renderSlide(currentIndex - 1);
+        if (e.key === 'ArrowRight') renderSlide(currentIndex + 1);
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

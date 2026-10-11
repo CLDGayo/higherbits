@@ -1,0 +1,38 @@
+{
+  "creator": "JurreHoutkamp",
+  "ownerLabel": "JurreHoutkamp",
+  "name": "JurreHoutkamp",
+  "sheetRow": 27,
+  "profileUrl": "https://21st.dev/@JurreHoutkamp",
+  "githubUser": "https://github.com/jurrehoutkamp",
+  "website": "https://www.jurrehoutkamp.com/",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub user jurrehoutkamp (ID 22095598) verified on GitHub, but personal repositories contain no component libraries or source code for hover-zoom, text-glow-hover, or tilt-card.",
+  "items": [
+    {
+      "slug": "hover-zoom",
+      "title": "Hover Zoom",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing hover-zoom component source mapped."
+    },
+    {
+      "slug": "text-glow-hover",
+      "title": "Text Glow Hover",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing text-glow-hover component source mapped."
+    },
+    {
+      "slug": "tilt-card",
+      "title": "Tilt Card",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing tilt-card component source mapped."
+    }
+  ]
+}

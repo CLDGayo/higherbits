@@ -1,0 +1,149 @@
+{
+  "creator": "animbits",
+  "ownerLabel": "animbits",
+  "name": "animbits",
+  "sheetRow": 88,
+  "profileUrl": "https://21st.dev/@animbits",
+  "website": "https://animbits.dev",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped.",
+  "items": [
+    {
+      "slug": "loaders-bars",
+      "title": "Loaders Bars",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-blur-in",
+      "title": "Text Blur In",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-dia",
+      "title": "Text Dia",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-fade-in",
+      "title": "Text Fade In",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-gooey-blobs",
+      "title": "Loaders Gooey Blobs",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "image-text",
+      "title": "Image Text",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "specials-linear-carousel",
+      "title": "Specials Linear Carousel",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-liquid-progress",
+      "title": "Loaders Liquid Progress",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "specials-magnetic-drawer",
+      "title": "Specials Magnetic Drawer",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-morphing",
+      "title": "Loaders Morphing",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-orbit",
+      "title": "Loaders Orbit",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-pulse",
+      "title": "Loaders Pulse",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-skeleton",
+      "title": "Loaders Skeleton",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-slide-up",
+      "title": "Text Slide Up",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "loaders-spinner",
+      "title": "Loaders Spinner",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-split-reveal",
+      "title": "Text Split Reveal",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-svg-text-draw",
+      "title": "Text Svg Text Draw",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-highlight",
+      "title": "Text Highlight",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    },
+    {
+      "slug": "text-word-carousel",
+      "title": "Text Word Carousel",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+    }
+  ]
+}

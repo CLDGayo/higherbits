@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alwurts - Chat Input Preview</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .preview-stage {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-stage">
+    <!--
+  Source repository: https://github.com/Alwurts/simple-ai
+  Candidate revision: 2d8292d0ed173727ef88501997f6bcc33773a648
+  Component source path: packages/registry/registry/ui/chat-input.tsx
+  License: MIT
+  MIT License text:
+  Copyright (c) 2024 Alwurts
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction...
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Chat Input Component">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%;
+      min-height: 480px;
+      display: grid;
+      place-items: center;
+      padding: 32px 16px;
+      box-sizing: border-box;
+      background: #fafafa;
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #09090b;
+    }
+    .ghl-input-card {
+      width: min(100%, 520px);
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-sizing: border-box;
+    }
+    .ghl-chat-box {
+      border: 1px solid #e4e4e7;
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .ghl-chat-box:focus-within {
+      border-color: #a1a1aa;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+    }
+    .ghl-mention-popup {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 12px;
+      width: 180px;
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      z-index: 40;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ghl-mention-popup.open {
+      display: flex;
+    }
+    .ghl-mention-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #18181b;
+      cursor: pointer;
+      user-select: none;
+    }
+    .ghl-mention-item:hover {
+      background: #f4f4f5;
+    }
+    .ghl-mention-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #e4e4e7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #52525b;
+    }
+    .ghl-editor-area {
+      min-height: 52px;
+      max-height: 140px;
+      overflow-y: auto;
+      font: 14px/1.5 inherit;
+      color: #18181b;
+      outline: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .ghl-editor-area:empty::before {
+      content: attr(data-placeholder);
+      color: #a1a1aa;
+    }
+    .ghl-input-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 6px;
+      border-top: 1px solid #f4f4f5;
+    }
+    .ghl-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ghl-mention-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 6px;
+      border: 1px solid #e4e4e7;
+      background: #fafafa;
+      font-size: 12px;
+      font-weight: 500;
+      color: #52525b;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .ghl-mention-btn:hover {
+      background: #f4f4f5;
+      color: #09090b;
+    }
+    .ghl-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #10b981;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: #ecfdf5;
+    }
+    .ghl-submit-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #18181b;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .ghl-submit-btn:hover {
+      opacity: 0.9;
+    }
+    .ghl-history {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid #f4f4f5;
+    }
+    .ghl-msg-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f4f4f5;
+      font-size: 13px;
+      color: #27272a;
+    }
+  </style>
+
+  <div class="ghl-input-card">
+    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a;">
+      Chat Input with Mentions
+    </div>
+
+    <div class="ghl-chat-box">
+      <div class="ghl-mention-popup" id="ghl-al-mention-popup">
+        <div class="ghl-mention-item" data-mention="Alice">
+          <div class="ghl-mention-avatar">A</div>
+          <span>Alice</span>
+        </div>
+        <div class="ghl-mention-item" data-mention="Bob">
+          <div class="ghl-mention-avatar">B</div>
+          <span>Bob</span>
+        </div>
+        <div class="ghl-mention-item" data-mention="Charlie">
+          <div class="ghl-mention-avatar">C</div>
+          <span>Charlie</span>
+        </div>
+      </div>
+
+      <div class="ghl-editor-area" id="ghl-al-editor" contenteditable="true" data-placeholder="Type @ to mention..."></div>
+
+      <div class="ghl-input-footer">
+        <div class="ghl-footer-left">
+          <button type="button" class="ghl-mention-btn" id="ghl-al-mention-trigger">
+            <span>@</span> Mention
+          </button>
+          <span class="ghl-status-pill">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span>
+            ready
+          </span>
+        </div>
+
+        <button type="button" class="ghl-submit-btn" id="ghl-al-submit" aria-label="Send message">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="ghl-history" id="ghl-al-history">
+      <div class="ghl-msg-item">
+        <strong>Alice:</strong> Can you review the proposed phase ingestion checklist?
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var editor = document.getElementById("ghl-al-editor");
+      var popup = document.getElementById("ghl-al-mention-popup");
+      var mentionBtn = document.getElementById("ghl-al-mention-trigger");
+      var submitBtn = document.getElementById("ghl-al-submit");
+      var history = document.getElementById("ghl-al-history");
+
+      function insertMention(name) {
+        editor.focus();
+        var mentionText = "@" + name + " ";
+        document.execCommand("insertText", false, mentionText);
+        popup.classList.remove("open");
+      }
+
+      if (mentionBtn) {
+        mentionBtn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          popup.classList.toggle("open");
+        });
+      }
+
+      document.querySelectorAll(".ghl-mention-item").forEach(function(item) {
+        item.addEventListener("click", function(e) {
+          e.stopPropagation();
+          var name = item.getAttribute("data-mention");
+          insertMention(name);
+        });
+      });
+
+      document.addEventListener("click", function(e) {
+        if (!popup.contains(e.target) && e.target !== mentionBtn) {
+          popup.classList.remove("open");
+        }
+      });
+
+      if (editor) {
+        editor.addEventListener("keyup", function(e) {
+          if (e.key === "@") {
+            popup.classList.add("open");
+          } else if (e.key === "Escape") {
+            popup.classList.remove("open");
+          }
+        });
+        editor.addEventListener("keydown", function(e) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submitBtn.click();
+          }
+        });
+      }
+
+      if (submitBtn && editor && history) {
+        submitBtn.addEventListener("click", function() {
+          var text = editor.innerText.trim();
+          if (!text) return;
+          var msg = document.createElement("div");
+          msg.className = "ghl-msg-item";
+          msg.innerHTML = "<strong>You:</strong> " + text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          history.appendChild(msg);
+          editor.innerHTML = "";
+          popup.classList.remove("open");
+        });
+      }
+    })();
+  </script>
+</div>
+
+  </div>
+</body>
+</html>

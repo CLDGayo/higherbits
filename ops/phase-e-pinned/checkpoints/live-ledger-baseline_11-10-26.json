@@ -1,0 +1,1483 @@
+{
+  "capturedAtUtc": "2026-10-10 23:08:38 UTC",
+  "source": {
+    "spreadsheetId": "1FHIXbjLyy5pIKtA2I35Y8DFFT6fED2bSrFOoHjjL988",
+    "spreadsheetName": "21st creators",
+    "tab": "21st creators",
+    "range": "'21st creators'!A1:AG1000"
+  },
+  "meaning": "Current sheet ledger snapshot only; published IDs are not a production readback and do not independently prove live publication.",
+  "totals": {
+    "authors": 182,
+    "componentCount": 3314,
+    "publishedIds": 75,
+    "held": 174,
+    "unreconciled": 3065
+  },
+  "batches": [
+    {
+      "batch": 1,
+      "authors": 10,
+      "componentCount": 65,
+      "publishedIds": 20,
+      "held": 45,
+      "unreconciled": 0,
+      "handles": [
+        {
+          "handle": "0xUrvish",
+          "componentCount": 24,
+          "publishedIds": 18,
+          "held": 6,
+          "unreconciled": 0
+        },
+        {
+          "handle": "40973894",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "8starlabs",
+          "componentCount": 2,
+          "publishedIds": 1,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Adurotimi",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Alwurts",
+          "componentCount": 8,
+          "publishedIds": 0,
+          "held": 8,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Astryxdesign",
+          "componentCount": 10,
+          "publishedIds": 0,
+          "held": 10,
+          "unreconciled": 0
+        },
+        {
+          "handle": "BelkacemYerfa",
+          "componentCount": 1,
+          "publishedIds": 1,
+          "held": 0,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Codehagen",
+          "componentCount": 16,
+          "publishedIds": 0,
+          "held": 16,
+          "unreconciled": 0
+        },
+        {
+          "handle": "DanielWhit21874",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Daniela_Muntyan",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        }
+      ]
+    },
+    {
+      "batch": 2,
+      "authors": 10,
+      "componentCount": 66,
+      "publishedIds": 15,
+      "held": 51,
+      "unreconciled": 0,
+      "handles": [
+        {
+          "handle": "Edil-ozi",
+          "componentCount": 8,
+          "publishedIds": 3,
+          "held": 5,
+          "unreconciled": 0
+        },
+        {
+          "handle": "ElevenLabs-crawled",
+          "componentCount": 8,
+          "publishedIds": 3,
+          "held": 5,
+          "unreconciled": 0
+        },
+        {
+          "handle": "JurreHoutkamp",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 3,
+          "unreconciled": 0
+        },
+        {
+          "handle": "KarrixLee",
+          "componentCount": 2,
+          "publishedIds": 1,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "LegionWebDev",
+          "componentCount": 16,
+          "publishedIds": 0,
+          "held": 16,
+          "unreconciled": 0
+        },
+        {
+          "handle": "OrcDev",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "RayMethula",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 4,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Shatlyk1011",
+          "componentCount": 14,
+          "publishedIds": 8,
+          "held": 6,
+          "unreconciled": 0
+        },
+        {
+          "handle": "Smit-Prajapati",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "SubframeApp",
+          "componentCount": 9,
+          "publishedIds": 0,
+          "held": 9,
+          "unreconciled": 0
+        }
+      ]
+    },
+    {
+      "batch": 3,
+      "authors": 10,
+      "componentCount": 87,
+      "publishedIds": 6,
+      "held": 5,
+      "unreconciled": 76,
+      "handles": [
+        {
+          "handle": "abui",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "abxlfazl__",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "adrielzimbril",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "aicanvas",
+          "componentCount": 7,
+          "publishedIds": 3,
+          "held": 4,
+          "unreconciled": 0
+        },
+        {
+          "handle": "airbnb-visx",
+          "componentCount": 29,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 29
+        },
+        {
+          "handle": "alain00",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        },
+        {
+          "handle": "amitgajare2",
+          "componentCount": 3,
+          "publishedIds": 2,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "anelkabag",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        },
+        {
+          "handle": "animbits",
+          "componentCount": 19,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 19
+        },
+        {
+          "handle": "anshuman008",
+          "componentCount": 1,
+          "publishedIds": 1,
+          "held": 0,
+          "unreconciled": 0
+        }
+      ]
+    },
+    {
+      "batch": 4,
+      "authors": 10,
+      "componentCount": 81,
+      "publishedIds": 8,
+      "held": 73,
+      "unreconciled": 0,
+      "handles": [
+        {
+          "handle": "antdesign",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 7,
+          "unreconciled": 0
+        },
+        {
+          "handle": "anubra266",
+          "componentCount": 37,
+          "publishedIds": 0,
+          "held": 37,
+          "unreconciled": 0
+        },
+        {
+          "handle": "arikchakma",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 5,
+          "unreconciled": 0
+        },
+        {
+          "handle": "arlanoska",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 5,
+          "unreconciled": 0
+        },
+        {
+          "handle": "armandsalle",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "asanshay",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 7,
+          "unreconciled": 0
+        },
+        {
+          "handle": "barvian",
+          "componentCount": 5,
+          "publishedIds": 4,
+          "held": 1,
+          "unreconciled": 0
+        },
+        {
+          "handle": "berlix",
+          "componentCount": 4,
+          "publishedIds": 4,
+          "held": 0,
+          "unreconciled": 0
+        },
+        {
+          "handle": "bklitai",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 5,
+          "unreconciled": 0
+        },
+        {
+          "handle": "brijr",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 5,
+          "unreconciled": 0
+        }
+      ]
+    },
+    {
+      "batch": 5,
+      "authors": 10,
+      "componentCount": 273,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 273,
+      "handles": [
+        {
+          "handle": "builduilabs",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "bundui",
+          "componentCount": 74,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 74
+        },
+        {
+          "handle": "campsite",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "chamaac",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "componentry",
+          "componentCount": 27,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 27
+        },
+        {
+          "handle": "contentbit",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "corr",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "coss.com",
+          "componentCount": 75,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 75
+        },
+        {
+          "handle": "cubby-ui",
+          "componentCount": 9,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 9
+        },
+        {
+          "handle": "cult-ui",
+          "componentCount": 52,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 52
+        }
+      ]
+    },
+    {
+      "batch": 6,
+      "authors": 10,
+      "componentCount": 81,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 81,
+      "handles": [
+        {
+          "handle": "daniel__designs",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "danielpetho",
+          "componentCount": 35,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 35
+        },
+        {
+          "handle": "deltacomponents",
+          "componentCount": 8,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 8
+        },
+        {
+          "handle": "dennysdionigi",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "devongovett",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "dialkit",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "diceui",
+          "componentCount": 19,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 19
+        },
+        {
+          "handle": "dqnamo",
+          "componentCount": 11,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 11
+        },
+        {
+          "handle": "drdruide",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "dubinc",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        }
+      ]
+    },
+    {
+      "batch": 7,
+      "authors": 10,
+      "componentCount": 407,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 407,
+      "handles": [
+        {
+          "handle": "edwinvakayil",
+          "componentCount": 51,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 51
+        },
+        {
+          "handle": "efferd",
+          "componentCount": 117,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 117
+        },
+        {
+          "handle": "eldoraui",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "evilrabbit",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "extend",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "extend-hq",
+          "componentCount": 12,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 12
+        },
+        {
+          "handle": "felipemenezes098",
+          "componentCount": 178,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 178
+        },
+        {
+          "handle": "filipz",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "framecn",
+          "componentCount": 21,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 21
+        },
+        {
+          "handle": "fuma-nama",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        }
+      ]
+    },
+    {
+      "batch": 8,
+      "authors": 10,
+      "componentCount": 126,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 126,
+      "handles": [
+        {
+          "handle": "glasscn",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "gooseui",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "gpt-vis",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        },
+        {
+          "handle": "grootstudio",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "hari",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "haydenbleasel",
+          "componentCount": 28,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 28
+        },
+        {
+          "handle": "hero_ui",
+          "componentCount": 64,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 64
+        },
+        {
+          "handle": "heygaia",
+          "componentCount": 11,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 11
+        },
+        {
+          "handle": "honestui",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "hsuanyi-chou",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        }
+      ]
+    },
+    {
+      "batch": 9,
+      "authors": 10,
+      "componentCount": 137,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 137,
+      "handles": [
+        {
+          "handle": "hyggemethat",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "iamsatish4564",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        },
+        {
+          "handle": "inference-sh",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "intentui",
+          "componentCount": 25,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 25
+        },
+        {
+          "handle": "jakobhoeg",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        },
+        {
+          "handle": "jh3yy_deleted",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "johuniq",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "jolbol1",
+          "componentCount": 50,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 50
+        },
+        {
+          "handle": "joyco",
+          "componentCount": 11,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 11
+        },
+        {
+          "handle": "jshguo",
+          "componentCount": 23,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 23
+        }
+      ]
+    },
+    {
+      "batch": 10,
+      "authors": 10,
+      "componentCount": 88,
+      "publishedIds": 1,
+      "held": 0,
+      "unreconciled": 87,
+      "handles": [
+        {
+          "handle": "kaif-ui",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "kokonutd",
+          "componentCount": 55,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 55
+        },
+        {
+          "handle": "kristen17",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "kvnkld",
+          "componentCount": 17,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 17
+        },
+        {
+          "handle": "lensblocks",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "lepikhinb",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "limeplay",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "lina.sameer",
+          "componentCount": 1,
+          "publishedIds": 1,
+          "held": 0,
+          "unreconciled": 0
+        },
+        {
+          "handle": "liveblocks",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "llaxmi",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        }
+      ]
+    },
+    {
+      "batch": 11,
+      "authors": 10,
+      "componentCount": 181,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 181,
+      "handles": [
+        {
+          "handle": "loading-ui",
+          "componentCount": 39,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 39
+        },
+        {
+          "handle": "lucasbassetti",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "lukacho",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "luv-jeri",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "manuarora700",
+          "componentCount": 88,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 88
+        },
+        {
+          "handle": "mapcn",
+          "componentCount": 11,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 11
+        },
+        {
+          "handle": "meghtrix",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "micka_design",
+          "componentCount": 15,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 15
+        },
+        {
+          "handle": "mikolajdobrucki",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "mona_biasia",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        }
+      ]
+    },
+    {
+      "batch": 12,
+      "authors": 10,
+      "componentCount": 211,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 211,
+      "handles": [
+        {
+          "handle": "motiondotdev",
+          "componentCount": 81,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 81
+        },
+        {
+          "handle": "mrhyddenn",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "mvp_Subha",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "nayan_radadiya6",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "nevsky118",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "nexus-ui",
+          "componentCount": 30,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 30
+        },
+        {
+          "handle": "nikolas-sapa",
+          "componentCount": 76,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 76
+        },
+        {
+          "handle": "nyxbui",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "odysseyui",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        },
+        {
+          "handle": "oeneco",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        }
+      ]
+    },
+    {
+      "batch": 13,
+      "authors": 10,
+      "componentCount": 248,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 248,
+      "handles": [
+        {
+          "handle": "openstatusHQ",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "originui",
+          "componentCount": 44,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 44
+        },
+        {
+          "handle": "osmosupply",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "oui",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        },
+        {
+          "handle": "pacekit",
+          "componentCount": 10,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 10
+        },
+        {
+          "handle": "paceui",
+          "componentCount": 12,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 12
+        },
+        {
+          "handle": "paper-design",
+          "componentCount": 121,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 121
+        },
+        {
+          "handle": "pate1kiran",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "platejs",
+          "componentCount": 22,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 22
+        },
+        {
+          "handle": "prebuiltui",
+          "componentCount": 23,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 23
+        }
+      ]
+    },
+    {
+      "batch": 14,
+      "authors": 10,
+      "componentCount": 248,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 248,
+      "handles": [
+        {
+          "handle": "preetsuthar17",
+          "componentCount": 119,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 119
+        },
+        {
+          "handle": "pulkitxm",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "reaviz",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "redpangilinan",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "reshaped",
+          "componentCount": 37,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 37
+        },
+        {
+          "handle": "retroui",
+          "componentCount": 10,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 10
+        },
+        {
+          "handle": "reuno-ui",
+          "componentCount": 42,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 42
+        },
+        {
+          "handle": "ridemountainpig",
+          "componentCount": 5,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 5
+        },
+        {
+          "handle": "rudrodip",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "satoriui",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        }
+      ]
+    },
+    {
+      "batch": 15,
+      "authors": 10,
+      "componentCount": 561,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 561,
+      "handles": [
+        {
+          "handle": "scrollxui",
+          "componentCount": 59,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 59
+        },
+        {
+          "handle": "sean0205",
+          "componentCount": 273,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 273
+        },
+        {
+          "handle": "shadcn",
+          "componentCount": 83,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 83
+        },
+        {
+          "handle": "shadcncraft",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "shadcndesign",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "shadcnstore",
+          "componentCount": 17,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 17
+        },
+        {
+          "handle": "shadcnui-blocks",
+          "componentCount": 100,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 100
+        },
+        {
+          "handle": "shoota",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "shuding",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "slide-cn",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        }
+      ]
+    },
+    {
+      "batch": 16,
+      "authors": 10,
+      "componentCount": 90,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 90,
+      "handles": [
+        {
+          "handle": "solaceui",
+          "componentCount": 16,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 16
+        },
+        {
+          "handle": "sona-ui",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "soralabs",
+          "componentCount": 17,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 17
+        },
+        {
+          "handle": "strlrd-29",
+          "componentCount": 9,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 9
+        },
+        {
+          "handle": "supabase",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "tailwind-admin",
+          "componentCount": 9,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 9
+        },
+        {
+          "handle": "terrae",
+          "componentCount": 0,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 0
+        },
+        {
+          "handle": "thegridcn",
+          "componentCount": 21,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 21
+        },
+        {
+          "handle": "theshanelevine",
+          "componentCount": 13,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 13
+        },
+        {
+          "handle": "tigerabrodi",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        }
+      ]
+    },
+    {
+      "batch": 17,
+      "authors": 10,
+      "componentCount": 282,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 282,
+      "handles": [
+        {
+          "handle": "tinkerers-labs",
+          "componentCount": 7,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 7
+        },
+        {
+          "handle": "tom_ui",
+          "componentCount": 26,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 26
+        },
+        {
+          "handle": "tommyjepsen",
+          "componentCount": 18,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 18
+        },
+        {
+          "handle": "tool-ui",
+          "componentCount": 6,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 6
+        },
+        {
+          "handle": "trophyso",
+          "componentCount": 9,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 9
+        },
+        {
+          "handle": "uiable",
+          "componentCount": 168,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 168
+        },
+        {
+          "handle": "uicapsule",
+          "componentCount": 11,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 11
+        },
+        {
+          "handle": "unlumen",
+          "componentCount": 30,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 30
+        },
+        {
+          "handle": "user_hardp",
+          "componentCount": 3,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 3
+        },
+        {
+          "handle": "user_xn1cklas",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        }
+      ]
+    },
+    {
+      "batch": 18,
+      "authors": 10,
+      "componentCount": 71,
+      "publishedIds": 25,
+      "held": 0,
+      "unreconciled": 46,
+      "handles": [
+        {
+          "handle": "utilcn",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "uvcanvas",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "vercel-crawled",
+          "componentCount": 14,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 14
+        },
+        {
+          "handle": "vgpu",
+          "componentCount": 25,
+          "publishedIds": 25,
+          "held": 0,
+          "unreconciled": 0
+        },
+        {
+          "handle": "victorwelander",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        },
+        {
+          "handle": "voxlet-ui",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        },
+        {
+          "handle": "whyte25",
+          "componentCount": 2,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 2
+        },
+        {
+          "handle": "witharc",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "xordev",
+          "componentCount": 15,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 15
+        },
+        {
+          "handle": "yadwinder",
+          "componentCount": 4,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 4
+        }
+      ]
+    },
+    {
+      "batch": 19,
+      "authors": 2,
+      "componentCount": 11,
+      "publishedIds": 0,
+      "held": 0,
+      "unreconciled": 11,
+      "handles": [
+        {
+          "handle": "yashsehgal",
+          "componentCount": 1,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 1
+        },
+        {
+          "handle": "zanwei",
+          "componentCount": 10,
+          "publishedIds": 0,
+          "held": 0,
+          "unreconciled": 10
+        }
+      ]
+    }
+  ]
+}

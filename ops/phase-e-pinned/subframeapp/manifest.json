@@ -1,0 +1,80 @@
+{
+  "creator": "SubframeApp",
+  "ownerLabel": "SubframeApp",
+  "name": "SubframeApp",
+  "sheetRow": 38,
+  "profileUrl": "https://21st.dev/@SubframeApp",
+  "githubUser": "https://github.com/SubframeApp",
+  "website": "https://subframe.com",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "SubframeApp organization repositories host core developer tools and CLI, but sheet items correspond to proprietary Subframe design-to-code exports not published in open-source repositories.",
+  "items": [
+    {
+      "slug": "accordion-1",
+      "title": "Accordion 1",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "area-chart",
+      "title": "Area Chart",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "avatar-2",
+      "title": "Avatar 2",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "breadcrumb",
+      "title": "Breadcrumb",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "calendar-1",
+      "title": "Calendar 1",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "checkbox-1",
+      "title": "Checkbox 1",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "checkbox-card",
+      "title": "Checkbox Card",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "checkbox-group-1",
+      "title": "Checkbox Group 1",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    },
+    {
+      "slug": "context-menu-1",
+      "title": "Context Menu 1",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Item is a proprietary Subframe platform export; no public open-source component repository exists."
+    }
+  ]
+}

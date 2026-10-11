@@ -12,6 +12,7 @@ const root = join(repo, 'ops/phase-e-pinned/urvish')
 const manifestBytes = readFileSync(join(root, 'manifest.json'))
 const manifest = JSON.parse(manifestBytes)
 const dependencyEvidenceBytes = readFileSync(join(root, 'dependency-license-evidence.json'))
+const dependencyEvidence = JSON.parse(dependencyEvidenceBytes)
 const license = readFileSync(join(root, 'LICENSE'))
 const authoredLicense = readFileSync(join(repo, 'LICENSE'))
 const promptPath = join(root, 'copy-prompts.json')
@@ -95,10 +96,19 @@ function stageItem(item) {
     })
   })
   if (missingRelative.length) reasons.push(`relative_source_import_unresolved:${[...new Set(missingRelative)].join(',')}`)
+  const verifiedAssets = dependencyEvidence.remoteAssets?.verified || []
+  const forbiddenAssetPrefixes = (dependencyEvidence.remoteAssets?.unverified || [])
+    .map(entry => entry.prefix)
   const remoteUrls = files.flatMap(file => [...file.bytes.toString('utf8').matchAll(/https?:\/\/[^"'\s)`]+/g)]
     .map(match => match[0]).filter(url => !url.startsWith('http://www.w3.org/2000/svg') &&
       !url.startsWith('https://twitter.com/intent/tweet?')))
-  if (remoteUrls.length) reasons.push('remote_resource_rights_unverified')
+  const unverifiedUrls = remoteUrls.filter(url => {
+    const isForbidden = forbiddenAssetPrefixes.some(prefix => url.startsWith(prefix))
+    const isVerified = verifiedAssets.some(entry =>
+      entry.applicableSlugs?.includes(slug) && url.startsWith(entry.allowedPrefix))
+    return isForbidden || !isVerified
+  })
+  if (unverifiedUrls.length) reasons.push('remote_resource_rights_unverified')
   const demoPath = join(root, 'demos', `${slug}.tsx`)
   const demo = existsSync(demoPath) ? readFileSync(demoPath) : null
   if (!demo?.length || !demo.toString('utf8').includes(`@/components/auto-index/urvish-${slug}/`)) reasons.push('demo_missing_or_unreviewed')

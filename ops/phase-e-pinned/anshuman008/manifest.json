@@ -1,0 +1,23 @@
+{
+  "creator": "anshuman008",
+  "ownerLabel": "anshuman008",
+  "name": "Anshuman",
+  "sheetRow": 94,
+  "profileUrl": "https://21st.dev/@anshuman008",
+  "githubUser": "https://github.com/anshuman008",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub user anshuman008 verified, but none of user's 99 public repositories contain faq-chat-accordion component source.",
+  "items": [
+    {
+      "slug": "faq-chat-accordion",
+      "title": "FAQ Chat Accordion",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Public GitHub inspection of user anshuman008 repositories confirmed no faq-chat-accordion component source repository exists."
+    }
+  ]
+}

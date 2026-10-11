@@ -1,0 +1,347 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-card-bg: #18181b;
+      --ghl-card-border: #27272a;
+      --ghl-text: #fafafa;
+      --ghl-muted: #a1a1aa;
+      --ghl-accent: #8b5cf6;
+      --ghl-badge-bg: #27272a;
+      --ghl-badge-text: #d4d4d8;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 440px;
+      padding: 32px 16px;
+      background-color: var(--ghl-bg);
+      border-radius: 16px;
+      gap: 24px;
+    }
+    .ghl-component-wrapper .ghl-nav {
+      display: inline-flex;
+      background: #18181b;
+      padding: 4px;
+      border-radius: 9999px;
+      border: 1px solid var(--ghl-card-border);
+      gap: 4px;
+    }
+    .ghl-component-wrapper .ghl-mode-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--ghl-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-mode-btn:hover {
+      color: var(--ghl-text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .ghl-component-wrapper .ghl-mode-btn.active {
+      background: #27272a;
+      color: var(--ghl-text);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+    .ghl-component-wrapper .ghl-mode-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    .ghl-component-wrapper .ghl-items-view {
+      width: 100%;
+      max-width: 480px;
+      min-height: 260px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    /* Mode: list */
+    .ghl-component-wrapper .ghl-mode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+    .ghl-component-wrapper .ghl-mode-list .ghl-item-card {
+      display: flex;
+      align-items: center;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      gap: 14px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ghl-component-wrapper .ghl-mode-list .ghl-item-card .ghl-artwork {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .ghl-component-wrapper .ghl-mode-list .ghl-item-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ghl-component-wrapper .ghl-mode-list .ghl-item-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ghl-badge-text);
+      background: var(--ghl-badge-bg);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    /* Mode: card */
+    .ghl-component-wrapper .ghl-mode-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+    .ghl-component-wrapper .ghl-mode-card .ghl-item-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ghl-component-wrapper .ghl-mode-card .ghl-item-card .ghl-artwork {
+      width: 100%;
+      height: 140px;
+    }
+    .ghl-component-wrapper .ghl-mode-card .ghl-item-info-wrap {
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ghl-component-wrapper .ghl-mode-card .ghl-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ghl-component-wrapper .ghl-mode-card .ghl-item-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ghl-badge-text);
+      background: var(--ghl-badge-bg);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    /* Mode: pack */
+    .ghl-component-wrapper .ghl-mode-pack {
+      position: relative;
+      width: 220px;
+      height: 250px;
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-card:nth-child(1) {
+      transform: rotate(-10deg) translate(-14px, 8px);
+      z-index: 1;
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-card:nth-child(2) {
+      transform: rotate(8deg) translate(14px, 0);
+      z-index: 2;
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-card .ghl-artwork {
+      width: 100%;
+      height: 130px;
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-info-wrap {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ghl-component-wrapper .ghl-mode-pack .ghl-item-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ghl-badge-text);
+      background: var(--ghl-badge-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .ghl-component-wrapper .ghl-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ghl-text);
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .ghl-subtitle {
+      font-size: 12px;
+      color: var(--ghl-muted);
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .ghl-artwork svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+
+  <div class="ghl-container">
+    <div class="ghl-nav" role="tablist" aria-label="View Mode">
+      <button type="button" class="ghl-mode-btn active" data-mode="list" aria-label="List view" title="List view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+      </button>
+      <button type="button" class="ghl-mode-btn" data-mode="card" aria-label="Card view" title="Card view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+        </svg>
+      </button>
+      <button type="button" class="ghl-mode-btn" data-mode="pack" aria-label="Pack view" title="Pack view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ghl-items-view">
+      <div class="ghl-collection-root ghl-mode-list">
+        <div class="ghl-item-card">
+          <div class="ghl-artwork">
+            <svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="g-horizons" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1e1b4b"></stop>
+                  <stop offset="50%" stop-color="#4338ca"></stop>
+                  <stop offset="100%" stop-color="#f59e0b"></stop>
+                </linearGradient>
+              </defs>
+              <rect width="200" height="150" fill="url(#g-horizons)"></rect>
+              <circle cx="100" cy="95" r="32" fill="#fbbf24" opacity="0.9"></circle>
+              <polygon points="20,150 70,85 120,150" fill="#0f172a" opacity="0.9"></polygon>
+              <polygon points="80,150 140,70 200,150" fill="#1e1b4b" opacity="0.85"></polygon>
+              <polygon points="130,150 170,100 210,150" fill="#09090b" opacity="0.95"></polygon>
+            </svg>
+          </div>
+          <div class="ghl-item-info-wrap">
+            <div class="ghl-item-info">
+              <span class="ghl-title">Cinematic Horizons</span>
+              <span class="ghl-subtitle">Photography</span>
+            </div>
+            <span class="ghl-item-badge">#209</span>
+          </div>
+        </div>
+
+        <div class="ghl-item-card">
+          <div class="ghl-artwork">
+            <svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="g-dreams" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#7c3aed"></stop>
+                  <stop offset="50%" stop-color="#db2777"></stop>
+                  <stop offset="100%" stop-color="#2563eb"></stop>
+                </linearGradient>
+              </defs>
+              <rect width="200" height="150" fill="url(#g-dreams)"></rect>
+              <circle cx="60" cy="70" r="45" fill="#38bdf8" opacity="0.45"></circle>
+              <circle cx="140" cy="80" r="55" fill="#f43f5e" opacity="0.5"></circle>
+              <circle cx="100" cy="50" r="35" fill="#a855f7" opacity="0.6"></circle>
+              <path d="M10,120 Q50,70 100,110 T190,80" fill="none" stroke="#f8fafc" stroke-width="4" opacity="0.6"></path>
+            </svg>
+          </div>
+          <div class="ghl-item-info-wrap">
+            <div class="ghl-item-info">
+              <span class="ghl-title">Abstract Dreams</span>
+              <span class="ghl-subtitle">Digital Art</span>
+            </div>
+            <span class="ghl-item-badge">#808</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const wrapper = document.querySelector('.ghl-component-wrapper');
+      if (!wrapper) return;
+      const buttons = wrapper.querySelectorAll('.ghl-mode-btn');
+      const root = wrapper.querySelector('.ghl-collection-root');
+      if (!buttons.length || !root) return;
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const mode = btn.getAttribute('data-mode');
+          if (!mode) return;
+          buttons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          root.className = 'ghl-collection-root ghl-mode-' + mode;
+        });
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

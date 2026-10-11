@@ -1,0 +1,225 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-card-bg: #18181b;
+      --ghl-card-border: #27272a;
+      --ghl-text: #fafafa;
+      --ghl-muted: #a1a1aa;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      padding: 32px 16px;
+      background-color: var(--ghl-bg);
+      border-radius: 16px;
+      gap: 16px;
+    }
+    .ghl-component-wrapper .ghl-grid-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 520px;
+      height: 360px;
+    }
+    .ghl-component-wrapper .ghl-grid-row {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+      transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .ghl-component-wrapper .ghl-grid-tile {
+      flex: 1;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--ghl-card-border);
+      background: var(--ghl-card-bg);
+      cursor: pointer;
+      min-width: 0;
+      transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.2s ease, border-color 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-grid-tile:hover {
+      border-color: #52525b;
+    }
+    .ghl-component-wrapper .ghl-grid-tile.expanded {
+      flex: 2.5;
+    }
+    .ghl-component-wrapper .ghl-tile-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .ghl-component-wrapper .ghl-tile-bg svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-tile-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(9, 9, 11, 0.85) 0%, rgba(9, 9, 11, 0.2) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 14px 16px;
+      gap: 2px;
+    }
+    .ghl-component-wrapper .ghl-tile-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ghl-text);
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .ghl-tile-sub {
+      font-size: 11px;
+      color: var(--ghl-muted);
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ghl-component-wrapper .ghl-grid-hint {
+      font-size: 12px;
+      color: var(--ghl-muted);
+      text-align: center;
+    }
+  </style>
+
+  <div class="ghl-container">
+    <div class="ghl-grid-layout" id="ghl-fluid-grid">
+      <div class="ghl-grid-row">
+        <div class="ghl-grid-tile expanded" data-id="highlands">
+          <div class="ghl-tile-bg">
+            <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="g-highlands" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#14532d"></stop>
+                  <stop offset="60%" stop-color="#4d7c0f"></stop>
+                  <stop offset="100%" stop-color="#84cc16"></stop>
+                </linearGradient>
+              </defs>
+              <rect width="300" height="200" fill="url(#g-highlands)"></rect>
+              <circle cx="200" cy="70" r="35" fill="#facc15" opacity="0.8"></circle>
+              <polygon points="0,200 80,100 180,200" fill="#0f3d20" opacity="0.85"></polygon>
+              <polygon points="100,200 210,90 300,200" fill="#1e3a1e" opacity="0.9"></polygon>
+            </svg>
+          </div>
+          <div class="ghl-tile-overlay">
+            <span class="ghl-tile-title">Highlands</span>
+            <span class="ghl-tile-sub">Golden fields under the giant</span>
+          </div>
+        </div>
+
+        <div class="ghl-grid-tile" data-id="crimson">
+          <div class="ghl-tile-bg">
+            <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="g-crimson" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#831843"></stop>
+                  <stop offset="60%" stop-color="#be123c"></stop>
+                  <stop offset="100%" stop-color="#f43f5e"></stop>
+                </linearGradient>
+              </defs>
+              <rect width="300" height="200" fill="url(#g-crimson)"></rect>
+              <polygon points="40,200 150,60 260,200" fill="#4c0519" opacity="0.75"></polygon>
+              <circle cx="150" cy="60" r="16" fill="#fb7185" opacity="0.9"></circle>
+            </svg>
+          </div>
+          <div class="ghl-tile-overlay">
+            <span class="ghl-tile-title">Crimson</span>
+            <span class="ghl-tile-sub">A scarlet flame in the mountains</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ghl-grid-row">
+        <div class="ghl-grid-tile" data-id="deepsea">
+          <div class="ghl-tile-bg">
+            <svg viewBox="0 0 520 200" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="g-deepsea" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#082f49"></stop>
+                  <stop offset="50%" stop-color="#0369a1"></stop>
+                  <stop offset="100%" stop-color="#38bdf8"></stop>
+                </linearGradient>
+              </defs>
+              <rect width="520" height="200" fill="url(#g-deepsea)"></rect>
+              <circle cx="120" cy="110" r="45" fill="#0284c7" opacity="0.6"></circle>
+              <circle cx="340" cy="90" r="55" fill="#0ea5e9" opacity="0.5"></circle>
+              <path d="M40,160 Q180,100 320,160 T500,120" fill="none" stroke="#bae6fd" stroke-width="3" opacity="0.7"></path>
+            </svg>
+          </div>
+          <div class="ghl-tile-overlay">
+            <span class="ghl-tile-title">Deep Sea</span>
+            <span class="ghl-tile-sub">Floating gracefully in the abyss</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ghl-grid-hint">Click any tile to expand fluid layout</div>
+  </div>
+
+  <script>
+    (() => {
+      const wrapper = document.querySelector('.ghl-component-wrapper');
+      if (!wrapper) return;
+
+      const tiles = wrapper.querySelectorAll('.ghl-grid-tile');
+      const rows = wrapper.querySelectorAll('.ghl-grid-row');
+      if (!tiles.length) return;
+
+      tiles.forEach((tile) => {
+        tile.addEventListener('click', () => {
+          tiles.forEach((t) => t.classList.remove('expanded'));
+          tile.classList.add('expanded');
+
+          const parentRow = tile.closest('.ghl-grid-row');
+          if (parentRow && rows.length > 1) {
+            rows.forEach((row) => {
+              if (row === parentRow) row.style.flex = '1.6';
+              else row.style.flex = '1';
+            });
+          }
+        });
+      });
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

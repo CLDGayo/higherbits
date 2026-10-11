@@ -1,0 +1,34 @@
+{
+  "approved": true,
+  "scope": "production",
+  "releaseCommit": "ffb606e29a6e58de561ec1b492cab578353911a6",
+  "manifestSha256": "ea192bb14335a5ce21bad489adc2ee9403a5b4fe001a821bccfd72817dcf7367",
+  "promptsSha256": "fd1863a92c3956d39d9ff5a229bd279fa1654d396b6fac34571f9e7573846914",
+  "dependencyEvidenceSha256": "fdb64c49c89babd17e93aa14a2e1b11f988aa872a70a37793eef2f8ab7e87d7d",
+  "artifactsSha256": "7ac05878e08dec30be9a6b1f24da879a757db813042de272398544c06d9a18c1",
+  "reviewerLabel": "Antigravity Pair Programmer",
+  "reviewedAt": "2026-10-06T15:27:00.000Z",
+  "rationale": "BelkacemYerfa datetime-picker passed all strict gates: MIT upstream license, timescape dependency license evidence, clean self-contained GHL DOM and Babel AST validation, browser Playwright verification with 0 errors, typecheck and test verification, live HTTPS asset parity.",
+  "deployedAssets": {
+    "datetime-picker": {
+      "html": {
+        "url": "https://higherbits.dev/auto-index/belkacemyerfa-datetime-picker.html",
+        "sha256": "f02a6894dc420e8df27d44bfb6d4796e2b5533561fa7d8ccfb64073f262facfd"
+      },
+      "png": {
+        "url": "https://higherbits.dev/auto-index/belkacemyerfa-datetime-picker.png",
+        "sha256": "fbc4219a34b5853d64d58ed83d39df9be93626a6132852493335e52053e65934"
+      }
+    }
+  },
+  "published_count": 1,
+  "held_count": 0,
+  "total_count": 1,
+  "urls": {
+    "html": "https://higherbits.dev/auto-index/belkacemyerfa-datetime-picker.html",
+    "png": "https://higherbits.dev/auto-index/belkacemyerfa-datetime-picker.png",
+    "author_21st": "https://21st.dev/@BelkacemYerfa",
+    "github_repo": "https://github.com/BelkacemYerfa/shadcn-extension"
+  },
+  "sheet_j20": "1 pinned source item (datetime-picker) verified under upstream MIT license (BelkacemYerfa/shadcn-extension@d678d7f5); timescape@0.4.3 MIT dependency verified; 10 copy-prompts + self-contained GHL + preview bundle and PNG live and verified. 1 published, 0 held."
+}

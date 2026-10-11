@@ -1,0 +1,317 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-card-bg: #18181b;
+      --ghl-card-border: #27272a;
+      --ghl-text: #fafafa;
+      --ghl-muted: #a1a1aa;
+      --ghl-accent: #3b82f6;
+      --ghl-online: #10b981;
+      --ghl-input-bg: #121215;
+      --ghl-input-border: #27272a;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 520px;
+      padding: 32px 16px;
+      background-color: var(--ghl-bg);
+      border-radius: 16px;
+    }
+    .ghl-component-wrapper .ghl-card-box {
+      width: 100%;
+      max-width: 440px;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .ghl-component-wrapper .ghl-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ghl-component-wrapper .ghl-card-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ghl-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ghl-component-wrapper .ghl-count-pill {
+      font-size: 11px;
+      font-weight: 600;
+      background: #27272a;
+      color: #d4d4d8;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+    .ghl-component-wrapper .ghl-search-box {
+      position: relative;
+      width: 100%;
+    }
+    .ghl-component-wrapper .ghl-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ghl-muted);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ghl-component-wrapper .ghl-search-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+    .ghl-component-wrapper .ghl-search-input {
+      width: 100%;
+      padding: 9px 12px 9px 36px;
+      background: var(--ghl-input-bg);
+      border: 1px solid var(--ghl-input-border);
+      border-radius: 10px;
+      color: var(--ghl-text);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-search-input:focus {
+      border-color: #52525b;
+    }
+    .ghl-component-wrapper .ghl-search-input::placeholder {
+      color: #71717a;
+    }
+    .ghl-component-wrapper .ghl-members-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ghl-component-wrapper .ghl-member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: transparent;
+      transition: background 0.15s ease;
+    }
+    .ghl-component-wrapper .ghl-member-row:hover {
+      background: #202024;
+    }
+    .ghl-component-wrapper .ghl-member-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .ghl-component-wrapper .ghl-avatar-wrap {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+    .ghl-component-wrapper .ghl-avatar-circle {
+      width: 100%;
+      height: 100%;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .ghl-component-wrapper .ghl-online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 9999px;
+      background: var(--ghl-online);
+      border: 2px solid var(--ghl-card-bg);
+    }
+    .ghl-component-wrapper .ghl-online-dot.offline {
+      background: #71717a;
+    }
+    .ghl-component-wrapper .ghl-member-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ghl-component-wrapper .ghl-member-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ghl-text);
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .ghl-member-status {
+      font-size: 12px;
+      color: var(--ghl-muted);
+      line-height: 1.2;
+    }
+    .ghl-component-wrapper .ghl-role-pill {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #27272a;
+      color: #e4e4e7;
+      white-space: nowrap;
+    }
+    .ghl-component-wrapper .ghl-role-pm { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .ghl-component-wrapper .ghl-role-designer { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .ghl-component-wrapper .ghl-role-data { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .ghl-component-wrapper .ghl-role-creator { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .ghl-component-wrapper .ghl-toggle-btn {
+      width: 100%;
+      padding: 9px;
+      border-radius: 10px;
+      border: 1px solid var(--ghl-card-border);
+      background: #1f1f23;
+      color: var(--ghl-text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-toggle-btn:hover {
+      background: #27272a;
+    }
+  </style>
+
+  <div class="ghl-container">
+    <div class="ghl-card-box">
+      <div class="ghl-card-header">
+        <span class="ghl-card-title">
+          Active Members
+          <span class="ghl-count-pill" id="ghl-active-count">7</span>
+        </span>
+      </div>
+
+      <div class="ghl-search-box">
+        <div class="ghl-search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <input type="text" class="ghl-search-input" id="ghl-member-search" placeholder="Search members..." autocomplete="off">
+      </div>
+
+      <div class="ghl-members-list" id="ghl-members-container">
+        <!-- Rendered members -->
+      </div>
+
+      <button type="button" class="ghl-toggle-btn" id="ghl-expand-toggle">Show Less</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const wrapper = document.querySelector('.ghl-component-wrapper');
+      if (!wrapper) return;
+
+      const members = [
+        { id: '1', name: 'Oliver Smith', status: 'Online', online: true, role: 'Project Manager', type: 'pm', bg: '#2563eb', initials: 'OS' },
+        { id: '2', name: 'Sophie Chen', status: '17m ago', online: false, role: 'Designer', type: 'designer', bg: '#db2777', initials: 'SC' },
+        { id: '3', name: 'Noah Wilson', status: '29m ago', online: false, role: 'Data Specialist', type: 'data', bg: '#059669', initials: 'NW' },
+        { id: '4', name: 'Emma Davis', status: 'Online', online: true, role: 'Content Creator', type: 'creator', bg: '#d97706', initials: 'ED' },
+        { id: '5', name: 'Leo Martinez', status: '1h ago', online: false, role: 'Designer', type: 'designer', bg: '#9333ea', initials: 'LM' },
+        { id: '6', name: 'Mia Taylor', status: 'Online', online: true, role: 'Data Specialist', type: 'data', bg: '#0284c7', initials: 'MT' },
+        { id: '7', name: 'Ethan Hunt', status: 'Online', online: true, role: 'Project Manager', type: 'pm', bg: '#4f46e5', initials: 'EH' }
+      ];
+
+      const searchInput = wrapper.querySelector('#ghl-member-search');
+      const container = wrapper.querySelector('#ghl-members-container');
+      const countEl = wrapper.querySelector('#ghl-active-count');
+      const toggleBtn = wrapper.querySelector('#ghl-expand-toggle');
+
+      let isExpanded = true;
+      let filterText = '';
+
+      function render() {
+        const query = filterText.toLowerCase().trim();
+        const filtered = members.filter(m => m.name.toLowerCase().includes(query) || m.role.toLowerCase().includes(query));
+        countEl.textContent = String(filtered.length);
+
+        const displayed = isExpanded ? filtered : filtered.slice(0, 3);
+
+        container.innerHTML = displayed.map(m => `
+          <div class="ghl-member-row">
+            <div class="ghl-member-left">
+              <div class="ghl-avatar-wrap">
+                <div class="ghl-avatar-circle" style="background-color: ${m.bg};">${m.initials}</div>
+                <div class="ghl-online-dot ${m.online ? '' : 'offline'}"></div>
+              </div>
+              <div class="ghl-member-info">
+                <span class="ghl-member-name">${m.name}</span>
+                <span class="ghl-member-status">${m.status}</span>
+              </div>
+            </div>
+            <span class="ghl-role-pill ghl-role-${m.type}">${m.role}</span>
+          </div>
+        `).join('');
+
+        if (toggleBtn) {
+          toggleBtn.textContent = isExpanded ? 'Show Less' : 'Show All (' + filtered.length + ')';
+        }
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          filterText = e.target.value;
+          render();
+        });
+      }
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          isExpanded = !isExpanded;
+          render();
+        });
+      }
+
+      render();
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

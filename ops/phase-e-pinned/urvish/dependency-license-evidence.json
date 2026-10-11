@@ -1,6 +1,6 @@
 {
-  "reviewedAt": "2026-10-06",
-  "purpose": "Only free Hugeicons icon data and the MIT-licensed React renderer may enter the pinned previews and install prompts.",
+  "reviewedAt": "2026-10-11",
+  "purpose": "Only free Hugeicons icon data, the MIT-licensed React renderer, and verified open-licensed remote assets may enter the pinned catalog. Unsafe or unverifiable assets are excluded.",
   "packages": {
     "@hugeicons/react": {
       "version": "1.1.10",
@@ -22,5 +22,43 @@
       "packageJsonSha256": "1777e7db3edd1bf7dd7a8590f7585921eb659db987dfbfa6f21136b17a353645",
       "evidence": "The publisher's 2.0.0 package metadata declares MIT; the official Hugeicons repository identifies the free icon pack as MIT. No @hugeicons-pro import occurs in the pinned source."
     }
+  },
+  "remoteAssets": {
+    "verified": [
+      {
+        "provider": "Unsplash",
+        "allowedPrefix": "https://images.unsplash.com/photo-",
+        "license": "Unsplash License",
+        "licenseUrl": "https://unsplash.com/license",
+        "rights": "Irrevocable, nonexclusive, worldwide copyright license to download, copy, modify, distribute, perform, and use photos from Unsplash for free, including for commercial purposes, without permission from or attributing the photographer.",
+        "evidence": "Photos hosted under https://images.unsplash.com/photo-* in animated-collection, expandable-gallery, feature-carousel, and vertical-tabs are free Unsplash photos. Previews and GHL exports remain self-contained.",
+        "applicableSlugs": [
+          "animated-collection",
+          "expandable-gallery",
+          "feature-carousel",
+          "vertical-tabs"
+        ]
+      }
+    ],
+    "unverified": [
+      {
+        "provider": "Unsplash+",
+        "prefix": "https://plus.unsplash.com/",
+        "status": "blocked",
+        "reason": "Unsplash+ terms prohibit use in digital templates. HigherBits distributes reusable UI components, so the original source asset remains held unless replaced or separately licensed.",
+        "applicableSlugs": [
+          "fluid-expanding-grid"
+        ]
+      },
+      {
+        "provider": "Tapback",
+        "prefix": "https://tapback.co/api/avatar/",
+        "status": "blocked",
+        "reason": "Third-party private avatar API without documented open distribution rights or commercial license terms.",
+        "applicableSlugs": [
+          "stacked-list"
+        ]
+      }
+    ]
   }
 }

@@ -1,0 +1,219 @@
+{
+  "creator": "airbnb-visx",
+  "ownerLabel": "airbnb",
+  "name": "Airbnb",
+  "sheetRow": 68,
+  "profileUrl": "https://21st.dev/@airbnb-visx",
+  "repositoryUrl": "https://github.com/airbnb/visx",
+  "revision": "485c0359664ee8e612992defb16e1f035ed40b23",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "8c766533b7d4200b4dfb1a1afff396e3665460d21d7b4c34d059efcb5a332c84",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "monorepo_library_dependencies_uninstalled",
+  "holdDetail": "Upstream repository airbnb/visx is a monorepo of npm visualization primitives and demo sandboxes requiring @visx/* and d3 packages; none is a single self-contained UI component.",
+  "items": [
+    {
+      "slug": "annotation",
+      "title": "Annotation",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "axis",
+      "title": "Axis",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "bar-group-vertical",
+      "title": "Bar Group Vertical",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "bar-stac",
+      "title": "Bar Stac",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "bar-stack",
+      "title": "Bar Stack",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "brush",
+      "title": "Brush",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "chords",
+      "title": "Chords",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "curves",
+      "title": "Curves",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "delaunay-triangulation",
+      "title": "Delaunay Triangulation",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "drag-and-draw",
+      "title": "Drag And Draw",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "finance-chart",
+      "title": "Finance Chart",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "glyphs",
+      "title": "Glyphs",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "gradients",
+      "title": "Gradients",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "heatmaps",
+      "title": "Heatmaps",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "legends",
+      "title": "Legends",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "linktypes",
+      "title": "Linktypes",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "patterns",
+      "title": "Patterns",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "pie-chart",
+      "title": "Pie Chart",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "radar-chart",
+      "title": "Radar Chart",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "radial-lines",
+      "title": "Radial Lines",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "split-line-path",
+      "title": "Split Line Path",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "streamgraph",
+      "title": "Streamgraph",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "threshold",
+      "title": "Threshold",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "toggle-nav",
+      "title": "Toggle Nav",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "tooltip",
+      "title": "Tooltip",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "treemap-chart",
+      "title": "Treemap Chart",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "voronoi",
+      "title": "Voronoi",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "word-cloud",
+      "title": "Word Cloud",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    },
+    {
+      "slug": "zoom",
+      "title": "Zoom",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+    }
+  ]
+}

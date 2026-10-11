@@ -1,0 +1,36 @@
+<!--
+  Source registry: https://ds.asanshay.com/r/motion-blur-text.json
+  Candidate revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac
+  Component source path: registry/new-york/blocks/motion-blur-text/motion-blur-text.tsx
+  Eligibility provenance: 21st.dev auto-index=true roster signal (upstream registry defines component schema without a separate standalone root license file)
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Motion Blur Text component">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #09090b; font: 14px/1.5 system-ui, -apple-system, sans-serif; color: #fafafa; }
+    .ghl-blur-card { width: min(100%, 560px); background: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 32px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .ghl-blur-word {
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-align: center;
+      line-height: 1.2;
+      text-shadow:
+        -3.5px 3.5px 2px rgba(255,255,255,0.08), 3.5px -3.5px 2px rgba(255,255,255,0.08),
+        -7.0px 7.0px 3px rgba(255,255,255,0.07), 7.0px -7.0px 3px rgba(255,255,255,0.07),
+        -10.5px 10.5px 4px rgba(255,255,255,0.06), 10.5px -10.5px 4px rgba(255,255,255,0.06),
+        -14.0px 14.0px 5px rgba(255,255,255,0.05), 14.0px -14.0px 5px rgba(255,255,255,0.05),
+        -17.5px 17.5px 6px rgba(255,255,255,0.04), 17.5px -17.5px 6px rgba(255,255,255,0.04),
+        -21.0px 21.0px 7px rgba(255,255,255,0.03), 21.0px -21.0px 7px rgba(255,255,255,0.03);
+    }
+    .ghl-blur-sub { font-size: 12px; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+  </style>
+  <div class="ghl-blur-card">
+    <div class="ghl-blur-sub">Directional Motion Blur</div>
+    <div class="ghl-blur-word">VELOCITY</div>
+    <div style="font-size: 11px; color: #71717a; font-family: ui-monospace, monospace;">
+      angle: 135deg | blurLayers: 24 | bidirectional: true
+    </div>
+  </div>
+</div>

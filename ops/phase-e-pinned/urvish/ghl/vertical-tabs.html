@@ -1,0 +1,296 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-card-bg: #18181b;
+      --ghl-card-border: #27272a;
+      --ghl-text: #fafafa;
+      --ghl-muted: #a1a1aa;
+      --ghl-accent: #3b82f6;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      padding: 32px 16px;
+      background-color: var(--ghl-bg);
+      border-radius: 16px;
+    }
+    .ghl-component-wrapper .ghl-tabs-box {
+      width: 100%;
+      max-width: 580px;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    @media (max-width: 540px) {
+      .ghl-component-wrapper .ghl-tabs-box {
+        grid-template-columns: 1fr;
+      }
+    }
+    .ghl-component-wrapper .ghl-tabs-nav {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      border-right: 1px solid var(--ghl-card-border);
+    }
+    .ghl-component-wrapper .ghl-tabs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ghl-component-wrapper .ghl-tab-item {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .ghl-component-wrapper .ghl-tab-item:hover {
+      background: #202024;
+    }
+    .ghl-component-wrapper .ghl-tab-item.active {
+      background: #27272a;
+      border-color: #3f3f46;
+    }
+    .ghl-component-wrapper .ghl-tab-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ghl-component-wrapper .ghl-tab-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ghl-accent);
+      font-family: ui-monospace, monospace;
+    }
+    .ghl-component-wrapper .ghl-tab-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ghl-text);
+    }
+    .ghl-component-wrapper .ghl-tab-desc {
+      font-size: 12px;
+      color: var(--ghl-muted);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+    .ghl-component-wrapper .ghl-nav-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px solid #27272a;
+    }
+    .ghl-component-wrapper .ghl-ctrl-group {
+      display: flex;
+      gap: 6px;
+    }
+    .ghl-component-wrapper .ghl-arrow-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      color: var(--ghl-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .ghl-component-wrapper .ghl-arrow-btn:hover {
+      background: #3f3f46;
+    }
+    .ghl-component-wrapper .ghl-status-text {
+      font-size: 11px;
+      color: var(--ghl-muted);
+    }
+    .ghl-component-wrapper .ghl-panel-display {
+      position: relative;
+      background: #111113;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 260px;
+    }
+    .ghl-component-wrapper .ghl-panel-display svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+
+  <div class="ghl-container">
+    <div class="ghl-tabs-box" id="ghl-vtabs-box">
+      <div class="ghl-tabs-nav">
+        <div class="ghl-tabs-list" role="tablist">
+          <button type="button" class="ghl-tab-item active" data-index="0" role="tab" aria-selected="true">
+            <div class="ghl-tab-header">
+              <span class="ghl-tab-num">01</span>
+              <span class="ghl-tab-title">Web Design</span>
+            </div>
+            <span class="ghl-tab-desc">Creating beautiful, functional, and user-centric digital experiences.</span>
+          </button>
+
+          <button type="button" class="ghl-tab-item" data-index="1" role="tab" aria-selected="false">
+            <div class="ghl-tab-header">
+              <span class="ghl-tab-num">02</span>
+              <span class="ghl-tab-title">Framer Development</span>
+            </div>
+            <span class="ghl-tab-desc">Building high-performance, animated websites with Framer.</span>
+          </button>
+
+          <button type="button" class="ghl-tab-item" data-index="2" role="tab" aria-selected="false">
+            <div class="ghl-tab-header">
+              <span class="ghl-tab-num">03</span>
+              <span class="ghl-tab-title">Branding</span>
+            </div>
+            <span class="ghl-tab-desc">Defining your brand's visual identity and voice for a lasting impression.</span>
+          </button>
+        </div>
+
+        <div class="ghl-nav-footer">
+          <span class="ghl-status-text" id="ghl-vtabs-indicator">Service 1 of 3</span>
+          <div class="ghl-ctrl-group">
+            <button type="button" class="ghl-arrow-btn" id="ghl-vtabs-prev" aria-label="Previous tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="ghl-arrow-btn" id="ghl-vtabs-next" aria-label="Next tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ghl-panel-display" id="ghl-vtabs-stage">
+        <!-- Rendered Artwork SVG -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const wrapper = document.querySelector('.ghl-component-wrapper');
+      if (!wrapper) return;
+
+      const tabs = wrapper.querySelectorAll('.ghl-tab-item');
+      const stage = wrapper.querySelector('#ghl-vtabs-stage');
+      const indicator = wrapper.querySelector('#ghl-vtabs-indicator');
+      const prevBtn = wrapper.querySelector('#ghl-vtabs-prev');
+      const nextBtn = wrapper.querySelector('#ghl-vtabs-next');
+      const box = wrapper.querySelector('#ghl-vtabs-box');
+
+      const artworks = [
+        '<svg viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="vg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#312e81"/></linearGradient></defs><rect width="320" height="320" fill="url(#vg1)"/><rect x="40" y="40" width="240" height="160" rx="10" fill="#0f172a" stroke="#6366f1" stroke-width="2"/><circle cx="65" cy="60" r="5" fill="#ef4444"/><circle cx="80" cy="60" r="5" fill="#f59e0b"/><circle cx="95" cy="60" r="5" fill="#10b981"/><rect x="60" y="80" width="90" height="90" rx="6" fill="#1e293b"/><rect x="165" y="80" width="95" height="40" rx="6" fill="#334155"/><rect x="165" y="130" width="95" height="40" rx="6" fill="#334155"/><path d="M40,240 Q160,200 280,240" fill="none" stroke="#818cf8" stroke-width="3"/></svg>',
+        '<svg viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="vg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#022c22"/><stop offset="100%" stop-color="#064e3b"/></linearGradient></defs><rect width="320" height="320" fill="url(#vg2)"/><polygon points="160,40 260,110 260,210 160,280 60,210 60,110" fill="none" stroke="#10b981" stroke-width="3"/><circle cx="160" cy="160" r="50" fill="#059669" opacity="0.6"/><circle cx="160" cy="160" r="25" fill="#34d399"/><line x1="60" y1="110" x2="260" y2="210" stroke="#a7f3d0" stroke-width="1.5" opacity="0.5"/><line x1="260" y1="110" x2="60" y2="210" stroke="#a7f3d0" stroke-width="1.5" opacity="0.5"/></svg>',
+        '<svg viewBox="0 0 320 320" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="vg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3b0764"/><stop offset="100%" stop-color="#581c87"/></linearGradient></defs><rect width="320" height="320" fill="url(#vg3)"/><circle cx="120" cy="140" r="60" fill="#a855f7" opacity="0.6"/><circle cx="200" cy="160" r="60" fill="#ec4899" opacity="0.6"/><polygon points="160,80 220,180 100,180" fill="#fbbf24" opacity="0.8"/><text x="160" y="270" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="20" font-weight="700" fill="#fafafa" text-anchor="middle" letter-spacing="4">IDENTITY</text></svg>'
+      ];
+
+      let currentIndex = 0;
+      let timer = null;
+      let isPaused = false;
+
+      function render(index) {
+        currentIndex = (index + tabs.length) % tabs.length;
+        tabs.forEach((tab, i) => {
+          if (i === currentIndex) {
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+          } else {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+          }
+        });
+        stage.innerHTML = artworks[currentIndex];
+        indicator.textContent = 'Service ' + (currentIndex + 1) + ' of ' + tabs.length;
+      }
+
+      function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+          if (isPaused) return;
+          render(currentIndex + 1);
+        }, 5000);
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const idx = parseInt(tab.getAttribute('data-index') || '0', 10);
+          render(idx);
+          startTimer();
+        });
+      });
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          render(currentIndex - 1);
+          startTimer();
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          render(currentIndex + 1);
+          startTimer();
+        });
+      }
+
+      if (box) {
+        box.addEventListener('mouseenter', () => { isPaused = true; });
+        box.addEventListener('mouseleave', () => { isPaused = false; });
+      }
+
+      render(0);
+      startTimer();
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

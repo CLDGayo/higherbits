@@ -1,0 +1,196 @@
+{
+  "creator": "antdesign",
+  "ownerLabel": "antdesign",
+  "name": "Ant Design",
+  "sheetRow": 96,
+  "profileUrl": "https://21st.dev/@antdesign",
+  "repositoryUrl": "https://github.com/ant-design/ant-design",
+  "revision": "4a39f54842eade4e565ab336ef6097cd7e723cdd",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "3c82654bb472ebbcacc4c1ff00f94aa8c60c4b7ee011b16bafcbacecc3703458",
+  "evaluationModel": "Antigravity Gemini 3.8 Flash High",
+  "evaluationStatus": "all_items_held",
+  "items": [
+    {
+      "slug": "breadcrumb",
+      "title": "Breadcrumb",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream component from ant-design/ant-design requires monolithic antd runtime, @ant-design/cssinjs, and @rc-component/util; 21st.dev demo imports directly from package antd.",
+      "sourcePath": "components/breadcrumb/Breadcrumb.tsx",
+      "bytes": 9345,
+      "sha256": "789424dd53eac086e58b56d97fe0a3eb2e767a55224d1a54dda5038bc2b73527",
+      "demoSha256": "5de129abd5dd1dfef282140a84ea1a2dacab801ca60434c76acfcaeee51aaa0d",
+      "ghlSha256": "ce95e251699beb8e71591820c50d58c5e711581b6ef9d19a7e33edd6ae92afa8",
+      "previewSha256": "27ea848e999fa037b11e00f4dfa8820b9540155aba5c3a640d9832052af11c17",
+      "pngSha256": "2738ba2ce7e6aba616952ce1302573fc411daefd5d18efa7a1e2a212839be850",
+      "dependencies": {
+        "declared": [
+          "antd"
+        ],
+        "uninstalled": [
+          "antd"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    },
+    {
+      "slug": "button-ant",
+      "title": "Button Ant",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream component from ant-design/ant-design requires monolithic antd runtime and style system; 21st.dev demo imports directly from package antd.",
+      "sourcePath": "components/button/Button.tsx",
+      "bytes": 15189,
+      "sha256": "2ce5986af953bf012764a876cbf17c1e3396b1aacbe7bf79aaea227ca468062e",
+      "demoSha256": "27f1b11cb1ec133f296ced89aa60237ddd469aaf9ac2bb154655de0d38332339",
+      "ghlSha256": "a9c705c00dbf22fd33d2cf2521491666097e9058d6faf9114c37647be56bd84f",
+      "previewSha256": "a86afda2926921bfaca899d12f7ef1918a90ba03abff88e0aafb8d57537df26d",
+      "pngSha256": "5161d4eb9f3c24ea674bc039ef2c69fddb23d962afc59c21eb28621f248974b4",
+      "dependencies": {
+        "declared": [
+          "antd"
+        ],
+        "uninstalled": [
+          "antd"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    },
+    {
+      "slug": "dropdown",
+      "title": "Dropdown",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream component from ant-design/ant-design requires monolithic antd runtime and @ant-design/icons; 21st.dev demo imports directly from package antd.",
+      "sourcePath": "components/dropdown/dropdown.tsx",
+      "bytes": 12394,
+      "sha256": "e5fd1046224a2fea0b92c27c91562630e29e10b82e59e8220b1b2b1d82a3b378",
+      "demoSha256": "3d1fb9bb969b932a676ce3097a773e686736bab0db12fd63bcca148057378db4",
+      "ghlSha256": "8a8695543881665aedc229cd3b16bce29175fb3ac92e4ab8df2543c7dd689719",
+      "previewSha256": "eaa74245ad5f7176c22e728019e6ef16659ab4f83da2faac338f29ea45b69781",
+      "pngSha256": "c69e2df1a92e3a48e1e7e1d912a6ce6601377b0f160db6d2f5c931e4d21057a0",
+      "dependencies": {
+        "declared": [
+          "antd",
+          "@ant-design/icons"
+        ],
+        "uninstalled": [
+          "antd",
+          "@ant-design/icons"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    },
+    {
+      "slug": "float-button",
+      "title": "FloatButton",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream component from ant-design/ant-design requires monolithic antd runtime; 21st.dev demo imports directly from package antd.",
+      "sourcePath": "components/float-button/FloatButton.tsx",
+      "bytes": 6978,
+      "sha256": "5258cbd296ada4aadc3a33a1324dd8ccd685cf307a9d24d4f03c54f64bb51139",
+      "demoSha256": "2c48b23ecc6171ccb50b9035d2357f725230fb5848b05586f7d9df58bb661811",
+      "ghlSha256": "f15991a1a45488594b37291d62aad6eaddb40ed2b165bf1158386d9526fed450",
+      "previewSha256": "5dd76d3c90434cb0275ff4fe48d3e51a562f71adccc9f29ad01bee356f4c92ce",
+      "pngSha256": "ee454837b3046d9910dae599f0e55dfe5eec5c00b5e2a458002cdb5032fdcd72",
+      "dependencies": {
+        "declared": [
+          "antd"
+        ],
+        "uninstalled": [
+          "antd"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    },
+    {
+      "slug": "floating-action-menu",
+      "title": "Floating Action Menu",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Attributed to @antdesign on 21st.dev with framer-motion and lucide-react dependencies, but has no corresponding repository or component within the ant-design GitHub organization; no verified creator repository or license grant exists.",
+      "sourcePath": "source/21st/floating-action-menu.tsx",
+      "bytes": 2861,
+      "sha256": "55944fd1d87c3e33348cbad6c0a26facecc6d8a4557c464af8a54a316b52df32",
+      "demoSha256": "0d75182747fda1eb0f3393e085bee2427b03ead54f979b3fb9e3f1be4e23b4a5",
+      "ghlSha256": "638e8279bd7210212972c11faf2ddc56f221fd57195a49ec24d50edaff11596c",
+      "previewSha256": "8ddfa7db4d57a7cbd7f6ee5469a702cb2a4c306b44115f052162c18472cced56",
+      "pngSha256": "944f5b5851029a51f6627bf3a8dd91637a68565607b6fcb0e44d633708f16e58",
+      "dependencies": {
+        "declared": [
+          "framer-motion",
+          "lucide-react"
+        ],
+        "uninstalled": [
+          "framer-motion",
+          "lucide-react"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    },
+    {
+      "slug": "menu-1",
+      "title": "Menu",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream component from ant-design/ant-design requires monolithic antd runtime and @rc-component/menu; 21st.dev demo imports directly from package antd.",
+      "sourcePath": "components/menu/menu.tsx",
+      "bytes": 10321,
+      "sha256": "5d9a5c0a973a5db45288303cd0237125e50aea2c0d188e7f90fb199abb9e460c",
+      "demoSha256": "ea24c21baeee4752494d7648173080fa566b24375ea168bbd970495a8daf0716",
+      "ghlSha256": "717934bc0e5302d7aee5ad3c0aa0dc757d2590ebccea5653a56f7fed74314a27",
+      "previewSha256": "afb53300cfe71058d93b95f41a1c0520a27ee7831a757de59204f41540eac810",
+      "pngSha256": "24e593e50ec5055b7e1984b84766dea4586a7d1ba00d5458cab1dbb6c8995f7c",
+      "dependencies": {
+        "declared": [
+          "antd",
+          "@ant-design/icons"
+        ],
+        "uninstalled": [
+          "antd",
+          "@ant-design/icons"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    },
+    {
+      "slug": "pagination-ant",
+      "title": "Pagination Ant",
+      "status": "held",
+      "reason": "monorepo_library_dependencies_uninstalled",
+      "detail": "Upstream component from ant-design/ant-design requires monolithic antd runtime; 21st.dev demo imports directly from package antd.",
+      "sourcePath": "components/pagination/Pagination.tsx",
+      "bytes": 10683,
+      "sha256": "324ef5d2b495bf7cc698e32e955f92cd532b78f19cd2a797539f269c2d14f5f7",
+      "demoSha256": "f29c0f94f8f404d6b1ccbf32c503838cb74e368eb75c00971f06b3c5f37ba747",
+      "ghlSha256": "8a1c29df8bc42cac75f98a9716f1f2f72a9964cfd064ec7da0d76bb048e43f05",
+      "previewSha256": "bad22cb3f87df5c11c4617b00b290f923c80f6b412c919a6c69d4e447352e864",
+      "pngSha256": "a2496c9fdb545e6128a51748135bdfc71dce833d20032facc5bb91ca721298ed",
+      "dependencies": {
+        "declared": [
+          "antd"
+        ],
+        "uninstalled": [
+          "antd"
+        ]
+      },
+      "hasExternalAssets": false,
+      "ghlCleanValidated": true,
+      "allPromptFlavorsPresent": true
+    }
+  ]
+}

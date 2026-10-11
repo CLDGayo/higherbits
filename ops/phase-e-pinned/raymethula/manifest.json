@@ -1,0 +1,45 @@
+{
+  "creator": "RayMethula",
+  "ownerLabel": "RayMethula",
+  "name": "Ray Methula",
+  "sheetRow": 35,
+  "profileUrl": "https://21st.dev/@RayMethula",
+  "githubUser": "https://github.com/xrmethula",
+  "website": "https://rapidui.dev/#blocks",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub user xrmethula (\"Ray Methula\", ID 91151418) verified on GitHub, but repositories contain no component library or source code for brands, footer, testimonial, or testimonial-carousel.",
+  "items": [
+    {
+      "slug": "brands",
+      "title": "Brands",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing brands component source mapped."
+    },
+    {
+      "slug": "footer",
+      "title": "Footer",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing footer component source mapped."
+    },
+    {
+      "slug": "testimonial",
+      "title": "Testimonial",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing testimonial component source mapped."
+    },
+    {
+      "slug": "testimonial-carousel",
+      "title": "Testimonial Carousel",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "No public upstream repository containing testimonial-carousel component source mapped."
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "creator": "aicanvas",
+  "ownerLabel": "aicanvas-me",
+  "name": "aicanvas",
+  "sheetRow": 64,
+  "profileUrl": "https://21st.dev/@aicanvas",
+  "website": "https://aicanvas.me",
+  "repositoryUrl": "https://github.com/aicanvas-me/aicanvas",
+  "revision": "0242a000368640404f6bc1a32d56df4801bd0629",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "75c85790506bae0a1a8ab322e3a4cda906ed8fed8803d398e91bae0a8c592659",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uninstalled_package_dependencies",
+  "holdDetail": "Source repository identified under MIT (aicanvas-me/aicanvas), but components require uninstalled net-new dependencies (framer-motion, @phosphor-icons/react), and andromeda-search-field is missing from components-workspace.",
+  "items": [
+    {
+      "slug": "blind-pull-toggle",
+      "title": "Blind Pull Toggle",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled framer-motion and @phosphor-icons/react; lacks HigherBits demo wrapper and clean self-contained GHL export."
+    },
+    {
+      "slug": "expanding-tabs",
+      "title": "Expanding Tabs",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled framer-motion and @phosphor-icons/react; lacks HigherBits demo wrapper and clean self-contained GHL export."
+    },
+    {
+      "slug": "glass-search-bar",
+      "title": "Glass Search Bar",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled framer-motion and @phosphor-icons/react; lacks HigherBits demo wrapper and clean self-contained GHL export."
+    },
+    {
+      "slug": "magnetic-logo-cluster",
+      "title": "Magnetic Logo Cluster",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled framer-motion; lacks HigherBits demo wrapper and clean self-contained GHL export."
+    },
+    {
+      "slug": "runway-loader",
+      "title": "Runway Loader",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled framer-motion; lacks HigherBits demo wrapper and clean self-contained GHL export."
+    },
+    {
+      "slug": "andromeda-search-field",
+      "title": "Andromeda Search Field",
+      "status": "held",
+      "reason": "missing_upstream_component",
+      "detail": "Component slug does not exist in upstream components-workspace and is not staged in candidate inventory."
+    },
+    {
+      "slug": "stack-tower",
+      "title": "Stack Tower",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled framer-motion (useAnimationFrame, useTransform); lacks HigherBits demo wrapper and clean self-contained GHL export."
+    }
+  ]
+}

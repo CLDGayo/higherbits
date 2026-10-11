@@ -1,0 +1,44 @@
+{
+  "repositoryUrl": "https://github.com/8starlabs/ui",
+  "ownerLabel": "8starlabs",
+  "profileUrl": "https://21st.dev/@8starlabs",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "392075473ac3a5da2de1035e5dd31e7079518eb0af322e6bed332ed0d7f277f0",
+  "revision": "9633e2fa89cdea2da40a81d69ef484ff04d0de63",
+  "copyPromptsSha256": "01ad7d6e3d22d7959ee47d20c289cb4d7a47355366a9890992a237fdcc7259cd",
+  "items": [
+    {
+      "slug": "open-in-chat",
+      "registryName": "open-in-chat",
+      "title": "Open In Chat",
+      "description": "A component that opens an LLM chat prompt in external AI tools (ChatGPT, Claude, Perplexity, Grok, v0).",
+      "revision": "9633e2fa89cdea2da40a81d69ef484ff04d0de63",
+      "sourcePath": "registry/8starlabs-ui/blocks/open-in-chat.tsx",
+      "files": [
+        {
+          "path": "registry/8starlabs-ui/blocks/open-in-chat.tsx",
+          "type": "registry:ui",
+          "bytes": 7969,
+          "sha256": "c5d9c5efc3590f630c2b67b7be71c5590b79cd945044a9d72e9316be7c193f59"
+        },
+        {
+          "path": "registry/8starlabs-ui/ui/ai-icons.tsx",
+          "type": "registry:ui",
+          "bytes": 3202,
+          "sha256": "1bda9e7185f479a998091d4f4e7a279e8f7510230a8281151b9dad2acf7df50e"
+        }
+      ],
+      "dependencies": [
+        "lucide-react",
+        "simple-icons"
+      ],
+      "aliasImports": [],
+      "demoSha256": "f2d624cbac9226eb431da5d3a9e606d0f205ce0b07d018ace4d57d60dc7efca1",
+      "upstreamDemoSha256": "4bbda9af9ec39da1fdfe2b2f3abd6e850881e4dc099e459ef72edc89c596f284",
+      "ghlSha256": "1e2ad9b31f584fbb6fd456d24f5660557d4a752be0bc5485359a70e08bf05318",
+      "previewSha256": "fe4fead9c307df73eac73b83d2c0918c255dab1b375d1e54b873880d5b49faa1",
+      "previewHtmlSha256": "880c10c8bcf76894f40ffce85943ac617d04b3f23600978fdf2703cc46a6f129"
+    }
+  ],
+  "heldItems": []
+}

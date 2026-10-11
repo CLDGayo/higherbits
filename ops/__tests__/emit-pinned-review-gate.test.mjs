@@ -11,6 +11,9 @@ const emitters = [
   'emit-pinned-urvish-production.mjs',
   'emit-pinned-edilozi-production.mjs',
   'emit-pinned-linasameer-production.mjs',
+  'emit-pinned-asanshay-production.mjs',
+  'emit-pinned-alwurts-production.mjs',
+  'emit-pinned-astryxdesign-production.mjs',
 ]
 
 test('all pinned production emitters stage candidates without publishing or inventing reviewer approval', () => {
@@ -36,4 +39,29 @@ test('all pinned production emitters stage candidates without publishing or inve
       /\b(?:DELETE\s+FROM|INSERT\s+INTO)\s+(?:public\.)?auto_index_copy_prompts\b/i,
       `${filename}: must not write prompts directly to the public table`)
   }
+})
+
+test('verified remote asset rights are scoped to the reviewed component slugs', () => {
+  const source = readFileSync(new URL('../emit-pinned-urvish-production.mjs', import.meta.url), 'utf8')
+  assert.match(source, /entry\.applicableSlugs\?\.includes\(slug\)/)
+})
+
+test('official-registry staging maps normalized owners while custom manifests stay explicit', () => {
+  const migration = readFileSync(new URL('../../supabase/migrations/20261008_auto_index_reviewer_provenance.sql', import.meta.url), 'utf8')
+  const stageWriter = migration.slice(
+    migration.indexOf('CREATE FUNCTION public.stage_auto_index_candidate_publication_metadata('),
+    migration.indexOf('CREATE FUNCTION public.auto_index_admin_review_queue('),
+  )
+  assert.match(stageWriter, /WHEN s\.kind='custom_manifest' AND lower\(s\.owner_label\)='vgpu' THEN 'vgpu'/)
+  assert.match(stageWriter, /IF v_emitter IS NULL AND s\.kind='official_registry' THEN/)
+  assert.match(stageWriter, /regexp_replace\(btrim\(s\.owner_label\)/)
+  assert.match(stageWriter, /v_emitter !~ '\^\[a-z0-9\]\[a-z0-9-\]\{0,37\}\$'/)
+  assert.match(stageWriter, /ELSIF s\.kind='official_registry' AND p_preview_asset_slug=v_emitter\|\|'-'\|\|p_component_slug THEN/)
+})
+
+test('pgvector operators are qualified for the restricted function search path', () => {
+  const migration = readFileSync(new URL('../../supabase/migrations/20261008_auto_index_reviewer_provenance.sql', import.meta.url), 'utf8')
+  const operators = [...migration.matchAll(/<=>/g)]
+  assert.equal(operators.length, 6)
+  assert.ok(operators.every(match => migration.slice(Math.max(0, match.index - 21), match.index).endsWith('OPERATOR(extensions.')))
 })

@@ -1,0 +1,100 @@
+{
+  "creator": "Astryxdesign",
+  "profileUrl": "https://21st.dev/@Astryxdesign",
+  "candidateRepositoryUrl": "https://github.com/facebook/astryx",
+  "candidateRevision": "4607f2fbcbce09e28ba0aee4047b898c9ff12ea7",
+  "candidateRepositoryOwner": "facebook (Meta Platforms, Inc. / Meta Open Source)",
+  "status": "ALL_ITEMS_HELD",
+  "items": [],
+  "heldItems": [
+    {
+      "slug": "astryx-aspect-ratio",
+      "candidatePath": "packages/core/src/AspectRatio/AspectRatio.tsx",
+      "reasons": [
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source) with copyright assigned to Meta Platforms, Inc.; no verified provenance linking Astryxdesign on 21st.dev to repository ownership.",
+        "unverified_standalone_closure: Component is an integrated part of @astryxdesign/core and requires Meta @stylexjs/stylex compiler and internal package dependencies, lacking standalone component closure."
+      ]
+    },
+    {
+      "slug": "astryx-avatar",
+      "candidatePath": "Avatar/Avatar.tsx",
+      "reasons": [
+        "path_non_existent: Path Avatar/Avatar.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Internal @astryxdesign/core component relies on internal hooks, tokens, and @stylexjs/stylex."
+      ]
+    },
+    {
+      "slug": "astryx-avatar-group",
+      "candidatePath": "AvatarGroup/AvatarGroup.tsx",
+      "reasons": [
+        "path_non_existent: Path AvatarGroup/AvatarGroup.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    },
+    {
+      "slug": "astryx-badge",
+      "candidatePath": "Badge/Badge.tsx",
+      "reasons": [
+        "path_non_existent: Path Badge/Badge.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    },
+    {
+      "slug": "astryx-banner",
+      "candidatePath": "Banner/Banner.tsx",
+      "reasons": [
+        "path_non_existent: Path Banner/Banner.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    },
+    {
+      "slug": "astryx-blockquote",
+      "candidatePath": "Blockquote/Blockquote.tsx",
+      "reasons": [
+        "path_non_existent: Path Blockquote/Blockquote.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    },
+    {
+      "slug": "astryx-breadcrumbs",
+      "candidatePath": "Breadcrumbs/Breadcrumbs.tsx",
+      "reasons": [
+        "path_non_existent: Path Breadcrumbs/Breadcrumbs.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    },
+    {
+      "slug": "astryx-button",
+      "candidatePath": "Button/Button.tsx",
+      "reasons": [
+        "path_non_existent: Path Button/Button.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Requires 20+ internal files from packages/core/src/ and Meta @stylexjs/stylex compiler."
+      ]
+    },
+    {
+      "slug": "astryx-button-group",
+      "candidatePath": "ButtonGroup/ButtonGroup.tsx",
+      "reasons": [
+        "path_non_existent: Path ButtonGroup/ButtonGroup.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    },
+    {
+      "slug": "astryx-toggle-button",
+      "candidatePath": "ToggleButton/ToggleButton.tsx",
+      "reasons": [
+        "path_non_existent: Path ToggleButton/ToggleButton.tsx does not exist at repository root (HTTP 404).",
+        "ownership_mismatch_unverified: Candidate repository is owned by facebook (Meta Platforms, Inc. / Meta Open Source); unverified 21st creator identity.",
+        "unverified_standalone_closure: Tightly coupled to internal StyleX tokens and @astryxdesign/core architecture."
+      ]
+    }
+  ]
+}

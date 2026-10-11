@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>asanshay - chat-tool</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <!--
+  Source registry: https://ds.asanshay.com/r/chat-tool.json
+  Candidate revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac
+  Component source path: registry/new-york/blocks/chat-tool/chat-tool.tsx
+  Eligibility provenance: 21st.dev auto-index=true roster signal (upstream registry defines component schema without a separate standalone root license file)
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Chat Tool component">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, -apple-system, sans-serif; color: #09090b; }
+    .ghl-tools-card { width: min(100%, 540px); background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 12px; }
+    .ghl-tool-row { border: 1px solid #e4e4e7; border-radius: 12px; background: #fafafa; padding: 12px 14px; font-size: 13px; }
+    .ghl-tool-row-header { display: flex; align-items: center; justify-content: space-between; }
+    .ghl-badge-ok { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #059669; }
+    .ghl-badge-run { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #2563eb; }
+    .ghl-badge-err { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #dc2626; }
+    .ghl-tool-data { margin-top: 8px; padding-top: 8px; border-top: 1px solid #e4e4e7; font-family: ui-monospace, monospace; font-size: 11px; color: #52525b; line-height: 1.5; }
+  </style>
+  <div class="ghl-tools-card">
+    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a;">
+      AI Tool Invocations
+    </div>
+    <div class="ghl-tool-row">
+      <div class="ghl-tool-row-header">
+        <span class="ghl-badge-ok"><span>✓</span> Used fetch_schema</span>
+        <span style="font-size: 11px; color: #a1a1aa;">table: customers</span>
+      </div>
+      <div class="ghl-tool-data">
+        columns: 14 | primaryKey: "id" | indexes: ["idx_email", "idx_created_at"]
+      </div>
+    </div>
+    <div class="ghl-tool-row">
+      <div class="ghl-tool-row-header">
+        <span class="ghl-badge-run"><span>⟳</span> Using benchmark_runner</span>
+        <span style="font-size: 11px; color: #a1a1aa;">1000 iterations</span>
+      </div>
+    </div>
+    <div class="ghl-tool-row">
+      <div class="ghl-tool-row-header">
+        <span class="ghl-badge-err"><span>!</span> Failed dns_lookup</span>
+        <span style="font-size: 11px; color: #dc2626;">timeout</span>
+      </div>
+      <div class="ghl-tool-data" style="color: #b91c1c;">
+        NXDOMAIN: could not resolve internal host within 5000ms
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

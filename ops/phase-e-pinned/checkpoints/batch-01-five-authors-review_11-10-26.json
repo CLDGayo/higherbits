@@ -1,0 +1,189 @@
+{
+  "batch": "01",
+  "batch_subset": "five_authors_continuation",
+  "reviewed_at": "2026-10-11T02:40:00.000Z",
+  "reviewer_label": "Antigravity Gemini 3.8 Flash High Ingestion Review",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 5,
+    "authors_with_published_items": 0,
+    "authors_blocked": 5,
+    "total_sheet_items_evaluated": 20,
+    "total_published_items": 0,
+    "total_blocked_items": 20
+  },
+  "authors": [
+    {
+      "row": 9,
+      "handle": "40973894",
+      "name": "40973894",
+      "profile_url": "https://21st.dev/@40973894",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "siri-wave",
+          "reason": "unmapped_source_repository",
+          "detail": "GitHub account 40973894 not found on public GitHub (404); no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 15,
+      "handle": "Adurotimi",
+      "name": "Dolphin",
+      "profile_url": "https://21st.dev/@Adurotimi",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "save-button",
+          "reason": "unmapped_source_repository",
+          "detail": "GitHub user Adurotimi ('Dolphin', id 93479434) verified on GitHub, but has no repository containing save-button component source."
+        }
+      ]
+    },
+    {
+      "row": 21,
+      "handle": "Codehagen",
+      "name": "Prism UI",
+      "profile_url": "https://21st.dev/@Codehagen",
+      "repository_url": "https://github.com/Codehagen/Prismui",
+      "revision": "40854d9e9bfed7822a730fc5e0932f257725cbd6",
+      "license_spdx": "AGPL-3.0",
+      "license_sha256": "db52e3daad9260a1cc638efaf3f6b7a6bdead236365586a60078a9a287613037",
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 16,
+      "total_count": 16,
+      "blocked_items": [
+        {
+          "slug": "action-button",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "button-group",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "button-group-with-icons",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "display-cards",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "expandable-card",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "floating-action-panel",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "hero",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "hero-badge",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "icons",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "logo-carousel",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "open-source",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "popover",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "previous-next-button-group",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "pricing",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "timeline",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        },
+        {
+          "slug": "use-expandable",
+          "reason": "license_incompatible_copyleft",
+          "detail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 licensed under AGPL-3.0; fails permissive license safeguard."
+        }
+      ]
+    },
+    {
+      "row": 22,
+      "handle": "DanielWhit21874",
+      "name": "DanielWhit21874",
+      "profile_url": "https://21st.dev/@DanielWhit21874",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "slot-text",
+          "reason": "unmapped_source_repository",
+          "detail": "GitHub account DanielWhit21874 not found on public GitHub (404); no mapped item source repository or license lead."
+        }
+      ]
+    },
+    {
+      "row": 23,
+      "handle": "Daniela_Muntyan",
+      "name": "Daniela Muntyan",
+      "profile_url": "https://21st.dev/@Daniela_Muntyan",
+      "repository_url": null,
+      "license_spdx": null,
+      "status": "blocked",
+      "published_count": 0,
+      "blocked_count": 1,
+      "total_count": 1,
+      "blocked_items": [
+        {
+          "slug": "shader-clock",
+          "reason": "unmapped_source_repository",
+          "detail": "GitHub user danielamuntyan verified on GitHub, but has 0 public repositories or gists containing shader-clock component source."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+Provenance Note:
+Source artifacts for asanshay components (chat-message, chat-reasoning, chat-tool, motion-blur-text, page-header, reveal, loader) are pinned directly from official public shadcn registry endpoints at https://ds.asanshay.com/r/<slug>.json (content hash revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac).
+Inclusion is governed by user-confirmed 21st.dev auto-index=true roster eligibility provenance. Upstream registry responses define component schemas without a separate standalone root license file; no synthetic copyright lines or SPDX grants are manufactured.

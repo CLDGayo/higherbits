@@ -1,0 +1,108 @@
+{
+  "creator": "adrielzimbril",
+  "ownerLabel": "adrielzimbril",
+  "name": "adrielzimbril",
+  "sheetRow": 59,
+  "profileUrl": "https://21st.dev/@adrielzimbril",
+  "website": "https://www.spaceui.one",
+  "githubUser": "https://github.com/adrielzimbril",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub user adrielzimbril (ID 109924237) personal repositories consist of landing-page challenge sites and contain no component library source for the 13 evaluated component items.",
+  "items": [
+    {
+      "slug": "avatar-extended",
+      "title": "Avatar Extended",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "orb-bloop",
+      "title": "Orb Bloop",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "block-dither-carousel",
+      "title": "Block Dither Carousel",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "doodle-callout",
+      "title": "Doodle Callout",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "generating-orb",
+      "title": "Generating Orb",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "gradient-file-upload",
+      "title": "Gradient File Upload",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "handle-reel",
+      "title": "Handle Reel",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "kanban",
+      "title": "Kanban",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "mesh-gradient",
+      "title": "Mesh Gradient",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "block-sign-in",
+      "title": "Block Sign In",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "thinking-orb",
+      "title": "Thinking Orb",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "user-presence-avatar",
+      "title": "User Presence Avatar",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    },
+    {
+      "slug": "voice-chat-widget",
+      "title": "Voice Chat Widget",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+    }
+  ]
+}

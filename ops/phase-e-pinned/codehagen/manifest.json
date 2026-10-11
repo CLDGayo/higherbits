@@ -1,0 +1,300 @@
+{
+  "creator": "Codehagen",
+  "ownerLabel": "Codehagen",
+  "name": "Prism UI",
+  "profileUrl": "https://21st.dev/@Codehagen",
+  "website": "https://www.prismui.tech/",
+  "repositoryUrl": "https://github.com/Codehagen/Prismui",
+  "revision": "40854d9e9bfed7822a730fc5e0932f257725cbd6",
+  "licenseSpdx": "AGPL-3.0",
+  "licenseSha256": "db52e3daad9260a1cc638efaf3f6b7a6bdead236365586a60078a9a287613037",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "license_incompatible_copyleft",
+  "holdDetail": "Upstream repository Codehagen/Prismui at commit 40854d9e9bfed7822a730fc5e0932f257725cbd6 is licensed under AGPL-3.0 (GNU Affero General Public License v3.0); fails permissive license safeguard. Pinned source preserved as exact evidence; items must not be relabeled MIT.",
+  "items": [
+    {
+      "slug": "action-button",
+      "title": "Action Button",
+      "description": "A button component with loading states and enhanced interactions from Prism UI.",
+      "sourcePath": "registry/default/ui/action-button.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/action-button.tsx",
+          "type": "registry:ui",
+          "bytes": 1546,
+          "sha256": "0c9a1f020a2101ce72c7405dffe79ebee411dae047e495b2821bee2bf0f709a5"
+        }
+      ]
+    },
+    {
+      "slug": "button-group",
+      "title": "Button Group",
+      "description": "A component for grouping related buttons with various layouts from Prism UI.",
+      "sourcePath": "registry/default/ui/button-group.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/button-group.tsx",
+          "type": "registry:ui",
+          "bytes": 1446,
+          "sha256": "8d2f123b00e1befffc8406d9f3cb5db384ca6cc10901564b80b042efe5558b2f"
+        }
+      ]
+    },
+    {
+      "slug": "button-group-with-icons",
+      "title": "Button Group With Icons",
+      "description": "Button group variant featuring icons and outline styles from Prism UI.",
+      "sourcePath": "src/registry/example/button-group-demo.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "src/registry/example/button-group-demo.tsx",
+          "type": "registry:example",
+          "bytes": 4660,
+          "sha256": "274833babc4061b3520a5dd8e011d23dc235223588977358c97dbfe2fe0d4340"
+        },
+        {
+          "path": "registry/default/ui/button-group.tsx",
+          "type": "registry:ui",
+          "bytes": 1446,
+          "sha256": "8d2f123b00e1befffc8406d9f3cb5db384ca6cc10901564b80b042efe5558b2f"
+        }
+      ]
+    },
+    {
+      "slug": "display-cards",
+      "title": "Display Cards",
+      "description": "A stack of animated cards for showcasing featured content with hover effects from Prism UI.",
+      "sourcePath": "registry/default/ui/display-cards.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/display-cards.tsx",
+          "type": "registry:ui",
+          "bytes": 3475,
+          "sha256": "82657fde0e4a8c1908ae60e3499ddb3b4dc48e3b9845521232c34822915d74dc"
+        }
+      ]
+    },
+    {
+      "slug": "expandable-card",
+      "title": "Expandable Card",
+      "description": "A card component that expands to show additional content with smooth animations from Prism UI.",
+      "sourcePath": "registry/default/ui/expandable-card.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/expandable-card.tsx",
+          "type": "registry:ui",
+          "bytes": 7654,
+          "sha256": "b0d4deef976f0138b3cd536a72ef21b32571798882fa46599f2abd769a589905"
+        }
+      ]
+    },
+    {
+      "slug": "floating-action-panel",
+      "title": "Floating Action Panel",
+      "description": "A floating panel component for contextual actions and forms from Prism UI.",
+      "sourcePath": "registry/default/ui/floating-action-panel.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/floating-action-panel.tsx",
+          "type": "registry:ui",
+          "bytes": 8667,
+          "sha256": "4cfba607f617982ddfa80e3204d926173644d69a33cd0ffd0b8e6b6227539014"
+        }
+      ]
+    },
+    {
+      "slug": "hero",
+      "title": "Hero",
+      "description": "A versatile hero component with animations and customizable content from Prism UI.",
+      "sourcePath": "registry/default/ui/hero.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/hero.tsx",
+          "type": "registry:ui",
+          "bytes": 4362,
+          "sha256": "c2a1c3264d622e824f56a6cda5bd8550f808b4d32d6de4eeb06fa4fbc9980ed9"
+        }
+      ]
+    },
+    {
+      "slug": "hero-badge",
+      "title": "Hero Badge",
+      "description": "A beautiful badge component for hero sections with icon support from Prism UI.",
+      "sourcePath": "registry/default/ui/hero-badge.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/hero-badge.tsx",
+          "type": "registry:ui",
+          "bytes": 2267,
+          "sha256": "f5f272e6313d06304b0183fcacc6f4d1e10c623060b757c2c74a018b14066e09"
+        }
+      ]
+    },
+    {
+      "slug": "icons",
+      "title": "Icons",
+      "description": "Icon definitions and SVG helper components from Prism UI.",
+      "sourcePath": "src/components/icons.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "src/components/icons.tsx",
+          "type": "registry:file",
+          "bytes": 13921,
+          "sha256": "c7c5721fe927432b6d4435213901509f69154f4037822e95930fdb9e98818c86"
+        }
+      ]
+    },
+    {
+      "slug": "logo-carousel",
+      "title": "Logo Carousel",
+      "description": "An animated carousel component for displaying logos and brand icons from Prism UI.",
+      "sourcePath": "registry/default/ui/logo-carousel.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/logo-carousel.tsx",
+          "type": "registry:ui",
+          "bytes": 3804,
+          "sha256": "1ae9c51eb8d46c0845d017ddfe866ce1232366dec31eb3881b9b5046c6036553"
+        }
+      ]
+    },
+    {
+      "slug": "open-source",
+      "title": "Open Source",
+      "description": "A component for showcasing open source projects and contributions from Prism UI.",
+      "sourcePath": "registry/default/ui/open-source.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/open-source.tsx",
+          "type": "registry:ui",
+          "bytes": 10934,
+          "sha256": "bae31f0bfe6af9e5af83b13f666d562d496c93be6f0d34eeff194aa5ca9ef82d"
+        }
+      ]
+    },
+    {
+      "slug": "popover",
+      "title": "Popover",
+      "description": "An enhanced popover component with animations and flexible content from Prism UI.",
+      "sourcePath": "registry/default/ui/popover.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/popover.tsx",
+          "type": "registry:ui",
+          "bytes": 9660,
+          "sha256": "55c04ab4c6c27cf3d1984b9b294cd26e1e089c3c0071214014f3e1b892a2a796"
+        }
+      ]
+    },
+    {
+      "slug": "previous-next-button-group",
+      "title": "Previous Next Button Group",
+      "description": "Previous and Next action button group pair from Prism UI.",
+      "sourcePath": "src/registry/example/button-group-basic.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "src/registry/example/button-group-basic.tsx",
+          "type": "registry:example",
+          "bytes": 1258,
+          "sha256": "ed345a7305fa18a00f4d28f5ef81d36f3ce54e28cd472f1f48be98b6b097416f"
+        },
+        {
+          "path": "registry/default/ui/button-group.tsx",
+          "type": "registry:ui",
+          "bytes": 1446,
+          "sha256": "8d2f123b00e1befffc8406d9f3cb5db384ca6cc10901564b80b042efe5558b2f"
+        }
+      ]
+    },
+    {
+      "slug": "pricing",
+      "title": "Pricing",
+      "description": "Pricing cards and plans presentation component from Prism UI.",
+      "sourcePath": "src/components/prismui/pricing.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "src/components/prismui/pricing.tsx",
+          "type": "registry:ui",
+          "bytes": 4736,
+          "sha256": "9aff28b4da5e6c19d273930824d745eb1d6028193fb6b53db83b308d5ca02d7a"
+        }
+      ]
+    },
+    {
+      "slug": "timeline",
+      "title": "Timeline",
+      "description": "A timeline component with expandable entries and responsive design from Prism UI.",
+      "sourcePath": "registry/default/ui/timeline.tsx",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "registry/default/ui/timeline.tsx",
+          "type": "registry:ui",
+          "bytes": 9057,
+          "sha256": "ea8d3032f858047311996c5013be2fbe9d60f65e4c691ed82041b97ca3ad46ed"
+        }
+      ]
+    },
+    {
+      "slug": "use-expandable",
+      "title": "useExpandable",
+      "description": "Hook managing expand and collapse state transitions for card components from Prism UI.",
+      "sourcePath": "src/hooks/use-expandable.ts",
+      "status": "held",
+      "reason": "license_incompatible_copyleft",
+      "detail": "Upstream repository licensed under AGPL-3.0; fails permissive license safeguard.",
+      "files": [
+        {
+          "path": "src/hooks/use-expandable.ts",
+          "type": "registry:hook",
+          "bytes": 465,
+          "sha256": "8b4b83384af2d77be82ba8a36c87f81225e5d914f8a844a8b30c622a93a51772"
+        }
+      ]
+    }
+  ]
+}

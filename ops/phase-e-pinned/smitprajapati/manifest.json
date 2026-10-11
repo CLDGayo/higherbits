@@ -1,0 +1,23 @@
+{
+  "creator": "Smit-Prajapati",
+  "ownerLabel": "Smit-Prajapati",
+  "name": "Smit Prajapati",
+  "sheetRow": 37,
+  "profileUrl": "https://21st.dev/@Smit-Prajapati",
+  "githubUser": "https://github.com/Smit-Prajapati",
+  "repositoryUrl": "https://github.com/Smit-Prajapati/css-cards",
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_permissive_source_component",
+  "holdDetail": "Repository Smit-Prajapati/css-cards contains raw HTML/SCSS card snippets without component isolation or permissive license file; fails permissive license safeguard.",
+  "items": [
+    {
+      "slug": "glass-card",
+      "title": "Glass Card",
+      "status": "held",
+      "reason": "unmapped_permissive_source_component",
+      "detail": "Repository Smit-Prajapati/css-cards has no permissive license file and contains monolithic HTML/SCSS demo rather than isolated reusable component."
+    }
+  ]
+}

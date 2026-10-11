@@ -1,0 +1,82 @@
+{
+  "LICENSE.md": {
+    "bytes": 34273,
+    "sha256": "db52e3daad9260a1cc638efaf3f6b7a6bdead236365586a60078a9a287613037"
+  },
+  "package.json": {
+    "bytes": 3800,
+    "sha256": "0ef6e909c4ee15895b5b8eca8686aada3e25afaccac9255c13989b9c73dcfea6"
+  },
+  "registry.json": {
+    "bytes": 6543,
+    "sha256": "4a8e69840f55089a038cdf39578efafc913744a5e01879dc976bab25d77f42a3"
+  },
+  "registry/default/ui/action-button.tsx": {
+    "bytes": 1546,
+    "sha256": "0c9a1f020a2101ce72c7405dffe79ebee411dae047e495b2821bee2bf0f709a5"
+  },
+  "registry/default/ui/button-group.tsx": {
+    "bytes": 1446,
+    "sha256": "8d2f123b00e1befffc8406d9f3cb5db384ca6cc10901564b80b042efe5558b2f"
+  },
+  "registry/default/ui/display-cards.tsx": {
+    "bytes": 3475,
+    "sha256": "82657fde0e4a8c1908ae60e3499ddb3b4dc48e3b9845521232c34822915d74dc"
+  },
+  "registry/default/ui/expandable-card.tsx": {
+    "bytes": 7654,
+    "sha256": "b0d4deef976f0138b3cd536a72ef21b32571798882fa46599f2abd769a589905"
+  },
+  "registry/default/ui/floating-action-panel.tsx": {
+    "bytes": 8667,
+    "sha256": "4cfba607f617982ddfa80e3204d926173644d69a33cd0ffd0b8e6b6227539014"
+  },
+  "registry/default/ui/hero.tsx": {
+    "bytes": 4362,
+    "sha256": "c2a1c3264d622e824f56a6cda5bd8550f808b4d32d6de4eeb06fa4fbc9980ed9"
+  },
+  "registry/default/ui/hero-badge.tsx": {
+    "bytes": 2267,
+    "sha256": "f5f272e6313d06304b0183fcacc6f4d1e10c623060b757c2c74a018b14066e09"
+  },
+  "src/components/icons.tsx": {
+    "bytes": 13921,
+    "sha256": "c7c5721fe927432b6d4435213901509f69154f4037822e95930fdb9e98818c86"
+  },
+  "registry/default/ui/logo-carousel.tsx": {
+    "bytes": 3804,
+    "sha256": "1ae9c51eb8d46c0845d017ddfe866ce1232366dec31eb3881b9b5046c6036553"
+  },
+  "registry/default/ui/open-source.tsx": {
+    "bytes": 10934,
+    "sha256": "bae31f0bfe6af9e5af83b13f666d562d496c93be6f0d34eeff194aa5ca9ef82d"
+  },
+  "registry/default/ui/popover.tsx": {
+    "bytes": 9660,
+    "sha256": "55c04ab4c6c27cf3d1984b9b294cd26e1e089c3c0071214014f3e1b892a2a796"
+  },
+  "src/components/prismui/pricing.tsx": {
+    "bytes": 4736,
+    "sha256": "9aff28b4da5e6c19d273930824d745eb1d6028193fb6b53db83b308d5ca02d7a"
+  },
+  "registry/default/ui/timeline.tsx": {
+    "bytes": 9057,
+    "sha256": "ea8d3032f858047311996c5013be2fbe9d60f65e4c691ed82041b97ca3ad46ed"
+  },
+  "src/hooks/use-expandable.ts": {
+    "bytes": 465,
+    "sha256": "8b4b83384af2d77be82ba8a36c87f81225e5d914f8a844a8b30c622a93a51772"
+  },
+  "src/registry/example/button-group-basic.tsx": {
+    "bytes": 1258,
+    "sha256": "ed345a7305fa18a00f4d28f5ef81d36f3ce54e28cd472f1f48be98b6b097416f"
+  },
+  "src/registry/example/button-group-demo.tsx": {
+    "bytes": 4660,
+    "sha256": "274833babc4061b3520a5dd8e011d23dc235223588977358c97dbfe2fe0d4340"
+  },
+  "src/lib/utils.ts": {
+    "bytes": 4317,
+    "sha256": "895cf67b3b9fe9a6913f1aec4e223f0d0ea5c335c54db556be2f0ed902394d07"
+  }
+}

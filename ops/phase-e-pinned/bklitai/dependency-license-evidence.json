@@ -33,6 +33,12 @@
       "role": "Sankey graph layout computation."
     },
     {
+      "name": "d3-sankey",
+      "version": "0.12.3",
+      "licenseSpdx": "BSD-3-Clause",
+      "role": "Sankey graph layout computation."
+    },
+    {
       "name": "clsx",
       "version": "^2.1.1",
       "licenseSpdx": "MIT",

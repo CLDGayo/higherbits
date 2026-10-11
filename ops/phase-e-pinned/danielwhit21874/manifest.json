@@ -1,0 +1,25 @@
+{
+  "creator": "DanielWhit21874",
+  "ownerLabel": "DanielWhit21874",
+  "name": "DanielWhit21874",
+  "sheetRow": 22,
+  "profileUrl": "https://21st.dev/@DanielWhit21874",
+  "website": null,
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub account DanielWhit21874 not found on public GitHub (HTTP 404, 0 search results); no mapped upstream repository or license lead.",
+  "items": [
+    {
+      "slug": "slot-text",
+      "title": "Slot Text",
+      "description": "Slot text animation component.",
+      "sourcePath": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "GitHub account DanielWhit21874 not found on public GitHub; no mapped item source repository or license lead."
+    }
+  ]
+}

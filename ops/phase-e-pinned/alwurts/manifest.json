@@ -1,0 +1,99 @@
+{
+  "repositoryUrl": "https://github.com/Alwurts/simple-ai",
+  "ownerLabel": "Alwurts",
+  "profileUrl": "https://21st.dev/@Alwurts",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "d2319217dd84baa183682594da1602c1fa53b723042e17d8d6a08abe3c44e50b",
+  "revision": "2d8292d0ed173727ef88501997f6bcc33773a648",
+  "copyPromptsSha256": "4674a8dd622f2ceb602aebe36782f036104a6d3e36011e9b064c59e8677aa1f8",
+  "items": [
+    {
+      "slug": "chat-input",
+      "registryName": "chat-input",
+      "title": "Chat Input",
+      "description": "Rich chat input editor with @ mention autocomplete, streaming status indicator, and submit actions.",
+      "revision": "2d8292d0ed173727ef88501997f6bcc33773a648",
+      "sourcePath": "packages/registry/registry/ui/chat-input.tsx",
+      "files": [
+        {
+          "path": "packages/registry/registry/ui/chat-input.tsx",
+          "type": "registry:ui",
+          "bytes": 19485,
+          "sha256": "f3a080a354ca7f0f60451ffcba9bafc7319d474b489cf0d3cf36ab5710ab716b"
+        }
+      ],
+      "dependencies": [
+        "@tiptap/core",
+        "@tiptap/react",
+        "@tiptap/starter-kit",
+        "@tiptap/extension-mention",
+        "@tiptap/extension-placeholder",
+        "@tiptap/suggestion",
+        "ai",
+        "lucide-react"
+      ],
+      "aliasImports": [],
+      "demoSha256": "fe1f95672ec283969c6ebfe7507d9865c4de49822ec14f07d8418f672c0d98ea",
+      "ghlSha256": "5bc27b0fd985d20f1f3b73c4c6ce012c864977f5748ac5f45c22bd2273760c27",
+      "previewSha256": "7659e5cd39e013c81f9dcaa07e50d4f6cef367ad5b366c146628af01069cafe5",
+      "previewHtmlSha256": "4564e9c3475f92eed4ed973322f5cb6f807e204218c6cc11146459754637ec9c"
+    },
+    {
+      "slug": "tool",
+      "registryName": "tool",
+      "title": "Tool",
+      "description": "Collapsible AI tool invocation component with status indicators, argument inspect, and formatted output display.",
+      "revision": "2d8292d0ed173727ef88501997f6bcc33773a648",
+      "sourcePath": "packages/registry/registry/ui/tool.tsx",
+      "files": [
+        {
+          "path": "packages/registry/registry/ui/tool.tsx",
+          "type": "registry:ui",
+          "bytes": 5681,
+          "sha256": "f2308784a7e5fb483498965d50e7dec6a051052a95f403bad591767107aa2bb3"
+        }
+      ],
+      "dependencies": [
+        "ai",
+        "lucide-react"
+      ],
+      "aliasImports": [],
+      "demoSha256": "e39120b5beb6f80eaa31737a33946c58f1d49cffb3d838b01d916010d45d3ec3",
+      "ghlSha256": "0f2eaed0aacf53daa39c0211f0d0ebbd3ee421a83a3d6a2a98bee5ab08d3a117",
+      "previewSha256": "9e1cf8646e3e15f7ce479aeb6315eb379d4f63b1424d413258fd21875be585b5",
+      "previewHtmlSha256": "65a850a568e6350b855485aab484adc118ca2fc8577dd77ab4b1a0ef2eb6bbf5"
+    }
+  ],
+  "heldItems": [
+    {
+      "slug": "chat-suggestions",
+      "reason": "source_path_unmapped_in_repo",
+      "detail": "No exact source path in the public repository snapshot at commit 2d8292d0ed173727ef88501997f6bcc33773a648."
+    },
+    {
+      "slug": "editable-handle",
+      "reason": "source_path_unmapped_in_repo",
+      "detail": "No exact source path in the public repository snapshot at commit 2d8292d0ed173727ef88501997f6bcc33773a648."
+    },
+    {
+      "slug": "jsx-renderer",
+      "reason": "source_path_unmapped_in_repo",
+      "detail": "No exact source path in the public repository snapshot at commit 2d8292d0ed173727ef88501997f6bcc33773a648."
+    },
+    {
+      "slug": "model-selector",
+      "reason": "source_path_unmapped_in_repo",
+      "detail": "No exact source path in the public repository snapshot at commit 2d8292d0ed173727ef88501997f6bcc33773a648."
+    },
+    {
+      "slug": "status-edge",
+      "reason": "source_path_unmapped_in_repo",
+      "detail": "No exact source path in the public repository snapshot at commit 2d8292d0ed173727ef88501997f6bcc33773a648."
+    },
+    {
+      "slug": "tool-invocation",
+      "reason": "source_path_unmapped_in_repo",
+      "detail": "No exact source path in the public repository snapshot at commit 2d8292d0ed173727ef88501997f6bcc33773a648."
+    }
+  ]
+}

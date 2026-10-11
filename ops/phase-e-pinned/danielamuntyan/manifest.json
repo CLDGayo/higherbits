@@ -1,0 +1,26 @@
+{
+  "creator": "Daniela_Muntyan",
+  "ownerLabel": "Daniela_Muntyan",
+  "name": "Daniela Muntyan",
+  "sheetRow": 23,
+  "profileUrl": "https://21st.dev/@Daniela_Muntyan",
+  "githubUser": "https://github.com/danielamuntyan",
+  "website": null,
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub user danielamuntyan (id 51169248) verified on GitHub, but has 0 public repositories and 0 public gists. No repository hosting shader-clock exists under user profile.",
+  "items": [
+    {
+      "slug": "shader-clock",
+      "title": "Shader Clock",
+      "description": "Shader clock animation component.",
+      "sourcePath": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "GitHub user danielamuntyan verified on GitHub, but has 0 public repositories or gists containing shader-clock component source."
+    }
+  ]
+}

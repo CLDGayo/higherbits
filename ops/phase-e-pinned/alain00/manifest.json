@@ -1,0 +1,45 @@
+{
+  "creator": "alain00",
+  "ownerLabel": "Alain00",
+  "name": "alain00",
+  "sheetRow": 73,
+  "profileUrl": "https://21st.dev/@alain00",
+  "website": "https://blobatar.dev",
+  "repositoryUrl": "https://github.com/Alain00/blobatar",
+  "revision": "a7fd546ebede49d0a9fa638945b9e534489782a2",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "939e45eec9b4a8a904657acccda2beb0ff4c83d451a1e4971608cecaaad4d34a",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uninstalled_package_dependencies",
+  "holdDetail": "Components in Alain00/blobatar depend on uninstalled packages blobatar and @blobatar/react and external motion stylesheets (blobatar/motion.css, blobatar/gaze.css); not installed in HigherBits.",
+  "items": [
+    {
+      "slug": "group-chat",
+      "title": "Group Chat",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react and external stylesheet blobatar/motion.css."
+    },
+    {
+      "slug": "password-field",
+      "title": "Password Field",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react and external stylesheets blobatar/motion.css and blobatar/gaze.css."
+    },
+    {
+      "slug": "presence-avatar",
+      "title": "Presence Avatar",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react and external stylesheet blobatar/motion.css."
+    },
+    {
+      "slug": "user-table",
+      "title": "User Table",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react."
+    }
+  ]
+}

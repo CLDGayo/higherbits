@@ -96,12 +96,29 @@ CREATE OR REPLACE FUNCTION public.match_embeddings_with_details(
     d.video_url,
     d.demo_slug,
     d.user_id,
-    to_jsonb(c.*) AS component_data,
-    to_jsonb(u.*) AS user_data,
+    jsonb_build_object(
+      'id', c.id,
+      'name', c.name,
+      'description', c.description,
+      'code', c.code,
+      'registry', c.registry,
+      'direct_registry_dependencies', c.direct_registry_dependencies,
+      'component_slug', c.component_slug,
+      'user_id', c.user_id
+    ) AS component_data,
+    jsonb_build_object(
+      'id', u.id,
+      'username', u.username,
+      'name', u.name,
+      'display_name', u.display_name,
+      'display_username', u.display_username,
+      'display_image_url', u.display_image_url,
+      'image_url', u.image_url
+    ) AS user_data,
     jsonb_build_object(
       'usage_description', ue.usage_description,
       'metadata', ue.metadata,
-      'similarity', 1 - (ue.embedding <=> query_embedding)
+      'similarity', 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding)
     ) AS usage_data
   FROM public.usage_embeddings ue
   JOIN public.demos d ON d.id = ue.item_id AND ue.item_type = 'demo'
@@ -109,9 +126,10 @@ CREATE OR REPLACE FUNCTION public.match_embeddings_with_details(
   JOIN public.public_profiles u ON u.id = d.user_id
   WHERE c.is_public = TRUE
     AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
-    AND 1 - (ue.embedding <=> query_embedding) > match_threshold
-  ORDER BY ue.embedding <=> query_embedding
-  LIMIT match_count;
+    AND 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding) >
+      LEAST(GREATEST(coalesce(match_threshold,0.33),0.33),0.95)
+  ORDER BY ue.embedding OPERATOR(extensions.<=>) query_embedding
+  LIMIT LEAST(GREATEST(coalesce(match_count,0),0),20);
 $$;
 
 -- Demo search used by the search_demos_ai_oai_extended edge fn.
@@ -164,12 +182,29 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_extended(
     d.demo_slug,
     d.user_id,
     d.created_at,
-    to_jsonb(c.*) AS component_data,
-    to_jsonb(u.*) AS user_data,
+    jsonb_build_object(
+      'id', c.id,
+      'name', c.name,
+      'description', c.description,
+      'code', c.code,
+      'registry', c.registry,
+      'direct_registry_dependencies', c.direct_registry_dependencies,
+      'component_slug', c.component_slug,
+      'user_id', c.user_id
+    ) AS component_data,
+    jsonb_build_object(
+      'id', u.id,
+      'username', u.username,
+      'name', u.name,
+      'display_name', u.display_name,
+      'display_username', u.display_username,
+      'display_image_url', u.display_image_url,
+      'image_url', u.image_url
+    ) AS user_data,
     jsonb_build_object(
       'usage_description', ue.usage_description,
       'metadata', ue.metadata,
-      'similarity', 1 - (ue.embedding <=> query_embedding)
+      'similarity', 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding)
     ) AS usage_data
   FROM public.usage_embeddings ue
   JOIN public.demos d ON d.id = ue.item_id AND ue.item_type = 'demo'
@@ -177,7 +212,8 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_extended(
   JOIN public.public_profiles u ON u.id = d.user_id
   WHERE c.is_public = TRUE
     AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
-    AND 1 - (ue.embedding <=> query_embedding) > match_threshold
-  ORDER BY ue.embedding <=> query_embedding
+    AND 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding) >
+      LEAST(GREATEST(coalesce(match_threshold,0.33),0.33),0.95)
+  ORDER BY ue.embedding OPERATOR(extensions.<=>) query_embedding
   LIMIT 20;
 $$;

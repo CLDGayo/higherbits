@@ -1,0 +1,241 @@
+{
+  "repositoryUrl": "https://ds.asanshay.com",
+  "ownerLabel": "asanshay",
+  "profileUrl": "https://21st.dev/@asanshay",
+  "licenseSpdx": null,
+  "licenseSha256": "b15e586dc0113e8bf51fe713a1e56eca2ee4b2492eaecde67c1943803fb9623d",
+  "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+  "copyPromptsSha256": "6ed6d5770388e1dfe18c3eb698e69d27f60f9f175ebabff5d2d5c4573183d3d0",
+  "items": [
+    {
+      "slug": "chat-message",
+      "registryName": "chat-message",
+      "title": "Chat Message",
+      "description": "A chat message component compatible with the Vercel AI SDK including markdown support, copying, etc.",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/chat-message/chat-message.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/chat-message/chat-message.tsx",
+          "type": "registry:component",
+          "bytes": 3456,
+          "sha256": "73457950d42aad320ee19505dcff9f3f5406d3d7dec3835cdc262c1ebee42c8b"
+        },
+        {
+          "path": "registry/new-york/blocks/button/button.tsx",
+          "type": "registry:component",
+          "bytes": 3374,
+          "sha256": "a211a1d24ffdd7091a171a50a28659cd13070f9597c8916422762d1b95340a07"
+        },
+        {
+          "path": "registry/new-york/blocks/chat-reasoning/chat-reasoning.tsx",
+          "type": "registry:component",
+          "bytes": 2231,
+          "sha256": "61ea1b11476d6970cc87ca5554f1cf59f3fa7100337731819e82e371928501a5"
+        },
+        {
+          "path": "registry/new-york/blocks/markdown/markdown.tsx",
+          "type": "registry:component",
+          "bytes": 4073,
+          "sha256": "cdf4865d2b410b3da06aad63617ea7b811f6076d85c005d9f405c7c3f41d0081"
+        },
+        {
+          "path": "registry/new-york/blocks/code-block/code-block.tsx",
+          "type": "registry:component",
+          "bytes": 3581,
+          "sha256": "eb7e8beea5a28c2da3047e1286a1d93594125868c52a4346826da8e99b20eb98"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "lucide-react",
+        "react-markdown",
+        "remark-gfm",
+        "react-syntax-highlighter",
+        "ai"
+      ],
+      "aliasImports": [],
+      "demoSha256": "c98d34dc6ca224c12dc54fea4c05226a1831a230582f44972d7dbcfabd851968",
+      "ghlSha256": "fd4ec4693fc91456e030f512e70fdb5f0b837d7ceb0127cf59fbf8fa9b088fa3",
+      "previewSha256": "b8edb78aa029e486d33c6ef500390b13cde4d94d913c6a64663793244768956d"
+    },
+    {
+      "slug": "chat-reasoning",
+      "registryName": "chat-reasoning",
+      "title": "Chat Reasoning",
+      "description": "A chat reasoning component for a nice chatbot experience. Ready for useChat().",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/chat-reasoning/chat-reasoning.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/chat-reasoning/chat-reasoning.tsx",
+          "type": "registry:component",
+          "bytes": 2231,
+          "sha256": "61ea1b11476d6970cc87ca5554f1cf59f3fa7100337731819e82e371928501a5"
+        }
+      ],
+      "dependencies": [
+        "ai"
+      ],
+      "aliasImports": [],
+      "demoSha256": "83cf545444cab6c4b93420b419feba3e36365fa2812525934f19adc8dd12132e",
+      "ghlSha256": "bc9ff504116443d2c3019ddd5112b55ddbccf44482c3e69689ad3c91a53ced43",
+      "previewSha256": "f57f67ab7d65c551173e25317e0a5ba51a88bd9e641e276fae79e40055b071ad"
+    },
+    {
+      "slug": "chat-tool",
+      "registryName": "chat-tool",
+      "title": "Chat Tool",
+      "description": "A chat tool component that displays tool calls and their results.",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/chat-tool/chat-tool.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/chat-tool/chat-tool.tsx",
+          "type": "registry:component",
+          "bytes": 4314,
+          "sha256": "c3aab2246d60ea878799dc54defe2080f9c894c289c5083cc1ab2b717c158e14"
+        }
+      ],
+      "dependencies": [
+        "ai",
+        "@radix-ui/react-accordion",
+        "lucide-react"
+      ],
+      "aliasImports": [],
+      "demoSha256": "2ae408a537d1d2e672eb661558fad5df598a82422aa35eea0d605c6cf5ef4dba",
+      "ghlSha256": "e844708fec7a2b02428ca72eaf8b1ae2af1f21950e56666072a3953e5f60b3eb",
+      "previewSha256": "6c7aab306ca745c235e984c27d41d322bad52a807715b885de9ce7ee1e534700"
+    },
+    {
+      "slug": "motion-blur-text",
+      "registryName": "motion-blur-text",
+      "title": "Motion Blur Text",
+      "description": "A cool motion blur text effect.",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/motion-blur-text/motion-blur-text.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/motion-blur-text/motion-blur-text.tsx",
+          "type": "registry:component",
+          "bytes": 1795,
+          "sha256": "8d3317185bf0d56565e02749870d9fe75a3034761242e403c7342a41a4dfe067"
+        }
+      ],
+      "dependencies": [],
+      "aliasImports": [],
+      "demoSha256": "322c3c352bb8281322955076cdcb771f4693a2316b4b715a014064f9e7364702",
+      "ghlSha256": "2cadf2a2e6139ec38086bf4a0240e1c7d61bdc208ad06cfd34a1a5af62ffeb50",
+      "previewSha256": "ee378e053a002578b3934abdf8f040bd4fb7e4a7417c98c80bfd25f455c863f3"
+    },
+    {
+      "slug": "page-header",
+      "registryName": "page-header",
+      "title": "Page Header",
+      "description": "A clean page header so your pages look consistent.",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/page-header/page-header.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/page-header/page-header.tsx",
+          "type": "registry:component",
+          "bytes": 702,
+          "sha256": "036c47450d0a32bba225fa9088e982db177ca060ad2abdbe13f223d570dbaa22"
+        }
+      ],
+      "dependencies": [],
+      "aliasImports": [],
+      "demoSha256": "7cfc06a6c0d0ba51dbc6564d116afefd0c6fa4a4aeb0eb9789a5670cdb59374b",
+      "ghlSha256": "a46dbf5429f353435c670c85a39d917b7ac7ef15d373a4d4e7d0cac873f119c1",
+      "previewSha256": "26f3e332b246348460ab6b7baf677b782e377c243ff738f055798ca5dff25dec"
+    },
+    {
+      "slug": "reveal",
+      "registryName": "reveal",
+      "title": "Reveal",
+      "description": "A simple wrapper that reveals content when it scrolls into view.",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/reveal/reveal.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/reveal/reveal.tsx",
+          "type": "registry:component",
+          "bytes": 769,
+          "sha256": "c8c3ffc134eae2300ce23adc440e42e82a65950967c14647dd0d677cb7e5e935"
+        }
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "aliasImports": [],
+      "demoSha256": "439f2b921d1db722cc325faa2e0069f93644393145314a8498b07f154fc19243",
+      "ghlSha256": "14623fceccde438890c7c204fa6bd670299cef34eba2ccaf643f3c0e5bf91914",
+      "previewSha256": "cfa4bd24957f0f2b84fafe6c6b0c5575384c380b023e7154891d1aa9e26df0c1"
+    },
+    {
+      "slug": "loader",
+      "registryName": "loader",
+      "title": "Loader",
+      "description": "Custom WebGL shader loaders with 3 shapes (sphere, swirl, ripple) × 3 styles (plain, blur, dither).",
+      "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+      "sourcePath": "registry/new-york/blocks/loader/loader.tsx",
+      "files": [
+        {
+          "path": "registry/new-york/blocks/loader/loader.tsx",
+          "type": "registry:component",
+          "bytes": 3967,
+          "sha256": "493026273e17e03fe044f5c735178d685dc21919e821da9d1ce76bf95c82747f"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shader-mount.tsx",
+          "type": "registry:component",
+          "bytes": 6451,
+          "sha256": "d3cc6ca147eded08d792218c33c0e9d57703c601459a33d3b4328a00d8b8e7e9"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shaders/index.ts",
+          "type": "registry:component",
+          "bytes": 243,
+          "sha256": "35ec46dfcd0032551930b06fed62af08036901cccaa4646694b2e6650aa3bdec"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shaders/vertex.ts",
+          "type": "registry:component",
+          "bytes": 212,
+          "sha256": "522a45061e850908e8850e0a86502cdf4a67ba267754aea779ebc0b50ea33614"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shaders/utils.ts",
+          "type": "registry:component",
+          "bytes": 4058,
+          "sha256": "df68c175dd0677ab4ac0c6c77b060279dd633cd737ae220577ec0bc650184d2e"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shaders/plain.ts",
+          "type": "registry:component",
+          "bytes": 2016,
+          "sha256": "1aaf47000c6f26b7353d245b4ddb55137c33753f16cfe8cdc1b8180ea7321d37"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shaders/blur.ts",
+          "type": "registry:component",
+          "bytes": 2702,
+          "sha256": "4c9f9a123cfe37f4a04c0568fc777b6b2d523cbe0f4bdabb4f351ff591af0d30"
+        },
+        {
+          "path": "registry/new-york/blocks/loader/shaders/dither.ts",
+          "type": "registry:component",
+          "bytes": 2084,
+          "sha256": "bdd0c28c84f8ef735198a5c7e43a7718146367bcc7ec5fb8bcf3c5ca5377c534"
+        }
+      ],
+      "dependencies": [],
+      "aliasImports": [],
+      "demoSha256": "92eb8ff1eb0e9cf56a5c0f06676908545bbfffb052e7926e46e654a7483c8cd3",
+      "ghlSha256": "242148e4e43a84e7c93e3b63592b08ff1b2d61fcd95c9d0abbc2e2388f3bf582",
+      "previewSha256": "c5c370cfb6b9e5eea639f0a450c43c1c52593a15b352bd58d1f1a057bdfbf517"
+    }
+  ],
+  "eligibilityProvenance": "21st.dev auto-index=true roster eligibility signal; pinned from official public shadcn registry endpoints https://ds.asanshay.com/r/<slug>.json; upstream registry defines component schemas without a separate standalone root license file"
+}

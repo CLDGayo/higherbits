@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>asanshay - chat-message</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <!--
+  Source registry: https://ds.asanshay.com/r/chat-message.json
+  Candidate revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac
+  Component source path: registry/new-york/blocks/chat-message/chat-message.tsx
+  Eligibility provenance: 21st.dev auto-index=true roster signal (upstream registry defines component schema without a separate standalone root license file)
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Chat Message component">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, -apple-system, sans-serif; color: #09090b; }
+    .ghl-chat-box { width: min(100%, 580px); background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 16px; }
+    .ghl-msg-user { align-self: flex-end; max-width: 80%; background: #2563eb; color: #ffffff; border-radius: 14px 14px 2px 14px; padding: 10px 14px; font-size: 13px; font-weight: 500; }
+    .ghl-msg-bot { align-self: flex-start; width: 100%; background: #f4f4f5; border: 1px solid #e4e4e7; border-radius: 14px 14px 14px 2px; padding: 14px; font-size: 13px; color: #18181b; box-sizing: border-box; }
+    .ghl-reasoning { background: #ffffff; border: 1px solid #e4e4e7; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; font-size: 12px; color: #71717a; display: flex; align-items: center; justify-content: space-between; }
+    .ghl-tool-pill { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 6px 10px; margin-bottom: 10px; font-size: 11px; color: #065f46; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .ghl-code { background: #18181b; color: #f4f4f5; border-radius: 8px; padding: 10px 12px; font-family: ui-monospace, monospace; font-size: 11px; margin: 8px 0; overflow-x: auto; }
+  </style>
+  <div class="ghl-chat-box">
+    <div class="ghl-msg-user">
+      Can you analyze the recent query performance and recommend a compound index?
+    </div>
+    <div class="ghl-msg-bot">
+      <div class="ghl-reasoning">
+        <span>✓ Done reasoning (120ms)</span>
+        <span style="font-size: 10px; color: #a1a1aa;">1 step</span>
+      </div>
+      <div class="ghl-tool-pill">
+        <span>✓</span> Used query_analyzer (table: orders, speedup: 12x)
+      </div>
+      <div>
+        Creating a composite index on <code>orders(status, created_at)</code> resolves the sequential scan:
+      </div>
+      <pre class="ghl-code"><code>CREATE INDEX CONCURRENTLY idx_orders_status_created_at
+ON orders (status, created_at DESC);</code></pre>
+      <div style="font-size: 12px; color: #71717a;">
+        Estimated cost dropped by 92% across filtered benchmarks.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

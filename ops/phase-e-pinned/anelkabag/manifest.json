@@ -1,0 +1,66 @@
+{
+  "creator": "anelkabag",
+  "ownerLabel": "anelkabag",
+  "name": "Anelka Bag",
+  "sheetRow": 87,
+  "profileUrl": "https://21st.dev/@anelkabag",
+  "website": "https://www.bagui.pro",
+  "repositoryUrl": "https://github.com/anelkabag/bag-ui",
+  "revision": "06525a540b02dd60f92932b365ebb6a3af950c32",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "c6e48dc5db4f87852d8ad79fc0060cad35733f6d6c241a3ed344dce91043c936",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "dependency_and_path_mismatch_upstream",
+  "holdDetail": "Blocks in anelkabag/bag-ui couple to uninstalled gsap/ScrollTrigger (faq1) or Next.js image/link primitives (footer1, navbar2); cta-1, footer-3, hero4, and chat-app1 have file path mismatches or missing files upstream.",
+  "items": [
+    {
+      "slug": "cta-1",
+      "title": "CTA 1",
+      "status": "held",
+      "reason": "missing_upstream_component",
+      "detail": "Upstream registry references path registry/default/blocks/cta/cta-1.tsx which does not exist in repository."
+    },
+    {
+      "slug": "footer-3",
+      "title": "Footer 3",
+      "status": "held",
+      "reason": "missing_upstream_component",
+      "detail": "Upstream registry references path registry/default/blocks/Footer/footer-3.tsx which does not exist in repository."
+    },
+    {
+      "slug": "chat-app1",
+      "title": "Chat App 1",
+      "status": "held",
+      "reason": "missing_upstream_component",
+      "detail": "No component implementation file exists in repository for chat-app1 block."
+    },
+    {
+      "slug": "hero4",
+      "title": "Hero 4",
+      "status": "held",
+      "reason": "missing_upstream_component",
+      "detail": "Upstream registry references path registry/default/blocks/hero/hero4.tsx which does not exist in repository."
+    },
+    {
+      "slug": "faq1",
+      "title": "FAQ 1",
+      "status": "held",
+      "reason": "uninstalled_package_dependencies",
+      "detail": "Requires uninstalled gsap and gsap/ScrollTrigger dependencies; lacks HigherBits demo wrapper and GHL export."
+    },
+    {
+      "slug": "footer1",
+      "title": "Footer 1",
+      "status": "held",
+      "reason": "framework_coupled_no_bundled_images",
+      "detail": "Depends on next/link and next/image with unbundled image assets; cannot render self-contained GHL export."
+    },
+    {
+      "slug": "navbar2",
+      "title": "Navbar 2",
+      "status": "held",
+      "reason": "framework_coupled",
+      "detail": "Depends on next/link and motion/react; lacks HigherBits demo wrapper and self-contained GHL export."
+    }
+  ]
+}

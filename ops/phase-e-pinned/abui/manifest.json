@@ -1,0 +1,37 @@
+{
+  "creator": "abui",
+  "ownerLabel": "abui",
+  "name": "abui",
+  "sheetRow": 52,
+  "profileUrl": "https://21st.dev/@abui",
+  "website": "https://abui.io",
+  "repositoryUrl": "https://github.com/antoniobrandao/abui",
+  "revision": "243b80762b57311b8eda498979838f61b46a613e",
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unasserted_private_source_license",
+  "holdDetail": "Repository antoniobrandao/abui specifies \"private\": true in package.json and contains no open-source license grant; furthermore items couple to framework image primitives (scroll-reveal-content-a) or uninstalled dependencies (timeline requires @dnd-kit/core and tunnel-rat).",
+  "items": [
+    {
+      "slug": "animated-chart",
+      "title": "Animated Chart",
+      "status": "held",
+      "reason": "unasserted_private_source_license",
+      "detail": "Upstream repository antoniobrandao/abui has \"private\": true in package.json without an open-source license grant."
+    },
+    {
+      "slug": "scroll-reveal-content-a",
+      "title": "Scroll Reveal Content A",
+      "status": "held",
+      "reason": "framework_coupled_unasserted_license",
+      "detail": "Component couples to Next.js framework Image primitive and unbundled remote URLs, and repository lacks open-source license."
+    },
+    {
+      "slug": "timeline",
+      "title": "Timeline",
+      "status": "held",
+      "reason": "uninstalled_dependencies_unasserted_license",
+      "detail": "Component requires uninstalled @dnd-kit/core and tunnel-rat packages, and repository lacks open-source license."
+    }
+  ]
+}

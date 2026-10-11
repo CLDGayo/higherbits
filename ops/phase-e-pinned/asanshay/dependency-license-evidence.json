@@ -1,0 +1,61 @@
+{
+  "reviewedAt": "2026-10-11",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for asanshay components.",
+  "source": {
+    "registryHost": "https://ds.asanshay.com",
+    "revision": "7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac",
+    "licenseSpdx": null,
+    "licensePath": "LICENSE (provenance note recorded)",
+    "eligibilityProvenance": "21st.dev auto-index=true roster signal; pinned from official public registry endpoints https://ds.asanshay.com/r/<slug>.json"
+  },
+  "dependencies": [
+    {
+      "name": "ai",
+      "licenseSpdx": "Apache-2.0",
+      "role": "Vercel AI SDK types and stream parsing (UIMessage, ToolUIPart)."
+    },
+    {
+      "name": "@radix-ui/react-accordion",
+      "licenseSpdx": "MIT",
+      "role": "Accessible collapsible container for chat-reasoning and chat-tool."
+    },
+    {
+      "name": "@radix-ui/react-slot",
+      "licenseSpdx": "MIT",
+      "role": "Polymorphic slot primitive for button component."
+    },
+    {
+      "name": "class-variance-authority",
+      "licenseSpdx": "Apache-2.0",
+      "role": "CVA variant utilities for button and chat message styling."
+    },
+    {
+      "name": "lucide-react",
+      "licenseSpdx": "ISC",
+      "role": "Icons (Wrench, Loader2, Check, AlertCircle, Copy, etc.)."
+    },
+    {
+      "name": "react-markdown",
+      "licenseSpdx": "MIT",
+      "role": "Markdown rendering for chat-message."
+    },
+    {
+      "name": "remark-gfm",
+      "licenseSpdx": "MIT",
+      "role": "GitHub Flavored Markdown plugin."
+    },
+    {
+      "name": "react-syntax-highlighter",
+      "licenseSpdx": "MIT",
+      "role": "Code syntax highlighting for code-block."
+    },
+    {
+      "name": "motion",
+      "licenseSpdx": "MIT",
+      "role": "Framer Motion layout and enter animation wrapper for reveal."
+    }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}

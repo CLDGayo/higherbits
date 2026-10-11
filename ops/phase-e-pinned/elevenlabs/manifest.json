@@ -1,0 +1,168 @@
+{
+  "creator": "ElevenLabs-crawled",
+  "ownerLabel": "elevenlabs",
+  "name": "ElevenLabs",
+  "sheetRow": 26,
+  "profileUrl": "https://21st.dev/@ElevenLabs-crawled",
+  "repositoryUrl": "https://github.com/elevenlabs/ui",
+  "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "ad3f66b8568970d067e3bd47b690ad013945a61f972559743946a3a6558dc828",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uncaptured_source_item",
+  "holdDetail": "Upstream repository identified under MIT, but component items lack HigherBits demo wrappers, self-contained GHL exports, and deployed HTTPS preview assets per INGESTION_SOP §2-§3.",
+  "items": [
+    {
+      "slug": "audio-player",
+      "title": "Audio Player",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/audio-player.tsx",
+      "bytes": 16974,
+      "sha256": "b93aeedf0b5f749d210b64a9d964e84f12bbf875b18d61bcbc3017c6f8966c49",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component depends on custom media controls; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/audio-player.tsx",
+          "type": "registry:ui",
+          "bytes": 16974,
+          "sha256": "b93aeedf0b5f749d210b64a9d964e84f12bbf875b18d61bcbc3017c6f8966c49"
+        }
+      ]
+    },
+    {
+      "slug": "bar-visualizer",
+      "title": "Bar Visualizer",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/bar-visualizer.tsx",
+      "bytes": 14807,
+      "sha256": "6244d6f95996385c359dbf12968f5980ecabe5155eaea694a753217b86c3f685",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires MediaStream audio analyzer runtime; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/bar-visualizer.tsx",
+          "type": "registry:ui",
+          "bytes": 14807,
+          "sha256": "6244d6f95996385c359dbf12968f5980ecabe5155eaea694a753217b86c3f685"
+        }
+      ]
+    },
+    {
+      "slug": "live-waveform",
+      "title": "Live Waveform",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/live-waveform.tsx",
+      "bytes": 17316,
+      "sha256": "ca011f6594bb105afe56362eef5f9032c008623b507b16320216121951939170",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires real-time audio input stream; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/live-waveform.tsx",
+          "type": "registry:ui",
+          "bytes": 17316,
+          "sha256": "ca011f6594bb105afe56362eef5f9032c008623b507b16320216121951939170"
+        }
+      ]
+    },
+    {
+      "slug": "orb",
+      "title": "Orb",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/orb.tsx",
+      "bytes": 15529,
+      "sha256": "16fdb804e37c495806091d34712e689f89c02b4638bb173ab5bef5e5eac52b91",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires heavy WebGL runtime (@react-three/drei, @react-three/fiber, three); candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/orb.tsx",
+          "type": "registry:ui",
+          "bytes": 15529,
+          "sha256": "16fdb804e37c495806091d34712e689f89c02b4638bb173ab5bef5e5eac52b91"
+        }
+      ]
+    },
+    {
+      "slug": "response",
+      "title": "Response",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/response.tsx",
+      "bytes": 539,
+      "sha256": "129a7e7acd1344af1ee0406e555d378c3c2c85b626ac52b350dad0fb3698a09b",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/response.tsx",
+          "type": "registry:ui",
+          "bytes": 539,
+          "sha256": "129a7e7acd1344af1ee0406e555d378c3c2c85b626ac52b350dad0fb3698a09b"
+        }
+      ]
+    },
+    {
+      "slug": "shimmering-text",
+      "title": "Shimmering Text",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/shimmering-text.tsx",
+      "bytes": 2992,
+      "sha256": "c746b3a1d29d9c666bd01681d512b88aeb4a3ff6f589e4055870580ced4eea5b",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component depends on motion/react; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/shimmering-text.tsx",
+          "type": "registry:ui",
+          "bytes": 2992,
+          "sha256": "c746b3a1d29d9c666bd01681d512b88aeb4a3ff6f589e4055870580ced4eea5b"
+        }
+      ]
+    },
+    {
+      "slug": "voice-picker",
+      "title": "Voice Picker",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/voice-picker.tsx",
+      "bytes": 5930,
+      "sha256": "a42f5fe785986295885d099194e2ea23658911189f39e43b8c448bf6c4f9ca7d",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/voice-picker.tsx",
+          "type": "registry:ui",
+          "bytes": 5930,
+          "sha256": "a42f5fe785986295885d099194e2ea23658911189f39e43b8c448bf6c4f9ca7d"
+        }
+      ]
+    },
+    {
+      "slug": "waveform",
+      "title": "Waveform",
+      "revision": "23c31bd3088814215a8b5d0bfb56b327cad1a578",
+      "sourcePath": "apps/www/registry/elevenlabs-ui/ui/waveform.tsx",
+      "bytes": 47132,
+      "sha256": "e5e0c314a66d545f851e012420a9f87474aef8673cbeedae46d021389fd847f8",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "apps/www/registry/elevenlabs-ui/ui/waveform.tsx",
+          "type": "registry:ui",
+          "bytes": 47132,
+          "sha256": "e5e0c314a66d545f851e012420a9f87474aef8673cbeedae46d021389fd847f8"
+        }
+      ]
+    }
+  ]
+}

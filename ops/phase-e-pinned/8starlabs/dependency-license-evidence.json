@@ -1,0 +1,47 @@
+{
+  "reviewedAt": "2026-10-11",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for 8StarLabs components.",
+  "source": {
+    "repositoryUrl": "https://github.com/8starlabs/ui",
+    "revision": "9633e2fa89cdea2da40a81d69ef484ff04d0de63",
+    "licenseSpdx": "MIT",
+    "licensePath": "LICENSE.md",
+    "licenseSha256": "392075473ac3a5da2de1035e5dd31e7079518eb0af322e6bed332ed0d7f277f0",
+    "eligibilityProvenance": "21st.dev auto-index=true roster signal; exact pinned source capture at commit 9633e2fa89cdea2da40a81d69ef484ff04d0de63"
+  },
+  "dependencies": [
+    {
+      "name": "lucide-react",
+      "licenseSpdx": "ISC",
+      "role": "Iconography (ChevronDown, ExternalLink)."
+    },
+    {
+      "name": "simple-icons",
+      "licenseSpdx": "CC0-1.0",
+      "role": "Brand SVG vector paths for AI services (siClaude, siPerplexity, siV0)."
+    },
+    {
+      "name": "@radix-ui/react-dropdown-menu",
+      "licenseSpdx": "MIT",
+      "role": "Accessible dropdown menu container and popup primitives."
+    },
+    {
+      "name": "@radix-ui/react-tooltip",
+      "licenseSpdx": "MIT",
+      "role": "Accessible tooltip primitives for provider icon buttons."
+    },
+    {
+      "name": "@radix-ui/react-slot",
+      "licenseSpdx": "MIT",
+      "role": "Slot composition primitive for Button component."
+    },
+    {
+      "name": "class-variance-authority",
+      "licenseSpdx": "Apache-2.0",
+      "role": "Variant management for buttons."
+    }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}

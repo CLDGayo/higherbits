@@ -1,0 +1,639 @@
+{
+  "batch": "03",
+  "batch_range": "abui through anshuman008 (sequential batch of 10 TRUE rows starting at row 52 of 21st creators sheet)",
+  "evaluated_at": "2026-10-11T03:18:00.000Z",
+  "evaluation_model": "Antigravity Gemini 3.8 Flash High",
+  "scope": "production_batch_verification",
+  "summary": {
+    "total_authors_evaluated": 10,
+    "authors_with_ready_items": 1,
+    "authors_all_items_held": 9,
+    "total_sheet_items_evaluated": 87,
+    "total_ready_items": 1,
+    "total_held_items": 86
+  },
+  "authors": [
+    {
+      "row": 52,
+      "handle": "abui",
+      "name": "abui",
+      "profile_url": "https://21st.dev/@abui",
+      "repository_url": "https://github.com/antoniobrandao/abui",
+      "revision": "243b80762b57311b8eda498979838f61b46a613e",
+      "license_spdx": null,
+      "license_sha256": null,
+      "manifest_sha256": "4ede0512921bc4e460408e9091918f03edb1b5469c82d6186bfe497cc1f2dfc1",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 3,
+      "ready_count": 0,
+      "held_count": 3,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "animated-chart",
+          "reason": "unasserted_private_source_license",
+          "detail": "Upstream repository antoniobrandao/abui has \"private\": true in package.json without an open-source license grant."
+        },
+        {
+          "slug": "scroll-reveal-content-a",
+          "reason": "framework_coupled_unasserted_license",
+          "detail": "Component couples to Next.js framework Image primitive and unbundled remote URLs, and repository lacks open-source license."
+        },
+        {
+          "slug": "timeline",
+          "reason": "uninstalled_dependencies_unasserted_license",
+          "detail": "Component requires uninstalled @dnd-kit/core and tunnel-rat packages, and repository lacks open-source license."
+        }
+      ]
+    },
+    {
+      "row": 54,
+      "handle": "abxlfazl__",
+      "name": "abxlfazl__",
+      "profile_url": "https://21st.dev/@abxlfazl__",
+      "repository_url": null,
+      "revision": null,
+      "license_spdx": null,
+      "license_sha256": null,
+      "manifest_sha256": "bf808808a5f46a20f140641efda73d226552cba6eabaca56d7772d3960638a9a",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 1,
+      "ready_count": 0,
+      "held_count": 1,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "animated-tab-bar",
+          "reason": "unmapped_source_repository",
+          "detail": "Public GitHub inspection of user abxlfazl repositories confirmed no animated-tab-bar component source repository exists."
+        }
+      ]
+    },
+    {
+      "row": 59,
+      "handle": "adrielzimbril",
+      "name": "adrielzimbril",
+      "profile_url": "https://21st.dev/@adrielzimbril",
+      "repository_url": null,
+      "revision": null,
+      "license_spdx": null,
+      "license_sha256": null,
+      "manifest_sha256": "73cda3d6be8779f140f5a94061704e5cda5a362864f3b8dfde060ceb99cd85c4",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 13,
+      "ready_count": 0,
+      "held_count": 13,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "avatar-extended",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "orb-bloop",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "block-dither-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "doodle-callout",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "generating-orb",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "gradient-file-upload",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "handle-reel",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "kanban",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "mesh-gradient",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "block-sign-in",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "thinking-orb",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "user-presence-avatar",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        },
+        {
+          "slug": "voice-chat-widget",
+          "reason": "unmapped_source_repository",
+          "detail": "User adrielzimbril public repositories are landing-page challenges and contain no component library source for this slug."
+        }
+      ]
+    },
+    {
+      "row": 64,
+      "handle": "aicanvas",
+      "name": "aicanvas",
+      "profile_url": "https://21st.dev/@aicanvas",
+      "repository_url": "https://github.com/aicanvas-me/aicanvas",
+      "revision": "0242a000368640404f6bc1a32d56df4801bd0629",
+      "license_spdx": "MIT",
+      "license_sha256": "75c85790506bae0a1a8ab322e3a4cda906ed8fed8803d398e91bae0a8c592659",
+      "manifest_sha256": "43f1d62a0920e48dcdaa86ef46b9add687925861534544af993a9b17096fa619",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 7,
+      "ready_count": 0,
+      "held_count": 7,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "blind-pull-toggle",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled framer-motion and @phosphor-icons/react; lacks HigherBits demo wrapper and clean self-contained GHL export."
+        },
+        {
+          "slug": "expanding-tabs",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled framer-motion and @phosphor-icons/react; lacks HigherBits demo wrapper and clean self-contained GHL export."
+        },
+        {
+          "slug": "glass-search-bar",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled framer-motion and @phosphor-icons/react; lacks HigherBits demo wrapper and clean self-contained GHL export."
+        },
+        {
+          "slug": "magnetic-logo-cluster",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled framer-motion; lacks HigherBits demo wrapper and clean self-contained GHL export."
+        },
+        {
+          "slug": "runway-loader",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled framer-motion; lacks HigherBits demo wrapper and clean self-contained GHL export."
+        },
+        {
+          "slug": "andromeda-search-field",
+          "reason": "missing_upstream_component",
+          "detail": "Component slug does not exist in upstream components-workspace and is not staged in candidate inventory."
+        },
+        {
+          "slug": "stack-tower",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled framer-motion (useAnimationFrame, useTransform); lacks HigherBits demo wrapper and clean self-contained GHL export."
+        }
+      ]
+    },
+    {
+      "row": 68,
+      "handle": "airbnb-visx",
+      "name": "Airbnb",
+      "profile_url": "https://21st.dev/@airbnb-visx",
+      "repository_url": "https://github.com/airbnb/visx",
+      "revision": "485c0359664ee8e612992defb16e1f035ed40b23",
+      "license_spdx": "MIT",
+      "license_sha256": "8c766533b7d4200b4dfb1a1afff396e3665460d21d7b4c34d059efcb5a332c84",
+      "manifest_sha256": "6f4ac424a45e67138e5b66fc785d93b3e617bbb26940efa908ab6c326985738a",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 29,
+      "ready_count": 0,
+      "held_count": 29,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "annotation",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "axis",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "bar-group-vertical",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "bar-stac",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "bar-stack",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "brush",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "chords",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "curves",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "delaunay-triangulation",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "drag-and-draw",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "finance-chart",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "glyphs",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "gradients",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "heatmaps",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "legends",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "linktypes",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "patterns",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "pie-chart",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "radar-chart",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "radial-lines",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "split-line-path",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "streamgraph",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "threshold",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "toggle-nav",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "tooltip",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "treemap-chart",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "voronoi",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "word-cloud",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        },
+        {
+          "slug": "zoom",
+          "reason": "monorepo_library_dependencies_uninstalled",
+          "detail": "Upstream item is a package or demo sandbox from airbnb/visx monorepo requiring multiple uninstalled @visx/* and d3 packages; not a single self-contained UI component."
+        }
+      ]
+    },
+    {
+      "row": 73,
+      "handle": "alain00",
+      "name": "alain00",
+      "profile_url": "https://21st.dev/@alain00",
+      "repository_url": "https://github.com/Alain00/blobatar",
+      "revision": "a7fd546ebede49d0a9fa638945b9e534489782a2",
+      "license_spdx": "MIT",
+      "license_sha256": "939e45eec9b4a8a904657acccda2beb0ff4c83d451a1e4971608cecaaad4d34a",
+      "manifest_sha256": "f679e7ea1d27ea9691ef50f16ccce8c0465fa2d12986ea03f06a5e5f5ed7d2a2",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 4,
+      "ready_count": 0,
+      "held_count": 4,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "group-chat",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react and external stylesheet blobatar/motion.css."
+        },
+        {
+          "slug": "password-field",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react and external stylesheets blobatar/motion.css and blobatar/gaze.css."
+        },
+        {
+          "slug": "presence-avatar",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react and external stylesheet blobatar/motion.css."
+        },
+        {
+          "slug": "user-table",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Depends on uninstalled npm packages blobatar and @blobatar/react."
+        }
+      ]
+    },
+    {
+      "row": 84,
+      "handle": "amitgajare2",
+      "name": "Amit Gajare",
+      "profile_url": "https://21st.dev/@amitgajare2",
+      "repository_url": "https://github.com/Amitgajare2/ariseui",
+      "revision": "490e5fe1d4518c7e72f6f96b8c4b1b37586b793f",
+      "license_spdx": "MIT",
+      "license_sha256": "716d70d55e3637a03b3dc532c34a61cea09f17a01a496f431cb043a096152ed9",
+      "manifest_sha256": "83289e418140e21771ed78d29dc69558e80619f2a454d813d9eb7741c5e7fa22",
+      "copy_prompts_sha256": "cd8e17d8c1555e101e2bdc0d0578416c7dcdcf507d4047bbb79aa28e17094cad",
+      "status": "partially_ready",
+      "total_count": 3,
+      "ready_count": 1,
+      "held_count": 2,
+      "ready_slugs": [
+        "option-wheel"
+      ],
+      "held_items": [
+        {
+          "slug": "code-block",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled prism-react-renderer package; lacks HigherBits demo wrapper and GHL export."
+        },
+        {
+          "slug": "proximity-sidebar",
+          "reason": "runtime_coupling_and_full_page_motion",
+          "detail": "Requires full-page proximity tracking and motion; lacks HigherBits demo wrapper and GHL export."
+        }
+      ]
+    },
+    {
+      "row": 87,
+      "handle": "anelkabag",
+      "name": "Anelka Bag",
+      "profile_url": "https://21st.dev/@anelkabag",
+      "repository_url": "https://github.com/anelkabag/bag-ui",
+      "revision": "06525a540b02dd60f92932b365ebb6a3af950c32",
+      "license_spdx": "MIT",
+      "license_sha256": "c6e48dc5db4f87852d8ad79fc0060cad35733f6d6c241a3ed344dce91043c936",
+      "manifest_sha256": "64f75c5a8c8e7337ca229b833479f6d534117dae7023ecca3cc4c193788cba21",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 7,
+      "ready_count": 0,
+      "held_count": 7,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "cta-1",
+          "reason": "missing_upstream_component",
+          "detail": "Upstream registry references path registry/default/blocks/cta/cta-1.tsx which does not exist in repository."
+        },
+        {
+          "slug": "footer-3",
+          "reason": "missing_upstream_component",
+          "detail": "Upstream registry references path registry/default/blocks/Footer/footer-3.tsx which does not exist in repository."
+        },
+        {
+          "slug": "chat-app1",
+          "reason": "missing_upstream_component",
+          "detail": "No component implementation file exists in repository for chat-app1 block."
+        },
+        {
+          "slug": "hero4",
+          "reason": "missing_upstream_component",
+          "detail": "Upstream registry references path registry/default/blocks/hero/hero4.tsx which does not exist in repository."
+        },
+        {
+          "slug": "faq1",
+          "reason": "uninstalled_package_dependencies",
+          "detail": "Requires uninstalled gsap and gsap/ScrollTrigger dependencies; lacks HigherBits demo wrapper and GHL export."
+        },
+        {
+          "slug": "footer1",
+          "reason": "framework_coupled_no_bundled_images",
+          "detail": "Depends on next/link and next/image with unbundled image assets; cannot render self-contained GHL export."
+        },
+        {
+          "slug": "navbar2",
+          "reason": "framework_coupled",
+          "detail": "Depends on next/link and motion/react; lacks HigherBits demo wrapper and self-contained GHL export."
+        }
+      ]
+    },
+    {
+      "row": 88,
+      "handle": "animbits",
+      "name": "animbits",
+      "profile_url": "https://21st.dev/@animbits",
+      "repository_url": null,
+      "revision": null,
+      "license_spdx": null,
+      "license_sha256": null,
+      "manifest_sha256": "61bfddb652d2b119e9bb8e2801364de8eb60d528de9775b0714fb029f060ed5f",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 19,
+      "ready_count": 0,
+      "held_count": 19,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "loaders-bars",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-blur-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-dia",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-fade-in",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-gooey-blobs",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "image-text",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "specials-linear-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-liquid-progress",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "specials-magnetic-drawer",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-morphing",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-orbit",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-pulse",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-skeleton",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-slide-up",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "loaders-spinner",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-split-reveal",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-svg-text-draw",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-highlight",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        },
+        {
+          "slug": "text-word-carousel",
+          "reason": "unmapped_source_repository",
+          "detail": "Components served directly from animbits.dev registry; no creator-owned public GitHub source repository mapped."
+        }
+      ]
+    },
+    {
+      "row": 94,
+      "handle": "anshuman008",
+      "name": "Anshuman",
+      "profile_url": "https://21st.dev/@anshuman008",
+      "repository_url": null,
+      "revision": null,
+      "license_spdx": null,
+      "license_sha256": null,
+      "manifest_sha256": "503667349dbb3f293083058e382d176d6add98fb67e94d7e5296cb677f13782a",
+      "copy_prompts_sha256": null,
+      "status": "all_items_held",
+      "total_count": 1,
+      "ready_count": 0,
+      "held_count": 1,
+      "ready_slugs": [],
+      "held_items": [
+        {
+          "slug": "faq-chat-accordion",
+          "reason": "unmapped_source_repository",
+          "detail": "Public GitHub inspection of user anshuman008 repositories confirmed no faq-chat-accordion component source repository exists."
+        }
+      ]
+    }
+  ]
+}

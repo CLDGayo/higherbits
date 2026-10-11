@@ -66,6 +66,18 @@ const items = [
       svg: '3eacff5f190edc7a4b58268ac8377db74c7da76e664601dd6370f43266616019',
     },
   },
+  {
+    slug: 'open-in-chat', title: 'Open In Chat', description: 'A component that opens an LLM chat prompt in external AI tools from the MIT-licensed 8StarLabs UI repository.',
+    demoProvenance: 'higherbits-authored',
+    expected: {
+      source: 'c5d9c5efc3590f630c2b67b7be71c5590b79cd945044a9d72e9316be7c193f59',
+      upstreamDemo: '4bbda9af9ec39da1fdfe2b2f3abd6e850881e4dc099e459ef72edc89c596f284',
+      demo: 'f2d624cbac9226eb431da5d3a9e606d0f205ce0b07d018ace4d57d60dc7efca1',
+      html: '880c10c8bcf76894f40ffce85943ac617d04b3f23600978fdf2703cc46a6f129',
+      css: 'a4e7edf2ff719b4cac67632b5f42caf29902ca47ab1afda9b3c75a012aba4ec9',
+      svg: '47c718a7964202286e43d3527e54f90639b0e28a501ace54f31ab53149d3dcb6',
+    },
+  },
 ]
 
 const license = readFileSync(join(capture, 'LICENSE.md'))
@@ -77,7 +89,7 @@ if (hash(authoredLicense) !== '5188d73b997011afd7ab61ee3be917f9f99981abdfa46ddcf
   throw new Error('HigherBits authored-demo MIT license differs from reviewed bytes')
 }
 const pinnedPromptsBytes = readFileSync(join(repo, 'ops/phase-e-pinned/8starlabs/copy-prompts.json'))
-const pinnedPromptsSha256 = 'd002e054330eca4222e9575692723aa1081ed0748c32df193c0620fc68cd2db0'
+const pinnedPromptsSha256 = '01ad7d6e3d22d7959ee47d20c289cb4d7a47355366a9890992a237fdcc7259cd'
 if (hash(pinnedPromptsBytes) !== pinnedPromptsSha256) throw new Error('pinned copy prompts differ from reviewed bytes')
 const pinnedPrompts = JSON.parse(pinnedPromptsBytes.toString('utf8'))
 const expectedPromptTypes = ['sitebrew','v0','lovable','bolt','extended','replit','magic_patterns','claude','codex','antigravity']
@@ -107,7 +119,7 @@ for (const item of items) {
   const metadataPath = join(capture, slug, 'registry-metadata/public/r', `${slug}.json`)
   if (item.demoProvenance === 'higherbits-authored') {
     const metadata = JSON.parse(readFileSync(metadataPath, 'utf8'))
-    if (metadata.files?.length !== 1 || metadata.files[0].path !== item.sourcePath ||
+    if (metadata.files?.length < 1 || metadata.files[0].path !== item.sourcePath ||
         metadata.files[0].content !== item.source.toString('utf8')) {
       throw new Error(`${slug} captured registry metadata differs from source`)
     }
@@ -119,7 +131,9 @@ for (const item of items) {
   if (item.html.toString('utf8').includes('localhost')) throw new Error(`${slug} bundle contains localhost reference`)
   item.dependencies = ['timeline', 'partition-bar'].includes(slug)
     ? [{ type: 'npm', name: 'class-variance-authority', version: '0.7.1' }]
-    : []
+    : slug === 'open-in-chat'
+      ? [{ type: 'npm', name: 'lucide-react', version: '0.487.0' }, { type: 'npm', name: 'simple-icons', version: '16.21.0' }]
+      : []
 }
 
 const manifest = {

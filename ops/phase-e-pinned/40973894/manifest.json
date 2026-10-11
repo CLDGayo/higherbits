@@ -1,0 +1,25 @@
+{
+  "creator": "40973894",
+  "ownerLabel": "40973894",
+  "name": "40973894",
+  "sheetRow": 9,
+  "profileUrl": "https://21st.dev/@40973894",
+  "website": null,
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub account 40973894 not found on public GitHub (HTTP 404, 0 search results); no mapped upstream repository or license lead.",
+  "items": [
+    {
+      "slug": "siri-wave",
+      "title": "Siri Wave",
+      "description": "Siri wave animation component.",
+      "sourcePath": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "GitHub account 40973894 not found on public GitHub; no mapped item source repository or license lead."
+    }
+  ]
+}

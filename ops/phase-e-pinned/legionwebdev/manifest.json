@@ -1,0 +1,251 @@
+{
+  "creator": "LegionWebDev",
+  "ownerLabel": "legions-developer",
+  "name": "Legion Dev",
+  "sheetRow": 30,
+  "profileUrl": "https://21st.dev/@LegionWebDev",
+  "website": "https://evilcharts.com",
+  "repositoryUrl": "https://github.com/legions-developer/evilcharts",
+  "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "7b6baf25f6caa0de061a2c99a47205d6651cdefc6e636910bc51bb3853ed056e",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uncaptured_source_item",
+  "holdDetail": "Upstream repository identified under MIT (EvilCharts), 6 block components captured, but items require chart runtime dependencies and lack HigherBits demo wrappers, self-contained GHL exports, and deployed HTTPS preview assets.",
+  "items": [
+    {
+      "slug": "allocation-echarts-sankey-chart",
+      "title": "Allocation Echarts Sankey Chart",
+      "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+      "sourcePath": "src/registry/blocks/echarts/b-allocation-echarts-sankey-chart.tsx",
+      "bytes": 3398,
+      "sha256": "582a49da9044f3678043db85276a5b658e3aabc440f26839fadc6bfc5d0b8e10",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component block captured under MIT, but requires echarts/recharts/motion runtimes and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/registry/blocks/echarts/b-allocation-echarts-sankey-chart.tsx",
+          "type": "registry:block",
+          "bytes": 3398,
+          "sha256": "582a49da9044f3678043db85276a5b658e3aabc440f26839fadc6bfc5d0b8e10"
+        }
+      ]
+    },
+    {
+      "slug": "area-chart",
+      "title": "Area Chart",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "bar-chart",
+      "title": "Bar Chart",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "cache-tiers-echarts-radial-chart",
+      "title": "Cache Tiers Echarts Radial Chart",
+      "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+      "sourcePath": "src/registry/blocks/echarts/b-cache-tiers-echarts-radial-chart.tsx",
+      "bytes": 3908,
+      "sha256": "1445da7a5bdfbbfd1802a4b8653e746c42a766e045bec2cdd0aa17d1bf8b2f61",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component block captured under MIT, but requires echarts/recharts/motion runtimes and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/registry/blocks/echarts/b-cache-tiers-echarts-radial-chart.tsx",
+          "type": "registry:block",
+          "bytes": 3908,
+          "sha256": "1445da7a5bdfbbfd1802a4b8653e746c42a766e045bec2cdd0aa17d1bf8b2f61"
+        }
+      ]
+    },
+    {
+      "slug": "background",
+      "title": "Background",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "cpu-architecture",
+      "title": "Cpu Architecture",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "database-with-rest-api",
+      "title": "Database With Rest Api",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "echarts-sankey-chart",
+      "title": "Echarts Sankey Chart",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "grid-bar-chart",
+      "title": "Grid Bar Chart",
+      "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+      "sourcePath": "src/registry/blocks/recharts/b-grid-bar-chart.tsx",
+      "bytes": 5393,
+      "sha256": "f06b17b55d0d571207d4a41f938e04e35c78f5a39587efebc836157455b825c7",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component block captured under MIT, but requires echarts/recharts/motion runtimes and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/registry/blocks/recharts/b-grid-bar-chart.tsx",
+          "type": "registry:block",
+          "bytes": 5393,
+          "sha256": "f06b17b55d0d571207d4a41f938e04e35c78f5a39587efebc836157455b825c7"
+        }
+      ]
+    },
+    {
+      "slug": "hover-trace-bar-chart",
+      "title": "Hover Trace Bar Chart",
+      "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+      "sourcePath": "src/registry/blocks/recharts/b-hover-trace-bar-chart.tsx",
+      "bytes": 6112,
+      "sha256": "db014a0c2e031d82dab11fa729f3234dbdd3cdc6ef76f6e52eb191e45d50bd22",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component block captured under MIT, but requires echarts/recharts/motion runtimes and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/registry/blocks/recharts/b-hover-trace-bar-chart.tsx",
+          "type": "registry:block",
+          "bytes": 6112,
+          "sha256": "db014a0c2e031d82dab11fa729f3234dbdd3cdc6ef76f6e52eb191e45d50bd22"
+        }
+      ]
+    },
+    {
+      "slug": "legion-web-dev",
+      "title": "Legion Web Dev",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "line-chart",
+      "title": "Line Chart",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "monospace-bar-chart",
+      "title": "Monospace Bar Chart",
+      "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+      "sourcePath": "src/registry/blocks/recharts/b-monospace-bar-chart.tsx",
+      "bytes": 5343,
+      "sha256": "dedcf5fb6ef755392486d5e81bda231908027e7d99f84983fe37ab0c3292fabb",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component block captured under MIT, but requires echarts/recharts/motion runtimes and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/registry/blocks/recharts/b-monospace-bar-chart.tsx",
+          "type": "registry:block",
+          "bytes": 5343,
+          "sha256": "dedcf5fb6ef755392486d5e81bda231908027e7d99f84983fe37ab0c3292fabb"
+        }
+      ]
+    },
+    {
+      "slug": "pie-chart",
+      "title": "Pie Chart",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    },
+    {
+      "slug": "pipeline-echarts-sankey-chart",
+      "title": "Pipeline Echarts Sankey Chart",
+      "revision": "ecbd6a5db7b25f9a7e070c02b2ef728c378eeb5c",
+      "sourcePath": "src/registry/blocks/echarts/b-pipeline-echarts-sankey-chart.tsx",
+      "bytes": 3280,
+      "sha256": "0acfe4f2af8497142197b44251a301659606cd0038169db63fd0635155e1e66a",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component block captured under MIT, but requires echarts/recharts/motion runtimes and lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/registry/blocks/echarts/b-pipeline-echarts-sankey-chart.tsx",
+          "type": "registry:block",
+          "bytes": 3280,
+          "sha256": "0acfe4f2af8497142197b44251a301659606cd0038169db63fd0635155e1e66a"
+        }
+      ]
+    },
+    {
+      "slug": "radar-chart",
+      "title": "Radar Chart",
+      "revision": null,
+      "sourcePath": null,
+      "bytes": 0,
+      "sha256": null,
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Slug corresponds to generic showcase or doc layout; no discrete 1:1 reusable block found in upstream repository.",
+      "files": []
+    }
+  ]
+}

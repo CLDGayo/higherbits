@@ -1,0 +1,282 @@
+{
+  "creator": "Shatlyk1011",
+  "ownerLabel": "Shatlyk1011",
+  "name": "Shatlyk1011",
+  "sheetRow": 36,
+  "profileUrl": "https://21st.dev/@Shatlyk1011",
+  "repositoryUrl": "https://github.com/Shatlyk1011/emerald-ui",
+  "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "e5a21985a382808c051c86738631544cab600ab435d3a4bf065c1f5a794b8461",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uncaptured_source_item",
+  "holdDetail": "Upstream repository identified under MIT (Emerald UI), all 14 source files captured, but components require GSAP/framer-motion and lack HigherBits demo wrappers, self-contained GHL exports, and deployed HTTPS preview assets per INGESTION_SOP §2-§3.",
+  "items": [
+    {
+      "slug": "3d-marquee",
+      "title": "3D Marquee",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/3d-marquee.tsx",
+      "bytes": 3133,
+      "sha256": "5d99edfadbc01127f6f21afb9c48a3f5acc5d8c4c5d7b30672ca6f22aae2a17f",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires CSS 3D transforms; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/3d-marquee.tsx",
+          "type": "registry:ui",
+          "bytes": 3133,
+          "sha256": "5d99edfadbc01127f6f21afb9c48a3f5acc5d8c4c5d7b30672ca6f22aae2a17f"
+        }
+      ]
+    },
+    {
+      "slug": "animated-dropdown",
+      "title": "Animated Dropdown",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/animated-dropdown.tsx",
+      "bytes": 4042,
+      "sha256": "3e7cbc5a752f4197ce3d827237032161780a9e2045ec1759641773df65cd720c",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires lucide-react; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/animated-dropdown.tsx",
+          "type": "registry:ui",
+          "bytes": 4042,
+          "sha256": "3e7cbc5a752f4197ce3d827237032161780a9e2045ec1759641773df65cd720c"
+        }
+      ]
+    },
+    {
+      "slug": "button-colorful",
+      "title": "Button Colorful",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/button-colorful.tsx",
+      "bytes": 1438,
+      "sha256": "3a4c9391826f205f985c52603a20498d708e8baca5387c9fb45673192e72e6aa",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/button-colorful.tsx",
+          "type": "registry:ui",
+          "bytes": 1438,
+          "sha256": "3a4c9391826f205f985c52603a20498d708e8baca5387c9fb45673192e72e6aa"
+        }
+      ]
+    },
+    {
+      "slug": "fancy-text-hover",
+      "title": "Fancy Text Hover",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/gsap-components/fancy-text-hover.tsx",
+      "bytes": 4437,
+      "sha256": "31b71e99bdb94f09375f59b2e747266bc10f085cc0d10ca48b0303561763d3de",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires GSAP animation runtime; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/gsap-components/fancy-text-hover.tsx",
+          "type": "registry:ui",
+          "bytes": 4437,
+          "sha256": "31b71e99bdb94f09375f59b2e747266bc10f085cc0d10ca48b0303561763d3de"
+        }
+      ]
+    },
+    {
+      "slug": "gradient-borders-button",
+      "title": "Gradient Borders Button",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/gradient-borders-button.tsx",
+      "bytes": 1857,
+      "sha256": "d9a15e4673ba6749df00724e9ec13430384971a975580ff203108d4ee3d30f0d",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/gradient-borders-button.tsx",
+          "type": "registry:ui",
+          "bytes": 1857,
+          "sha256": "d9a15e4673ba6749df00724e9ec13430384971a975580ff203108d4ee3d30f0d"
+        }
+      ]
+    },
+    {
+      "slug": "hover-border-gradient",
+      "title": "Hover Border Gradient",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/hover-border-gradient.tsx",
+      "bytes": 3322,
+      "sha256": "635323e80e6947e09f5eb3b4f00ea33d6f29d4ad1cdafde51a60aba09c094717",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires framer-motion; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/hover-border-gradient.tsx",
+          "type": "registry:ui",
+          "bytes": 3322,
+          "sha256": "635323e80e6947e09f5eb3b4f00ea33d6f29d4ad1cdafde51a60aba09c094717"
+        }
+      ]
+    },
+    {
+      "slug": "interactive-hover-button",
+      "title": "Interactive Hover Button",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/interactive-hover-button.tsx",
+      "bytes": 3303,
+      "sha256": "fd140e7294b284ba2a02abd0e4072e27c7d4ca6bb611192f38b53d271a0492cc",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires lucide-react; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/interactive-hover-button.tsx",
+          "type": "registry:ui",
+          "bytes": 3303,
+          "sha256": "fd140e7294b284ba2a02abd0e4072e27c7d4ca6bb611192f38b53d271a0492cc"
+        }
+      ]
+    },
+    {
+      "slug": "link-hover",
+      "title": "Link Hover",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/gsap-components/link-hover.tsx",
+      "bytes": 4461,
+      "sha256": "a8cd49c630695cd908fd76c6abd85037fa09adadeb7c54e7786c720addc7e511",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires GSAP animation runtime; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/gsap-components/link-hover.tsx",
+          "type": "registry:ui",
+          "bytes": 4461,
+          "sha256": "a8cd49c630695cd908fd76c6abd85037fa09adadeb7c54e7786c720addc7e511"
+        }
+      ]
+    },
+    {
+      "slug": "motion-button",
+      "title": "Motion Button",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/motion-button.tsx",
+      "bytes": 1180,
+      "sha256": "87890facbba79148db25f3ff3dbcccd3fd563cfb48be19b53478e7f354ad89a4",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires framer-motion; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/motion-button.tsx",
+          "type": "registry:ui",
+          "bytes": 1180,
+          "sha256": "87890facbba79148db25f3ff3dbcccd3fd563cfb48be19b53478e7f354ad89a4"
+        }
+      ]
+    },
+    {
+      "slug": "shimmer-button",
+      "title": "Shimmer Button",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/shimmer-button.tsx",
+      "bytes": 1376,
+      "sha256": "06244d34bd01bed59b2dca5824f4a5c33c220f06ca476619f4317faf2c4b9c73",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/shimmer-button.tsx",
+          "type": "registry:ui",
+          "bytes": 1376,
+          "sha256": "06244d34bd01bed59b2dca5824f4a5c33c220f06ca476619f4317faf2c4b9c73"
+        }
+      ]
+    },
+    {
+      "slug": "shiny-button",
+      "title": "Shiny Button",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/shiny-button.tsx",
+      "bytes": 1196,
+      "sha256": "7d46abc35130939cc13e96bd1683b67cdf5b9b73f3b51c912ada87feb4ad4e24",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/shiny-button.tsx",
+          "type": "registry:ui",
+          "bytes": 1196,
+          "sha256": "7d46abc35130939cc13e96bd1683b67cdf5b9b73f3b51c912ada87feb4ad4e24"
+        }
+      ]
+    },
+    {
+      "slug": "social-button",
+      "title": "Social Button",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/buttons/social-button.tsx",
+      "bytes": 4753,
+      "sha256": "2da4a063bdf38da1f2c8ece7c7e6ab9fd72f0d057fabc25f4ec879f288d0d7c1",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires lucide-react; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/buttons/social-button.tsx",
+          "type": "registry:ui",
+          "bytes": 4753,
+          "sha256": "2da4a063bdf38da1f2c8ece7c7e6ab9fd72f0d057fabc25f4ec879f288d0d7c1"
+        }
+      ]
+    },
+    {
+      "slug": "team-member-card",
+      "title": "Team Member Card",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/cards/team-member-card.tsx",
+      "bytes": 5003,
+      "sha256": "9d938573513a7dfedfb064114c51c07673e6d672408a2f1354f1afd7eb13a793",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires lucide-react; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/cards/team-member-card.tsx",
+          "type": "registry:ui",
+          "bytes": 5003,
+          "sha256": "9d938573513a7dfedfb064114c51c07673e6d672408a2f1354f1afd7eb13a793"
+        }
+      ]
+    },
+    {
+      "slug": "typing-effect",
+      "title": "Typing Effect",
+      "revision": "ca2a6f309f59d517f70235fc3d4a04368486956d",
+      "sourcePath": "src/components/emerald-ui-components/texts/text-typing-effect.tsx",
+      "bytes": 2025,
+      "sha256": "b3012948b17ef1367367e77e20249ad438cc20b23a9043f4789fb0bd52b2f082",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "src/components/emerald-ui-components/texts/text-typing-effect.tsx",
+          "type": "registry:ui",
+          "bytes": 2025,
+          "sha256": "b3012948b17ef1367367e77e20249ad438cc20b23a9043f4789fb0bd52b2f082"
+        }
+      ]
+    }
+  ]
+}

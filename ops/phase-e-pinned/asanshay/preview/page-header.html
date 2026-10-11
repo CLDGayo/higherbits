@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>asanshay - page-header</title>
+  <style>
+    body { margin: 0; padding: 0; background: #fafafa; font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <!--
+  Source registry: https://ds.asanshay.com/r/page-header.json
+  Candidate revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac
+  Component source path: registry/new-york/blocks/page-header/page-header.tsx
+  Eligibility provenance: 21st.dev auto-index=true roster signal (upstream registry defines component schema without a separate standalone root license file)
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Page Header component">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, -apple-system, sans-serif; color: #09090b; }
+    .ghl-header-card { width: min(100%, 640px); background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .ghl-h-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; border-bottom: 1px solid #f4f4f5; padding-bottom: 24px; }
+    .ghl-h-title { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: #09090b; margin: 0; }
+    .ghl-h-desc { font-size: 13px; color: #71717a; margin-top: 4px; }
+    .ghl-h-actions { display: flex; gap: 8px; }
+    .ghl-btn-sec { background: #ffffff; border: 1px solid #d4d4d8; border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; color: #3f3f46; cursor: pointer; }
+    .ghl-btn-pri { background: #09090b; border: 1px solid #09090b; border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; color: #ffffff; cursor: pointer; }
+  </style>
+  <div class="ghl-header-card">
+    <div class="ghl-h-row">
+      <div>
+        <h1 class="ghl-h-title">Project Settings</h1>
+        <p class="ghl-h-desc">Manage domains, encryption secrets, and automated deployment pipelines.</p>
+      </div>
+      <div class="ghl-h-actions">
+        <button class="ghl-btn-sec" type="button">Documentation</button>
+        <button class="ghl-btn-pri" type="button">Save Changes</button>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px;">
+      <div style="background: #fafafa; border: 1px solid #e4e4e7; border-radius: 10px; padding: 12px;">
+        <div style="font-size: 11px; color: #71717a;">Custom Domains</div>
+        <div style="font-size: 16px; font-weight: 700; color: #09090b; margin-top: 4px;">3 Active</div>
+      </div>
+      <div style="background: #fafafa; border: 1px solid #e4e4e7; border-radius: 10px; padding: 12px;">
+        <div style="font-size: 11px; color: #71717a;">Secrets</div>
+        <div style="font-size: 16px; font-weight: 700; color: #09090b; margin-top: 4px;">18 Encrypted</div>
+      </div>
+      <div style="background: #fafafa; border: 1px solid #e4e4e7; border-radius: 10px; padding: 12px;">
+        <div style="font-size: 11px; color: #71717a;">Deploy Hook</div>
+        <div style="font-size: 16px; font-weight: 700; color: #059669; margin-top: 4px;">Healthy</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

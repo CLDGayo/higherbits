@@ -1,0 +1,345 @@
+<div class="ghl-component-wrapper">
+  <style>
+    .ghl-component-wrapper {
+      --ghl-bg: #09090b;
+      --ghl-card-bg: #18181b;
+      --ghl-card-border: #27272a;
+      --ghl-text: #fafafa;
+      --ghl-muted: #a1a1aa;
+      --ghl-accent: #3b82f6;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .ghl-component-wrapper *,
+    .ghl-component-wrapper *::before,
+    .ghl-component-wrapper *::after {
+      box-sizing: border-box;
+    }
+    .ghl-component-wrapper .ghl-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      padding: 32px 16px;
+      background-color: var(--ghl-bg);
+      border-radius: 16px;
+      gap: 20px;
+    }
+    .ghl-component-wrapper .ghl-carousel-box {
+      width: 100%;
+      max-width: 520px;
+      background: var(--ghl-card-bg);
+      border: 1px solid var(--ghl-card-border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .ghl-component-wrapper .ghl-slide-viewport {
+      width: 100%;
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ghl-component-wrapper .ghl-slide-graphic {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ghl-component-wrapper .ghl-slide-graphic svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .ghl-component-wrapper .ghl-slide-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ghl-component-wrapper .ghl-slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ghl-component-wrapper .ghl-slide-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ghl-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ghl-component-wrapper .ghl-slide-desc {
+      font-size: 13px;
+      color: var(--ghl-muted);
+      line-height: 1.5;
+    }
+    .ghl-component-wrapper .ghl-progress-line {
+      width: 100%;
+      height: 3px;
+      background: #27272a;
+      overflow: hidden;
+    }
+    .ghl-component-wrapper .ghl-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--ghl-accent);
+      transition: width 0.1s linear;
+    }
+    .ghl-component-wrapper .ghl-tabs-scroll {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      max-width: 520px;
+      width: 100%;
+      scrollbar-width: none;
+    }
+    .ghl-component-wrapper .ghl-tabs-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .ghl-component-wrapper .ghl-tab-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      background: #18181b;
+      border: 1px solid var(--ghl-card-border);
+      color: var(--ghl-muted);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-tab-pill:hover {
+      background: #27272a;
+      color: var(--ghl-text);
+    }
+    .ghl-component-wrapper .ghl-tab-pill.active {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: var(--ghl-text);
+    }
+    .ghl-component-wrapper .ghl-controls {
+      display: flex;
+      gap: 8px;
+    }
+    .ghl-component-wrapper .ghl-ctrl-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      color: var(--ghl-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .ghl-component-wrapper .ghl-ctrl-btn:hover {
+      background: #3f3f46;
+    }
+  </style>
+
+  <div class="ghl-container">
+    <div class="ghl-carousel-box">
+      <div class="ghl-slide-viewport" id="ghl-carousel-stage">
+        <!-- SVG graphic inserted here -->
+      </div>
+      <div class="ghl-progress-line">
+        <div class="ghl-progress-bar" id="ghl-carousel-progress"></div>
+      </div>
+      <div class="ghl-slide-body">
+        <div class="ghl-slide-header">
+          <span class="ghl-slide-title" id="ghl-carousel-title">Sustainable Sourcing</span>
+          <div class="ghl-controls">
+            <button type="button" class="ghl-ctrl-btn" id="ghl-carousel-prev" aria-label="Previous slide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="ghl-ctrl-btn" id="ghl-carousel-next" aria-label="Next slide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <span class="ghl-slide-desc" id="ghl-carousel-desc">Ethically sourced ingredients from local farmers.</span>
+      </div>
+    </div>
+
+    <div class="ghl-tabs-scroll" role="tablist">
+      <button type="button" class="ghl-tab-pill active" data-index="0">Sourcing</button>
+      <button type="button" class="ghl-tab-pill" data-index="1">Community</button>
+      <button type="button" class="ghl-tab-pill" data-index="2">Global Reach</button>
+      <button type="button" class="ghl-tab-pill" data-index="3">Awards</button>
+      <button type="button" class="ghl-tab-pill" data-index="4">Cloud Ready</button>
+      <button type="button" class="ghl-tab-pill" data-index="5">Mobile</button>
+      <button type="button" class="ghl-tab-pill" data-index="6">Data</button>
+      <button type="button" class="ghl-tab-pill" data-index="7">Creative</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const wrapper = document.querySelector('.ghl-component-wrapper');
+      if (!wrapper) return;
+
+      const titleEl = wrapper.querySelector('#ghl-carousel-title');
+      const descEl = wrapper.querySelector('#ghl-carousel-desc');
+      const stageEl = wrapper.querySelector('#ghl-carousel-stage');
+      const progressEl = wrapper.querySelector('#ghl-carousel-progress');
+      const prevBtn = wrapper.querySelector('#ghl-carousel-prev');
+      const nextBtn = wrapper.querySelector('#ghl-carousel-next');
+      const tabPills = wrapper.querySelectorAll('.ghl-tab-pill');
+      const box = wrapper.querySelector('.ghl-carousel-box');
+
+      const items = [
+        {
+          title: 'Sustainable Sourcing',
+          desc: 'Ethically sourced ingredients from local farmers.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#064e3b"/><circle cx="260" cy="120" r="70" fill="#047857" opacity="0.7"/><path d="M220,130 C220,90 260,70 260,70 C260,70 300,90 300,130 C300,160 260,180 260,180 C260,180 220,160 220,130 Z" fill="#10b981"/><line x1="260" y1="90" x2="260" y2="160" stroke="#064e3b" stroke-width="3"/></svg>'
+        },
+        {
+          title: 'Community Focused',
+          desc: 'Building stronger bonds through shared experiences.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#1e1b4b"/><circle cx="210" cy="110" r="40" fill="#6366f1" opacity="0.6"/><circle cx="310" cy="110" r="40" fill="#a855f7" opacity="0.6"/><circle cx="260" cy="140" r="45" fill="#38bdf8" opacity="0.5"/><path d="M170,190 Q260,130 350,190" fill="none" stroke="#e0e7ff" stroke-width="4"/></svg>'
+        },
+        {
+          title: 'Global Reach',
+          desc: 'Connecting visionaries across all continents.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#0f172a"/><circle cx="260" cy="120" r="65" fill="#0284c7" opacity="0.8"/><circle cx="260" cy="120" r="65" fill="none" stroke="#38bdf8" stroke-width="3"/><ellipse cx="260" cy="120" rx="65" ry="25" fill="none" stroke="#94a3b8" stroke-width="2"/><line x1="260" y1="55" x2="260" y2="185" stroke="#94a3b8" stroke-width="2"/></svg>'
+        },
+        {
+          title: 'Award Winning',
+          desc: 'Recognized excellence in design and innovation.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#451a03"/><circle cx="260" cy="100" r="50" fill="#f59e0b" opacity="0.9"/><polygon points="260,65 272,90 298,92 278,110 284,136 260,122 236,136 242,110 222,92 248,90" fill="#fef3c7"/><rect x="235" y="160" width="50" height="40" rx="4" fill="#78350f"/></svg>'
+        },
+        {
+          title: 'Cloud Ready',
+          desc: 'Scale your infrastructure with seamless ease.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#172554"/><path d="M190,140 C170,140 155,125 155,105 C155,88 168,74 185,71 C195,50 218,35 245,35 C278,35 305,58 310,90 C325,92 335,105 335,120 C335,135 322,145 305,145 Z" fill="#3b82f6" opacity="0.8"/><circle cx="260" cy="100" r="20" fill="#93c5fd"/></svg>'
+        },
+        {
+          title: 'Mobile Optimized',
+          desc: 'Crafted for handhelds with responsive touch gestures.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#1c1917"/><rect x="210" y="35" width="100" height="170" rx="16" fill="#292524" stroke="#78716c" stroke-width="2"/><rect x="220" y="55" width="80" height="120" rx="4" fill="#0c0a09"/><circle cx="260" cy="190" r="6" fill="#a8a29e"/></svg>'
+        },
+        {
+          title: 'Data Insights',
+          desc: 'Real-time analytics and predictive models.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#18181b"/><rect x="180" y="140" width="28" height="60" rx="4" fill="#6366f1"/><rect x="220" y="100" width="28" height="100" rx="4" fill="#3b82f6"/><rect x="260" y="70" width="28" height="130" rx="4" fill="#10b981"/><rect x="300" y="115" width="28" height="85" rx="4" fill="#f59e0b"/></svg>'
+        },
+        {
+          title: 'Creative Tools',
+          desc: 'Express your craft with modular generative components.',
+          svg: '<svg viewBox="0 0 520 240" preserveAspectRatio="xMidYMid slice"><rect width="520" height="240" fill="#311042"/><circle cx="230" cy="100" r="40" fill="#ec4899" opacity="0.7"/><polygon points="280,60 330,150 230,150" fill="#8b5cf6" opacity="0.8"/><circle cx="290" cy="130" r="30" fill="#06b6d4" opacity="0.6"/></svg>'
+        }
+      ];
+
+      let currentIndex = 0;
+      let timer = null;
+      let progressTimer = null;
+      const duration = 4000;
+      let startTime = Date.now();
+      let isPaused = false;
+
+      function updateSlide(index) {
+        currentIndex = (index + items.length) % items.length;
+        const item = items[currentIndex];
+        titleEl.textContent = item.title;
+        descEl.textContent = item.desc;
+        stageEl.innerHTML = item.svg;
+
+        tabPills.forEach((pill, i) => {
+          if (i === currentIndex) pill.classList.add('active');
+          else pill.classList.remove('active');
+        });
+
+        startTime = Date.now();
+      }
+
+      function startTimer() {
+        clearInterval(timer);
+        clearInterval(progressTimer);
+        startTime = Date.now();
+
+        progressTimer = setInterval(() => {
+          if (isPaused) return;
+          const elapsed = Date.now() - startTime;
+          const pct = Math.min((elapsed / duration) * 100, 100);
+          progressEl.style.width = pct + '%';
+        }, 50);
+
+        timer = setInterval(() => {
+          if (isPaused) return;
+          updateSlide(currentIndex + 1);
+        }, duration);
+      }
+
+      updateSlide(0);
+      startTimer();
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          updateSlide(currentIndex - 1);
+          startTimer();
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          updateSlide(currentIndex + 1);
+          startTimer();
+        });
+      }
+
+      tabPills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          const idx = parseInt(pill.getAttribute('data-index') || '0', 10);
+          updateSlide(idx);
+          startTimer();
+        });
+      });
+
+      if (box) {
+        box.addEventListener('mouseenter', () => { isPaused = true; });
+        box.addEventListener('mouseleave', () => {
+          isPaused = false;
+          startTime = Date.now();
+        });
+      }
+    })();
+  </script>
+</div>
+<!--
+MIT License
+
+Copyright (c) 2025 Urvish Mali
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->

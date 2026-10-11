@@ -1,0 +1,23 @@
+{
+  "creator": "abxlfazl__",
+  "ownerLabel": "abxlfazl",
+  "name": "abxlfazl__",
+  "sheetRow": 54,
+  "profileUrl": "https://21st.dev/@abxlfazl__",
+  "githubUser": "https://github.com/abxlfazl",
+  "repositoryUrl": null,
+  "revision": null,
+  "licenseSpdx": null,
+  "evaluationStatus": "all_items_held",
+  "holdReason": "unmapped_source_repository",
+  "holdDetail": "GitHub user abxlfazl (ID 78156549) verified on public GitHub, but none of user's 7 public repositories contain animated-tab-bar component source.",
+  "items": [
+    {
+      "slug": "animated-tab-bar",
+      "title": "Animated Tab Bar",
+      "status": "held",
+      "reason": "unmapped_source_repository",
+      "detail": "Public GitHub inspection of user abxlfazl repositories confirmed no animated-tab-bar component source repository exists."
+    }
+  ]
+}

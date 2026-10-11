@@ -1,0 +1,62 @@
+{
+  "reviewedAt": "2026-10-11",
+  "purpose": "Record item-scoped source, license, dependency, and asset evidence for Alwurts components.",
+  "source": {
+    "repositoryUrl": "https://github.com/Alwurts/simple-ai",
+    "revision": "2d8292d0ed173727ef88501997f6bcc33773a648",
+    "licenseSpdx": "MIT",
+    "licensePath": "LICENSE",
+    "licenseSha256": "d2319217dd84baa183682594da1602c1fa53b723042e17d8d6a08abe3c44e50b",
+    "eligibilityProvenance": "21st.dev auto-index=true roster signal; exact pinned source capture at commit 2d8292d0ed173727ef88501997f6bcc33773a648"
+  },
+  "dependencies": [
+    {
+      "name": "@tiptap/core",
+      "licenseSpdx": "MIT",
+      "role": "Headless rich-text editor engine core for chat-input."
+    },
+    {
+      "name": "@tiptap/react",
+      "licenseSpdx": "MIT",
+      "role": "React integration and bindings for Tiptap editor."
+    },
+    {
+      "name": "@tiptap/starter-kit",
+      "licenseSpdx": "MIT",
+      "role": "Baseline document, paragraph, and formatting extensions."
+    },
+    {
+      "name": "@tiptap/extension-mention",
+      "licenseSpdx": "MIT",
+      "role": "@ mention support and DOM node rendering."
+    },
+    {
+      "name": "@tiptap/extension-placeholder",
+      "licenseSpdx": "MIT",
+      "role": "Placeholder text display for chat input."
+    },
+    {
+      "name": "@tiptap/suggestion",
+      "licenseSpdx": "MIT",
+      "role": "Autocomplete suggestion trigger plugin."
+    },
+    {
+      "name": "ai",
+      "licenseSpdx": "Apache-2.0",
+      "role": "Vercel AI SDK types (ChatStatus, ToolUIPart)."
+    },
+    {
+      "name": "lucide-react",
+      "licenseSpdx": "ISC",
+      "role": "Iconography (ChevronDownIcon, SendIcon)."
+    },
+    {
+      "name": "@radix-ui/react-collapsible",
+      "licenseSpdx": "MIT",
+      "role": "Accessible collapsible container primitive for tool component."
+    }
+  ],
+  "assets": [],
+  "remoteAssets": false,
+  "ghlRuntimeDependencies": []
+}

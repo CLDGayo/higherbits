@@ -6,8 +6,7 @@ BEGIN;
 -- able to turn this table into an approval bypass.
 CREATE TABLE public.auto_index_candidate_publication_metadata (
   candidate_id bigint PRIMARY KEY REFERENCES public.auto_index_candidates(id),
-  emitter text NOT NULL CHECK (emitter IN
-    ('8starlabs','elsecase','mvpblocks','vgpu','belkacemyerfa','urvish','edilozi','linasameer')),
+  emitter text NOT NULL CHECK (emitter ~ '^[a-z0-9][a-z0-9-]{0,37}$'),
   component_slug text NOT NULL CHECK (component_slug ~ '^[a-z0-9][a-z0-9-]{0,79}$'),
   preview_asset_slug text NOT NULL CHECK (preview_asset_slug ~ '^[a-z0-9][a-z0-9-]{0,119}$'),
   title text NOT NULL CHECK (length(title) BETWEEN 1 AND 160),
@@ -114,7 +113,8 @@ BEGIN
       AND p.candidate_id=decision.candidate_id;
   IF legacy.source_id<>successor.source_id OR legacy.item_key<>successor.item_key OR
      legacy.approved_decision_id=successor.approved_decision_id OR
-     legacy.delisted_at IS NOT NULL OR legacy.superseded_at IS NOT NULL OR
+     legacy.delisted_at IS NOT NULL OR legacy.superseded_at IS NULL OR
+     successor.delisted_at IS NOT NULL OR successor.superseded_at IS NOT NULL OR
      legacy.component_id=successor.component_id OR
      candidate.source_id<>successor.source_id OR candidate.item_key<>successor.item_key OR
      proof.checklist_version IS DISTINCT FROM 'component-review-v2' OR
@@ -126,6 +126,41 @@ END $$;
 CREATE TRIGGER auto_index_publication_supersession_guard
   BEFORE INSERT OR UPDATE OR DELETE ON public.auto_index_publication_supersessions
   FOR EACH ROW EXECUTE FUNCTION public.auto_index_publication_supersession_guard();
+
+-- Freeze the exact legacy auto-index publication set that was already public
+-- when this migration began. This is a compatibility allowlist, not reviewer
+-- provenance; current publication/source/component state can only shrink it.
+CREATE TABLE public.auto_index_legacy_publication_bridge (
+  source_id bigint NOT NULL,
+  item_key text NOT NULL,
+  approved_decision_id bigint NOT NULL,
+  component_id integer NOT NULL REFERENCES public.components(id),
+  PRIMARY KEY (source_id,item_key,approved_decision_id),
+  FOREIGN KEY (source_id,item_key,approved_decision_id)
+    REFERENCES public.auto_index_publications(source_id,item_key,approved_decision_id)
+);
+INSERT INTO public.auto_index_legacy_publication_bridge(source_id,item_key,approved_decision_id,component_id)
+SELECT publication.source_id,publication.item_key,publication.approved_decision_id,publication.component_id
+FROM public.auto_index_publications publication
+JOIN public.components component ON component.id=publication.component_id
+JOIN public.auto_index_sources source ON source.id=publication.source_id
+JOIN public.auto_index_decisions decision ON decision.id=publication.approved_decision_id
+JOIN public.auto_index_candidates candidate ON candidate.id=decision.candidate_id
+WHERE publication.delisted_at IS NULL AND publication.superseded_at IS NULL
+  AND component.is_public IS TRUE AND component.registry='auto-index'
+  AND source.opted_out IS FALSE AND decision.outcome='approved'
+  AND decision.review_provenance_id IS NULL
+  AND candidate.source_id=publication.source_id AND candidate.item_key=publication.item_key
+  AND NOT EXISTS (SELECT 1 FROM public.auto_index_publication_supersessions supersession
+    WHERE supersession.legacy_source_id=publication.source_id
+      AND supersession.legacy_item_key=publication.item_key
+      AND supersession.legacy_approved_decision_id=publication.approved_decision_id);
+ALTER TABLE public.auto_index_legacy_publication_bridge ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.auto_index_legacy_publication_bridge
+  FROM PUBLIC,anon,authenticated,service_role,auto_index_stage,auto_index_reviewer;
+CREATE TRIGGER auto_index_legacy_publication_bridge_immutable
+  BEFORE INSERT OR UPDATE OR DELETE ON public.auto_index_legacy_publication_bridge
+  FOR EACH ROW EXECUTE FUNCTION public.auto_index_history_immutable();
 
 -- Public readers serve the current component/demo rows. Keep those rows equal
 -- to the payload that was reviewed; refreshed versions use new rows linked by
@@ -197,10 +232,8 @@ CREATE TRIGGER auto_index_reviewed_demo_payload_guard
     compiled_css,ghl_html_content,ghl_source_fingerprint OR DELETE ON public.demos
   FOR EACH ROW EXECUTE FUNCTION public.auto_index_reviewed_payload_guard();
 
--- The historical partial unique index cannot represent a successor relation
--- while retaining predecessor rows. Finalization is serialized by refresh state
--- locks and is the sole writer of publications and supersessions.
-DROP INDEX IF EXISTS public.auto_index_one_active_publication;
+-- Keep the original partial unique index. A successor transition terminally
+-- marks its predecessor before inserting the replacement, within one transaction.
 
 ALTER TABLE public.auto_index_review_provenance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.auto_index_candidate_publication_metadata ENABLE ROW LEVEL SECURITY;
@@ -243,8 +276,9 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path=pg_catalog,public AS $$
   WHERE c.id=p_candidate_id
 $$;
 
--- Read-only provenance gate for existing server-side consumers. Legacy or stale
--- publications are intentionally invisible until they receive a reviewed successor.
+-- Read-only provenance gate for existing server-side consumers. A frozen
+-- migration-time allowlist preserves the pre-existing public legacy set; all
+-- later publications must carry valid reviewer provenance.
 CREATE FUNCTION public.auto_index_component_has_current_approval(p_component_id bigint) RETURNS boolean
 LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=pg_catalog,public AS $$
 DECLARE publication public.auto_index_publications; source public.auto_index_sources;
@@ -258,15 +292,25 @@ BEGIN
           AND supersession.legacy_approved_decision_id=p.approved_decision_id);
   IF NOT FOUND THEN RETURN false; END IF;
   SELECT * INTO source FROM public.auto_index_sources s WHERE s.id=publication.source_id;
-  IF source.id IS NULL THEN RETURN false; END IF;
+  IF source.id IS NULL OR source.opted_out THEN RETURN false; END IF;
   SELECT * INTO decision FROM public.auto_index_decisions d WHERE d.id=publication.approved_decision_id;
-  IF NOT FOUND OR decision.outcome IS DISTINCT FROM 'approved' OR decision.review_provenance_id IS NULL THEN RETURN false; END IF;
+  IF NOT FOUND OR decision.outcome IS DISTINCT FROM 'approved' THEN RETURN false; END IF;
   SELECT * INTO candidate FROM public.auto_index_candidates c WHERE c.id=decision.candidate_id;
   IF NOT FOUND OR candidate.source_id IS DISTINCT FROM publication.source_id OR
      candidate.item_key IS DISTINCT FROM publication.item_key THEN RETURN false; END IF;
+  IF decision.review_provenance_id IS NULL THEN
+    RETURN EXISTS (
+      SELECT 1 FROM public.auto_index_legacy_publication_bridge legacy
+      JOIN public.components component ON component.id=legacy.component_id
+      WHERE legacy.source_id=publication.source_id AND legacy.item_key=publication.item_key
+        AND legacy.approved_decision_id=publication.approved_decision_id
+        AND legacy.component_id=publication.component_id AND component.id=p_component_id
+        AND component.is_public IS TRUE AND component.registry='auto-index'
+    );
+  END IF;
   SELECT * INTO proof FROM public.auto_index_review_provenance p
     WHERE p.id=decision.review_provenance_id AND p.candidate_id=candidate.id;
-  IF NOT FOUND OR source.opted_out OR proof.reviewer_user_id IS NULL OR length(btrim(proof.reviewer_user_id))=0 OR
+  IF NOT FOUND OR proof.reviewer_user_id IS NULL OR length(btrim(proof.reviewer_user_id))=0 OR
      proof.checklist_version IS DISTINCT FROM 'component-review-v2' OR
      proof.checklist_answers IS DISTINCT FROM jsonb_build_object(
        'source_identity_verified',true,'source_bytes_verified',true,'license_and_notice_verified',true,
@@ -319,6 +363,12 @@ DROP POLICY IF EXISTS "components_select" ON public.components;
 CREATE POLICY "components_select" ON public.components AS PERMISSIVE
   FOR SELECT TO authenticated
   USING (is_public=true OR user_id=auth.jwt()->>'sub');
+DROP POLICY IF EXISTS components_anon_public_select ON public.components;
+CREATE POLICY components_anon_public_select ON public.components AS PERMISSIVE
+  FOR SELECT TO anon USING (is_public=true);
+DROP POLICY IF EXISTS components_anon_public_provenance_guard ON public.components;
+CREATE POLICY components_anon_public_provenance_guard ON public.components AS RESTRICTIVE
+  FOR SELECT TO anon USING (public.auto_index_component_public_select_allowed(id));
 DROP POLICY IF EXISTS "demos_select" ON public.demos;
 CREATE POLICY "demos_select" ON public.demos AS PERMISSIVE
   FOR SELECT TO authenticated
@@ -341,7 +391,7 @@ CREATE FUNCTION public.stage_auto_index_candidate_publication_metadata(
 ) RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
 DECLARE c public.auto_index_candidates; s public.auto_index_sources; existing public.auto_index_candidate_publication_metadata;
   v_emitter text; v_component_preview text; v_demo_preview text;
-  v_bundle text; v_dependencies jsonb; v_assets jsonb;
+  v_bundle text; v_dependencies jsonb; v_assets jsonb; v_normalized_owner text;
   expected_component text; expected_html text;
 BEGIN
   IF session_user<>'auto_index_stage' THEN RAISE EXCEPTION 'stage identity required'; END IF;
@@ -371,6 +421,11 @@ BEGIN
     WHEN lower(s.owner_label)='edil-ozi' THEN 'edilozi'
     WHEN lower(s.owner_label)='lina.sameer' THEN 'linasameer'
     ELSE NULL END;
+  IF v_emitter IS NULL AND s.kind='official_registry' THEN
+    v_normalized_owner:=lower(regexp_replace(btrim(s.owner_label),'[^a-zA-Z0-9]+','-','g'));
+    v_emitter:=regexp_replace(v_normalized_owner,'(^-|-$)','','g');
+    IF v_emitter !~ '^[a-z0-9][a-z0-9-]{0,37}$' THEN v_emitter:=NULL; END IF;
+  END IF;
   IF v_emitter IS NULL THEN RAISE EXCEPTION 'source identity has no staging mapping'; END IF;
   v_component_preview:=p_component_preview_url; v_demo_preview:=p_demo_preview_url;
   v_bundle:=p_bundle_html_url; v_dependencies:=p_component_dependencies;
@@ -393,6 +448,8 @@ BEGIN
     expected_component:='/auto-index/vgpu-'||p_component_slug||'.png'; expected_html:='/auto-index/vgpu-'||p_component_slug||'.html';
   ELSIF v_emitter IN ('belkacemyerfa','urvish','edilozi','linasameer') AND
       p_preview_asset_slug=v_emitter||'-'||p_component_slug THEN
+    expected_component:='/auto-index/'||p_preview_asset_slug||'.png'; expected_html:='/auto-index/'||p_preview_asset_slug||'.html';
+  ELSIF s.kind='official_registry' AND p_preview_asset_slug=v_emitter||'-'||p_component_slug THEN
     expected_component:='/auto-index/'||p_preview_asset_slug||'.png'; expected_html:='/auto-index/'||p_preview_asset_slug||'.html';
   ELSE
     RAISE EXCEPTION 'emitter slug mapping rejected';
@@ -580,7 +637,7 @@ DECLARE v_candidate_id bigint; v_source_id bigint; v_item_key text; v_generation
   demo_artifact public.auto_index_candidate_demos; refresh_state public.auto_index_refresh_state;
   active_component_id integer; active_generation bigint; component_id integer; active_demo_id integer;
   source_code text; registry_files jsonb; license_target text; notice_target text; expected_fingerprint text;
-  existing_publication public.auto_index_publications; publication_component_slug text;
+  existing_publication public.auto_index_publications; publication_component_slug text; superseded_count integer;
 BEGIN
   IF session_user<>'auto_index_reviewer' THEN RAISE EXCEPTION 'reviewer identity required'; END IF;
   IF p_approved_decision_id IS NULL OR p_approved_decision_id<=0 THEN RAISE EXCEPTION 'invalid decision ID'; END IF;
@@ -712,6 +769,16 @@ BEGIN
   IF (SELECT count(*) FROM public.auto_index_copy_prompts prompt WHERE prompt.demo_id=active_demo_id)<>10 THEN
     RAISE EXCEPTION 'incomplete auto-index copy prompts';
   END IF;
+  IF active_component_id IS NOT NULL THEN
+    UPDATE public.auto_index_publications publication SET superseded_at=clock_timestamp()
+      WHERE publication.source_id=existing_publication.source_id
+        AND publication.item_key=existing_publication.item_key
+        AND publication.approved_decision_id=existing_publication.approved_decision_id
+        AND publication.component_id=active_component_id
+        AND publication.delisted_at IS NULL AND publication.superseded_at IS NULL;
+    GET DIAGNOSTICS superseded_count=ROW_COUNT;
+    IF superseded_count<>1 THEN RAISE EXCEPTION 'active publication changed during revision switch'; END IF;
+  END IF;
   INSERT INTO public.auto_index_publications(source_id,item_key,component_id,approved_decision_id)
     VALUES(c.source_id,c.item_key,component_id,d.id);
   -- Keep the component private on INSERT; the publication guard validates the
@@ -764,7 +831,30 @@ BEGIN
   RETURN NEW;
 END $$;
 
--- Reviewed auto-index rows are the only indexed rows visible through these RPCs.
+-- New publication rows must reference immutable reviewer provenance. Legacy
+-- predecessors may still take their one terminal supersession transition.
+CREATE FUNCTION public.auto_index_publication_review_provenance_guard() RETURNS trigger
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,public AS $$
+BEGIN
+  IF TG_OP='INSERT' AND NOT EXISTS (
+    SELECT 1 FROM public.auto_index_decisions decision
+    JOIN public.auto_index_review_provenance proof
+      ON proof.id=decision.review_provenance_id AND proof.candidate_id=decision.candidate_id
+    WHERE decision.id=NEW.approved_decision_id AND decision.outcome='approved'
+      AND decision.review_provenance_id IS NOT NULL
+      AND length(btrim(proof.reviewer_user_id))>0
+      AND proof.checklist_version='component-review-v2'
+  ) THEN
+    RAISE EXCEPTION 'new publication requires reviewer provenance';
+  END IF;
+  RETURN NEW;
+END $$;
+CREATE TRIGGER auto_index_publication_review_provenance_guard
+  BEFORE INSERT ON public.auto_index_publications
+  FOR EACH ROW EXECUTE FUNCTION public.auto_index_publication_review_provenance_guard();
+
+-- Reviewed rows and the frozen pre-migration public set are the only indexed
+-- rows visible through these RPCs.
 CREATE OR REPLACE FUNCTION public.get_user_profile_demo_list(
   p_user_id text,
   p_include_private boolean DEFAULT false
@@ -1574,6 +1664,14 @@ JOIN public.public_profiles u ON u.id = c.user_id
 WHERE c.is_public = true
   AND (c.registry IS DISTINCT FROM 'auto-index' OR c.id IN
     (SELECT approved.id FROM public.auto_index_public_component_ids approved));
+REVOKE SELECT ON public.components_with_username FROM PUBLIC,anon;
+GRANT SELECT ON public.components_with_username TO anon,authenticated,service_role;
+GRANT SELECT (
+  code,component_names,component_slug,created_at,demo_code,demo_dependencies,
+  demo_direct_registry_dependencies,dependencies,description,direct_registry_dependencies,
+  downloads_count,fts,id,is_public,license,likes_count,name,preview_url,registry,updated_at,
+  user_id,video_url
+) ON public.components TO anon;
 
 -- Used by: lib/queries.server.ts (registry dependency tree resolution).
 -- One row per (source component -> dependency component) closure edge,
@@ -1710,12 +1808,29 @@ CREATE OR REPLACE FUNCTION public.match_embeddings_with_details(
     d.video_url,
     d.demo_slug,
     d.user_id,
-    to_jsonb(c.*) AS component_data,
-    to_jsonb(u.*) AS user_data,
+    jsonb_build_object(
+      'id', c.id,
+      'name', c.name,
+      'description', c.description,
+      'code', c.code,
+      'registry', c.registry,
+      'direct_registry_dependencies', c.direct_registry_dependencies,
+      'component_slug', c.component_slug,
+      'user_id', c.user_id
+    ) AS component_data,
+    jsonb_build_object(
+      'id', u.id,
+      'username', u.username,
+      'name', u.name,
+      'display_name', u.display_name,
+      'display_username', u.display_username,
+      'display_image_url', u.display_image_url,
+      'image_url', u.image_url
+    ) AS user_data,
     jsonb_build_object(
       'usage_description', ue.usage_description,
       'metadata', ue.metadata,
-      'similarity', 1 - (ue.embedding <=> query_embedding)
+      'similarity', 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding)
     ) AS usage_data
   FROM public.usage_embeddings ue
   JOIN public.demos d ON d.id = ue.item_id AND ue.item_type = 'demo'
@@ -1723,9 +1838,10 @@ CREATE OR REPLACE FUNCTION public.match_embeddings_with_details(
   JOIN public.public_profiles u ON u.id = d.user_id
   WHERE c.is_public = TRUE
     AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
-    AND 1 - (ue.embedding <=> query_embedding) > match_threshold
-  ORDER BY ue.embedding <=> query_embedding
-  LIMIT match_count;
+    AND 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding) >
+      LEAST(GREATEST(coalesce(match_threshold,0.33),0.33),0.95)
+  ORDER BY ue.embedding OPERATOR(extensions.<=>) query_embedding
+  LIMIT LEAST(GREATEST(coalesce(match_count,0),0),20);
 $$;
 
 -- Demo search used by the search_demos_ai_oai_extended edge fn.
@@ -1778,12 +1894,29 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_extended(
     d.demo_slug,
     d.user_id,
     d.created_at,
-    to_jsonb(c.*) AS component_data,
-    to_jsonb(u.*) AS user_data,
+    jsonb_build_object(
+      'id', c.id,
+      'name', c.name,
+      'description', c.description,
+      'code', c.code,
+      'registry', c.registry,
+      'direct_registry_dependencies', c.direct_registry_dependencies,
+      'component_slug', c.component_slug,
+      'user_id', c.user_id
+    ) AS component_data,
+    jsonb_build_object(
+      'id', u.id,
+      'username', u.username,
+      'name', u.name,
+      'display_name', u.display_name,
+      'display_username', u.display_username,
+      'display_image_url', u.display_image_url,
+      'image_url', u.image_url
+    ) AS user_data,
     jsonb_build_object(
       'usage_description', ue.usage_description,
       'metadata', ue.metadata,
-      'similarity', 1 - (ue.embedding <=> query_embedding)
+      'similarity', 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding)
     ) AS usage_data
   FROM public.usage_embeddings ue
   JOIN public.demos d ON d.id = ue.item_id AND ue.item_type = 'demo'
@@ -1791,8 +1924,9 @@ CREATE OR REPLACE FUNCTION public.search_demos_ai_oai_extended(
   JOIN public.public_profiles u ON u.id = d.user_id
   WHERE c.is_public = TRUE
     AND (c.registry IS DISTINCT FROM 'auto-index' OR public.auto_index_component_has_current_approval(c.id))
-    AND 1 - (ue.embedding <=> query_embedding) > match_threshold
-  ORDER BY ue.embedding <=> query_embedding
+    AND 1 - (ue.embedding OPERATOR(extensions.<=>) query_embedding) >
+      LEAST(GREATEST(coalesce(match_threshold,0.33),0.33),0.95)
+  ORDER BY ue.embedding OPERATOR(extensions.<=>) query_embedding
   LIMIT 20;
 $$;
 
@@ -1814,11 +1948,13 @@ GRANT EXECUTE ON FUNCTION public.match_embeddings_with_details(vector,double pre
 
 REVOKE ALL ON FUNCTION public.auto_index_review_provenance_immutable() FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON FUNCTION public.auto_index_publication_supersession_guard() FROM PUBLIC,anon,authenticated,service_role;
+REVOKE ALL ON FUNCTION public.auto_index_publication_review_provenance_guard() FROM PUBLIC,anon,authenticated,service_role,auto_index_stage,auto_index_reviewer;
 REVOKE ALL ON FUNCTION public.auto_index_reviewed_payload_guard() FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON FUNCTION public.auto_index_candidate_review_fingerprint(bigint) FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON FUNCTION public.auto_index_component_has_current_approval(bigint) FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON FUNCTION public.auto_index_components_with_current_approval(bigint[]) FROM PUBLIC,anon,authenticated,service_role;
-REVOKE ALL ON FUNCTION public.auto_index_component_public_select_allowed(bigint) FROM PUBLIC,anon,service_role;
+REVOKE ALL ON FUNCTION public.auto_index_component_public_select_allowed(bigint) FROM PUBLIC,anon,authenticated,service_role;
+GRANT EXECUTE ON FUNCTION public.auto_index_component_public_select_allowed(bigint) TO anon,authenticated;
 REVOKE ALL ON FUNCTION public.auto_index_admin_review_queue(bigint,integer) FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON FUNCTION public.auto_index_admin_review_candidate(bigint) FROM PUBLIC,anon,authenticated,service_role;
 REVOKE ALL ON FUNCTION public.auto_index_record_human_review(bigint,text,text,text,jsonb,text) FROM PUBLIC,anon,authenticated,service_role;
@@ -1846,7 +1982,7 @@ REVOKE CREATE ON SCHEMA public FROM auto_index_stage,auto_index_reviewer;
 REVOKE ALL ON public.auto_index_sources,public.auto_index_refresh_state,public.auto_index_refresh_runs,
   public.auto_index_candidates,public.auto_index_candidate_files,public.auto_index_candidate_demos,
   public.auto_index_candidate_assets,public.auto_index_decisions,public.auto_index_publications,
-  public.auto_index_publication_supersessions,
+  public.auto_index_publication_supersessions,public.auto_index_legacy_publication_bridge,
   public.auto_index_candidate_publication_metadata,public.auto_index_review_provenance,
   public.auto_index_copy_prompts FROM auto_index_stage,auto_index_reviewer,service_role;
 GRANT SELECT ON public.auto_index_sources,public.auto_index_refresh_state,public.auto_index_refresh_runs,

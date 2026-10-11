@@ -17,7 +17,7 @@
   },
   "artifacts": {
     "demo_sha256": "bde40de4c233fb6aa57ed60758206d3134ad6c49f0d3c7d0e38fbe20f15ff315",
-    "ghl_sha256": "e5e78d887821163342e3171757049af404c22fe03f5a6b0c5a67d434042ffb44",
+    "ghl_sha256": "3b1ed61791b9b5f34f47a63ec4746b7b43933468896491400f4024a25db52a8d",
     "preview_png_sha256": "d9cfa98d444fd31d45d95ad934d2259ab7a63d9be73a3312516a0eb1b1b05909",
     "copy_prompts_sha256": "1debf271a00bfc35135fea58517dec4195192be5286e7e87077f49373128a436",
     "copy_prompt_count": 10,
@@ -40,7 +40,20 @@
       "Changed all ten prompts to describe the plain-text behavior implemented by the shipped demo."
     ],
     "deterministic_hash_assertions": "passed",
-    "visual_render": "unchanged; only prompt text and HTML license comment changed"
+    "visual_render": "centered and unclipped; GHL attribution comment corrected to agonist/contentbit",
+    "source_closure": {
+      "path": "source/71b5face90bd9dd5a4ef401879dfc810ff832ad1/registry/src/blocks/pros-cons.tsx",
+      "bytes": 1830,
+      "sha256": "e290c64a41f6c6bddcc2f2ed2d915cfb727793dd2628a14581c0bcdeb8702b5c",
+      "verified": true
+    },
+    "local_assets": {
+      "html_path": "apps/web/public/auto-index/contentbit-pros-cons.html",
+      "html_sha256": "3b1ed61791b9b5f34f47a63ec4746b7b43933468896491400f4024a25db52a8d",
+      "preview_path": "apps/web/public/auto-index/contentbit-pros-cons.png",
+      "preview_sha256": "d9cfa98d444fd31d45d95ad934d2259ab7a63d9be73a3312516a0eb1b1b05909",
+      "deployed_and_https_verified": false
+    }
   },
   "production_readback": {
     "project_ref": "ewktoowpuemgbaaxxbdq",

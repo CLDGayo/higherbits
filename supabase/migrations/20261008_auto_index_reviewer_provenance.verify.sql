@@ -1,14 +1,42 @@
 DO $$
 DECLARE decision_guard text; stage_writer text; review_writer text; finalizer text; payload_guard text;
-  normalized_payload_guard text; normalized_finalizer text;
+  supersession_guard text; approval_helper text; publication_provenance_guard text;
+  normalized_payload_guard text; normalized_finalizer text; normalized_stage_writer text;
   component_policy text; demo_policy text; public_select_helper text;
   component_public_policy text; demo_public_policy text;
+  anon_component_public_policy text; anon_component_guard text;
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_class
       WHERE oid='public.auto_index_review_provenance'::regclass AND relrowsecurity) OR
      NOT EXISTS (SELECT 1 FROM pg_class
-      WHERE oid='public.auto_index_candidate_publication_metadata'::regclass AND relrowsecurity) THEN
-    RAISE EXCEPTION 'review provenance and staged metadata tables must have RLS enabled';
+      WHERE oid='public.auto_index_candidate_publication_metadata'::regclass AND relrowsecurity) OR
+     NOT EXISTS (SELECT 1 FROM pg_class
+      WHERE oid='public.auto_index_legacy_publication_bridge'::regclass AND relrowsecurity) THEN
+    RAISE EXCEPTION 'review provenance, staged metadata, and legacy bridge tables must have RLS enabled';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint
+      WHERE conrelid='public.auto_index_legacy_publication_bridge'::regclass AND contype='p') OR
+     (SELECT count(*) FROM pg_constraint
+      WHERE conrelid='public.auto_index_legacy_publication_bridge'::regclass AND contype='f')<2 OR
+     NOT EXISTS (SELECT 1 FROM pg_trigger
+      WHERE tgrelid='public.auto_index_legacy_publication_bridge'::regclass
+        AND tgname='auto_index_legacy_publication_bridge_immutable' AND NOT tgisinternal
+        AND tgfoid='public.auto_index_history_immutable()'::regprocedure) THEN
+    RAISE EXCEPTION 'frozen legacy-publication bridge key/foreign-key/immutability contract is missing';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM public.auto_index_legacy_publication_bridge bridge
+    JOIN public.auto_index_publications publication
+      ON publication.source_id=bridge.source_id AND publication.item_key=bridge.item_key
+        AND publication.approved_decision_id=bridge.approved_decision_id
+    JOIN public.auto_index_decisions decision ON decision.id=publication.approved_decision_id
+    JOIN public.auto_index_candidates candidate ON candidate.id=decision.candidate_id
+    WHERE bridge.component_id IS DISTINCT FROM publication.component_id
+      OR decision.outcome IS DISTINCT FROM 'approved' OR decision.review_provenance_id IS NOT NULL
+      OR candidate.source_id IS DISTINCT FROM publication.source_id
+      OR candidate.item_key IS DISTINCT FROM publication.item_key
+  ) THEN
+    RAISE EXCEPTION 'legacy-publication bridge contains a non-legacy or mismatched publication';
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_class
       WHERE oid='public.auto_index_publication_supersessions'::regclass AND relrowsecurity) OR
@@ -26,6 +54,12 @@ BEGIN
       WHERE tgrelid='public.auto_index_publication_supersessions'::regclass
         AND tgname='auto_index_publication_supersession_guard' AND NOT tgisinternal) THEN
     RAISE EXCEPTION 'append-only publication supersession relation contract is missing';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_indexes
+      WHERE schemaname='public' AND tablename='auto_index_publications'
+        AND indexname='auto_index_one_active_publication'
+        AND indexdef ILIKE 'CREATE UNIQUE INDEX%ON public.auto_index_publications USING btree (source_id, item_key)%WHERE%delisted_at IS NULL%superseded_at IS NULL%') THEN
+    RAISE EXCEPTION 'one-active-publication unique index is missing';
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint
       WHERE conrelid='public.auto_index_review_provenance'::regclass AND contype='p'
@@ -51,6 +85,16 @@ BEGIN
   END IF;
   IF has_table_privilege('anon','public.auto_index_review_provenance','SELECT,INSERT,UPDATE,DELETE') OR
      has_table_privilege('authenticated','public.auto_index_review_provenance','SELECT,INSERT,UPDATE,DELETE') OR
+     has_table_privilege('anon','public.auto_index_legacy_publication_bridge','SELECT,INSERT,UPDATE,DELETE,TRUNCATE') OR
+     has_table_privilege('authenticated','public.auto_index_legacy_publication_bridge','SELECT,INSERT,UPDATE,DELETE,TRUNCATE') OR
+     has_table_privilege('service_role','public.auto_index_legacy_publication_bridge','SELECT,INSERT,UPDATE,DELETE,TRUNCATE') OR
+     has_table_privilege('auto_index_stage','public.auto_index_legacy_publication_bridge','SELECT,INSERT,UPDATE,DELETE,TRUNCATE') OR
+     has_table_privilege('auto_index_reviewer','public.auto_index_legacy_publication_bridge','SELECT,INSERT,UPDATE,DELETE,TRUNCATE') OR
+     has_function_privilege('anon','public.auto_index_publication_review_provenance_guard()','EXECUTE') OR
+     has_function_privilege('authenticated','public.auto_index_publication_review_provenance_guard()','EXECUTE') OR
+     has_function_privilege('service_role','public.auto_index_publication_review_provenance_guard()','EXECUTE') OR
+     has_function_privilege('auto_index_stage','public.auto_index_publication_review_provenance_guard()','EXECUTE') OR
+     has_function_privilege('auto_index_reviewer','public.auto_index_publication_review_provenance_guard()','EXECUTE') OR
      has_table_privilege('service_role','public.auto_index_review_provenance','INSERT,UPDATE,DELETE') OR
      has_table_privilege('service_role','public.auto_index_candidate_publication_metadata','INSERT,UPDATE,DELETE') OR
      has_table_privilege('service_role','public.auto_index_publication_supersessions','INSERT,UPDATE,DELETE') OR
@@ -65,7 +109,7 @@ BEGIN
      has_function_privilege('anon','public.auto_index_component_has_current_approval(bigint)','EXECUTE') OR
      has_function_privilege('authenticated','public.auto_index_component_has_current_approval(bigint)','EXECUTE') OR
      NOT has_function_privilege('service_role','public.auto_index_component_has_current_approval(bigint)','EXECUTE') OR
-     has_function_privilege('anon','public.auto_index_component_public_select_allowed(bigint)','EXECUTE') OR
+     NOT has_function_privilege('anon','public.auto_index_component_public_select_allowed(bigint)','EXECUTE') OR
      NOT has_function_privilege('authenticated','public.auto_index_component_public_select_allowed(bigint)','EXECUTE') OR
      has_function_privilege('service_role','public.auto_index_component_public_select_allowed(bigint)','EXECUTE') OR
      has_function_privilege('anon','public.auto_index_components_with_current_approval(bigint[])','EXECUTE') OR
@@ -130,7 +174,15 @@ BEGIN
       JOIN pg_auth_members membership ON membership.roleid=closure.member_oid
     )
     SELECT 1 FROM granted_to_closure closure
+    JOIN pg_roles member ON member.oid=closure.member_oid
     WHERE closure.member_oid<>closure.root_oid
+      AND NOT EXISTS (
+        SELECT 1 FROM pg_auth_members edge
+        JOIN pg_roles grantor ON grantor.oid=edge.grantor
+        WHERE edge.roleid=closure.root_oid AND edge.member=closure.member_oid
+          AND member.rolname='postgres' AND grantor.rolname='supabase_admin'
+          AND edge.admin_option AND NOT edge.inherit_option AND NOT edge.set_option
+      )
   ) THEN
     RAISE EXCEPTION 'stage/reviewer is granted to another direct or transitive role member';
   END IF;
@@ -145,15 +197,21 @@ BEGIN
         'public.auto_index_candidate_files'::regclass,'public.auto_index_candidate_demos'::regclass,
         'public.auto_index_candidate_assets'::regclass,'public.auto_index_decisions'::regclass,
         'public.auto_index_publications'::regclass,'public.auto_index_publication_supersessions'::regclass,
+        'public.auto_index_legacy_publication_bridge'::regclass,
         'public.auto_index_copy_prompts'::regclass,'public.auto_index_review_provenance'::regclass,
         'public.auto_index_candidate_publication_metadata'::regclass)
+  ) OR EXISTS (
+    SELECT 1 FROM pg_class protected
+    JOIN pg_roles restricted_role ON restricted_role.oid=protected.relowner
+    WHERE restricted_role.rolname='service_role'
+      AND protected.oid='public.auto_index_legacy_publication_bridge'::regclass
   ) OR EXISTS (
     SELECT 1 FROM pg_roles restricted_role
     JOIN pg_proc protected ON protected.proowner=restricted_role.oid
     WHERE restricted_role.rolname IN ('auto_index_stage','auto_index_reviewer')
       AND protected.pronamespace='public'::regnamespace
       AND protected.proname IN ('auto_index_decision_guard','auto_index_review_provenance_immutable',
-        'auto_index_publication_supersession_guard','auto_index_candidate_review_fingerprint',
+        'auto_index_publication_supersession_guard','auto_index_publication_review_provenance_guard','auto_index_candidate_review_fingerprint',
         'auto_index_component_has_current_approval','auto_index_components_with_current_approval',
         'auto_index_component_public_select_allowed','stage_auto_index_candidate_publication_metadata',
         'auto_index_admin_review_queue','auto_index_admin_review_candidate',
@@ -180,10 +238,28 @@ BEGIN
   SELECT pg_get_expr(policy.polqual,policy.polrelid) INTO demo_public_policy
     FROM pg_policy policy WHERE policy.polrelid='public.demos'::regclass
       AND policy.polname='demos_select' AND policy.polpermissive;
+  SELECT pg_get_expr(policy.polqual,policy.polrelid) INTO anon_component_public_policy
+    FROM pg_policy policy WHERE policy.polrelid='public.components'::regclass
+      AND policy.polname='components_anon_public_select' AND policy.polpermissive
+      AND policy.polcmd='r'
+      AND policy.polroles @> ARRAY[(SELECT oid FROM pg_roles WHERE rolname='anon')];
+  SELECT pg_get_expr(policy.polqual,policy.polrelid) INTO anon_component_guard
+    FROM pg_policy policy WHERE policy.polrelid='public.components'::regclass
+      AND policy.polname='components_anon_public_provenance_guard' AND NOT policy.polpermissive
+      AND policy.polcmd='r'
+      AND policy.polroles @> ARRAY[(SELECT oid FROM pg_roles WHERE rolname='anon')];
   SELECT pg_get_functiondef('public.auto_index_component_public_select_allowed(bigint)'::regprocedure)
     INTO public_select_helper;
+  SELECT pg_get_functiondef('public.auto_index_component_has_current_approval(bigint)'::regprocedure)
+    INTO approval_helper;
   IF has_table_privilege('anon','public.components','SELECT') OR
      has_table_privilege('anon','public.demos','SELECT') OR
+     NOT has_column_privilege('anon','public.components','code','SELECT') OR
+     NOT has_column_privilege('anon','public.components','video_url','SELECT') OR
+     NOT has_table_privilege('anon','public.components_with_username','SELECT') OR
+     anon_component_public_policy IS NULL OR anon_component_guard IS NULL OR
+     position('is_public' IN anon_component_public_policy)=0 OR
+     position('auto_index_component_public_select_allowed' IN anon_component_guard)=0 OR
      component_policy IS NULL OR demo_policy IS NULL OR component_public_policy IS NULL OR demo_public_policy IS NULL OR
      position('auto_index_component_public_select_allowed' IN component_policy)=0 OR
      position('user_id' IN component_policy)=0 OR
@@ -193,6 +269,11 @@ BEGIN
      position('user_id' IN demo_public_policy)=0 OR position('component_id' IN demo_public_policy)=0 OR
      position('registry IS DISTINCT FROM ''auto-index''' IN public_select_helper)=0 OR
      position('auto_index_component_has_current_approval' IN public_select_helper)=0 OR
+     position('auto_index_legacy_publication_bridge' IN approval_helper)=0 OR
+     position('decision.review_provenance_id IS NULL' IN approval_helper)=0 OR
+     position('source.opted_out' IN approval_helper)=0 OR
+     position('component.is_public IS TRUE' IN approval_helper)=0 OR
+     position('component.registry=''auto-index''' IN approval_helper)=0 OR
      NOT EXISTS (SELECT 1 FROM pg_proc helper
        WHERE helper.oid='public.auto_index_component_public_select_allowed(bigint)'::regprocedure
          AND helper.prosecdef
@@ -202,6 +283,17 @@ BEGIN
   END IF;
   SELECT pg_get_functiondef('public.auto_index_reviewed_payload_guard()'::regprocedure)
     INTO payload_guard;
+  SELECT pg_get_functiondef('public.auto_index_publication_review_provenance_guard()'::regprocedure)
+    INTO publication_provenance_guard;
+  IF publication_provenance_guard IS NULL OR
+     position('new publication requires reviewer provenance' IN publication_provenance_guard)=0 OR
+     NOT EXISTS (SELECT 1 FROM pg_trigger trigger
+       WHERE trigger.tgrelid='public.auto_index_publications'::regclass
+         AND trigger.tgname='auto_index_publication_review_provenance_guard' AND NOT trigger.tgisinternal
+         AND (trigger.tgtype & 3)=3 AND (trigger.tgtype & 4)=4
+         AND trigger.tgfoid='public.auto_index_publication_review_provenance_guard()'::regprocedure) THEN
+    RAISE EXCEPTION 'new publication reviewer-provenance guard is missing';
+  END IF;
   IF payload_guard IS NULL OR position('SECURITY DEFINER' IN payload_guard)=0 OR
      position('auto_index_publications' IN payload_guard)=0 OR
      position('reviewed auto-index component payload is immutable' IN payload_guard)=0 OR
@@ -235,7 +327,10 @@ BEGIN
   SELECT pg_get_functiondef('public.stage_auto_index_candidate_publication_metadata(bigint,text,text,text,text,jsonb,text,text,text,text)'::regprocedure) INTO stage_writer;
   SELECT pg_get_functiondef('public.auto_index_record_human_review(bigint,text,text,text,jsonb,text)'::regprocedure) INTO review_writer;
   SELECT pg_get_functiondef('public.finalize_auto_index_candidate(bigint)'::regprocedure) INTO finalizer;
+  SELECT pg_get_functiondef('public.auto_index_publication_supersession_guard()'::regprocedure) INTO supersession_guard;
   normalized_finalizer:=lower(regexp_replace(finalizer,'[[:space:]]+','','g'));
+  normalized_stage_writer:=lower(regexp_replace(stage_writer,'[[:space:]]+','','g'));
+  supersession_guard:=lower(regexp_replace(supersession_guard,'[[:space:]]+','','g'));
   IF position('approved decision requires valid reviewer provenance' IN decision_guard)=0 OR
      position('session_user' IN stage_writer)=0 OR position('auto_index_stage' IN stage_writer)=0 OR
      position('source identity' IN stage_writer)=0 OR position('jsonb' IN stage_writer)=0 OR
@@ -244,7 +339,11 @@ BEGIN
      position('candidate_fingerprint' IN finalizer)=0 OR position('auto_index_candidate_review_fingerprint' IN finalizer)=0 OR
      position('bundle_html_url' IN finalizer)=0 OR position('compiled_css' IN finalizer)=0 OR
      position('auto_index_publication_supersessions' IN finalizer)=0 OR
-     position('UPDATE public.auto_index_publications' IN finalizer)>0 OR
+     position('updatepublic.auto_index_publicationspublicationsetsuperseded_at=clock_timestamp()' IN normalized_finalizer)=0 OR
+     position('updatepublic.auto_index_publicationspublicationsetsuperseded_at=clock_timestamp()' IN normalized_finalizer)>=
+       position('insertintopublic.auto_index_publications' IN normalized_finalizer) OR
+     position('legacy.superseded_atisnull' IN supersession_guard)=0 OR
+     position('successor.superseded_atisnotnull' IN supersession_guard)=0 OR
      position('UPDATE public.demos' IN finalizer)>0 OR
      position('lower(c.license_spdx),false)' IN normalized_finalizer)=0 OR
      position('insertintopublic.auto_index_publications' IN normalized_finalizer)=0 OR
@@ -253,13 +352,56 @@ BEGIN
        position('insertintopublic.auto_index_publications' IN normalized_finalizer) THEN
     RAISE EXCEPTION 'approval, stage, review, or finalization guard is incomplete';
   END IF;
+  IF position('ifv_emitterisnullands.kind=''official_registry''then' IN normalized_stage_writer)=0 OR
+     position('regexp_replace(btrim(s.owner_label)' IN normalized_stage_writer)=0 OR
+     position('v_emitter!~''^[a-z0-9][a-z0-9-]{0,37}$''' IN normalized_stage_writer)=0 OR
+     position('whens.kind=''custom_manifest''andlower(s.owner_label)=''vgpu''then''vgpu''' IN normalized_stage_writer)=0 OR
+     position('elsifs.kind=''official_registry''andp_preview_asset_slug=v_emitter||''-''||p_component_slug' IN normalized_stage_writer)=0 THEN
+    RAISE EXCEPTION 'official-registry emitter mapping or custom-manifest restriction is incomplete';
+  END IF;
   IF EXISTS (SELECT 1 FROM pg_proc function
       WHERE function.pronamespace='public'::regnamespace
         AND function.prosecdef
-        AND function.proname IN ('auto_index_candidate_review_fingerprint','auto_index_component_has_current_approval','auto_index_components_with_current_approval','auto_index_component_public_select_allowed','auto_index_publication_supersession_guard','auto_index_reviewed_payload_guard','stage_auto_index_candidate_publication_metadata',
+        AND function.proname IN ('auto_index_candidate_review_fingerprint','auto_index_component_has_current_approval','auto_index_components_with_current_approval','auto_index_component_public_select_allowed','auto_index_publication_supersession_guard','auto_index_publication_review_provenance_guard','auto_index_reviewed_payload_guard','stage_auto_index_candidate_publication_metadata',
           'auto_index_admin_review_queue','auto_index_admin_review_candidate','auto_index_record_human_review',
           'finalize_auto_index_candidate')
         AND NOT ('search_path=pg_catalog, public' = ANY(coalesce(function.proconfig,ARRAY[]::text[])))) THEN
     RAISE EXCEPTION 'a reviewer-provenance security definer function has an unsafe search path';
+  END IF;
+  IF position('operator(extensions.<=>)' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('operator(extensions.<=>)' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))=0 THEN
+    RAISE EXCEPTION 'pgvector cosine operators must be qualified outside the extensions search path';
+  END IF;
+  IF position('to_jsonb(c.*)' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))>0 OR
+     position('to_jsonb(c.*)' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))>0 OR
+     position('''description'', c.description' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('''code'', c.code' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('''registry'', c.registry' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('''direct_registry_dependencies'', c.direct_registry_dependencies' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('''description'', c.description' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))=0 OR
+     position('''code'', c.code' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))=0 OR
+     position('''registry'', c.registry' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))=0 OR
+     position('''direct_registry_dependencies'', c.direct_registry_dependencies' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))=0 OR
+     position('limit least(greatest(coalesce(match_count,0),0),20)' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('least(greatest(coalesce(match_threshold,0.33),0.33),0.95)' IN lower(pg_get_functiondef(
+       'public.match_embeddings_with_details(vector,double precision,integer)'::regprocedure)))=0 OR
+     position('least(greatest(coalesce(match_threshold,0.33),0.33),0.95)' IN lower(pg_get_functiondef(
+       'public.search_demos_ai_oai_extended(text,vector,double precision)'::regprocedure)))=0 OR
+     NOT has_function_privilege('anon','public.match_embeddings_with_details(vector,double precision,integer)','EXECUTE') OR
+     NOT has_function_privilege('anon','public.search_demos_ai_oai_extended(text,vector,double precision)','EXECUTE') THEN
+    RAISE EXCEPTION 'anonymous embedding search must retain execution with an allowlisted component projection';
   END IF;
 END $$;

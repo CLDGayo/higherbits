@@ -1,0 +1,42 @@
+<!--
+  Source registry: https://ds.asanshay.com/r/reveal.json
+  Candidate revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac
+  Component source path: registry/new-york/blocks/reveal/reveal.tsx
+  Eligibility provenance: 21st.dev auto-index=true roster signal (upstream registry defines component schema without a separate standalone root license file)
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Reveal component">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, -apple-system, sans-serif; color: #09090b; }
+    .ghl-reveal-card { width: min(100%, 600px); background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .ghl-rev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .ghl-rev-item { background: #fafafa; border: 1px solid #e4e4e7; border-radius: 12px; padding: 16px; animation: ghlRevealAnim 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .ghl-rev-item:nth-child(1) { animation-delay: 0.1s; }
+    .ghl-rev-item:nth-child(2) { animation-delay: 0.25s; }
+    .ghl-rev-item:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes ghlRevealAnim {
+      0% { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+    }
+  </style>
+  <div class="ghl-reveal-card">
+    <div style="font-size: 16px; font-weight: 700; color: #09090b;">Staggered Scroll Entrance</div>
+    <div style="font-size: 12px; color: #71717a; margin-top: 2px;">Smooth opacity, blur, and vertical translation reveals.</div>
+    <div class="ghl-rev-grid">
+      <div class="ghl-rev-item">
+        <div style="font-size: 12px; font-weight: 700; color: #2563eb;">01</div>
+        <div style="font-size: 13px; font-weight: 600; margin-top: 6px;">Global Edge</div>
+        <div style="font-size: 11px; color: #71717a; margin-top: 4px;">Sub-5ms response across 35 cloud regions.</div>
+      </div>
+      <div class="ghl-rev-item">
+        <div style="font-size: 12px; font-weight: 700; color: #2563eb;">02</div>
+        <div style="font-size: 13px; font-weight: 600; margin-top: 6px;">Instant Rollback</div>
+        <div style="font-size: 11px; color: #71717a; margin-top: 4px;">Atomic pointer swapping for zero downtime.</div>
+      </div>
+      <div class="ghl-rev-item">
+        <div style="font-size: 12px; font-weight: 700; color: #2563eb;">03</div>
+        <div style="font-size: 13px; font-weight: 600; margin-top: 6px;">Canary Deploys</div>
+        <div style="font-size: 11px; color: #71717a; margin-top: 4px;">Automated error budget monitoring and ramp.</div>
+      </div>
+    </div>
+  </div>
+</div>

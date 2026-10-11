@@ -220,6 +220,21 @@ describe("auto-index public reader census", () => {
       expect(sqlFunctionBlock(migration, name), `${name} migration RPC`).toBe(definition)
     }
     expect(migration).toContain("REVOKE ALL ON FUNCTION public.match_embeddings(vector,double precision,integer,text,text)")
+    for (const name of ["match_embeddings_with_details", "search_demos_ai_oai_extended"]) {
+      const definition = sqlFunctionBlock(searchSource, name) ?? ""
+      expect(definition).not.toContain("to_jsonb(c.*)")
+      expect(definition).toContain("'description', c.description")
+      expect(definition).toContain("'code', c.code")
+      expect(definition).toContain("'registry', c.registry")
+      expect(definition).toContain("'direct_registry_dependencies', c.direct_registry_dependencies")
+      expect(definition).toContain("'component_slug', c.component_slug")
+      expect(definition).toContain("'display_username', u.display_username")
+      expect(definition).toContain("LEAST(GREATEST(coalesce(match_threshold,0.33),0.33),0.95)")
+      expect(sqlFunctionBlock(migration, name)).toBe(definition)
+    }
+    expect(sqlFunctionBlock(searchSource, "match_embeddings_with_details")).toContain(
+      "LIMIT LEAST(GREATEST(coalesce(match_count,0),0),20)",
+    )
   })
 
   it("fails if an app caller reintroduces an undocumented public-row RPC", () => {
@@ -269,17 +284,70 @@ describe("auto-index public reader census", () => {
     expect(verifier).toContain("NOT policy.polpermissive")
   })
 
+  it("preserves the public component card reader with column-limited access and provenance RLS", () => {
+    const migration = readRepo("supabase/migrations/20261008_auto_index_reviewer_provenance.sql")
+    const verifier = readRepo("supabase/migrations/20261008_auto_index_reviewer_provenance.verify.sql")
+
+    expect(migration).toContain("CREATE POLICY components_anon_public_select ON public.components AS PERMISSIVE")
+    expect(migration).toContain("CREATE POLICY components_anon_public_provenance_guard ON public.components AS RESTRICTIVE")
+    expect(migration).toContain("FOR SELECT TO anon USING (public.auto_index_component_public_select_allowed(id))")
+    expect(migration).toContain("GRANT SELECT ON public.components_with_username TO anon,authenticated,service_role")
+    expect(migration).toContain("video_url\n) ON public.components TO anon")
+    expect(verifier).toContain("components_anon_public_select")
+    expect(verifier).toContain("components_anon_public_provenance_guard")
+    expect(verifier).toContain("has_column_privilege('anon','public.components','code','SELECT')")
+    expect(verifier).toContain("public.components_with_username','SELECT')")
+    expect(verifier).toContain("NOT has_function_privilege('anon','public.auto_index_component_public_select_allowed(bigint)','EXECUTE')")
+  })
+
+  it("bridges only the pre-migration public legacy set while requiring provenance for new approvals", () => {
+    const migration = readRepo("supabase/migrations/20261008_auto_index_reviewer_provenance.sql")
+    const verifier = readRepo("supabase/migrations/20261008_auto_index_reviewer_provenance.verify.sql")
+    const approval = sqlFunctionBlock(migration, "auto_index_component_has_current_approval") ?? ""
+    const decisionGuard = sqlFunctionBlock(migration, "auto_index_decision_guard") ?? ""
+    const publicationGuard = sqlFunctionBlock(migration, "auto_index_publication_review_provenance_guard") ?? ""
+
+    expect(migration).toContain("CREATE TABLE public.auto_index_legacy_publication_bridge")
+    expect(migration).toContain("INSERT INTO public.auto_index_legacy_publication_bridge")
+    expect(migration).toContain("component.is_public IS TRUE")
+    expect(migration).toContain("source.opted_out IS FALSE")
+    expect(migration).toContain("publication.delisted_at IS NULL AND publication.superseded_at IS NULL")
+    expect(migration).toContain("decision.review_provenance_id IS NULL")
+    expect(migration).toContain("BEFORE INSERT OR UPDATE OR DELETE ON public.auto_index_legacy_publication_bridge")
+
+    expect(approval).toContain("source.opted_out")
+    expect(approval).toContain("IF decision.review_provenance_id IS NULL THEN")
+    expect(approval).toContain("public.auto_index_legacy_publication_bridge")
+    expect(approval).toContain("component.is_public IS TRUE")
+    expect(approval).toContain("component.registry='auto-index'")
+    expect(decisionGuard).toContain("approved decision requires valid reviewer provenance")
+    expect(publicationGuard).toContain("decision.review_provenance_id IS NOT NULL")
+    expect(migration).toContain("BEFORE INSERT ON public.auto_index_publications")
+    expect(verifier).toContain("public.auto_index_legacy_publication_bridge")
+    expect(verifier).toContain("approved decision requires valid reviewer provenance")
+  })
+
   it("preserves old publication payload and serializes reviewer retries", () => {
     const migration = readRepo("supabase/migrations/20261008_auto_index_reviewer_provenance.sql")
     const publicationGuards = readRepo("supabase/migrations/20260929_auto_indexer.sql")
+    const verifier = readRepo("supabase/migrations/20261008_auto_index_reviewer_provenance.verify.sql")
     const finalizer = sqlFunctionBlock(migration, "finalize_auto_index_candidate") ?? ""
     const review = sqlFunctionBlock(migration, "auto_index_record_human_review") ?? ""
 
     expect(migration).toContain("CREATE TABLE public.auto_index_publication_supersessions")
     expect(migration).toContain("PRIMARY KEY (legacy_source_id,legacy_item_key,legacy_approved_decision_id)")
     expect(migration).toContain("BEFORE INSERT OR UPDATE OR DELETE ON public.auto_index_publication_supersessions")
+    expect(migration).not.toContain("DROP INDEX IF EXISTS public.auto_index_one_active_publication")
+    expect(migration).toContain("legacy.delisted_at IS NOT NULL OR legacy.superseded_at IS NULL")
+    expect(verifier).toContain("CREATE UNIQUE INDEX%ON public.auto_index_publications USING btree (source_id, item_key)%WHERE%delisted_at IS NULL%superseded_at IS NULL%")
     expect(finalizer).toContain("INSERT INTO public.auto_index_publication_supersessions")
-    expect(finalizer).not.toContain("UPDATE public.auto_index_publications")
+    expect(finalizer).toContain("UPDATE public.auto_index_publications publication SET superseded_at=clock_timestamp()")
+    expect(finalizer.indexOf("UPDATE public.auto_index_publications publication SET superseded_at=clock_timestamp()")).toBeLessThan(
+      finalizer.indexOf("INSERT INTO public.auto_index_publications"),
+    )
+    expect(finalizer.indexOf("INSERT INTO public.auto_index_publications")).toBeLessThan(
+      finalizer.indexOf("INSERT INTO public.auto_index_publication_supersessions"),
+    )
     expect(finalizer).not.toContain("UPDATE public.demos")
     expect(finalizer).toContain("lower(c.license_spdx),false) RETURNING id INTO component_id")
     expect(finalizer).toContain("UPDATE public.components SET is_public=true WHERE id=component_id AND NOT is_public")
@@ -291,6 +359,18 @@ describe("auto-index public reader census", () => {
     expect(finalizer).not.toContain("DELETE FROM public.auto_index_copy_prompts")
     expect(finalizer).toContain("publication_component_slug:=left(meta.component_slug,58)||'-r'||d.id::text")
     expect(review.indexOf("FOR UPDATE")).toBeLessThan(review.indexOf("WHERE idempotency_key=p_idempotency_key"))
+    const reviewRoute = readRepo("apps/web/app/api/admin/auto-index/review/[candidateId]/route.ts")
+    const finalizeRoute = readRepo("apps/web/app/api/admin/auto-index/finalize/route.ts")
+    const reviewerDatabase = readRepo("apps/web/lib/auto-index/reviewer-database.ts")
+    expect(reviewRoute).toContain("const admin = await requireAutoIndexAdmin()")
+    expect(reviewRoute).toContain("${admin.userId}::text")
+    expect(reviewRoute).toContain("getAutoIndexReviewerDatabase()")
+    expect(reviewRoute).not.toContain("review.reviewerUserId")
+    expect(finalizeRoute).toContain("const admin = await requireAutoIndexAdmin()")
+    expect(finalizeRoute).toContain("getAutoIndexReviewerDatabase()")
+    expect(reviewerDatabase).toContain('process.env.AUTO_INDEX_REVIEWER_DATABASE_URL')
+    expect(reviewerDatabase).not.toContain('process.env.DATABASE_URL')
+    expect(reviewerDatabase).not.toContain('supabaseWithAdminAccess')
     const reviewUi = readRepo("apps/web/app/admin/auto-index/page.tsx")
     expect(reviewUi).toContain("idempotencyKey: reviewIdempotencyKey")
     expect(reviewUi).toContain("sessionStorage.getItem(storageKey)")
@@ -331,6 +411,10 @@ describe("auto-index public reader census", () => {
       "has_schema_privilege('auto_index_stage','public','CREATE')",
       "has_schema_privilege('auto_index_reviewer','public','CREATE')",
       "WITH RECURSIVE membership_closure", "WITH RECURSIVE granted_to_closure",
+      "member.rolname='postgres' AND grantor.rolname='supabase_admin'",
+      "edge.admin_option AND NOT edge.inherit_option AND NOT edge.set_option",
+      "whens.kind=''custom_manifest''andlower(s.owner_label)=''vgpu''then''vgpu''",
+      "elsifs.kind=''official_registry''andp_preview_asset_slug=v_emitter||''-''||p_component_slug",
       "membership.roleid=closure.member_oid", "'postgres'", "'supabase_admin'", "'authenticator'", "'service_role'",
       "protected.relowner", "protected.proowner", "auto_index_publication_supersessions",
       "auto_index_publication_guard", "auto_index_publication_visibility",

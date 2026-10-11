@@ -1,0 +1,54 @@
+{
+  "creator": "KarrixLee",
+  "ownerLabel": "KarrixLee",
+  "name": "KarrixLee",
+  "sheetRow": 28,
+  "profileUrl": "https://21st.dev/@KarrixLee",
+  "repositoryUrl": "https://github.com/KarrixLee/KL-ui",
+  "revision": "e70ab612716f5bb73795f713a4b3c50157234164",
+  "licenseSpdx": "MIT",
+  "licenseSha256": "75a6eb5e6e3201427fdd827bd44e6be160dba5d7f5abf9bb448d8917cf62ad96",
+  "evaluationStatus": "all_items_held",
+  "holdReason": "uncaptured_source_item",
+  "holdDetail": "Upstream repository identified under MIT, but component items lack HigherBits demo wrappers, self-contained GHL exports, and deployed HTTPS preview assets per INGESTION_SOP §2-§3.",
+  "items": [
+    {
+      "slug": "info-card",
+      "title": "Info Card",
+      "revision": "e70ab612716f5bb73795f713a4b3c50157234164",
+      "sourcePath": "registry/kl-ui/info-card/info-card.tsx",
+      "bytes": 11334,
+      "sha256": "61f5672fbe5db23f79f2c8dac5689a810a14684cb3b87fcfe0c2c56a938049b5",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires framer-motion; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "registry/kl-ui/info-card/info-card.tsx",
+          "type": "registry:ui",
+          "bytes": 11334,
+          "sha256": "61f5672fbe5db23f79f2c8dac5689a810a14684cb3b87fcfe0c2c56a938049b5"
+        }
+      ]
+    },
+    {
+      "slug": "unsave-popup",
+      "title": "Unsave Popup",
+      "revision": "e70ab612716f5bb73795f713a4b3c50157234164",
+      "sourcePath": "registry/kl-ui/unsave-popup/unsave-popup.tsx",
+      "bytes": 6571,
+      "sha256": "4f324cee26bf1cb7a8dae19acebd376e495428176d6eb8ebea4d218085f16e06",
+      "status": "held",
+      "reason": "uncaptured_source_item",
+      "detail": "Component requires motion/react; candidate inventory lacks HigherBits demo wrapper, self-contained GHL export, and deployed HTTPS preview assets.",
+      "files": [
+        {
+          "path": "registry/kl-ui/unsave-popup/unsave-popup.tsx",
+          "type": "registry:ui",
+          "bytes": 6571,
+          "sha256": "4f324cee26bf1cb7a8dae19acebd376e495428176d6eb8ebea4d218085f16e06"
+        }
+      ]
+    }
+  ]
+}
