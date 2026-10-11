@@ -53,6 +53,7 @@ test('Alwurts staging records provenance for the pinned demo asset', () => {
   assert.equal(source.match(/quoted\(demoSourceUrl\)/g)?.length, 2, 'demo and asset must share the same source URL')
   assert.match(source, /quoted\(manifest\.ownerLabel\)/, 'source identity must use the creator label, not repository title')
   assert.match(source, /Object\.fromEntries\(dependencies\.map\(name => \[name, dependencyVersions\[name\]\]\)\)/)
+  assert.match(source, /\$\{quoted\(componentPreviewUrl\)\},\$\{quoted\(demoPreviewUrl\)\},\$\{quoted\(demoPreviewUrl\)\}/)
 })
 
 test('official-registry staging maps normalized owners while custom manifests stay explicit', () => {

@@ -138,6 +138,8 @@ for (const item of manifest.items) {
   const demoBytes = readFileSync(join(root, 'demos', `${slug}.tsx`))
   const ghlBytes = readFileSync(join(root, 'ghl', `${slug}.html`))
   const demoSourceUrl = `${repositoryUrl}/blob/${revision}/packages/registry/registry/examples/${slug}-demo.tsx`
+  const componentPreviewUrl = `${assetBase}/alwurts-${slug}.png`
+  const demoPreviewUrl = `${assetBase}/alwurts-${slug}.html`
   const mainSourceBytes = readFileSync(join(root, 'source', revision, sourcePath))
   const mainSourceSha256 = hash(mainSourceBytes)
   const promptsForSlug = copyPrompts[slug].prompts || copyPrompts[slug]
@@ -186,8 +188,7 @@ for (const item of manifest.items) {
   sections.push(`    RAISE EXCEPTION ${quoted(`${slug} provenance incomplete`)}; END IF;`)
   sections.push(`  PERFORM public.stage_auto_index_candidate_publication_metadata(v_candidate_id,${quoted(slug)},${quoted(`alwurts-${slug}`)},`)
   sections.push(`    ${quoted(title)},${quoted(description)},${json(componentDependencies)},`)
-  sections.push(`    ${quoted(`${assetBase}/alwurts-${slug}.png`)},${quoted(`${assetBase}/alwurts-${slug}.png`)},`)
-  sections.push(`    ${quoted(`${assetBase}/alwurts-${slug}.html`)},'');`)
+  sections.push(`    ${quoted(componentPreviewUrl)},${quoted(demoPreviewUrl)},${quoted(demoPreviewUrl)},'');`)
 }
 
 sections.push('END $batch$;', 'COMMIT;',
