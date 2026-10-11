@@ -1,0 +1,51 @@
+<!--
+  Source registry: https://ds.asanshay.com/r/chat-reasoning.json
+  Candidate revision: 7d8db82d93b8d61416a2ce135798f67d583e65fb0e27ea08f489b6ca67cbb5ac
+  Component source path: registry/new-york/blocks/chat-reasoning/chat-reasoning.tsx
+  Eligibility provenance: 21st.dev auto-index=true roster signal (upstream registry defines component schema without a separate standalone root license file)
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Chat Reasoning component">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, -apple-system, sans-serif; color: #09090b; }
+    .ghl-reasoning-card { width: min(100%, 540px); background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .ghl-r-header { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: #3f3f46; border-bottom: 1px solid #f4f4f5; padding-bottom: 12px; margin-bottom: 14px; }
+    .ghl-r-item { display: flex; gap: 12px; margin-bottom: 12px; }
+    .ghl-r-item:last-child { margin-bottom: 0; }
+    .ghl-r-spine { display: flex; flex-direction: column; align-items: center; }
+    .ghl-r-dot { width: 8px; height: 8px; border-radius: 50%; background: #a1a1aa; margin-top: 4px; }
+    .ghl-r-line { width: 2px; flex: 1; min-height: 24px; background: #e4e4e7; margin-top: 2px; }
+    .ghl-r-body { flex: 1; }
+    .ghl-r-title { font-size: 12px; font-weight: 600; color: #18181b; }
+    .ghl-r-desc { font-size: 11px; color: #71717a; margin-top: 2px; line-height: 1.4; }
+  </style>
+  <div class="ghl-reasoning-card">
+    <div class="ghl-r-header">
+      <span style="display: flex; align-items: center; gap: 8px;">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #2563eb;"></span>
+        Done reasoning
+      </span>
+      <span style="font-size: 11px; color: #a1a1aa; font-weight: normal;">3 steps completed</span>
+    </div>
+    <div class="ghl-r-item">
+      <div class="ghl-r-spine"><div class="ghl-r-dot"></div><div class="ghl-r-line"></div></div>
+      <div class="ghl-r-body">
+        <div class="ghl-r-title">Parse constraints and payload schema</div>
+        <div class="ghl-r-desc">Validated request parameters: target table orders, filter columns status and created_at.</div>
+      </div>
+    </div>
+    <div class="ghl-r-item">
+      <div class="ghl-r-spine"><div class="ghl-r-dot"></div><div class="ghl-r-line"></div></div>
+      <div class="ghl-r-body">
+        <div class="ghl-r-title">Evaluate B-tree vs BRIN indexing strategies</div>
+        <div class="ghl-r-desc">B-tree index chosen because order status updates frequently out of block-range order.</div>
+      </div>
+    </div>
+    <div class="ghl-r-item">
+      <div class="ghl-r-spine"><div class="ghl-r-dot"></div></div>
+      <div class="ghl-r-body">
+        <div class="ghl-r-title">Formulate zero-downtime concurrent DDL</div>
+        <div class="ghl-r-desc">Selected CREATE INDEX CONCURRENTLY to avoid exclusive write table locks.</div>
+      </div>
+    </div>
+  </div>
+</div>
