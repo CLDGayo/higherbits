@@ -1,0 +1,47 @@
+<!--
+MIT License
+
+Copyright (c) 2026 uixmat
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Area chart">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b;
+    }
+    .ghl-card { width: min(100%, 520px); background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .ghl-title { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+    .ghl-sub { font-size: 12px; color: #71717a; margin: 0 0 16px; }
+  </style>
+  <div class="ghl-card">
+    <h4 class="ghl-title">Monthly Revenue</h4>
+    <p class="ghl-sub">Continuous area trend with gradient shading</p>
+    <svg viewBox="0 0 500 200" style="width: 100%; height: auto;">
+      <defs>
+        <linearGradient id="ghlAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"></stop>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M 20 180 Q 100 130 180 110 T 340 70 T 480 30 L 480 190 L 20 190 Z" fill="url(#ghlAreaGrad)"></path>
+      <path d="M 20 180 Q 100 130 180 110 T 340 70 T 480 30" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"></path>
+    </svg>
+  </div>
+</div>

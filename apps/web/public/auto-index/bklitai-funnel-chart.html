@@ -1,0 +1,42 @@
+<!--
+MIT License
+
+Copyright (c) 2026 uixmat
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Funnel chart">
+  <style>
+    .ghl-component-wrapper { width: 100%; min-height: 480px; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #fafafa; font: 14px/1.5 system-ui, sans-serif; color: #09090b; }
+    .ghl-card { width: min(100%, 500px); background: #fff; border: 1px solid #e4e4e7; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .ghl-step { margin-bottom: 12px; }
+    .ghl-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; font-weight: 500; }
+    .ghl-track { width: 100%; height: 26px; border-radius: 6px; background: #f4f4f5; overflow: hidden; }
+    .ghl-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: #fff; font-size: 11px; font-weight: 700; }
+  </style>
+  <div class="ghl-card">
+    <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Conversion Funnel</h4>
+    <p style="margin: 4px 0 16px; font-size: 12px; color: #71717a;">Pipeline throughput across purchase stages</p>
+    <div class="ghl-step"><div class="ghl-row"><span>Visitors</span><span>125,000</span></div><div class="ghl-track"><div class="ghl-fill" style="width: 100%; background: #2563eb;">100%</div></div></div>
+    <div class="ghl-step"><div class="ghl-row"><span>Product Views</span><span>48,200</span></div><div class="ghl-track"><div class="ghl-fill" style="width: 75%; background: #4f46e5;">75%</div></div></div>
+    <div class="ghl-step"><div class="ghl-row"><span>Cart</span><span>16,400</span></div><div class="ghl-track"><div class="ghl-fill" style="width: 52%; background: #7c3aed;">52%</div></div></div>
+    <div class="ghl-step"><div class="ghl-row"><span>Checkout</span><span>8,900</span></div><div class="ghl-track"><div class="ghl-fill" style="width: 34%; background: #9333ea;">34%</div></div></div>
+    <div class="ghl-step"><div class="ghl-row"><span>Purchased</span><span>3,750</span></div><div class="ghl-track"><div class="ghl-fill" style="width: 20%; background: #059669;">20%</div></div></div>
+  </div>
+</div>

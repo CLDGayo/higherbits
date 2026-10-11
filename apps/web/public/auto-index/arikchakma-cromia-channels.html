@@ -1,0 +1,106 @@
+<!--
+MIT License
+
+Copyright (c) Arik Chakma
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<div class="ghl-component-wrapper" role="region" aria-label="Cromia channels slider">
+  <style>
+    .ghl-component-wrapper {
+      width: 100%;
+      min-height: 480px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+      background: #fafafa;
+      font: 14px/1.5 system-ui, -apple-system, sans-serif;
+      color: #09090b;
+    }
+    .ghl-box {
+      width: min(100%, 420px);
+      background: #fff;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .ghl-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .ghl-title { font-size: 14px; font-weight: 600; margin: 0; }
+    .ghl-preview-chip {
+      width: 56px;
+      height: 30px;
+      border-radius: 6px;
+      border: 1px solid #d4d4d8;
+      background: #2563eb;
+    }
+    .ghl-slider-group { margin-bottom: 14px; }
+    .ghl-slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #71717a;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .ghl-slider-track {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #e4e4e7;
+      position: relative;
+    }
+    .ghl-slider-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #2563eb;
+    }
+    .ghl-slider-hue {
+      background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+    }
+  </style>
+  <div class="ghl-box">
+    <div class="ghl-header">
+      <h3 class="ghl-title">Cromia Channels</h3>
+      <div class="ghl-preview-chip"></div>
+    </div>
+    <div class="ghl-slider-group">
+      <div class="ghl-slider-label"><span>Hue</span><span>210°</span></div>
+      <div class="ghl-slider-track ghl-slider-hue"></div>
+    </div>
+    <div class="ghl-slider-group">
+      <div class="ghl-slider-label"><span>Saturation</span><span>85%</span></div>
+      <div class="ghl-slider-track"><div class="ghl-slider-fill" style="width: 85%;"></div></div>
+    </div>
+    <div class="ghl-slider-group">
+      <div class="ghl-slider-label"><span>Lightness</span><span>55%</span></div>
+      <div class="ghl-slider-track"><div class="ghl-slider-fill" style="width: 55%;"></div></div>
+    </div>
+    <div class="ghl-slider-group">
+      <div class="ghl-slider-label"><span>Alpha</span><span>100%</span></div>
+      <div class="ghl-slider-track"><div class="ghl-slider-fill" style="width: 100%;"></div></div>
+    </div>
+  </div>
+</div>

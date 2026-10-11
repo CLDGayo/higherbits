@@ -3,7 +3,7 @@
   "ownerLabel": "arikchakma",
   "profileUrl": "https://21st.dev/@arikchakma",
   "licenseSpdx": "MIT",
-  "licenseSha256": "0487df6b2311dec28da7388cbac26bf50d35c06a4c98a2d133cd99945f0fc7cc",
+  "licenseSha256": "0858d50d6750f3ab2620d7927ea5e03c37462d646c66718f55c7b6a318686279",
   "revision": "c4779bebc21262556fbd5a4ec3851526395bf829",
   "copyPromptsSha256": "5d46d17bf7faeca7c04b518d75af20a47e7bfa88248bf19f14293fa0063a998a",
   "items": [
@@ -55,7 +55,7 @@
       "dependencies": {},
       "aliasImports": [],
       "demoSha256": "1696a64611c173e3071a5a962760babd0eabfd67ceb46c1ff090b0e293404acd",
-      "ghlSha256": "5e2520b7c0847ab3fdbfbea11263ba570b2ceb07fd0f5847b8ef0fa3d3830913",
+      "ghlSha256": "31c61a7b3e980caae6fa025742c0b83c6f1e6e58401aaa215fbb6045e9762a81",
       "previewSha256": "6dfe32daa50a2d4bbf0ebef514df48447aed80d2dacddbaeebbb523a73d10067"
     },
     {
@@ -112,7 +112,7 @@
       "dependencies": {},
       "aliasImports": [],
       "demoSha256": "b955297ffa9d408dec8b748d26e9d988dc1c895d2aa2629d3c0d83876d381200",
-      "ghlSha256": "76b3b580b49736c6797cd6e7ce62bcdb5cbeb13c266efae294e28f5502326ce9",
+      "ghlSha256": "f9a53209848597ee795ddeee3e8c41714fce69d4260bc04764dbd2289ff09355",
       "previewSha256": "67a42700d9a76794370ed1e1b5d075941d6cdb89ec2dad93eb2c911614d8837d"
     },
     {
@@ -145,7 +145,7 @@
       "dependencies": {},
       "aliasImports": [],
       "demoSha256": "54edd07b3a996bfd0af3a49a6dafa21d58d8accaeb956f9d4809462a5d4b5be2",
-      "ghlSha256": "1d2d03581a477ca8dda0279adae7ca194c5c08828989b86c49fdd262a3980457",
+      "ghlSha256": "0fab144d45b8a50f449dea078e411d3241d8d598476c6349928b7b163215979a",
       "previewSha256": "d845a42c18b37398806f9e1e68865682a5d54233cecc7cf47e960ad7e58e6b4d"
     },
     {
@@ -172,7 +172,7 @@
       "dependencies": {},
       "aliasImports": [],
       "demoSha256": "b56e3fb7eefc3073113c94fb0c83236c62e9195d77bfeb3025695fe4917d9889",
-      "ghlSha256": "6dfe1ca9a7e195dadaefa743105803d83c0606be608c4a8a95ffb00f563a216c",
+      "ghlSha256": "fb03831c83864b7ba778d2149471d128f077a2ac19f8dce2c2c0b447ae7a5c77",
       "previewSha256": "0f419fc65a8176388cb91213c99cd51156b69b3ede4cb75fe9d328dfd3df4b5b"
     },
     {
@@ -217,7 +217,7 @@
       "dependencies": {},
       "aliasImports": [],
       "demoSha256": "b05a060fd4f3cee74655ed781032c801e342483a98fe996ec6396af1e55775b6",
-      "ghlSha256": "74ed17febc31bf946eb4b9d2f3de43f87b8167f6ed7cb57c7d8c5c81c2afe312",
+      "ghlSha256": "b0c71cd4a6c7f38db78a318cce44594b6ac23e05f3ddecd8ccc325c0d6d6362b",
       "previewSha256": "cf8d9f082e80a389bfd8ec5e986a21cb1658b26f1f31fda72aa1bade1456121a"
     }
   ]
