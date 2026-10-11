@@ -4,8 +4,7 @@
   "description": "HigherBits MCP server for searching the HigherBits AI component catalogue and retrieving authorized source.",
   "main": "dist/index.js",
   "bin": {
-    "higherbits-mcp": "./dist/index.js",
-    "higherbits-dev-cli": "./dist/index.js"
+    "higherbits-mcp": "dist/index.js"
   },
   "exports": {
     ".": "./dist/index.js"
@@ -14,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CLDGayo/higherbits.git",
+    "url": "git+https://github.com/CLDGayo/higherbits.git",
     "directory": "packages/ai"
   },
   "homepage": "https://higherbits.dev/magic",

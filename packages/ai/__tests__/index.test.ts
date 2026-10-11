@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { readFileSync } from "node:fs"
 import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js"
 import {
@@ -30,6 +31,13 @@ async function withMcp<T>(run: (client: Client) => Promise<T>) {
 
 describe("HigherBits MCP protocol", () => {
   beforeEach(() => vi.resetAllMocks())
+
+  it("exposes the executable used by the published MCP configuration", () => {
+    const packageJson = JSON.parse(
+      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+    )
+    expect(packageJson.bin).toEqual({ "higherbits-mcp": "dist/index.js" })
+  })
 
   it("advertises HigherBits catalogue search and source tools", async () => {
     const tools = await withMcp(async (client) => client.listTools())
