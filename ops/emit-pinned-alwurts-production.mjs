@@ -134,6 +134,7 @@ for (const item of manifest.items) {
   const { slug, title, description, sourcePath, files, dependencies, demoSha256, ghlSha256, previewSha256 } = item
   const demoBytes = readFileSync(join(root, 'demos', `${slug}.tsx`))
   const ghlBytes = readFileSync(join(root, 'ghl', `${slug}.html`))
+  const demoSourceUrl = `${repositoryUrl}/blob/${revision}/packages/registry/registry/examples/${slug}-demo.tsx`
   const mainSourceBytes = readFileSync(join(root, 'source', revision, sourcePath))
   const mainSourceSha256 = hash(mainSourceBytes)
   const promptsForSlug = copyPrompts[slug].prompts || copyPrompts[slug]
@@ -167,12 +168,15 @@ for (const item of manifest.items) {
   sections.push(`  SELECT id INTO STRICT v_candidate_id FROM public.auto_index_candidates`)
   sections.push(`    WHERE source_id=v_source_id AND item_key=${quoted(sourcePath)} AND revision=${quoted(revision)};`)
   sections.push(`  PERFORM public.record_auto_index_candidate_demo(v_candidate_id,${txt(demoBytes)},`)
-  sections.push(`    'upstream-original',${quoted('Alwurts simple-ai')},${quoted(`${repositoryUrl}/blob/${revision}/packages/registry/registry/examples/${slug}-demo.tsx`)},${quoted(revision)},${quoted(demoSha256)},`)
+  sections.push(`    'upstream-original',${quoted('Alwurts simple-ai')},${quoted(demoSourceUrl)},${quoted(revision)},${quoted(demoSha256)},`)
   sections.push(`    ${quoted('Exact pinned upstream example importing the component')},'{}'::jsonb,`)
   sections.push(`    ${txt(ghlBytes)},public.auto_index_ghl_fingerprint(${txt(mainSourceBytes)},${txt(demoBytes)}),${json(promptsForSlug)});`)
   sections.push(`  PERFORM public.record_auto_index_candidate_asset(v_candidate_id,${quoted(sourcePath)},`)
   sections.push(`    'component_source','upstream-original',${quoted(repositoryUrl)},${quoted(revision)},${quoted(mainSourceSha256)},`)
   sections.push(`    'MIT',${txt(licenseBytes)},'','Exact pinned source from upstream repository',NULL,NULL,NULL);`)
+  sections.push(`  PERFORM public.record_auto_index_candidate_asset(v_candidate_id,'demo_code','demo_source','upstream-original',`)
+  sections.push(`    ${quoted(demoSourceUrl)},${quoted(revision)},${quoted(demoSha256)},'MIT',${txt(licenseBytes)},'',`)
+  sections.push(`    'Exact pinned upstream demo source from the repository commit',NULL,NULL,NULL);`)
   sections.push(`  IF NOT public.auto_index_candidate_provenance_complete(v_candidate_id) THEN`)
   sections.push(`    RAISE EXCEPTION ${quoted(`${slug} provenance incomplete`)}; END IF;`)
   sections.push(`  PERFORM public.stage_auto_index_candidate_publication_metadata(v_candidate_id,${quoted(slug)},${quoted(`alwurts-${slug}`)},`)

@@ -46,6 +46,13 @@ test('verified remote asset rights are scoped to the reviewed component slugs', 
   assert.match(source, /entry\.applicableSlugs\?\.includes\(slug\)/)
 })
 
+test('Alwurts staging records provenance for the pinned demo asset', () => {
+  const source = readFileSync(new URL('../emit-pinned-alwurts-production.mjs', import.meta.url), 'utf8')
+  assert.match(source, /record_auto_index_candidate_asset\(v_candidate_id,'demo_code','demo_source','upstream-original'/)
+  assert.match(source, /quoted\(demoSha256\)/)
+  assert.equal(source.match(/quoted\(demoSourceUrl\)/g)?.length, 2, 'demo and asset must share the same source URL')
+})
+
 test('official-registry staging maps normalized owners while custom manifests stay explicit', () => {
   const migration = readFileSync(new URL('../../supabase/migrations/20261008_auto_index_reviewer_provenance.sql', import.meta.url), 'utf8')
   const stageWriter = migration.slice(
