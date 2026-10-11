@@ -2,14 +2,11 @@ import { Demo } from "@/types/global"
 import { useTheme } from "next-themes"
 import { FullScreenButton } from "../../ui/full-screen-button"
 import { LoadingSpinner } from "../../ui/loading-spinner"
-import React, { useState, useRef, useMemo, useEffect, useCallback } from "react"
-import { useAtom } from "jotai"
+import React, { useState, useRef, useEffect, useCallback } from "react"
 import {
-  extractControlsSettings,
-  getDefaultControlValues,
   useResolvedDemoCode,
-  activeDemoControlsAtom,
 } from "@/lib/controls-parser"
+import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
 import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 import { cn } from "@/lib/utils"
 
@@ -28,32 +25,19 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
       demoId: demo.id,
     },
   )
-  const controls = useMemo(() => {
-    return extractControlsSettings(rawCode)
-  }, [rawCode])
-
-  const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
-    getDefaultControlValues(controls),
-  )
-
-  const [, setGlobalControls] = useAtom(activeDemoControlsAtom)
-  useEffect(() => {
-    setGlobalControls(activeControls)
-  }, [activeControls, setGlobalControls])
-
-  // Reset or update active controls when demo changes
-  useEffect(() => {
-    setActiveControls(getDefaultControlValues(controls))
-  }, [controls])
+  const bundleUrl = (demo as any).bundle_html_url || (demo as any).bundle_url?.html
+  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef })
+  const { controls, activeControls, hasControls } = editor
 
   const sendThemeToIframe = useCallback(() => {
+    if (editor.isAutoIndex) return
     if (iframeRef.current?.contentWindow && resolvedTheme) {
       iframeRef.current.contentWindow.postMessage(
         { type: "theme-change", theme: resolvedTheme },
         "*",
       )
     }
-  }, [resolvedTheme])
+  }, [resolvedTheme, editor.isAutoIndex])
 
   const sendControlsToIframe = useCallback(() => {
     if (
@@ -61,11 +45,11 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
       Object.keys(activeControls).length > 0
     ) {
       iframeRef.current.contentWindow.postMessage(
-        { type: "controls-change", controls: activeControls },
+        { type: "controls-change", controls: editor.authoredValues },
         "*",
       )
     }
-  }, [activeControls])
+  }, [editor.authoredValues])
 
   const centerPreviewContent = useCallback(() => {
     try {
@@ -100,6 +84,7 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (event.source !== iframeRef.current?.contentWindow) return
       if (event.data?.type === "preview-ready" || event.data?.type === "READY") {
         sendThemeToIframe()
         sendControlsToIframe()
@@ -118,9 +103,9 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
         <FullScreenButton
           className={cn(
             "transition-all duration-300",
-            controls.length > 0 && isControlsExpanded
+            hasControls && isControlsExpanded
               ? "right-[304px]"
-              : controls.length > 0
+              : hasControls
               ? "right-14"
               : "right-4",
           )}
@@ -133,27 +118,31 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
         )}
         <iframe
           ref={iframeRef}
-          src={`${demo.bundle_html_url}?theme=${resolvedTheme}`}
+          sandbox={editor.isAutoIndex ? "allow-scripts" : undefined}
+          src={editor.isAutoIndex && editor.previewDocument ? undefined : `${bundleUrl}?theme=${resolvedTheme}`}
+          srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
+          title="Component preview"
+          style={editor.previewStyle}
           className="w-full h-full border-0"
           onLoad={() => {
             setIsLoading(false)
-            centerPreviewContent()
+            editor.onFrameLoad()
+            if (!editor.isAutoIndex) centerPreviewContent()
             sendThemeToIframe()
             sendControlsToIframe()
           }}
           onError={() => setIsLoading(false)}
         />
       </div>
-      {controls.length > 0 && (
+      {hasControls && (
         <FloatingControlsDrawer
           controls={controls}
           values={activeControls}
-          onChange={(key, value) => {
-            setActiveControls((prev) => ({ ...prev, [key]: value }))
-          }}
-          onReset={() => {
-            setActiveControls(getDefaultControlValues(controls))
-          }}
+          onChange={editor.onChange}
+          onReset={editor.onReset}
+          onResetControl={editor.onResetControl}
+          autoControls={editor.autoControls}
+          unavailableReason={editor.unavailableReason}
           isExpanded={isControlsExpanded}
           onExpandedChange={setIsControlsExpanded}
         />

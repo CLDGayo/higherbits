@@ -6,6 +6,8 @@
 import { parse } from "@babel/parser"
 import { traverseFast, type Node } from "@babel/types"
 import { load } from "cheerio/slim"
+import { applyAutoIndexControlsToHtml, applyAutoIndexControlsToReact, splitPreviewControls } from "./auto-index-controls-export"
+import { POPULAR_GOOGLE_FONT_FAMILIES } from "./google-fonts"
 
 const PRIMITIVE_LITERAL_PATTERN =
   "(?:-?(?:0x[0-9a-fA-F]+|\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?)|true|false|null|undefined|\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*'|\\`(?:[^\\`\\\\]|\\\\.)*\\`)"
@@ -24,15 +26,17 @@ function isValidControlKey(key: string): boolean {
 
 export function applyControlsToCode(
   code: string,
-  controls?: Record<string, any> | null,
+  controls?: Record<string, unknown> | null,
+  fileRole: "component" | "demo" = "demo",
 ): string {
   if (!code || !controls || typeof controls !== "object") {
     return code
   }
 
+  const { authored, universal } = splitPreviewControls(controls)
   let updated = code
   // Cap entries to prevent excessive processing
-  const entries = Object.entries(controls).slice(0, 50)
+  const entries = Object.entries(authored).slice(0, 50)
 
   for (const [key, rawVal] of entries) {
     if (rawVal === undefined || rawVal === null) continue
@@ -82,7 +86,7 @@ export function applyControlsToCode(
     }
   }
 
-  return updated
+  return universal && fileRole === "demo" ? applyAutoIndexControlsToReact(updated, universal) : updated
 }
 
 export function applyControlsToGhlHtml(
@@ -93,8 +97,14 @@ export function applyControlsToGhlHtml(
     return html
   }
 
+  const { authored, universal } = splitPreviewControls(controls)
+  const selectedGoogleFont = Object.values(universal?.targets ?? {}).map((target) => target.fontFamily).find(
+    (family): family is string => typeof family === "string" && (POPULAR_GOOGLE_FONT_FAMILIES as readonly string[]).includes(family),
+  )
+  if (selectedGoogleFont) throw new Error(`Google Font “${selectedGoogleFont}” requires an external stylesheet and cannot be included in a self-contained GHL export. Choose a system font instead.`)
+
   const values = new Map<string, string>()
-  for (const [key, rawVal] of Object.entries(controls).slice(0, 50)) {
+  for (const [key, rawVal] of Object.entries(authored).slice(0, 50)) {
     if (!isValidControlKey(key)) continue
     if (typeof rawVal !== "string" && typeof rawVal !== "boolean" &&
         !(typeof rawVal === "number" && Number.isFinite(rawVal))) continue
@@ -106,11 +116,11 @@ export function applyControlsToGhlHtml(
     values.set(key, value)
     values.set(constantKey, value)
   }
-  if (!values.size) return html
+  if (!values.size) return universal ? applyAutoIndexControlsToHtml(html, universal) : html
 
   // Retain support for callers passing a standalone JavaScript snippet.
   const script = replaceScriptControls(html, values)
-  if (script !== null) return script
+  if (script !== null) return universal ? applyAutoIndexControlsToHtml(script, universal) : script
 
   // Source indices preserve the original markup instead of reserializing it.
   const $ = load(html, { xml: { xmlMode: false, withStartIndices: true, withEndIndices: true } }, false)
@@ -124,7 +134,7 @@ export function applyControlsToGhlHtml(
     const replacement = replaceScriptControls(html.slice(start, end + 1), values)
     if (replacement !== null) updated = updated.slice(0, start) + replacement + updated.slice(end + 1)
   }
-  return updated
+  return universal ? applyAutoIndexControlsToHtml(updated, universal) : updated
 }
 
 function replaceScriptControls(script: string, values: Map<string, string>): string | null {

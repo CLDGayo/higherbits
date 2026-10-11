@@ -1,5 +1,6 @@
 import { parse } from "@babel/parser"
 import { load } from "cheerio"
+import postcss from "postcss"
 
 const VGPU_PAGE_CSS = "html,body,#root{height:100%;width:100%;margin:0}#root>div{height:100%;width:100%;overflow:hidden;background:black}canvas{display:block;width:100%;height:100%;touch-action:none}"
 const VGPU_DIAGNOSTICS = "window.__errors=[];window.addEventListener('error',e=>window.__errors.push(String(e.message)));window.addEventListener('unhandledrejection',e=>window.__errors.push(String(e.reason)));"
@@ -73,4 +74,82 @@ ${compiled}
 })();
 </script>
 </div>`
+}
+
+/** Isolates an already-ingested local document without changing its pinned source bytes. */
+export function prepareAutoIndexGhlHtml(raw: string): string {
+  const reject = (): never => { throw new Error("This component bundle cannot be copied with controls as self-contained HTML. Its root mount or document-level dependencies are unsupported.") }
+  if (Buffer.byteLength(raw) > 1024 * 1024) reject()
+  const $ = load(raw)
+  const root = $("body > #root")
+  const scripts = $("script").toArray()
+  if (root.length !== 1 || scripts.some(script => Object.keys(script.attribs).length) || $("link,iframe,object,embed,base").length) reject()
+  const scriptSources: string[] = []
+  let mounts = 0
+  for (const script of scripts) {
+    const code = $(script).text()
+    const ast = parse(code, { sourceType: "script" })
+    const replacements: Array<{start: number; end: number; text: string}> = []
+    const visit = (value: unknown, parent?: Record<string, unknown>): void => {
+      if (!value || typeof value !== "object") return
+      if (Array.isArray(value)) { value.forEach(item => visit(item, parent)); return }
+      const node = value as Record<string, unknown>
+      if (node.type === "Identifier" && ["__hbAutoIndexMount", "__hbAutoIndexShadow"].includes(String(node.name))) reject()
+      if (node.type === "MemberExpression") {
+        const object = node.object as {type?:string;name?:string}
+        const property = node.property as {name?:string;value?:string}
+        if (object?.type === "Identifier" && object.name === "document") {
+          const name = property.name ?? property.value ?? ""
+          if (["querySelector", "querySelectorAll"].includes(name)) reject()
+          if (["body", "documentElement"].includes(name)) {
+            const outerProperty = parent?.property as {name?: string} | undefined
+            if (parent?.type !== "MemberExpression" || parent.object !== node || !["scrollLeft", "scrollTop"].includes(outerProperty?.name ?? "")) reject()
+            replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexMount"})
+          }
+        }
+      }
+      if (node.type === "CallExpression") {
+        const callee = node.callee as {type?:string;computed?:boolean;object?:{name?:string};property?:{name?:string}}
+        const args = node.arguments as Array<{type?:string;value?:string}>
+        if (callee.type === "MemberExpression" && !callee.computed && callee.property?.name === "createElement" && args[0]?.type === "StringLiteral" && ["script", "link"].includes(args[0].value ?? "")) {
+          // shortcut: disable bundled React resource loaders; support external assets only through a separately reviewed export path.
+          replacements.push({start:node.start as number,end:node.end as number,text:'(()=>{throw new Error("External resources are unsupported in this copied component.")})()'})
+          return
+        }
+        if (callee.type === "MemberExpression" && !callee.computed && callee.object?.name === "document" && callee.property?.name === "getElementById") {
+          if (args.length !== 1 || args[0]?.type !== "StringLiteral" || args[0].value !== "root" || typeof node.start !== "number" || typeof node.end !== "number") reject()
+          replacements.push({start:node.start as number,end:node.end as number,text:"__hbAutoIndexMount"})
+          mounts++
+        }
+      }
+      Object.values(node).forEach(child => visit(child, node))
+    }
+    visit(ast.program)
+    let transformed = code
+    for (const replacement of replacements.sort((a,b)=>b.start-a.start)) transformed = transformed.slice(0,replacement.start) + replacement.text + transformed.slice(replacement.end)
+    scriptSources.push(transformed)
+  }
+  if (mounts !== 1) reject()
+  const styles = $("style").toArray().map(style => {
+    const css = postcss.parse($(style).text())
+    css.walkRules(rule => {
+      rule.selector = rule.selector.replace(/(^|,)\s*(html|body|:root)(?=\s|$|[,>.:#\[])/g, "$1 [data-hb-auto-index-root]").trim()
+    })
+    return css.toString()
+  })
+  const classes = [$("html").attr("class"), $("body").attr("class"), root.attr("class")].filter(Boolean).join(" ")
+  root.attr("data-hb-auto-index-root", "").attr("class", classes)
+  root.find("script,style").remove()
+  const markup = root.toString()
+  const notices = $.root().find("*").addBack().contents().filter((_index,node)=>node.type==="comment").map((_index,node)=>$.html(node)).get().join("\n")
+  const template = `<style>:host{display:block;width:100%;isolation:isolate}${styles.join("\n")}</style>${markup}`
+  return `${notices}\n<div class="ghl-component-wrapper"><template data-hb-export-template>${template}</template><script>(() => {
+const host = document.currentScript.parentElement;
+const __hbAutoIndexShadow = host.attachShadow({mode:"open"});
+const template = host.querySelector("template[data-hb-export-template]");
+__hbAutoIndexShadow.append(template.content.cloneNode(true));
+template.remove();
+const __hbAutoIndexMount = __hbAutoIndexShadow.querySelector('[data-hb-auto-index-root]');
+${scriptSources.join("\n;\n")}
+})();</script></div>`
 }

@@ -11,6 +11,10 @@ export async function requestCopy(endpoint: string, body: Record<string, unknown
       window.location.assign("/sign-in?redirect_url=" + encodeURIComponent(window.location.href))
       throw new Error("Sign in to copy or install components.")
     }
+    if (response.status === 422) {
+      const body = await response.clone().json().catch(() => null)
+      throw new Error(typeof body?.message === "string" ? body.message : "This component cannot be exported with the selected controls.")
+    }
     const messages: Record<number, string> = {
       403: "You do not have access to this component.",
       409: "This component changed. Start a new copy or install.",

@@ -5,12 +5,17 @@ import { ChevronsRight, RotateCcw } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { ControlSetting, inferNumberRange } from "@/lib/controls-parser"
 import { cn } from "@/lib/utils"
+import { AutoIndexControls } from "./auto-index-controls"
+import type { AutoIndexPanelControls } from "@/hooks/use-auto-index-controls"
 
 export interface ControlsPanelProps {
   controls: ControlSetting[]
   values: Record<string, any>
   onChange: (key: string, value: any) => void
   onReset: () => void
+  onResetControl?: (key: string) => void
+  autoControls?: AutoIndexPanelControls
+  unavailableReason?: string
   onClose?: () => void
   title?: string
   className?: string
@@ -179,6 +184,9 @@ export function ControlsPanel({
   values,
   onChange,
   onReset,
+  onResetControl,
+  autoControls,
+  unavailableReason,
   onClose,
   title = "Controls",
   className,
@@ -191,7 +199,7 @@ export function ControlsPanel({
     return [...nonBooleans, ...booleans]
   }, [controls])
 
-  if (controls.length === 0) {
+  if (controls.length === 0 && !autoControls && !unavailableReason) {
     return null
   }
 
@@ -221,9 +229,12 @@ export function ControlsPanel({
 
       {/* Control Rows */}
       <div className="flex-1 overflow-y-auto space-y-2 pr-0.5 custom-scrollbar">
+        {unavailableReason && <p role="status" className="text-xs leading-relaxed text-muted-foreground">{unavailableReason}</p>}
+        {autoControls && <AutoIndexControls controls={autoControls} authoredControls={controls} />}
+        {autoControls && sortedControls.length > 0 && <h4 className="pt-3 text-xs font-semibold">Component controls</h4>}
         {sortedControls.map((control) => {
           const val = values[control.key] ?? control.defaultValue
-
+          const row = (() => {
           if (control.type === "number") {
             return (
               <NumberScrubberRow
@@ -255,6 +266,7 @@ export function ControlsPanel({
                     />
                     <input
                       type="color"
+                      aria-label={control.label}
                       value={val || "#ffffff"}
                       onChange={(e) => onChange(control.key, e.target.value)}
                       className="sr-only"
@@ -276,6 +288,7 @@ export function ControlsPanel({
                 </span>
                 <input
                   type="text"
+                  aria-label={control.label}
                   value={val ?? ""}
                   onChange={(e) => onChange(control.key, e.target.value)}
                   className="bg-transparent text-right text-foreground text-xs focus:outline-none flex-1 truncate min-w-0 font-medium"
@@ -295,6 +308,7 @@ export function ControlsPanel({
                 </span>
                 <div className="flex items-center justify-end">
                   <Switch
+                    aria-label={control.label}
                     checked={Boolean(val)}
                     onCheckedChange={(checked) =>
                       onChange(control.key, checked)
@@ -307,6 +321,12 @@ export function ControlsPanel({
           }
 
           return null
+          })()
+          const changed = val !== control.defaultValue
+          return <div key={control.key} className="space-y-1">
+            {row}
+            {changed && onResetControl && <button type="button" aria-label={`Reset ${control.label}`} onClick={() => onResetControl(control.key)} className="flex min-h-11 items-center gap-1.5 rounded px-2 text-xs text-muted-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary"><RotateCcw className="size-3" />Changed · Reset</button>}
+          </div>
         })}
       </div>
 

@@ -6,7 +6,7 @@ import { isReviewOnlyCopy, withCopyNotice } from "@/lib/copy-notice"
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType, User } from "@/types/global"
-import { useState, useEffect, useRef, useMemo, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Bookmark, Copy, Search, Maximize, Minimize, ExternalLink, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -29,12 +29,10 @@ import { AMPLITUDE_EVENTS, trackEvent } from "@/lib/amplitude"
 import { useSupabaseAnalytics } from "@/hooks/use-analytics"
 import { promptOptions, PromptOptionBase } from "@/lib/prompts"
 import {
-  extractControlsSettings,
-  getDefaultControlValues,
   useResolvedDemoCode,
-  activeDemoControlsAtom,
   applyControlsToCode,
 } from "@/lib/controls-parser"
+import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
 import { FloatingControlsDrawer } from "@/components/features/controls/floating-controls-drawer"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
@@ -70,22 +68,9 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     demoSlug: demo.demo_slug,
     demoId: demo.id,
   })
-  const controls = useMemo(() => extractControlsSettings(rawCode), [rawCode])
-  const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
-    getDefaultControlValues(controls),
-  )
+  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef })
+  const { controls, activeControls, hasControls } = editor
   const [isControlsExpanded, setIsControlsExpanded] = useState(true)
-
-  const [, setGlobalControls] = useAtom(activeDemoControlsAtom)
-  useEffect(() => {
-    setGlobalControls(activeControls)
-  }, [activeControls, setGlobalControls])
-
-  useEffect(() => {
-    if (controls.length > 0) {
-      setActiveControls(getDefaultControlValues(controls))
-    }
-  }, [controls])
   
   const { user } = useUser()
   const supabase = useClerkSupabaseClient()
@@ -116,27 +101,37 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     if (resolvedTheme) {
       setPreviewTheme(resolvedTheme === "dark" ? "dark" : "light")
     }
-  }, [resolvedTheme])
+  }, [resolvedTheme, editor.isAutoIndex])
+
+  const selectedTheme = activeControls.__hbControls?.targets.component?.theme
+  useEffect(() => {
+    if (selectedTheme === "light" || selectedTheme === "dark") setPreviewTheme(selectedTheme)
+  }, [selectedTheme])
 
   const sendThemeToIframe = useCallback(() => {
+    if (editor.isAutoIndex) return
     if (iframeRef.current?.contentWindow) {
       iframeRef.current.contentWindow.postMessage(
         { type: "theme-change", theme: previewTheme },
         "*",
       )
     }
-  }, [previewTheme])
+  }, [previewTheme, editor.isAutoIndex])
 
   const toggleTheme = useCallback(() => {
     const next = previewTheme === "dark" ? "light" : "dark"
     setPreviewTheme(next)
+    if (editor.isAutoIndex) {
+      editor.onTargetChange("component", "theme", next)
+      return
+    }
     if (iframeRef.current?.contentWindow) {
       iframeRef.current.contentWindow.postMessage(
         { type: "theme-change", theme: next },
         "*",
       )
     }
-  }, [previewTheme])
+  }, [previewTheme, editor.isAutoIndex, editor.onTargetChange])
 
   const sendControlsToIframe = useCallback(() => {
     if (
@@ -144,11 +139,11 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
       Object.keys(activeControls).length > 0
     ) {
       iframeRef.current.contentWindow.postMessage(
-        { type: "controls-change", controls: activeControls },
+        { type: "controls-change", controls: editor.authoredValues },
         "*",
       )
     }
-  }, [activeControls])
+  }, [editor.authoredValues])
 
   useEffect(() => {
     sendThemeToIframe()
@@ -289,7 +284,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     }
   }
 
-  const handleCopyFile = async (e: React.MouseEvent, url: string, name: string) => {
+  const handleCopyFile = async (e: React.MouseEvent, url: string, name: string, role: "component" | "demo") => {
     e.stopPropagation()
     if (accessState !== "UNLOCKED") {
       setShowUnlockDialog(true)
@@ -300,7 +295,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
       const source = await getCopySource({ demoId: demo.id })
       const text = url === demo.demo_code ? source.demoCode : source.code
       if (typeof text !== "string") throw new Error("Source file unavailable")
-      const finalCode = withCopyNotice(applyControlsToCode(text, activeControls), source.notice, name)
+      const finalCode = withCopyNotice(applyControlsToCode(text, activeControls, role), source.notice, name)
       if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(finalCode)
       }
@@ -321,7 +316,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     try {
       const source = await getCopySource({ demoId: demo.id })
       const files = source.files as {path:string;content:string}[]
-      const fetchedFiles = files.map(file => "// " + file.path + "\n" + applyControlsToCode(file.content, activeControls))
+      const fetchedFiles = files.map(file => "// " + file.path + "\n" + applyControlsToCode(file.content, activeControls, file.path === `components/${demo.component.component_slug}-demo.tsx` ? "demo" : "component"))
 
       if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(withCopyNotice(fetchedFiles.join("\n\n"), source.notice, "all-files.txt"))
@@ -387,11 +382,15 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
               <iframe
                 ref={iframeRef}
                 sandbox="allow-scripts"
-                src={`${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
+                src={editor.isAutoIndex && editor.previewDocument ? undefined : `${bundleUrl}?theme=${previewTheme}${previewTheme === "dark" ? "&dark=true" : ""}`}
+                srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
+                title="Component preview"
+                style={editor.previewStyle}
                 className={cn("w-full h-full border-0 transition-opacity duration-300", isLoading ? "opacity-0" : "opacity-100")}
                 allowFullScreen
                 onLoad={() => {
                   setIsLoading(false)
+                  editor.onFrameLoad()
                   sendThemeToIframe()
                   sendControlsToIframe()
                 }}
@@ -456,9 +455,9 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             <div
               className={cn(
                 "absolute top-3 z-20 flex items-center gap-2 transition-all duration-300",
-                controls.length > 0 && isControlsExpanded
+                hasControls && isControlsExpanded
                   ? "right-[304px] opacity-90 hover:opacity-100"
-                  : controls.length > 0
+                  : hasControls
                   ? "right-14 opacity-0 group-hover:opacity-100"
                   : "right-3 opacity-0 group-hover:opacity-100"
               )}
@@ -583,13 +582,13 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                         <span>Copy prompt</span>
                       </DropdownMenuItem>
                       {demo.component.code && (
-                        <DropdownMenuItem onClick={(e) => handleCopyFile(e as any, demo.component.code!, demo.component.component_slug + ".tsx")} className="cursor-pointer">
+                        <DropdownMenuItem onClick={(e) => handleCopyFile(e as any, demo.component.code!, demo.component.component_slug + ".tsx", "component")} className="cursor-pointer">
                           <Code2 className="mr-2 h-4 w-4 text-blue-500" />
                           <span className="truncate">{demo.component.component_slug}.tsx</span>
                         </DropdownMenuItem>
                       )}
                       {demo.demo_code && (
-                        <DropdownMenuItem onClick={(e) => handleCopyFile(e as any, demo.demo_code!, demo.name || "demo.tsx")} className="cursor-pointer">
+                        <DropdownMenuItem onClick={(e) => handleCopyFile(e as any, demo.demo_code!, demo.name || "demo.tsx", "demo")} className="cursor-pointer">
                           <Code2 className="mr-2 h-4 w-4 text-blue-500" />
                           <span className="truncate">{isReviewOnlyCopy(demo.name || "demo.tsx") ? "Copy with attribution (review text)" : demo.name || "demo.tsx"}</span>
                         </DropdownMenuItem>
@@ -643,16 +642,15 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
         </div>
 
         {/* Docked Controls Drawer */}
-        {controls.length > 0 && (
+        {hasControls && (
           <FloatingControlsDrawer
             controls={controls}
             values={activeControls}
-            onChange={(key, value) => {
-              setActiveControls((prev) => ({ ...prev, [key]: value }))
-            }}
-            onReset={() => {
-              setActiveControls(getDefaultControlValues(controls))
-            }}
+            onChange={editor.onChange}
+            onReset={editor.onReset}
+            onResetControl={editor.onResetControl}
+            autoControls={editor.autoControls}
+            unavailableReason={editor.unavailableReason}
             isExpanded={isControlsExpanded}
             onExpandedChange={setIsControlsExpanded}
           />

@@ -6,7 +6,7 @@ import {
   SandpackProvider as SandpackProviderUnstyled,
 } from "@codesandbox/sandpack-react"
 import { motion } from "motion/react"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 
 import { useBundleDemo } from "@/hooks/use-bundle-demo"
 import { generateBundleFiles } from "@/lib/sandpack"
@@ -14,6 +14,8 @@ import { Component, Demo, Tag, User } from "@/types/global"
 import { useTheme } from "next-themes"
 import { FullScreenButton } from "../../ui/full-screen-button"
 import { LoadingSpinner } from "../../ui/loading-spinner"
+import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
+import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 
 interface LegacyFlowPreviewRendererProps {
   providerProps: SandpackProviderProps
@@ -67,6 +69,8 @@ export function LegacyFlowPreviewRenderer({
   const [contentLoading, setContentLoading] = useState(true)
   const [contentError, setContentError] = useState(false)
   const [showLongLoadMessage, setShowLongLoadMessage] = useState(false)
+  const [isControlsExpanded, setIsControlsExpanded] = useState(true)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const bundleFiles = useMemo(
     () => ({
@@ -96,6 +100,13 @@ export function LegacyFlowPreviewRenderer({
   )
 
   const precompiledUrl = demo.bundle_html_url || component.bundle_html_url
+  const editor = useAutoIndexControls({
+    demoId: demo.id,
+    bundleUrl: precompiledUrl,
+    rawCode: `${code}\n${demoCode}`,
+    iframeRef,
+    enabled: component.registry === "auto-index",
+  })
 
   const { bundle, error: bundleError } = useBundleDemo({
     files: bundleFiles,
@@ -188,9 +199,12 @@ export function LegacyFlowPreviewRenderer({
       <>
         {contentLoading && <LoadingOverlay text={getCurrentLoadingMessage()} />}
         <iframe
-          src={isDarkTheme ? `${urls.html}?dark=true` : urls.html}
+          ref={iframeRef}
+          sandbox={editor.isAutoIndex ? "allow-scripts" : undefined}
+          src={editor.isAutoIndex && editor.previewDocument ? undefined : (isDarkTheme ? `${urls.html}?dark=true` : urls.html)}
+          srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
           className="w-full h-full"
-          onLoad={() => setContentLoading(false)}
+          onLoad={() => { setContentLoading(false); editor.onFrameLoad() }}
           onError={() => {
             setContentError(true)
             setContentLoading(false)
@@ -238,6 +252,19 @@ export function LegacyFlowPreviewRenderer({
     <motion.div className="relative flex-grow h-full rounded-lg overflow-hidden">
       <FullScreenButton />
       {displayContent}
+      {component.registry === "auto-index" && editor.hasControls && (
+        <FloatingControlsDrawer
+          controls={editor.controls}
+          values={editor.activeControls}
+          onChange={editor.onChange}
+          onReset={editor.onReset}
+          onResetControl={editor.onResetControl}
+          autoControls={editor.autoControls}
+          unavailableReason={editor.unavailableReason}
+          isExpanded={isControlsExpanded}
+          onExpandedChange={setIsControlsExpanded}
+        />
+      )}
     </motion.div>
   )
 }
