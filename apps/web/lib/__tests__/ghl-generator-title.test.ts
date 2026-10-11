@@ -54,6 +54,13 @@ it.each([
   expect(() => cleanGhlHtml(`<div>Component${dependency}</div>`)).toThrow(/self-contained|resource|external/i)
 })
 
+it("allows only canonical Google Fonts stylesheets for catalogued families", () => {
+  const stylesheet = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald&amp;display=swap">'
+  expect(cleanGhlHtml(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald&display=swap"><div>Component</div>`)).toContain(stylesheet)
+  expect(() => cleanGhlHtml('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" onload="alert(1)"><div>Component</div>')).toThrow(/external|self-contained/i)
+  expect(() => cleanGhlHtml('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unknown&display=swap"><div>Component</div>')).toThrow(/external|self-contained/i)
+})
+
 it.each([
   '<script>const value = ;</script>',
   '<script>function render() {</script>',

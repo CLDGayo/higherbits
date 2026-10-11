@@ -33,9 +33,11 @@ afterEach(() => { document.body.innerHTML = "" })
 describe("auto-index customized-copy-render-parity", () => {
   it("renders exported HTML edits independently and preserves interaction and script count", async () => {
     const state = getEdits()
+    Object.assign(state.targets.component!, { fontFamily: "Source Sans 3" })
     const html = '<div class="ghl-component-wrapper"><div data-hb-auto-index-root>' + fixture + '</div><script>(() => { const root=document.currentScript.parentElement;root.querySelector("button").addEventListener("click",()=>{root.querySelector("output").textContent="1"});})();</script></div>'
     const output = applyControlsToGhlHtml(html, { __hbControls: state })
     expect((output.match(/<script\b/g) ?? []).length).toBe(1)
+    expect(output).toContain('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3&display=swap">')
     expect(() => cleanGhlHtml(output)).not.toThrow()
     const host = document.createElement("div")
     host.innerHTML = output
@@ -47,6 +49,7 @@ describe("auto-index customized-copy-render-parity", () => {
     expect(host.querySelector("h2")!.textContent).toBe("My <custom> title")
     expect(host.querySelector("p")!.textContent).toBe("Other text")
     expect((host.querySelector("h2") as HTMLElement).style.color).toBe("rgb(255, 0, 0)")
+    expect((host.querySelector("h2") as HTMLElement).style.fontFamily).toBe('"Source Sans 3", sans-serif')
     host.querySelector("button")!.click()
     expect(host.querySelector("output")!.textContent).toBe("1")
     delete (document as unknown as Record<string, unknown>).currentScript
@@ -151,10 +154,21 @@ describe("auto-index customized-copy-render-parity", () => {
     expect(() => applyControlsToGhlHtml('<iframe src="https://higherbits.dev/auto-index/vgpu-fluid.html"></iframe>', {__hbControls:edits})).toThrow(/hosted|iframe|bundle/i)
   })
 
-  it("returns a clear error when a selected Google Font cannot be embedded in self-contained GHL output", () => {
-    expect(() => applyControlsToGhlHtml('<div data-hb-auto-index-root><h2>Title</h2></div>', {
-      __hbControls: { version: 1, targets: { component: { fontFamily: "Poppins" } } },
-    })).toThrow(/Google Font.*self-contained GHL export.*system font/i)
+  it("loads selected Google Fonts in controlled GHL output", () => {
+    const output = applyControlsToGhlHtml('<div data-hb-auto-index-root><h2>Title</h2></div>', {
+      __hbControls: { version: 1, targets: { component: { fontFamily: "Oswald" }, "text-h2-0": { fontFamily: "Anton" } } },
+    })
+    expect(output).toContain('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald&display=swap">')
+    expect(output).toContain('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&display=swap">')
+    expect(() => cleanGhlHtml(output)).not.toThrow()
+  })
+
+  it("does not add a Google Fonts dependency for system fonts", () => {
+    const output = applyControlsToGhlHtml('<div data-hb-auto-index-root><h2>Title</h2></div>', {
+      __hbControls: { version: 1, targets: { component: { fontFamily: "Arial" } } },
+    })
+    expect(output).not.toContain("fonts.googleapis.com")
+    expect(() => cleanGhlHtml(output)).not.toThrow()
   })
 
   it.each(["edilozi-accordion.html", "urvish-list-item.html"])("preserves strict validation for actual ingested bundle %s", filename => {

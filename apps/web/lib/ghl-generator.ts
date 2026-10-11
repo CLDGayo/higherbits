@@ -4,6 +4,7 @@ import endent from "endent"
 import { load } from "cheerio"
 import { parse } from "@babel/parser"
 import { prepareBundledGhlHtml } from "@/lib/ghl-bundle-export"
+import { isGoogleFontStylesheetUrl } from "@/lib/google-fonts"
 
 const GHL_ALLOWED_TAGS = new Set([
   "a", "article", "aside", "b", "blockquote", "br", "button", "canvas", "code", "dd", "del", "details", "div", "dl", "dt", "em",
@@ -19,6 +20,12 @@ const GHL_REMOVE_SUBTREE_TAGS = new Set([
 const GHL_SVG_PRESENTATION_URL_ATTRIBUTES = new Set([
   "fill", "filter", "clip-path", "mask", "marker-start", "marker-mid", "marker-end", "stroke", "cursor",
 ])
+
+function isAllowedGoogleFontLink(tag: string, attributes: Record<string, string>): boolean {
+  return tag === "link" && attributes.rel?.toLowerCase() === "stylesheet" &&
+    Object.keys(attributes).every((name) => name === "rel" || name === "href") &&
+    Boolean(attributes.href && isGoogleFontStylesheetUrl(attributes.href))
+}
 
 function sanitizeGhlCss(value: string): string {
   return value
@@ -179,7 +186,8 @@ export function cleanGhlHtml(raw: string): string {
         !(element as typeof element & { sourceCodeLocation?: { endTag?: unknown } }).sourceCodeLocation?.endTag)) {
     throw new Error("GHL export contains malformed or truncated HTML")
   }
-  if ($("iframe, object, embed, base, link, meta[http-equiv]").length) {
+  const unsupportedLinks = $("link").toArray().filter((element) => !isAllowedGoogleFontLink(element.tagName.toLowerCase(), element.attribs))
+  if ($("iframe, object, embed, base, meta[http-equiv]").length || unsupportedLinks.length) {
     throw new Error("GHL export must be self-contained HTML; hosted embeds and external resources are unsupported")
   }
   $("meta").remove()
@@ -225,6 +233,7 @@ export function cleanGhlHtml(raw: string): string {
       if (attribute === "style" || GHL_SVG_PRESENTATION_URL_ATTRIBUTES.has(attribute)) validateExportCss(value)
       if (["src", "poster", "background", "xlink:href"].includes(attribute) ||
           (attribute === "href" && tag !== "a")) {
+        if (attribute === "href" && isAllowedGoogleFontLink(tag, element.attribs)) continue
         if (!isInlineResource(value)) throw new Error("GHL export cannot load external resources")
       }
       if (["srcset", "srcdoc", "ping"].includes(attribute) ||

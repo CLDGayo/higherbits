@@ -11,6 +11,21 @@ export const POPULAR_GOOGLE_FONT_FAMILIES = [
   "Noto Sans TC", "Noto Sans Arabic", "Tajawal", "Cairo", "Changa", "El Messiri", "Noto Kufi Arabic", "Amiri", "Almarai", "JetBrains Mono",
 ] as const
 
+export function googleFontStylesheetUrl(family: string): string | null {
+  if (!(POPULAR_GOOGLE_FONT_FAMILIES as readonly string[]).includes(family)) return null
+  return `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, "+")}&display=swap`
+}
+
+export function isGoogleFontStylesheetUrl(value: string): boolean {
+  try {
+    const url = new URL(value)
+    const family = url.searchParams.get("family")
+    return Boolean(family && url.href === googleFontStylesheetUrl(family))
+  } catch {
+    return false
+  }
+}
+
 const catalogLoads = new WeakMap<Document, Promise<string[]>>()
 
 export function preloadGoogleFontCatalog(doc: Document) {

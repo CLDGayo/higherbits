@@ -119,7 +119,7 @@ export function applyAutoIndexControlsToHtml(html: string, state: AutoIndexContr
       const mount = scope.querySelector('[data-hb-auto-index-root], [data-hb-vgpu-mount]');
       if (!mount) throw new Error('Customized component mount is unavailable.');
       let available = [];
-      (${installerSource()})(mount, state, profile => { available = profile.targets.map(target => target.id); }, undefined, [], ${scriptJson(AUTO_INDEX_ANIMATION_PRESETS)});
+      (${installerSource()})(mount, state, profile => { available = profile.targets.map(target => target.id); }, undefined, ${scriptJson(POPULAR_GOOGLE_FONT_FAMILIES)}, ${scriptJson(AUTO_INDEX_ANIMATION_PRESETS)});
       window.setTimeout(() => {
         const missing = Object.keys(state.targets).filter(id => !available.includes(id));
         if (missing.length) {
