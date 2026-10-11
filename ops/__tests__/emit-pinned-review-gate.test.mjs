@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import test from 'node:test'
 
 const emitters = [
@@ -44,6 +46,39 @@ test('all pinned production emitters stage candidates without publishing or inve
 test('verified remote asset rights are scoped to the reviewed component slugs', () => {
   const source = readFileSync(new URL('../emit-pinned-urvish-production.mjs', import.meta.url), 'utf8')
   assert.match(source, /entry\.applicableSlugs\?\.includes\(slug\)/)
+})
+
+test('8StarLabs staging matches the single unpublished ledger item and its pinned dependency closure', () => {
+  const manifest = JSON.parse(readFileSync(new URL('../phase-e-pinned/8starlabs/manifest.json', import.meta.url), 'utf8'))
+  const emitter = readFileSync(new URL('../emit-pinned-8starlabs-production.mjs', import.meta.url), 'utf8')
+  assert.deepEqual(manifest.items.map(item => item.slug), ['open-in-chat'])
+  assert.deepEqual(manifest.items[0].files.map(file => file.path).sort(), [
+    'registry/8starlabs-ui/blocks/button.tsx',
+    'registry/8starlabs-ui/blocks/open-in-chat.tsx',
+    'registry/8starlabs-ui/ui/ai-icons.tsx',
+    'registry/8starlabs-ui/ui/dropdown-menu.tsx',
+    'registry/8starlabs-ui/ui/tooltip.tsx',
+  ].sort())
+  assert.match(emitter, /only the unpublished ledger item open-in-chat/)
+  assert.match(emitter, /sourceFiles\.map/)
+  assert.match(emitter, /registry dependency closure is incomplete/)
+  assert.match(emitter, /readRelative\(packet, `ghl\//)
+  assert.match(emitter, /item\.ghlSha256/)
+  assert.doesNotMatch(emitter, /slug: '(?:shake|status-indicator|timeline|partition-bar)'/)
+})
+
+test('8StarLabs emitter validates relative paths and its pinned packet offline', () => {
+  const emitter = readFileSync(new URL('../emit-pinned-8starlabs-production.mjs', import.meta.url), 'utf8')
+  assert.match(emitter, /const safeRelativePath = value =>/)
+  assert.match(emitter, /!value\.startsWith\('\/'\)/)
+  assert.match(emitter, /!value\.includes\('\\\\'\)/)
+  assert.match(emitter, /part !== '\.\.'/)
+  assert.match(emitter, /item\.files\.some\(file => !safeRelativePath\(file\.path\) \|\| !safeRelativePath\(file\.target\)\)/)
+  const script = fileURLToPath(new URL('../emit-pinned-8starlabs-production.mjs', import.meta.url))
+  const pathCheck = spawnSync(process.execPath, [script, '--self-test-paths'], { encoding: 'utf8' })
+  assert.equal(pathCheck.status, 0, pathCheck.stderr)
+  const check = spawnSync(process.execPath, [script, '--check'], { encoding: 'utf8' })
+  assert.equal(check.status, 0, check.stderr)
 })
 
 test('Alwurts staging records provenance for the pinned demo asset', () => {

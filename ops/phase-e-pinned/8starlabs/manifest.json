@@ -14,25 +14,59 @@
       "description": "A component that opens an LLM chat prompt in external AI tools (ChatGPT, Claude, Perplexity, Grok, v0).",
       "revision": "9633e2fa89cdea2da40a81d69ef484ff04d0de63",
       "sourcePath": "registry/8starlabs-ui/blocks/open-in-chat.tsx",
+      "sourceSha256": "c5d9c5efc3590f630c2b67b7be71c5590b79cd945044a9d72e9316be7c193f59",
       "files": [
         {
           "path": "registry/8starlabs-ui/blocks/open-in-chat.tsx",
           "type": "registry:ui",
           "bytes": 7969,
-          "sha256": "c5d9c5efc3590f630c2b67b7be71c5590b79cd945044a9d72e9316be7c193f59"
+          "sha256": "c5d9c5efc3590f630c2b67b7be71c5590b79cd945044a9d72e9316be7c193f59",
+          "target": "registry/8starlabs-ui/blocks/open-in-chat.tsx"
         },
         {
           "path": "registry/8starlabs-ui/ui/ai-icons.tsx",
           "type": "registry:ui",
           "bytes": 3202,
-          "sha256": "1bda9e7185f479a998091d4f4e7a279e8f7510230a8281151b9dad2acf7df50e"
+          "sha256": "1bda9e7185f479a998091d4f4e7a279e8f7510230a8281151b9dad2acf7df50e",
+          "target": "registry/8starlabs-ui/ui/ai-icons.tsx"
+        },
+        {
+          "path": "registry/8starlabs-ui/blocks/button.tsx",
+          "type": "registry:ui",
+          "bytes": 3339,
+          "sha256": "7687945bc170df6473fba3c2f8dd3664cf2eb337f9a6d922a7ced4c10fed3a35",
+          "target": "registry/8starlabs-ui/blocks/button.tsx"
+        },
+        {
+          "path": "registry/8starlabs-ui/ui/dropdown-menu.tsx",
+          "type": "registry:ui",
+          "bytes": 8601,
+          "sha256": "860914aa7b757ad6ff2a8ee292eff4f97b446a5ddc3a9b49843397cd79c50a91",
+          "target": "registry/8starlabs-ui/ui/dropdown-menu.tsx"
+        },
+        {
+          "path": "registry/8starlabs-ui/ui/tooltip.tsx",
+          "type": "registry:ui",
+          "bytes": 5047,
+          "sha256": "67c6c3762588ae5124c244bc563d7adb57306babe27a84fb2f2b6adaf1afef84",
+          "target": "registry/8starlabs-ui/ui/tooltip.tsx"
         }
       ],
       "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
         "lucide-react",
         "simple-icons"
       ],
-      "aliasImports": [],
+      "registryDependencies": [
+        "https://ui.8starlabs.com/r/button.json",
+        "https://ui.8starlabs.com/r/dropdown-menu.json",
+        "https://ui.8starlabs.com/r/tooltip.json"
+      ],
+      "aliasImports": ["@/lib/utils"],
+      "ghlSha256": "1e2ad9b31f584fbb6fd456d24f5660557d4a752be0bc5485359a70e08bf05318",
+      "compiledCssSha256": "a4e7edf2ff719b4cac67632b5f42caf29902ca47ab1afda9b3c75a012aba4ec9",
+      "previewSvgSha256": "47c718a7964202286e43d3527e54f90639b0e28a501ace54f31ab53149d3dcb6",
       "demoSha256": "f2d624cbac9226eb431da5d3a9e606d0f205ce0b07d018ace4d57d60dc7efca1",
       "upstreamDemoSha256": "4bbda9af9ec39da1fdfe2b2f3abd6e850881e4dc099e459ef72edc89c596f284",
       "ghlSha256": "1e2ad9b31f584fbb6fd456d24f5660557d4a752be0bc5485359a70e08bf05318",

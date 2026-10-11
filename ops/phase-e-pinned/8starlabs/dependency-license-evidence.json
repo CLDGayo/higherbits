@@ -11,34 +11,28 @@
   },
   "dependencies": [
     {
+      "name": "@base-ui/react",
+      "version": "1.6.0",
+      "licenseSpdx": "MIT",
+      "role": "Button, dropdown-menu, and tooltip primitives from the pinned registry component closure."
+    },
+    {
+      "name": "class-variance-authority",
+      "version": "0.7.1",
+      "licenseSpdx": "Apache-2.0",
+      "role": "Variant management for the pinned button component."
+    },
+    {
       "name": "lucide-react",
+      "version": "0.487.0",
       "licenseSpdx": "ISC",
       "role": "Iconography (ChevronDown, ExternalLink)."
     },
     {
       "name": "simple-icons",
+      "version": "16.21.0",
       "licenseSpdx": "CC0-1.0",
       "role": "Brand SVG vector paths for AI services (siClaude, siPerplexity, siV0)."
-    },
-    {
-      "name": "@radix-ui/react-dropdown-menu",
-      "licenseSpdx": "MIT",
-      "role": "Accessible dropdown menu container and popup primitives."
-    },
-    {
-      "name": "@radix-ui/react-tooltip",
-      "licenseSpdx": "MIT",
-      "role": "Accessible tooltip primitives for provider icon buttons."
-    },
-    {
-      "name": "@radix-ui/react-slot",
-      "licenseSpdx": "MIT",
-      "role": "Slot composition primitive for Button component."
-    },
-    {
-      "name": "class-variance-authority",
-      "licenseSpdx": "Apache-2.0",
-      "role": "Variant management for buttons."
     }
   ],
   "assets": [],
