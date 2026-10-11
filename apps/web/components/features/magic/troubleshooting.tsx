@@ -45,7 +45,7 @@ export function TroubleshootingSection({
       problem: "Client closed",
       solutions: [
         `Go to MCP configuration`,
-        `Use explicit version number: "npx -y @higherbits-dev/cli@${latestVersion}" instead of "@latest"`,
+        `Pin the package version: "npx -y -p @higherbits-dev/cli@${latestVersion} higherbits-mcp" instead of "@latest"`,
       ],
     },
     {
