@@ -1,13 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
 import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 import { SignInButton, SignedOut, SignedIn } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { GitHubStarsBasic } from "@/components/ui/github-stars-number"
 import Link from "next/link"
-import { Icons } from "@/components/icons"
 import { Logo } from "@/components/ui/logo"
 import { useIsMobile } from "@/hooks/use-media-query"
 // Define props interface
@@ -36,35 +33,15 @@ export function MagicHeader({ isScrolled }: MagicHeaderProps) {
       }}
     >
       <div className="flex items-center gap-3">
-        <Logo
-          position="flex"
-          hasLink={false}
-          className="w-6 h-6"
-        />
+        <Logo position="flex" hasLink={false} className="w-6 h-6" />
         <span className="text-foreground font-medium">
-          Magic <span className="font-light text-muted-foreground">by HigherBits.dev</span>
+          HigherBits AI{" "}
+          <span className="font-light text-muted-foreground">
+            · HigherBits MCP
+          </span>
         </span>
       </div>
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-2 px-2.5 text-sm font-medium text-foreground hover:bg-muted hover:text-foreground"
-          asChild
-        >
-          <a
-            href="https://github.com/21st-dev/magic-mcp"
-            aria-label="View 21st-dev/magic-mcp on GitHub"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Icons.gitHub className="h-4 w-4" />
-            <GitHubStarsBasic
-              repo="21st-dev/magic-mcp"
-              className="text-foreground"
-            />
-          </a>
-        </Button>
         <Button
           variant="ghost"
           className="text-foreground text-[14px] hover:bg-muted hover:text-foreground"
@@ -74,7 +51,7 @@ export function MagicHeader({ isScrolled }: MagicHeaderProps) {
         </Button>
         <SignedIn>
           <Button asChild className="hidden sm:inline-flex">
-            <Link href="/magic/get-started">Get Started</Link>
+            <Link href="/magic/console">Get Started</Link>
           </Button>
         </SignedIn>
         <SignedOut>

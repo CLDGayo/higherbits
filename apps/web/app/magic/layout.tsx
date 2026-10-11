@@ -4,8 +4,9 @@ import { redirect } from "next/navigation"
 import { checkIsAdmin } from "@/lib/admin"
 
 export const metadata: Metadata = {
-  title: "HigherBits AI",
-  description: "AI Agent for Your IDE That Creates Professional UI Components",
+  title: "HigherBits AI — HigherBits MCP",
+  description:
+    "Search the HigherBits component catalogue and retrieve authorized source through MCP.",
 }
 
 export default async function MagicLayout({

@@ -2,34 +2,29 @@ import { Metadata } from "next"
 import { MagicPageClient } from "./page.client"
 
 export const metadata: Metadata = {
-  title:
-    "Magic - AI Agent for Your IDE That Creates Professional UI Components | HigherBits.dev",
+  title: "HigherBits AI — HigherBits MCP for your coding assistant",
   description:
-    "Transform your IDE with our AI agent that understands Modern Component Patterns. Create production-ready UI components in seconds instead of hours. Built for developers who want beautiful, consistent, and maintainable React components.",
+    "Search the HigherBits component catalogue and retrieve authorized source from your coding assistant with HigherBits MCP. HigherBits AI provides catalogue retrieval; your connected assistant controls how results are used.",
   keywords: [
     "Cursor IDE",
-    "AI code editor",
-    "GitHub Copilot alternative",
-    "VSCode extension",
-    "AI pair programming",
-    "code completion",
+    "MCP server",
+    "component catalogue search",
+    "authorized source retrieval",
     "web development",
     "UI components",
     "React components",
     "TypeScript",
     "Next.js",
     "developer tools",
-    "AI coding assistant",
+    "HigherBits MCP",
     "Windsurf",
-    "code generation",
     "MCP",
     "modern component patterns",
   ],
   openGraph: {
-    title:
-      "Magic - AI Agent for Your IDE That Creates Professional UI Components | HigherBits.dev",
+    title: "HigherBits AI — HigherBits MCP for your coding assistant",
     description:
-      "Transform your IDE with our AI agent that understands Modern Component Patterns. Create production-ready UI components in seconds instead of hours. Built for developers who want beautiful, consistent, and maintainable React components.",
+      "Search the HigherBits component catalogue and retrieve authorized source from your coding assistant with HigherBits MCP. HigherBits AI provides catalogue retrieval; your connected assistant controls how results are used.",
     images: ["/magic-agent-og-image.png"],
     type: "website",
     siteName: "HigherBits.dev",
@@ -37,10 +32,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Magic - AI Agent for Your IDE That Creates Professional UI Components | HigherBits.dev",
+    title: "HigherBits AI — HigherBits MCP for your coding assistant",
     description:
-      "Transform your IDE with our AI agent that understands Modern Component Patterns. Create production-ready UI components in seconds instead of hours. Built for developers who want beautiful, consistent, and maintainable React components.",
+      "Search the HigherBits component catalogue and retrieve authorized source from your coding assistant with HigherBits MCP.",
     images: ["/magic-agent-og-image.png"],
   },
 }

@@ -49,21 +49,19 @@ const MagicBannerContent = memo(function MagicBannerContent() {
             <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium">
-                  Introducing HigherBits AI - The AI Agent That Builds Beautiful UI
-                  Components
+                  HigherBits AI catalogue access for your coding assistant
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Empower your IDE with an AI extension that creates stunning,
-                  production-ready components with AI precision.
+                  Search components and retrieve authorized source through HigherBits MCP.
                 </p>
               </div>
               <div className="flex gap-2 max-md:flex-wrap">
                 <Button
                   size="sm"
                   className="text-sm"
-                  onClick={() => router.push("/magic")}
+                  onClick={() => router.push("/magic/console")}
                 >
-                  Try HigherBits AI Now
+                  Configure HigherBits MCP
                 </Button>
               </div>
             </div>

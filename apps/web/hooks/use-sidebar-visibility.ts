@@ -48,7 +48,8 @@ export function useSidebarVisibility() {
     pathname.startsWith("/c/") ||
     pathname.startsWith("/community/libraries") ||
     pathname.startsWith("/libraries") ||
-    pathname.startsWith("/magic/get-started") ||
+    pathname.startsWith("/magic/console") ||
+    pathname.startsWith("/magic/onboarding") ||
     pathname.startsWith("/magic/console") ||
     pathname.startsWith("/contest") ||
     isUserProfile

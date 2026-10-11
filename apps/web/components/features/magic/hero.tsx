@@ -2,12 +2,9 @@
 
 import { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { motion, AnimatePresence } from "motion/react"
-import NumberFlow from "@number-flow/react"
 import { Button } from "@/components/ui/button"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Mockup, MockupFrame } from "@/components/ui/mockup"
-import { GitHubStarsBasic } from "@/components/ui/github-stars-number"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Spinner } from "@/components/icons/spinner"
@@ -146,14 +143,7 @@ const Spotlight = ({
   )
 }
 
-const rotatingWords = [
-  "UI Components",
-  "Landing Pages",
-  "Login Forms",
-  "Dashboards",
-  "Image Galleries",
-  "Hero Sections",
-]
+const rotatingWords = ["Component Search", "Source Retrieval", "Attribution"]
 
 function RotatingText() {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -212,7 +202,7 @@ function RotatingText() {
     <div className="flex items-baseline justify-center gap-3 relative">
       {/* Static text - simple div */}
       <div className="relative whitespace-nowrap  bg-clip-text text-transparent bg-gradient-to-b from-neutral-800/90 to-neutral-700/90">
-        Beautiful
+        HigherBits MCP for
       </div>
 
       {/* Width-animated container */}
@@ -247,7 +237,6 @@ function RotatingText() {
 }
 
 export function Hero() {
-  const [count, setCount] = useState(20114)
   const [isLoading, setIsLoading] = useState(false)
   const [ref, isIntersecting] = useIntersectionObserver({
     threshold: 0,
@@ -262,7 +251,7 @@ export function Hero() {
         setIsLoading(true)
         trackMagicGetStarted()
         setTimeout(() => {
-          router.push("/magic/get-started")
+          router.push("/magic/console")
         }, 800)
       }
     }
@@ -279,7 +268,7 @@ export function Hero() {
     setIsLoading(true)
     trackMagicGetStarted()
     setTimeout(() => {
-      router.push("/magic/get-started")
+      router.push("/magic/console")
     }, 800)
   }
   return (
@@ -294,7 +283,7 @@ export function Hero() {
       <div className="relative z-10">
         <section
           ref={ref}
-          id="waitlist-form"
+          id="higherbits-mcp"
           className="flex min-h-screen flex-col items-center justify-center px-4 pt-20 pb-10 lg:py-40"
         >
           <motion.p
@@ -314,7 +303,7 @@ export function Hero() {
           >
             <div className="flex flex-col items-center gap-2">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-950/90 to-neutral-800/90 backdrop-blur-xl pb-1">
-                AI Agent That Builds
+                Find components. Retrieve source.
               </span>
               <RotatingText />
             </div>
@@ -326,8 +315,9 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 1, 0.5, 1] }}
             className="mt-6 max-w-2xl text-center sm:text-xl leading-8 text-black"
           >
-            Empower your IDE with an AI extension that creates stunning,
-            production-ready components inspired by{" "}
+            HigherBits AI provides catalogue search and authorized component
+            source retrieval through an MCP server. It does not generate code;
+            your connected assistant decides how to use results from{" "}
             <Link
               href="https://higherbits.dev"
               target="_blank"
@@ -374,88 +364,15 @@ export function Hero() {
                 asChild
               >
                 <a
-                  href="https://github.com/21st-dev/magic-mcp"
-                  aria-label="View 21st-dev/magic-mcp on GitHub"
+                  href="https://higherbits.dev"
+                  aria-label="Browse the HigherBits component catalogue"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Icons.gitHub className="h-4 w-4" />
-                  <GitHubStarsBasic
-                    repo="21st-dev/magic-mcp"
-                    className="text-neutral-800"
-                  />
+                  Browse catalogue
                 </a>
               </Button>
             </div>
-
-            {/* Updated Avatar Section - Real images with hover effect */}
-            <motion.div
-              initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{
-                duration: 0.8,
-                delay: 0.9,
-                ease: [0.25, 1, 0.5, 1],
-              }}
-              className="mt-6 flex justify-center"
-            >
-              <div className="flex items-center gap-4 p-2">
-                <div className="flex -space-x-3">
-                  {[
-                    {
-                      src: "https://pbs.twimg.com/profile_images/1836541543857164289/VhzOa4y0_400x400.jpg",
-                      alt: "Yoko Li",
-                      href: "https://x.com/stuffyokodraws",
-                      fallback: "YL",
-                    },
-                    {
-                      src: "https://pbs.twimg.com/profile_images/1833137601207009280/gGSDe5DF_400x400.jpg",
-                      alt: "Melvin Vivas",
-                      href: "https://x.com/donvito",
-                      fallback: "MV",
-                    },
-                    {
-                      src: "https://pbs.twimg.com/profile_images/1916508496117346304/7nXjRvdN_400x400.jpg",
-                      alt: "Gil",
-                      href: "https://x.com/gilgNYC",
-                      fallback: "G",
-                    },
-                  ].map((avatar, index) => (
-                    <motion.a
-                      key={avatar.alt}
-                      href={avatar.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative group overflow-hidden backdrop-blur-[1px] rounded-full"
-                      whileHover={{ scale: 1.05, zIndex: 10 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 10,
-                      }}
-                    >
-                      <Avatar className="h-8 w-8 border  border-black/10 backdrop-blur-xl transition-transform duration-150 ease-in-out group-hover:scale-110">
-                        <AvatarImage src={avatar.src} alt={avatar.alt} />
-                        <AvatarFallback className={`text-white/80 text-sm ${
-                          index === 0 ? "bg-neutral-700" :
-                          index === 1 ? "bg-neutral-600" :
-                          "bg-neutral-500"
-                        }`}>
-                          {avatar.fallback}
-                        </AvatarFallback>
-                      </Avatar>
-                      {/* Tooltip */}
-                      <span className="absolute bottom-full left-1/2 z-20 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded bg-neutral-800/90 px-2 py-0.5 text-[10px] font-medium text-neutral-100 opacity-0 transition-opacity duration-200 group-hover:opacity-100 invisible group-hover:visible">
-                        {avatar.alt}
-                      </span>
-                    </motion.a>
-                  ))}
-                </div>
-                <span className="text-sm text-neutral-800">
-                  <NumberFlow value={count} />+ people using HigherBits AI
-                </span>
-              </div>
-            </motion.div>
           </motion.div>
 
           {/* Mockup Section */}

@@ -41,7 +41,7 @@ describe("MagicBanner role-gating", () => {
 
     expect(container.firstChild).toBeNull()
     expect(
-      screen.queryByText(/Introducing HigherBits AI/i),
+      screen.queryByText(/HigherBits AI catalogue access/i),
     ).toBeNull()
   })
 
@@ -52,7 +52,7 @@ describe("MagicBanner role-gating", () => {
 
     expect(container.firstChild).toBeNull()
     expect(
-      screen.queryByText(/Introducing HigherBits AI/i),
+      screen.queryByText(/HigherBits AI catalogue access/i),
     ).toBeNull()
   })
 
@@ -62,10 +62,10 @@ describe("MagicBanner role-gating", () => {
     render(<MagicBanner />)
 
     expect(
-      screen.getByText(/Introducing HigherBits AI/i),
+      screen.getByText(/HigherBits AI catalogue access/i),
     ).toBeDefined()
     expect(
-      screen.getByText(/Try HigherBits AI Now/i),
+      screen.getByText(/Configure HigherBits MCP/i),
     ).toBeDefined()
   })
 })

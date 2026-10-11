@@ -7,10 +7,10 @@ export function SupportedEditors() {
     <div className="pt-0 pb-20">
       <div className="text-center mb-8">
         <h2 className="text-5xl sm:text-[3.9rem]/16 pb-2 font-bold tracking-tighter text-pretty text-foreground sm:text-balance">
-          Supported IDEs
+          Compatible Editors
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Use Magic with your favorite IDEs
+          Add the HigherBits MCP server to these MCP-capable editors
         </p>
       </div>
 
@@ -57,7 +57,9 @@ export function SupportedEditors() {
                 />
               </div>
             </div>
-            <span className="text-sm text-muted-foreground">VS Code + Cline</span>
+            <span className="text-sm text-muted-foreground">
+              VS Code + Cline
+            </span>
           </Link>
         </div>
       </div>

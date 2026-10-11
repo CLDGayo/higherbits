@@ -7,7 +7,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import Link from "next/link"
-import { PLAN_LIMITS } from "@/lib/config/subscription-plans"
 import { cn } from "@/lib/utils"
 
 export interface FAQ {
@@ -22,50 +21,36 @@ interface FAQProps {
 
 const DEFAULT_FAQS = [
   {
-    question: "How does HigherBits AI work?",
+    question: "What does HigherBits MCP do?",
     answer:
-      "HigherBits AI searches for relevant components in the HigherBits.dev library based on your request. Using RAG technology, it finds the top 3 matching components and draws inspiration from them to create new, unique components tailored to your needs. The IDE agent understands your application context and seamlessly integrates the new components in the right place.",
+      "HigherBits MCP exposes two catalogue tools to a compatible coding assistant: search component metadata, then retrieve authorized source for a selected component.",
   },
   {
-    question: "How does HigherBits AI handle my codebase?",
+    question: "Does HigherBits AI generate code?",
     answer:
-      "HigherBits AI only writes or modifies files related to the components it generates. It follows your project's code style and structure, and integrates seamlessly with your existing codebase without affecting other parts of your application.",
+      "No. HigherBits MCP provides catalogue search and source retrieval; it does not include or call a generative model. Your connected assistant decides what to do with results.",
   },
   {
-    question: "Can I customize the generated components?",
+    question: "Does it read my project files?",
     answer:
-      "Yes! All generated components are fully editable and come with well-structured code. You can modify the styling, functionality, and behavior just like any other React component in your codebase.",
+      "The MCP server sends your search terms to HigherBits and only requests source when you call the source tool. It does not inspect local project files.",
   },
   {
-    question: "Who owns the generated components?",
+    question: "Are search and source retrieval metered the same way?",
     answer:
-      "You fully own all components generated for you by HigherBits AI. There are no licensing restrictions - you're free to use, modify, and distribute the components however you want in your projects.",
+      "Search returns metadata and does not use the daily copy allowance. Retrieving source is authenticated, checks your account's access, and is subject to its copy allowance.",
   },
   {
-    question: "How does revenue sharing work with component authors?",
+    question: "What license information is returned?",
     answer:
-      "For each generation, 50% covers AI costs while the remaining 50% is split between HigherBits.dev and the authors of components that inspired the generation. For example, with a $10/50 generations subscription ($0.20 per generation), half goes to AI costs and half is split between HigherBits.dev and component authors. Authors receive their share via PayPal monthly (after a 21-day holding period).",
-  },
-  {
-    question: "What happens if I run out of generations?",
-    answer: `If you exceed your monthly generation limit, you'll be prompted to upgrade your plan. The Hobby plan includes ${PLAN_LIMITS.free.generationsPerMonth} generations per month, Standard plan includes ${PLAN_LIMITS.pro.generationsPerMonth} generations, and Pro plan includes ${PLAN_LIMITS.pro.generationsPerMonth} generations. You can upgrade at any time to continue generating components.`,
-  },
-  {
-    question: "How soon do new components get added to HigherBits.dev's library?",
-    answer:
-      "Authors can publish components to HigherBits.dev at any time, and HigherBits AI will have immediate access to them. This means you'll always have access to the latest components and design patterns from the community.",
-  },
-  {
-    question: "Is there a limit to component complexity?",
-    answer:
-      "HigherBits AI can handle components of varying complexity, from simple buttons to complex interactive forms. However, for best results, we recommend breaking down very complex UIs into smaller, manageable components.",
+      "Source results include the attribution or license notice provided for that component. Review and follow the notice returned with the source.",
   },
   {
     question: "How can I get help with HigherBits AI?",
     answer: (
       <>
-        If you need assistance, you can contact us via email at support@higherbits.dev
-        or join our{" "}
+        If you need assistance, you can contact us via email at
+        support@higherbits.dev or join our{" "}
         <Link
           href="https://discord.gg/vWqmFjPMU4"
           target="_blank"

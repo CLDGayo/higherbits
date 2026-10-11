@@ -1,32 +1,24 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
-import { Icons } from "@/components/icons"
-
 const features = [
   {
-    title: "Add New Components",
+    title: "Search the catalogue",
     description:
-      "Create UI components by describing what you need. HigherBits AI generates production-ready code instantly.",
+      "Find matching components by describing the UI you need. Search returns catalogue metadata and does not spend a source-copy allowance.",
     image: "/features-1.svg",
   },
   {
-    title: "Enhance Existing UI",
+    title: "Retrieve authorized source",
     description:
-      "Improve components with advanced features and animations. Upgrade without starting from scratch.",
+      "Ask your connected coding assistant to retrieve source for a matching component. Access is checked against your HigherBits account and copy allowance.",
     image: "/features-2.svg",
   },
   {
-    title: "Access Logo Library",
+    title: "Keep attribution with source",
     description:
-      "Integrate company logos and icons via SVGL. Access a vast collection of professional brand assets.",
+      "Source responses include the component files, dependencies, and the attribution or license notice needed to use the component.",
     image: "/features-3.svg",
-    badge: {
-      icon: Icons.svgl,
-      text: "SVGL Integration",
-      link: "https://svgl.app",
-    },
   },
 ]
 
@@ -39,7 +31,8 @@ export function Features() {
           Powerful Features
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Everything you need to build modern UI components
+          Catalogue search and authorized source retrieval for your coding
+          assistant
         </p>
       </div>
 
@@ -49,19 +42,6 @@ export function Features() {
             key={index}
             className="group relative rounded-lg border border-border bg-card/85 p-8 shadow-soft z-10 backdrop-blur-sm"
           >
-            {feature.badge && (
-              <Link
-                href={feature.badge.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-lg bg-primary/15 pl-1 pr-2 py-1 text-sm text-primary hover:bg-primary/25 transition-colors"
-              >
-                {feature.badge.icon && (
-                  <feature.badge.icon className="h-4 w-4" />
-                )}
-                <span>{feature.badge.text}</span>
-              </Link>
-            )}
             <div className="relative w-full">
               <div className="relative w-full aspect-[21/5]">
                 <Image
@@ -76,7 +56,7 @@ export function Features() {
               <h3 className="text-lg font-semibold text-foreground">
                 {feature.title}
               </h3>
-              {feature.title === "Enhance Existing UI" }
+              {feature.title === "Enhance Existing UI"}
             </div>
             <p className="mt-2 text-muted-foreground leading-relaxed">
               {feature.description}

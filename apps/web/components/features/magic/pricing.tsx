@@ -20,7 +20,7 @@ const TIERS = [
       "Community support",
     ],
     cta: "Get Started",
-    href: "/magic/get-started",
+    href: "/magic/console",
   },
   {
     name: "Pro",
@@ -38,7 +38,7 @@ const TIERS = [
       "50% of revenue goes to component authors",
     ],
     cta: "Get Started",
-    href: "/magic/get-started",
+    href: "/magic/console",
     popular: true,
   },
   {
@@ -57,7 +57,7 @@ const TIERS = [
       "50% of revenue goes to component authors",
     ],
     cta: "Get Started",
-    href: "/magic/get-started",
+    href: "/magic/console",
     highlighted: true,
   },
 ]

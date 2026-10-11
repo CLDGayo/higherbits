@@ -4,21 +4,21 @@ import Image from "next/image"
 
 const steps = [
   {
-    title: "Describe Your Vision",
+    title: "Search components",
     description:
-      "Simply tell the AI Agent what component you need by typing /ui and describing your idea - whether it's a pricing table, contact form, or navigation menu.",
+      "Ask your connected coding assistant to search the HigherBits catalogue for a component by describing what you need.",
     image: "/how-it-works-1.png",
   },
   {
-    title: "Choose from Options",
+    title: "Review matches",
     description:
-      "HigherBits AI generates three unique variations of your component. Review them and select the one that best matches your needs and design preferences.",
+      "The MCP server returns matching component names and descriptions. Your assistant can show those results so you can choose one.",
     image: "/how-it-works-3.png",
   },
   {
-    title: "Instant Integration",
+    title: "Retrieve source",
     description:
-      "Your IDE's AI Agent automatically integrates the chosen component into your project, handling all the necessary files and dependencies seamlessly.",
+      "Request the chosen component's source separately. HigherBits checks your account's access and copy allowance, then returns files with attribution details.",
     image: "/how-it-works-2.png",
   },
 ]
@@ -31,7 +31,8 @@ export function HowItWorks() {
           How It Works
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Create beautiful UI components in three simple steps
+          HigherBits AI provides catalogue search and authorized source through
+          HigherBits MCP
         </p>
       </div>
 
