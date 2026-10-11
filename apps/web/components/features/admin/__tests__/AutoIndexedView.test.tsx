@@ -9,6 +9,7 @@ vi.mock("@/hooks/use-debounced-state", () => ({ useDebouncedState: (initial: str
   return [value, value, setValue]
 } }))
 vi.mock("@/lib/api/users", () => ({ getUsersAction: vi.fn(async () => [{ id: "user_claimant1", username: "creator", display_username: "Creator", manually_added: false }]) }))
+vi.mock("jotai", async () => ({ ...await vi.importActual("jotai/vanilla"), useSetAtom: () => vi.fn() }))
 
 import AutoIndexedView from "../AutoIndexedView"
 

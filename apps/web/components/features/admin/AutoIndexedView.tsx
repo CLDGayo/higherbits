@@ -9,8 +9,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { useDebouncedState } from "@/hooks/use-debounced-state"
 import { getUsersAction } from "@/lib/api/users"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
+import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
+import { FloatingControlsDrawer } from "@/components/features/controls/floating-controls-drawer"
 
 type AutoIndexedItem = {
   componentId: number
@@ -55,6 +57,8 @@ export default function AutoIndexedView() {
   const [verificationNote, setVerificationNote] = useState("")
   const [verified, setVerified] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [isControlsExpanded, setIsControlsExpanded] = useState(true)
+  const previewIframeRef = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -79,6 +83,13 @@ export default function AutoIndexedView() {
 
   const eligibleUsers = users.filter((user) => !user.manually_added && /^user_[A-Za-z0-9]+$/.test(user.id))
   const previewHtmlUrl = preview?.bundleHtmlUrl || getAutoIndexHtmlPreviewUrl(preview?.previewUrl)
+  const editor = useAutoIndexControls({
+    demoId: preview?.demoId ?? 0,
+    bundleUrl: previewHtmlUrl,
+    rawCode: "",
+    iframeRef: previewIframeRef,
+    enabled: Boolean(preview),
+  })
 
   const closeClaim = () => {
     setClaim(null)
@@ -172,17 +183,34 @@ export default function AutoIndexedView() {
             <DialogTitle>{preview?.componentName}</DialogTitle>
             <DialogDescription>Live preview of this auto-indexed component.</DialogDescription>
           </DialogHeader>
-          <div className="min-h-0 flex-1 overflow-hidden rounded-md border bg-background">
+          <div className="relative min-h-0 flex-1 overflow-hidden rounded-md border bg-background">
             {previewHtmlUrl ? (
               <div className="flex h-full flex-col">
                 <iframe
+                  ref={previewIframeRef}
                   title={`${preview?.componentName ?? "Component"} preview`}
-                  src={previewHtmlUrl}
                   sandbox="allow-scripts"
+                  src={editor.isAutoIndex && editor.previewDocument ? undefined : previewHtmlUrl}
+                  srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
+                  style={editor.previewStyle}
                   referrerPolicy="no-referrer"
                   allowFullScreen
                   className="min-h-0 flex-1 border-0"
+                  onLoad={editor.onFrameLoad}
                 />
+                {editor.hasControls && (
+                  <FloatingControlsDrawer
+                    controls={editor.controls}
+                    values={editor.activeControls}
+                    onChange={editor.onChange}
+                    onReset={editor.onReset}
+                    onResetControl={editor.onResetControl}
+                    autoControls={editor.autoControls}
+                    unavailableReason={editor.unavailableReason}
+                    isExpanded={isControlsExpanded}
+                    onExpandedChange={setIsControlsExpanded}
+                  />
+                )}
                 {preview?.previewUrl && (
                   <a href={preview.previewUrl} target="_blank" rel="noopener noreferrer" className="flex shrink-0 items-center gap-3 border-t p-2 text-xs text-muted-foreground hover:text-foreground">
                     <img src={preview.previewUrl} alt="" className="h-12 w-20 rounded object-cover" />

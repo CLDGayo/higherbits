@@ -66,11 +66,9 @@ import { toast } from "sonner"
 import { AnimatePresence, motion } from "motion/react"
 import { PayWall } from "./pay-wall"
 import {
-  extractControlsSettings,
-  getDefaultControlValues,
   useResolvedDemoCode,
-  activeDemoControlsAtom,
 } from "@/lib/controls-parser"
+import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
 import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 
 const selectedPromptTypeAtom = atomWithStorage<PromptType>(
@@ -105,31 +103,16 @@ export function ComponentPreviewDialog({
   const [showUnlockDialog, setShowUnlockDialog] = useState(false)
   const accessState = useComponentAccess(demo.component, hasPurchased)
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
 
   const rawCode = useResolvedDemoCode(demo.demo_code, demo.component?.code, {
-    bundleUrl:
-      demo.bundle_html_url ||
-      demo.bundle_url?.html ||
-      demo.component?.bundle_html_url,
+    bundleUrl,
     demoSlug: demo.demo_slug,
     demoId: demo.id,
   })
-  const controls = useMemo(() => extractControlsSettings(rawCode), [rawCode])
-  const [activeControls, setActiveControls] = useState<Record<string, any>>(() =>
-    getDefaultControlValues(controls),
-  )
+  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef, enabled: isOpen })
+  const { controls, activeControls, hasControls } = editor
   const [isControlsExpanded, setIsControlsExpanded] = useState(true)
-
-  const [, setGlobalControls] = useAtom(activeDemoControlsAtom)
-  useEffect(() => {
-    setGlobalControls(activeControls)
-  }, [activeControls, setGlobalControls])
-
-  useEffect(() => {
-    if (controls.length > 0) {
-      setActiveControls(getDefaultControlValues(controls))
-    }
-  }, [controls])
 
   // Close unlock dialog when component becomes unlocked
   useEffect(() => {
@@ -143,16 +126,22 @@ export function ComponentPreviewDialog({
     if (resolvedTheme) {
       setPreviewTheme(resolvedTheme === "dark" ? "dark" : "light")
     }
-  }, [resolvedTheme])
+  }, [resolvedTheme, editor.isAutoIndex])
+
+  const selectedTheme = activeControls.__hbControls?.targets.component?.theme
+  useEffect(() => {
+    if (selectedTheme === "light" || selectedTheme === "dark") setPreviewTheme(selectedTheme)
+  }, [selectedTheme])
 
   const sendThemeToIframe = useCallback(() => {
+    if (editor.isAutoIndex) return
     if (iframeRef.current?.contentWindow) {
       iframeRef.current.contentWindow.postMessage(
         { type: "theme-change", theme: previewTheme },
         "*",
       )
     }
-  }, [previewTheme])
+  }, [previewTheme, editor.isAutoIndex])
 
   const sendControlsToIframe = useCallback(() => {
     if (
@@ -160,11 +149,11 @@ export function ComponentPreviewDialog({
       Object.keys(activeControls).length > 0
     ) {
       iframeRef.current.contentWindow.postMessage(
-        { type: "controls-change", controls: activeControls },
+        { type: "controls-change", controls: editor.authoredValues },
         "*",
       )
     }
-  }, [activeControls])
+  }, [editor.authoredValues])
 
   useEffect(() => {
     sendThemeToIframe()
@@ -224,8 +213,6 @@ export function ComponentPreviewDialog({
     user?.id,
     capture,
   ])
-
-  const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
 
   const { data: bookmarked } = useHasUserBookmarkedDemo(
     supabase,
@@ -427,6 +414,10 @@ export function ComponentPreviewDialog({
   const toggleTheme = () => {
     const next = previewTheme === "dark" ? "light" : "dark"
     setPreviewTheme(next)
+    if (editor.isAutoIndex) {
+      editor.onTargetChange("component", "theme", next)
+      return
+    }
     if (iframeRef.current?.contentWindow) {
       iframeRef.current.contentWindow.postMessage(
         { type: "theme-change", theme: next },
@@ -718,32 +709,35 @@ export function ComponentPreviewDialog({
                 <iframe
                   ref={iframeRef}
                   sandbox="allow-scripts"
-                  src={`${bundleUrl}?theme=${previewTheme}${
+                  src={editor.isAutoIndex && editor.previewDocument ? undefined : `${bundleUrl}?theme=${previewTheme}${
                     previewTheme === "dark" ? "&dark=true" : ""
                   }`}
+                  srcDoc={editor.isAutoIndex ? editor.previewDocument ?? undefined : undefined}
+                  title="Component preview"
                   className={cn("w-full h-full border-0", isLoading && "hidden")}
                   style={{
                     flex: 1,
                     minHeight: 0,
+                    ...editor.previewStyle,
                   }}
                   allowFullScreen
                   onLoad={() => {
                     setIsLoading(false)
+                    editor.onFrameLoad()
                     sendThemeToIframe()
                     sendControlsToIframe()
                   }}
                 />
               </div>
-              {controls.length > 0 && (
+              {hasControls && (
                 <FloatingControlsDrawer
                   controls={controls}
                   values={activeControls}
-                  onChange={(key, value) => {
-                    setActiveControls((prev) => ({ ...prev, [key]: value }))
-                  }}
-                  onReset={() => {
-                    setActiveControls(getDefaultControlValues(controls))
-                  }}
+                  onChange={editor.onChange}
+                  onReset={editor.onReset}
+                  onResetControl={editor.onResetControl}
+                  autoControls={editor.autoControls}
+                  unavailableReason={editor.unavailableReason}
                   isExpanded={isControlsExpanded}
                   onExpandedChange={setIsControlsExpanded}
                 />
