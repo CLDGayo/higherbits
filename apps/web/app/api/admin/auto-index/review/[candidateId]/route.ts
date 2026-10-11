@@ -55,15 +55,17 @@ export async function POST(request: Request, context: RouteContext) {
     try {
       refererMatches = !!referer && new URL(referer).origin === SITE_URL
     } catch {}
-    console.warn("[auto-index-review-origin-denied]", {
-      originPresent: origin !== null,
-      originMatches: origin === SITE_URL,
-      refererPresent: referer !== null,
-      refererMatches,
-      fetchSitePresent: request.headers.has("sec-fetch-site"),
-      fetchSiteSameOrigin: request.headers.get("sec-fetch-site") === "same-origin",
-    })
-    return json({ error: "origin_denied" }, 403)
+    return json({
+      error: "origin_denied",
+      diagnostics: {
+        originPresent: origin !== null,
+        originMatches: origin === SITE_URL,
+        refererPresent: referer !== null,
+        refererMatches,
+        fetchSitePresent: request.headers.has("sec-fetch-site"),
+        fetchSiteSameOrigin: request.headers.get("sec-fetch-site") === "same-origin",
+      },
+    }, 403)
   }
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
     return json({ error: "invalid_request" }, 415)
