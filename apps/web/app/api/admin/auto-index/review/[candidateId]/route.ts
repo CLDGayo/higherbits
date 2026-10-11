@@ -48,7 +48,7 @@ export async function POST(request: Request, context: RouteContext) {
   if (admin.status !== 200) return json({ error: admin.status === 503 ? "review_unavailable" : "unauthorized" }, admin.status)
   const candidateId = await candidateIdFrom(context)
   if (candidateId === null) return json({ error: "invalid_candidate_id" }, 400)
-  if (!isCanonicalSameOriginRequest(request.headers, process.env.NEXT_PUBLIC_APP_URL || SITE_URL)) {
+  if (!isCanonicalSameOriginRequest(request.headers, SITE_URL)) {
     return json({ error: "origin_denied" }, 403)
   }
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {

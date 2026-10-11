@@ -16,7 +16,7 @@ function json(body: unknown, status = 200) {
 export async function POST(request: Request) {
   const admin = await requireAutoIndexAdmin()
   if (admin.status !== 200) return json({ error: admin.status === 503 ? "finalization_unavailable" : "unauthorized" }, admin.status)
-  if (!isCanonicalSameOriginRequest(request.headers, process.env.NEXT_PUBLIC_APP_URL || SITE_URL)) {
+  if (!isCanonicalSameOriginRequest(request.headers, SITE_URL)) {
     return json({ error: "origin_denied" }, 403)
   }
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
