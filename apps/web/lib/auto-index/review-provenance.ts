@@ -41,7 +41,7 @@ export function parseAutoIndexFinalizeRequest(value: unknown): AutoIndexFinalize
   }
 }
 
-/** Require an exact HTTPS Origin match; missing Origin and cross-site requests fail closed. */
+/** Require an exact HTTPS Origin, or same-origin HTTPS Referer when Origin is absent. */
 export function isCanonicalSameOriginRequest(headers: Headers, canonicalOrigin: string | undefined): boolean {
   if (!canonicalOrigin) return false
 
@@ -53,7 +53,19 @@ export function isCanonicalSameOriginRequest(headers: Headers, canonicalOrigin: 
   }
 
   if (expected.protocol !== "https:" || expected.origin !== canonicalOrigin) return false
-  if (headers.get("origin") !== expected.origin) return false
+
+  const origin = headers.get("origin")
+  if (origin !== null) {
+    if (origin !== expected.origin) return false
+  } else {
+    const referer = headers.get("referer")
+    if (!referer) return false
+    try {
+      if (new URL(referer).origin !== expected.origin) return false
+    } catch {
+      return false
+    }
+  }
 
   const fetchSite = headers.get("sec-fetch-site")
   return fetchSite === null || fetchSite === "same-origin"
