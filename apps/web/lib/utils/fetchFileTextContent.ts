@@ -4,7 +4,12 @@ export const fetchFileTextContent = async (url: string | null | undefined) => {
   if (!url) {
     return { data: null, error: new Error("Empty URL provided") }
   }
-  const isUrl = url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")
+  const isProtocolRelativeUrl = /^\/\/(?:localhost(?::\d+)?|(?:[^/\s/]+\.)+[^/\s/]+)(?:\/|$)/.test(url)
+  const isUrl =
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    (url.startsWith("/") && !url.startsWith("/*") && !url.startsWith("//")) ||
+    isProtocolRelativeUrl
   if (!isUrl) {
     return { data: url, error: null }
   }
