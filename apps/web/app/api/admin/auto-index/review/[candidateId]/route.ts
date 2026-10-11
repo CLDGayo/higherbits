@@ -49,6 +49,20 @@ export async function POST(request: Request, context: RouteContext) {
   const candidateId = await candidateIdFrom(context)
   if (candidateId === null) return json({ error: "invalid_candidate_id" }, 400)
   if (!isCanonicalSameOriginRequest(request.headers, SITE_URL)) {
+    const origin = request.headers.get("origin")
+    const referer = request.headers.get("referer")
+    let refererMatches = false
+    try {
+      refererMatches = !!referer && new URL(referer).origin === SITE_URL
+    } catch {}
+    console.warn("[auto-index-review-origin-denied]", {
+      originPresent: origin !== null,
+      originMatches: origin === SITE_URL,
+      refererPresent: referer !== null,
+      refererMatches,
+      fetchSitePresent: request.headers.has("sec-fetch-site"),
+      fetchSiteSameOrigin: request.headers.get("sec-fetch-site") === "same-origin",
+    })
     return json({ error: "origin_denied" }, 403)
   }
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {

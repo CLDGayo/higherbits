@@ -54,19 +54,17 @@ export function isCanonicalSameOriginRequest(headers: Headers, canonicalOrigin: 
 
   if (expected.protocol !== "https:" || expected.origin !== canonicalOrigin) return false
 
-  const origin = headers.get("origin")
-  if (origin !== null) {
-    if (origin !== expected.origin) return false
-  } else {
-    const referer = headers.get("referer")
-    if (!referer) return false
-    try {
-      if (new URL(referer).origin !== expected.origin) return false
-    } catch {
-      return false
-    }
-  }
-
   const fetchSite = headers.get("sec-fetch-site")
-  return fetchSite === null || fetchSite === "same-origin"
+  if (fetchSite !== null && fetchSite !== "same-origin") return false
+
+  const origin = headers.get("origin")
+  if (origin !== null) return origin === expected.origin
+
+  const referer = headers.get("referer")
+  if (!referer) return false
+  try {
+    return new URL(referer).origin === expected.origin
+  } catch {
+    return false
+  }
 }

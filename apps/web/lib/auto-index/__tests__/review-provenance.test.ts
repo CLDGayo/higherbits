@@ -43,7 +43,7 @@ it("accepts only one positive PostgreSQL bigint decision ID for finalization", (
   expect(parseAutoIndexFinalizeRequest({ decisionId: "9223372036854775808" })).toBeNull()
 })
 
-it("requires a canonical Origin or same-origin Referer fallback and rejects cross-site requests", () => {
+it("requires a canonical Origin or same-origin Referer fallback and rejects explicit cross-site requests", () => {
   const headers = (origin?: string, site?: string, referer?: string) => new Headers({
     ...(origin ? { origin } : {}),
     ...(site ? { "sec-fetch-site": site } : {}),
@@ -53,6 +53,9 @@ it("requires a canonical Origin or same-origin Referer fallback and rejects cros
   expect(isCanonicalSameOriginRequest(headers("https://higherbits.dev", "same-origin"), "https://higherbits.dev")).toBe(true)
   expect(isCanonicalSameOriginRequest(headers(), "https://higherbits.dev")).toBe(false)
   expect(isCanonicalSameOriginRequest(headers(undefined, "same-origin", "https://higherbits.dev/admin/auto-index"), "https://higherbits.dev")).toBe(true)
+  expect(isCanonicalSameOriginRequest(headers("null", "same-origin", "https://higherbits.dev/admin/auto-index"), "https://higherbits.dev")).toBe(false)
+  expect(isCanonicalSameOriginRequest(headers("https://higherbits.dev", "cross-site"), "https://higherbits.dev")).toBe(false)
+  expect(isCanonicalSameOriginRequest(headers("https://evil.example", "same-origin", "https://higherbits.dev/admin/auto-index"), "https://higherbits.dev")).toBe(false)
   expect(isCanonicalSameOriginRequest(headers(undefined, "same-origin", "https://evil.example/admin/auto-index"), "https://higherbits.dev")).toBe(false)
   expect(isCanonicalSameOriginRequest(headers("https://evil.example", "cross-site"), "https://higherbits.dev")).toBe(false)
   expect(isCanonicalSameOriginRequest(headers("https://higherbits.dev/other"), "https://higherbits.dev")).toBe(false)
