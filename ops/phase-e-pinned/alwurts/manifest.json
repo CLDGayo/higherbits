@@ -32,6 +32,16 @@
         "ai",
         "lucide-react"
       ],
+      "dependencyVersions": {
+        "@tiptap/core": "^3.31.4",
+        "@tiptap/react": "^3.31.4",
+        "@tiptap/starter-kit": "^3.31.4",
+        "@tiptap/extension-mention": "^3.31.4",
+        "@tiptap/extension-placeholder": "^3.31.4",
+        "@tiptap/suggestion": "^3.31.4",
+        "ai": "^7.0.126",
+        "lucide-react": "^0.577.0"
+      },
       "aliasImports": [],
       "demoSha256": "fe1f95672ec283969c6ebfe7507d9865c4de49822ec14f07d8418f672c0d98ea",
       "ghlSha256": "5bc27b0fd985d20f1f3b73c4c6ce012c864977f5748ac5f45c22bd2273760c27",
@@ -57,6 +67,10 @@
         "ai",
         "lucide-react"
       ],
+      "dependencyVersions": {
+        "ai": "^7.0.126",
+        "lucide-react": "^0.577.0"
+      },
       "aliasImports": [],
       "demoSha256": "e39120b5beb6f80eaa31737a33946c58f1d49cffb3d838b01d916010d45d3ec3",
       "ghlSha256": "0f2eaed0aacf53daa39c0211f0d0ebbd3ee421a83a3d6a2a98bee5ab08d3a117",

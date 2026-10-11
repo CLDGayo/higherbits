@@ -32,6 +32,9 @@ if (hash(copyPromptsBytes) !== manifest.copyPromptsSha256) throw new Error('Alwu
 
 for (const item of manifest.items) {
   if (!copyPrompts[item.slug]) throw new Error(`Missing copy prompts for ${item.slug}`)
+  if (!Array.isArray(item.dependencies) || item.dependencies.some(name => typeof item.dependencyVersions?.[name] !== 'string')) {
+    throw new Error(`Missing pinned dependency versions for ${item.slug}`)
+  }
   const savedPrompts = copyPrompts[item.slug].prompts || copyPrompts[item.slug]
   if (Object.keys(savedPrompts).sort().join(',') !== [...promptTypes].sort().join(',')) {
     throw new Error(`Incomplete prompt flavor coverage for ${item.slug}`)
@@ -131,13 +134,15 @@ const sections = [
 ]
 
 for (const item of manifest.items) {
-  const { slug, title, description, sourcePath, files, dependencies, demoSha256, ghlSha256, previewSha256 } = item
+  const { slug, title, description, sourcePath, files, dependencies, dependencyVersions, demoSha256, ghlSha256, previewSha256 } = item
   const demoBytes = readFileSync(join(root, 'demos', `${slug}.tsx`))
   const ghlBytes = readFileSync(join(root, 'ghl', `${slug}.html`))
   const demoSourceUrl = `${repositoryUrl}/blob/${revision}/packages/registry/registry/examples/${slug}-demo.tsx`
   const mainSourceBytes = readFileSync(join(root, 'source', revision, sourcePath))
   const mainSourceSha256 = hash(mainSourceBytes)
   const promptsForSlug = copyPrompts[slug].prompts || copyPrompts[slug]
+  const dependencyEvidence = dependencies.map(name => ({ type: 'npm', name, version: dependencyVersions[name] }))
+  const componentDependencies = Object.fromEntries(dependencies.map(name => [name, dependencyVersions[name]]))
 
   const evidence = {
     scope: 'production',
@@ -163,7 +168,7 @@ for (const item of manifest.items) {
 
   sections.push(`  -- ${title}: ${sourcePath}`)
   sections.push(`  v_decision_id := public.record_auto_index_candidate(v_source_id,${quoted(sourcePath)},${quoted(revision)},`)
-  sections.push(`    ${quoted(repositoryUrl)},'MIT',${txt(licenseBytes)},NULL,${json(dependencies)},${json(filesPayload)},`)
+  sections.push(`    ${quoted(repositoryUrl)},'MIT',${txt(licenseBytes)},NULL,${json(dependencyEvidence)},${json(filesPayload)},`)
   sections.push(`    'qualified','production_source_qualified',${json(evidence)});`)
   sections.push(`  SELECT id INTO STRICT v_candidate_id FROM public.auto_index_candidates`)
   sections.push(`    WHERE source_id=v_source_id AND item_key=${quoted(sourcePath)} AND revision=${quoted(revision)};`)
@@ -180,7 +185,7 @@ for (const item of manifest.items) {
   sections.push(`  IF NOT public.auto_index_candidate_provenance_complete(v_candidate_id) THEN`)
   sections.push(`    RAISE EXCEPTION ${quoted(`${slug} provenance incomplete`)}; END IF;`)
   sections.push(`  PERFORM public.stage_auto_index_candidate_publication_metadata(v_candidate_id,${quoted(slug)},${quoted(`alwurts-${slug}`)},`)
-  sections.push(`    ${quoted(title)},${quoted(description)},${json(dependencies)},`)
+  sections.push(`    ${quoted(title)},${quoted(description)},${json(componentDependencies)},`)
   sections.push(`    ${quoted(`${assetBase}/alwurts-${slug}.png`)},${quoted(`${assetBase}/alwurts-${slug}.png`)},`)
   sections.push(`    ${quoted(`${assetBase}/alwurts-${slug}.html`)},'');`)
 }
