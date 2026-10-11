@@ -45,7 +45,9 @@ vi.mock("sonner", () => ({
 // makes no claim about image hosts — the live-route probe covers that.
 vi.mock("../card-image", () => ({
   __esModule: true,
-  default: () => <div data-testid="preview-image-stub" />,
+  default: ({ src }: { src: string }) => (
+    <div data-testid="preview-image-stub" data-src={src} />
+  ),
 }))
 
 import { ComponentCard } from "../card"
@@ -81,8 +83,8 @@ const demo: any = {
   },
 }
 
-function mountCard() {
-  const { container } = render(<ComponentCard demo={demo} hideUser />)
+function mountCard(cardDemo: any = demo) {
+  const { container } = render(<ComponentCard demo={cardDemo} hideUser />)
   const host = container.querySelector<HTMLElement>(
     '[data-testid="card-interactive-wrapper"]',
   )
@@ -165,5 +167,19 @@ describe("Card Hover — no downward translation clipping at rest", () => {
         .filter((t) => t && !t.includes(":") && LAYOUT.test(t))
       expect(found.sort()).toEqual([...baseline[key]].sort())
     }
+  })
+})
+
+describe("Component card thumbnail URL", () => {
+  it("uses the PNG sibling when an auto-index preview points at its HTML source", () => {
+    const { container } = mountCard({
+      ...demo,
+      preview_url: "https://higherbits.dev/auto-index/alwurts-chat-input.html",
+    })
+
+    const image = container.querySelector('[data-testid="preview-image-stub"]')
+    expect(image?.getAttribute("data-src")).toBe(
+      "https://higherbits.dev/auto-index/alwurts-chat-input.png",
+    )
   })
 })
