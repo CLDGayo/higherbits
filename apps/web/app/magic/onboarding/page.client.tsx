@@ -382,17 +382,7 @@ export function OnboardingClient({
       case "welcome":
         return (
           <WelcomeStep
-            onComplete={async () => {
-              // Generate API key when welcome step is completed (if user is authenticated and doesn't have one)
-              if (currentUserId && !apiKey) {
-                const createdKey = await createApiKeyForUser(currentUserId)
-                if (!createdKey) {
-                  // If the API key creation fails, show an error but allow to continue
-                  toast.error(
-                    "API key generation failed. You can try again in the next step.",
-                  )
-                }
-              }
+            onComplete={() => {
               completeStep("welcome", "select-ide")
             }}
             isAuthenticated={!!currentUserId}

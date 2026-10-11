@@ -11,7 +11,9 @@ async function getApiKey(userId: string) {
     .select("*")
     .eq("user_id", userId)
     .eq("is_active", true)
-    .single()
+    .order("created_at", { ascending: false, nullsFirst: false })
+    .limit(1)
+    .maybeSingle()
 
   if (!rawApiKey) return null
 

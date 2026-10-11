@@ -17,8 +17,8 @@ vi.mock("@/lib/supabase", () => ({
 }))
 vi.mock("@/components/ui/footer", () => ({ Footer: () => null }))
 vi.mock("@/components/ui/header.client", () => ({ Header: () => null }))
-vi.mock("./console/page.client", () => ({ ConsoleClient: () => null }))
-vi.mock("./onboarding/page.client", () => ({ OnboardingClient: () => null }))
+vi.mock("../console/page.client", () => ({ ConsoleClient: () => null }))
+vi.mock("../onboarding/page.client", () => ({ OnboardingClient: () => null }))
 
 import MagicLayout from "../layout"
 import ConsolePage from "../console/page"
@@ -28,6 +28,8 @@ function queryResult(data: unknown) {
   const query: Record<string, any> = {}
   query.select = vi.fn(() => query)
   query.eq = vi.fn(() => query)
+  query.order = vi.fn(() => query)
+  query.limit = vi.fn(() => query)
   query.maybeSingle = vi.fn(async () => ({ data, error: null }))
   query.single = vi.fn(async () => ({ data, error: null }))
   return query
@@ -79,6 +81,13 @@ describe("HigherBits MCP route access", () => {
     for (const query of [plan, usage, apiKey]) {
       expect(query.eq).toHaveBeenCalledWith("user_id", "user-own")
     }
+    expect(apiKey.eq).toHaveBeenCalledWith("is_active", true)
+    expect(apiKey.order).toHaveBeenCalledWith("created_at", {
+      ascending: false,
+      nullsFirst: false,
+    })
+    expect(apiKey.limit).toHaveBeenCalledWith(1)
+    expect(apiKey.maybeSingle).toHaveBeenCalledOnce()
   })
 
   it("keeps onboarding admin-only and fetches no account data for other users", async () => {
@@ -88,5 +97,29 @@ describe("HigherBits MCP route access", () => {
     await expect(OnboardingPage()).rejects.toThrow("REDIRECT:/magic/console")
     expect(mocks.checkIsAdmin).toHaveBeenCalledWith("user-nonadmin")
     expect(mocks.from).not.toHaveBeenCalled()
+  })
+
+  it("loads the newest active onboarding key for the authenticated admin", async () => {
+    mocks.auth.mockResolvedValue({ userId: "user-admin" })
+    mocks.checkIsAdmin.mockResolvedValue({ isAdmin: true })
+    const apiKey = queryResult({
+      id: "key-newest",
+      key: "admin-key",
+      user_id: "user-admin",
+      is_active: true,
+    })
+    mocks.from.mockReturnValue(apiKey)
+
+    await OnboardingPage()
+
+    expect(mocks.from).toHaveBeenCalledWith("api_keys")
+    expect(apiKey.eq).toHaveBeenCalledWith("user_id", "user-admin")
+    expect(apiKey.eq).toHaveBeenCalledWith("is_active", true)
+    expect(apiKey.order).toHaveBeenCalledWith("created_at", {
+      ascending: false,
+      nullsFirst: false,
+    })
+    expect(apiKey.limit).toHaveBeenCalledWith(1)
+    expect(apiKey.maybeSingle).toHaveBeenCalledOnce()
   })
 })

@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => {
     select: vi.fn(),
     eq: vi.fn(),
     single: vi.fn(),
+    maybeSingle: vi.fn(),
     update: vi.fn(),
     insert: vi.fn(),
   };
@@ -23,52 +24,58 @@ const mocks = vi.hoisted(() => {
   };
 
   return {
+    auth: vi.fn(),
     mockFrom: vi.fn().mockReturnValue(chainable),
-    mockSelect: chainable.select,
     mockEq: chainable.eq,
     mockSingle: chainable.single,
-    mockUpdate: chainable.update,
-    mockInsert: chainable.insert,
+    mockMaybeSingle: chainable.maybeSingle,
     mockRpc: vi.fn(),
   };
 });
 
+vi.mock("@clerk/nextjs/server", () => ({ auth: mocks.auth }));
+
 vi.mock("@/lib/supabase", () => ({
   supabaseWithAdminAccess: {
     from: mocks.mockFrom,
-    select: mocks.mockSelect,
-    eq: mocks.mockEq,
-    single: mocks.mockSingle,
-    update: mocks.mockUpdate,
-    insert: mocks.mockInsert,
     rpc: mocks.mockRpc,
   },
 }));
 
 // Provide destructured access for the tests
-const { mockFrom, mockSelect, mockEq, mockSingle, mockUpdate, mockInsert, mockRpc } = mocks;
+const { mockEq, mockSingle, mockMaybeSingle, mockRpc } = mocks;
 
 describe("Magic API Routes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.auth.mockResolvedValue({ userId: null });
   });
 
   describe("GET /api/magic/check", () => {
     it("should return 401 if API key is missing", async () => {
       const req = new NextRequest("http://localhost/api/magic/check");
       const res = await checkMagic(req);
+      const json = await res.json();
+
       expect(res.status).toBe(401);
+      expect(json.error).toBe("sign_in_required");
     });
 
     it("should return success if API key is valid", async () => {
-      mockSingle.mockResolvedValueOnce({ data: { user_id: "user_123" }, error: null });
+      mockMaybeSingle.mockResolvedValueOnce({ data: { user_id: "user_123" }, error: null });
 
-      const req = new NextRequest("http://localhost/api/magic/check?apikey=valid-key");
+      const req = new NextRequest("http://localhost/api/magic/check", {
+        headers: {
+          Authorization: "Bearer valid-key",
+        },
+      });
       const res = await checkMagic(req);
       const json = await res.json();
       
       expect(res.status).toBe(200);
       expect(json.success).toBe(true);
+      expect(mockEq).toHaveBeenCalledWith("key", "valid-key");
+      expect(mockEq).toHaveBeenCalledWith("is_active", true);
     });
   });
 

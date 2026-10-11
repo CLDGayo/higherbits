@@ -141,7 +141,10 @@ async function getApiKey(userId: string | null): Promise<ApiKey | null> {
       .from("api_keys")
       .select("*")
       .eq("user_id", userId)
-      .single()
+      .eq("is_active", true)
+      .order("created_at", { ascending: false, nullsFirst: false })
+      .limit(1)
+      .maybeSingle()
 
     if (!rawApiKey) return null
 
@@ -155,7 +158,7 @@ async function getApiKey(userId: string | null): Promise<ApiKey | null> {
       created_at: rawApiKey.created_at || new Date().toISOString(),
       expires_at: rawApiKey.expires_at,
       last_used_at: rawApiKey.last_used_at,
-      is_active: rawApiKey.is_active || true,
+      is_active: rawApiKey.is_active ?? true,
       project_url: rawApiKey.project_url || "",
     }
   } catch (error) {
