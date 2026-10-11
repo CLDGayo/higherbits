@@ -129,7 +129,7 @@ const sections = [
   'DECLARE v_source_id bigint; v_candidate_id bigint; v_decision_id bigint;',
   'BEGIN',
   `  IF session_user <> 'auto_index_stage' OR current_user <> 'auto_index_stage' THEN RAISE EXCEPTION 'direct auto_index_stage login required'; END IF;`,
-  `  v_source_id := public.register_auto_index_source('official_registry',${quoted(repositoryUrl)},'Alwurts simple-ai');`,
+  `  v_source_id := public.register_auto_index_source('official_registry',${quoted(repositoryUrl)},${quoted(manifest.ownerLabel)});`,
   `  IF (SELECT opted_out FROM public.auto_index_sources WHERE id=v_source_id) THEN RAISE EXCEPTION 'Alwurts opted out'; END IF;`,
 ]
 
