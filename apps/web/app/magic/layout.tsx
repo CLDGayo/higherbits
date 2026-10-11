@@ -1,7 +1,4 @@
 import { type Metadata } from "next/types"
-import { auth } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
-import { checkIsAdmin } from "@/lib/admin"
 
 export const metadata: Metadata = {
   title: "HigherBits AI — HigherBits MCP",
@@ -14,16 +11,7 @@ export default async function MagicLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { userId } = await auth()
-
-  if (!userId) {
-    redirect("/")
-  }
-
-  const { isAdmin } = await checkIsAdmin(userId)
-  if (!isAdmin) {
-    redirect("/")
-  }
-
+  // The product page is public. Protected child routes enforce their own
+  // access rules so the console can serve each signed-in user's account.
   return <>{children}</>
 }

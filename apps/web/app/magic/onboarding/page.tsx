@@ -1,4 +1,6 @@
 import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import { checkIsAdmin } from "@/lib/admin"
 import { supabaseWithAdminAccess } from "@/lib/supabase"
 import { OnboardingClient } from "./page.client"
 
@@ -30,7 +32,16 @@ async function getApiKey(userId: string) {
 
 export default async function OnboardingPage() {
   const { userId } = await auth()
-  const apiKey = userId ? await getApiKey(userId) : null
+  if (!userId) {
+    redirect("/sign-in?redirect_url=%2Fmagic%2Fonboarding")
+  }
+
+  const { isAdmin } = await checkIsAdmin(userId)
+  if (!isAdmin) {
+    redirect("/magic/console")
+  }
+
+  const apiKey = await getApiKey(userId)
 
   return (
     <div className="min-h-screen flex flex-col">

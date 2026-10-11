@@ -170,9 +170,9 @@ export const dynamic = "force-dynamic"
 export default async function ConsolePage() {
   const { userId } = await auth()
 
-  // Redirect unauthorized users to onboarding
+  // Keep the sign-in flow on the console after authentication.
   if (!userId) {
-    redirect("/magic/onboarding")
+    redirect("/sign-in?redirect_url=%2Fmagic%2Fconsole")
   }
 
   const subscription = await getCurrentPlan(userId)
