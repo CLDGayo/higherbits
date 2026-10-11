@@ -157,12 +157,32 @@ describe("auto-index customized-copy-render-parity", () => {
     })).toThrow(/Google Font.*self-contained GHL export.*system font/i)
   })
 
-  it.each(["edilozi-accordion.html"])("preserves strict validation for actual ingested bundle %s", filename => {
+  it.each(["edilozi-accordion.html", "urvish-list-item.html"])("preserves strict validation for actual ingested bundle %s", filename => {
     const source = readFileSync(path.join(process.cwd(), "public", "auto-index", filename), "utf8")
     const prepared = prepareAutoIndexGhlHtml(source)
     const checked = cleanGhlHtml(prepared)
     const customized = applyControlsToGhlHtml(checked, {__hbControls:{version:1,targets:{component:{padding:"12px"}}}})
     expect(() => cleanGhlHtml(customized)).not.toThrow()
+  })
+
+  it("scopes Motion document integrations to the copied component", () => {
+    const source = readFileSync(path.join(process.cwd(), "public", "auto-index", "urvish-list-item.html"), "utf8")
+    const prepared = prepareAutoIndexGhlHtml(source)
+    expect(prepared).toContain("__hbAutoIndexShadow.appendChild")
+    expect(prepared).toContain("__hbAutoIndexMount.getAnimations()")
+    expect(prepared).toContain("undefined(async()=>")
+    expect(prepared).toContain("window.innerWidth")
+    expect(prepared).toContain("window.innerHeight")
+    expect(prepared).not.toMatch(/document\.(?:body|documentElement|head|getAnimations|startViewTransition)/)
+  })
+
+  it.each([
+    'document.getElementById("root");document.querySelector("body");',
+    'document.getElementById("root");document.querySelectorAll("body");',
+    'document.getElementById("root");document.getAnimations({subtree:true});',
+  ])("continues rejecting unsupported document queries and animation calls", code => {
+    const source = `<html><body><div id="root"></div><script>(()=>{${code}})();</script></body></html>`
+    expect(() => prepareAutoIndexGhlHtml(source)).toThrow(/document-level dependencies are unsupported/)
   })
 
   it("preserves VGPU exact-shape checks before adding the controls runtime", () => {
