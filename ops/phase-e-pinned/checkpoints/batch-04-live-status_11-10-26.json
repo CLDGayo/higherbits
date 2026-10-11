@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-10-11T00:52:12Z",
+  "batch": "04",
+  "source": {
+    "spreadsheet_id": "1FHIXbjLyy5pIKtA2I35Y8DFFT6fED2bSrFOoHjjL988",
+    "spreadsheet_title": "higherbits-phase-e-component-ledger",
+    "sheet": "21st creators",
+    "selection_rule": "auto-index=true is the user's approved eligibility signal; retain the source row as provenance.",
+    "rows": [96, 98, 106, 107, 108, 116, 140, 144, 151, 156]
+  },
+  "summary": {
+    "creators": 10,
+    "sheet_components": 81,
+    "existing_component_ids_in_sheet": 8,
+    "held_components_in_sheet": 73,
+    "production_readback_verified": false,
+    "production_write_attempted": false,
+    "reviewer_authenticated": false
+  },
+  "authors": [
+    {
+      "row": 96,
+      "handle": "antdesign",
+      "components": 7,
+      "sheet_status": "Held (0 published; 7 held)",
+      "sheet_ids": [],
+      "packet": "ops/phase-e-pinned/antdesign",
+      "packet_check": "all_items_held_verified",
+      "decision": "Do not publish. Six demo wrappers are lookalikes rather than Ant Design components; floating-action-menu is misattributed to larsen66."
+    },
+    {
+      "row": 98,
+      "handle": "anubra266",
+      "components": 37,
+      "sheet_status": "Held (0 published; 37 held)",
+      "sheet_ids": [],
+      "packet": null,
+      "packet_check": "not_started",
+      "decision": "Prepare source-mapped packet."
+    },
+    {
+      "row": 106,
+      "handle": "arikchakma",
+      "components": 5,
+      "sheet_status": "Held (0 published; 5 held)",
+      "sheet_ids": [],
+      "packet": "ops/phase-e-pinned/arikchakma",
+      "packet_check": "packet_present_readiness_unverified",
+      "decision": "Run packet, preview, dependency, prompt, and provenance checks; no dedicated emitter exists."
+    },
+    {
+      "row": 107,
+      "handle": "arlanoska",
+      "components": 5,
+      "sheet_status": "Held (0 published; 5 held)",
+      "sheet_ids": [],
+      "packet": null,
+      "packet_check": "not_started",
+      "decision": "Prepare source-mapped packet."
+    },
+    {
+      "row": 108,
+      "handle": "armandsalle",
+      "components": 1,
+      "sheet_status": "Held (0 published; 1 held)",
+      "sheet_ids": [],
+      "packet": null,
+      "packet_check": "not_started",
+      "decision": "Prepare source-mapped packet."
+    },
+    {
+      "row": 116,
+      "handle": "asanshay",
+      "components": 7,
+      "sheet_status": "Held (0 published; 7 held)",
+      "sheet_ids": [],
+      "packet": "ops/phase-e-pinned/asanshay",
+      "packet_check": "READY",
+      "decision": "Seven items pass the emitter's offline integrity check; production staging still requires an authenticated reviewer and rotated database credentials."
+    },
+    {
+      "row": 140,
+      "handle": "barvian",
+      "components": 5,
+      "sheet_status": "Partial (4 published; 1 held)",
+      "sheet_ids": [186, 187, 188, 189],
+      "sheet_held": 1,
+      "packet": null,
+      "packet_check": "not_started_for_held_item",
+      "decision": "Do not duplicate four listed IDs; investigate only the remaining held item."
+    },
+    {
+      "row": 144,
+      "handle": "berlix",
+      "components": 4,
+      "sheet_status": "Published (4/4)",
+      "sheet_ids": [182, 183, 184, 185],
+      "packet": null,
+      "packet_check": "already_listed_published",
+      "decision": "Skip to avoid duplicates; production readback is still unverified."
+    },
+    {
+      "row": 151,
+      "handle": "bklitai",
+      "components": 5,
+      "sheet_status": "Held (0 published; 5 held)",
+      "sheet_ids": [],
+      "packet": "ops/phase-e-pinned/bklitai",
+      "packet_check": "packet_present_readiness_unverified",
+      "decision": "Run packet, preview, dependency, prompt, and provenance checks; no dedicated emitter exists."
+    },
+    {
+      "row": 156,
+      "handle": "brijr",
+      "components": 5,
+      "sheet_status": "Held (0 published; 5 held)",
+      "sheet_ids": [],
+      "packet": "ops/phase-e-pinned/brijr",
+      "packet_check": "packet_present_readiness_unverified",
+      "decision": "Run packet, preview, dependency, prompt, and provenance checks; no dedicated emitter exists."
+    }
+  ],
+  "production_gate": {
+    "user_reported_database_password_rotated": false,
+    "higherbits_admin_ui": "Access denied in the available session.",
+    "action": "No production SQL, staging, or publishing attempted. Resume after password rotation/secrets update and authenticated admin access."
+  },
+  "reviewer_label": null,
+  "reviewed_at": null
+}
