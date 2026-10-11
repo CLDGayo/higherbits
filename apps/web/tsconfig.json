@@ -11,6 +11,8 @@
         "name": "next"
       }
     ],
+    "declaration": false,
+    "declarationMap": false,
     "strictNullChecks": true,
     "lib": [
       "es2023",
