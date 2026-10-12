@@ -1,7 +1,4 @@
 /** @vitest-environment jsdom */
-import fs from "node:fs"
-import path from "node:path"
-
 import React from "react"
 import { describe, it, expect, vi, beforeAll } from "vitest"
 import { render } from "@testing-library/react"
@@ -19,7 +16,6 @@ import { render } from "@testing-library/react"
  * D1-locked element list:
  *   - Hero: h1, h2, and the "HigherBits.dev" nav-brand span
  *   - Dashboard: h1 + the 5 stat-tile number divs
- *   - Sidebar: the Go-Premium card "Unlock everything" label ONLY
  */
 
 const { routerPush } = vi.hoisted(() => ({ routerPush: vi.fn() }))
@@ -113,28 +109,5 @@ describe("AC5 — font-cozy applied to D1-locked dashboard elements", () => {
       "div.font-cozy.text-2xl.font-bold",
     )
     expect(statNumbers.length).toBe(5)
-  })
-})
-
-describe("AC5 — font-cozy applied to the D1-locked sidebar Go-Premium label", () => {
-  it("applies font-cozy to the sidebar 'Unlock everything' Go-Premium card label", () => {
-    // The sidebar-layout requires Clerk/jotai/sidebar-context providers that are
-    // impractical to render in jsdom; assert class-presence at the source level
-    // (still a class-presence proof, consistent with D2).
-    const source = fs.readFileSync(
-      path.join(
-        __dirname,
-        "../../components/features/main-page/sidebar-layout.tsx",
-      ),
-      "utf8",
-    )
-
-    // Locate the "Unlock everything" label's wrapping div and assert it carries
-    // font-cozy on the same className string.
-    const labelBlock = source.slice(
-      source.lastIndexOf("<div", source.indexOf("Unlock everything")),
-      source.indexOf("Unlock everything"),
-    )
-    expect(labelBlock).toContain("font-cozy")
   })
 })

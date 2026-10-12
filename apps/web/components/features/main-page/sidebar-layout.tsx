@@ -98,7 +98,6 @@ import {
 
 // Import types from navigation-with-magic.tsx
 import { Button } from "@/components/ui/button"
-import { ClayCard } from "@/components/ui/clay-card"
 import { TextShimmer } from "@/components/ui/text-shimmer"
 import type {
   NavigationCategory,
@@ -1126,33 +1125,6 @@ export function MainSidebar() {
         )}
       </SidebarContent>
       <SidebarFooter className="flex flex-col justify-start pl-4 border-t py-2">
-        {isAdmin && state !== "collapsed" && (
-          <ClayCard className="bg-accent-pink text-accent-pink-foreground mr-4 flex flex-col justify-between p-4">
-            <div>
-              <div className="flex items-center gap-2 font-cozy text-sm font-medium">
-                <Crown className="h-4 w-4" />
-                Unlock everything
-              </div>
-              <p className="mt-1 text-sm">
-                Go Pro for full access to every component.
-              </p>
-            </div>
-            <Link
-              href="/support"
-              className="mt-3 inline-block"
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return
-                e.preventDefault()
-                router.push("/support")
-                if (isMobile) setOpenMobile(false)
-              }}
-            >
-              <span className="font-medium underline underline-offset-4">
-                Support Us!
-              </span>
-            </Link>
-          </ClayCard>
-        )}
         <Help open={helpOpen} onOpenChange={setHelpOpen} />
       </SidebarFooter>
     </Sidebar>
