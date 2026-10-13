@@ -1,18 +1,18 @@
 ---
 feature: higherbits-redesign
 phase: PLAN
-status: validated-conditional-execution-authorized
+status: shipped-verified-with-limitations
 date: 13-10-26
 ---
 # HigherBits sidebar reference adaptation
 
 **Date**: 13-10-26
 **Complexity**: SIMPLE — one bounded sidebar implementation stream
-**Status**: ⏳ PLANNED — CONDITIONAL VALIDATION ACCEPTED; EXECUTION AUTHORIZED
+**Status**: ✅ RELEASED — user accepted the local UI; scoped VPS deployment verified with documented limits
 
 ## Overview
 
-Adapt the applicable structure and compact visual rhythm of the live authenticated 21st.dev sidebar to HigherBits using its existing MainSidebar, routes, permissions, branding and dependencies. The investigation/mapping is [sidebar-reference-adaptation_REPORT_13-10-26.md](sidebar-reference-adaptation_REPORT_13-10-26.md), including all 78 reference categories and 27 root/context/control rows. Application implementation has not started. This plan is the sole execution anchor. The user's detailed task supplies the requirements, recorded in sidebar-reference-adaptation_SPEC_13-10-26.md; review approval freezes them. The unrelated rebrand SPEC is not authority to expand this scope.
+Adapt the applicable structure and compact visual rhythm of the live authenticated 21st.dev sidebar to HigherBits using its existing MainSidebar, routes, permissions, branding and dependencies. The investigation/mapping is [sidebar-reference-adaptation_REPORT_13-10-26.md](sidebar-reference-adaptation_REPORT_13-10-26.md), including all 78 reference categories and 27 root/context/control rows. Implementation and release outcomes are recorded in the execution and release reports in this task folder. This plan remains the execution anchor. The user's detailed task supplies the requirements, recorded in sidebar-reference-adaptation_SPEC_13-10-26.md; review approval freezes them. The unrelated rebrand SPEC is not authority to expand this scope.
 
 Design Read: developer marketplace navigation for component builders; compact, calm, familiar, HigherBits-branded. Dials: DESIGN_VARIANCE 2 / MOTION_INTENSITY 2 / VISUAL_DENSITY 6. Reference hierarchy governs applicable order; existing HigherBits tokens and typography govern brand.
 
