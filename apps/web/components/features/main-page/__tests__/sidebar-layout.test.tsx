@@ -1,215 +1,301 @@
 /** @vitest-environment jsdom */
 import React from "react"
-import { describe, it, expect, vi, beforeEach } from "vitest"
-import { render, fireEvent, screen } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import { createStore } from "jotai/vanilla"
+import { sortByAtom } from "@/lib/atoms"
+import { marketing, sidebarCategories, ui } from "@/lib/navigation"
 
-const mockPush = vi.fn()
-vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
-  useRouter: () => ({ push: mockPush, replace: vi.fn(), prefetch: vi.fn() }),
-  useSearchParams: () => new URLSearchParams(),
+const fixture = vi.hoisted(() => ({
+  pathname: "/",
+  search: "",
+  mobile: false,
+  user: null as null | { id: string; username?: string; externalAccounts?: { username: string }[] },
+  admin: false,
+  counts: {} as Record<string, number>,
+  push: vi.fn(),
+  navigate: vi.fn(),
+  store: null as any,
 }))
 
-// Heavy data hooks — bypass real jotai/atom wiring.
+// The workspace's React Jotai package targets React 18 while this app tests
+// render with React 19. Keep the real vanilla atoms/store and bridge hooks here.
+vi.mock("jotai", async () => {
+  const vanilla = await vi.importActual<typeof import("jotai/vanilla")>("jotai/vanilla")
+  const React = await import("react")
+  return {
+    ...vanilla,
+    useAtom: (atom: any) => {
+      const [value, setValue] = React.useState(() => fixture.store.get(atom))
+      React.useEffect(() => fixture.store.sub(atom, () => setValue(fixture.store.get(atom))), [atom])
+      const setAtom = React.useCallback((next: any) => fixture.store.set(atom, next), [atom])
+      return [value, setAtom]
+    },
+  }
+})
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => fixture.pathname,
+  useSearchParams: () => new URLSearchParams(fixture.search),
+  useRouter: () => ({ push: fixture.push, replace: vi.fn(), prefetch: vi.fn() }),
+}))
 vi.mock("@/hooks/use-navigation", () => ({
   useNavigation: () => ({
-    activeTab: "home",
+    activeTab: new URLSearchParams(fixture.search).get("tab") || "home",
     currentSection: "home",
-    navigateToTab: vi.fn(),
-    sortBy: "newest",
+    navigateToTab: fixture.navigate,
   }),
 }))
-// null → MainSidebar falls back to real defaultCategories (rendered collapsed).
-vi.mock("@/lib/navigation-with-higherbits-mcp", () => ({
-  useFilteredNavigation: () => null,
-}))
-vi.mock("jotai", () => ({
-  useAtom: () => [undefined, vi.fn()],
-  atom: (v: unknown) => v,
-}))
-const mockUser: { current: any } = { current: null }
-const mockAdmin: { current: boolean } = { current: false }
+vi.mock("@/hooks/use-mobile", () => ({ useIsMobile: () => fixture.mobile }))
+vi.mock("@/hooks/use-media-query", () => ({ useMediaQuery: () => !fixture.mobile }))
 vi.mock("@clerk/nextjs", () => ({
-  useUser: () => ({ user: mockUser.current }),
+  useUser: () => ({ user: fixture.user }),
   useSession: () => ({ session: null }),
 }))
 vi.mock("@/components/features/publish/hooks/use-is-admin", () => ({
-  useIsAdmin: () => ({ isAdmin: mockAdmin.current, isLoading: false }),
+  useIsAdmin: () => ({ isAdmin: fixture.admin, isLoading: false }),
 }))
-// Live-query hook stand-in. Mutable so a test can supply real counts (Phase 04 D3).
-const tagCounts: { current: Record<string, number> } = { current: {} }
 vi.mock("@/lib/queries", () => ({
-  useCategoryTagCounts: () => ({ data: tagCounts.current }),
+  useCategoryTagCounts: () => ({ data: fixture.counts }),
 }))
-vi.mock("@/hooks/use-media-query", () => ({ useIsMobile: () => false }))
 
 import { MainSidebar } from "../sidebar-layout"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 function renderSidebar() {
-  return render(
+  const store = createStore()
+  fixture.store = store
+  const view = render(
     <SidebarProvider>
+      <SidebarTrigger data-testid="sidebar-trigger" />
       <MainSidebar />
     </SidebarProvider>,
   )
+  return { ...view, store }
 }
 
-describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
-  beforeEach(() => {
-    tagCounts.current = {}
-    mockUser.current = null
-    mockAdmin.current = false
+beforeEach(() => {
+  fixture.pathname = "/"
+  fixture.search = ""
+  fixture.mobile = false
+  fixture.user = null
+  fixture.admin = false
+  fixture.counts = {}
+  fixture.push.mockReset()
+  fixture.navigate.mockReset()
+  localStorage.clear()
+})
+
+describe("sidebar catalog metadata", () => {
+  it("keeps original category exports and maps all 78 reference rows", () => {
+    expect(marketing).toHaveLength(29)
+    expect(ui).toHaveLength(46)
+    expect(sidebarCategories.map((group) => [group.title, group.items.length])).toEqual([
+      ["Marketing Blocks", 29],
+      ["UI Components", 49],
+    ])
+    expect(sidebarCategories.flatMap((group) => group.items).filter((item) => item.comingSoon)).toHaveLength(25)
+    expect(sidebarCategories[0]?.items.map((item) => item.title)).toEqual([
+      "Announcements", "ASCII Art", "Backgrounds", "Borders", "Calls to Action", "Clients", "Comparisons", "Docks", "FAQs", "Features", "Footers", "Galleries", "Gradients", "Heroes", "Hooks", "Images", "Maps", "Marquees", "Navigation Menus", "Pricing Sections", "Scroll Areas", "Shaders", "Stats & KPIs", "Steppers", "Team Sections", "Testimonials", "Texts", "Timelines", "Videos",
+    ])
+    expect(sidebarCategories[1]?.items.map((item) => item.title)).toEqual([
+      "Accordions", "AI Chats", "Alerts", "Avatars", "Badges", "Buttons", "Calendars", "Cards", "3D Carousels", "Charts & Data Viz", "Checkboxes", "Cursors", "Dashboards", "Date Pickers", "Dialogs / Modals", "Dropdowns", "Empty States", "File Trees", "File Uploads", "Forms", "Globes", "Grids & Bento", "Icons", "Inputs", "Links", "Lists", "Menus", "Notifications", "Numbers", "Onboarding", "Paginations", "Popovers", "Profiles", "Progress", "Radio Groups", "Search Bars", "Selects", "Sidebars", "Sign Ins", "Sign ups", "Sliders", "Spinner Loaders", "Tables", "Tabs", "Tags", "Text Areas", "Toasts", "Toggles", "Tooltips",
+    ])
+    expect(ui.find((item) => item.title === "Avatars")?.href).toBe("/s/avatar")
   })
 
-  it("applies the lavender active-pill token on the active nav item (A1)", () => {
-    const { container } = renderSidebar()
-
-    const active = container.querySelector('[data-active="true"]')
-    expect(active).not.toBeNull()
-    // The variant string carries the arbitrary-variant lavender token literally.
-    expect(active?.className).toContain("data-[active=true]:bg-accent-lavender")
-    expect(active?.className).toContain(
-      "data-[active=true]:text-accent-lavender-foreground",
-    )
-  })
-
-  it("does not render the Go-Premium card with Support Us! CTA for non-admin users", () => {
-    const { container } = renderSidebar()
-
-    const supportLink = container.querySelector('a[href="/support"]')
-    expect(supportLink).toBeNull()
-    expect(container.textContent).not.toContain("Support Us!")
-    expect(container.querySelector(".bg-accent-pink")).toBeNull()
-  })
-
-  it("renders the Go-Premium card with the Support Us! CTA link for admin users (A3)", () => {
-    mockUser.current = { id: "user_admin" }
-    mockAdmin.current = true
-
-    const { container } = renderSidebar()
-
-    const supportLink = container.querySelector('a[href="/support"]')
-    expect(supportLink).not.toBeNull()
-    expect(container.textContent).toContain("Support Us!")
-
-    // Card reuses the pink clay token (distinct from the lavender active pill).
-    expect(container.querySelector(".bg-accent-pink")).not.toBeNull()
-  })
-
-  it("does not leave any stale bg-accent active token on a manual nav path (A1b)", () => {
-    const { container } = renderSidebar()
-
-    // No rendered element should carry the OLD active token string; both the
-    // variant path and the asChild manual ternary now use the lavender token.
-    const stale = Array.from(container.querySelectorAll("*")).filter((el) =>
-      el.className &&
-      typeof el.className === "string" &&
-      el.className.includes("bg-accent text-accent-foreground"),
-    )
-    expect(stale).toHaveLength(0)
+  it("resolves five alias routes and labels the narrower carousel category", () => {
+    const items = sidebarCategories.flatMap((group) => group.items)
+    for (const [title, href] of [
+      ["Avatars", "/s/avatars"],
+      ["Grids & Bento", "/s/grid"],
+      ["Sign ups", "/s/registration"],
+      ["Team Sections", "/s/team"],
+      ["3D Carousels", "/s/3d-carousel"],
+    ]) {
+      expect(items.find((item) => item.title === title)?.href).toBe(href)
+    }
   })
 })
 
-// Phase 04 (supabase-interconnect) Step D3 / SPEC AC4.
-describe("MainSidebar — two-level components drill-down and live-query counts", () => {
-  beforeEach(() => {
-    tagCounts.current = {}
+describe("MainSidebar", () => {
+  it("shows HigherBits Explore and Build groups without the removed promotion", () => {
+    const { container } = renderSidebar()
+    expect(screen.getByText("Explore")).not.toBeNull()
+    expect(screen.getByText("Build")).not.toBeNull()
+    expect(screen.getByRole("link", { name: "Components" }).getAttribute("href")).toContain("tab=components")
+    expect(screen.getByRole("link", { name: "Home" }).getAttribute("aria-current")).toBe("page")
+    expect(container.textContent).not.toContain("Support Us!")
+    expect(container.querySelector(".bg-accent-pink")).toBeNull()
+    expect(screen.queryByText("Design Bug Bot")).toBeNull()
   })
 
-  it("does not render the redundant Explore accordion on the main view", () => {
-    tagCounts.current = { hero: 42 }
-
-    const { container } = renderSidebar()
-
-    expect(container.textContent).not.toContain("Explore")
+  it("makes unavailable products disabled and keeps real public links", () => {
+    renderSidebar()
+    for (const title of ["Themes", "Apps", "Icons", "Video", "HigherBits AI"]) {
+      const button = screen.getByRole("button", { name: `${title}, Coming soon` }) as HTMLButtonElement
+      expect(button.disabled).toBe(true)
+      expect(button.closest("a")).toBeNull()
+      expect(button.textContent).toContain("Coming soon")
+    }
+    expect(screen.getByRole("link", { name: "Creators" }).getAttribute("href")).toContain("tab=authors")
+    expect(screen.getByRole("link", { name: "Collections" }).getAttribute("href")).toContain("tab=collections")
+    expect(screen.queryByRole("link", { name: "Templates" })).toBeNull()
+    expect(screen.queryByRole("link", { name: "Creator Studio" })).toBeNull()
+    expect(screen.queryByRole("button", { name: "Publish" })).toBeNull()
   })
 
-  it("switches to components drill-down view when clicking Components", () => {
-    const { container } = renderSidebar()
-
-    expect(screen.queryByText("Marketing Blocks")).toBeNull()
-    expect(screen.queryByText("UI Components")).toBeNull()
-
-    fireEvent.click(screen.getByText("Components"))
-
+  it("opens the component context and filters all categories", () => {
+    fixture.counts = { hero: 42, avatars: 3 }
+    renderSidebar()
+    fireEvent.click(screen.getByRole("link", { name: "Components" }))
     expect(screen.getByText("Marketing Blocks")).not.toBeNull()
     expect(screen.getByText("UI Components")).not.toBeNull()
-    expect(screen.getByPlaceholderText("Search components")).not.toBeNull()
+    expect(screen.getByRole("textbox", { name: "Search components" })).not.toBeNull()
+    expect(screen.getByRole("link", { name: /Heroes/ }).textContent).toContain("42")
+    expect(screen.getByRole("link", { name: /Avatars/ }).getAttribute("href")).toBe("/s/avatars")
+    fireEvent.change(screen.getByRole("textbox", { name: "Search components" }), { target: { value: "proGRESS" } })
+    expect(screen.getByRole("button", { name: "Progress, Coming soon" })).not.toBeNull()
+    expect(screen.queryByRole("link", { name: /Heroes/ })).toBeNull()
+    fireEvent.change(screen.getByRole("textbox", { name: "Search components" }), { target: { value: "nonexistent" } })
+    expect(screen.getByText(/No components found matching/)).not.toBeNull()
   })
 
-  it("renders a non-zero live count as the item badge in the components view", () => {
-    tagCounts.current = { hero: 42 }
-
-    const { container } = renderSidebar()
-
-    fireEvent.click(screen.getByText("Components"))
-
-    const heroLink = container.querySelector('a[href="/s/hero"]')
-    expect(heroLink).not.toBeNull()
-    expect(heroLink?.textContent).toContain("42")
-    // The hardcoded navigation.ts value must never surface.
-    expect(heroLink?.textContent).not.toContain("73")
-  })
-
-  it("navigates directly to category page when clicked", () => {
-    tagCounts.current = { hero: 42 }
-    const originalLocation = window.location
-    let locationHref = ""
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: {
-        ...originalLocation,
-        get href() {
-          return locationHref
-        },
-        set href(val: string) {
-          locationHref = val
-        },
-      },
-    })
-
-    const { container } = renderSidebar()
-    fireEvent.click(screen.getByText("Components"))
-
-    const heroLink = container.querySelector('a[href="/s/hero"]')
-    expect(heroLink).not.toBeNull()
-
-    fireEvent.click(heroLink!)
-    expect(window.location.href).toBe("/s/hero")
-
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: originalLocation,
-    })
-  })
-
-  it("returns to main view when clicking the back button in components view", () => {
+  it("renders 25 readable unavailable category buttons while zero-count categories remain links", () => {
     renderSidebar()
-
-    fireEvent.click(screen.getByText("Components"))
-    expect(screen.getByText("Marketing Blocks")).not.toBeNull()
-
-    fireEvent.click(screen.getByRole("button", { name: /components/i }))
-    expect(screen.queryByText("Marketing Blocks")).toBeNull()
-    expect(screen.getByText("Home")).not.toBeNull()
+    fireEvent.click(screen.getByRole("link", { name: "Components" }))
+    expect(screen.getAllByRole("button", { name: /Coming soon/ })).toHaveLength(25)
+    expect(screen.getByRole("link", { name: "Borders" }).getAttribute("href")).toBe("/s/border")
+    expect(screen.getByRole("button", { name: "ASCII Art, Coming soon" }).closest("a")).toBeNull()
+    expect(screen.getByRole("button", { name: "ASCII Art, Coming soon" }).className).toContain("disabled:opacity-100")
   })
 
-  it("hides AI UI Builder, Bundles, Premium Stores, Contest, and Support Us for non-admin users", () => {
+  it("uses the resolved alias for category current state", () => {
+    fixture.pathname = "/s/avatars"
     const { container } = renderSidebar()
-
-    expect(screen.queryByText("AI UI Builder")).toBeNull()
-    expect(screen.queryByText("Bundles")).toBeNull()
-    expect(screen.queryByText("Premium Stores")).toBeNull()
-    expect(screen.queryByText("Contest")).toBeNull()
-    expect(screen.queryByText("Overview")).toBeNull()
-    expect(screen.queryByText("Leaderboard")).toBeNull()
-    expect(screen.queryByText("Support Us!")).toBeNull()
+    expect(screen.getByRole("link", { name: "Avatars" }).getAttribute("aria-current")).toBe("page")
+    expect(container.querySelector('a[href="/s/avatars"]')?.getAttribute("data-active")).toBe("true")
   })
 
-  it("renders Collections even when no user is logged in", () => {
-    mockUser.current = null
-    renderSidebar()
+  it("provides one navigation push for sort links and leaves modified clicks alone", () => {
+    fixture.search = "tab=components&sort=recommended"
+    const view = renderSidebar()
+    const { store } = view
+    fireEvent.click(screen.getByRole("link", { name: "Newest" }), { metaKey: true })
+    expect(fixture.push).not.toHaveBeenCalled()
+    expect(store.get(sortByAtom)).toBe("recommended")
+    fireEvent.click(screen.getByRole("link", { name: "Newest" }))
+    expect(fixture.push).toHaveBeenCalledExactlyOnceWith("/?tab=components&sort=date")
+    fixture.search = "tab=components&sort=date"
+    view.rerender(<SidebarProvider><SidebarTrigger /><MainSidebar /></SidebarProvider>)
+    expect(store.get(sortByAtom)).toBe("date")
+  })
 
-    expect(screen.getByText("Collections")).not.toBeNull()
+  it("restores valid and invalid URL sort values without writing history", () => {
+    fixture.search = "tab=components&sort=date"
+    const view = renderSidebar()
+    expect(view.store.get(sortByAtom)).toBe("date")
+    fixture.search = "tab=components&sort=bad"
+    view.rerender(<SidebarProvider><SidebarTrigger /><MainSidebar /></SidebarProvider>)
+    expect(view.store.get(sortByAtom)).toBe("recommended")
+    expect(fixture.push).not.toHaveBeenCalled()
+  })
+
+  it("does not undo a header sort atom update before its URL navigation lands", () => {
+    fixture.search = "tab=components&sort=date"
+    const view = renderSidebar()
+    expect(view.store.get(sortByAtom)).toBe("date")
+    view.store.set(sortByAtom, "likes")
+    expect(view.store.get(sortByAtom)).toBe("likes")
+    fixture.search = "tab=components&sort=likes"
+    view.rerender(<SidebarProvider><SidebarTrigger /><MainSidebar /></SidebarProvider>)
+    expect(view.store.get(sortByAtom)).toBe("likes")
+    expect(fixture.push).not.toHaveBeenCalled()
+  })
+
+  it("keeps gated tools available only to real signed-in admins", () => {
+    fixture.user = { id: "admin", username: "owner" }
+    fixture.admin = true
+    renderSidebar()
+    expect(screen.getByRole("link", { name: "Templates" })).not.toBeNull()
+    expect(screen.getByRole("link", { name: "Bundles" })).not.toBeNull()
+    expect(screen.getByRole("link", { name: "Premium Stores" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "HigherBits MCP" }).getAttribute("aria-expanded")).toBe("false")
+    fireEvent.click(screen.getByRole("button", { name: "HigherBits MCP" }))
+    expect(screen.getByRole("button", { name: "HigherBits MCP" }).getAttribute("aria-expanded")).toBe("true")
+    expect(document.getElementById("higherbits-mcp-links")?.hidden).toBe(false)
+    expect(screen.getByRole("button", { name: "Purchased Bundles, Coming soon" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Publish" })).not.toBeNull()
+  })
+
+  it("does not create malformed account links with unresolved identity", () => {
+    fixture.user = { id: "signed-in" }
+    const { container } = renderSidebar()
+    expect(container.querySelector('a[href*="undefined"]')).toBeNull()
+    expect(screen.queryByRole("link", { name: "Bookmarks" })).toBeNull()
+    expect(screen.getByRole("link", { name: "Creator Studio" }).getAttribute("href")).toBe("/studio")
+  })
+
+  it("keeps library search and pressed filters", () => {
+    fixture.search = "tab=libraries"
+    renderSidebar()
+    expect(screen.getByRole("textbox", { name: "Search libraries" })).not.toBeNull()
+    const grid = screen.getByRole("button", { name: "Grid" })
+    const list = screen.getByRole("button", { name: "List" })
+    expect(grid.getAttribute("aria-pressed")).toBe("true")
+    fireEvent.click(list)
+    expect(list.getAttribute("aria-pressed")).toBe("true")
+    expect(grid.getAttribute("aria-pressed")).toBe("false")
+  })
+
+  it("labels and closes the actual mobile sheet with Escape and focus return", async () => {
+    fixture.mobile = true
+    renderSidebar()
+    const trigger = screen.getByTestId("sidebar-trigger")
+    fireEvent.click(trigger)
+    expect(screen.getByRole("dialog", { name: "HigherBits navigation" })).not.toBeNull()
+    expect(screen.getByRole("button", { name: "Close navigation" }).parentElement?.className).toContain("sticky")
+    fireEvent.keyDown(document, { key: "Escape" })
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "HigherBits navigation" })).toBeNull())
+    expect(document.activeElement).toBe(trigger)
+    fireEvent.click(trigger)
+    fireEvent.click(screen.getByRole("button", { name: "Close navigation" }))
+    expect(screen.queryByRole("dialog", { name: "HigherBits navigation" })).toBeNull()
+  })
+
+  it("closes mobile navigation before activating global Search", async () => {
+    fixture.mobile = true
+    renderSidebar()
+    fireEvent.click(screen.getByTestId("sidebar-trigger"))
+    const searchEvents: boolean[] = []
+    const listener = (event: KeyboardEvent) => {
+      if (event.key === "k" && event.metaKey) searchEvents.push(screen.queryByRole("dialog", { name: "HigherBits navigation" }) === null)
+    }
+    document.addEventListener("keydown", listener)
+    try {
+      fireEvent.click(screen.getByRole("button", { name: /Search/ }))
+      await waitFor(() => expect(searchEvents).toEqual([true]))
+    } finally {
+      document.removeEventListener("keydown", listener)
+    }
+  })
+
+  it("cancels pending mobile Search when navigation reopens", async () => {
+    fixture.mobile = true
+    renderSidebar()
+    const trigger = screen.getByTestId("sidebar-trigger")
+    fireEvent.click(trigger)
+    const dispatches = vi.fn()
+    const listener = (event: KeyboardEvent) => { if (event.key === "k" && event.metaKey) dispatches() }
+    document.addEventListener("keydown", listener)
+    try {
+      fireEvent.click(screen.getByRole("button", { name: /Search/ }))
+      fireEvent.click(trigger)
+      expect(screen.getByRole("dialog", { name: "HigherBits navigation" })).not.toBeNull()
+      await new Promise((resolve) => setTimeout(resolve, 350))
+      expect(dispatches).not.toHaveBeenCalled()
+    } finally {
+      document.removeEventListener("keydown", listener)
+    }
   })
 })

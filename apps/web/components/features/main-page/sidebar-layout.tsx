@@ -1,32 +1,20 @@
 "use client"
 
-import { Icons } from "@/components/icons"
-import { SidebarHeader, useSidebar } from "@/components/ui/sidebar"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { studioHardNavigate } from "@/components/features/studio/nav-config"
+import { useSidebar } from "@/components/ui/sidebar"
+import { SheetTitle } from "@/components/ui/sheet"
 import { useNavigation } from "@/hooks/use-navigation"
 import {
   AppSection,
+  sortByAtom,
   librariesSearchAtom,
   librariesCategoryAtom,
   librariesScopeAtom,
   librariesSortAtom,
   librariesViewModeAtom,
 } from "@/lib/atoms"
-import {
-  LIBRARIES_DATA,
-  LIBRARY_CATEGORIES,
-  LIBRARY_SCOPE_COUNTS,
-} from "@/lib/data/libraries-data"
-import {
-  categories as defaultCategories,
-  aiBuilderNavItem,
-  mainNavigationItems,
-} from "@/lib/navigation"
-import { useFilteredNavigation } from "@/lib/navigation-with-higherbits-mcp"
+import { LIBRARY_CATEGORIES } from "@/lib/data/libraries-data"
+import { sidebarCategories, aiBuilderNavItem } from "@/lib/navigation"
 import { userStateAtom } from "@/lib/store/user-store"
 import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
@@ -35,7 +23,6 @@ import { useCategoryTagCounts } from "@/lib/queries"
 import { useAtom } from "jotai"
 import {
   ArrowDown,
-  ArrowUpRight,
   AudioLines,
   BarChart2,
   BookOpen,
@@ -49,10 +36,8 @@ import {
   Component,
   Crown,
   FileInput,
-  FolderKanban,
   FolderOpen,
   Globe,
-  Group,
   Home,
   KeyRound,
   Layers,
@@ -65,7 +50,6 @@ import {
   Package,
   Palette,
   PenLine,
-  Presentation,
   Search,
   Shapes,
   ShoppingCart,
@@ -76,9 +60,9 @@ import {
   Trophy,
   Users,
   Video,
+  X,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { AnimatePresence, motion } from "motion/react"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import * as React from "react"
@@ -96,17 +80,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// Import types from navigation-with-higherbits-mcp.tsx
-import { Button } from "@/components/ui/button"
-import { ClayCard } from "@/components/ui/clay-card"
-import { TextShimmer } from "@/components/ui/text-shimmer"
-import type {
-  NavigationCategory,
-  NavigationItem,
-} from "@/lib/navigation-with-higherbits-mcp"
 
 export function MainSidebar() {
-  const { toggleSidebar, state, isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, openMobile, setOpenMobile } = useSidebar()
+  const [searchAfterClose, setSearchAfterClose] = React.useState(false)
+  const wasMobileOpen = React.useRef(false)
+  const searchTimer = React.useRef<number | null>(null)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -118,25 +97,41 @@ export function MainSidebar() {
     setMounted(true)
   }, [])
 
-  const [showTrigger, setShowTrigger] = React.useState(true)
-  const [hoveredItem, setHoveredItem] = React.useState<string | null>(null)
-  const [expandedCategories, setExpandedCategories] = React.useState<string[]>(
-    [],
-  )
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]) // Start with Magic menu closed
 
   // Use our custom tabs navigation hook
-  const { activeTab, currentSection, navigateToTab, sortBy, handleSortChange } = useNavigation()
-
-  // Use the filtered navigation that checks if Magic onboarding is completed
-  const filteredCategories = useFilteredNavigation()
-
-  // Fall back to default categories if filteredCategories is not available (SSR)
-  // Hydration fix: only use filteredCategories after mounting to avoid mismatch with SSR
-  const categories = mounted ? (filteredCategories || defaultCategories) : defaultCategories
+  const { activeTab, currentSection, navigateToTab } = useNavigation()
+  const [sortBy, setSortBy] = useAtom(sortByAtom)
 
   // Get the current tab from URL when available
   const urlTab = searchParams.get("tab") as Exclude<AppSection, "higherbits-mcp"> | null
+  const routeQuery = searchParams.toString()
+
+  React.useEffect(() => {
+    if (!isMobile) return
+    if (openMobile && searchTimer.current !== null) {
+      window.clearTimeout(searchTimer.current)
+      searchTimer.current = null
+    }
+    if (wasMobileOpen.current && !openMobile) {
+      wasMobileOpen.current = false
+      if (searchAfterClose) {
+        setSearchAfterClose(false)
+        // The mobile sheet has a 300 ms closing animation; wait until its focus trap exits.
+        searchTimer.current = window.setTimeout(() => {
+          searchTimer.current = null
+          document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }))
+        }, 300)
+        return
+      }
+      document.querySelector<HTMLElement>('[data-sidebar="trigger"]')?.focus()
+    }
+    wasMobileOpen.current = openMobile
+  }, [isMobile, openMobile, searchAfterClose])
+
+  React.useEffect(() => () => {
+    if (searchTimer.current !== null) window.clearTimeout(searchTimer.current)
+  }, [])
 
   // Libraries filter state
   const [librariesSearch, setLibrariesSearch] = useAtom(librariesSearchAtom)
@@ -157,9 +152,7 @@ export function MainSidebar() {
     !isLibraryRoute &&
     (pathname.startsWith("/s/") ||
       urlTab === "components" ||
-      urlTab === "authors" ||
-      (currentSection === "components" &&
-        (activeTab === "components" || activeTab === "authors")))
+      (currentSection === "components" && activeTab === "components"))
 
   const [sidebarView, setSidebarView] = React.useState<
     "main" | "components" | "libraries"
@@ -220,16 +213,8 @@ export function MainSidebar() {
   const [searchQuery, setSearchQuery] = React.useState("")
   const searchInputRef = React.useRef<HTMLInputElement>(null)
 
-  const marketingCategory = categories.find(
-    (c: NavigationCategory) => c.title === "Marketing Blocks",
-  )
-  const uiCategory = categories.find(
-    (c: NavigationCategory) => c.title === "UI Components",
-  )
-
-  const marketingItems =
-    marketingCategory?.items || defaultCategories[0]?.items || []
-  const uiItems = uiCategory?.items || defaultCategories[1]?.items || []
+  const marketingItems = sidebarCategories[0]?.items ?? []
+  const uiItems = sidebarCategories[1]?.items ?? []
 
   const filteredMarketingItems = React.useMemo(() => {
     if (!searchQuery.trim()) return marketingItems
@@ -247,48 +232,11 @@ export function MainSidebar() {
     )
   }, [uiItems, searchQuery])
 
-  // Toggle category expansion
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories((prev) =>
-      prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId],
-    )
-  }
-
   // Toggle item expansion (like AI Component Builder)
   const toggleExpandItem = (id: string) => {
     setExpandedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     )
-  }
-
-  // Map navigation value to icon component
-  const getIconForNavItem = (value: string) => {
-    const item = mainNavigationItems.find((item) => item.value === value)
-    if (item) {
-      const Icon = item.icon
-      return <Icon className="mr-2 h-4 w-4" />
-    }
-    // Fallbacks
-    switch (value) {
-      case "home":
-        return <Home className="mr-2 h-4 w-4" />
-      case "components":
-        return <Component className="mr-2 h-4 w-4" />
-      case "templates":
-        return <LayoutTemplate className="mr-2 h-4 w-4" />
-      case "categories":
-        return <FolderKanban className="mr-2 h-4 w-4" />
-      case "authors":
-        return <Users className="mr-2 h-4 w-4" />
-      case "pro":
-        return <Crown className="mr-2 h-4 w-4" />
-      case "collections":
-        return <FolderOpen className="mr-2 h-4 w-4" />
-      default:
-        return <Box className="mr-2 h-4 w-4" />
-    }
   }
 
   const [helpOpen, setHelpOpen] = React.useState(false)
@@ -323,22 +271,113 @@ export function MainSidebar() {
   const { isAdmin: isHookAdmin } = useIsAdmin()
   const { data: tagCounts } = useCategoryTagCounts()
   const isAdmin = mounted ? Boolean(clerkUser && isHookAdmin) : false
+  const username =
+    userState?.profile?.display_username ||
+    userState?.profile?.username ||
+    clerkUser?.username ||
+    clerkUser?.externalAccounts?.[0]?.username
 
-  // Add a useEffect to automatically open the AI Builder menu after 1 second if admin
+  const tabHref = (tab: string, sort?: string) =>
+    `/?tab=${tab}${sort ? `&sort=${sort}` : ""}`
+
+  const navigateTab = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    tab: Exclude<AppSection, "higherbits-mcp">,
+    sort?: "recommended" | "date",
+  ) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
+    event.preventDefault()
+    if (sort) {
+      router.push(tabHref(tab, sort))
+    } else {
+      navigateToTab(tab)
+    }
+    if (tab === "components") setSidebarView("components")
+    if (tab === "libraries") setSidebarView("libraries")
+    if (isMobile) setOpenMobile(false)
+  }
+
+  const categoryRow = (item: (typeof sidebarCategories)[number]["items"][number]) => {
+    const Icon = item.icon || Box
+    const isActive = !item.comingSoon && pathname === item.href
+    const tagSlug = item.href.startsWith("/s/") ? item.href.slice(3) : ""
+    const count = tagSlug ? tagCounts?.[tagSlug] : undefined
+    return (
+      <SidebarMenuItem key={item.title}>
+        <SidebarMenuButton asChild isActive={isActive} className="h-auto min-h-8 rounded-md px-2 text-sm disabled:opacity-100 md:min-h-8 max-md:min-h-11">
+          {item.comingSoon ? (
+            <button type="button" disabled aria-label={`${item.title}, Coming soon`} className="flex w-full items-center gap-2 text-left text-muted-foreground disabled:cursor-not-allowed disabled:opacity-100">
+              <Icon className="size-4 shrink-0" />
+              <span className="min-w-0 flex-1 truncate">{item.title}</span>
+              <span className="shrink-0 rounded border border-border px-1 py-0.5 text-[10px] leading-none">Coming soon</span>
+            </button>
+          ) : (
+            <Link
+              href={item.href}
+              aria-current={isActive ? "page" : undefined}
+              className="flex w-full items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+                e.preventDefault()
+                window.location.href = item.href
+                if (isMobile) setOpenMobile(false)
+              }}
+            >
+              <Icon className="size-4 shrink-0" />
+              <span className="min-w-0 flex-1 truncate">{item.title}</span>
+              {typeof count === "number" && count > 0 && <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{count}</span>}
+            </Link>
+          )}
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    )
+  }
+
+  const tabRow = (title: string, tab: Exclude<AppSection, "higherbits-mcp">, Icon: typeof Home) => {
+    const selected = pathname === "/" && (urlTab || "home") === tab
+    return (
+      <SidebarMenuItem key={title}>
+        <SidebarMenuButton asChild isActive={selected} className="h-auto min-h-8 px-2 text-sm max-md:min-h-11">
+          <Link href={tabHref(tab, tab === "components" ? "recommended" : undefined)} aria-current={selected ? "page" : undefined} onClick={(e) => navigateTab(e, tab, tab === "components" ? "recommended" : undefined)} className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring">
+            <Icon className="size-4 shrink-0" /><span>{title}</span>
+            {tab === "components" && <ChevronRight className="ml-auto size-4" />}
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    )
+  }
+
+  const soonRow = (title: string, Icon: typeof Home) => (
+    <SidebarMenuItem key={title}>
+      <SidebarMenuButton asChild className="h-auto min-h-8 px-2 text-sm disabled:opacity-100 max-md:min-h-11">
+        <button type="button" disabled aria-label={`${title}, Coming soon`} className="flex w-full items-center gap-2 text-left text-muted-foreground disabled:cursor-not-allowed disabled:opacity-100">
+          <Icon className="size-4 shrink-0" /><span className="min-w-0 flex-1 truncate">{title}</span>
+          <span className="shrink-0 rounded border border-border px-1 py-0.5 text-[10px] leading-none">Coming soon</span>
+        </button>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  )
+
   React.useEffect(() => {
-    if (!isAdmin) return
-    const timer = setTimeout(() => {
-      setExpandedItems((prev) =>
-        prev.includes("ai-builder") ? prev : [...prev, "ai-builder"],
-      )
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [isAdmin])
+    if (pathname !== "/" || urlTab !== "components") return
+    const requested = new URLSearchParams(routeQuery).get("sort")
+    const nextSort = requested === "date" || requested === "downloads" || requested === "likes" || requested === "bookmarks"
+      ? requested
+      : "recommended"
+    setSortBy((current) => current === nextSort ? current : nextSort)
+  }, [pathname, urlTab, routeQuery, setSortBy])
 
   return (
     <Sidebar className="hidden md:flex top-14 h-[calc(100svh-3.5rem)] border-t">
-      <SidebarContent className="pb-14">
+      <SidebarContent className="min-h-0 flex-1 pb-2">
+        {isMobile && (
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-sidebar px-3 py-2">
+            <SheetTitle className="text-sm font-semibold">HigherBits navigation</SheetTitle>
+            <button type="button" aria-label="Close navigation" onClick={() => setOpenMobile(false)} className="flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:ring-ring">
+              <X className="size-5" />
+            </button>
+          </div>
+        )}
         {sidebarView === "libraries" ? (
           <>
             {/* Header with back button */}
@@ -363,6 +402,7 @@ export function MainSidebar() {
                 <Input
                   ref={librariesSearchRef}
                   type="text"
+                  aria-label="Search libraries"
                   placeholder="Search libraries"
                   value={librariesSearch}
                   onChange={(e) => setLibrariesSearch(e.target.value)}
@@ -379,6 +419,7 @@ export function MainSidebar() {
               <div className="flex h-8 items-center rounded-md border border-border/60 bg-foreground/5 p-0.5">
                 <button
                   type="button"
+                  aria-pressed={librariesViewMode === "grid"}
                   onClick={() => setLibrariesViewMode("grid")}
                   className={cn(
                     "flex h-6.5 flex-1 items-center justify-center gap-1.5 rounded-sm text-xs transition-colors",
@@ -392,6 +433,7 @@ export function MainSidebar() {
                 </button>
                 <button
                   type="button"
+                  aria-pressed={librariesViewMode === "list"}
                   onClick={() => setLibrariesViewMode("list")}
                   className={cn(
                     "flex h-6.5 flex-1 items-center justify-center gap-1.5 rounded-sm text-xs transition-colors",
@@ -406,10 +448,11 @@ export function MainSidebar() {
               </div>
             </div>
 
-            {/* Scope selection with totals derived from the displayed library catalog. */}
+            {/* Scope selection: On HigherBits (139) / shadcn directory (308) */}
             <div className="px-2 pb-1 flex flex-col gap-0.5">
               <button
                 type="button"
+                aria-pressed={librariesScope === "higherbits" && librariesCategory === "all"}
                 onClick={() => {
                   setLibrariesScope("higherbits")
                   setLibrariesCategory("all")
@@ -424,12 +467,13 @@ export function MainSidebar() {
                 <Boxes className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
                 <span>On HigherBits</span>
                 <span className="ml-auto text-xs tabular-nums text-muted-foreground/70">
-                  {LIBRARY_SCOPE_COUNTS.higherbits}
+                  139
                 </span>
               </button>
 
               <button
                 type="button"
+                aria-pressed={librariesScope === "shadcn"}
                 onClick={() => {
                   setLibrariesScope("shadcn")
                 }}
@@ -443,7 +487,7 @@ export function MainSidebar() {
                 <Globe className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
                 <span>shadcn directory</span>
                 <span className="ml-auto text-xs tabular-nums text-muted-foreground/70">
-                  {LIBRARY_SCOPE_COUNTS.shadcn}
+                  308
                 </span>
               </button>
             </div>
@@ -464,6 +508,7 @@ export function MainSidebar() {
                   <button
                     key={s.value}
                     type="button"
+                    aria-pressed={librariesSort === s.value}
                     onClick={() => setLibrariesSort(s.value as any)}
                     className={cn(
                       "flex w-full items-center h-7 rounded-md px-2 text-xs transition-colors",
@@ -488,17 +533,15 @@ export function MainSidebar() {
               </p>
               <div className="flex flex-col gap-0.5">
                 {LIBRARY_CATEGORIES.map((cat) => {
-                  const isCatActive = librariesCategory === cat.slug
-                  const categoryCount = LIBRARIES_DATA.filter(
-                    (library) =>
-                      library.scope === librariesScope &&
-                      library.categories.includes(cat.slug),
-                  ).length
+                  const isCatActive =
+                    librariesCategory === cat.slug && librariesScope === "higherbits"
                   return (
                     <button
                       key={cat.slug}
                       type="button"
+                      aria-pressed={isCatActive}
                       onClick={() => {
+                        setLibrariesScope("higherbits")
                         setLibrariesCategory(
                           isCatActive ? "all" : cat.slug,
                         )
@@ -515,7 +558,7 @@ export function MainSidebar() {
                       </span>
                       <span className="truncate">{cat.name}</span>
                       <span className="ml-auto pl-2 text-[11px] tabular-nums text-muted-foreground/70">
-                        {categoryCount}
+                        {cat.count}
                       </span>
                     </button>
                   )
@@ -530,6 +573,7 @@ export function MainSidebar() {
               <button
                 type="button"
                 onClick={() => setSidebarView("main")}
+                aria-label="Back to main navigation"
                 className="flex items-center gap-2 text-sm font-semibold text-foreground hover:text-foreground/80 transition-colors py-1 px-1 -ml-1 rounded-md"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -544,6 +588,7 @@ export function MainSidebar() {
                 <Input
                   ref={searchInputRef}
                   type="text"
+                  aria-label="Search components"
                   placeholder="Search components"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -555,249 +600,42 @@ export function MainSidebar() {
               </div>
             </div>
 
-            {/* Quick Links */}
             {!searchQuery.trim() && (
-              <SidebarGroup className="py-1">
-                <SidebarGroupContent>
-                  <SidebarMenu className="gap-0.5">
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={
-                          currentSection !== "higherbits-mcp" &&
-                          !pathname.startsWith("/s/") &&
-                          urlTab === "components" &&
-                          sortBy === "recommended"
-                        }
-                        onClick={() => {
-                          navigateToTab("components")
-                          handleSortChange("recommended")
-                          if (isMobile) setOpenMobile(false)
-                        }}
-                      >
-                        <div className="flex items-center w-full">
-                          <Sparkles className="mr-2 h-4 w-4 text-muted-foreground" />
-                          <span>Featured</span>
-                        </div>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={
-                          currentSection !== "higherbits-mcp" &&
-                          !pathname.startsWith("/s/") &&
-                          urlTab === "components" &&
-                          sortBy === "date"
-                        }
-                        onClick={() => {
-                          navigateToTab("components")
-                          handleSortChange("date")
-                          if (isMobile) setOpenMobile(false)
-                        }}
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center">
-                            <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <span>Newest</span>
-                          </div>
-                          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                        </div>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={activeTab === "authors" || urlTab === "authors"}
-                        onClick={() => {
-                          navigateToTab("authors")
-                          if (isMobile) setOpenMobile(false)
-                        }}
-                      >
-                        <div className="flex items-center w-full">
-                          <Users className="mr-2 h-4 w-4 text-muted-foreground" />
-                          <span>Authors</span>
-                        </div>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        isActive={
-                          activeTab === "libraries" ||
-                          urlTab === "libraries"
-                        }
-                        onClick={() => {
-                          setSidebarView("libraries")
-                          navigateToTab("libraries")
-                          if (isMobile) setOpenMobile(false)
-                        }}
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center">
-                            <Layers className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <span>Libraries</span>
-                            <span className="ml-2 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 text-[10px] leading-none font-medium">
-                              Updated
-                            </span>
-                          </div>
-                          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-                        </div>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroupContent>
+              <SidebarGroup className="px-2 py-1">
+                <SidebarGroupContent><SidebarMenu className="gap-0.5">
+                  {([
+                    { title: "Featured", icon: Sparkles, tab: "components", sort: "recommended" },
+                    { title: "Newest", icon: Clock, tab: "components", sort: "date" },
+                    { title: "Creators", icon: Users, tab: "authors" },
+                    { title: "Libraries", icon: Layers, tab: "libraries" },
+                  ] as const).map(({ title, icon: Icon, tab, ...option }) => {
+                    const sort = "sort" in option ? option.sort : undefined
+                    const selected = pathname === "/" && urlTab === tab && (tab !== "components" || sortBy === sort)
+                    return (
+                      <SidebarMenuItem key={title}>
+                        <SidebarMenuButton asChild isActive={selected} className="h-auto min-h-8 px-2 text-sm max-md:min-h-11">
+                          <Link href={tabHref(tab, sort)} aria-current={selected ? "page" : undefined} onClick={(e) => navigateTab(e, tab, sort)} className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring">
+                            <Icon className="size-4 shrink-0" /><span>{title}</span>
+                            {tab === "libraries" && <ChevronRight className="ml-auto size-4" />}
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  })}
+                </SidebarMenu></SidebarGroupContent>
               </SidebarGroup>
             )}
 
-            {/* Marketing Blocks */}
             {filteredMarketingItems.length > 0 && (
-              <SidebarGroup className="py-1">
-                <SidebarGroupLabel className="text-xs font-semibold text-foreground px-3 py-1">
-                  Marketing Blocks
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu className="gap-0.5">
-                    {filteredMarketingItems.map((item) => {
-                      const tagSlug = item.href.startsWith("/s/")
-                        ? item.href.replace("/s/", "")
-                        : ""
-                      const liveCount =
-                        tagCounts && tagSlug ? (tagCounts[tagSlug] ?? 0) : 0
-                      const isActive =
-                        pathname === item.href ||
-                        Boolean(tagSlug && pathname === `/s/${tagSlug}`)
-                      const Icon = item.icon || Box
-
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive}>
-                            <Link
-                              href={item.href}
-                              className={cn(
-                                "flex items-center justify-between w-full text-xs py-1.5",
-                                isActive
-                                  ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
-                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                              )}
-                              onClick={(e) => {
-                                if (item.externalLink) return
-                                if (
-                                  e.metaKey ||
-                                  e.ctrlKey ||
-                                  e.shiftKey ||
-                                  e.button === 1
-                                )
-                                  return
-                                e.preventDefault()
-                                window.location.href = item.href
-                                if (isMobile) setOpenMobile(false)
-                              }}
-                              onMouseEnter={() => setHoveredItem(item.title)}
-                              onMouseLeave={() => setHoveredItem(null)}
-                            >
-                              <span className="flex items-center min-w-0 truncate">
-                                <Icon className="mr-2 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                                <span className="truncate">{item.title}</span>
-                                {item.isNew && (
-                                  <span className="ml-2 shrink-0 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 text-[10px] leading-none font-medium">
-                                    New
-                                  </span>
-                                )}
-                              </span>
-                              {liveCount > 0 && (
-                                <span
-                                  className={cn(
-                                    "text-xs text-muted-foreground shrink-0 ml-2",
-                                    hoveredItem === item.title &&
-                                      "text-accent-foreground",
-                                  )}
-                                >
-                                  {liveCount}
-                                </span>
-                              )}
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
+              <SidebarGroup className="py-1 px-2">
+                <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">Marketing Blocks</SidebarGroupLabel>
+                <SidebarGroupContent><SidebarMenu className="gap-0.5">{filteredMarketingItems.map(categoryRow)}</SidebarMenu></SidebarGroupContent>
               </SidebarGroup>
             )}
-
-            {/* UI Components */}
             {filteredUiItems.length > 0 && (
-              <SidebarGroup className="py-1">
-                <SidebarGroupLabel className="text-xs font-semibold text-foreground px-3 py-1">
-                  UI Components
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu className="gap-0.5">
-                    {filteredUiItems.map((item) => {
-                      const tagSlug = item.href.startsWith("/s/")
-                        ? item.href.replace("/s/", "")
-                        : ""
-                      const liveCount =
-                        tagCounts && tagSlug ? (tagCounts[tagSlug] ?? 0) : 0
-                      const isActive =
-                        pathname === item.href ||
-                        Boolean(tagSlug && pathname === `/s/${tagSlug}`)
-                      const Icon = item.icon || Box
-
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive}>
-                            <Link
-                              href={item.href}
-                              className={cn(
-                                "flex items-center justify-between w-full text-xs py-1.5",
-                                isActive
-                                  ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
-                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                              )}
-                              onClick={(e) => {
-                                if (item.externalLink) return
-                                if (
-                                  e.metaKey ||
-                                  e.ctrlKey ||
-                                  e.shiftKey ||
-                                  e.button === 1
-                                )
-                                  return
-                                e.preventDefault()
-                                window.location.href = item.href
-                                if (isMobile) setOpenMobile(false)
-                              }}
-                              onMouseEnter={() => setHoveredItem(item.title)}
-                              onMouseLeave={() => setHoveredItem(null)}
-                            >
-                              <span className="flex items-center min-w-0 truncate">
-                                <Icon className="mr-2 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                                <span className="truncate">{item.title}</span>
-                                {item.isNew && (
-                                  <span className="ml-2 shrink-0 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 text-[10px] leading-none font-medium">
-                                    New
-                                  </span>
-                                )}
-                              </span>
-                              {liveCount > 0 && (
-                                <span
-                                  className={cn(
-                                    "text-xs text-muted-foreground shrink-0 ml-2",
-                                    hoveredItem === item.title &&
-                                      "text-accent-foreground",
-                                  )}
-                                >
-                                  {liveCount}
-                                </span>
-                              )}
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
+              <SidebarGroup className="py-1 px-2">
+                <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">UI Components</SidebarGroupLabel>
+                <SidebarGroupContent><SidebarMenu className="gap-0.5">{filteredUiItems.map(categoryRow)}</SidebarMenu></SidebarGroupContent>
               </SidebarGroup>
             )}
 
@@ -809,216 +647,87 @@ export function MainSidebar() {
           </>
         ) : (
           <>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {/* Home and Components first */}
-                  {mainNavigationItems
-                    .filter((item) => ["home", "components"].includes(item.value))
-                    .map((item) => (
-                      <SidebarMenuItem key={item.value}>
-                        <SidebarMenuButton
-                          isActive={
-                            currentSection !== "higherbits-mcp" &&
-                            !pathname.startsWith("/s/") &&
-                            ((item.value === "home" &&
-                              (urlTab === "home" ||
-                                (!urlTab && pathname === "/"))) ||
-                              (item.value === "components" &&
-                                urlTab === "components") ||
-                              (item.value !== "home" &&
-                                item.value !== "components" &&
-                                activeTab === item.value))
-                          }
-                          onClick={() => {
-                            if (item.value === "components") {
-                              setSidebarView("components")
-                            }
-                            navigateToTab(
-                              item.value as Exclude<AppSection, "higherbits-mcp"> | "home",
-                            )
-                            if (isMobile) setOpenMobile(false)
-                          }}
-                        >
-                          <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center">
-                              {getIconForNavItem(item.value)}
-                              {item.title}
-                              {item.isNew && (
-                                <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000]">
-                                  New
-                                </span>
-                              )}
-                            </div>
-                            {item.value === "components" && (
-                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </div>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-
-                  {/* AI Component Builder collapsible menu */}
-                  {isAdmin && (
-                  <SidebarMenuItem className="group/menu-item relative">
-                    <SidebarMenuButton
-                      isActive={false}
-                      onClick={() => toggleExpandItem("ai-builder")}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center">
-                          <Sparkles className="mr-2 h-4 w-4" />
-                          {aiBuilderNavItem.title}
-                        </div>
-                        <ChevronRight
-                          className={cn(
-                            "h-4 w-4 transition-transform",
-                            expandedItems.includes("ai-builder") &&
-                              "transform rotate-90",
-                          )}
-                        />
-                      </div>
-                    </SidebarMenuButton>
-
-                    <AnimatePresence mode="wait">
-                      {expandedItems.includes("ai-builder") && (
-                        <motion.div
-                          key="ai-builder-menu"
-                          initial={{
-                            height: 0,
-                            opacity: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                          }}
-                          animate={{
-                            height: "auto",
-                            opacity: 1,
-                            marginTop: 4,
-                            marginBottom: 4,
-                          }}
-                          exit={{
-                            height: 0,
-                            opacity: 0,
-                            marginTop: 0,
-                            marginBottom: 0,
-                          }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
-                          className="overflow-hidden ml-6 w-auto"
-                          style={{ paddingBottom: 0 }}
-                        >
-                          <div className="flex flex-col gap-0.5">
-                            {aiBuilderNavItem.subitems.map((subitem, itemIndex) => {
-                              const isActive =
-                                pathname === subitem.href ||
-                                (currentSection === "higherbits-mcp" &&
-                                  pathname === subitem.href)
-
-                              // Calculate staggered delay
-                              const staggerDelay = Math.min(itemIndex * 0.02, 0.15)
-
-                              return (
-                                <motion.div
-                                  key={subitem.title}
-                                  initial={{ opacity: 0, y: -10 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  exit={{ opacity: 0, y: -5 }}
-                                  transition={{
-                                    duration: 0.15,
-                                    delay: staggerDelay,
-                                    ease: "easeOut",
-                                  }}
-                                >
-                                  <div className="mb-0">
-                                    <SidebarMenuButton asChild isActive={isActive}>
-                                      <Link
-                                        href={subitem.href}
-                                        className={cn(
-                                          "flex items-center justify-between w-full",
-                                          isActive
-                                            ? "bg-accent-lavender text-accent-lavender-foreground font-medium"
-                                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                                        )}
-                                        onClick={(e) => {
-                                          if (subitem.externalLink) return
-                                          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return
-                                          e.preventDefault()
-                                          window.location.href = subitem.href
-                                          if (isMobile) setOpenMobile(false)
-                                        }}
-                                        target={
-                                          subitem.externalLink
-                                            ? "_blank"
-                                            : undefined
-                                        }
-                                        rel={
-                                          subitem.externalLink
-                                            ? "noopener noreferrer"
-                                            : undefined
-                                        }
-                                      >
-                                        <span className="flex items-center">
-                                          {subitem.title}
-                                          {subitem.isNew && (
-                                            <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000]">
-                                              New
-                                            </span>
-                                          )}
-                                        </span>
-                                        {subitem.externalLink && (
-                                          <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
-                                        )}
-                                      </Link>
-                                    </SidebarMenuButton>
-                                  </div>
-                                </motion.div>
-                              )
-                            })}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </SidebarMenuItem>
-                  )}
-
-                  {/* Templates and other items */}
-                  {mainNavigationItems
-                    .filter((item) => !["home", "components"].includes(item.value))
-                    .filter((item) => {
-                      return (
-                        isAdmin ||
-                        !["bundles", "templates", "pro"].includes(item.value)
-                      )
-                    })
-                    .map((item) => (
-                      <SidebarMenuItem key={item.value}>
-                        <SidebarMenuButton
-                          isActive={
-                            currentSection !== "higherbits-mcp" &&
-                            !pathname.startsWith("/s/") &&
-                            activeTab === item.value
-                          }
-                          onClick={() => {
-                            navigateToTab(
-                              item.value as Exclude<AppSection, "higherbits-mcp">,
-                            )
-                            if (isMobile) setOpenMobile(false)
-                          }}
-                        >
-                          <div className="flex items-center w-full">
-                            {getIconForNavItem(item.value)}
-                            {item.title}
-                            {item.isNew && (
-                              <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000]">
-                                New
-                              </span>
-                            )}
-                          </div>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
+            <SidebarGroup className="px-2 py-2">
+              <SidebarGroupContent><SidebarMenu className="gap-0.5">
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild className="h-auto min-h-8 px-2 text-sm max-md:min-h-11">
+                    <button type="button" onClick={() => {
+                      if (isMobile) {
+                        setSearchAfterClose(true)
+                        setOpenMobile(false)
+                      } else {
+                        document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }))
+                      }
+                    }} className="flex w-full items-center gap-2 text-left focus-visible:ring-2 focus-visible:ring-ring">
+                      <Search className="size-4" /><span>Search</span><kbd className="ml-auto text-[10px] text-muted-foreground">⌘ K</kbd>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                {tabRow("Home", "home", Home)}
+              </SidebarMenu></SidebarGroupContent>
             </SidebarGroup>
+
+            <SidebarGroup className="px-2 py-1">
+              <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">Explore</SidebarGroupLabel>
+              <SidebarGroupContent><SidebarMenu className="gap-0.5">
+                {tabRow("Components", "components", Component)}
+                {soonRow("Themes", Palette)}
+                {isAdmin && tabRow("Templates", "templates", LayoutTemplate)}
+                {soonRow("Apps", Boxes)}
+                {soonRow("Icons", Shapes)}
+                {soonRow("Video", Video)}
+                {mounted && clerkUser && username && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === `/${username}` && searchParams.get("tab") === "bookmarks"} className="h-auto min-h-8 px-2 text-sm max-md:min-h-11">
+                      <Link href={`/${username}?tab=bookmarks`} aria-current={pathname === `/${username}` && searchParams.get("tab") === "bookmarks" ? "page" : undefined} className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring" onClick={(e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return; if (isMobile) setOpenMobile(false) }}>
+                        <Bookmark className="size-4" />Bookmarks
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+                {tabRow("Creators", "authors", Users)}
+                {tabRow("Collections", "collections", FolderOpen)}
+              </SidebarMenu></SidebarGroupContent>
+            </SidebarGroup>
+
+            <SidebarGroup className="px-2 py-1">
+              <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">Build</SidebarGroupLabel>
+              <SidebarGroupContent><SidebarMenu className="gap-0.5">
+                {mounted && clerkUser && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith("/studio")} className="h-auto min-h-8 px-2 text-sm max-md:min-h-11">
+                      <Link href={username ? `/studio/${username}/components` : "/studio"} aria-current={pathname.startsWith("/studio") ? "page" : undefined} className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring" onClick={(e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return; e.preventDefault(); if (username) studioHardNavigate(`/studio/${username}/components`); else router.push("/studio"); if (isMobile) setOpenMobile(false) }}>
+                        <PenLine className="size-4" />Creator Studio
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+                {soonRow("HigherBits AI", Sparkles)}
+                {isAdmin && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton type="button" aria-expanded={expandedItems.includes("higherbits-mcp")} aria-controls="higherbits-mcp-links" onClick={() => toggleExpandItem("higherbits-mcp")} className="h-auto min-h-8 px-2 text-sm max-md:min-h-11">
+                      <div className="flex w-full items-center gap-2"><Terminal className="size-4" />HigherBits MCP<ChevronRight className={cn("ml-auto size-4 transition-transform motion-reduce:transition-none", expandedItems.includes("higherbits-mcp") && "rotate-90")} /></div>
+                    </SidebarMenuButton>
+                    <div id="higherbits-mcp-links" hidden={!expandedItems.includes("higherbits-mcp")} className="ml-6">
+                      {aiBuilderNavItem.subitems.filter((item) => item.title !== "HigherBits AI Waitlist").map((item) => (
+                        <Link key={item.title} href={item.href} target={item.externalLink ? "_blank" : undefined} rel={item.externalLink ? "noopener noreferrer" : undefined} aria-current={pathname === item.href ? "page" : undefined} className="flex min-h-8 items-center rounded-md px-2 text-sm text-muted-foreground hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring max-md:min-h-11" onClick={(e) => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return; if (isMobile) setOpenMobile(false) }}>{item.title}</Link>
+                      ))}
+                    </div>
+                  </SidebarMenuItem>
+                )}
+              </SidebarMenu></SidebarGroupContent>
+            </SidebarGroup>
+
+            {isAdmin && (
+              <SidebarGroup className="px-2 py-1">
+                <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">Catalog tools</SidebarGroupLabel>
+                <SidebarGroupContent><SidebarMenu className="gap-0.5">
+                  {tabRow("Bundles", "bundles", Package)}
+                  {tabRow("Premium Stores", "pro", Crown)}
+                  <SidebarMenuItem><SidebarMenuButton asChild className="h-auto min-h-8 px-2 text-sm max-md:min-h-11"><Link href="/magic-chat" className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-ring"><Bot className="size-4" />HigherBits AI Waitlist</Link></SidebarMenuButton></SidebarMenuItem>
+                </SidebarMenu></SidebarGroupContent>
+              </SidebarGroup>
+            )}
 
             {isAdmin && (
             <SidebarGroup>
@@ -1060,100 +769,24 @@ export function MainSidebar() {
             </SidebarGroup>
             )}
 
-            {/* Add You section */}
-            {mounted && Boolean(clerkUser) && (
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-sm font-semibold text-foreground">
-                You
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      onClick={() => {
-                        if (userState.profile?.display_username) {
-                          router.push(
-                            `/${userState.profile.display_username}?tab=bookmarks`,
-                          )
-                        } else if (clerkUser?.username) {
-                          router.push(`/${clerkUser.username}?tab=bookmarks`)
-                        } else if (clerkUser?.externalAccounts?.[0]?.username) {
-                          router.push(
-                            `/${clerkUser.externalAccounts[0].username}?tab=bookmarks`,
-                          )
-                        }
-                          if (isMobile) setOpenMobile(false)
-                      }}
-                    >
-                      <div className="flex items-center w-full">
-                        <Bookmark className="mr-2 h-4 w-4" />
-                        Bookmarks
-                      </div>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  {isAdmin && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      onClick={() => {
-                        if (userState.profile?.display_username) {
-                          router.push(
-                            `/${userState.profile.display_username}?tab=purchased_bundles`,
-                          )
-                        } else if (clerkUser?.username) {
-                          router.push(
-                            `/${clerkUser.username}?tab=purchased_bundles`,
-                          )
-                        } else if (clerkUser?.externalAccounts?.[0]?.username) {
-                          router.push(
-                            `/${clerkUser.externalAccounts[0].username}?tab=purchased_bundles`,
-                          )
-                        }
-                          if (isMobile) setOpenMobile(false)
-                      }}
-                    >
-                      <div className="flex items-center w-full">
-                        <Package className="mr-2 h-4 w-4" />
-                        Purchased Bundles
-                      </div>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  )}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            {mounted && Boolean(clerkUser) && isAdmin && (
+              <SidebarGroup className="px-2 py-1">
+                <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">You</SidebarGroupLabel>
+                <SidebarGroupContent><SidebarMenu className="gap-0.5">
+                  {soonRow("Purchased Bundles", Package)}
+                </SidebarMenu></SidebarGroupContent>
+              </SidebarGroup>
             )}
           </>
         )}
       </SidebarContent>
-      <SidebarFooter className="flex flex-col justify-start pl-4 border-t py-2">
-        {isAdmin && state !== "collapsed" && (
-          <ClayCard className="bg-accent-pink text-accent-pink-foreground mr-4 flex flex-col justify-between p-4">
-            <div>
-              <div className="flex items-center gap-2 font-cozy text-sm font-medium">
-                <Crown className="h-4 w-4" />
-                Unlock everything
-              </div>
-              <p className="mt-1 text-sm">
-                Go Pro for full access to every component.
-              </p>
-            </div>
-            <Link
-              href="/support"
-              className="mt-3 inline-block"
-              onClick={(e) => {
-                if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return
-                e.preventDefault()
-                router.push("/support")
-                if (isMobile) setOpenMobile(false)
-              }}
-            >
-              <span className="font-medium underline underline-offset-4">
-                Support Us!
-              </span>
-            </Link>
-          </ClayCard>
-        )}
+      <SidebarFooter className="shrink-0 flex flex-row items-center justify-between border-t px-3 py-2">
         <Help open={helpOpen} onOpenChange={setHelpOpen} />
+        {mounted && clerkUser && (
+          <button type="button" onClick={() => { if (username) studioHardNavigate(`/studio/${username}/components?new=true`); else router.push("/studio?new=true"); if (isMobile) setOpenMobile(false) }} className="inline-flex min-h-8 items-center gap-2 rounded-md px-2 text-sm font-medium text-foreground hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring max-md:min-h-11">
+            <PenLine className="size-4" />Publish
+          </button>
+        )}
       </SidebarFooter>
     </Sidebar>
   )

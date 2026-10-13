@@ -59,6 +59,7 @@ import {
   PanelBottom,
   PanelLeft,
   Quote,
+  Search,
   Shapes,
   Sliders,
   SlidersHorizontal,
@@ -708,5 +709,65 @@ export const categories: NavigationCategory[] = [
     title: "UI Components",
     icon: Group,
     items: ui,
+  },
+]
+
+export type SidebarCategoryItem = NavigationItem & { comingSoon?: boolean }
+
+const unavailableSidebarCategories = new Set([
+  "Announcements", "ASCII Art", "Calls to Action", "FAQs", "Footers",
+  "Galleries", "Hooks", "Images", "Maps", "Steppers", "Videos",
+  "File Uploads", "Icons", "Links", "Notifications", "Onboarding",
+  "Paginations", "Profiles", "Progress", "Radio Groups", "Search Bars",
+  "Sliders", "Tags", "Text Areas", "Toasts",
+])
+
+const sidebarAliases: Record<string, string> = {
+  "/s/avatar": "/s/avatars",
+  "/s/bento-grid": "/s/grid",
+  "/s/registration-signup": "/s/registration",
+  "/s/team-section": "/s/team",
+  "/s/carousel": "/s/3d-carousel",
+}
+
+// Sidebar availability reflects reviewed HigherBits routes, not the 21st.dev catalog.
+export const sidebarCategories: {
+  title: string
+  items: SidebarCategoryItem[]
+}[] = [
+  {
+    title: "Marketing Blocks",
+    items: marketing.map((item) => ({
+      ...item,
+      href: sidebarAliases[item.href] ?? item.href,
+      comingSoon: unavailableSidebarCategories.has(item.title),
+      isNew: false,
+    })),
+  },
+  {
+    title: "UI Components",
+    items: [
+      ...ui,
+      { title: "Profiles", href: "/s/profile", icon: CircleUser },
+      { title: "Progress", href: "/s/progress", icon: BarChart2 },
+      { title: "Search Bars", href: "/s/search", icon: Search },
+    ]
+      .map((item) => ({
+        ...item,
+        title: item.title === "Carousels" ? "3D Carousels" : item.title,
+        href: sidebarAliases[item.href] ?? item.href,
+        comingSoon: unavailableSidebarCategories.has(item.title),
+        isNew: false,
+      }))
+      .sort((a, b) => {
+        const order = (title: string) => {
+          if (title === "3D Carousels") return "Carousels"
+          if (title === "Sidebars") return "Selek-Sidebars"
+          if (title === "Tabs") return "Tags-1"
+          if (title === "Tags") return "Tags-2"
+          return title
+        }
+        return order(a.title).localeCompare(order(b.title))
+      }),
   },
 ]

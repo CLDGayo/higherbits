@@ -1,0 +1,435 @@
+{
+  "root": [
+    "Home",
+    "Explore: Components",
+    "Themes",
+    "Templates",
+    "Apps",
+    "Icons",
+    "Video",
+    "Bookmarks",
+    "Build: Creator Studio",
+    "21st AI",
+    "Design Bug Bot",
+    "CLI & MCP"
+  ],
+  "controls": [
+    "Brand home",
+    "Search",
+    "Help",
+    "Publish",
+    "Close sidebar",
+    "Components context button",
+    "Category search"
+  ],
+  "componentTop": [
+    {
+      "name": "Featured",
+      "href": "/community/components/featured"
+    },
+    {
+      "name": "Newest",
+      "href": "/community/components/newest"
+    },
+    {
+      "name": "Authors",
+      "href": "/community/authors"
+    },
+    {
+      "name": "Libraries",
+      "href": "/community/libraries"
+    }
+  ],
+  "categories": [
+    {
+      "group": "Marketing Blocks",
+      "name": "Announcements",
+      "href": "/community/components/s/announcement"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "ASCII Art",
+      "href": "/community/ascii"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Backgrounds",
+      "href": "/community/components/s/background"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Borders",
+      "href": "/community/components/s/border"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Calls to Action",
+      "href": "/community/components/s/cta"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Clients",
+      "href": "/community/components/s/clients"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Comparisons",
+      "href": "/community/components/s/comparison"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Docks",
+      "href": "/community/components/s/dock"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "FAQs",
+      "href": "/community/components/s/faq"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Features",
+      "href": "/community/components/s/features"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Footers",
+      "href": "/community/components/s/footer"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Galleries",
+      "href": "/community/components/s/gallery"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Gradients",
+      "href": "/community/gradients"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Heroes",
+      "href": "/community/components/s/hero"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Hooks",
+      "href": "/community/components/s/hook"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Images",
+      "href": "/community/components/s/image"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Maps",
+      "href": "/community/components/s/map"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Marquees",
+      "href": "/community/components/s/marquee"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Navigation Menus",
+      "href": "/community/components/s/navigation-menu"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Pricing Sections",
+      "href": "/community/components/s/pricing-section"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Scroll Areas",
+      "href": "/community/components/s/scroll-area"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Shaders",
+      "href": "/community/shaders"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Stats & KPIs",
+      "href": "/community/components/s/stat"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Steppers",
+      "href": "/community/components/s/steps"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Team Sections",
+      "href": "/community/components/s/team"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Testimonials",
+      "href": "/community/components/s/testimonials"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Texts",
+      "href": "/community/components/s/text"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Timelines",
+      "href": "/community/components/s/timeline"
+    },
+    {
+      "group": "Marketing Blocks",
+      "name": "Videos",
+      "href": "/community/components/s/video"
+    },
+    {
+      "group": "UI Components",
+      "name": "Accordions",
+      "href": "/community/components/s/accordion"
+    },
+    {
+      "group": "UI Components",
+      "name": "AI Chats",
+      "href": "/community/components/s/ai-chat"
+    },
+    {
+      "group": "UI Components",
+      "name": "Alerts",
+      "href": "/community/components/s/alert"
+    },
+    {
+      "group": "UI Components",
+      "name": "Avatars",
+      "href": "/community/components/s/avatar"
+    },
+    {
+      "group": "UI Components",
+      "name": "Badges",
+      "href": "/community/components/s/badge"
+    },
+    {
+      "group": "UI Components",
+      "name": "Buttons",
+      "href": "/community/components/s/button"
+    },
+    {
+      "group": "UI Components",
+      "name": "Calendars",
+      "href": "/community/components/s/calendar"
+    },
+    {
+      "group": "UI Components",
+      "name": "Cards",
+      "href": "/community/components/s/card"
+    },
+    {
+      "group": "UI Components",
+      "name": "Carousels",
+      "href": "/community/components/s/carousel"
+    },
+    {
+      "group": "UI Components",
+      "name": "Charts & Data Viz",
+      "href": "/community/components/s/data-visualization"
+    },
+    {
+      "group": "UI Components",
+      "name": "Checkboxes",
+      "href": "/community/components/s/checkbox"
+    },
+    {
+      "group": "UI Components",
+      "name": "Cursors",
+      "href": "/community/components/s/cursor"
+    },
+    {
+      "group": "UI Components",
+      "name": "Dashboards",
+      "href": "/community/components/s/dashboard"
+    },
+    {
+      "group": "UI Components",
+      "name": "Date Pickers",
+      "href": "/community/components/s/date-picker"
+    },
+    {
+      "group": "UI Components",
+      "name": "Dialogs / Modals",
+      "href": "/community/components/s/modal"
+    },
+    {
+      "group": "UI Components",
+      "name": "Dropdowns",
+      "href": "/community/components/s/dropdown"
+    },
+    {
+      "group": "UI Components",
+      "name": "Empty States",
+      "href": "/community/components/s/empty-state"
+    },
+    {
+      "group": "UI Components",
+      "name": "File Trees",
+      "href": "/community/components/s/file-tree"
+    },
+    {
+      "group": "UI Components",
+      "name": "File Uploads",
+      "href": "/community/components/s/upload-download"
+    },
+    {
+      "group": "UI Components",
+      "name": "Forms",
+      "href": "/community/components/s/form"
+    },
+    {
+      "group": "UI Components",
+      "name": "Globes",
+      "href": "/community/components/s/globe"
+    },
+    {
+      "group": "UI Components",
+      "name": "Grids & Bento",
+      "href": "/community/components/s/grid"
+    },
+    {
+      "group": "UI Components",
+      "name": "Icons",
+      "href": "/community/components/s/icon"
+    },
+    {
+      "group": "UI Components",
+      "name": "Inputs",
+      "href": "/community/components/s/input"
+    },
+    {
+      "group": "UI Components",
+      "name": "Links",
+      "href": "/community/components/s/link"
+    },
+    {
+      "group": "UI Components",
+      "name": "Lists",
+      "href": "/community/components/s/list"
+    },
+    {
+      "group": "UI Components",
+      "name": "Menus",
+      "href": "/community/components/s/menu"
+    },
+    {
+      "group": "UI Components",
+      "name": "Notifications",
+      "href": "/community/components/s/notification"
+    },
+    {
+      "group": "UI Components",
+      "name": "Numbers",
+      "href": "/community/components/s/number"
+    },
+    {
+      "group": "UI Components",
+      "name": "Onboarding",
+      "href": "/community/components/s/onboarding"
+    },
+    {
+      "group": "UI Components",
+      "name": "Paginations",
+      "href": "/community/components/s/pagination"
+    },
+    {
+      "group": "UI Components",
+      "name": "Popovers",
+      "href": "/community/components/s/popover"
+    },
+    {
+      "group": "UI Components",
+      "name": "Profiles",
+      "href": "/community/components/s/profile"
+    },
+    {
+      "group": "UI Components",
+      "name": "Progress",
+      "href": "/community/components/s/progress"
+    },
+    {
+      "group": "UI Components",
+      "name": "Radio Groups",
+      "href": "/community/components/s/radio-group"
+    },
+    {
+      "group": "UI Components",
+      "name": "Search Bars",
+      "href": "/community/components/s/search"
+    },
+    {
+      "group": "UI Components",
+      "name": "Selects",
+      "href": "/community/components/s/select"
+    },
+    {
+      "group": "UI Components",
+      "name": "Sidebars",
+      "href": "/community/components/s/sidebar"
+    },
+    {
+      "group": "UI Components",
+      "name": "Sign Ins",
+      "href": "/community/components/s/sign-in"
+    },
+    {
+      "group": "UI Components",
+      "name": "Sign ups",
+      "href": "/community/components/s/sign-up"
+    },
+    {
+      "group": "UI Components",
+      "name": "Sliders",
+      "href": "/community/components/s/slider"
+    },
+    {
+      "group": "UI Components",
+      "name": "Spinner Loaders",
+      "href": "/community/components/s/spinner"
+    },
+    {
+      "group": "UI Components",
+      "name": "Tables",
+      "href": "/community/components/s/table"
+    },
+    {
+      "group": "UI Components",
+      "name": "Tabs",
+      "href": "/community/components/s/tabs"
+    },
+    {
+      "group": "UI Components",
+      "name": "Tags",
+      "href": "/community/components/s/chip"
+    },
+    {
+      "group": "UI Components",
+      "name": "Text Areas",
+      "href": "/community/components/s/textarea"
+    },
+    {
+      "group": "UI Components",
+      "name": "Toasts",
+      "href": "/community/components/s/toast"
+    },
+    {
+      "group": "UI Components",
+      "name": "Toggles",
+      "href": "/community/components/s/toggle"
+    },
+    {
+      "group": "UI Components",
+      "name": "Tooltips",
+      "href": "/community/components/s/tooltip"
+    }
+  ]
+}
