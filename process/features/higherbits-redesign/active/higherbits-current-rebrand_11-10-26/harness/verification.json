@@ -1,0 +1,74 @@
+{
+  "steps": [
+    {
+      "step": "Final FAQ/console source snapshot follow-through",
+      "command": "corepack pnpm --filter web test; task-local source assertions and installed Playwright/Axe checks recorded in session-final-copy-tests_REPORT_12-10-26.md",
+      "result": "PASS",
+      "notes": "Later full package run after both copy edits: 117 files / 928 PASS, exit 0, session-final-copy-unit_REPORT_12-10-26.md. Bounded tester verifies exact generated/fallback command preservation, three adjacent tests, four first-answer and four heading-combination captures, and both matched-viewport MCP Axe arrays equal the genuine baseline. Two source hashes stable. Exact FAQ/console diff independently PASS in session-final-copy-review_REPORT_12-10-26.md. Prior failed captures preserved. No phase-wide approval or historical public-baseline proof inferred."
+    },
+    {
+      "step": "Final current package and focused contract unit checks, including positive and boundary cases",
+      "command": "corepack pnpm --filter web test; corepack pnpm --filter web exec vitest run app/magic-chat/__tests__/page.client.test.tsx app/api/subscribe/__tests__/route.test.ts app/api/magic/__tests__/legacy-routes.test.ts app/api/higherbits-mcp/__tests__/route.test.ts",
+      "result": "PASS",
+      "notes": "117 files / 928 package tests and overlapping focused four files / 30 tests, exit 0; 794 source fingerprints stable. Actual commands, raw logs and selected assertions: session-final-unit_REPORT_12-10-26.md. Does not claim coverage percentage or live-provider behavior."
+    },
+    {
+      "step": "Legacy URLs, ordered query semantics and signed-out redirect isolation",
+      "command": "Preserved combined Playwright invocation in session-final-runtime_REPORT_12-10-26.md",
+      "result": "PASS",
+      "notes": "Four public legacy redirect cases and two signed-out cases passed inside the 20-case invocation. This snapshot precedes final presentational workflow changes; those changes did not modify middleware, handler, auth or query behavior. Original failed byte-equality outcomes remain failures under the earlier contract."
+    },
+    {
+      "step": "Complete current public accessibility scope",
+      "command": "corepack pnpm --filter web exec playwright test e2e/a11y.spec.ts --project=public --global-timeout 300000",
+      "result": "PASS",
+      "notes": "Ten public route/theme cases, zero violations; session-public-final_REPORT_12-10-26.md. Late post-only capture, not an original public pre-edit baseline. Acceptance-standard decision remains pending."
+    },
+    {
+      "step": "Protected accessibility before/after comparisons and final affected workflow checks",
+      "command": "Preserved admin Playwright invocations in session-final-runtime_REPORT_12-10-26.md and session-workflow-final_REPORT_12-10-26.md",
+      "result": "PASS",
+      "notes": "Four genuine protected route/theme baseline arrays compared with post arrays; final affected MCP two-theme checks also equal the empty original arrays. No new signatures or affected targets."
+    },
+    {
+      "step": "Final workflow and footer native pixel review",
+      "command": "Task-local bounded scripts recorded in session-dark-recovery_REPORT_12-10-26.md and session-footer-review_REPORT_12-10-26.md",
+      "result": "PASS",
+      "notes": "Six dark workflow captures and eight footer captures passed native review, complementing preserved light/header/preview/middle captures. All prior harness failures retained. Footer Reject action denied analytics only in disposable test contexts; no user state file or normal profile modified."
+    },
+    {
+      "step": "Owned public documentation truth qualification",
+      "command": "Source assertions and exact before/after diff recorded in session-doc-claims_REPORT_12-10-26.md",
+      "result": "PASS",
+      "notes": "Two owner-confirmed docs corrected; exact 35-add/42-delete change independently PASS in session-doc-claims-review_REPORT_12-10-26.md. Before/after hashes and six protected-source fingerprints independently verified. This does not certify legal compliance, per-item rights, npm availability or provider operation. Separate MCP FAQ and console copy findings remain under correction, so docs PASS is not whole-phase truth acceptance."
+    },
+    {
+      "step": "Original historical public accessibility baseline recovery",
+      "command": "Read-only provenance research recorded in session-baseline-provenance_REPORT_12-10-26.md",
+      "result": "SKIP",
+      "notes": "Original public pre-edit capture and complete original dirty dependencies were not recovered. Explicit user acceptance-standard decision pending; no historical result invented or silently waived."
+    },
+    {
+      "step": "Live-provider, package registry and deployed authorization checks",
+      "command": "Not run",
+      "result": "SKIP",
+      "notes": "Excluded by existing user choices: npm lookup unprobed; API-key RPC live-provider hypothesis out of rebrand scope; no deployment, secret change or live send."
+    },
+    {
+      "step": "Independent final Phase01 EVL and authorized interphase reconciliation",
+      "command": "Read-only final evidence adjudication in session-phase01-final-evl_REPORT_13-10-26.md; process artifact validators recorded in session-phase01-update-process_REPORT_13-10-26.md; no product test/browser rerun",
+      "result": "PASS",
+      "notes": "vc-validate-agent independent final EVL dated 2026-10-13 passes AC1–AC6 and A1–D5. Canonical current APPROVE recorded with original REJECT/rationale/timestamp snapshot preserved. Original public pre-edit history missing; C2 eleven-original aggregate writer-only with unrecovered manifest; current 796-source/16-asset integrity is not original provenance. Retained viewport/tiled/native and supplementary-unit artifact limits, historical FAIL/INCONCLUSIVE outcomes and excluded live-provider/npm/RPC/build/typecheck/lint claims remain as documented in the final EVL. No production approval."
+    }
+  ],
+  "phaseStatus": "VERIFIED — Phase01 local gate only; program active for Phase02",
+  "decision": "Phase01 independent final EVL PASS (session-phase01-final-evl_REPORT_13-10-26.md, vc-validate-agent, 2026-10-13) resolves criterion/packet disposition under the explicit revised acceptance. Current canonical APPROVE is scoped to Phase01 local verification only. No new test/browser invocation or human/production approval. Fresh Phase02 RESEARCH next; commit not required for local verification and prohibited.",
+  "historicalDispositions": [
+    {
+      "phaseStatus": "ACTIVE / TESTING, not VERIFIED",
+      "decision": "2026-10-13 user explicitly selected current ten public zero-violation audits plus genuine four protected comparisons; see session-baseline-acceptance-revision_REPORT_13-10-26.md. Missing public history remains disclosed. Independent final EVL and criterion/packet disposition pending; retain historical REJECT and no Phase 02 entry until verified."
+    }
+  ],
+  "stepProvenance": "Earlier step notes are preserved historical checkpoints; pending-choice/copy notes are superseded only by the final EVL and current top-level disposition, not by altered raw results.",
+  "limits": "Original public pre-edit history missing; C2 eleven-original aggregate writer-only with unrecovered manifest; current 796-source/16-asset integrity is not original provenance. Retained viewport/tiled/native and supplementary-unit artifact limits, historical FAIL/INCONCLUSIVE outcomes and excluded live-provider/npm/RPC/build/typecheck/lint claims remain as documented in the final EVL. No production approval."
+}

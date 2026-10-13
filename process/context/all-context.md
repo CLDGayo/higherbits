@@ -9,6 +9,15 @@ Every agent (Orchestrator, Claude, Codex, Antigravity, and ALL RIPER-5 subagents
 
 ---
 
+## Current rebrand compatibility — locally verified 2026-10-13
+
+Current source uses HigherBits.dev, HigherBits MCP at `/higherbits-mcp`, and HigherBits AI at retained `/magic-chat`. Legacy page/API/request/vendor/attribution/rate/Jotai identifiers remain compatibility contracts; do not blanket-rename them. Historical state below remains unchanged. See the [program closeout](../features/higherbits-redesign/active/higherbits-current-rebrand_11-10-26/higherbits-current-rebrand-closeout_REPORT_13-10-26.md) and [release integration record](../features/higherbits-redesign/active/higherbits-current-rebrand_11-10-26/release-integration_REPORT_13-10-26.md). This local verification is not a deployment claim.
+
+- Analytics identity aliases `higherbits_anon_id` and `21st_anon_id` retain legacy-first compatibility, accepted-consent-only access, verified writes, and cancellation on revocation/unmount. Storage failure suppresses anonymous capture.
+- MCP storage aliases `higherbits_mcp_onboarding_state` and `magic_onboarding_state` retain validated legacy-first fallback and dual serialization. Loaded live Clerk identity governs storage access; signed-out clears both. Console/onboarding retain upstream MCP JSON configuration with `env.API_KEY`, not an installer command.
+- Nonempty `HIGHERBITS_MCP_WAITLIST_AUDIENCE` / `HIGHERBITS_AI_WAITLIST_AUDIENCE` precede their legacy audience variables; empty canonical values fall back. Preserve request types, response/error behavior, audience guards, and third-party identifiers. No live delivery claim.
+- Integration preserves upstream sidebar authors/catalog/profile behavior and request copy identity/security/token stripping/headers. The [matched upstream baseline](../features/higherbits-redesign/active/release-upstream-baseline_13-10-26/release-upstream-baseline_REPORT_13-10-26.md) found zero new unit failures: all 23 release failures reproduce upstream; the full suite still exits 1. Reported release checks: typecheck passed, 92 selected unit tests passed, and 118 browser tests passed. Use `process/context/tests/all-tests.md` and the phase plans for verification boundaries.
+
 ## Project Identity (read first)
 
 **CURRENT STATE CORRECTION (2026-07-13, supersedes the paragraphs immediately below):**

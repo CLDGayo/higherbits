@@ -1,0 +1,36 @@
+{
+  "scenarios": [
+    {
+      "scenario": "Legacy API alias drifts from canonical handler during rename",
+      "ruled_out": true,
+      "rationale": "For the reviewed two handlers, direct re-exports and strict imported-function identity assertions pass in the current focused unit run. This rules out duplicated-handler drift within that exact scope, not all API correctness."
+    },
+    {
+      "scenario": "Brand rewrite drops repeated, encoded, empty or literal-plus query values",
+      "ruled_out": true,
+      "rationale": "Four preserved public redirect tests pass under the explicit ordered decoded-parameter contract, including independent expected ordered entries and unchanged 308/path assertions. Raw signed-query byte identity is explicitly not promised; earlier raw failures remain retained."
+    },
+    {
+      "scenario": "Signed-out browser renders either protected product body",
+      "ruled_out": true,
+      "rationale": "Both signed-out local Playwright cases passed final homepage redirects; protected source checks both identity and admin permission. This conclusion is limited to tested signed-out conditions and current unchanged guards, not a live authorization audit."
+    },
+    {
+      "scenario": "Waitlist rebrand changes serialized types or calls a live provider during contract tests",
+      "ruled_out": true,
+      "rationale": "Six client and seventeen handler tests preserve exact magic-chat POST and all three existing audience request types; Resend/fetch are mocked. Invalid request/missing configuration/provider failure behavior is asserted without real contacts or email sends."
+    },
+    {
+      "scenario": "Current-brand artwork replacement destroys legacy source assets",
+      "ruled_out": true,
+      "rationale": "Original raster hashes and the three How It Works PNG hashes match retained before manifests; current consumers were repointed or removed without original deletion. Before bytes for the two documentation changes are separately preserved. No global reset, clean, stage or commit occurred."
+    },
+    {
+      "scenario": "Unexamined deployed RLS/EXECUTE grants, non-admin role escalation or API-key RPC behavior",
+      "ruled_out": false,
+      "rationale": "Explicitly deferred/out of scope under user choices; no live-provider probe or new role session is authorized or claimed. Existing static guards and signed-out tests are not substituted for deployed permission proof."
+    }
+  ],
+  "scope": "Phase 01 local compatibility/presentation evidence only; not a production penetration test",
+  "deferralReason": "User excluded live-provider RPC probing and npm lookup; no auth-control implementation change or deployment is part of this rebrand"
+}

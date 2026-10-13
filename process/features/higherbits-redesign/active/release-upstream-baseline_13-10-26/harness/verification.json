@@ -1,0 +1,302 @@
+{
+  "baselineCommit": "369d4ca440b1c21007ee5d30058cb154e6a61eb8",
+  "upstreamRoot": "/private/tmp/higherbits-upstream-baseline-369d4ca4-sAbei8",
+  "releaseRoot": "/private/tmp/higherbits-rebrand-release-20261013",
+  "upstream": {
+    "files": 152,
+    "passedFiles": 146,
+    "failedFiles": 6,
+    "total": 1245,
+    "passed": 1221,
+    "failed": 24,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 16050.157958984375
+  },
+  "release": {
+    "files": 159,
+    "passedFiles": 154,
+    "failedFiles": 5,
+    "total": 1573,
+    "passed": 1550,
+    "failed": 23,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 17255.147216796875
+  },
+  "savedRelease": {
+    "files": 159,
+    "passedFiles": 154,
+    "failedFiles": 5,
+    "total": 1573,
+    "passed": 1550,
+    "failed": 23,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 15032.131591796875
+  },
+  "newFailures": [],
+  "unchangedFailures": [
+    {
+      "file": "lib/__tests__/copy-route-contracts.test.ts",
+      "name": "GHL controls reject too many entries before preparing or admitting a copy",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 400 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "lib/__tests__/ghl-generator-title.test.ts",
+      "name": "rejects malformed or truncated JavaScript: <script>const value = 1;",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected [Function] to throw error matching /JavaScript|unclosed/i but got 'GHL export contains malformed or trun…'"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/connect/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/connect — Phase 1 telemetry logs bootup_type telemetry with the exact allowlist fields on the success path",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/connect/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/connect — Phase 1 telemetry logs error telemetry from the outer catch when the SDK start() rejects",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 500 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/connect/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/connect — Phase 1 telemetry returns 402 with WORKSPACE_FROZEN when CodeSandbox returns workspace frozen error",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 402 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/connect/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/connect — Phase 1 telemetry returns 429 with RATE_LIMITED when CodeSandbox returns rate limit error",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 429 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/connect/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/connect — credit-burn guards writes sandboxes.updated_at on every successful sandbox.start()",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/connect/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/connect — credit-burn guards passes vmTier, the lowered hibernation timeout, and disabled automatic wakeup to sandbox.start()",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — Phase 1 telemetry logs error telemetry when the SDK create() rejects (502 path)",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 502 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — Phase 1 telemetry logs error telemetry when the Supabase insert fails (dbError path)",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 500 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — Phase 1 telemetry logs error telemetry from the top-level catch on an unexpected failure",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 500 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — Phase 1 telemetry does NOT log sandbox error telemetry on the pre-flight 429 rate-limit return",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 429 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — Phase 1 telemetry emits no bootup_type telemetry on the success path (A3)",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — credit-burn guards passes vmTier, the lowered hibernation timeout, and disabled automatic wakeup to sandbox.create()",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create returns the existing shortSandboxId and creates NO new VM when a recent unbound row exists",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create scopes the reuse lookup to the caller's own unbound rows inside the window",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected +0 to be 1 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create still creates a new VM when no recent row exists",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create does not reuse a row whose codesandbox_id is missing",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected \"vi.fn()\" to be called 1 times, but got 0 times"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create falls through to create when the reuse lookup errors",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 200 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create skips the lookup entirely when CSB_SANDBOX_REUSE_WINDOW_SECONDS=0",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected \"vi.fn()\" to be called 1 times, but got 0 times"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "app/api/sandbox/new/__tests__/route.test.ts",
+      "name": "POST /api/sandbox/new — reuse-before-create rejects before the reuse lookup when rate-limited",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 503 to be 429 // Object.is equality"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "components/features/studio/publish/__tests__/publish-submission-gating.test.ts",
+      "name": "G7.4 - submit_for_featuring gates the submissions write U-GHL-01 leaves submission out of review when GHL save fails",
+      "status": "failed",
+      "errors": [
+        "Error: expected [Function] to throw error including 'GoHighLevel output could not be saved' but got 'Copy outputs could not be saved. Retr…'"
+      ],
+      "sameErrorSignature": true
+    },
+    {
+      "file": "components/features/studio/publish/__tests__/publish-submission-gating.test.ts",
+      "name": "G7.4 - submit_for_featuring gates the submissions write U-GHL-01 preserves an existing on_review submission and saved demo fingerprint when retry preparation fails",
+      "status": "failed",
+      "errors": [
+        "Error: expected [Function] to throw error including 'GoHighLevel output could not be saved' but got 'Copy outputs could not be saved. Retr…'"
+      ],
+      "sameErrorSignature": true
+    }
+  ],
+  "upstreamOnlyFailures": [
+    {
+      "file": "app/api/magic/__tests__/route.test.ts",
+      "name": "Magic API Routes GET /api/magic/check should return success if API key is valid",
+      "status": "failed",
+      "errors": [
+        "AssertionError: expected 401 to be 200 // Object.is equality"
+      ],
+      "existsInRelease": false
+    }
+  ],
+  "savedReleaseFailureSetMatches": true,
+  "sourceEvidence": [
+    {
+      "file": "apps/web/lib/__tests__/copy-route-contracts.test.ts",
+      "byteIdentical": true,
+      "sha256": "6b6e61e530fd5f4ef3d2e10a69cd569c40db20de018bfd573bf82d8f1e87214e"
+    },
+    {
+      "file": "apps/web/lib/__tests__/ghl-generator-title.test.ts",
+      "byteIdentical": true,
+      "sha256": "ec10e6c895c5bddf402a6c31a324879c025bf71114b49197834b4244141cd39e"
+    },
+    {
+      "file": "apps/web/app/api/sandbox/connect/__tests__/route.test.ts",
+      "byteIdentical": true,
+      "sha256": "8503099bd5fc3939e5bbebf9c11cde3458e34cf59d8b38c9bb21d5f29c9516d1"
+    },
+    {
+      "file": "apps/web/app/api/sandbox/new/__tests__/route.test.ts",
+      "byteIdentical": true,
+      "sha256": "b15adcb492bb3125d68040aab13a5305e88e90efc994bab0d9492d1e5461c1e9"
+    },
+    {
+      "file": "apps/web/components/features/studio/publish/__tests__/publish-submission-gating.test.ts",
+      "byteIdentical": true,
+      "sha256": "d0c6e49d0f08963e9bd38dec02227dc0d72ba8a1fbe650ba221b9d3d9f58e1e3"
+    }
+  ],
+  "configIdentical": true,
+  "environment": {
+    "NODE_ENV": "test",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://example.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_KEY": "synthetic-test-key",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "synthetic-test-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "synthetic-test-key",
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_Y2xlcmsuZXhhbXBsZS5jb20k"
+  },
+  "command": "env -i PATH=\"$PATH\" HOME=\"$HOME\" TMPDIR=/private/tmp [environment above] corepack pnpm --filter web exec vitest run --config vitest.first-party-identifiers.config.ts --reporter=json --outputFile=[per-run JSON path]",
+  "exitCodes": {
+    "upstream": 1,
+    "release": 1
+  },
+  "status": "DONE_WITH_CONCERNS"
+}

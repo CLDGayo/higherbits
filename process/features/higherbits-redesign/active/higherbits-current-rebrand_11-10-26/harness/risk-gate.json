@@ -1,0 +1,35 @@
+{
+  "riskClass": "public API or external contract changes",
+  "workDescription": "Phase 01 HigherBits rebrand and canonical MCP route presentation, preserving existing legacy redirects, API aliases, subscription request values and access controls. No live-provider probe or handler behavior change is authorized by this packet.",
+  "approver": "Codex orchestrator: classification against the approved Phase 01 plan and existing user standing consent for reversible local work; not a new live-provider or deployment approval",
+  "mustStopBeforeFinalize": false,
+  "scope": "phase-01-public-surfaces_PLAN_12-10-26.md",
+  "authorizationEvidence": "higherbits-current-rebrand_AUTOPILOT_GOAL_12-10-26.md; user selected full two-phase program and explicitly confirmed named rebrand-file ownership",
+  "acceptanceDecision": "2026-10-13 user: Use current zero-violation audits plus genuine protected-page deltas. Recorded in session-baseline-acceptance-revision_REPORT_13-10-26.md; missing original public history remains disclosed.",
+  "pendingDecision": "None for Phase01 local verification; independent final EVL PASS and authorized interphase disposition recorded. Phase02 research/PVL and all outward/production permissions remain separate.",
+  "historicalDispositions": [
+    {
+      "riskClass": "public API or external contract changes",
+      "workDescription": "Phase 01 HigherBits rebrand and canonical MCP route presentation, preserving existing legacy redirects, API aliases, subscription request values and access controls. No live-provider probe or handler behavior change is authorized by this packet.",
+      "approver": "Codex orchestrator: classification against the approved Phase 01 plan and existing user standing consent for reversible local work; not a new live-provider or deployment approval",
+      "mustStopBeforeFinalize": true,
+      "scope": "phase-01-public-surfaces_PLAN_12-10-26.md",
+      "authorizationEvidence": "higherbits-current-rebrand_AUTOPILOT_GOAL_12-10-26.md; user selected full two-phase program and explicitly confirmed named rebrand-file ownership",
+      "acceptanceDecision": "2026-10-13 user: Use current zero-violation audits plus genuine protected-page deltas. Recorded in session-baseline-acceptance-revision_REPORT_13-10-26.md; missing original public history remains disclosed.",
+      "pendingDecision": "Independent final EVL and criterion/packet disposition under the explicitly revised acceptance standard; no phase approval inferred from the user's standard selection"
+    }
+  ],
+  "localDisposition": {
+    "decision": "APPROVE",
+    "scope": "Phase01 local gate only",
+    "reviewer": "vc-validate-agent (independent final EVL dated 2026-10-13)",
+    "reportDate": "2026-10-13",
+    "evidence": "session-phase01-final-evl_REPORT_13-10-26.md",
+    "reconciliation": "session-phase01-update-process_REPORT_13-10-26.md",
+    "productionApproval": false,
+    "commitRequiredForLocalVerification": false,
+    "commitAuthorized": false,
+    "archiveAuthorized": false,
+    "limits": "Original public pre-edit history missing; C2 eleven-original aggregate writer-only with unrecovered manifest; current 796-source/16-asset integrity is not original provenance. Retained viewport/tiled/native and supplementary-unit artifact limits, historical FAIL/INCONCLUSIVE outcomes and excluded live-provider/npm/RPC/build/typecheck/lint claims remain as documented in the final EVL. No production approval."
+  }
+}

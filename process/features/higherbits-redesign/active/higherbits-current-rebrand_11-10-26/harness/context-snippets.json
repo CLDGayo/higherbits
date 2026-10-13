@@ -1,0 +1,50 @@
+{
+  "snippets": [
+    {
+      "file": "apps/web/middleware.ts",
+      "lines": "16-28",
+      "description": "Legacy MCP URL redirects retain 308 and cloned query parameters; original raw-byte failures and later ordered semantic-query contract are separately recorded.",
+      "content": "if (pathname === \"/magic/get-started\" || pathname.startsWith(\"/magic/get-started/\")) { const destination = request.nextUrl.clone(); destination.pathname = \"/higherbits-mcp/onboarding\"; return NextResponse.redirect(destination, 308) } if (pathname === \"/magic\" || pathname.startsWith(\"/magic/\")) { const destination = request.nextUrl.clone(); destination.pathname = pathname.replace(\"/magic\", \"/higherbits-mcp\"); return NextResponse.redirect(destination, 308) }"
+    },
+    {
+      "file": "apps/web/app/api/magic/check/route.ts",
+      "lines": "1",
+      "description": "Legacy GET and canonical GET are the same handler, not duplicated implementations.",
+      "content": "export { GET } from \"../../higherbits-mcp/check/route\""
+    },
+    {
+      "file": "apps/web/app/api/magic/use/route.ts",
+      "lines": "1",
+      "description": "Legacy POST and canonical POST are the same handler.",
+      "content": "export { POST } from \"../../higherbits-mcp/use/route\""
+    },
+    {
+      "file": "apps/web/app/higherbits-mcp/layout.tsx",
+      "lines": "16-26",
+      "description": "Protected MCP body requires both an authenticated identity and existing admin authorization.",
+      "content": "const { userId } = await auth(); if (!userId) { redirect(\"/\") } const { isAdmin } = await checkIsAdmin(userId); if (!isAdmin) { redirect(\"/\") }"
+    },
+    {
+      "file": "apps/web/app/magic-chat/page.tsx",
+      "lines": "47-59",
+      "description": "HigherBits AI retains its legacy route and the same authenticated-admin requirement.",
+      "content": "const { userId } = await auth(); if (!userId) { redirect(\"/\") } const { isAdmin } = await checkIsAdmin(userId); if (!isAdmin) { redirect(\"/\") } return <MagicChatPageClient />"
+    },
+    {
+      "file": "apps/web/app/api/subscribe/route.ts",
+      "lines": "41-56",
+      "description": "Phase 01 preserves all three serialized request types and audience selection. No environment values are captured.",
+      "content": "if (!type || ![\"newsletter\", \"magic-waitlist\", \"magic-chat\"].includes(type)) { return NextResponse.json({ error: \"Invalid subscription type\" }, { status: 400 }) } const audienceId = type === \"newsletter\" ? AUDIENCES.NEWSLETTER : type === \"magic-waitlist\" ? AUDIENCES.MAGIC_WAITLIST : AUDIENCES.MAGIC_CHAT_WAITLIST"
+    }
+  ],
+  "excerptFormat": "Whitespace-normalized excerpts, not complete file snapshots or secret values",
+  "canonicalSurfaceEvidence": {
+    "review": "session-phase01-compat-review_REPORT_12-10-26.md — Critical pass: compatibility",
+    "handlers": ["apps/web/app/api/higherbits-mcp/check/route.ts", "apps/web/app/api/higherbits-mcp/use/route.ts"],
+    "preservation": "Independent review compared canonical bodies to HEAD legacy bodies: byte equality after diagnostic endpoint-name changes only. HEAD comparison establishes compatibility, not an original dirty-tree baseline.",
+    "rateBuckets": "apps/web/middleware.ts:51 retains global_api classification for both families; apps/web/app/api/higherbits-mcp/use/route.ts:44 retains magic_use.",
+    "clientSerializer": "apps/web/app/magic-chat/page.client.tsx:242 handleSubscribe is byte-equal to HEAD, including POST /api/subscribe and type magic-chat at :254.",
+    "tests": "session-final-unit_REPORT_12-10-26.md: mocked canonical handlers, alias identity and subscription/client tests; no live-provider execution."
+  },
+  "provenance": "Current excerpts and canonical surface preservation independently checked in session-doc-claims-review_REPORT_12-10-26.md and session-phase01-compat-review_REPORT_12-10-26.md; no phase approval inferred."
+}
