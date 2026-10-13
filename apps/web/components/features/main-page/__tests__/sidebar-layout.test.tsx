@@ -82,18 +82,16 @@ describe("MainSidebar — claymorphism Phase 3 (A1/A1b/A3)", () => {
     expect(container.querySelector(".bg-accent-pink")).toBeNull()
   })
 
-  it("renders the Go-Premium card with the Support Us! CTA link for admin users (A3)", () => {
+  it("does not render the Go-Premium card with Support Us! CTA for admin users either (A3)", () => {
     mockUser.current = { id: "user_admin" }
     mockAdmin.current = true
 
     const { container } = renderSidebar()
 
     const supportLink = container.querySelector('a[href="/support"]')
-    expect(supportLink).not.toBeNull()
-    expect(container.textContent).toContain("Support Us!")
-
-    // Card reuses the pink clay token (distinct from the lavender active pill).
-    expect(container.querySelector(".bg-accent-pink")).not.toBeNull()
+    expect(supportLink).toBeNull()
+    expect(container.textContent).not.toContain("Support Us!")
+    expect(container.querySelector(".bg-accent-pink")).toBeNull()
   })
 
   it("does not leave any stale bg-accent active token on a manual nav path (A1b)", () => {
