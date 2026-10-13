@@ -49,6 +49,21 @@ describe("useSidebarVisibility", () => {
     expect(getByText("false")).toBeDefined()
   })
 
+  it("does not misclassify the canonical MCP landing as a creator profile", () => {
+    route.pathname = "/higherbits-mcp"
+    const { getByText } = render(<Visibility />)
+    expect(getByText("false")).toBeDefined()
+  })
+
+  it.each(["/higherbits-mcp/onboarding", "/higherbits-mcp/console"])(
+    "retains the shared sidebar on the canonical MCP route %s",
+    (pathname) => {
+      route.pathname = pathname
+      const { getByText } = render(<Visibility />)
+      expect(getByText("true")).toBeDefined()
+    },
+  )
+
   it.each(["/privacy", "/refunds", "/terms"])(
     "does not show the sidebar on the static route %s",
     (pathname) => {

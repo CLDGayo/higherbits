@@ -1,26 +1,45 @@
 # HigherBits.dev
 
-> HigherBits.dev is a marketplace of production-ready shadcn/ui components,
-> templates, and UI blocks for developers, agencies, and technical virtual
-> assistants.
+> HigherBits.dev is the production UI component registry and marketplace for developers, agencies, and technical virtual assistants. It offers production-ready React 19, Next.js 15, and Tailwind CSS components inspired by shadcn/ui, paired with a Multi-Format AI Prompt Engine for GoHighLevel (GHL), Cursor, Claude, Antigravity, and v0.
 
-Components are copy-paste React and Tailwind CSS, built on shadcn/ui and Radix UI
-primitives. Creators publish and monetise components; buyers install them by
-pasting source into their own projects, with no runtime dependency on
-HigherBits.dev. Each component states its own licence on its detail page; the
-default is MIT.
+HigherBits eliminates generic "AI slop" by providing distinctive, polished, accessible, and performant UI components, full-page templates, themes, ASCII art, gradients, and WebGL/Three.js shaders. Copied component source has no runtime dependency on the HigherBits service; components may require React, Radix UI, motion, or other listed dependencies. Follow each item's installation instructions and applicable licenses.
 
-## Catalogue
-- [All components](https://higherbits.dev/?tab=home)
-- [Templates](https://higherbits.dev/?tab=templates)
-- [Browse by tag](https://higherbits.dev/s/3d)
-- [Sitemap (every component URL)](https://higherbits.dev/sitemap.xml)
+## Quick Start & CLI
+- [Component Installation](https://higherbits.dev/): Copy an item's source and follow its documented dependency and installation instructions. Where the item provides a registry install command, use its shadcn CLI command, following the pattern `npx shadcn@latest add "https://higherbits.dev/r/<author>/<slug>"` with the item's actual author and slug.
+- [All Components Catalogue](https://higherbits.dev/?tab=home): Browse curated, copy-paste React UI blocks
+- [Templates Collection](https://higherbits.dev/?tab=templates): Full-page marketing, SaaS, and funnel layouts built with shadcn/ui, Tailwind CSS, and Framer Motion
+- [Component Libraries Directory](https://higherbits.dev/?tab=libraries): Browse UI kits, registries, and design systems; consult the directory for its current listings
+- [Full LLM Context](https://higherbits.dev/llms-full.txt): Comprehensive technical documentation and prompt instructions for LLM agents
 
-## About
-- [Our Story](https://higherbits.dev/our-story)
-- [Terms](https://higherbits.dev/terms)
-- [Privacy](https://higherbits.dev/privacy)
-- [Refunds](https://higherbits.dev/refunds)
+## Core Features & Capabilities
+- **Multi-Format AI Prompt Engine**: One-click prompt copying tailored for diverse AI workflows:
+  - **GoHighLevel (GHL)**: Includes an AI conversion prompt template and supported HTML/CSS/JS export paths for custom code blocks. Output and dependencies vary by path; review and test the result in the target GHL page.
+  - **Claude, Cursor, Codex & Antigravity**: Structured prompts containing component logic, dependencies, and styles ready for your AI agent.
+  - **v0 by Vercel, Bolt.new, Lovable, Replit, Magic Patterns & sitebrew.ai**: Specially tuned prompts for each visual builder.
+- **Production-Ready Component Registry**: Copy-paste React components with no runtime dependency on the HigherBits service. Install each item's listed packages and follow its styling instructions; dependencies and their licenses still apply.
+- **Creator Studio**: A comprehensive authoring suite where creators can build, preview, manage, and publish components, themes, templates, ASCII art, gradients, and WebGL/Three.js shaders.
+- **Component Previews**: Preview support varies by item: supported paths use Sandpack or bundled iframe previews. Available editing and theme controls depend on the item and preview type.
+- **Monetization & Bundles**: Marketplace code includes Stripe bundle checkout and Lemon Squeezy subscription checkout paths. Purchase and creator payout availability depend on configured providers, account eligibility, and the offering; check the item page and current account status.
+- **Source Code & Licensing**: Copy and modify source under each item's published license, preserving required copyright and permission notices. Premium items may have separate commercial terms; review those terms before use.
+
+## Catalogue & Discovery
+- [Browse All Components](https://higherbits.dev/?tab=home): Live registry of interactive React UI components
+- [Browse Templates](https://higherbits.dev/?tab=templates): Full landing pages, dashboards, and marketing funnels
+- [Browse by Tag](https://higherbits.dev/s/3d): Filter components by category tags (e.g. 3d, animation, navigation, hero, buttons, cards, forms)
+- [XML Sitemap](https://higherbits.dev/sitemap.xml): Machine-readable index of every component, tag, author, and page
+
+## About & Community
+- [Our Story](https://higherbits.dev/our-story): How HigherBits.dev was founded by Clarence Lloyd Gayo
+- [Pricing](https://higherbits.dev/pricing): Transparent pricing for developers, agencies, and creators
+- [GitHub Repository](https://github.com/CLDGayo/higherbits): Open-source codebase, issues, and discussions
+- [Discord Community](https://discord.gg/vWqmFjPMU4): Official developer and creator community
+- [X / Twitter (@CLDGayo)](https://x.com/CLDGayo): Product updates and component showcases
+
+## Policies & Compliance
+- [Terms of Service](https://higherbits.dev/terms): Usage terms and licensing rules
+- [Privacy Policy](https://higherbits.dev/privacy): Data handling and privacy guarantees
+- [Security Policy](https://higherbits.dev/security): Security standards and vulnerability disclosure
+- [Refund Policy](https://higherbits.dev/refunds): Digital asset refund conditions
 
 ## Contact
-- support@higherbits.dev
+- Support & Inquiries: support@higherbits.dev

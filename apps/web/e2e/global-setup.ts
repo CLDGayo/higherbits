@@ -41,7 +41,7 @@ const STUDIO_SECTIONS = [
 const ROUTES = [
   "/",
   "/?tab=home",
-  "/magic",
+  "/higherbits-mcp",
   "/magic-chat",
   "/studio",
   ...STUDIO_SECTIONS.map((section) => `/studio/_warm${section}`),

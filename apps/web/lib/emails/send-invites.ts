@@ -15,7 +15,7 @@ export async function sendInvites() {
     try {
       // Create an encoded email parameter for the URL
       const encodedEmail = Buffer.from(email).toString("base64")
-      const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/magic/console?waitlist=${encodedEmail}`
+      const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/higherbits-mcp/console?waitlist=${encodedEmail}`
 
       const data = await resend.emails.send({
         from: "Clarence from HigherBits.dev <clarence@hey.higherbits.dev>",

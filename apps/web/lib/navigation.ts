@@ -131,27 +131,27 @@ export const mainNavigationItems: MainNavigationItem[] = [
 
 // This is a separate navigation item for AI Component Builder that will only be used for the sidebar
 // and won't be part of the tab navigation
-export const magicNavItem = {
+export const aiBuilderNavItem = {
   title: "AI UI Builder",
   icon: Wand2,
   subitems: [
     {
-      title: "Magic Chat Waitlist",
+      title: "HigherBits AI Waitlist",
       href: "/magic-chat",
       isNew: true,
     },
     {
-      title: "Magic MCP",
-      href: "/magic",
+      title: "HigherBits MCP",
+      href: "/higherbits-mcp",
       externalLink: true,
     },
     {
       title: "Onboarding",
-      href: "/magic/onboarding",
+      href: "/higherbits-mcp/onboarding",
     },
     {
       title: "Console",
-      href: "/magic/console",
+      href: "/higherbits-mcp/console",
     },
     {
       title: "Pricing",

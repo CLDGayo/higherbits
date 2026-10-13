@@ -2,9 +2,13 @@ import { Resend } from "resend"
 import { NextResponse } from "next/server"
 
 const AUDIENCES = {
-  MAGIC_WAITLIST: process.env.MAGIC_WAITLIST_AUDIENCE ?? "",
+  MAGIC_WAITLIST:
+    process.env.HIGHERBITS_MCP_WAITLIST_AUDIENCE ||
+    process.env.MAGIC_WAITLIST_AUDIENCE || "",
   NEWSLETTER: process.env.NEWSLETTER_AUDIENCE ?? "",
-  MAGIC_CHAT_WAITLIST: process.env.MAGIC_CHAT_WAITING_AUDIENCE ?? "",
+  MAGIC_CHAT_WAITLIST:
+    process.env.HIGHERBITS_AI_WAITLIST_AUDIENCE ||
+    process.env.MAGIC_CHAT_WAITING_AUDIENCE || "",
 } as const
 
 export async function POST(request: Request) {
@@ -18,9 +22,9 @@ export async function POST(request: Request) {
     }
 
     if (
-      !process.env.MAGIC_WAITLIST_AUDIENCE ||
+      !(process.env.HIGHERBITS_MCP_WAITLIST_AUDIENCE || process.env.MAGIC_WAITLIST_AUDIENCE) ||
       !process.env.NEWSLETTER_AUDIENCE ||
-      !process.env.MAGIC_CHAT_WAITING_AUDIENCE
+      !(process.env.HIGHERBITS_AI_WAITLIST_AUDIENCE || process.env.MAGIC_CHAT_WAITING_AUDIENCE)
     ) {
       return NextResponse.json(
         {

@@ -9,11 +9,11 @@ export type AppSection =
   | "authors"
   | "pro"
   | "collections"
-  | "magic"
+  | "higherbits-mcp"
   | "bundles"
   | "libraries"
 
-export type MainTabType = Exclude<AppSection, "magic">
+export type MainTabType = Exclude<AppSection, "higherbits-mcp">
 
 export type TabChangeHandler = (tab: MainTabType | "home") => void
 

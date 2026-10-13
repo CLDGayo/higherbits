@@ -1,0 +1,101 @@
+# HigherBits.dev - Complete LLM & AI Reference Documentation
+
+> HigherBits.dev is an open-source community registry and marketplace for production-ready React UI components, templates, themes, ASCII art, gradients, and WebGL/Three.js shaders. Built for modern developers, design engineers, agencies, and technical virtual assistants, HigherBits features an integrated Multi-Format AI Prompt Engine with workflow-specific prompts for GoHighLevel (GHL), Claude, Cursor, Codex, Antigravity, and v0, plus supported GHL HTML export paths.
+
+---
+
+## 1. What is HigherBits.dev?
+
+HigherBits.dev (https://higherbits.dev) solves the problem of generic, poorly styled "AI slop" by providing distinctive, polished, and accessible UI building blocks. Inspired by the component architecture of shadcn/ui, HigherBits provides component source that developers can copy into compatible projects and install following each item's documented instructions. Copied source has no runtime dependency on the HigherBits service; the component's own dependencies and licenses still apply.
+
+### Key Value Propositions
+1. **Source in Your Project**: Copy component source into your project using the item's documented file layout. Components may require React, Radix UI, motion, or other listed packages. You can modify the source under its published license, preserving required copyright and permission notices.
+2. **Multi-Format AI Prompt Engine**: HigherBits provides prompts tailored to different platforms and AI agents, with separate supported GHL HTML export paths:
+   - **GoHighLevel (GHL)**: An AI conversion prompt template and supported generated/bundled HTML export paths, for review and testing in funnels and agency client sites.
+   - **AI Coding Agents**: Context-rich prompts for Cursor, Claude, Antigravity, and OpenAI Codex.
+   - **Visual Builders**: Clean prompts for v0 by Vercel, Bolt.new, Lovable.dev, Replit, Magic Patterns, and sitebrew.ai.
+3. **Component Previews**: Supported paths use Sandpack or bundled iframe previews. Editing, theme switching, and controls vary by item and preview type; a live editable sandbox is not available for every item.
+4. **Creator Studio & Marketplace**: Developers and designers can author and publish items. Marketplace code includes Stripe bundle checkout and Lemon Squeezy subscription checkout paths; purchase and creator payout availability depend on provider configuration, account eligibility, and the offering. Check the item page and current account status.
+
+---
+
+## 2. Component Installation
+
+Start from the component's item page: copy its source and follow its actual dependency, styling, and installation instructions for your project's framework and package versions.
+
+### shadcn/ui CLI Compatibility
+Where an item provides a registry install command, use the command shown on that item's page. The HigherBits registry uses this URL pattern; replace the placeholders with the item's actual author and slug:
+```bash
+npx shadcn@latest add "https://higherbits.dev/r/<author>/<component-slug>"
+```
+
+### Dependencies & Styles
+- Follow the item's documented destination paths and required helper components.
+- Apply the supplied Tailwind configuration, CSS variables, animations, and styles as appropriate for your project.
+- Install the listed npm packages, which may include React, `@radix-ui/react-*`, `lucide-react`, `motion`, `clsx`, or `tailwind-merge`. Their licenses still apply.
+
+---
+
+## 3. The Multi-Format AI Prompt Engine
+
+HigherBits is specifically engineered to bridge modern React UI with AI coding tools and no-code/agency platforms.
+
+### 3.1 GoHighLevel (GHL) Custom Code Blocks
+GoHighLevel is a leading CRM and marketing platform for marketing agencies and technical virtual assistants (VAs). Standard React components cannot be pasted directly into GHL funnels without custom bundling.
+- The GHL conversion prompt template asks an AI assistant to convert React source and demo code to HTML/CSS/JS. That template includes instructions for a Tailwind CDN runtime, disabled global preflight, and wrapper-scoped resets; copying instructions does not itself produce a compiled widget.
+- Supported copy/export API paths return cached or AI-generated HTML, or prepare an existing supported bundle. Generated-HTML instructions request inline CSS/JavaScript without external loaders; generation requires configured providers and may fail. Bundle compatibility and output dependencies vary by path and item.
+- Wrapper scoping and, for supported bundled exports, Shadow DOM aim to limit style interference. Review scripts, dependencies, layout, and interactions in the target GHL page before use; these mechanisms do not guarantee freedom from conflicts.
+
+### 3.2 Cursor, Claude, Antigravity & Codex
+When building with AI coding assistants, pasting raw JSX often leads to missing imports, broken Tailwind utilities, or uninstalled packages.
+- HigherBits generates a structured system prompt containing:
+  - Required npm dependencies to install.
+  - Necessary Tailwind theme variables and animation keyframes.
+  - Component source code with strict TypeScript types.
+  - Step-by-step instructions for the AI assistant to integrate the component cleanly into your existing architecture.
+
+### 3.3 v0 by Vercel, Bolt.new & Lovable.dev
+- HigherBits formats component logic and layout into prompts optimized for the specific context windows and rendering engines of v0, Bolt, and Lovable, allowing instant iteration inside browser-based IDEs.
+
+---
+
+## 4. Technology Stack & Primitives
+
+HigherBits components are crafted using the modern standard web stack:
+- **Framework**: React 19 and Next.js 15 (App Router, Server Components, and Server Actions).
+- **Styling**: Tailwind CSS with CSS custom properties (`hsl(var(--primary))`), ensuring seamless dark/light theme switching.
+- **Primitives**: Radix UI for unstyled, fully accessible keyboard-navigable primitives (Dialog, DropdownMenu, Accordion, Tooltip, Popover).
+- **Motion & Animation**: `motion` (formerly Framer Motion), CSS animations, and NumberFlow for smooth typography transitions.
+- **Visual Creativity**: Canvas 2D, Three.js, and WebGL raymarched shaders.
+
+---
+
+## 5. Alternatives & Vendor References
+
+For a comparison, consult each project's own documentation and terms:
+- [shadcn/ui](https://ui.shadcn.com/)
+- [21st.dev](https://21st.dev/)
+- [v0 by Vercel](https://v0.dev/)
+
+These are third-party product references. HigherBits-specific workflows are described above; this document does not verify the alternatives' current capabilities.
+
+---
+
+## 6. Licensing & Commercial Use
+
+- **Community Components & Dependencies**: Review each item's published license and source notices before use, modification, or redistribution. Preserve any required copyright and permission notices, including those required by MIT-licensed source. Dependencies retain their own licenses; free access does not establish a uniform license or unrestricted commercial rights.
+- **Paid Creator Bundles & Templates**: Premium items may have individual commercial terms specified on their product pages. Review the terms for the purchased item and intended use.
+- **Platform Terms**: See the [Terms of Service](https://higherbits.dev/terms) for platform usage and redistribution policies; this summary does not replace an item's license or the published platform terms.
+
+---
+
+## 7. Useful Links & Resources
+
+- Website: https://higherbits.dev
+- Component Catalogue: https://higherbits.dev/?tab=home
+- Templates: https://higherbits.dev/?tab=templates
+- Component Libraries: https://higherbits.dev/?tab=libraries
+- XML Sitemap: https://higherbits.dev/sitemap.xml
+- GitHub: https://github.com/CLDGayo/higherbits
+- Discord Community: https://discord.gg/vWqmFjPMU4
+- Support: support@higherbits.dev

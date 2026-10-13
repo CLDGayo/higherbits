@@ -12,6 +12,7 @@ const NON_PROFILE_ROOTS = new Set([
   "import-old",
   "libraries",
   "magic",
+  "higherbits-mcp",
   "magic-chat",
   "maintenance",
   "our-story",
@@ -48,8 +49,8 @@ export function useSidebarVisibility() {
     pathname.startsWith("/c/") ||
     pathname.startsWith("/community/libraries") ||
     pathname.startsWith("/libraries") ||
-    pathname.startsWith("/magic/get-started") ||
-    pathname.startsWith("/magic/console") ||
+    pathname.startsWith("/higherbits-mcp/onboarding") ||
+    pathname.startsWith("/higherbits-mcp/console") ||
     pathname.startsWith("/contest") ||
     isUserProfile
 

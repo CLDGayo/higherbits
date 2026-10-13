@@ -87,7 +87,7 @@ export default defineConfig({
    * still runs files concurrently, and every worker competes for the same
    * single `next dev` process. Measured: `/` reaches networkidle in 10.3s on
    * an idle server, but exceeded the 60s test timeout under concurrent
-   * workers, while `/magic` and `/contest` finished in 5-23s. The result was
+   * workers, while `/higherbits-mcp` and `/contest` finished in 5-23s. The result was
    * a suite whose failures moved run to run.
    *
    * Serial costs a few minutes of wall clock and buys results that mean
@@ -121,30 +121,74 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
-  projects: [
-    // Signs the studio account in once and caches the session. Skips itself
-    // when no credentials are configured.
-    {
-      name: "setup",
-      testMatch: /.*\.setup\.ts/,
-      use: { ...devices["Desktop Chrome"] },
-    },
-    // Public surfaces: no session, so a signed-out regression is visible here
-    // rather than masked by an authenticated one.
-    {
-      name: "public",
-      testMatch: /.*\.spec\.ts/,
-      testIgnore: /studio-.*\.spec\.ts/,
-      use: { ...devices["Desktop Chrome"] },
-    },
-    // Authenticated studio flows.
-    {
-      name: "studio",
-      testMatch: /studio-.*\.spec\.ts/,
-      dependencies: ["setup"],
-      use: { ...devices["Desktop Chrome"], storageState },
-    },
-  ],
+  projects: (() => {
+    const stage = process.env.HIGHERBITS_E2E_STAGE
+    if (stage && !["baseline", "post"].includes(stage)) {
+      throw new Error("HIGHERBITS_E2E_STAGE must be baseline or post")
+    }
+    const runId = (process.env.HIGHERBITS_E2E_RUN_ID ??= crypto.randomUUID())
+    const commandId = (process.env.HIGHERBITS_E2E_COMMAND_ID ??= crypto.randomUUID())
+    if (![runId, commandId].every((value) => /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}$/.test(value))) {
+      throw new Error("HigherBits evidence IDs must be safe path segments")
+    }
+    const evidenceDir = path.resolve(
+      __dirname,
+      "../../process/features/higherbits-redesign/active/higherbits-current-rebrand_11-10-26/evidence/phase-01",
+      runId,
+      stage ?? "unselected",
+      commandId,
+    )
+    const adminState = process.env.HIGHERBITS_E2E_ADMIN_STATE
+    if (adminState && (!path.isAbsolute(adminState) || !fs.existsSync(adminState) || !fs.statSync(adminState).isFile())) {
+      throw new Error("HIGHERBITS_E2E_ADMIN_STATE must name an existing absolute local file")
+    }
+    const adminSpecs = /higherbits-mcp-(route-identity|visual-evidence|a11y)\.spec\.ts/
+    return [
+      // Signs the studio account in once and caches the session. Skips itself
+      // when no credentials are configured.
+      {
+        name: "setup",
+        testMatch: /.*\.setup\.ts/,
+        use: { ...devices["Desktop Chrome"] },
+      },
+      // Public surfaces: no session, so a signed-out regression is visible here
+      // rather than masked by an authenticated one.
+      {
+        name: "public",
+        testMatch: /.*\.spec\.ts/,
+        testIgnore: [/studio-.*\.spec\.ts/, adminSpecs],
+        outputDir: path.join(evidenceDir, "public"),
+        metadata: { evidenceStage: stage ?? null },
+        use: {
+          ...devices["Desktop Chrome"],
+          storageState: { cookies: [], origins: [] },
+          trace: "off",
+          screenshot: "off",
+          video: "off",
+        },
+      },
+      // Authenticated studio flows.
+      {
+        name: "studio",
+        testMatch: /studio-.*\.spec\.ts/,
+        dependencies: ["setup"],
+        use: { ...devices["Desktop Chrome"], storageState },
+      },
+      ...(adminState ? [{
+        name: "admin",
+        testMatch: adminSpecs,
+        outputDir: path.join(evidenceDir, "admin"),
+        metadata: { evidenceStage: stage ?? null },
+        use: {
+          ...devices["Desktop Chrome"],
+          storageState: adminState,
+          trace: "off" as const,
+          screenshot: "off" as const,
+          video: "off" as const,
+        },
+      }] : []),
+    ]
+  })(),
   webServer: {
     command: `corepack pnpm exec next dev --port ${port}`,
     url: baseURL,

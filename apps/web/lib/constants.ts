@@ -60,6 +60,7 @@ export const RESERVED_TOP_LEVEL_SLUGS = new Set([
   "admin",
   "api",
   "magic",
+  "higherbits-mcp",
   "magic-chat",
   "pricing",
   "support",

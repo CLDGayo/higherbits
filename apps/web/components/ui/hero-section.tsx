@@ -169,7 +169,7 @@ export function HeroSection() {
 
               {isAdmin && (
                 <ClayPillButton variant="secondary" asChild className="gap-2">
-                  <Link href="/magic">
+                  <Link href="/higherbits-mcp">
                     Integrate in IDE AI Agent
                     <ArrowRight className="h-4 w-4 ml-1.5" />
                   </Link>

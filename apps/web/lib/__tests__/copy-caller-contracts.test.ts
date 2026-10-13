@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { requestCopy, getInstallCommand } from "../copy-client"
-import { getMcpConfigJson } from "../config/magic-mcp"
+import { getMcpConfigJson } from "../config/higherbits-mcp"
 import { withCopyNotice } from "../copy-notice"
 const notice = {displayText:"Recorded license: MIT License (unverified). Component profile: @creator. Copyright holder and upstream license text have not been verified by HigherBits.",provenanceClass:"recorded-unverified" as const}
 const fetchMock = vi.fn()

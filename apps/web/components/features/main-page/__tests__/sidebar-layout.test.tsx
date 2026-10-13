@@ -20,7 +20,7 @@ vi.mock("@/hooks/use-navigation", () => ({
   }),
 }))
 // null → MainSidebar falls back to real defaultCategories (rendered collapsed).
-vi.mock("@/lib/navigation-with-magic", () => ({
+vi.mock("@/lib/navigation-with-higherbits-mcp", () => ({
   useFilteredNavigation: () => null,
 }))
 vi.mock("jotai", () => ({

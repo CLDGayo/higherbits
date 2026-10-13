@@ -12,8 +12,24 @@ export default clerkMiddleware(async (auth, request) => {
   if (process.env.MAINTENANCE_MODE === "true") {
     return NextResponse.rewrite(new URL("/maintenance", request.url))
   }
-  if (request.nextUrl.pathname.startsWith("/magic/get-started")) {
-    return NextResponse.redirect(new URL("/magic/onboarding", request.url))
+  const pathname = request.nextUrl.pathname
+  if (
+    pathname === "/magic/get-started" ||
+    pathname.startsWith("/magic/get-started/")
+  ) {
+    const destination = request.nextUrl.clone()
+    destination.pathname = "/higherbits-mcp/onboarding"
+    return NextResponse.redirect(destination, 308)
+  }
+  if (pathname === "/magic" || pathname.startsWith("/magic/")) {
+    const destination = request.nextUrl.clone()
+    destination.pathname = pathname.replace("/magic", "/higherbits-mcp")
+    return NextResponse.redirect(destination, 308)
+  }
+  if (pathname.startsWith("/higherbits-mcp/get-started")) {
+    const destination = request.nextUrl.clone()
+    destination.pathname = "/higherbits-mcp/onboarding"
+    return NextResponse.redirect(destination, 308)
   }
 
   if (request.nextUrl.pathname.startsWith("/api/")) {
@@ -21,7 +37,7 @@ export default clerkMiddleware(async (auth, request) => {
     requestHeaders.set("x-internal-token", process.env.INTERNAL_API_SECRET!)
     // Convenience source/search routes resolve the caller themselves. Never treat
     // this middleware's server token (or a caller-supplied one) as user identity.
-    if (/^\/api\/(?:prompts|component-source|copy-grants|mcp\/component-source|r|search(?:-mcp)?|magic-search|magic\/check)(?:\/|$)/.test(request.nextUrl.pathname)) {
+    if (/^\/api\/(?:prompts|component-source|copy-grants|mcp\/component-source|r|search(?:-mcp)?|magic-search|magic\/check|higherbits-mcp\/check)(?:\/|$)/.test(request.nextUrl.pathname)) {
       requestHeaders.delete("x-internal-token")
     }
 

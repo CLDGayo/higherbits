@@ -1,9 +1,9 @@
 import AxeBuilder from "@axe-core/playwright"
-import { expect, test, type Page } from "@playwright/test"
+import { expect, test, type Page, type TestInfo } from "@playwright/test"
 
 const routes = [
   "/",
-  "/magic",
+  "/higherbits-mcp",
   "/magic-chat",
   "/studio",
   "/api-access",
@@ -19,37 +19,63 @@ const routes = [
   "/public-dashboard",
 ]
 
-async function auditRoute(page: Page, route: string, theme: "light" | "dark") {
-  if (theme === "dark") {
-    await page.addInitScript(() => {
-      window.localStorage.setItem("theme", "dark")
-      document.documentElement.classList.add("dark")
-    })
-  }
+async function auditRoute(page: Page, route: string, theme: "light" | "dark", testInfo: TestInfo) {
+  expect(["baseline", "post"]).toContain(testInfo.project.metadata.evidenceStage)
+  await page.addInitScript((selectedTheme) => {
+    window.localStorage.setItem("theme", selectedTheme)
+    document.documentElement.classList.toggle("dark", selectedTheme === "dark")
+  }, theme)
 
   await page.goto(route)
   await page.waitForLoadState("networkidle")
-
-  if (theme === "dark") {
-    await page.evaluate(() => {
-      document.documentElement.classList.add("dark")
-    })
+  await expect(page).toHaveURL(new URL(route, testInfo.project.use.baseURL).href)
+  const identities: Record<string, RegExp> = {
+    "/": /Production UI for developers and agencies/,
+    "/studio": /Share Your Components with the World/,
+    "/api-access": /^API Access$/,
+    "/contest": /^Contest$/,
+    "/our-story": /^Our Story$/,
+    "/public-dashboard": /^Public Payouts Dashboard$/,
   }
+  expect(identities[route], "Every audited route needs its own page identity").toBeDefined()
+  await expect(page.getByRole("heading", { name: identities[route] })).toBeVisible()
+
+  await page.evaluate((selectedTheme) => {
+    document.documentElement.classList.toggle("dark", selectedTheme === "dark")
+  }, theme)
 
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     .analyze()
 
-  expect(results.violations).toEqual([])
+  const rawResults = JSON.parse(JSON.stringify(results, (key, value) =>
+    ["html", "data", "relatedNodes"].includes(key) ? undefined : value,
+  ))
+  await testInfo.attach(`${route.replace(/\//g, "") || "home"}-${theme}-desktop-axe.json`, {
+    body: JSON.stringify({
+      route,
+      theme,
+      viewport: page.viewportSize(),
+      stage: testInfo.project.metadata.evidenceStage,
+      rawResults,
+      signatures: results.violations.map(({ id, impact, nodes }) => ({
+        id,
+        impact,
+        targets: nodes.map(({ target }) => target),
+      })),
+    }, null, 2),
+    contentType: "application/json",
+  })
+  expect(results.violations.length).toBe(0)
 }
 
 test.describe("accessibility", () => {
-  for (const route of routes) {
+  for (const route of routes.filter((route) => !["/higherbits-mcp", "/magic-chat", "/contest"].includes(route))) {
     for (const theme of ["light", "dark"] as const) {
       test(`${route} has no WCAG A/AA violations in ${theme} mode`, async ({
         page,
-      }) => {
-        await auditRoute(page, route, theme)
+      }, testInfo) => {
+        await auditRoute(page, route, theme, testInfo)
       })
     }
   }

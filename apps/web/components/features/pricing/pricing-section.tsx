@@ -142,7 +142,7 @@ export function PricingSection({
             at the speed of thought.
           </h1>
           <p className="text-lg leading-8 text-muted-foreground font-light max-w-xl mx-auto">
-            Create beautiful UI with Magic MCP and access premium components
+            Create beautiful UI with HigherBits MCP and access premium components
             from top developers. Cancel anytime.
           </p>
         </div>

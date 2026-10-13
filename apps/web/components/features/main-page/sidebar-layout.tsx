@@ -23,10 +23,10 @@ import {
 } from "@/lib/data/libraries-data"
 import {
   categories as defaultCategories,
-  magicNavItem,
+  aiBuilderNavItem,
   mainNavigationItems,
 } from "@/lib/navigation"
-import { useFilteredNavigation } from "@/lib/navigation-with-magic"
+import { useFilteredNavigation } from "@/lib/navigation-with-higherbits-mcp"
 import { userStateAtom } from "@/lib/store/user-store"
 import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
@@ -96,14 +96,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// Import types from navigation-with-magic.tsx
+// Import types from navigation-with-higherbits-mcp.tsx
 import { Button } from "@/components/ui/button"
 import { ClayCard } from "@/components/ui/clay-card"
 import { TextShimmer } from "@/components/ui/text-shimmer"
 import type {
   NavigationCategory,
   NavigationItem,
-} from "@/lib/navigation-with-magic"
+} from "@/lib/navigation-with-higherbits-mcp"
 
 export function MainSidebar() {
   const { toggleSidebar, state, isMobile, setOpenMobile } = useSidebar()
@@ -136,7 +136,7 @@ export function MainSidebar() {
   const categories = mounted ? (filteredCategories || defaultCategories) : defaultCategories
 
   // Get the current tab from URL when available
-  const urlTab = searchParams.get("tab") as Exclude<AppSection, "magic"> | null
+  const urlTab = searchParams.get("tab") as Exclude<AppSection, "higherbits-mcp"> | null
 
   // Libraries filter state
   const [librariesSearch, setLibrariesSearch] = useAtom(librariesSearchAtom)
@@ -324,12 +324,12 @@ export function MainSidebar() {
   const { data: tagCounts } = useCategoryTagCounts()
   const isAdmin = mounted ? Boolean(clerkUser && isHookAdmin) : false
 
-  // Add a useEffect to automatically open Magic menu after 1 second if admin
+  // Add a useEffect to automatically open the AI Builder menu after 1 second if admin
   React.useEffect(() => {
     if (!isAdmin) return
     const timer = setTimeout(() => {
       setExpandedItems((prev) =>
-        prev.includes("magic") ? prev : [...prev, "magic"],
+        prev.includes("ai-builder") ? prev : [...prev, "ai-builder"],
       )
     }, 1000)
 
@@ -563,7 +563,7 @@ export function MainSidebar() {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         isActive={
-                          currentSection !== "magic" &&
+                          currentSection !== "higherbits-mcp" &&
                           !pathname.startsWith("/s/") &&
                           urlTab === "components" &&
                           sortBy === "recommended"
@@ -584,7 +584,7 @@ export function MainSidebar() {
                     <SidebarMenuItem>
                       <SidebarMenuButton
                         isActive={
-                          currentSection !== "magic" &&
+                          currentSection !== "higherbits-mcp" &&
                           !pathname.startsWith("/s/") &&
                           urlTab === "components" &&
                           sortBy === "date"
@@ -819,7 +819,7 @@ export function MainSidebar() {
                       <SidebarMenuItem key={item.value}>
                         <SidebarMenuButton
                           isActive={
-                            currentSection !== "magic" &&
+                            currentSection !== "higherbits-mcp" &&
                             !pathname.startsWith("/s/") &&
                             ((item.value === "home" &&
                               (urlTab === "home" ||
@@ -835,7 +835,7 @@ export function MainSidebar() {
                               setSidebarView("components")
                             }
                             navigateToTab(
-                              item.value as Exclude<AppSection, "magic"> | "home",
+                              item.value as Exclude<AppSection, "higherbits-mcp"> | "home",
                             )
                             if (isMobile) setOpenMobile(false)
                           }}
@@ -863,17 +863,17 @@ export function MainSidebar() {
                   <SidebarMenuItem className="group/menu-item relative">
                     <SidebarMenuButton
                       isActive={false}
-                      onClick={() => toggleExpandItem("magic")}
+                      onClick={() => toggleExpandItem("ai-builder")}
                     >
                       <div className="flex items-center justify-between w-full">
                         <div className="flex items-center">
                           <Sparkles className="mr-2 h-4 w-4" />
-                          {magicNavItem.title}
+                          {aiBuilderNavItem.title}
                         </div>
                         <ChevronRight
                           className={cn(
                             "h-4 w-4 transition-transform",
-                            expandedItems.includes("magic") &&
+                            expandedItems.includes("ai-builder") &&
                               "transform rotate-90",
                           )}
                         />
@@ -881,9 +881,9 @@ export function MainSidebar() {
                     </SidebarMenuButton>
 
                     <AnimatePresence mode="wait">
-                      {expandedItems.includes("magic") && (
+                      {expandedItems.includes("ai-builder") && (
                         <motion.div
-                          key="magic-menu"
+                          key="ai-builder-menu"
                           initial={{
                             height: 0,
                             opacity: 0,
@@ -907,10 +907,10 @@ export function MainSidebar() {
                           style={{ paddingBottom: 0 }}
                         >
                           <div className="flex flex-col gap-0.5">
-                            {magicNavItem.subitems.map((subitem, itemIndex) => {
+                            {aiBuilderNavItem.subitems.map((subitem, itemIndex) => {
                               const isActive =
                                 pathname === subitem.href ||
-                                (currentSection === "magic" &&
+                                (currentSection === "higherbits-mcp" &&
                                   pathname === subitem.href)
 
                               // Calculate staggered delay
@@ -993,13 +993,13 @@ export function MainSidebar() {
                       <SidebarMenuItem key={item.value}>
                         <SidebarMenuButton
                           isActive={
-                            currentSection !== "magic" &&
+                            currentSection !== "higherbits-mcp" &&
                             !pathname.startsWith("/s/") &&
                             activeTab === item.value
                           }
                           onClick={() => {
                             navigateToTab(
-                              item.value as Exclude<AppSection, "magic">,
+                              item.value as Exclude<AppSection, "higherbits-mcp">,
                             )
                             if (isMobile) setOpenMobile(false)
                           }}

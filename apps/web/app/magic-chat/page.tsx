@@ -2,11 +2,11 @@ import { Metadata } from "next"
 import { MagicChatPageClient } from "./page.client"
 
 export const metadata: Metadata = {
-  title: "Magic Chat - Create Standout Components with AI | HigherBits.dev",
+  title: "HigherBits AI - Create Standout Components with AI | HigherBits.dev",
   description:
-    "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
+    "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with HigherBits AI.",
   keywords: [
-    "Magic Chat",
+    "HigherBits AI",
     "AI UI generation",
     "standout components",
     "UI components",
@@ -23,20 +23,20 @@ export const metadata: Metadata = {
     "modern component patterns",
   ],
   openGraph: {
-    title: "Magic Chat - Create Standout Components with AI | HigherBits.dev",
+    title: "HigherBits AI - Create Standout Components with AI | HigherBits.dev",
     description:
-      "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
-    images: ["/magic-chat-og.png"],
+      "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with HigherBits AI.",
+    images: ["/og-image.png"],
     type: "website",
     siteName: "HigherBits.dev",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Magic Chat - Create Standout Components with AI | HigherBits.dev",
+    title: "HigherBits AI - Create Standout Components with AI | HigherBits.dev",
     description:
-      "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with AI-powered Magic Chat.",
-    images: ["/magic-chat-og.png"],
+      "Start with a prompt, iterate in chat, and draw inspiration from the best works of HigherBits.dev's top design engineers. Create standout UI components with HigherBits AI.",
+    images: ["/og-image.png"],
   },
 }
 

@@ -12,9 +12,9 @@ import { CollectionsContainer } from "@/components/features/collections/collecti
 import { DesignEngineersList } from "@/components/features/design-engineers/design-engineers-list"
 import { HomeTabLayout } from "@/components/features/home/home-layout"
 import {
-  MagicBanner,
-  magicBannerVisibleAtom,
-} from "@/components/features/magic/magic-banner"
+  HigherBitsMcpBanner,
+  higherbitsMcpBannerVisibleAtom,
+} from "@/components/features/higherbits-mcp/higherbits-mcp-banner"
 import { FilterChips } from "@/components/features/main-page/filter-chips"
 import { sidebarOpenAtom } from "@/components/features/main-page/main-layout"
 import { ComponentsHeader } from "@/components/features/main-page/main-page-header"
@@ -36,11 +36,11 @@ const MainContent = React.memo(function MainContent({
   sortBy,
   handleTabChange,
 }: {
-  activeTab: Exclude<AppSection, "magic"> | "home"
+  activeTab: Exclude<AppSection, "higherbits-mcp"> | "home"
   prevSidebarState: boolean
   sidebarOpen: boolean
   sortBy: SortOption
-  handleTabChange: (tab: Exclude<AppSection, "magic"> | "home") => void
+  handleTabChange: (tab: Exclude<AppSection, "higherbits-mcp"> | "home") => void
 }) {
   const [selectedFilter, setSelectedFilter] = useState<string>("all")
   const isMobile = useIsMobile()
@@ -130,10 +130,10 @@ const MainContent = React.memo(function MainContent({
 export function HomePageClient({
   initialTab,
 }: {
-  initialTab?: Exclude<AppSection, "magic"> | "home"
+  initialTab?: Exclude<AppSection, "higherbits-mcp"> | "home"
 } = {}) {
   const [sidebarOpen] = useAtom(sidebarOpenAtom)
-  const [magicBannerVisible] = useAtom(magicBannerVisibleAtom)
+  const [higherbitsMcpBannerVisible] = useAtom(higherbitsMcpBannerVisibleAtom)
   const [shouldShowBanner, setShouldShowBanner] = useState(false)
   const [prevSidebarState, setPrevSidebarState] = useState(sidebarOpen)
   const isMobile = useIsMobile()
@@ -154,7 +154,7 @@ export function HomePageClient({
     return () => clearTimeout(timer)
   }, [isMobile])
 
-  const handleTabChange = (tab: Exclude<AppSection, "magic"> | "home") => {
+  const handleTabChange = (tab: Exclude<AppSection, "higherbits-mcp"> | "home") => {
     if ("startViewTransition" in document) {
       ;(document as any).startViewTransition(() => {
         navigateToTab(tab)
@@ -170,12 +170,12 @@ export function HomePageClient({
     <main
       className={cn(
         "flex flex-1 flex-col min-w-0",
-        isAdmin && magicBannerVisible && shouldShowBanner && "mt-3 md:mt-4",
+        isAdmin && higherbitsMcpBannerVisible && shouldShowBanner && "mt-3 md:mt-4",
       )}
     >
       <div className="w-full mx-auto max-w-full" style={{ viewTransitionName: "main-content" } as React.CSSProperties}>
         <AnimatePresence>
-          {isAdmin && magicBannerVisible && shouldShowBanner && <MagicBanner />}
+          {isAdmin && higherbitsMcpBannerVisible && shouldShowBanner && <HigherBitsMcpBanner />}
         </AnimatePresence>
         <MainContent
           activeTab={activeTab}

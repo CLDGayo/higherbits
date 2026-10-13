@@ -16,7 +16,7 @@ const PUBLIC_ROUTES = [
   "/",
   "/?tab=home",
   "/?tab=templates",
-  "/magic",
+  "/higherbits-mcp",
   "/magic-chat",
   "/api-access",
   "/contest",

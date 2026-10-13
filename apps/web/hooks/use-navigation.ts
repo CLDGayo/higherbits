@@ -48,11 +48,11 @@ export function useNavigation(
   const [selectedMainTab, setSelectedMainTab] = useAtom(selectedMainTabAtom)
   const [sortBy, setSortBy] = useAtom(sortByAtom)
 
-  const urlTab = searchParams.get("tab") as Exclude<AppSection, "magic"> | null
+  const urlTab = searchParams.get("tab") as Exclude<AppSection, "higherbits-mcp"> | null
 
   useEffect(() => {
-    if (pathname.startsWith("/magic")) {
-      setCurrentSection("magic")
+    if (pathname.startsWith("/higherbits-mcp")) {
+      setCurrentSection("higherbits-mcp")
       return
     }
 

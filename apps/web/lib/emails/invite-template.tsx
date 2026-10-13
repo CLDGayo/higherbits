@@ -21,15 +21,15 @@ export const InviteEmail = ({ inviteUrl }: InviteEmailProps) => {
     <Html>
       <Head />
       <Preview>
-        You're off the waitlist - welcome to HigherBits.dev's Magic beta! 🎉
+        You're off the waitlist - welcome to the HigherBits MCP beta! 🎉
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
-            src="https://higherbits.dev/magic-agent-og-image.png"
+            src="https://higherbits.dev/higherbits-mcp-social-card.png"
             width={580}
             height={300}
-            alt="Magic Agent"
+            alt="HigherBits MCP"
             style={{
               ...image,
               display: "block",
@@ -47,19 +47,19 @@ export const InviteEmail = ({ inviteUrl }: InviteEmailProps) => {
             </Heading>
             <Text style={text}>
               Your time on the waitlist is over - get ready to experience the
-              magic of AI-powered UI development! 🪄
+              AI-powered UI development! 🪄
             </Text>
             <Text style={text}>
-              You are invited to be an early user of HigherBits.dev's Magic Agent
-              beta. Our product is early, and we're excited to have you help
-              shape its future. Every piece of feedback will make Magic better
-              for everyone.
+              You are invited to be an early user of HigherBits MCP. Our product
+              is early, and we're excited to have you help shape its future.
+              Every piece of feedback will make HigherBits MCP better for
+              everyone.
             </Text>
             <Button style={button} href={inviteUrl}>
-              Join the Magic ✨
+              Get started with HigherBits MCP ✨
             </Button>
             <Text style={text}>
-              We can't wait to see what you'll build with Magic! 🚀
+              We can't wait to see what you'll build with HigherBits MCP! 🚀
             </Text>
             <Text style={footer}>
               Best wishes,

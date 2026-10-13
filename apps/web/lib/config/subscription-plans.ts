@@ -110,7 +110,7 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
   },
   {
     name: "UI Inspirations",
-    section: "Magic MCP",
+    section: "HigherBits MCP",
     values: {
       free: "Unlimited",
       pro: "Unlimited",
@@ -118,7 +118,7 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
   },
   {
     name: "SVG Logo Search",
-    section: "Magic MCP",
+    section: "HigherBits MCP",
     values: {
       free: "Unlimited",
       pro: "Unlimited",
@@ -156,7 +156,7 @@ export const PLAN_FEATURES: PlanFeature[] = [
   {
     name: "UI Inspirations",
     included: "free",
-    category: "Magic MCP",
+    category: "HigherBits MCP",
     valueByPlan: {
       free: "Unlimited",
       pro: "Unlimited",
@@ -165,7 +165,7 @@ export const PLAN_FEATURES: PlanFeature[] = [
   {
     name: "SVG Logo Search",
     included: "free",
-    category: "Magic MCP",
+    category: "HigherBits MCP",
     valueByPlan: {
       free: "Unlimited",
       pro: "Unlimited",

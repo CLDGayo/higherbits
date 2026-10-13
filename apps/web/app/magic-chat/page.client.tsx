@@ -5,7 +5,7 @@ import { motion } from "motion/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Footer } from "@/components/ui/footer"
-import { MagicHeader } from "@/components/features/magic/magic-header"
+import { HigherBitsMcpHeader } from "@/components/features/higherbits-mcp/higherbits-mcp-header"
 import { Mockup, MockupFrame } from "@/components/ui/mockup"
 import { Icons } from "@/components/icons"
 import { Spinner } from "@/components/icons/spinner"
@@ -174,7 +174,7 @@ const SuccessModal = ({
           </DialogTitle>
 
           <DialogDescription className="text-muted-foreground text-sm">
-            We'll notify you when Magic Chat launches.
+            We'll notify you when HigherBits AI launches.
           </DialogDescription>
         </div>
 
@@ -289,7 +289,7 @@ export function MagicChatPageClient() {
       ref={scrollRef}
       className="absolute inset-0 min-h-screen w-full overflow-auto bg-background text-foreground"
     >
-      <MagicHeader isScrolled={isScrolled} />
+      <HigherBitsMcpHeader isScrolled={isScrolled} productName="HigherBits AI" />
 
       <main className="relative w-full">
         <motion.div
@@ -313,7 +313,7 @@ export function MagicChatPageClient() {
                 }}
                 className="font-sans mb-6 mt-0 text-center text-[12px] sm:text-base uppercase tracking-[0.51em] text-muted-foreground"
               >
-                Introducing Magic Chat
+                Introducing HigherBits AI
               </motion.p>
 
               <motion.h1
@@ -410,8 +410,8 @@ export function MagicChatPageClient() {
                   >
                     <div className="relative w-full h-full group">
                       <img
-                        src="/magic-preview.webp"
-                        alt="Magic Chat Demo"
+                        src="/higherbits-component-preview.svg"
+                        alt="HigherBits AI illustrative component previews"
                         className="object-cover object-center"
                       />
                       {/* Play Button Overlay removed temporarily */}
