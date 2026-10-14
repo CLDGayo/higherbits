@@ -1,78 +1,36 @@
 import { expect, test } from "@playwright/test"
 
-/**
- * The homepage tells the truth about its own catalogue.
- *
- * Intent: three section rows, none of the retired category rows, and no empty
- * state anywhere.
- *
- * **This spec used to assert that the page's ONLY level-2 headings were the
- * three section names, and that was wrong.** Component cards carry their own
- * `<h2>` (`table`, `select`, `switch`, …), so the assertion held only while
- * the cards had not loaded yet — it was testing the loading state and passing
- * by racing the data. In the full suite, where the page took ~24s instead of
- * ~5s, the cards won the race and it failed; alone, it passed 3/3. That is the
- * whole of the flake, and raising the timeout made it worse rather than
- * better, because more time means more cards.
- *
- * So the section headings are now identified by name rather than by "every
- * h2", and the spec waits for the catalogue to actually populate before
- * judging it — asserting the settled state instead of outrunning it.
- */
-const SECTION_HEADINGS = ["Featured", "Newest", "Popular"]
-
-const retiredCategoryHeadings = [
-  "Heros",
-  "Features",
-  "AI Chat Components",
-  "Calls to Action",
-  "Buttons",
-  "Testimonials",
-  "Pricing Sections",
-  "Text Components",
+const sections = [
+  "Popular", "New additions", "Categories", "Collections", "Browse libraries",
+  "More heroes", "Gradients", "Templates", "Featured", "ASCII art",
+  "Explore everything", "Recently viewed",
 ]
 
 for (const viewport of [
   { name: "desktop", width: 1280, height: 900 },
-  { name: "mobile", width: 375, height: 812 },
+  { name: "tablet", width: 820, height: 900 },
+  { name: "mobile", width: 390, height: 844 },
 ]) {
-  test(`renders an honest ${viewport.name} catalogue`, async ({ page }) => {
+  test(`Home discovery has honest sections and reachable controls at ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize(viewport)
     await page.goto("/?tab=home")
-
-    // Each section must be present, in this order.
-    for (const heading of SECTION_HEADINGS) {
-      await expect(
-        page.getByRole("heading", { level: 2, name: heading, exact: true }),
-        `the ${heading} section is missing`,
-      ).toBeVisible({ timeout: 20_000 })
+    await expect(page.getByRole("heading", { level: 1, name: /Find your next building block/ })).toBeVisible()
+    await expect(page.getByTestId("card-interactive-wrapper").first()).toBeVisible({ timeout: 30_000 })
+    for (const title of sections) {
+      await expect(page.getByRole("heading", { level: 2, name: title, exact: true })).toBeVisible()
     }
-
-    const sectionOrder = (
-      await page.getByRole("heading", { level: 2 }).allTextContents()
-    )
-      .map((text) => text.trim())
-      .filter((text) => SECTION_HEADINGS.includes(text))
-    expect(sectionOrder).toEqual(SECTION_HEADINGS)
-
-    // Wait for the catalogue to populate, so the assertions below judge a
-    // loaded page rather than an empty one. A section that renders no cards at
-    // all is exactly what this spec exists to catch, so this is not optional
-    // politeness - an empty page would otherwise pass every check that follows.
-    await expect(
-      page.getByRole("heading", { level: 2 }),
-      "no component cards rendered - the catalogue is empty",
-    ).not.toHaveCount(SECTION_HEADINGS.length, { timeout: 20_000 })
-
-    await expect(
-      page.getByText("No items to display", { exact: true }),
-    ).toHaveCount(0)
-
-    for (const heading of retiredCategoryHeadings) {
-      await expect(
-        page.getByRole("heading", { level: 2, name: heading, exact: true }),
-        `the retired ${heading} row is back`,
-      ).toHaveCount(0)
-    }
+    const order = (await page.getByRole("heading", { level: 2 }).allTextContents()).map((text) => text.trim()).filter((text) => sections.includes(text))
+    expect(order).toEqual(sections)
+    await expect(page.getByRole("link", { name: "Browse all components" })).toHaveAttribute("href", "/?tab=components")
+    await expect(page.getByRole("link", { name: /Browse libraries/ }).last()).toHaveAttribute("href", "/?tab=libraries")
+    await expect(page.getByRole("heading", { level: 2, name: "Recently viewed" }).locator("..")).toContainText("Coming soon")
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true)
   })
 }
+
+test("category count request failure displays uncertainty and retry", async ({ page }) => {
+  await page.route("**/api/tags/counts", (route) => route.fulfill({ status: 500, contentType: "application/json", body: '{"error":"forced","counts":{}}' }))
+  await page.goto("/?tab=home")
+  await expect(page.getByTestId("card-interactive-wrapper").first()).toBeVisible({ timeout: 30_000 })
+  await expect(page.getByRole("alert").filter({ hasText: "Category counts are unavailable" })).toBeVisible({ timeout: 20_000 })
+})

@@ -2921,6 +2921,10 @@ export type Database = {
           bundle_url: Json
         }[]
       }
+      get_public_demo_tag_counts: {
+        Args: Record<PropertyKey, never>
+        Returns: { slug: string; demo_count: number }[]
+      }
       get_collections_v1: {
         Args: {
           p_offset?: number

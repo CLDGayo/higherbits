@@ -6,30 +6,12 @@ export const revalidate = 300
 
 export async function GET() {
   try {
-    const [{ data: demoTagsData, error: demoTagsError }, { data: componentTagsData, error: componentTagsError }] =
-      await Promise.all([
-        supabaseWithAdminAccess.from("demo_tags").select("tags!inner(slug)"),
-        supabaseWithAdminAccess.from("component_tags").select("tags!inner(slug)"),
-      ])
-
-    if (demoTagsError) throw demoTagsError
-    if (componentTagsError) throw componentTagsError
+    const { data, error } = await supabaseWithAdminAccess.rpc("get_public_demo_tag_counts")
+    if (error) throw error
 
     const counts: Record<string, number> = {}
 
-    demoTagsData?.forEach((row: any) => {
-      const slug = row.tags?.slug
-      if (slug) {
-        counts[slug] = (counts[slug] || 0) + 1
-      }
-    })
-
-    componentTagsData?.forEach((row: any) => {
-      const slug = row.tags?.slug
-      if (slug) {
-        counts[slug] = (counts[slug] || 0) + 1
-      }
-    })
+    data?.forEach((row) => { counts[row.slug] = row.demo_count })
 
     return NextResponse.json(
       { counts },

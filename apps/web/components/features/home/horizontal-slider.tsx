@@ -8,7 +8,7 @@ import { ComponentCardSkeleton } from "@/components/ui/skeletons"
 import { cn, shouldHideLeaderboardRankings } from "@/lib/utils"
 import { DemoWithComponent } from "@/types/global"
 import { useUser } from "@clerk/nextjs"
-import { ChevronLeft, ChevronRight, Link } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
@@ -104,7 +104,7 @@ export function HorizontalSlider({
     if (!viewport) return
 
     const scrollAmount = viewport.clientWidth * 0.75
-    viewport.scrollBy({ left: -scrollAmount, behavior: "smooth" })
+    viewport.scrollBy({ left: -scrollAmount, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
   }
 
   const handleScrollRight = () => {
@@ -118,18 +118,7 @@ export function HorizontalSlider({
     if (!viewport) return
 
     const scrollAmount = viewport.clientWidth * 0.75
-    viewport.scrollBy({ left: scrollAmount, behavior: "smooth" })
-  }
-
-  const handleViewAllClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (onViewAll) {
-      onViewAll()
-    } else if (viewAllUrl) {
-      router.push(viewAllUrl)
-    }
+    viewport.scrollBy({ left: scrollAmount, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
   }
 
   const handleCardClick = (demo: DemoWithComponent) => {
@@ -161,10 +150,11 @@ export function HorizontalSlider({
           <Button
             variant="link"
             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors p-0 h-auto cursor-pointer"
-            asChild={!onViewAll && !viewAllUrl}
-            onClick={handleViewAllClick}
+            asChild={!onViewAll}
+            onClick={onViewAll ? (event) => { event.stopPropagation(); onViewAll() } : undefined}
+            type={onViewAll ? "button" : undefined}
           >
-            {onViewAll || viewAllUrl ? (
+            {onViewAll ? (
               <span className="cursor-pointer flex items-center group">
                 {isLeaderboard ? "View Leaderboard" : "View all"}
                 {totalCount !== undefined && (
@@ -175,8 +165,8 @@ export function HorizontalSlider({
                 <ChevronRight className="ml-1 h-4 w-4" />
               </span>
             ) : (
-              <Link
-                href={viewAllLink}
+              <a
+                href={viewAllUrl || viewAllLink}
                 className="flex items-center gap-1 group"
               >
                 {isLeaderboard ? "View Leaderboard" : "View all"}
@@ -185,7 +175,8 @@ export function HorizontalSlider({
                     ({totalCount})
                   </span>
                 )}
-              </Link>
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </a>
             )}
           </Button>
         )}
@@ -247,10 +238,12 @@ export function HorizontalSlider({
           variant="outline"
           size="icon"
           className={cn(
-            "absolute left-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background shadow-md transition-opacity",
+            "absolute left-1 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-background shadow-md transition-opacity focus-visible:ring-2 focus-visible:ring-ring",
             showLeftButton ? "opacity-100" : "opacity-0 pointer-events-none",
           )}
           onClick={handleScrollLeft}
+          aria-label={`Scroll ${title} left`}
+          disabled={!showLeftButton}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -259,10 +252,12 @@ export function HorizontalSlider({
           variant="outline"
           size="icon"
           className={cn(
-            "absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background shadow-md transition-opacity",
+            "absolute right-1 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-background shadow-md transition-opacity focus-visible:ring-2 focus-visible:ring-ring",
             showRightButton ? "opacity-100" : "opacity-0 pointer-events-none",
           )}
           onClick={handleScrollRight}
+          aria-label={`Scroll ${title} right`}
+          disabled={!showRightButton}
         >
           <ChevronRight className="h-4 w-4" />
         </Button>

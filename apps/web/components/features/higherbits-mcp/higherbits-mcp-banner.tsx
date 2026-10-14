@@ -27,6 +27,7 @@ const HigherBitsMcpBannerContent = memo(function HigherBitsMcpBannerContent() {
 
   return (
     <div
+      id="higherbits-mcp-banner"
       className="fixed top-14 z-[90] border-b border-border bg-muted transition-[left] duration-200 ease-in-out"
       style={{
         left: isSidebarOpen ? "var(--sidebar-width, 0px)" : "0",
@@ -34,10 +35,10 @@ const HigherBitsMcpBannerContent = memo(function HigherBitsMcpBannerContent() {
       }}
     >
       <Banner variant="muted" className="text-foreground">
-        <div className="flex w-full gap-2 md:items-center">
-          <div className="flex grow gap-3 md:items-center">
+        <div className="flex w-full min-w-0 gap-2 md:items-center">
+          <div className="flex min-w-0 grow gap-3 md:items-center">
             <div
-              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 max-md:mt-0.5"
+              className="hidden size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 sm:flex max-md:mt-0.5"
               aria-hidden="true"
             >
               <Logo
@@ -46,12 +47,12 @@ const HigherBitsMcpBannerContent = memo(function HigherBitsMcpBannerContent() {
                 className="opacity-80 w-6 h-6"
               />
             </div>
-            <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
-              <div className="space-y-0.5">
+            <div className="flex min-w-0 grow flex-col justify-between gap-3 md:flex-row md:items-center">
+              <div className="min-w-0 space-y-0.5">
                 <p className="text-sm font-medium">
                   Introducing HigherBits MCP
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="hidden text-sm text-muted-foreground xl:block">
                   Search the HigherBits.dev component catalog and retrieve source from your IDE.
                 </p>
               </div>
@@ -59,9 +60,11 @@ const HigherBitsMcpBannerContent = memo(function HigherBitsMcpBannerContent() {
                 <Button
                   size="sm"
                   className="text-sm"
+                  aria-label="Explore HigherBits MCP"
                   onClick={() => router.push("/higherbits-mcp")}
                 >
-                  Explore HigherBits MCP
+                  <span className="sm:hidden">Explore</span>
+                  <span className="hidden sm:inline">Explore HigherBits MCP</span>
                 </Button>
               </div>
             </div>

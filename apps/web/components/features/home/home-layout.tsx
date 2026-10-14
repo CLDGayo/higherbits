@@ -5,18 +5,23 @@ import {
   useMainDemosExcludingFeatured,
   useLatestDemos,
   useLeaderboardDemosForHome,
+  useTagDemos,
+  useCategoryTagCounts,
 } from "@/lib/queries"
 import { HorizontalSlider } from "./horizontal-slider"
+import { Categories, CollectionsPreview, ComingSoon, LibraryPreview, TemplatesPreview } from "./home-discovery-sections"
 import { DemoWithComponent, SortOption } from "@/types/global"
 import { buildHomeSections, HomeSection } from "./home-sections"
-import { useMemo, useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useNavigation } from "@/hooks/use-navigation"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { shouldHideLeaderboardRankings } from "@/lib/utils"
 import { toast } from "sonner"
 import { useClerkSupabaseClient } from "@/lib/clerk"
 import { useUser } from "@clerk/nextjs"
 import { useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
 interface HomeTabLayoutProps {
   sortBy?: SortOption
@@ -24,6 +29,8 @@ interface HomeTabLayoutProps {
 
 type SliderGroup = HomeSection & {
   isLoading: boolean
+  isError: boolean
+  retry: () => void
   targetTab?: "components"
   viewAllUrl?: string
   isLeaderboard?: boolean
@@ -55,6 +62,28 @@ export function HomeTabLayout({ sortBy = "recommended" }: HomeTabLayoutProps) {
   const supabase = useClerkSupabaseClient()
   const { user } = useUser()
   const queryClient = useQueryClient()
+  const categoryCounts = useCategoryTagCounts()
+  const heroes = useTagDemos("hero", "date", undefined, 12)
+  const gradients = useTagDemos("gradients", "date", undefined, 12)
+  const avatars = useTagDemos("avatars", "date", undefined, 12)
+  const tabs = useTagDemos("tabs", "date", undefined, 12)
+  const aiChats = useTagDemos("ai-chat", "date", undefined, 12)
+  const collections = useQuery({
+    queryKey: ["collections", "home"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_collections_v1", { p_offset: 0, p_limit: 12, p_include_private: false })
+      if (error) throw error
+      return data || []
+    },
+  })
+  const templates = useQuery({
+    queryKey: ["templates", "home"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_templates_v3", { p_offset: 0, p_limit: 3, p_include_private: false })
+      if (error) throw error
+      return data || []
+    },
+  })
 
   // Keep track of component order by ID
   const leaderboardItemOrderRef = useRef<number[]>([])
@@ -135,8 +164,7 @@ export function HomeTabLayout({ sortBy = "recommended" }: HomeTabLayoutProps) {
 
   const { navigateToTab, handleSortChange } = useNavigation()
 
-  const sliderGroups = useMemo(() => {
-    return buildHomeSections({
+  const sliderGroups = buildHomeSections({
       featured: featuredDemosQuery.data?.data || [],
       latest: latestDemosQuery.data || [],
       popular: popularDemosQuery.data || [],
@@ -148,17 +176,10 @@ export function HomeTabLayout({ sortBy = "recommended" }: HomeTabLayoutProps) {
           : group.id === "newest"
             ? latestDemosQuery.isLoading
             : popularDemosQuery.isLoading,
+      isError: group.id === "featured" ? featuredDemosQuery.isError : group.id === "newest" ? latestDemosQuery.isError : popularDemosQuery.isError,
+      retry: () => { void (group.id === "featured" ? featuredDemosQuery.refetch() : group.id === "newest" ? latestDemosQuery.refetch() : popularDemosQuery.refetch()) },
       targetTab: "components",
     }))
-  }, [
-    featuredDemosQuery.data,
-    featuredDemosQuery.isLoading,
-    popularDemosQuery.isLoading,
-    latestDemosQuery.data,
-    latestDemosQuery.isLoading,
-    randomizedLeaderboardItems,
-    leaderboardDemosQuery.isLoading,
-  ])
 
   const handleViewAll = (group: SliderGroup) => {
     if (group.viewAllUrl) {
@@ -253,11 +274,12 @@ export function HomeTabLayout({ sortBy = "recommended" }: HomeTabLayoutProps) {
   const shouldHideRankings = shouldHideLeaderboardRankings()
 
   return (
-    <div className="space-y-8">
-      {sliderGroups.map((group) => (
-        <HorizontalSlider
+    <div data-testid="home-discovery" className="mx-auto w-full min-w-0 max-w-[1680px] space-y-9 px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+      <header className="border-b border-border pb-5"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Discover HigherBits</p><h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Find your next building block.</h1><p className="mt-2 max-w-2xl text-sm text-muted-foreground">Explore components, collections, and templates from the HigherBits catalog.</p></header>
+      {["popular", "newest"].map((id) => sliderGroups.find((group) => group.id === id)).filter((group): group is SliderGroup => Boolean(group)).map((group) => (
+        group.isError ? <p key={group.id} role="alert" className="text-sm">{group.title} could not load. <button type="button" className="underline" onClick={group.retry}>Retry</button></p> : <HorizontalSlider
           key={group.id}
-          title={group.title}
+          title={group.id === "newest" ? "New additions" : group.title}
           items={group.items || []}
           isLoading={group.isLoading}
           onViewAll={() => handleViewAll(group)}
@@ -266,6 +288,16 @@ export function HomeTabLayout({ sortBy = "recommended" }: HomeTabLayoutProps) {
           onVote={group.isLeaderboard ? handleVote : undefined}
         />
       ))}
+      <Categories counts={categoryCounts.data} isError={categoryCounts.isError} retry={() => { void categoryCounts.refetch() }} />
+      <CollectionsPreview collections={collections.data} isLoading={collections.isLoading} isError={collections.isError} retry={() => { void collections.refetch() }} />
+      <LibraryPreview />
+      {([ ["More heroes", heroes, "/s/hero"], ["Gradients", gradients, "/s/gradients"] ] as const).map(([title, query, href]) => <section key={title} aria-label={title}>{query.isError ? <p role="alert" className="text-sm">{title} could not load. <button type="button" className="underline" onClick={() => { void query.refetch() }}>Retry</button></p> : <HorizontalSlider title={title} items={query.data?.data} isLoading={query.isLoading} viewAllUrl={href} totalCount={query.data?.total_count} />}{title === "Gradients" && <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground"><span>Create a gradient</span><span className="rounded-full border border-border px-2 py-0.5 text-xs">Coming soon</span><span>Public creation is not available yet.</span></div>}</section>)}
+      <TemplatesPreview templates={templates.data} isLoading={templates.isLoading} isError={templates.isError} retry={() => { void templates.refetch() }} />
+      {sliderGroups.filter((group) => group.id === "featured").map((group) => group.isError ? <p key={group.id} role="alert" className="text-sm">Featured could not load. <button type="button" className="underline" onClick={group.retry}>Retry</button></p> : <HorizontalSlider key={group.id} title={group.title} items={group.items} isLoading={group.isLoading} onViewAll={() => handleViewAll(group)} />)}
+      {([ ["Avatars", avatars, "/s/avatars"], ["Tabs", tabs, "/s/tabs"], ["AI Chats", aiChats, "/s/ai-chat"] ] as const).filter(([, query]) => query.isLoading || query.isError || Boolean(query.data?.data.length)).map(([title, query, href]) => <section key={title} aria-label={title}>{query.isError ? <p role="alert" className="text-sm">{title} could not load. <button type="button" className="underline" onClick={() => { void query.refetch() }}>Retry</button></p> : <HorizontalSlider title={title} items={query.data?.data} isLoading={query.isLoading} viewAllUrl={href} totalCount={query.data?.total_count} />}</section>)}
+      <ComingSoon title="ASCII art" description="An ASCII art collection is planned for the catalog." />
+      <section className="rounded-2xl border border-border bg-card/50 p-5 sm:p-6"><h2 className="text-lg font-semibold">Explore everything</h2><p className="mt-1 text-sm text-muted-foreground">Browse all public components or choose a category above.</p><Link href="/?tab=components" className="mt-3 inline-flex min-h-11 items-center text-sm font-medium underline focus-visible:ring-2 focus-visible:ring-ring">Browse all components</Link></section>
+      <ComingSoon title="Recently viewed" description="Browsing history is not available yet. Explore the catalog to find components now." />
     </div>
   )
 }

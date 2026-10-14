@@ -1265,17 +1265,12 @@ export function useCategoryTagCounts() {
   return useQuery({
     queryKey: ["category-tag-counts"] as const,
     queryFn: async () => {
-      try {
-        const res = await fetch("/api/tags/counts")
-        if (!res.ok) {
-          throw new Error(`Failed to fetch tag counts: ${res.statusText}`)
-        }
-        const data = await res.json()
-        return (data.counts || {}) as Record<string, number>
-      } catch (error) {
-        console.error("Error fetching category tag counts:", error)
-        return {} as Record<string, number>
+      const res = await fetch("/api/tags/counts")
+      if (!res.ok) {
+        throw new Error(`Failed to fetch tag counts: ${res.statusText}`)
       }
+      const data = await res.json()
+      return (data.counts || {}) as Record<string, number>
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 30, // 30 minutes

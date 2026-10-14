@@ -993,6 +993,13 @@ iframe {
   }
 }
 
+/* Keep Home's introductory label below the admin-only fixed MCP banner. */
+@media (min-width: 768px) {
+  body:has(#higherbits-mcp-banner) [data-testid="home-discovery"] {
+    margin-top: 2rem;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Navigation progress bar (components/ui/navigation-progress.tsx)
    Covers the pre-commit RSC-fetch window that `loading.tsx` cannot: Next's
