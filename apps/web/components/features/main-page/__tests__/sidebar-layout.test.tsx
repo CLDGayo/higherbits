@@ -94,7 +94,7 @@ describe("sidebar catalog metadata", () => {
       ["Marketing Blocks", 29],
       ["UI Components", 49],
     ])
-    expect(sidebarCategories.flatMap((group) => group.items).filter((item) => item.comingSoon)).toHaveLength(25)
+    expect(sidebarCategories.flatMap((group) => group.items).filter((item) => item.comingSoon)).toHaveLength(24)
     expect(sidebarCategories[0]?.items.map((item) => item.title)).toEqual([
       "Announcements", "ASCII Art", "Backgrounds", "Borders", "Calls to Action", "Clients", "Comparisons", "Docks", "FAQs", "Features", "Footers", "Galleries", "Gradients", "Heroes", "Hooks", "Images", "Maps", "Marquees", "Navigation Menus", "Pricing Sections", "Scroll Areas", "Shaders", "Stats & KPIs", "Steppers", "Team Sections", "Testimonials", "Texts", "Timelines", "Videos",
     ])
@@ -161,13 +161,24 @@ describe("MainSidebar", () => {
     expect(screen.getByText(/No components found matching/)).not.toBeNull()
   })
 
-  it("renders 25 readable unavailable category buttons while zero-count categories remain links", () => {
+  it("renders 24 readable unavailable category buttons while zero-count categories remain links", () => {
     renderSidebar()
     fireEvent.click(screen.getByRole("link", { name: "Components" }))
-    expect(screen.getAllByRole("button", { name: /Coming soon/ })).toHaveLength(25)
+    expect(screen.getAllByRole("button", { name: /Coming soon/ })).toHaveLength(24)
     expect(screen.getByRole("link", { name: "Borders" }).getAttribute("href")).toBe("/s/border")
     expect(screen.getByRole("button", { name: "ASCII Art, Coming soon" }).closest("a")).toBeNull()
     expect(screen.getByRole("button", { name: "ASCII Art, Coming soon" }).className).toContain("disabled:opacity-100")
+  })
+
+  it("keeps Galleries navigable and shows its live tag count", () => {
+    fixture.counts = { gallery: 2 }
+    renderSidebar()
+    fireEvent.click(screen.getByRole("link", { name: "Components" }))
+
+    const galleriesLink = screen.getByRole("link", { name: /Galleries/ })
+    expect(galleriesLink.getAttribute("href")).toBe("/s/gallery")
+    expect(galleriesLink.textContent).toContain("2")
+    expect(screen.queryByRole("button", { name: "Galleries, Coming soon" })).toBeNull()
   })
 
   it("uses the resolved alias for category current state", () => {

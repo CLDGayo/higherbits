@@ -716,7 +716,7 @@ export type SidebarCategoryItem = NavigationItem & { comingSoon?: boolean }
 
 const unavailableSidebarCategories = new Set([
   "Announcements", "ASCII Art", "Calls to Action", "FAQs", "Footers",
-  "Galleries", "Hooks", "Images", "Maps", "Steppers", "Videos",
+  "Hooks", "Images", "Maps", "Steppers", "Videos",
   "File Uploads", "Icons", "Links", "Notifications", "Onboarding",
   "Paginations", "Profiles", "Progress", "Radio Groups", "Search Bars",
   "Sliders", "Tags", "Text Areas", "Toasts",
