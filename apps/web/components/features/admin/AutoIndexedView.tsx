@@ -19,6 +19,7 @@ type AutoIndexedItem = {
   demoId: number
   componentName: string
   componentSlug: string
+  tags: { name: string; slug: string }[]
   previewUrl: string | null
   bundleHtmlUrl: string | null
   sourceLabel: string | null
@@ -89,6 +90,7 @@ export default function AutoIndexedView() {
     rawCode: "",
     iframeRef: previewIframeRef,
     enabled: Boolean(preview),
+    tags: preview?.tags,
   })
 
   const closeClaim = () => {

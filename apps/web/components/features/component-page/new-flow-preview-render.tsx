@@ -1,4 +1,4 @@
-import { Demo } from "@/types/global"
+import { Demo, Tag } from "@/types/global"
 import { useTheme } from "next-themes"
 import { FullScreenButton } from "../../ui/full-screen-button"
 import { LoadingSpinner } from "../../ui/loading-spinner"
@@ -10,7 +10,7 @@ import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
 import { FloatingControlsDrawer } from "../controls/floating-controls-drawer"
 import { cn } from "@/lib/utils"
 
-export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
+export function NewFlowPreviewRender({ demo, componentTags = [] }: { demo: Demo; componentTags?: Tag[] }) {
   const { resolvedTheme } = useTheme()
   const [isLoading, setIsLoading] = useState(true)
   const [isControlsExpanded, setIsControlsExpanded] = useState(true)
@@ -26,7 +26,7 @@ export function NewFlowPreviewRender({ demo }: { demo: Demo }) {
     },
   )
   const bundleUrl = (demo as any).bundle_html_url || (demo as any).bundle_url?.html
-  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef })
+  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef, tags: [...((demo as any).tags ?? []), ...componentTags] })
   const { controls, activeControls, hasControls } = editor
 
   const sendThemeToIframe = useCallback(() => {

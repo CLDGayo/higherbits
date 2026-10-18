@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { AUTO_INDEX_ANIMATION_PRESETS, createAutoIndexPreviewDocument, installAutoIndexControls, normalizeAutoIndexControlState, type AutoIndexControlProfile } from "../auto-index-controls-runtime"
+import { AUTO_INDEX_ANIMATION_PRESETS, createAutoIndexPreviewDocument, getAutoIndexPreviewLayout, installAutoIndexControls, normalizeAutoIndexControlState, type AutoIndexControlProfile } from "../auto-index-controls-runtime"
 import { loadGoogleFont, POPULAR_GOOGLE_FONT_FAMILIES, preloadGoogleFontCatalog } from "../google-fonts"
 
 const active: ReturnType<typeof installAutoIndexControls>[] = []
@@ -82,6 +82,23 @@ describe("auto-index controls runtime", () => {
     parentPort.postMessage({ type: "hb-auto-index-controls-command", nonce, action: "dispose" })
     parentPort.close()
     window.removeEventListener("message", listener)
+  })
+
+  it("centers ordinary previews and makes background and shader previews full-bleed", () => {
+    const html = '<html><head></head><body><div id="root"><main>Preview</main></div></body></html>'
+    const centered = createAutoIndexPreviewDocument(html, "0123456789abcdef0123456789abcdef", "https://higherbits.dev/auto-index/")
+    const background = createAutoIndexPreviewDocument(html, "0123456789abcdef0123456789abcdef", "https://higherbits.dev/auto-index/", [], [], getAutoIndexPreviewLayout([{ slug: "backgrounds", name: "Backgrounds" }]))
+    const shader = createAutoIndexPreviewDocument(html, "0123456789abcdef0123456789abcdef", "https://higherbits.dev/auto-index/", [], [], getAutoIndexPreviewLayout([{ tag_name: "Shader" }]))
+    const centeredLayout = centered.match(/<style id="higherbits-preview-layout">([\s\S]*?)<\/style>/)?.[1] ?? ""
+
+    expect(centered).toContain("place-items:center!important")
+    expect(centeredLayout).not.toMatch(/(?:^|[;{])height:100vh!important/)
+    expect(background).toContain("higherbits-preview-layout")
+    expect(background).toContain("height:100vh!important")
+    expect(background).toContain(".ghl-component-wrapper>*{width:100%!important;height:100%!important;min-height:100vh!important}")
+    expect(centered).toContain(".ghl-component-wrapper{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-height:100vh!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;display:grid!important;place-items:center!important}")
+    expect(shader).toContain("height:100vh!important")
+    expect(getAutoIndexPreviewLayout([{ slug: "buttons", name: "Buttons" }])).toBe("centered")
   })
 
   it("animation-presets-runtime-and-reset keeps the original option and exactly 20 allowlisted presets on static components", () => {

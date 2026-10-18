@@ -106,6 +106,7 @@ export function LegacyFlowPreviewRenderer({
     rawCode: `${code}\n${demoCode}`,
     iframeRef,
     enabled: component.registry === "auto-index",
+    tags: component.tags,
   })
 
   const { bundle, error: bundleError } = useBundleDemo({

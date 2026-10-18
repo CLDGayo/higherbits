@@ -9,7 +9,9 @@ import {
 } from "@/lib/controls-parser"
 import {
   createAutoIndexPreviewDocument,
+  getAutoIndexPreviewLayout,
   AUTO_INDEX_ANIMATION_PRESETS,
+  type AutoIndexPreviewTag,
   type AutoIndexControlKey,
   type AutoIndexControlProfile,
   type AutoIndexControlState,
@@ -92,12 +94,14 @@ export function useAutoIndexControls({
   rawCode,
   iframeRef,
   enabled = true,
+  tags = [],
 }: {
   demoId: string | number
   bundleUrl?: string | null
   rawCode: string
   iframeRef: RefObject<HTMLIFrameElement | null>
   enabled?: boolean
+  tags?: readonly AutoIndexPreviewTag[]
 }) {
   const identity = `${demoId}:${bundleUrl ?? ""}`
   const controls = useMemo(() => extractControlsSettings(rawCode), [rawCode])
@@ -117,6 +121,7 @@ export function useAutoIndexControls({
   const setGlobalControls = useSetAtom(activeDemoControlsAtom)
   const localBundleUrl = getLocalAutoIndexBundleUrl(bundleUrl, typeof window === "undefined" ? undefined : window.location.origin)
   const isAutoIndex = Boolean(localBundleUrl)
+  const previewLayout = getAutoIndexPreviewLayout(tags)
   const activeControls = useMemo(() => ({
     ...defaults,
     ...(session.identity === identity ? session.values : {}),
@@ -178,7 +183,7 @@ export function useAutoIndexControls({
       baseUrl.search = ""
       baseUrl.hash = ""
       baseUrl.pathname = baseUrl.pathname.slice(0, baseUrl.pathname.lastIndexOf("/") + 1)
-      setPreviewDocument(createAutoIndexPreviewDocument(html, nonce, baseUrl.href, POPULAR_GOOGLE_FONT_FAMILIES, AUTO_INDEX_ANIMATION_PRESETS))
+      setPreviewDocument(createAutoIndexPreviewDocument(html, nonce, baseUrl.href, POPULAR_GOOGLE_FONT_FAMILIES, AUTO_INDEX_ANIMATION_PRESETS, previewLayout))
     }).catch(() => {
       if (!controller.signal.aborted) {
         setBundleFetchFailedIdentity(identity)
@@ -186,7 +191,7 @@ export function useAutoIndexControls({
       }
     })
     return () => controller.abort()
-  }, [enabled, localBundleUrl, identity])
+  }, [enabled, localBundleUrl, identity, previewLayout])
 
   useEffect(() => {
     if (!enabled || !isAutoIndex) return

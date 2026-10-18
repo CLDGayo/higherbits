@@ -110,7 +110,7 @@ export function ComponentPreviewDialog({
     demoSlug: demo.demo_slug,
     demoId: demo.id,
   })
-  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef, enabled: isOpen })
+  const editor = useAutoIndexControls({ demoId: demo.id, bundleUrl, rawCode, iframeRef, tags: [...demo.tags, ...((demo.component as any)?.tags ?? [])], enabled: isOpen })
   const { controls, activeControls, hasControls } = editor
   const [isControlsExpanded, setIsControlsExpanded] = useState(true)
 

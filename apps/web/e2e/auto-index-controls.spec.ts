@@ -60,6 +60,36 @@ test("does not navigate the iframe to the source bundle while preparing its inje
   await expect(page.getByTestId("auto-index-controls")).toBeVisible()
 })
 
+test("centers ordinary previews and expands tagged backgrounds to the preview viewport", async ({ page }) => {
+  const preview = new ControlsPreview(page)
+  await preview.open()
+  await expect(preview.frame.locator("#higherbits-preview-layout")).toHaveCount(1)
+  await expectCss(preview.frame.locator("body"), "display", "grid")
+  await expectCss(preview.frame.locator(".ghl-component-wrapper"), "padding", "0px")
+  await expectCss(preview.frame.locator(".ghl-component-wrapper"), "background-color", "rgba(0, 0, 0, 0)")
+  await expectCss(preview.frame.locator(".ghl-component-wrapper"), "border-width", "0px")
+  await expect(preview.frame.locator(".demo-card").evaluate((card) => {
+    const bounds = card.getBoundingClientRect()
+    const view = card.ownerDocument.defaultView!
+    return Math.abs(bounds.left + bounds.width / 2 - view.innerWidth / 2) < 1 && Math.abs(bounds.top + bounds.height / 2 - view.innerHeight / 2) < 1
+  })).resolves.toBe(true)
+
+  await page.getByLabel("Component").selectOption("background-fixture")
+  await expect(preview.frame.locator("#higherbits-preview-layout")).toHaveCount(1)
+  const frameHeight = await preview.frame.locator("body").evaluate((body) => `${body.ownerDocument.defaultView?.innerHeight}px`)
+  await expectCss(preview.frame.locator("body"), "height", frameHeight)
+  await expectCss(preview.frame.locator("body"), "overflow", "hidden")
+  await expectCss(preview.frame.locator(".ghl-component-wrapper"), "padding", "0px")
+  await expectCss(preview.frame.locator(".ghl-component-wrapper"), "background-color", "rgb(9, 9, 11)")
+  await expectCss(preview.frame.locator(".ghl-component-wrapper"), "height", frameHeight)
+  await expectCss(preview.frame.locator(".ghl-component-wrapper > .demo-surface"), "min-height", frameHeight)
+  await expect(preview.frame.locator(".ghl-component-wrapper").evaluate((wrapper) => {
+    const bounds = wrapper.getBoundingClientRect()
+    const view = wrapper.ownerDocument.defaultView!
+    return Math.abs(bounds.width - view.innerWidth) < 1 && Math.abs(bounds.height - view.innerHeight) < 1 && Math.abs(bounds.top) < 1
+  })).resolves.toBe(true)
+})
+
 test("typography controls target one part and reset independently with keyboard support", async ({ page }, testInfo) => {
   const preview = new ControlsPreview(page)
   await preview.open()

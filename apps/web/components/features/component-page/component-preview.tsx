@@ -264,7 +264,7 @@ export function ComponentPagePreview({
         description="An error occurred while compiling or mounting this component preview. The source code and installation commands remain fully accessible below."
       >
         {isNewFlowOfPiblishing ? (
-          <NewFlowPreviewRender demo={demo} />
+          <NewFlowPreviewRender demo={demo} componentTags={component.tags} />
         ) : (
           <LegacyFlowPreviewRenderer
             component={component}

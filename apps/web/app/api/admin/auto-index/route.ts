@@ -40,11 +40,15 @@ export async function GET(request: Request) {
   const items = Array.isArray(result?.items) ? result.items : []
   const demoBundleUrls = new Map<number, string | null>()
   const componentBundleUrls = new Map<number, string | null>()
+  const demoTags = new Map<number, { name: string; slug: string }[]>()
+  const componentTags = new Map<number, { name: string; slug: string }[]>()
 
   if (items.length > 0) {
-    const [demosResult, componentsResult] = await Promise.all([
+    const [demosResult, componentsResult, tagsResult, componentTagsResult] = await Promise.all([
       supabaseAdmin.from("demos").select("id,bundle_html_url").in("id", items.map((item) => item.demoId)),
       supabaseAdmin.from("components").select("id,bundle_html_url").in("id", items.map((item) => item.componentId)),
+      supabaseAdmin.from("demo_tags").select("demo_id,tags(name,slug)").in("demo_id", items.map((item) => item.demoId)),
+      supabaseAdmin.from("component_tags").select("component_id,tags(name,slug)").in("component_id", items.map((item) => item.componentId)),
     ])
 
     if (demosResult.error) console.error("Could not load auto-index demo preview bundles:", demosResult.error)
@@ -52,6 +56,18 @@ export async function GET(request: Request) {
 
     if (componentsResult.error) console.error("Could not load auto-index component preview bundles:", componentsResult.error)
     else for (const component of componentsResult.data ?? []) componentBundleUrls.set(component.id, component.bundle_html_url)
+
+    if (tagsResult.error) console.error("Could not load auto-index demo preview tags:", tagsResult.error)
+    else for (const row of tagsResult.data ?? []) {
+      if (!row.tags) continue
+      demoTags.set(row.demo_id, [...(demoTags.get(row.demo_id) ?? []), row.tags])
+    }
+
+    if (componentTagsResult.error) console.error("Could not load auto-index component preview tags:", componentTagsResult.error)
+    else for (const row of componentTagsResult.data ?? []) {
+      if (!row.tags) continue
+      componentTags.set(row.component_id, [...(componentTags.get(row.component_id) ?? []), row.tags])
+    }
   }
 
   return NextResponse.json({
@@ -59,6 +75,10 @@ export async function GET(request: Request) {
     items: items.map((item) => ({
       ...item,
       bundleHtmlUrl: demoBundleUrls.get(item.demoId) ?? componentBundleUrls.get(item.componentId) ?? null,
+      tags: [...new Map([
+        ...(demoTags.get(item.demoId) ?? []),
+        ...(componentTags.get(item.componentId) ?? []),
+      ].map((tag) => [tag.slug, tag])).values()],
     })),
   })
 }

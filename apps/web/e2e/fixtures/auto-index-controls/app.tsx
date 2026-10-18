@@ -7,11 +7,12 @@ import { useAutoIndexControls } from "../../../hooks/use-auto-index-controls"
 function Preview() {
   const [bundle, setBundle] = useState("controls-fixture")
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const controls = useAutoIndexControls({ demoId: bundle, bundleUrl: `/auto-index/${bundle}.html`, rawCode: "", iframeRef })
+  const controls = useAutoIndexControls({ demoId: bundle, bundleUrl: `/auto-index/${bundle}.html`, rawCode: "", iframeRef, tags: bundle === "background-fixture" ? [{ slug: "backgrounds", name: "Backgrounds" }] : [] })
   return <main className="fixture-layout">
     <section>
       <label>Component <select aria-label="Component" value={bundle} onChange={event => setBundle(event.target.value)}>
         <option value="controls-fixture">Deterministic React component</option>
+        <option value="background-fixture">Full-bleed background</option>
         <option value="edilozi-accordion">Ingested accordion</option>
       </select></label>
       <iframe key={bundle} ref={iframeRef} title="Component preview" sandbox="allow-scripts" src={controls.useInjectedPreviewDocument ? undefined : `/auto-index/${bundle}.html`} srcDoc={controls.isAutoIndex ? controls.previewDocument ?? undefined : undefined} onLoad={controls.onFrameLoad} style={controls.previewStyle} />

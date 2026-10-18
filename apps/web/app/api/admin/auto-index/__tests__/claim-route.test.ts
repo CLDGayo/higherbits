@@ -1,13 +1,13 @@
 import { beforeEach, expect, it, vi } from "vitest"
 
-const mock = vi.hoisted(() => ({ auth: vi.fn(), getUser: vi.fn(), rpc: vi.fn(), admin: true, demos: [] as Array<{ id: number; bundle_html_url: string | null }>, components: [] as Array<{ id: number; bundle_html_url: string | null }>, target: { id: "user_creator", manually_added: false } as unknown }))
+const mock = vi.hoisted(() => ({ auth: vi.fn(), getUser: vi.fn(), rpc: vi.fn(), admin: true, demos: [] as Array<{ id: number; bundle_html_url: string | null }>, components: [] as Array<{ id: number; bundle_html_url: string | null }>, demoTags: [] as Array<{ demo_id: number; tags: { name: string; slug: string } | null }>, componentTags: [] as Array<{ component_id: number; tags: { name: string; slug: string } | null }>, target: { id: "user_creator", manually_added: false } as unknown }))
 vi.mock("@clerk/nextjs/server", () => ({ auth: mock.auth, clerkClient: async () => ({ users: { getUser: mock.getUser } }) }))
 vi.mock("@/lib/supabase", () => ({ supabaseWithAdminAccess: {
   rpc: mock.rpc,
   from: (table: string) => {
     const query = { select: () => query, eq: (_key: string, value: string) => { query.id = value; return query },
       id: "", maybeSingle: async () => ({ data: query.id === "user_admin" ? { is_admin: mock.admin } : mock.target, error: null }),
-      in: async (_key: string, ids: number[]) => ({ data: table === "demos" ? mock.demos.filter((demo) => ids.includes(demo.id)) : mock.components.filter((component) => ids.includes(component.id)), error: null }) }
+      in: async (_key: string, ids: number[]) => ({ data: table === "demos" ? mock.demos.filter((demo) => ids.includes(demo.id)) : table === "components" ? mock.components.filter((component) => ids.includes(component.id)) : table === "demo_tags" ? mock.demoTags.filter((tag) => ids.includes(tag.demo_id)) : mock.componentTags.filter((tag) => ids.includes(tag.component_id)), error: null }) }
     return query
   },
 } }))
@@ -26,6 +26,8 @@ beforeEach(() => {
   mock.rpc.mockReset().mockResolvedValue({ data: { items: [], total: 0 }, error: null })
   mock.demos = []
   mock.components = []
+  mock.demoTags = []
+  mock.componentTags = []
   mock.admin = true
   mock.target = { id: "user_creator", manually_added: false }
 })
@@ -66,6 +68,20 @@ it("adds the compiled demo bundle URL to the admin-only auto-index listing", asy
   mock.demos = [{ id: 42, bundle_html_url: "https://higherbits.dev/preview/42.html" }]
   const response = await GET(new Request("http://localhost/api/admin/auto-index"))
   expect(await response.json()).toMatchObject({ items: [{ demoId: 42, bundleHtmlUrl: "https://higherbits.dev/preview/42.html" }] })
+})
+
+it("includes real demo tags for admin preview layout", async () => {
+  mock.rpc.mockResolvedValue({ data: { items: [{ componentId: 41, demoId: 42 }], total: 1 }, error: null })
+  mock.demoTags = [{ demo_id: 42, tags: { name: "Backgrounds", slug: "backgrounds" } }]
+  const response = await GET(new Request("http://localhost/api/admin/auto-index"))
+  expect(await response.json()).toMatchObject({ items: [{ demoId: 42, tags: [{ name: "Backgrounds", slug: "backgrounds" }] }] })
+})
+
+it("includes component-level tags for admin preview layout", async () => {
+  mock.rpc.mockResolvedValue({ data: { items: [{ componentId: 41, demoId: 42 }], total: 1 }, error: null })
+  mock.componentTags = [{ component_id: 41, tags: { name: "Background", slug: "background" } }]
+  const response = await GET(new Request("http://localhost/api/admin/auto-index"))
+  expect(await response.json()).toMatchObject({ items: [{ demoId: 42, tags: [{ name: "Background", slug: "background" }] }] })
 })
 
 it("falls back to the component bundle when its demo has no compiled bundle", async () => {

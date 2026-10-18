@@ -9,6 +9,7 @@ vi.mock("jotai", async () => ({ ...await vi.importActual("jotai/vanilla"), useSe
 vi.mock("@/lib/auto-index-controls-runtime", () => ({
   AUTO_INDEX_ANIMATION_PRESETS: [],
   createAutoIndexPreviewDocument: preview.create,
+  getAutoIndexPreviewLayout: () => "centered",
 }))
 
 const origin = window.location.origin

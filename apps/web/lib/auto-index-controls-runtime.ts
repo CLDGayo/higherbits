@@ -687,7 +687,16 @@ export function installAutoIndexControls(
   return { update, reset, select, replay, dispose }
 }
 
-export function createAutoIndexPreviewDocument(html: string, nonce: string, baseUrl: string, googleFonts: readonly string[] = [], animationPresets: readonly AutoIndexAnimationPreset[] = []): string {
+export type AutoIndexPreviewTag = { slug?: string | null; name?: string | null; tag_slug?: string | null; tag_name?: string | null }
+export type AutoIndexPreviewLayout = "centered" | "background"
+
+export function getAutoIndexPreviewLayout(tags: readonly AutoIndexPreviewTag[] = []): AutoIndexPreviewLayout {
+  return tags.some((tag) => [tag.slug, tag.name, tag.tag_slug, tag.tag_name].some((value) =>
+    typeof value === "string" && /^(?:backgrounds?|shaders?)$/i.test(value.trim()),
+  )) ? "background" : "centered"
+}
+
+export function createAutoIndexPreviewDocument(html: string, nonce: string, baseUrl: string, googleFonts: readonly string[] = [], animationPresets: readonly AutoIndexAnimationPreset[] = [], layout: AutoIndexPreviewLayout = "centered"): string {
   if (!/^[a-zA-Z0-9-]{16,128}$/.test(nonce) || new TextEncoder().encode(html).byteLength > 2 * 1024 * 1024) {
     throw new Error("Auto-index preview is invalid or exceeds the preview limit.")
   }
@@ -719,16 +728,21 @@ export function createAutoIndexPreviewDocument(html: string, nonce: string, base
     };
     window.addEventListener("load", announceReady, { once: true });
   })();`
+  const layoutStyle = `<style id="higherbits-preview-layout">html,body{width:100%;min-height:100%;margin:0!important;padding:0!important}${layout === "background"
+    ? `html,body,#root,#__next{height:100%!important;min-height:100%!important;overflow:hidden!important}body,#root,#__next{display:block!important;height:100vh!important;min-height:100vh!important}.ghl-component-wrapper{box-sizing:border-box!important;width:100%!important;height:100%!important;min-height:100vh!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;display:block!important}.ghl-component-wrapper>*{width:100%!important;height:100%!important;min-height:100vh!important}#root>*,#__next>*{width:100%!important;height:100%!important;min-height:100vh!important;margin:0!important}`
+    : `body{min-height:100vh;display:grid!important;place-items:center!important}#root,#__next{width:100%;min-height:100vh;display:grid!important;place-items:center!important}.ghl-component-wrapper{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-height:100vh!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;display:grid!important;place-items:center!important}#root>*,#__next>*{margin-inline:auto!important}`}</style>`
   const base = `<base href="${baseUrl.replace(/[&\"<>]/g, "")}">`
   let output = html
   const head = output.match(/<head\b[^>]*>/i)
   if (head) {
     const insertion = head.index! + head[0].length
-    if (!/<base\b/i.test(output.slice(insertion, output.indexOf("</head>", insertion)))) output = output.slice(0, insertion) + base + output.slice(insertion)
+    const headContent = output.slice(insertion, output.indexOf("</head>", insertion))
+    const additions = `${/<base\b/i.test(headContent) ? "" : base}${/<style\b[^>]*id=["']higherbits-preview-layout["']/i.test(headContent) ? "" : layoutStyle}`
+    if (additions) output = output.slice(0, insertion) + additions + output.slice(insertion)
   } else {
     const htmlTag = output.match(/<html\b[^>]*>/i)
     const insertion = htmlTag ? htmlTag.index! + htmlTag[0].length : 0
-    output = output.slice(0, insertion) + `<head>${base}</head>` + output.slice(insertion)
+    output = output.slice(0, insertion) + `<head>${base}${layoutStyle}</head>` + output.slice(insertion)
   }
   const script = `<script>${runtime}</script>`
   const bodyEnd = output.toLowerCase().lastIndexOf("</body>")
