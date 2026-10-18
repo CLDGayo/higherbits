@@ -94,7 +94,7 @@ describe("sidebar catalog metadata", () => {
       ["Marketing Blocks", 29],
       ["UI Components", 49],
     ])
-    expect(sidebarCategories.flatMap((group) => group.items).filter((item) => item.comingSoon)).toHaveLength(24)
+    expect(sidebarCategories.flatMap((group) => group.items).filter((item) => item.comingSoon)).toHaveLength(17)
     expect(sidebarCategories[0]?.items.map((item) => item.title)).toEqual([
       "Announcements", "ASCII Art", "Backgrounds", "Borders", "Calls to Action", "Clients", "Comparisons", "Docks", "FAQs", "Features", "Footers", "Galleries", "Gradients", "Heroes", "Hooks", "Images", "Maps", "Marquees", "Navigation Menus", "Pricing Sections", "Scroll Areas", "Shaders", "Stats & KPIs", "Steppers", "Team Sections", "Testimonials", "Texts", "Timelines", "Videos",
     ])
@@ -161,13 +161,42 @@ describe("MainSidebar", () => {
     expect(screen.getByText(/No components found matching/)).not.toBeNull()
   })
 
-  it("renders 24 readable unavailable category buttons while zero-count categories remain links", () => {
+  it("renders 17 readable unavailable category buttons while zero-count categories remain links", () => {
     renderSidebar()
     fireEvent.click(screen.getByRole("link", { name: "Components" }))
-    expect(screen.getAllByRole("button", { name: /Coming soon/ })).toHaveLength(24)
+    expect(screen.getAllByRole("button", { name: /Coming soon/ })).toHaveLength(17)
     expect(screen.getByRole("link", { name: "Borders" }).getAttribute("href")).toBe("/s/border")
     expect(screen.getByRole("button", { name: "ASCII Art, Coming soon" }).closest("a")).toBeNull()
     expect(screen.getByRole("button", { name: "ASCII Art, Coming soon" }).className).toContain("disabled:opacity-100")
+  })
+
+  it("keeps Batch 09 categories navigable and shows their live counts", () => {
+    fixture.counts = {
+      hook: 1,
+      toast: 2,
+      "upload-download": 3,
+      video: 4,
+      "radio-group": 5,
+      slider: 6,
+      image: 7,
+    }
+    renderSidebar()
+    fireEvent.click(screen.getByRole("link", { name: "Components" }))
+
+    for (const [title, slug, count] of [
+      ["Hooks", "hook", 1],
+      ["Toasts", "toast", 2],
+      ["File Uploads", "upload-download", 3],
+      ["Videos", "video", 4],
+      ["Radio Groups", "radio-group", 5],
+      ["Sliders", "slider", 6],
+      ["Images", "image", 7],
+    ] as const) {
+      const link = screen.getByRole("link", { name: new RegExp(title) })
+      expect(link.getAttribute("href")).toBe(`/s/${slug}`)
+      expect(link.textContent).toContain(String(count))
+      expect(screen.queryByRole("button", { name: `${title}, Coming soon` })).toBeNull()
+    }
   })
 
   it("keeps Galleries navigable and shows its live tag count", () => {
