@@ -7,42 +7,62 @@ import { cn } from "@/lib/utils"
 import type { DemoWithComponent } from "@/types/global"
 
 /**
- * The landing catalogue's chip strip + carousel.
+ * The landing catalogue's category discovery header + carousel row.
  *
- * Composition is measured from
- * `21st.dev-capture_19-08-26/03-marketing-blocks/01-strip-and-carousel.webp`
- * at a 1440 viewport: eyebrow + chips on one line at the container inset (168),
- * active chip a ~127x30 pill, 74px from the chip baseline down to the card tops.
- *
- * CHIPS ARE DERIVED FROM DATA, NEVER HARDCODED. `apps/web/lib/navigation.ts`
- * carries a 47-slug marketing/UI taxonomy that reads exactly like 21st.dev's
- * strip, but re-measured live on 2026-08-23 the database holds 9 tags, an
- * EMPTY `component_tags` junction and 0 collections — 46 of those 47 slugs have
- * no rows at all. Rendering them would produce chips that filter to nothing,
- * which is the precise failure `homepage-catalog-reliability` exists to prevent.
- * Every chip below is guaranteed to yield at least MIN_ITEMS_PER_CHIP cards.
- *
- * `"use client"` still server-renders: the default chip's items are present in
- * the SSR HTML, so the crawler-visibility guarantee the landing suite pins is
- * unaffected.
+ * Replaces the previous in-place tag filter chips with semantic grouped navigation links
+ * to verified HigherBits category routes (/s/[tag_slug]), while preserving carousel
+ * identity ("Most Loved", "Newest Additions"), card ordering, and horizontal scrolling.
  */
 
-/** A chip is only offered when it can fill this many cards. */
-const MIN_ITEMS_PER_CHIP = 2
-
-/** Cards rendered per chip, matching LANDING_ROW_SIZE. */
+/** Cards rendered per row, matching LANDING_ROW_SIZE. */
 const ROW_SIZE = 12
 
-/** Sentinel for the unfiltered chip — never collides with a tag slug. */
+/** Sentinel for the unfiltered chip — preserved for backward compatibility. */
 const ALL_CHIP = "__all"
+const MIN_ITEMS_PER_CHIP = 2
 
-interface Chip {
+export interface CategoryLink {
+  label: string
+  href: string
+}
+
+/**
+ * Verified Marketing Blocks categories.
+ * All routes verified against the public tag-result path (p_include_private: false).
+ * Counts are omitted from the UI to avoid stale claims.
+ */
+export const MARKETING_BLOCKS_CATEGORIES: CategoryLink[] = [
+  { label: "Backgrounds", href: "/s/background" },
+  { label: "Gradients", href: "/s/gradients" },
+  { label: "Heroes", href: "/s/hero" },
+  { label: "Navigation Menus", href: "/s/navbar-navigation" },
+  { label: "Shaders", href: "/s/shaders" },
+  { label: "Testimonials", href: "/s/testimonials" },
+  { label: "Texts", href: "/s/text" },
+]
+
+/**
+ * Verified UI Components categories.
+ * All routes verified against the public tag-result path (p_include_private: false).
+ * Counts are omitted from the UI to avoid stale claims.
+ */
+export const UI_COMPONENTS_CATEGORIES: CategoryLink[] = [
+  { label: "AI Chats", href: "/s/ai-chat" },
+  { label: "Buttons", href: "/s/button" },
+  { label: "Cards", href: "/s/card" },
+  { label: "Charts & Data Viz", href: "/s/charts" },
+  { label: "Forms", href: "/s/form" },
+  { label: "Inputs", href: "/s/input" },
+  { label: "Numbers", href: "/s/number" },
+]
+
+export interface Chip {
   key: string
   label: string
   count: number
 }
 
-interface TagLike {
+export interface TagLike {
   slug?: string | null
   name?: string | null
 }
@@ -78,8 +98,6 @@ export function buildChips(
   const tagChips = [...counts.entries()]
     .filter(([, v]) => v.count >= MIN_ITEMS_PER_CHIP)
     .map(([slug, v]) => ({ key: slug, label: v.label, count: v.count }))
-    // Busiest first, then alphabetical so the order is stable across requests
-    // even while every tag has the same count.
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
 
   return [
@@ -114,8 +132,18 @@ export function filterByChip(
 export interface CatalogueChipRowProps {
   /** The full public pool, pre-sorted server-side. This component never fetches. */
   items: DemoWithComponent[]
-  /** Label for the unfiltered chip — also the row's identity. */
+  /** Label for the unfiltered carousel view — also the row's identity ("Most Loved" | "Newest Additions"). */
   allLabel: string
+  /**
+   * Optional semantic category group title.
+   * Defaults to "Marketing Blocks" for "Most Loved" and "UI Components" for "Newest Additions".
+   */
+  groupTitle?: string
+  /**
+   * Optional category links override for this group (up to 7 verified destinations).
+   * Defaults to the approved public categories for the group.
+   */
+  categoryLinks?: CategoryLink[]
   /**
    * `"likes"` trusts the server's ordering as-is. `"newest"` re-sorts by
    * `created_at` desc so the second row reads as a recency feed rather than a
@@ -130,6 +158,8 @@ export interface CatalogueChipRowProps {
 export function CatalogueChipRow({
   items,
   allLabel,
+  groupTitle,
+  categoryLinks,
   sortBy = "likes",
   autoScroll,
   className,
@@ -139,53 +169,69 @@ export function CatalogueChipRow({
     [items, sortBy],
   )
 
-  const chips = React.useMemo(
-    () => buildChips(ordered, allLabel),
-    [ordered, allLabel],
-  )
-  const [active, setActive] = React.useState(ALL_CHIP)
+  const resolvedGroupTitle =
+    groupTitle ??
+    (allLabel === "Most Loved"
+      ? "Marketing Blocks"
+      : allLabel === "Newest Additions" || sortBy === "newest"
+        ? "UI Components"
+        : allLabel)
 
+  const defaultCategories =
+    resolvedGroupTitle === "Marketing Blocks"
+      ? MARKETING_BLOCKS_CATEGORIES
+      : resolvedGroupTitle === "UI Components"
+        ? UI_COMPONENTS_CATEGORIES
+        : []
+
+  const categoriesToRender = categoryLinks ?? defaultCategories
+
+  // The carousel always renders the full row's items (up to ROW_SIZE) in order;
+  // category links navigate to category routes and no longer filter the carousel in place.
   const visible = React.useMemo(
-    () => filterByChip(ordered, active).slice(0, ROW_SIZE),
-    [ordered, active],
+    () => ordered.slice(0, ROW_SIZE),
+    [ordered],
   )
 
   return (
     <div className={className}>
-      {/* Eyebrow + chips share one line, as in the capture. `flex-wrap` rather
-          than a scroller: with 7 chips this never overflows at 1440, and a
-          horizontal scroller here would compete with the carousel below it. */}
-      {/* The strip keeps the page container inset; the carousel below breaks
-          out of it. The parent LandingSection is mounted with
-          `max-w-none px-0` so this row owns both, which is what lets the cards
-          bleed to the viewport edge the way the capture's do. */}
-      <div className="mx-auto mb-[74px] flex w-full max-w-6xl flex-wrap items-center gap-x-3 gap-y-2 px-8">
-        <span className="text-base">
-          <span className="font-semibold text-foreground">{items.length}</span>{" "}
-          <span className="text-foreground/80 dark:text-muted-foreground font-medium">components:</span>
-        </span>
+      <div className="mx-auto mb-8 md:mb-10 flex w-full max-w-6xl flex-col gap-3 px-8">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
+            {resolvedGroupTitle}
+          </h2>
+          <span className="text-sm font-semibold text-muted-foreground">
+            {allLabel}
+          </span>
+        </div>
 
-        {chips.map((chip) => {
-          const isActive = chip.key === active
-          return (
-            <button
-              key={chip.key}
-              type="button"
-              onClick={() => setActive(chip.key)}
-              aria-pressed={isActive}
+        <nav
+          aria-label={`${resolvedGroupTitle} categories`}
+          className="flex flex-wrap items-center gap-x-2.5 gap-y-2"
+        >
+          {categoriesToRender.map((cat) => (
+            // A document navigation bypasses the catch-all intercepted component
+            // modal, which also matches two-segment category URLs during soft navigation.
+            <a
+              key={cat.href}
+              href={cat.href}
               className={cn(
-                // 15px/py-1 gives a 30px pill, the height measured on the
-                // reference's active "Animated heroes" chip.
-                "rounded-lg px-3 py-1 text-[15px] font-medium transition-colors",
-                isActive
-                  ? "bg-foreground/15 text-foreground font-semibold shadow-sm"
-                  : "text-foreground/75 dark:text-muted-foreground hover:text-foreground hover:bg-foreground/5",
+                "rounded-lg px-3 py-1.5 text-[14px] md:text-[15px] font-medium transition-colors",
+                "text-foreground/75 dark:text-muted-foreground hover:text-foreground hover:bg-foreground/10 bg-foreground/5 dark:bg-foreground/10",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               )}
             >
-              {chip.label}
-            </button>
-          )
-        })}
+              {cat.label}
+            </a>
+          ))}
+          {categoriesToRender.length < 7 && (
+            <p className="w-full text-xs text-muted-foreground italic mt-0.5">
+              {categoriesToRender.length === 0
+                ? "No categories currently available in this group. Additional categories will appear as components are published."
+                : "Only categories with verified public components are shown. Additional categories will appear as new components are published."}
+            </p>
+          )}
+        </nav>
       </div>
 
       <CatalogueCarouselRow items={visible} autoScroll={autoScroll} />

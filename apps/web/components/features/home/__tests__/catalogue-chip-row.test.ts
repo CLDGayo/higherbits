@@ -1,24 +1,43 @@
-import { describe, it, expect } from "vitest"
+/** @vitest-environment jsdom */
+import React from "react"
+import { describe, it, expect, vi } from "vitest"
+import { render, screen } from "@testing-library/react"
 
 import {
   buildChips,
   filterByChip,
   sortNewestFirst,
+  CatalogueChipRow,
+  MARKETING_BLOCKS_CATEGORIES,
+  UI_COMPONENTS_CATEGORIES,
 } from "@/components/features/home/catalogue-chip-row"
 import type { DemoWithComponent } from "@/types/global"
 
-/**
- * The chip strip's whole reason to exist is that it must never offer a chip
- * that filters to nothing. `apps/web/lib/navigation.ts` carries a 47-slug
- * taxonomy reading exactly like 21st.dev's strip, but 46 of those slugs have
- * zero rows (re-measured live 2026-08-23). These tests pin the two behaviours
- * that keep a dead chip off the page.
- */
+// Mock the carousel row using React.createElement to keep this .ts file clean
+vi.mock("@/components/features/home/catalogue-carousel-row", () => ({
+  CatalogueCarouselRow: ({ items }: { items: DemoWithComponent[] }) =>
+    React.createElement(
+      "div",
+      { "data-testid": "catalogue-carousel-row", "data-count": items.length },
+      items.map((item) =>
+        React.createElement(
+          "div",
+          { key: item.id, "data-testid": `carousel-card-${item.id}` },
+          (item as any).name ?? (item as any).component?.name ?? `Item ${item.id}`,
+        ),
+      ),
+    ),
+}))
 
 const demo = (id: number, tags: Array<[string, string]>): DemoWithComponent =>
   ({
     id,
+    created_at: `2026-08-${String(id).padStart(2, "0")}T00:00:00Z`,
     tags: tags.map(([slug, name]) => ({ slug, name })),
+    component: {
+      name: `Component ${id}`,
+      likes_count: 100 - id,
+    },
   }) as unknown as DemoWithComponent
 
 const POOL = [
@@ -88,10 +107,6 @@ describe("filterByChip", () => {
 })
 
 describe("sortNewestFirst — the two rows' disjointness mechanism", () => {
-  // Row 1 sorts by likes; every likes_count is 0 today, so it tiebreaks to the
-  // OLDEST ids. Row 2 sorts newest-first. The layout drops Phase 03's D4
-  // pre-dedup and relies on these two orderings not colliding, so the property
-  // is pinned here rather than left to the data.
   const pool = Array.from({ length: 30 }, (_, i) => ({
     id: i + 1,
     created_at: new Date(2020, 0, i + 1).toISOString(),
@@ -112,5 +127,154 @@ describe("sortNewestFirst — the two rows' disjointness mechanism", () => {
     const ragged = [{ id: 2 }, { id: 1 }, { id: 3 }]
     expect(() => sortNewestFirst(ragged)).not.toThrow()
     expect(sortNewestFirst(ragged).map((d) => d.id)).toEqual([1, 2, 3])
+  })
+})
+
+describe("CatalogueChipRow — Grouped Category Discovery (AC1 - AC8)", () => {
+  const TWENTY_DEMOS = Array.from({ length: 20 }, (_, i) => demo(i + 1, [["tag", "Tag"]]))
+
+  it("AC1: renders Marketing Blocks semantic h2 heading and Most Loved carousel label", () => {
+    const { container } = render(
+      React.createElement(CatalogueChipRow, { items: TWENTY_DEMOS, allLabel: "Most Loved" })
+    )
+
+    const heading = screen.getByRole("heading", { level: 2, name: /Marketing Blocks/i })
+    expect(heading).toBeDefined()
+    expect(container.textContent).toContain("Most Loved")
+  })
+
+  it("AC1: renders UI Components semantic h2 heading and Newest Additions carousel label", () => {
+    const { container } = render(
+      React.createElement(CatalogueChipRow, {
+        items: TWENTY_DEMOS,
+        allLabel: "Newest Additions",
+        sortBy: "newest",
+      })
+    )
+
+    const heading = screen.getByRole("heading", { level: 2, name: /UI Components/i })
+    expect(heading).toBeDefined()
+    expect(container.textContent).toContain("Newest Additions")
+  })
+
+  it("AC2: renders exactly seven approved Marketing Blocks links with valid hrefs", () => {
+    render(
+      React.createElement(CatalogueChipRow, { items: TWENTY_DEMOS, allLabel: "Most Loved" })
+    )
+
+    const nav = screen.getByRole("navigation", { name: /Marketing Blocks categories/i })
+    expect(nav).toBeDefined()
+
+    const links = nav.querySelectorAll("a")
+    expect(links).toHaveLength(7)
+
+    const expected = MARKETING_BLOCKS_CATEGORIES
+    expected.forEach((cat, idx) => {
+      expect(links[idx]!.textContent).toBe(cat.label)
+      expect(links[idx]!.getAttribute("href")).toBe(cat.href)
+    })
+  })
+
+  it("AC2: renders exactly seven approved UI Components links with valid hrefs", () => {
+    render(
+      React.createElement(CatalogueChipRow, {
+        items: TWENTY_DEMOS,
+        allLabel: "Newest Additions",
+        sortBy: "newest",
+      })
+    )
+
+    const nav = screen.getByRole("navigation", { name: /UI Components categories/i })
+    expect(nav).toBeDefined()
+
+    const links = nav.querySelectorAll("a")
+    expect(links).toHaveLength(7)
+
+    const expected = UI_COMPONENTS_CATEGORIES
+    expected.forEach((cat, idx) => {
+      expect(links[idx]!.textContent).toBe(cat.label)
+      expect(links[idx]!.getAttribute("href")).toBe(cat.href)
+    })
+  })
+
+  it("AC5: omits unverified category counts from category links", () => {
+    render(
+      React.createElement(CatalogueChipRow, { items: TWENTY_DEMOS, allLabel: "Most Loved" })
+    )
+
+    const nav = screen.getByRole("navigation", { name: /Marketing Blocks categories/i })
+    const links = nav.querySelectorAll("a")
+
+    // Assert that no link text has counts (e.g. "Backgrounds (34)" or "12")
+    links.forEach((link) => {
+      expect(link.textContent).not.toMatch(/\d+/)
+    })
+  })
+
+  it("AC6: category links have visible keyboard focus and accessible styling", () => {
+    render(
+      React.createElement(CatalogueChipRow, { items: TWENTY_DEMOS, allLabel: "Most Loved" })
+    )
+
+    const nav = screen.getByRole("navigation", { name: /Marketing Blocks categories/i })
+    const links = nav.querySelectorAll("a")
+
+    links.forEach((link) => {
+      expect(link.className).toContain("focus-visible:ring-2")
+      expect(link.className).toContain("rounded-lg")
+    })
+  })
+
+  it("AC2/Honest fallback: explains omission when fewer than seven categories qualify", () => {
+    const subset = [
+      { label: "Backgrounds", href: "/s/background" },
+      { label: "Shaders", href: "/s/shaders" },
+    ]
+
+    const { container } = render(
+      React.createElement(CatalogueChipRow, {
+        items: TWENTY_DEMOS,
+        allLabel: "Most Loved",
+        groupTitle: "Marketing Blocks",
+        categoryLinks: subset,
+      })
+    )
+
+    const nav = screen.getByRole("navigation", { name: /Marketing Blocks categories/i })
+    const links = nav.querySelectorAll("a")
+    expect(links).toHaveLength(2)
+
+    expect(container.textContent).toContain(
+      "Only categories with verified public components are shown. Additional categories will appear as new components are published."
+    )
+  })
+
+  it("AC2/Honest fallback: explains when zero categories qualify without dummy links", () => {
+    const { container } = render(
+      React.createElement(CatalogueChipRow, {
+        items: TWENTY_DEMOS,
+        allLabel: "Marketing Blocks",
+        groupTitle: "Marketing Blocks",
+        categoryLinks: [],
+      })
+    )
+
+    const nav = screen.getByRole("navigation", { name: /Marketing Blocks categories/i })
+    const links = nav.querySelectorAll("a")
+    expect(links).toHaveLength(0)
+
+    expect(container.textContent).toContain(
+      "No categories currently available in this group. Additional categories will appear as components are published."
+    )
+  })
+
+  it("Carousel independence: renders exactly ROW_SIZE items without filtering mutation", () => {
+    render(
+      React.createElement(CatalogueChipRow, { items: TWENTY_DEMOS, allLabel: "Most Loved" })
+    )
+
+    const carousel = screen.getByTestId("catalogue-carousel-row")
+    // Sliced to 12 items
+    expect(carousel.getAttribute("data-count")).toBe("12")
   })
 })
