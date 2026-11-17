@@ -1,0 +1,50 @@
+{
+  "upstream": "https://github.com/msitarzewski/agency-agents",
+  "commit": "f99f6aa910a442b0197b768ce0ea7751e35e2060",
+  "project_root": "<app-root>",
+  "app_head": "b8b7cf64c5e99e7c8b6a3262a87d9016843c54a2",
+  "agents": [
+    {
+      "slug": "senior-project-manager",
+      "name": "Senior Project Manager",
+      "path": "<app-root>/.codex/agents/senior-project-manager.toml",
+      "upstream_sha256": "e145c0a56cac4d85411502aaf14ac517393832806181eae140aee3a4c3d256e8",
+      "installed_sha256": "c9c7844d7cc50abf7dfd02b51bcfc2d47bdb4c33eb19b71905e7711c99ab6a78"
+    },
+    {
+      "slug": "senior-developer",
+      "name": "Senior Developer",
+      "path": "<app-root>/.codex/agents/senior-developer.toml",
+      "upstream_sha256": "7004a73245783536f51dbb2646ba36c36780bbfc720fc836a6384e317e9797ba",
+      "installed_sha256": "537118664b212d2e0cc2fa713a91c184cd39efa7b1dde7a596474d506dca78cd"
+    },
+    {
+      "slug": "ui-designer",
+      "name": "UI Designer",
+      "path": "<app-root>/.codex/agents/ui-designer.toml",
+      "upstream_sha256": "eddf1c1ff03905f165ef56f26ba4543ca5fc55061d4cf6ad32ecc90377ec5c14",
+      "installed_sha256": "bb77beb748377578cd0d4f61746177f07daa37e7702114ae4de35ecac9343385"
+    },
+    {
+      "slug": "ux-architect",
+      "name": "UX Architect",
+      "path": "<app-root>/.codex/agents/ux-architect.toml",
+      "upstream_sha256": "6e1e21314c2ab9beb70f646b6617fb1470cf27626506836d95a9ea555a48c7a7",
+      "installed_sha256": "c4f70cc1c0b2acc3578358940d464d64f71c46e16e9e966f4b52f028861f6471"
+    },
+    {
+      "slug": "code-reviewer",
+      "name": "Code Reviewer",
+      "path": "<app-root>/.codex/agents/code-reviewer.toml",
+      "upstream_sha256": "40e32a1188bb51af8bc5bdfa69341510e8f9c2d331d3ed6b53f25b71c052eeaf",
+      "installed_sha256": "26bae89011ea08d9155d178a5f7349ccf74b2edd2c3b3c247899771894ee0c3f"
+    },
+    {
+      "slug": "test-automation-engineer",
+      "name": "Test Automation Engineer",
+      "path": "<app-root>/.codex/agents/test-automation-engineer.toml",
+      "upstream_sha256": "cdaaf61b261ed4ae80b2392a438beb7276f748f22c50cacfba496d4e4344664f",
+      "installed_sha256": "322aa748ac3439e9d492a8e81e770b49687733e901f082ec5cef07deb956f8f5"
+    }
+  ]
+}

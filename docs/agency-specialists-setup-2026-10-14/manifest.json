@@ -1,0 +1,33 @@
+{
+  "upstream": "https://github.com/msitarzewski/agency-agents",
+  "commit": "4bce55aa8b97385a5ad7b37d09b44ab976b96573",
+  "project_root": "<app-root>",
+  "date": "2026-10-14",
+  "preserved_config_sha256": "9e4643217193203529758fbcc211f2e24ed7626946ea5026526d6899ff9271a9",
+  "agents": [
+    {
+      "slug": "application-security-engineer",
+      "name": "Application Security Engineer",
+      "path": "<app-root>/.codex/agents/application-security-engineer.toml",
+      "source": "security/security-appsec-engineer.md",
+      "upstream_sha256": "30bc736c02f13df649202b2fbbe424c1dfb0df2c257930c9f0b993d746294497",
+      "installed_sha256": "b74da151de34814c112eda36e2054f22781e24da8fe2077eaf2deb2919e0565b"
+    },
+    {
+      "slug": "payments-billing-engineer",
+      "name": "Payments & Billing Engineer",
+      "path": "<app-root>/.codex/agents/payments-billing-engineer.toml",
+      "source": "engineering/engineering-payments-billing-engineer.md",
+      "upstream_sha256": "e1cd51337f7a6e0494fc483f70ad176644131ffc2ea3aa7adef6999ef3a9afac",
+      "installed_sha256": "841fe82d3d0932954d2e0c31da89b25b3648af28eda555c276b9874d84c1f9d0"
+    },
+    {
+      "slug": "accessibility-auditor",
+      "name": "Accessibility Auditor",
+      "path": "<app-root>/.codex/agents/accessibility-auditor.toml",
+      "source": "testing/testing-accessibility-auditor.md",
+      "upstream_sha256": "edb4564fab0c30af5f02ef4afa444876b06587b52e0dfff81e8e92b66764ee5e",
+      "installed_sha256": "2d12cf83beaca92d297a594af850b15e3dae2a734126f9d2d1496e68e58b75ec"
+    }
+  ]
+}

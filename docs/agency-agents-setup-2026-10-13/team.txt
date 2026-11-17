@@ -1,0 +1,6 @@
+senior-project-manager
+senior-developer
+ui-designer
+ux-architect
+code-reviewer
+test-automation-engineer

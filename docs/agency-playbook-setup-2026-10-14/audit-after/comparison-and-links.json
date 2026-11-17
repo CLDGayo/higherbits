@@ -1,0 +1,108 @@
+{
+  "comparison": {
+    "agent-parity": {
+      "failures": {
+        "before_count": 9,
+        "after_count": 9,
+        "unchanged": true
+      },
+      "warnings": {
+        "before_count": 18,
+        "after_count": 18,
+        "unchanged": true
+      }
+    },
+    "protocol-wiring": {
+      "failures": {
+        "before_count": 0,
+        "after_count": 0,
+        "unchanged": true
+      },
+      "warnings": {
+        "before_count": 0,
+        "after_count": 0,
+        "unchanged": true
+      }
+    },
+    "agents-skill-invocation": {
+      "failures": {
+        "before_count": 42,
+        "after_count": 42,
+        "unchanged": true
+      },
+      "warnings": {
+        "before_count": 0,
+        "after_count": 0,
+        "unchanged": true
+      }
+    }
+  },
+  "links": [
+    {
+      "source": "docs/AGENCY_PLAYBOOK.md",
+      "line": 3,
+      "target": "AI_TEAM.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AGENCY_PLAYBOOK.md",
+      "line": 15,
+      "target": "../process/context/all-context.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AGENCY_PLAYBOOK.md",
+      "line": 44,
+      "target": "../process/development-protocols/orchestration.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AGENCY_PLAYBOOK.md",
+      "line": 44,
+      "target": "../process/development-protocols/all-development-protocols.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AGENCY_PLAYBOOK.md",
+      "line": 56,
+      "target": "../ops/phase-e-pinned/INGESTION_SOP.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AGENCY_PLAYBOOK.md",
+      "line": 87,
+      "target": "AI_TEAM.md",
+      "exists": true
+    },
+    {
+      "source": "AGENTS.md",
+      "line": 3,
+      "target": "docs/AGENCY_PLAYBOOK.md",
+      "exists": true
+    },
+    {
+      "source": "AGENTS.md",
+      "line": 754,
+      "target": "docs/AGENCY_PLAYBOOK.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AI_TEAM.md",
+      "line": 3,
+      "target": "AGENCY_PLAYBOOK.md",
+      "exists": true
+    },
+    {
+      "source": "docs/AI_TEAM.md",
+      "line": 49,
+      "target": "AGENCY_PLAYBOOK.md",
+      "exists": true
+    }
+  ],
+  "all_links_resolve": true,
+  "git_diff_check": {
+    "command": "rtk proxy git diff --check -- AGENTS.md docs/AI_TEAM.md docs/AGENCY_PLAYBOOK.md",
+    "exit_code": 0,
+    "limitation": "git diff does not inspect untracked files; canonical document was separately read and links checked."
+  }
+}

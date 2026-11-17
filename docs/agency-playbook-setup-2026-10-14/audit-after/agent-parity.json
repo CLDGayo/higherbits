@@ -1,0 +1,37 @@
+{
+  "checkedClaudeAgents": 15,
+  "checkedCodexAgents": 24,
+  "comparedAgents": 15,
+  "warnings": [
+    "vc-code-reviewer normalized body differs (0% length delta)",
+    "vc-code-simplifier normalized body differs (0% length delta)",
+    "vc-debugger descriptions differ between Claude and Codex",
+    "vc-debugger normalized body differs (0% length delta)",
+    "vc-execute-agent normalized body differs (2% length delta)",
+    "vc-fast-mode-agent normalized body differs (5% length delta)",
+    "vc-git-manager normalized body differs (0% length delta)",
+    "vc-innovate-agent normalized body differs (1% length delta)",
+    "vc-plan-agent normalized body differs (0% length delta)",
+    "vc-quick-fix-agent normalized body differs (0% length delta)",
+    "vc-research-agent normalized body differs (1% length delta)",
+    "vc-spec-agent normalized body differs (0% length delta)",
+    "vc-tester descriptions differ between Claude and Codex",
+    "vc-tester normalized body differs (0% length delta)",
+    "vc-ui-ux-designer descriptions differ between Claude and Codex",
+    "vc-ui-ux-designer normalized body differs (1% length delta)",
+    "vc-update-process-agent normalized body differs (0% length delta)",
+    "vc-validate-agent normalized body differs (1% length delta)"
+  ],
+  "failures": [
+    ".claude/agents/accessibility-auditor.md missing",
+    ".claude/agents/application-security-engineer.md missing",
+    ".claude/agents/code-reviewer.md missing",
+    ".claude/agents/payments-billing-engineer.md missing",
+    ".claude/agents/senior-developer.md missing",
+    ".claude/agents/senior-project-manager.md missing",
+    ".claude/agents/test-automation-engineer.md missing",
+    ".claude/agents/ui-designer.md missing",
+    ".claude/agents/ux-architect.md missing"
+  ],
+  "strict": false
+}
