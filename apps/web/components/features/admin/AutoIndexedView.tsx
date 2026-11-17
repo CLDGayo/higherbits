@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Edit, Globe, Lock, Star, Trash } from "lucide-react"
 import { toast } from "sonner"
@@ -17,30 +17,19 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
-<<<<<<< HEAD
-import { useDebouncedState } from "@/hooks/use-debounced-state"
-import { getUsersAction } from "@/lib/api/users"
-import { useQuery } from "@tanstack/react-query"
-import { useEffect, useRef, useState } from "react"
-import { toast } from "sonner"
 import { useAutoIndexControls } from "@/hooks/use-auto-index-controls"
 import { FloatingControlsDrawer } from "@/components/features/controls/floating-controls-drawer"
-=======
 import SubmissionStatusFilter from "@/components/features/admin/SubmissionStatusFilter"
 import { DbLinks } from "@/components/features/admin/db-links"
->>>>>>> origin/codex/higherbits-auto-index-admin-columns
 
 type AutoIndexedItem = {
   componentId: number
   demoId: number
   componentName: string
   componentSlug: string
-<<<<<<< HEAD
   tags: { name: string; slug: string }[]
-=======
   demoName: string
   demoSlug: string
->>>>>>> origin/codex/higherbits-auto-index-admin-columns
   previewUrl: string | null
   bundleHtmlUrl: string | null
   sourceLabel: string | null
@@ -340,7 +329,6 @@ export default function AutoIndexedView() {
       </div>
       <Dialog open={!!preview} onOpenChange={(open) => { if (!open) setPreview(null) }}>
         <DialogContent className="flex h-[85vh] max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-6xl flex-col gap-3 p-4">
-<<<<<<< HEAD
           <DialogHeader className="pr-8">
             <DialogTitle>{preview?.componentName}</DialogTitle>
             <DialogDescription>Live preview of this auto-indexed component.</DialogDescription>
@@ -385,11 +373,6 @@ export default function AutoIndexedView() {
             ) : (
               <p className="flex h-full items-center justify-center text-sm text-muted-foreground">No preview is available.</p>
             )}
-=======
-          <DialogHeader className="pr-8"><DialogTitle>{preview?.componentName}</DialogTitle><DialogDescription>Live preview of this auto-indexed component.</DialogDescription></DialogHeader>
-          <div className="min-h-0 flex-1 overflow-hidden rounded-md border bg-background">
-            {previewHtmlUrl ? <div className="flex h-full flex-col"><iframe title={`${preview?.componentName ?? "Component"} preview`} src={previewHtmlUrl} sandbox="allow-scripts" referrerPolicy="no-referrer" allowFullScreen className="min-h-0 flex-1 border-0" />{preview?.previewUrl && <a href={preview.previewUrl} target="_blank" rel="noopener noreferrer" className="flex shrink-0 items-center gap-3 border-t p-2 text-xs text-muted-foreground hover:text-foreground"><img src={preview.previewUrl} alt="" className="h-12 w-20 rounded object-cover" />Open static thumbnail</a>}</div> : preview?.previewUrl ? <img src={preview.previewUrl} alt={`${preview.componentName} preview`} className="h-full w-full object-contain" /> : <p className="flex h-full items-center justify-center text-sm text-muted-foreground">No preview is available.</p>}
->>>>>>> origin/codex/higherbits-auto-index-admin-columns
           </div>
         </DialogContent>
       </Dialog>

@@ -69,7 +69,6 @@ it("returns the active admin rows with their demo bundle from the listing RPC", 
   expect(mock.rpc).toHaveBeenCalledWith("list_auto_index_admin_items", { p_limit: 25, p_offset: 0, p_status: "posted" })
   expect(await response.json()).toMatchObject({ items: [{ demoId: 42, bundleHtmlUrl: "https://higherbits.dev/preview/42.html" }] })
 })
-<<<<<<< HEAD
 
 it("includes real demo tags for admin preview layout", async () => {
   mock.rpc.mockResolvedValue({ data: { items: [{ componentId: 41, demoId: 42 }], total: 1 }, error: null })
@@ -91,5 +90,3 @@ it("falls back to the component bundle when its demo has no compiled bundle", as
   const response = await GET(new Request("http://localhost/api/admin/auto-index"))
   expect(await response.json()).toMatchObject({ items: [{ componentId: 41, bundleHtmlUrl: "https://higherbits.dev/preview/component-41.html" }] })
 })
-=======
->>>>>>> origin/codex/higherbits-auto-index-admin-columns

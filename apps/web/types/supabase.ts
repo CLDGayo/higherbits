@@ -2785,7 +2785,6 @@ export type Database = {
       }
     }
     Functions: {
-<<<<<<< HEAD
       auto_index_component_has_current_approval: {
         Args: { p_component_id: number }
         Returns: boolean
@@ -2809,7 +2808,6 @@ export type Database = {
         }
         Returns: undefined
       }
-=======
       admin_update_auto_index_state: {
         Args: {
           p_component_id: number
@@ -2824,7 +2822,6 @@ export type Database = {
         Args: { p_limit: number; p_offset: number; p_status: string }
         Returns: Json
       }
->>>>>>> origin/codex/higherbits-auto-index-admin-columns
       // ─────────────────────────────────────────────────────────────────────
       // HAND-ADDED — NOT FROM `supabase gen types`
       //

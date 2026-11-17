@@ -61,10 +61,6 @@ export async function GET(request: Request) {
     p_limit: limit, p_offset: offset, p_status: status,
   } as never)
   if (error) return NextResponse.json({ error: "auto_index_list_unavailable" }, { status: 503 })
-  return NextResponse.json(data ?? { items: [], total: 0 })
-}
-
-<<<<<<< HEAD
   const result = data as {
     items?: Array<{ componentId: number; demoId: number; [key: string]: unknown }>
     [key: string]: unknown
@@ -106,14 +102,15 @@ export async function GET(request: Request) {
     ...result,
     items: items.map((item) => ({
       ...item,
-      bundleHtmlUrl: demoBundleUrls.get(item.demoId) ?? componentBundleUrls.get(item.componentId) ?? null,
+      bundleHtmlUrl: demoBundleUrls.get(item.demoId) ?? componentBundleUrls.get(item.componentId) ?? (typeof item.bundleHtmlUrl === "string" ? item.bundleHtmlUrl : null),
       tags: [...new Map([
         ...(demoTags.get(item.demoId) ?? []),
         ...(componentTags.get(item.componentId) ?? []),
       ].map((tag) => [tag.slug, tag])).values()],
     })),
   })
-=======
+}
+
 export async function PATCH(request: Request) {
   const admin = await requireAdmin()
   if (admin.status !== 200) return NextResponse.json({ error: "unauthorized" }, { status: admin.status })
@@ -185,5 +182,4 @@ export async function DELETE(request: Request) {
   if (error) return NextResponse.json({ error: "component_unavailable" }, { status: 409 })
   revalidatePath("/")
   return NextResponse.json({ success: true, archived: true })
->>>>>>> origin/codex/higherbits-auto-index-admin-columns
 }

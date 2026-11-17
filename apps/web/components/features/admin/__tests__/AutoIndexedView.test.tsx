@@ -9,18 +9,8 @@ vi.mock("@/hooks/use-debounced-state", () => ({ useDebouncedState: (initial: str
   return [value, value, setValue]
 } }))
 vi.mock("@/lib/api/users", () => ({ getUsersAction: vi.fn(async () => [{ id: "user_claimant1", username: "creator", display_username: "Creator", manually_added: false }]) }))
-<<<<<<< HEAD
-vi.mock("jotai", async () => ({ ...await vi.importActual("jotai/vanilla"), useSetAtom: () => vi.fn() }))
-
-import AutoIndexedView from "../AutoIndexedView"
-
-const row = {
-  componentId: 41, demoId: 42, componentName: "Pinned component", componentSlug: "pinned",
-  previewUrl: "https://higherbits.dev/preview/pinned.png", bundleHtmlUrl: "https://higherbits.dev/preview/pinned.html" as string | null, sourceLabel: "GitHub", sourceUrl: "https://github.com/example/pinned",
-  sourceId: "example/pinned", ownerId: "placeholder-1", ownerUsername: "placeholder",
-  ownerDisplayName: "Indexed publisher", publishedAt: "2026-09-01T00:00:00Z", claimedAt: null,
-=======
 vi.mock("@/components/features/admin/db-links", () => ({ DbLinks: () => <span>Supabase</span> }))
+vi.mock("jotai", async () => ({ ...await vi.importActual("jotai/vanilla"), useSetAtom: () => vi.fn() }))
 
 import AutoIndexedView from "../AutoIndexedView"
 
@@ -37,7 +27,6 @@ type TestRow = {
   sourceLabel: string | null; sourceUrl: string | null; sourceId: number | string | null
   ownerId: string; ownerUsername: string; ownerDisplayName: string | null
   publishedAt: string | null; claimedAt: string | null; submissionStatus: string | null; isPublic: boolean
->>>>>>> origin/codex/higherbits-auto-index-admin-columns
 }
 
 const row: TestRow = {
