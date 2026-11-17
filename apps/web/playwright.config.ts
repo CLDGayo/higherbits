@@ -142,7 +142,7 @@ export default defineConfig({
     if (adminState && (!path.isAbsolute(adminState) || !fs.existsSync(adminState) || !fs.statSync(adminState).isFile())) {
       throw new Error("HIGHERBITS_E2E_ADMIN_STATE must name an existing absolute local file")
     }
-    const adminSpecs = /higherbits-mcp-(route-identity|visual-evidence|a11y)\.spec\.ts/
+    const adminSpecs = /higherbits-mcp-(route-identity|visual-evidence|a11y|http)\.spec\.ts/
     return [
       // Signs the studio account in once and caches the session. Skips itself
       // when no credentials are configured.
