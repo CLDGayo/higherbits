@@ -349,7 +349,7 @@ export function CommandMenu() {
                   <ResponsiveCommandItem
                     value={`search-${searchQuery}`}
                     onSelect={() => {
-                      router.push(`/q/${encodeURIComponent(searchQuery)}`)
+                      window.location.href = `/q/${encodeURIComponent(searchQuery)}`
                       setSearchQuery("")
                       setValue("")
                       setOpen(false)
