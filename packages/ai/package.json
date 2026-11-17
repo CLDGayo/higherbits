@@ -22,7 +22,7 @@
   "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsup --format esm --clean",
-    "dev": "tsup src/index.ts --format esm --watch",
+    "dev": "tsup --format esm --watch",
     "start": "node dist/index.js",
     "lint": "eslint src/",
     "test": "vitest run"
