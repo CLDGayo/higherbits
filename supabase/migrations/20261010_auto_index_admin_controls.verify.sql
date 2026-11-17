@@ -6,7 +6,9 @@ BEGIN
   IF has_table_privilege('anon','public.auto_index_admin_state','SELECT,INSERT,UPDATE,DELETE') OR
      has_table_privilege('authenticated','public.auto_index_admin_state','SELECT,INSERT,UPDATE,DELETE') OR
      has_table_privilege('service_role','public.auto_index_admin_state','DELETE') OR
-     NOT has_table_privilege('service_role','public.auto_index_admin_state','SELECT,INSERT,UPDATE') THEN
+     NOT (has_table_privilege('service_role','public.auto_index_admin_state','SELECT') AND
+          has_table_privilege('service_role','public.auto_index_admin_state','INSERT') AND
+          has_table_privilege('service_role','public.auto_index_admin_state','UPDATE')) THEN
     RAISE EXCEPTION 'incorrect auto-index admin state table privileges';
   END IF;
   IF has_function_privilege('anon','public.list_auto_index_admin_items(integer,integer,text)','EXECUTE') OR
