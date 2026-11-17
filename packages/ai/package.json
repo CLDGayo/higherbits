@@ -7,11 +7,12 @@
     "higherbits-dev-cli": "./dist/index.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./http": "./dist/http.js"
   },
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --clean",
+    "build": "tsup --format esm --clean",
     "dev": "tsup src/index.ts --format esm --watch",
     "start": "node dist/index.js",
     "lint": "eslint src/",

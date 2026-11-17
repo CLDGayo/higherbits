@@ -1,0 +1,161 @@
+{
+  "task": "HigherBits MCP Streamable HTTP facade verification",
+  "commands": [
+    "corepack pnpm --filter @higherbits-dev/cli exec vitest run __tests__/index.test.ts -t \"G-AC4-ERROR-RETRY\"",
+    "corepack pnpm --filter @higherbits-dev/cli build",
+    "corepack pnpm --filter @higherbits-dev/cli test",
+    "git diff --check",
+    "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/streamable-http.test.ts -t \"G-ROUTE-ADAPTER\"",
+    "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/route.test.ts app/api/higherbits-mcp/__tests__/streamable-http.test.ts app/api/higherbits-mcp/__tests__/streamable-http.integration.test.ts",
+    "corepack pnpm --filter web typecheck",
+    "corepack pnpm --filter web exec vitest run lib/__tests__/copy-identity.test.ts",
+    "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/route.test.ts",
+    "corepack pnpm --filter web test",
+    "corepack pnpm --filter web exec tsc --noEmit --target ES2022 --module ESNext --moduleResolution Bundler --skipLibCheck --types node e2e/higherbits-mcp-http.spec.ts",
+    "corepack pnpm --filter web exec playwright test --list e2e/higherbits-mcp-http.spec.ts",
+    "graphify update ."
+  ],
+  "manualChecks": [
+    "Rechecked 2026-10-19: all seven local E2E environment inputs are missing, and apps/web/e2e/.auth/studio.json is absent; no Next app server or browser was started.",
+    "The Playwright cancellation assertion now aborts a pending SSE read and expects AbortError; it checks client-side abort, not server-side termination.",
+    "Disposable 127.0.0.1 SSE probe: pending read rejected with AbortError and the generic Node server observed response close; this does not exercise the Next route.",
+    "Built-package SDK Request/Response probe: GET returned 200 text/event-stream, body cancellation resolved, and DELETE returned 200; does not exercise Next routing or auth.",
+    "Reran package build and full MCP package tests on 2026-10-19 in the isolated candidate: build succeeded and 10/10 tests passed.",
+    "Reran the full web Vitest suite on 2026-10-19: 12 of 163 files failed; 35 tests failed and 1536 passed. Visible unrelated failures include missing Supabase URL, sandbox endpoint 503 responses, font/sidebar assertions, and a publish error-message mismatch.",
+    "Reran focused MCP route, identity, and legacy regressions after the full suite: 16/16 tests passed across three files.",
+    "After the route protocol integration addition, the package build passed and the focused MCP route/adapter/protocol run passed 12/12 tests across three files. The new in-process test exercises actual GET/POST/DELETE exports, initialize/list/call, and stream cancellation using mocked identity and downstream handlers; it is not Next runtime, Clerk/session, database, or server-side disconnect evidence.",
+    "The latest full web typecheck still fails on unrelated admin/bundles/Studio/Prisma/image type errors, with no diagnostics in the MCP route or MCP test files. The first typecheck exposed and prompted fixes to strict errors in the MCP route and adapter test.",
+    "The file-scoped ESLint command could not start because @next/eslint-plugin-next is absent from the isolated dependency environment; no dependency was added.",
+    "Initial independent review decision is REJECT; follow-up independently approves the retry remediation only.",
+    "AC6 migration/RPC behavior passed against a disposable local Supabase/Postgres fixture; deployed behavior remains unverified."
+  ],
+  "result": "package AC1-AC5, route adapter, in-process actual-route GET/POST/DELETE protocol integration, AC6 local SQL semantics, build, and retry remediation pass; actual Next runtime E2E remains conditional, including Clerk/session and server-side SSE termination evidence, and full web-suite failures remain outstanding",
+  "steps": [
+    {
+      "step": "Build package ESM and declaration exports, including the HTTP subpath.",
+      "command": "corepack pnpm --filter @higherbits-dev/cli build",
+      "result": "PASS",
+      "notes": "Reran on 2026-10-19 in the isolated candidate; tsup emitted dist/http.js, dist/http.d.ts, CLI output, and declarations."
+    },
+    {
+      "step": "Run the exact Fully-Automated AC1 through AC5 package gates.",
+      "command": "corepack pnpm --filter @higherbits-dev/cli exec vitest run __tests__/index.test.ts -t \"G-AC1-SDK-HTTP\" (repeated for G-AC2-SEARCH, G-AC3-SOURCE, G-AC4-ERROR-RETRY, G-AC5-CAPABILITY-LIST)",
+      "result": "PASS",
+      "notes": "All five named tests passed individually in the prior execution; after this retry-only change AC4 passed again and the full package suite passed all 10 tests."
+    },
+    {
+      "step": "Run the complete MCP package test suite.",
+      "command": "corepack pnpm --filter @higherbits-dev/cli test",
+      "result": "PASS",
+      "notes": "Reran on 2026-10-19; 1 test file passed and all 10 tests passed, including fetch retry with identical requestId and in-process TypeError no-retry."
+    },
+    {
+      "step": "Rerun focused MCP route, identity-boundary, and legacy endpoint regressions after the full web suite.",
+      "command": "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/streamable-http.test.ts lib/__tests__/copy-identity.test.ts app/api/higherbits-mcp/__tests__/route.test.ts",
+      "result": "PASS",
+      "notes": "2026-10-19: all 3 files passed, 16/16 tests."
+    },
+    {
+      "step": "Run the mocked route adapter gate for alternate identities, fixed dispatch, and source denials.",
+      "command": "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/streamable-http.test.ts -t \"G-ROUTE-ADAPTER\"",
+      "result": "PASS",
+      "notes": "2/2 tests passed on 2026-10-19; includes missing/cookie-only/Basic/x-api-key/query identity rejection and mismatch rejection before dispatch."
+    },
+    {
+      "step": "Run the existing copy identity contract tests.",
+      "command": "corepack pnpm --filter web exec vitest run lib/__tests__/copy-identity.test.ts",
+      "result": "PASS",
+      "notes": "6/6 tests passed, including API-key binding, key/session mismatch rejection, storage failure, and session-only origin behavior. This is unit evidence, not actual Clerk middleware E2E."
+    },
+    {
+      "step": "Run the legacy HigherBits MCP check/use route regression tests.",
+      "command": "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/route.test.ts",
+      "result": "PASS",
+      "notes": "8/8 tests passed; legacy /check and /use behavior remains intact."
+    },
+    {
+      "step": "Verify importing the HTTP package subpath does not require API_KEY or start the CLI.",
+      "command": "env -u API_KEY NODE_ENV=production node --input-type=module -e 'await import(\"@higherbits-dev/cli/http\")'",
+      "result": "PASS",
+      "notes": "Exited successfully from apps/web."
+    },
+    {
+      "step": "Run the complete web Vitest suite.",
+      "command": "corepack pnpm --filter web test",
+      "result": "FAIL",
+      "notes": "Reran on 2026-10-19: 12 of 163 files failed; 35 tests failed and 1536 passed. Visible unrelated failures include missing Supabase URL configuration, sandbox endpoint 503 responses, font/sidebar assertions, and a publish error-message mismatch. MCP route adapter tests pass when run separately. No unrelated failures were changed."
+    },
+    {
+      "step": "Type-check the actual-route Playwright spec without starting a server or browser.",
+      "command": "corepack pnpm --filter web exec tsc --noEmit --target ES2022 --module ESNext --moduleResolution Bundler --skipLibCheck --types node e2e/higherbits-mcp-http.spec.ts",
+      "result": "PASS",
+      "notes": "The updated pending-read abort assertion type-checks. This is not a runtime or route test."
+    },
+    {
+      "step": "Exercise the actual MCP route exports with initialize, tools/list, and both tools/call requests through the built SDK server.",
+      "command": "corepack pnpm --filter web exec vitest run app/api/higherbits-mcp/__tests__/route.test.ts app/api/higherbits-mcp/__tests__/streamable-http.test.ts app/api/higherbits-mcp/__tests__/streamable-http.integration.test.ts",
+      "result": "PASS",
+      "notes": "2026-10-19: 3 files, 12/12 tests. The new protocol integration exercises actual GET/POST/DELETE route exports, MCP initialize/list/call, and response-stream cancellation with deterministic identity/search/source mocks. It does not exercise the Next runtime, Clerk middleware/session cookies, real database/search services, or server-side disconnect termination."
+    },
+    {
+      "step": "Type-check the web app and inspect diagnostics for the MCP changes.",
+      "command": "corepack pnpm --filter web typecheck",
+      "result": "FAIL",
+      "notes": "The repository-wide typecheck still reports unrelated errors in admin, bundles, Studio, generated Prisma client imports, and image declarations. The latest output has no diagnostics in the HigherBits MCP route or MCP tests; an earlier run did report strict errors there, which were fixed and rechecked."
+    },
+    {
+      "step": "Run actual Next route Playwright proof for Clerk/cookie identity, SSE, and cancellation.",
+      "command": "corepack pnpm --filter web exec playwright test e2e/higherbits-mcp-http.spec.ts",
+      "result": "SKIP",
+      "notes": "Not run: HIGHERBITS_MCP_E2E_LOCAL_FIXTURE, HIGHERBITS_MCP_E2E_API_KEY, HIGHERBITS_MCP_E2E_MISMATCH_API_KEY, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, NEXT_PUBLIC_SUPABASE_URL, HIGHERBITS_E2E_ADMIN_STATE, and PLAYWRIGHT_BASE_URL were all missing; apps/web/e2e/.auth/studio.json was absent. A --list probe registered zero tests because the admin project is only configured when HIGHERBITS_E2E_ADMIN_STATE exists. No Next app server or browser was started. The spec now asserts that an active client read rejects on abort, but does not prove server-side termination."
+    },
+    {
+      "step": "Prove AC6 authoritative repeated/concurrent admission behavior.",
+      "command": "Repeat the disposable bootstrap in process/features/higherbits-ai/backlog/higherbits-mcp-ac6-test-building_NOTE_18-10-26.md; run ac6-admission-behavior.sql and the ten-session probe",
+      "result": "PASS",
+      "notes": "Recreated the disposable fixture from scratch. Migration verifier, RLS/grant checks, transaction-scoped replay/quota/pro/grant assertions, and ten-way concurrent admission all passed. Concurrency returned 2 ok, 8 copy_limit_reached, and daily consumed=2. Stopped the project with backup=true. No production/deployed behavior is claimed."
+    },
+    {
+      "step": "Run Graphify after implementation changes.",
+      "command": "graphify update .",
+      "result": "PASS",
+      "notes": "The latest 2026-10-19 Graphify update rebuilt the candidate: 21657 nodes, 35187 edges, 1336 communities. It skipped 38 SQL files because tree_sitter_sql is not installed; community labels were not refreshed."
+    },
+    {
+      "step": "Check patch whitespace and conflict markers.",
+      "command": "git diff --check",
+      "result": "PASS",
+      "notes": "No whitespace errors reported."
+    },
+    {
+      "step": "Obtain an independent code-review decision.",
+      "command": "Inspect the independent retry-remediation follow-up in harness/review-decision.json",
+      "result": "PASS",
+      "notes": "The follow-up independently approves the retry remediation with no blocking/material findings. The initial REJECT remains preserved; neither decision establishes overall parity."
+    },
+    {
+      "step": "Confirm red for the injected in-process TypeError retry regression.",
+      "command": "corepack pnpm --filter @higherbits-dev/cli exec vitest run __tests__/index.test.ts -t \"G-AC4-ERROR-RETRY\" (before the implementation fix)",
+      "result": "PASS",
+      "notes": "Expected red observed: the old implementation called the injected TypeError dispatcher twice instead of once."
+    },
+    {
+      "step": "Run the focused AC4 retry regression after the fix.",
+      "command": "corepack pnpm --filter @higherbits-dev/cli exec vitest run __tests__/index.test.ts -t \"G-AC4-ERROR-RETRY\"",
+      "result": "PASS",
+      "notes": "The default fetch boundary retries one TypeError with identical requestId/body; an injected in-process dispatcher TypeError is propagated after one call."
+    },
+    {
+      "step": "Check final patch whitespace.",
+      "command": "git diff --check",
+      "result": "PASS",
+      "notes": "Rerun after the retry implementation and tests; no whitespace issues."
+    },
+    {
+      "step": "Validate the high-risk evidence pack.",
+      "command": "node .claude/skills/vc-risk-evidence-pack/scripts/validate-risk-artifacts.mjs process/features/higherbits-ai/active/higherbits-mcp-parity_17-10-26/harness",
+      "result": "PASS",
+      "notes": "No structural warnings or failures. The initial REJECT is preserved and the independent follow-up approves only the retry remediation; validator success is not overall parity approval."
+    }
+  ]
+}

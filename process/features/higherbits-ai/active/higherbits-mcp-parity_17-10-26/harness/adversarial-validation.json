@@ -1,0 +1,44 @@
+{
+  "scenarios": [
+    {
+      "scenario": "A caller attempts cookie-only, missing, malformed Basic, x-api-key, or query-string identity instead of Bearer authorization.",
+      "ruled_out": true,
+      "rationale": "The mocked route adapter test confirms these requests return 401 before identity lookup, MCP transport, or downstream handler dispatch."
+    },
+    {
+      "scenario": "A caller supplies mismatched API-key and Clerk-session identities.",
+      "ruled_out": false,
+      "rationale": "The mocked adapter test proves a copyIdentity conflict fails before transport dispatch, but actual Clerk ambient-session behavior through the Next route awaits the unrun local-fixture E2E."
+    },
+    {
+      "scenario": "Caller-controlled Host, Origin, Cookie, Forwarded, or X-Forwarded-Host attempts to alter a downstream destination or leak headers.",
+      "ruled_out": true,
+      "rationale": "The adapter test observes fixed first-party URLs and only Authorization plus Content-Type on synthetic downstream requests; the route source has no caller-derived destination."
+    },
+    {
+      "scenario": "A denied source request exposes protected source text or is retried as a transient network failure.",
+      "ruled_out": true,
+      "rationale": "The package and mocked route gates assert protected-source sentinels are absent, structured denial reasons are preserved, and denial responses are not retried."
+    },
+    {
+      "scenario": "A malformed or unsafe source identifier reaches a first-party handler, or a transient retry changes its request UUID.",
+      "ruled_out": true,
+      "rationale": "The AC4 package gate passes exact-key, safe-integer, and UUID validation; the default fetch-boundary failure retries once with the identical request body and UUID."
+    },
+    {
+      "scenario": "A TypeError from an injected in-process route handler is mistaken for a network failure and repeats source admission.",
+      "ruled_out": true,
+      "rationale": "The focused regression test injects an ordinary TypeError, expects it to propagate, and asserts the dispatcher is called exactly once. Only fetch-boundary TypeErrors are wrapped as HigherBitsNetworkError."
+    },
+    {
+      "scenario": "The actual Next runtime mishandles SSE initialization, Clerk/cookie identity, or stream cancellation.",
+      "ruled_out": false,
+      "rationale": "The actual-route Playwright test was not run because safe local test fixtures and server prerequisites were unavailable."
+    },
+    {
+      "scenario": "Repeated or concurrent requests violate authoritative quota, grant, or idempotency behavior.",
+      "ruled_out": true,
+      "rationale": "The exact tracked migration passed isolated local RLS/grant, sequential replay/idempotency, quota/reset, pro-exemption, grant-rate, and ten-session concurrent-admission assertions. This rules out the scenario for the tested local migration only; deployed behavior and full MCP-to-database routing remain unverified."
+    }
+  ]
+}
