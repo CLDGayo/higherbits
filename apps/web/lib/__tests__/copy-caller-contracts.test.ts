@@ -63,10 +63,12 @@ describe("copy callers", () => {
     expect(fetchMock.mock.calls[0]![0]).toBe("/api/copy-grants")
   })
   it.each(["mac", "windows", "linux"] as const)("MCP %s config passes key only through env", os => {
-    const config = JSON.parse(getMcpConfigJson("secret",os)).mcpServers["@higherbits-dev/cli"]
+    const config = JSON.parse(getMcpConfigJson("secret",os)).mcpServers["higherbits-mcp"]
     expect(config.env).toEqual({API_KEY:"secret"})
     expect(config.args.join(" ")).not.toContain("secret")
-    expect(config.args).not.toContain("install")
+    expect(config.args).toContain("-p")
+    expect(config.args).toContain("@higherbits-dev/cli@latest")
+    expect(config.args).toContain("higherbits-mcp")
   })
 })
 

@@ -103,7 +103,7 @@ pnpm build
 | [`apps/web`](./apps/web) | Next.js 15 + React 19 web application |
 | [`apps/backend`](./apps/backend) | Bun service for CSS/Tailwind bundling |
 | [`packages/ui`](./packages/ui) | Shared `@repo/ui` primitives |
-| [`packages/ai`](./packages/ai) | `@higherbits-dev/cli` MCP server package |
+| [`packages/ai`](./packages/ai) | HigherBits MCP stdio server package (`@higherbits-dev/cli`) for catalogue search and authorized source retrieval |
 
 **Stack:** TypeScript, Tailwind CSS, Radix UI, Supabase (Postgres + Prisma), Clerk auth, Turborepo + pnpm workspaces.
 
