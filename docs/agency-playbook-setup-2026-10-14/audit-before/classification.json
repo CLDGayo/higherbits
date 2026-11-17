@@ -1,0 +1,17 @@
+{
+  "active_markdown_files_checked": 390,
+  "active_plan_matches": [],
+  "invocation_failure_count": 42,
+  "all_flagged_tokens_are_existing_agents": true,
+  "flagged_existing_agent_names": [
+    "vc-code-reviewer",
+    "vc-execute-agent",
+    "vc-fast-mode-agent",
+    "vc-innovate-agent",
+    "vc-plan-agent",
+    "vc-research-agent",
+    "vc-tester",
+    "vc-ui-ux-designer",
+    "vc-update-process-agent"
+  ]
+}

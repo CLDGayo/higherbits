@@ -1,0 +1,103 @@
+{
+  "method": "Static reading of installed docs/AGENCY_PLAYBOOK.md; no live routing commands, product writes, or runtime failure simulation executed by this audit.",
+  "document": "docs/AGENCY_PLAYBOOK.md",
+  "scenarios": [
+    {
+      "scenario": "Plan-only substantive feature request",
+      "evidence_lines": [
+        7,
+        15,
+        19,
+        44,
+        77
+      ],
+      "expected": "Obtain all-nine read-only assessment; retain existing planning owner and gates; produce authorized planning artifacts only; no product implementation.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Read-only audit",
+      "evidence_lines": [
+        17,
+        60,
+        77
+      ],
+      "expected": "All-nine initial assessment and relevant follow-through remain read-only; findings and proposed next actions only.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Stop during execution",
+      "evidence_lines": [
+        15,
+        77
+      ],
+      "expected": "Cancel pending assignments and interrupt active work where supported; do not start another assessment.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Simple progress update in the same task",
+      "evidence_lines": [
+        9,
+        28,
+        73
+      ],
+      "expected": "Reuse existing assessments; report actual states and next action without new triage.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Scoped change to current task",
+      "evidence_lines": [
+        9,
+        15,
+        20
+      ],
+      "expected": "Reassess only affected roles while preserving scope, previous evidence, and boundaries; a genuinely new substantive request starts all nine.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Current four-slot desktop concurrency",
+      "evidence_lines": [
+        16
+      ],
+      "expected": "Count coordinator and already-running agents; queue beyond free slots. At observed snapshot root and harness_checks were running, two children completed, leaving at most two available desktop slots. Do not assume a separate CLI runtime shares this snapshot; check its own limit.",
+      "static_result": "covered",
+      "observation": "collaboration.list_agents returned root and harness_checks running; playbook_author and playbook_review completed; developer runtime limit is four including coordinator."
+    },
+    {
+      "scenario": "Explicit skill invocation",
+      "evidence_lines": [
+        46,
+        57
+      ],
+      "expected": "Invoke real skill through supported mechanism; immediate trigger first, triage alongside independent preparation where permitted; no scope expansion.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Delegated VC or Agency child assignment",
+      "evidence_lines": [
+        11,
+        44
+      ],
+      "expected": "Do not recursively restart all-nine triage; reuse primary-session assessments, retain mandatory VC fanouts without duplicate Agency assignments.",
+      "static_result": "covered"
+    },
+    {
+      "scenario": "Accessibility Auditor unavailable (simulated)",
+      "evidence_lines": [
+        28,
+        81,
+        83
+      ],
+      "expected": "Record failure and affected deliverable; allow one evidence-justified retry, no silent replacement or 9/9 claim; continue independent authorized work and hold dependent sign-off.",
+      "static_result": "covered; simulated, not a live failure"
+    },
+    {
+      "scenario": "Explicitly narrowed single-agent request",
+      "evidence_lines": [
+        9
+      ],
+      "expected": "Honor explicit participation limit, report exception, never claim all-nine completion.",
+      "static_result": "covered"
+    }
+  ],
+  "limitation": "Textual coverage does not establish runtime enforcement or product correctness."
+}
