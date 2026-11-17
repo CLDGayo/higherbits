@@ -49,3 +49,33 @@ it("renders a top component when its nested author is absent", () => {
 
   expect(componentLink).not.toBeNull()
 })
+
+it("uses a PNG sibling when an auto-index preview URL points to its HTML demo", () => {
+  const author: any = {
+    username: "creator",
+    total_views: 0,
+    total_usages: 0,
+    total_downloads: 0,
+    top_components: [
+      {
+        id: 1,
+        name: "Example demo",
+        preview_url: "https://higherbits.dev/auto-index/example.html",
+        demo_slug: "default",
+        component_slug: "example",
+        component: {
+          name: "Example component",
+          component_slug: "example",
+          user: null,
+        },
+      },
+    ],
+  }
+
+  const { container } = render(<DesignEngineerCard author={author} />)
+  const previewImage = container.querySelector('img[alt="Example demo"]')
+
+  expect(previewImage?.getAttribute("src")).toBe(
+    "https://higherbits.dev/auto-index/example.png",
+  )
+})

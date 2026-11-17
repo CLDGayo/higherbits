@@ -1,0 +1,37 @@
+{
+  "task": "Independent review of HigherBits MCP Streamable HTTP facade",
+  "reviewer": "Independent reviewer (decision relayed by user)",
+  "decision": "rejected",
+  "decisionLabel": "REJECT",
+  "blockingFindings": [
+    "HIGH: packages/ai/src/server.ts retried every TypeError, including TypeErrors from the injected in-process route dispatcher, which could repeat source admission while AC6 idempotency remains unproven."
+  ],
+  "nonBlockingFindings": [
+    "Actual-route E2E and AC6 remain conditional under the selected plan."
+  ],
+  "remediationStatus": "Independent follow-up approved the retry remediation; no blocking or material security findings.",
+  "followUpReviewStatus": "APPROVED",
+  "followUpReview": {
+    "reviewer": "Independent follow-up reviewer (identity not provided; decision relayed by user)",
+    "decision": "approved",
+    "decisionLabel": "APPROVE",
+    "date": "2026-10-18",
+    "scope": [
+      "packages/ai/src/server.ts: retry only positively identified fetch-boundary network failures; do not retry ordinary in-process dispatcher TypeErrors.",
+      "packages/ai/__tests__/index.test.ts: verify one same-requestId retry for an eligible network failure and no retry for an injected dispatcher TypeError."
+    ],
+    "evidence": [
+      "Focused G-AC4-ERROR-RETRY regression test passed.",
+      "@higherbits-dev/cli package test suite passed (10/10).",
+      "@higherbits-dev/cli package build passed.",
+      "git diff --check passed after the remediation."
+    ],
+    "findings": [],
+    "blockingFindings": [],
+    "materialSecurityFindings": [],
+    "rationale": "The follow-up independently approved the retry remediation and found no new blocking or material security findings. This approval is limited to the retry remediation and does not establish overall MCP parity or resolve the conditional E2E/AC6 gates."
+  },
+  "notes": "The initial REJECT and its High finding are preserved as history. The follow-up APPROVE applies only to the retry remediation; overall parity remains in active/testing.",
+  "rationale": "The original broad TypeError retry could repeat an in-process source handler. The fix wraps fetch TypeErrors only after a valid Request has been constructed; handleSource retries only the resulting HigherBitsNetworkError. Injected dispatcher TypeErrors propagate without retry.",
+  "timestamp": "2026-10-18T13:42:53Z"
+}

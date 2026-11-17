@@ -32,6 +32,7 @@ import { useClerkSupabaseClient } from "@/lib/clerk"
 import { bookmarkDemo } from "@/lib/queries"
 import { cn, shouldHideLeaderboardRankings } from "@/lib/utils"
 import { Component, DemoWithComponent, User } from "@/types/global"
+import { normalizePreviewImageUrl } from "@/lib/preview-image-url"
 import { useUser } from "@clerk/nextjs"
 import NumberFlow from "@number-flow/react"
 import { motion } from "motion/react"
@@ -178,10 +179,7 @@ export const ComponentCard = React.memo(function ComponentCard({
       : ("pro_preview_image_url" in demo && demo.pro_preview_image_url)
         ? demo.pro_preview_image_url
         : "/placeholder.svg"
-  const previewImageUrl = previewUrl.replace(
-    /(\/auto-index\/[^?#]+)\.html(?=[?#]|$)/i,
-    "$1.png",
-  )
+  const previewImageUrl = normalizePreviewImageUrl(previewUrl)
 
   const lightPreviewUrl = isShadcn
     ? `/thumbnails/${componentSlug}-light.png`

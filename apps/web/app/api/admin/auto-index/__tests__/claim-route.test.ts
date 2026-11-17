@@ -63,10 +63,10 @@ it("bounds pagination and maps claim conflicts", async () => {
   expect((await POST(claim(valid))).status).toBe(409)
 })
 
-it("adds the compiled demo bundle URL to the admin-only auto-index listing", async () => {
-  mock.rpc.mockResolvedValue({ data: { items: [{ componentId: 41, demoId: 42 }], total: 1 }, error: null })
-  mock.demos = [{ id: 42, bundle_html_url: "https://higherbits.dev/preview/42.html" }]
-  const response = await GET(new Request("http://localhost/api/admin/auto-index"))
+it("returns the active admin rows with their demo bundle from the listing RPC", async () => {
+  mock.rpc.mockResolvedValue({ data: { items: [{ componentId: 41, demoId: 42, bundleHtmlUrl: "https://higherbits.dev/preview/42.html" }], total: 1 }, error: null })
+  const response = await GET(new Request("http://localhost/api/admin/auto-index?status=posted"))
+  expect(mock.rpc).toHaveBeenCalledWith("list_auto_index_admin_items", { p_limit: 25, p_offset: 0, p_status: "posted" })
   expect(await response.json()).toMatchObject({ items: [{ demoId: 42, bundleHtmlUrl: "https://higherbits.dev/preview/42.html" }] })
 })
 

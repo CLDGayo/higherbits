@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import { ComponentVideoPreview } from "../list-card/card-video"
 import { Database } from "@/types/supabase"
 import { DemoWithComponent } from "@/types/global"
+import { normalizePreviewImageUrl } from "@/lib/preview-image-url"
 
 type DatabaseAuthor =
   Database["public"]["Functions"]["get_active_authors_with_top_components"]["Returns"][0]
@@ -122,7 +123,9 @@ export function DesignEngineerCard({ author }: DesignEngineerCardProps) {
                       <div className="relative aspect-[4/3] rounded-xl shadow-base overflow-hidden ring-1 ring-white/10 group-hover/card:ring-white/20 transition-all duration-300">
                         <div className="absolute inset-0">
                           <Image
-                            src={demo.preview_url || "/placeholder.svg"}
+                            src={normalizePreviewImageUrl(
+                              demo.preview_url || "/placeholder.svg",
+                            )}
                             alt={demo.name || ""}
                             className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
                             fill

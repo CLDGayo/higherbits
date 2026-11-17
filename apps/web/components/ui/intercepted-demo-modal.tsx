@@ -3,11 +3,11 @@
 import { requestCopy, getCopySource, getInstallCommand } from "@/lib/copy-client"
 import { isReviewOnlyCopy, withCopyNotice } from "@/lib/copy-notice"
 
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { DemoWithComponent, PROMPT_TYPES, PromptType, AnalyticsActivityType, User } from "@/types/global"
 import { useState, useEffect, useRef, useCallback } from "react"
-import { Bookmark, Copy, Search, Maximize, Minimize, ExternalLink, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2 } from "lucide-react"
+import { Bookmark, Copy, Search, Maximize, Minimize, ExternalLink, Terminal, Code2, ChevronDown, Check, Circle, ChevronUp, Sun, Moon, Loader2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu"
@@ -54,13 +54,16 @@ const selectedPromptTypeAtom = atomWithStorage<PromptType>(
 // backwards out of its own page.
 export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased = false, onClose }: { demo: Omit<DemoWithComponent, "view_count"> & { view_count?: number | null }, componentDemos?: any[], hasPurchased?: boolean, onClose?: () => void }) {
   const router = useRouter()
+  const pathname = usePathname()
   const { resolvedTheme } = useTheme()
   const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("light")
   const [isLoading, setIsLoading] = useState(true)
   const [isPromptLoading, setIsPromptLoading] = useState(false)
   const [showUnlockDialog, setShowUnlockDialog] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const hasClosedRef = useRef(false)
 
   const bundleUrl = demo.bundle_html_url || demo.bundle_url?.html || demo.component?.bundle_html_url
   const rawCode = useResolvedDemoCode(demo.demo_code, demo.component?.code, {
@@ -90,6 +93,15 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
     author?.username ||
     ""
   const authorUsername = author?.display_username || author?.username
+  const componentPath = `/${authorUsername}/${demo.component.component_slug}`
+  const demoPath = `${componentPath}/${demo.demo_slug || "default"}`
+
+  useEffect(() => {
+    if (pathname === componentPath || pathname === demoPath) {
+      hasClosedRef.current = false
+      setIsOpen(true)
+    }
+  }, [componentPath, demo.id, demoPath, pathname])
 
   useEffect(() => {
     if (accessState === "UNLOCKED") {
@@ -167,11 +179,22 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
   }, [sendThemeToIframe, sendControlsToIframe])
 
   function handleOpenChange(open: boolean) {
-    if (!open) {
-      if (onClose) onClose()
-      else router.back()
-    }
+    setIsOpen(open)
+    if (open) return
+    // Ignore duplicate dismissals while the intercepted route is leaving.
+    if (hasClosedRef.current) return
+    hasClosedRef.current = true
+    if (onClose) onClose()
+    else router.back()
   }
+
+  // Prevent a second history action when navigation unmounts the dialog.
+  const closeForNavigation = useCallback(() => {
+    if (hasClosedRef.current) return
+    hasClosedRef.current = true
+    setIsOpen(false)
+    onClose?.()
+  }, [onClose])
 
   const handlePromptAction = async (e?: React.MouseEvent, promptTypeOverride?: string) => {
     e?.stopPropagation()
@@ -352,27 +375,38 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
 
   const handleSeeSimilar = (e: React.MouseEvent) => {
     e.stopPropagation()
-    const tags = (demo.component as any).tags || (demo as any).tags || []
-    if (tags.length > 0 && tags[0].slug) {
-      router.push(`/tags/${tags[0].slug}`)
+    closeForNavigation()
+    const tags = (demo.component as any)?.tags ?? demo.tags ?? []
+    const tagSlug = tags.find((tag: any) => typeof tag?.slug === "string")?.slug
+    if (tagSlug) {
+      router.push(`/s/${encodeURIComponent(tagSlug)}`)
     } else {
       router.push(`/q/${encodeURIComponent(demo.component.name)}`)
     }
-    router.refresh()
   }
 
   return (
-    <Dialog open onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent 
         className={cn(
           "p-0 overflow-visible bg-transparent border-none shadow-none flex items-center justify-center transition-all duration-300",
-          isFullscreen 
-            ? "w-screen h-screen max-w-none m-0 rounded-none border-none" 
+          isFullscreen
+            ? "w-screen h-screen max-w-none m-0 rounded-none border-none"
             : "w-[88vw] h-[85vh] max-w-6xl min-w-[320px]"
         )}
         hideCloseButton
       >
         <div className="relative w-full h-full flex items-center justify-start group">
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            aria-label="Close component preview"
+            onClick={() => handleOpenChange(false)}
+            className="absolute left-3 top-3 z-40 h-9 w-9 rounded-full bg-background/90 shadow-lg"
+          >
+            <X className="h-4 w-4" />
+          </Button>
           {/* Canvas Wrapper */}
           <div className={cn(
             "relative flex min-h-0 flex-1 h-full flex-col overflow-hidden rounded-xl border border-border/50 shadow-2xl transition-colors duration-300",
@@ -409,7 +443,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
 
             {/* Top Left User Avatar & Name */}
             {author && (authorName || authorUsername) && (
-              <div className="absolute top-3 left-3 z-20 flex items-center gap-2 transition-all duration-300 opacity-90 hover:opacity-100">
+              <div className="absolute top-3 left-14 z-20 flex items-center gap-2 transition-all duration-300 opacity-90 hover:opacity-100">
                 <div className="bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium pl-1.5 pr-3 py-1.5 rounded-full shadow-lg flex items-center gap-2">
                   <UserAvatar
                     src={
@@ -426,9 +460,12 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
                   />
                   {authorUsername ? (
                     <Link
-                      href={`/${authorUsername}`}
+                      href={`/${encodeURIComponent(authorUsername)}`}
                       className="truncate max-w-[140px] sm:max-w-[200px] hover:underline cursor-pointer"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        closeForNavigation()
+                      }}
                     >
                       {authorName || `@${authorUsername}`}
                     </Link>
@@ -444,7 +481,7 @@ export function InterceptedDemoModal({ demo, componentDemos = [], hasPurchased =
             {authorUsername && (
               <a
                 href={`/${encodeURIComponent(authorUsername)}/${encodeURIComponent(demo.component.component_slug)}/${encodeURIComponent(demo.demo_slug || "default")}`}
-                className="absolute top-14 left-3 z-20 bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 hover:bg-background/90"
+                className="absolute top-14 left-14 z-20 bg-background/80 backdrop-blur-md border border-border/50 text-foreground text-xs font-medium px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 hover:bg-background/90"
               >
                 <ExternalLink size={14} aria-hidden="true" />
                 Open full page

@@ -62,7 +62,7 @@ export function TroubleshootingStep({
     {
       problem: "Client closed",
       solutions: [
-        `Go to MCP config and use explicit version number: npx -y @higherbits-dev/cli@${latestVersion} instead of latest`,
+        `Go to MCP config and pin the package version: npx -y -p @higherbits-dev/cli@${latestVersion} higherbits-mcp`,
       ],
     },
     {

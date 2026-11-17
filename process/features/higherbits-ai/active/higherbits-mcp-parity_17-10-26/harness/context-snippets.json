@@ -1,0 +1,47 @@
+{
+  "task": "HigherBits MCP HTTP auth and protected-source trust boundaries",
+  "snippets": [
+    {
+      "file": "apps/web/app/api/higherbits-mcp/route.ts",
+      "lines": "25-38",
+      "description": "Accepts only a bounded Bearer credential and rejects alternate identity headers and query identity inputs before dispatch.",
+      "content": "const match = authorization?.match(/^Bearer (\\S+)$/); if (!match || match[1].length > 512 || request.headers.has(\"x-api-key\") || [...new URL(request.url).searchParams.keys()].some((key) => QUERY_IDENTITY_KEYS.has(key.toLowerCase()))) throw new CopyError(401, \"invalid_identity\");"
+    },
+    {
+      "file": "apps/web/app/api/higherbits-mcp/route.ts",
+      "lines": "41-84",
+      "description": "Builds internal requests with only Authorization and Content-Type, fixed handler destinations, and validates identity before creating the MCP transport.",
+      "content": "createInternalRequest(url, request) uses only Authorization and Content-Type; dispatchFirstPartyRoute switches only on /api/search and /api/mcp/component-source; handle calls the existing check handler with a synthetic Authorization-only request before handleStreamableHttpRequest."
+    },
+    {
+      "file": "apps/web/lib/api/server/copy-identity.ts",
+      "lines": "24-48",
+      "description": "Existing authority resolves API-key identity, checks ambient Clerk session mismatch, and does not fall back to session-only identity for keyed calls.",
+      "content": "copyIdentity resolves the Bearer key, looks up an active API key, rejects when sessionId and keyUser differ, then returns keyUser ?? sessionId."
+    },
+    {
+      "file": "apps/web/app/api/mcp/component-source/route.ts",
+      "lines": "4-15",
+      "description": "Existing source handler remains the authority for identity, request ID, copy admission, and protected response delivery.",
+      "content": "POST obtains userId via copyIdentity, validates requestId, prepares source, calls admitCopy with action mcp and the persisted copy tier, and returns the payload only after admission."
+    },
+    {
+      "file": "packages/ai/src/server.ts",
+      "lines": "151-176",
+      "description": "Source tool input validates exact allowed keys, safe integers, and UUID before dispatch.",
+      "content": "parseSourceArguments requires a safe-integer componentId, optional safe-integer demoId, and optional UUID requestId; it returns only those validated fields."
+    },
+    {
+      "file": "packages/ai/src/server.ts",
+      "lines": "37-42,113-128,221-223,275-281",
+      "description": "Only fetch-boundary TypeErrors from a preconstructed valid Request become retryable HigherBitsNetworkError instances; injected dispatcher errors are not classified as network failures.",
+      "content": "The default dispatcher constructs Request before fetch, wraps fetch TypeError as HigherBitsNetworkError, and isTransientNetworkFailure recognizes only that class; handleSource reuses the same dispatchRequest for one retry."
+    },
+    {
+      "file": "packages/ai/__tests__/index.test.ts",
+      "lines": "259-312",
+      "description": "Focused AC4 test proves an eligible fetch rejection retries once with an identical requestId/body and an injected in-process TypeError is called only once.",
+      "content": "G-AC4-ERROR-RETRY mocks the default fetch boundary for a TypeError and verifies identical request bodies; an injected dispatcher TypeError rejects with one invocation."
+    }
+  ]
+}

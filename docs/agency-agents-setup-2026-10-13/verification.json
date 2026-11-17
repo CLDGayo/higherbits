@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-13",
+  "status": "complete",
+  "root": "<app-root>",
+  "app_head": "b8b7cf64c5e99e7c8b6a3262a87d9016843c54a2",
+  "static_validation": "PASS",
+  "profiles_parsed": 21,
+  "unique_names": true,
+  "existing_agents_unchanged": 15,
+  "new_agents": 6,
+  "new_agents_only_three_supported_fields": true,
+  "project_config_unchanged": true,
+  "project_config_sha256": "9e4643217193203529758fbcc211f2e24ed7626946ea5026526d6899ff9271a9",
+  "chatgpt_login_status": "Logged in using ChatGPT",
+  "saved_project_model": "gpt-5.4",
+  "original_AGENTS_bytes_preserved": true,
+  "unrelated_tracked_diff_unchanged": true,
+  "staged_diff_unchanged": true,
+  "existing_untracked_metadata_preserved": 1477,
+  "parity_audit": {
+    "exit_code": 1,
+    "failures": [
+      ".claude/agents/code-reviewer.md missing",
+      ".claude/agents/senior-developer.md missing",
+      ".claude/agents/senior-project-manager.md missing",
+      ".claude/agents/test-automation-engineer.md missing",
+      ".claude/agents/ui-designer.md missing",
+      ".claude/agents/ux-architect.md missing"
+    ],
+    "existing_warnings": [
+      "vc-code-reviewer normalized body differs (0% length delta)",
+      "vc-code-simplifier normalized body differs (0% length delta)",
+      "vc-debugger descriptions differ between Claude and Codex",
+      "vc-debugger normalized body differs (0% length delta)",
+      "vc-execute-agent normalized body differs (2% length delta)",
+      "vc-fast-mode-agent normalized body differs (5% length delta)",
+      "vc-git-manager normalized body differs (0% length delta)",
+      "vc-innovate-agent normalized body differs (1% length delta)",
+      "vc-plan-agent normalized body differs (0% length delta)",
+      "vc-quick-fix-agent normalized body differs (0% length delta)",
+      "vc-research-agent normalized body differs (1% length delta)",
+      "vc-spec-agent normalized body differs (0% length delta)",
+      "vc-tester descriptions differ between Claude and Codex",
+      "vc-tester normalized body differs (0% length delta)",
+      "vc-ui-ux-designer descriptions differ between Claude and Codex",
+      "vc-ui-ux-designer normalized body differs (1% length delta)",
+      "vc-update-process-agent normalized body differs (0% length delta)",
+      "vc-validate-agent normalized body differs (1% length delta)"
+    ]
+  },
+  "runtime_verification": "PASS: all six actual custom agents loaded and completed sequential read-only tests through signed-in Codex; temporary gpt-6-astra override; CLI exit 0",
+  "runtime_model_plan": "Temporary gpt-6-astra override only; saved app settings preserved because user requested preservation.",
+  "product_tests": "NOT RUN: setup verification only; no product behavior, coverage or backend-model identity attestation",
+  "independent_runtime_review": "PASS: Code Reviewer independently checked all six profiles and hashes against permitted app manifests/design/test configuration; no actionable findings",
+  "smoke_parent_thread": "[redacted-private-thread-id]",
+  "smoke_children": [
+    {
+      "thread_id": "[redacted-private-thread-id]",
+      "status": "completed"
+    },
+    {
+      "thread_id": "[redacted-private-thread-id]",
+      "status": "completed"
+    },
+    {
+      "thread_id": "[redacted-private-thread-id]",
+      "status": "completed"
+    },
+    {
+      "thread_id": "[redacted-private-thread-id]",
+      "status": "completed"
+    },
+    {
+      "thread_id": "[redacted-private-thread-id]",
+      "status": "completed"
+    },
+    {
+      "thread_id": "[redacted-private-thread-id]",
+      "status": "completed"
+    }
+  ],
+  "runtime_evidence_file": "runtime-smoke-tests.json",
+  "saved_settings_preserved_after_smoke": true,
+  "remaining_limitation": "Saved app model gpt-5.4 is unchanged and previously rejected with ChatGPT sign-in; use a compatible temporary model override for CLI work. Other saved settings remain unchanged.",
+  "final_git_status_delta": [
+    " M AGENTS.md",
+    "?? .codex/agents/code-reviewer.toml",
+    "?? .codex/agents/senior-developer.toml",
+    "?? .codex/agents/senior-project-manager.toml",
+    "?? .codex/agents/test-automation-engineer.toml",
+    "?? .codex/agents/ui-designer.toml",
+    "?? .codex/agents/ux-architect.toml",
+    "?? docs/"
+  ]
+}

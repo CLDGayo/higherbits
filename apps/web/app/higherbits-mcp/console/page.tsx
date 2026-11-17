@@ -141,7 +141,10 @@ async function getApiKey(userId: string | null): Promise<ApiKey | null> {
       .from("api_keys")
       .select("*")
       .eq("user_id", userId)
-      .single()
+      .eq("is_active", true)
+      .order("created_at", { ascending: false, nullsFirst: false })
+      .limit(1)
+      .maybeSingle()
 
     if (!rawApiKey) return null
 

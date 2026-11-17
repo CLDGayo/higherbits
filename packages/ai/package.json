@@ -1,18 +1,28 @@
 {
   "name": "@higherbits-dev/cli",
   "version": "1.0.0",
-  "description": "HigherBits AI MCP Server",
+  "description": "HigherBits MCP server for searching the HigherBits AI component catalogue and retrieving authorized source.",
   "main": "dist/index.js",
   "bin": {
-    "higherbits-dev-cli": "./dist/index.js"
+    "higherbits-mcp": "dist/index.js"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./http": "./dist/http.js"
   },
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CLDGayo/higherbits.git",
+    "directory": "packages/ai"
+  },
+  "homepage": "https://higherbits.dev/magic",
+  "files": ["dist", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public" },
   "scripts": {
-    "build": "tsup src/index.ts --format esm --clean",
-    "dev": "tsup src/index.ts --format esm --watch",
+    "build": "tsup --format esm --clean",
+    "dev": "tsup --format esm --watch",
     "start": "node dist/index.js",
     "lint": "eslint src/",
     "test": "vitest run"
